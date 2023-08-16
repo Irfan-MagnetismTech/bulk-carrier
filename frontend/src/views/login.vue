@@ -23,8 +23,7 @@
   <div id="login_page_body" class="flex items-center justify-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
     <div class="overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800" style="z-index: 999;width: 30%">
       <div class="flex items-center justify-center">
-        <img aria-hidden="true" class="object-cover align-middle py-4 w-1/4" src="/qc-logo.png" alt="QC Trading Limited"> 
-        <h1 class="text-3xl font-semibold md:pl-2">Trading Limited</h1>
+        <img aria-hidden="true" class="object-cover align-middle py-4 w-2/4" src="/tsll-logo.gif" alt="Toggi Shipping & Logistics Limited">
       </div>
       <div class="flex flex-col overflow-y-auto md:flex-row">
         <div class="flex items-center justify-center p-6 sm:p-8 w-full">
@@ -38,22 +37,22 @@
                                 <label class="block mb-1 text-sm leading-relaxed tracking-tight text-gray-700 dark:text-gray-100">Password</label>
                                 <input type="password" v-model="user.password" required minlength="6" placeholder="Your Password" class="w-full px-4 py-2 transition duration-300 ease-in-out transform bg-gray-100 border-transparent rounded-md dark:text-gray-100 dark:bg-gray-600 dark:focus:border-gray-600 dark:focus:bg-gray-500 focus:ring-blue-600 focus:outline-none" />
                             </div>
-                            <div class="mt-4">
-                              <div class="label-group">
-                                  <span class="label-item-title">Shift</span>
-                                  <div class="my-3 flex">
-                                      <div class="flex items-center">
-                                          <input type="radio" value="A" required v-model="user.shift" class="" name="shift" :id="'shift_a'" />
-                                          <label class="ml-2" for="shift_a">A</label>
-                                      </div>
-                                      <div class="flex items-center ml-8">
-                                          <input type="radio" value="B" required v-model="user.shift" class="" name="shift" :id="'shift_b'" />
-                                          <label class="ml-2" for="shift_b">B</label>
-                                      </div>
+<!--                            <div class="mt-4">-->
+<!--                              <div class="label-group">-->
+<!--                                  <span class="label-item-title">Shift</span>-->
+<!--                                  <div class="my-3 flex">-->
+<!--                                      <div class="flex items-center">-->
+<!--                                          <input type="radio" value="A" required v-model="user.shift" class="" name="shift" :id="'shift_a'" />-->
+<!--                                          <label class="ml-2" for="shift_a">A</label>-->
+<!--                                      </div>-->
+<!--                                      <div class="flex items-center ml-8">-->
+<!--                                          <input type="radio" value="B" required v-model="user.shift" class="" name="shift" :id="'shift_b'" />-->
+<!--                                          <label class="ml-2" for="shift_b">B</label>-->
+<!--                                      </div>-->
 
-                                  </div>
-                              </div>
-                            </div>
+<!--                                  </div>-->
+<!--                              </div>-->
+<!--                            </div>-->
                             <button type="submit" :disabled="isLoading" class="inline-flex items-center justify-center flex-none w-full px-4 py-2 mt-6 text-sm font-semibold leading-6 text-gray-100 transition-colors duration-300 bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-600 focus:outline-none">
                                 <span v-if="!isLoading">Login</span>
                                 <svg v-else-if="isLoading" class="iconify iconify--eos-icons w-6 h-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -81,7 +80,7 @@
 <!--            <img aria-hidden="true" class="object-cover w-full align-middle dark:block w-14" src="/karnafully-logo.png" alt="Office">-->
 <!--          </li>-->
 <!--        </ul>-->
-<!--    <img aria-hidden="true" class="object-cover w-full align-middle dark:block w-14" src="/hr-line-header-small-logo.png" alt="Office">-->
+    <img aria-hidden="true" class="object-cover w-full align-middle" src="/b-group.png" alt="Office">
   </div>
 <!--  <div class="absolute inset-y-0 flex items-center rounded-lg bg-danger">-->
 <!--    <img aria-hidden="true" class="object-cover w-full align-middle dark:block" src="/hr-lines-shosti.png" alt="Office">-->

@@ -3,8 +3,8 @@ import { ref } from 'vue';
 
 export default function Title() {
     const title = useTitle('');
-    const divider = ref(" | ");
-    const suffix = ref('QC Trading Limited');
+    const divider = ref(" - ");
+    const suffix = ref('TSLL');
 
     function setTitle(value) {
         if(value === null || value === undefined || value === '') {
