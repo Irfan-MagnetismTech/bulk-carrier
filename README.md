@@ -1,6 +1,8 @@
 # bulk-carrier-erp
 
-Bulk carrier erp is a web application for managing bulk carrier shipping business. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world. It is a complete solution for managing all the business processes of a bulk carrier shipping company. It is a web application that can be accessed from anywhere in the world.
+Bulk carrier erp is a web application for managing bulk carrier shipping business.
+It is a complete solution for managing all the business processes of a bulk carrier shipping company.
+It is a web application that can be accessed from anywhere in the world.
 
 ## Installation
 
