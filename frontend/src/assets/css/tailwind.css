@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#nprogress .bar {
+	background: #a855f7 !important;
+	height: 0.215rem;
+}
+
+@layer components {
+	.btn-submit-default {
+		@apply flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg font-medium active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
+	}
+}
+
+input[type='search'] {
+	@apply appearance-none border-none focus:outline-none;
+}
+
+.vs--searchable .vs__dropdown-toggle {
+	cursor: text;
+	height: 2.35rem !important;
+}

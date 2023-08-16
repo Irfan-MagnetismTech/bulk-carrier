@@ -1,0 +1,255 @@
+/* readonly field */
+.vms-readonly-input {
+    background-color: #e7e6e6;
+    cursor: not-allowed;
+}
+
+.tox-notifications-container {
+    display: none !important;
+}
+
+.vs--searchable .vs__dropdown-toggle {
+    height: 2.05rem !important;
+}
+
+.vms-no-data-found{
+    color: #ef2323;
+    font-weight: bold;
+}
+
+.vms-required-input-border{
+    outline: none !important;
+    border: 1px solid #ec2525 !important;
+}
+
+.vs--searchable .vs__dropdown-toggle {
+    height: 2.30rem !important;
+}
+
+/* title-tip down */
+[data-title]:hover {
+    position: relative;
+}
+[data-title]:hover:before {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 99999;
+    content: attr(data-title);
+    margin-top: 0.5em;
+    padding: 0.5em;
+    width: 200px;    /* change it */
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size: inherit;
+    color: #FFF;
+    text-align: center;
+    background-color: #222;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+[data-title]:hover:after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 99999;
+    content: '';
+    margin-left: -0.125em;
+    width: 0;
+    height: 0;
+    border: 0.25em dashed transparent;
+    border-bottom: 0.25em solid #222;
+    font-size: inherit;
+}
+
+.scroll-show::-webkit-scrollbar {
+    height: 8px !important;
+    border-radius: 15px !important;
+    background: lightgray !important;
+}
+
+.scroll-show::-webkit-scrollbar-thumb {
+    background: gray !important;
+    border-radius: 10px !important;
+}
+
+.HeaderLogoWrapper{
+    margin: 0 auto;
+    text-align: center;
+}
+
+.HeaderLogo{
+    display: inline-block;
+}
+
+#login_page_body{
+    /*background-image: url("/qc-background-1.jpg");*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+    background-color: #1ED7C3;
+}
+
+.overlay_div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.group_logo{
+    border-radius: 50%;
+    margin: 10px 50px auto;
+    display: block;
+    right: 0;
+}
+
+/* cursor not allowed */
+.custom_disabled {
+    background-color: #e7e6e6;
+    pointer-events: none;
+}
+
+.custom_required_field {
+    color: red;
+}
+
+.custom_opacity{
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.custom_text_opacity{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.archived_row{
+   opacity: 0.5;
+}
+
+.archived_row_dot{
+
+}
+
+/* Qc Trading */
+
+.main_menu {
+    font-size: 12px;
+}
+
+.active_main_menu{
+    color: #eeee09 !important;
+}
+
+.button_pm_color{
+    background-color: #0F6B61;
+}
+
+.main_menu_link:hover {
+    color: #eeee09;
+}
+
+.sub_menu li>a {
+    background-color: #0F6B61 !important;
+    color: #fff;
+}
+
+.sub_menu li>a:hover {
+    color: #eeee09;
+}
+
+
+.sub_menu a {
+    font-family: 'Calibri', Times, serif;
+    line-height: .6;
+}
+
+
+.sub_sub_menu_two li>a {
+    background-color: #369382 !important;
+    color: #fff;
+}
+
+.sub_sub_menu_two li>a:hover {
+    color: #eeee09;
+}
+
+
+.sub_sub_menu_two a {
+    font-family: 'Calibri', Times, serif;
+    line-height: .6;
+}
+
+
+.custom_down_arrow{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    right: 0;
+    top: 15px;
+}
+
+.datepicker{
+    margin-top: 0.25rem;
+    display: block;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+/* datepicker onfocus border color */
+.datepicker:focus{
+    border-color: #664cc3;
+    box-shadow: 0 0 0 0.1rem rgba(0,123,255,.25);
+}
+
+input.custom_date{
+    position:relative;
+    overflow:hidden;
+}
+input.custom_date::-webkit-calendar-picker-indicator{
+    display:block;
+    top:0;
+    left:0;
+    background: #0000;
+    position:absolute;
+    transform: scale(12)
+}
+
+
+/*body {*/
+/*    font-family: 'Calibri', Times, serif;*/
+/*}*/
+
+/*!*You can use [title] selector as well*!*/
+/*[data-title] {*/
+/*    font-size: 30px; !*optional styling*!*/
+/*    position: relative;*/
+/*    cursor: help;*/
+/*}*/
+
+/*[data-title]:hover::before {*/
+/*    content: attr(data-title);*/
+/*    position: absolute;*/
+/*    bottom: -26px;*/
+/*    display: inline-block;*/
+/*    padding: 3px 6px;*/
+/*    border-radius: 2px;*/
+/*    background: #000;*/
+/*    color: #fff;*/
+/*    font-size: 12px;*/
+/*    font-family: sans-serif;*/
+/*    white-space: nowrap;*/
+/*}*/
+/*[data-title]:hover::after {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    bottom: -10px;*/
+/*    left: 8px;*/
+/*    display: inline-block;*/
+/*    color: #fff;*/
+/*    border: 8px solid transparent;*/
+/*    border-bottom: 8px solid #000;*/
+/*}*/
