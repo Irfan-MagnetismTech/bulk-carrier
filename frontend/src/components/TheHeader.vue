@@ -4,7 +4,7 @@
       <svg @click="toggleSidebar" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sidebar-open-close-toggle inline-flex float-right mr-2 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
-      <button v-show="!isSidebarOpen" class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple" @click="openSidebar()" aria-label="Menu">
+      <button v-show="!isSidebarOpen" class="p-1 mr-5 -ml-1 rounded-md md:hidden outline-none" @click="openSidebar()" aria-label="Menu">
         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
         </svg>
@@ -82,7 +82,7 @@ import {ref} from "vue";
 
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
-const { profileMenu, isProfileMenuOpen, isSidebarOpen, openSidebar } = useSidebarProfileMenu();
+const { profileMenu, isProfileMenuOpen, isSidebarOpen } = useSidebarProfileMenu();
 const { username, userRole, userPort, logout } = useAuth();
 
 const isLeftSidebarOpen = ref(true);
@@ -91,10 +91,23 @@ function toggleSidebar(){
   isLeftSidebarOpen.value = !isLeftSidebarOpen.value;
 
   if(isLeftSidebarOpen.value) {
-    document.getElementsByTagName('aside')[0].style.display = "block";
+    document.getElementsByTagName('aside')[0].style.left = "0px";
+    document.getElementsByTagName('aside')[0].style.width = "260px";
   }
   else{
-    document.getElementsByTagName('aside')[0].style.display = "none";
+    document.getElementsByTagName('aside')[0].style.left = "-260px";
+    document.getElementsByTagName('aside')[0].style.width = "0px";
+  }
+}
+
+function openSidebar() {
+  isLeftSidebarOpen.value = !isLeftSidebarOpen.value;
+
+  if(!isLeftSidebarOpen.value) {
+    document.getElementsByTagName('aside')[1].style.left = "0px";
+  }
+  else{
+    document.getElementsByTagName('aside')[1].style.left = "-260px";
   }
 }
 </script>
