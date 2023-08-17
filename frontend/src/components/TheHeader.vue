@@ -12,7 +12,7 @@
 
       <!-- Search input -->
       <div class="HeaderLogoWrapper">
-        
+
       </div>
 
       <div class="flex items-center mr-2">
