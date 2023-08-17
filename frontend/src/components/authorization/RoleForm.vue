@@ -19,23 +19,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Basic information -->
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-3 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Role Name <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.name" required placeholder="Role Name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
-        <Error v-if="errors?.name" :errors="errors.name" />
+    <!-- Basic information -->
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-3 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Role Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.name" required placeholder="Role Name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
+    </div>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+    <legend class="px-2 text-gray-700 dark:text-gray-300">Permissions <span class="text-red-500">*</span></legend>
+    <div class="mt-2">
+      <label v-for="(permissionData,index) in permissions" :key="index" class="inline-flex w-1/2 items-center mb-2 text-gray-600 dark:text-gray-400">
+        <input type="checkbox" :id="'name' + index" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" v-model="form.current_permissions" :value="permissionData?.id">
+        <span class="ml-2 font-medium">{{ permissionData?.name }}</span>
       </label>
-  </div>
-<fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-  <legend class="px-2 text-gray-700 dark:text-gray-300">Permissions <span class="text-red-500">*</span></legend>
-  <div class="mt-2">
-    <label v-for="(permissionData,index) in permissions" :key="index" class="inline-flex w-1/2 items-center mb-2 text-gray-600 dark:text-gray-400">
-      <input type="checkbox" :id="'name' + index" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" v-model="form.current_permissions" :value="permissionData?.id">
-      <span class="ml-2 font-medium">{{ permissionData?.name }}</span>
-    </label>
-  </div>
-</fieldset>
+    </div>
+  </fieldset>
 </template>
 
 <style lang="postcss" scoped>

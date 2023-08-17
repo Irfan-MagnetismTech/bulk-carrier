@@ -54,9 +54,8 @@ const props = defineProps({
     .paginate-btn {
         @apply px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple;
     }
-}
-.paginate-active{
-  background-color: #0F6B8C !important;
-  color: white;
+    .paginate-active {
+        @apply text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600;
+    }
 }
 </style>

@@ -1,63 +1,18 @@
-<script setup>
-import Error from "../Error.vue";
-import Editor from '@tinymce/tinymce-vue';
-
-import useRole from "../../composables/authorization/useRole";
-import {onMounted} from "vue";
-
-const props = defineProps({
-  form: {
-    required: false,
-    default: {}
-  },
-  branches: { type: [Object, Array], required: false },
-  errors: { type: [Object, Array], required: false },
-});
-
-const { roles, getRoles } = useRole();
-
-onMounted(() => {
-  getRoles();
-});
-
-</script>
-
 <template>
     <!-- Basic information -->
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-<!--    <label class="block w-full mt-3 text-sm">-->
-<!--      <span class="text-gray-700 dark:text-gray-300">Branch <span class="text-red-500">*</span></span>-->
-<!--      <select v-model="form.branch_id" required class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">-->
-<!--        <option value="" disabled selected>Select Branch</option>-->
-<!--        <option v-for="branch in branches" :value="branch.id">{{ branch.name }}</option>-->
-<!--      </select>-->
-<!--      <Error v-if="errors?.branch_id" :errors="errors.branch_id" />-->
-<!--    </label>-->
-    <label class="block w-full mt-3 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Role <span class="text-red-500">*</span></span>
-      <select v-model="form.role" required class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
-        <option value="" disabled selected>Select Role</option>
-        <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
-      </select>
-      <Error v-if="errors?.role" :errors="errors.role" />
-    </label>
-    <label class="block w-full mt-3 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">User Name</span>
-      <input type="text" v-model="form.name" placeholder="User Name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
-      <Error v-if="errors?.name" :errors="errors.name" />
-    </label>
-    <label class="block w-full mt-3 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
-      <input type="email" v-model="form.email" required placeholder="Email" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
-      <Error v-if="errors?.email" :errors="errors.email" />
-    </label>
-  </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-3 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">User Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.name" required placeholder="User Name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
       <label class="block w-full mt-3 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Phone No</span>
-        <input type="text" v-model="form.phone_no" placeholder="Phone no" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
-        <Error v-if="errors?.name" :errors="errors.phone_no" />
+        <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
+        <input type="email" v-model="form.email" required placeholder="Email" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
+        <Error v-if="errors?.email" :errors="errors.email" />
       </label>
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-3 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Password <span class="text-red-500">*</span></span>
         <input type="password" v-model="form.password" required placeholder="Password" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
@@ -69,12 +24,59 @@ onMounted(() => {
         <Error v-if="errors?.confirm_password" :errors="errors.confirm_password" />
       </label>
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-3 text-sm"></label>
-      <label class="block w-full mt-3 text-sm"></label>
-    </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-3 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Role <span class="text-red-500">*</span></span>
+      <select v-model="form.role" required class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+        <option value="" disabled selected>Select Role</option>
+        <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
+      </select>
+      <Error v-if="errors?.role" :errors="errors.role" />
+    </label>
+    <label class="block w-full mt-3 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Port <span class="text-red-500">*</span></span>
+      <v-select v-model="form.port" @search="fetchOptions" required :options="portName" label="code_name" :reduce="portName => portName.code" placeholder="Enter Port Code or Name" class="mt-1 placeholder-gray-600 w-full"></v-select>
+      <Error v-if="errors?.port" :errors="errors.port" />
+    </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-3 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Email Signature</span>
+      <editor v-model="form.email_signature" class="block w-full text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" api-key="wljvu7gtfjb8h5ou2rcxw8d5tykej98zy10x8ot83jclsm3o" />
 
+      <Error v-if="errors?.email_signature" :errors="errors.email_signature" />
+    </label>
+  </div>
 </template>
+<script setup>
+import Error from "../Error.vue";
+import Editor from '@tinymce/tinymce-vue';
+
+import useRole from "../../composables/authorization/useRole";
+import {onMounted} from "vue";
+import usePort from "../../composables/usePort";
+
+const props = defineProps({
+  form: {
+    required: false,
+    default: {}
+  },
+  errors: { type: [Object, Array], required: false },
+});
+
+
+const { roles, getRoles } = useRole();
+const { portName, getPortsByNameOrCode } = usePort();
+
+function fetchOptions(search, loading) {
+  getPortsByNameOrCode(search);
+}
+
+onMounted(() => {
+  getRoles();
+});
+
+</script>
 
 <style lang="postcss" scoped>
 #table, #table th, #table td{

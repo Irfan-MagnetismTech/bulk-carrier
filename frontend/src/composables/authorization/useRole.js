@@ -43,7 +43,8 @@ export default function useRole() {
             alert('Please select at least one permission');
             return;
         }
-        
+
+        NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -92,7 +93,7 @@ export default function useRole() {
                 form
             );
             role.value = data.value;
-            notification.showSuccess(status, data.message);
+            notification.showSuccess(status);
             router.push({ name: "authorization.user.role.index" });
         } catch (error) {
             const { data, status } = error.response;

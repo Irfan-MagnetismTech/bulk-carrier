@@ -16,8 +16,7 @@ export default function useUser() {
         password: '',
         confirm_password: '',
         role: '',
-        branch_id: '',
-        phone_no: '',
+        port: null,
     });
     const errors = ref(null);
     const isLoading = ref(false);
@@ -42,6 +41,12 @@ export default function useUser() {
     }
 
     async function storeUser(form) {
+        //NProgress.start();
+
+        if(!form.port){
+            alert('Please select a port');
+            return;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -81,6 +86,11 @@ export default function useUser() {
     }
 
     async function updateUser(form, userId) {
+        //NProgress.start();
+        if(!form.port){
+            alert('Please select a port');
+            return;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;

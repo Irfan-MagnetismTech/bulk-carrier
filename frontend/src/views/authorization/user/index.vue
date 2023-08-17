@@ -30,14 +30,15 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">User List</h2>
-    <router-link :to="{ name: 'authorization.user.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
+    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">User List</h2>
+    <router-link :to="{ name: 'authorization.user.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
     </router-link>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
+    <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing: {{ searchResults?.length ?? 0 }} of {{ containers?.length ?? 0 }}</span>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
@@ -54,10 +55,9 @@ onMounted(() => {
           <tr class="text-xs font-semibold tracking-wide text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="p-1">SL</th>
             <th class="p-1">Name</th>
-<!--            <th class="p-1">Branch</th>-->
-            <th class="p-1">Phone No.</th>
             <th class="p-1">Email</th>
             <th class="p-1">User Role</th>
+            <th class="p-1">Port Code</th>
             <th class="p-1">Action</th>
           </tr>
           </thead>
@@ -65,10 +65,9 @@ onMounted(() => {
           <tr v-for="(result,index) in searchResults" :key="result?.item?.id">
             <td>{{ index + 1 }}</td>
             <td>{{ result?.item?.name }}</td>
-<!--            <td>{{ result?.item?.branch?.name }}</td>-->
-            <td>{{ result?.item?.phone_no }}</td>
             <td>{{ result?.item?.email }}</td>
             <td>{{ result?.item?.roles }}</td>
+            <td>{{ result?.item?.port }}</td>
             <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
               <action-button :action="'edit'" :to="{ name: 'authorization.user.edit', params: { userId: result?.item?.id } }"></action-button>
               <action-button @click="deleteUser(result?.item?.id)" :action="'delete'"></action-button>
@@ -77,10 +76,10 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!users?.length" class="bg-white dark:bg-gray-800">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="6">Loading...</td>
           </tr>
           <tr v-else-if="!users?.length">
-            <td colspan="7">No user found.</td>
+            <td colspan="6">No user found.</td>
           </tr>
           </tfoot>
         </table>

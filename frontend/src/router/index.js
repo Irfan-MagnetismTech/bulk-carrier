@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
+import commercial from "./commercial";
+import dataencoding from "./dataencoding";
+import documentation from "./documentation";
+import finance from "./finance";
+import operation from "./operation";
 import authorization from "./authorization";
-import configuration from "./configuration";
-import scm from "./scm";
-import revenue from "./revenue";
-import accounts from "./accounts";
+import stevedorage from "./stevedorage";
 
 const router = createRouter({
 
@@ -33,11 +35,94 @@ const router = createRouter({
                     component: () => import ("../views/authorization/activity-log/index.vue"),
                     meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
                 },
+                {
+                    path: "/money-receipts",
+                    name: "money.receipt.index",
+                    component: () => import ("../views/moneyreceipt/list.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: "/money-receipts/create",
+                    name: "money.receipt.create",
+                    component: () => import ("../views/moneyreceipt/create-money-receipt.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: `/money-receipts/:receiptId/edit`,
+                    name: `money.receipt.edit`,
+                    component: () => import ("../views/moneyreceipt/edit.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: `/money-receipts/:receiptId`,
+                    name: `money.receipt.show`,
+                    component: () => import(`../views/moneyreceipt/show.vue`),
+                    meta: { requiresAuth: true, role: "all", permission: 'commercial-money-receipt-show'  },
+                },
+                {
+                    path: "/container-types",
+                    name: "containertype.index",
+                    component: () => import ("../views/containertypes/index.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "dataencoding-container-type-show" },
+                    props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+                },
+                {
+                    path: "/container-type/create",
+                    name: "containertype.create",
+                    component: () => import ("../views/containertypes/create.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: "/container-type/:containerTypeId/edit",
+                    name: "containertype.edit",
+                    component: () => import ("../views/containertypes/edit.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: '/ports',
+                    name: 'ports.index',
+                    component: () => import('../views/ports/index.vue'),
+                    meta: { requiresAuth: true, role: "all", permission: "dataencoding-port-show" },
+                    props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+                },
+                {
+                    path: "/ports/create",
+                    name: "ports.create",
+                    component: () => import ("../views/ports/create.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "dataencoding-port-create" },
+                },
+                {
+                    path: "/ports/:portId/edit",
+                    name: "ports.edit",
+                    component: () => import ("../views/ports/edit.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "dataencoding-port-edit" },
+                },
+                {
+                    path: "/banks",
+                    name: "banks.index",
+                    component: () => import ("../views/banks/index.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "dataencoding-bank-show" },
+		            props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+                },
+                {
+                    path: "/banks/create",
+                    name: "banks.create",
+                    component: () => import ("../views/banks/create.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
+                {
+                    path: "/banks/:bankId/edit",
+                    name: "banks.edit",
+                    component: () => import ("../views/banks/edit.vue"),
+                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
+                },
                 ...authorization,
-                ...configuration,
-                ...scm,
-                ...revenue,
-                ...accounts,
+                ...operation,
+                ...commercial,
+                ...documentation,
+                ...finance,
+                ...dataencoding,
+                ...stevedorage,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },
@@ -50,7 +135,6 @@ router.beforeEach((to, from, next) => {
 	const ROLE = USER?.role ?? null;
 	const IS_LOGGED_IN = USER?.email ?? false;
     const PERMISSIONS = USER?.permissions ?? [];
-
 
     // set interval and automatic token expired logout if no activity in 1 minutes even tab is closed or browser is closed
     // if (IS_LOGGED_IN) {

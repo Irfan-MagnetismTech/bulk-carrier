@@ -5,13 +5,10 @@ export const auth = {
     state: {
         tokenResponse: {},
         currentUser: {},
-        userShift: ''
     },
 
     actions: {
         login(context, user) {
-            context.commit("updateShift", user.shift);
-
             return new Promise((resolve, reject) => {
                 let data = {
                     client_id: env.CLIENT_ID,
@@ -27,6 +24,7 @@ export const auth = {
                         //get expirention time new date gettime + 2 hours
                         // let expirationTime = new Date().getTime() + 7200000;
                         // response.data.auto_logout_at = expirationTime;
+
                         context.commit("updateTokenResponse", response.data);
                         axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access_token}`;
                         resolve(response);
@@ -39,7 +37,7 @@ export const auth = {
 
         getCurrentUser(context) {
             return new Promise((resolve, reject) => {
-                axios.get('api/get-current-user')
+                axios.get('api/v1/get-current-user')
                     .then((response) => {
                         context.commit("updateCurrentUser", response.data);
                         resolve(response);
@@ -71,10 +69,6 @@ export const auth = {
             state.currentUser = currentUser;
         },
 
-        updateShift(state, shift) {
-            state.userShift = shift;
-        },
-
         logout(state) {
             state.currentUser = null;
             state.tokenResponse = {};
@@ -90,10 +84,6 @@ export const auth = {
         // },
         getCurrentUser(state) {
             return state.currentUser;
-        },
-
-        getCurrentUserShift(state) {
-            return state.userShift;
         }
     }
 };

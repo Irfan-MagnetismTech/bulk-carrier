@@ -1,10 +1,5 @@
 <template>
     <div class="py-2 text-gray-500 dark:text-gray-400">
-<!--      <div class="HeaderLogoWrapper">-->
-<!--        <div class="HeaderLogo">-->
-<!--          <img aria-hidden="true" class="object-cover align-middle dark:block w-12" src="/hr-lines-shosti.png" alt="Office">-->
-<!--        </div>-->
-<!--      </div>-->
 <!--        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">-->
 <!--          <img aria-hidden="true" class="object-cover w-full align-middle dark:block w-32" src="/hr-line-test.png" alt="Office">-->
 <!--        </a>-->
@@ -163,13 +158,6 @@
                 <span class="ml-2">Mail Template</span>
               </router-link>
             </li>
-            <li v-if="checkSidebarMenuPermission('dataencoding-tariff-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Tariff' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-              <router-link :to="{ name: 'dataencoding.tariffs.index' }" @click="addActiveClass('Tariff')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                <span class="ml-2">Tariff</span>
-              </router-link>
-            </li>
           </template>
 
           <a @click="toggleModuleMenu(3)" v-if="checkSidebarParentMenuPermission(['dataencoding-slot-partner-show','commercial-customer-show','operation-mlo-agents-show','operation-external-email-show'])" class="flex p-2 cursor-pointer justify-between items-center mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
@@ -296,13 +284,6 @@
                   </li>
                 </ul>
               </template>
-            </li>
-            <li v-if="checkSidebarMenuPermission('finance-voyage-expenditure-head-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Load Assign' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-              <router-link :to="{ name: 'operation.load-assign.index' }" @click="addActiveClass('Load Assign')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                <span class="ml-2">Load Assign</span>
-              </router-link>
             </li>
           </template>
 
@@ -509,14 +490,6 @@
               </router-link>
             </li>
 
-            <li v-if="checkSidebarMenuPermission('commercial-tariff-assign-voyages')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Tariff Assign' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-              <router-link :to="{ name: 'commercial.assign-tariff.voyages' }" @click="addActiveClass('Tariff Assign')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                <span class="ml-2">Tariff Assign</span>
-              </router-link>
-            </li>
-
             <li v-if="checkSidebarParentMenuPermission(['commercial-advanced-invoice-create','commercial-pending-invoice-create','commercial-invoice-list'])" class="relative px-6 py-3">
               <button @click="togglePagesMenu(6)" class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
                     <span class="inline-flex items-center">
@@ -564,7 +537,7 @@
             </div>
             <svg class="w-6 h-6 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
           </a>
-
+          
 
           <template v-if="isFinanceMenuOpen">
             <li v-if="checkSidebarMenuPermission('operation-update-exchange-rate')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Exchange Rate' }">
@@ -583,7 +556,7 @@
                 <span class="ml-2">Voyage Pairing</span>
               </router-link>
             </li>
-
+            
             <li v-if="checkSidebarMenuPermission('commercial-voyage-slot-uses-statement')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Voyage Slot Uses Statement' }">
               <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
               <router-link :to="{ name: 'commercial.voyage-slot-uses-statement' }" @click="addActiveClass('Voyage Slot Uses Statement')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
@@ -738,6 +711,42 @@
             </li>
           </template>
 
+          <a @click="toggleModuleMenu(9)" v-if="checkSidebarParentMenuPermission(['commercial-voyage-exchange-rate'])" class="flex cursor-pointer justify-between items-center p-2 mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
+            <div class="flex ml-2">
+              <span class="">Stevedorage</span>
+            </div>
+            <svg class="w-6 h-6 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
+          </a>
+          <template v-if="isSteveDorageMenuOpen">
+            <li v-if="checkSidebarMenuPermission('stevedorage-tariff-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Tariff' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'stevedorage.tariffs.index' }" @click="addActiveClass('Tariff')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                <span class="ml-2">Port Tariffs</span>
+              </router-link>
+            </li>
+            <li v-if="checkSidebarMenuPermission('finance-voyage-expenditure-head-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Load Assign' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'stevedorage.update-load-status.index' }" @click="addActiveClass('Load Assign')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                <span class="ml-2">Update Load Status</span>
+              </router-link>
+            </li>
+            <li v-if="checkSidebarMenuPermission('commercial-tariff-assign-voyages')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Tariff Assign' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'stevedorage.assign-tariff.voyages' }" @click="addActiveClass('Tariff Assign')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                <span class="ml-2">Voyage Tariff Assign</span>
+              </router-link>
+            </li>
+            <li v-if="checkSidebarMenuPermission('commercial-tariff-assign-voyages')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Generate Invoice' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'stevedorage.assign-tariff.generate-invoices' }" @click="addActiveClass('Generate Invoice')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                <span class="ml-2">Generate Invoice</span>
+              </router-link>
+            </li>
+          </template>
         </ul>
     </div>
 </template>
@@ -815,6 +824,7 @@ const isCommercialMenuOpen = ref(0); // commercial menu
 const isDocumentationMenuOpen = ref(0); // documentation menu
 const isPricingInvoicingMenuOpen = ref(0); // pricing & invoicing menu
 const isFinanceMenuOpen = ref(0); // finance menu
+const isSteveDorageMenuOpen = ref(0); // finance menu
 
 
 function toggleModuleMenu(moduleKey){
@@ -827,6 +837,7 @@ function toggleModuleMenu(moduleKey){
     isDocumentationMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 2){
     isDataEncodingMenuOpen.value = !isDataEncodingMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -836,6 +847,7 @@ function toggleModuleMenu(moduleKey){
     isDocumentationMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 3){
     isContactMenuOpen.value = !isContactMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -845,6 +857,7 @@ function toggleModuleMenu(moduleKey){
     isDocumentationMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 4){
     isVesselCargoMenuOpen.value = !isVesselCargoMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -854,6 +867,7 @@ function toggleModuleMenu(moduleKey){
     isDocumentationMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 5){
     isCommercialMenuOpen.value = !isCommercialMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -863,6 +877,7 @@ function toggleModuleMenu(moduleKey){
     isDocumentationMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 6){
     isDocumentationMenuOpen.value = !isDocumentationMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -872,6 +887,7 @@ function toggleModuleMenu(moduleKey){
     isCommercialMenuOpen.value = false;
     isPricingInvoicingMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
   } else if(moduleKey === 7){
     isPricingInvoicingMenuOpen.value = !isPricingInvoicingMenuOpen.value;
     isControlUserMenuOpen.value = false;
@@ -881,8 +897,30 @@ function toggleModuleMenu(moduleKey){
     isCommercialMenuOpen.value = false;
     isDocumentationMenuOpen.value = false;
     isFinanceMenuOpen.value = false;
-  } else {
+    isSteveDorageMenuOpen.value = false;
+  } else if(moduleKey === 8){
     isFinanceMenuOpen.value = !isFinanceMenuOpen.value;
+    isControlUserMenuOpen.value = false;
+    isDataEncodingMenuOpen.value = false;
+    isContactMenuOpen.value = false;
+    isVesselCargoMenuOpen.value = false;
+    isCommercialMenuOpen.value = false;
+    isDocumentationMenuOpen.value = false;
+    isPricingInvoicingMenuOpen.value = false;
+    isSteveDorageMenuOpen.value = false;
+  } else if((moduleKey === 9)) {
+    isSteveDorageMenuOpen.value = !isSteveDorageMenuOpen.value;
+    isFinanceMenuOpen.value = false;
+    isControlUserMenuOpen.value = false;
+    isDataEncodingMenuOpen.value = false;
+    isContactMenuOpen.value = false;
+    isVesselCargoMenuOpen.value = false;
+    isCommercialMenuOpen.value = false;
+    isDocumentationMenuOpen.value = false;
+    isPricingInvoicingMenuOpen.value = false;
+  } else {
+    isSteveDorageMenuOpen.value = false;
+    isFinanceMenuOpen.value = false;
     isControlUserMenuOpen.value = false;
     isDataEncodingMenuOpen.value = false;
     isContactMenuOpen.value = false;
@@ -930,291 +968,6 @@ function togglePagesMenu(sidebarElement) {
 function addActiveClass(label){
   isActive.value = label;
 }
-
-
-// const dataEncodingSidebarElements = {
-//     role: "super-admin,admin,dataencoding,operation",
-//     routes: [
-//         {
-//           route: 'dataencoding.vessels.index',
-//           label: 'Vessels',
-//           icon: icons.VehicleShip,
-//
-//         },
-//         {
-//           route: 'commercial.services.index',
-//           label: 'Services',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'ports.index',
-//           label: 'Ports',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'containertype.index',
-//           label: 'Container Types',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'dataencoding.chargetypes.index',
-//           label: 'Revenue Head',
-//           icon: icons.List,
-//         },
-//
-//         // Cost & Expenditure Menu Start
-//         {
-//           route: 'finance.voyageExpenditureHead.index',
-//           label: 'Cost Head Creation',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'finance.port-wise-head-generation.index',
-//           label: 'Cost Head Assign',
-//           icon: icons.List,
-//         },
-//         // Cost & Expenditure Menu End
-//
-//         {
-//             route: 'dataencoding.currency.index',
-//             label: 'Currency',
-//             icon: icons.Currency,
-//         },
-//         {
-//             route: 'banks.index',
-//             label: 'Banks',
-//             icon: icons.List,
-//         },
-//         {
-//             route: 'dataencoding.mail-templates.index',
-//             label: 'Mail Templates',
-//             icon: icons.List,
-//         },
-//     ],
-// };
-//
-// const operationSidebarElements = {
-//     role: "super-admin,admin,operation",
-//     routes: [
-//         {
-//             route: 'operation.voyages.index',
-//             label: 'Voyages',
-//             icon: icons.List,
-//         },
-//         //SOF MENU
-//         // {
-//         //   route: 'operation.mlo.agents.index',
-//         //   label: 'MLO Agents',
-//         //   icon: icons.User,
-//         // },
-//         {
-//           route: 'operation.edi-converter',
-//           label: 'EDI Converter',
-//           icon: icons.File,
-//         },
-//       {
-//         route: 'commercial.voyage-dg-containers.voyage',
-//         label: 'DG Assign',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'commercial.voyage-fr-containers.voyage',
-//         label: 'FR Assign',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'commercial.voyage-rf-containers.voyage',
-//         label: 'RF Assign',
-//         icon: icons.List,
-//       },
-//     ],
-// };
-//
-// const financeSidebarElements = {
-//     role: "super-admin,admin",
-//     routes: [
-//         {
-//             route: 'finance.voyages.index',
-//             label: 'Voyage Closing (FIN)',
-//             icon: icons.List,
-//         },
-//         {
-//           route: 'commercial.advance.invoice',
-//           label: 'Debit Note (Adv.)',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'commercial.pending.invoice',
-//           label: 'Freight Invoice',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'money.receipt.create',
-//           label: 'Create MR',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'money.receipt.index',
-//           label: 'MR List',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'commercial.aging-schedule',
-//           label: 'Aging Schedule',
-//           icon: icons.Report,
-//         },
-//         {
-//           route: 'commercial.freight-cargo-manifest',
-//           label: 'Freight & Cargo Manifest',
-//           icon: icons.Report,
-//         },
-//     ],
-// };
-//
-// const commercialSidebarElements = {
-//     role: "super-admin,admin,dataencoding",
-//     routes: [
-//         {
-//           route: 'commercial.bookings.index',
-//           label: 'Booking Creation',
-//           icon: icons.BookOpen,
-//         },
-//         {
-//           route: 'commercial.contracts.create',
-//           label: 'Contract Creation',
-//           icon: icons.List,
-//         },
-//         {
-//           route: 'commercial.contracts.index',
-//           label: 'Contract List',
-//           icon: icons.List,
-//         },
-//         {
-//             route: 'commercial.contract-assigns.voyages',
-//             label: 'Contract Assigns',
-//             icon: icons.List,
-//         },
-//       {
-//         route: 'documentation.particular-customer-report',
-//         label: 'Particular Customer Report',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'documentation.schedule-report',
-//         label: 'Voyage Schedule Report',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'documentation.service-report',
-//         label: 'Service Report',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'documentation.monthwise-service-report',
-//         label: 'Month Wise Service Report',
-//         icon: icons.List,
-//       },
-//       {
-//         route: 'documentation.customer-loading-performance-report',
-//         label: 'Customer Loading Performance',
-//         icon: icons.List,
-//       },
-//     ]
-// };
-//
-// const reportSidebarElements = {
-//     role: "super-admin,admin,report",
-//     routes: [
-//         {
-//             route: 'commercial.freight-cargo-manifest',
-//             label: 'Cargo Manifest',
-//             icon: icons.Report,
-//         },
-//         {
-//             route: 'commercial.customer-load-calculation',
-//             label: 'Load Summary',
-//             icon: icons.Report,
-//         },
-//         // {
-//         //   route: 'commercial.slot-uses-statement',
-//         //   label: 'Slot Uses Statement',
-//         //   icon: icons.Report,
-//         // },
-//         {
-//           route: 'commercial.voyage-slot-uses-statement',
-//           label: 'Voyage Slot Uses Statement',
-//           icon: icons.Report,
-//         },
-//         {
-//           route: 'commercial.manual-debit-note',
-//           label: 'Manual Debit Note',
-//           icon: icons.Report,
-//         },
-//     ]
-// };
-//
-// const invoiceSidebarElements = {
-//     role: "super-admin,admin,invoice",
-//     routes: [
-//         {
-//           route: 'commercial.advance.invoice',
-//           label: 'Advance Invoice',
-//           icon: icons.List,
-//         },
-//         {
-//             route: 'commercial.pending.invoice',
-//             label: 'Final Invoice',
-//             icon: icons.List,
-//         },
-//         {
-//             route: 'commercial.invoice.list',
-//             label: 'List',
-//             icon: icons.List,
-//         },
-//     ]
-// };
-//
-// const documentationSidebarElements = {
-//     role: "super-admin,admin,documentation",
-//     routes: [
-//         {
-//             route: 'documentation.generate-bl.report.index',
-//             label: 'Bill of Ladings',
-//             icon: icons.List,
-//         },
-//         {
-//           route: 'commercial.freight-cargo-manifest',
-//           label: 'Freight Manifest',
-//           icon: icons.Report,
-//         },
-//     ],
-// };
-//
-// const contactSidebarElements = {
-//   role: "",
-//   routes: [
-//     {
-//         route: 'commercial.customers.index',
-//         label: 'Customers',
-//         icon: icons.User,
-//     },
-//     {
-//       route: 'operation.mlo.agents.index',
-//       label: 'MLO Agents',
-//       icon: icons.User,
-//     },
-//     // {
-//     //   route: 'money.receipt.create',
-//     //   label: 'Create Receipt',
-//     //   icon: icons.List,
-//     // },
-//     // {
-//     //   route: 'money.receipt.index',
-//     //   label: 'List',
-//     //   icon: icons.List,
-//     // },
-//   ]
-// };
 
 const sidebarElements = {
     role: "",
