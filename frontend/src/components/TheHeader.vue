@@ -42,7 +42,7 @@ function setActiveMenu(menuName){
 
     <!-- Main menu -->
 
-    <div class="flex items-center px-6 mt-1">
+    <div class="flex items-center md:px-6 md:mt-1 py-1">
       <div class="w-full">
         <nav class="flex items-center space-between">
           <div class="hidden w-full md:block md:w-auto">
@@ -126,17 +126,17 @@ function setActiveMenu(menuName){
       </div>
 
       <div class="flex items-center text-purple-600 dark:text-purple-300">
-        <div class="flex items-center ml-auto">
+        <div class="hidden md:flex md:items-center ml-auto">
           <span class="block py-2 pl-3 pr-4 text-xs text-white rounded md:bg-transparent md:p-0 dark:text-white"><nobr>{{ username }} <strong>({{ shift }} SHIFT)</strong></nobr></span>
         </div>
-        <ul class="flex items-center flex-shrink-0 space-x-6">
+        <ul class="flex items-center flex-shrink-0 space-x-6 -mt-1 md:-mt-2">
           <!-- Profile menu -->
           <li class="relative" @click="isProfileMenuOpen = !isProfileMenuOpen" ref="profileMenu">
-            <button class="align-middle rounded-full" aria-label="Account" aria-haspopup="true">
-              <svg class="w-5 h-5 block py-2 pl-3 pr-4 text-white rounded md:bg-transparent md:p-0 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <button class="align-middle mr-2 md:mr-0 rounded-full" aria-label="Account" aria-haspopup="true">
+              <svg class="w-5 h-5 block text-white rounded md:bg-transparent dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             </button>
             <template v-if="isProfileMenuOpen">
-              <ul class="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700" aria-label="submenu">
+              <ul class="absolute right-2 md:right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700" aria-label="submenu">
                 <li class="flex mt-2">
                   <router-link :to="{ name: 'authorization.user.password.update' }" style="cursor: pointer" class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-3">
@@ -230,5 +230,14 @@ header {
 /*  border-bottom: none;*/
 /*  border-left: none;*/
 /*}*/
+
+{
+    position: absolute;
+    background: red;
+    height: 100vh;
+    align-items: baseline;
+    width: calc(80vw);
+    top: 0;
+}
 
 </style>
