@@ -1,2 +1,5 @@
 frontend/.vscode/settings.json
 .idea/
+package-lock.json
+frontend/package-lock.json
+backend/composer.lock
