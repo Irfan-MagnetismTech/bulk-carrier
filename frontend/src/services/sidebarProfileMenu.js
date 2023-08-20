@@ -9,9 +9,7 @@ export default function useSidebarProfileMenu() {
     const sidebar = ref(null);
     const isSidebarOpen = ref(computed(() => store.getters.getSidebarState));
 
-    function openSidebar() {
-        store.commit('openSidebar');
-    }
+
 
     function closeSidebar() {
         store.commit('closeSidebar');
@@ -45,7 +43,6 @@ export default function useSidebarProfileMenu() {
         isProfileMenuOpen,
         sidebar,
         isSidebarOpen,
-        openSidebar,
         closeSidebar
     }
 }
