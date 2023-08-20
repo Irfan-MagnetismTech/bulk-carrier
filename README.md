@@ -8,7 +8,9 @@ It is a web application that can be accessed from anywhere in the world.
 
 - Laravel 10.*
 - Vue.js 3
+- PHP 8.0 or later
 - Database MySQL 8.*
+- Node 18.0 or later
 
 ## Installation
 
@@ -131,5 +133,6 @@ Project Repository
 
 - [@Hasan Md Shahriare](https://github.com/hasashah)
 - [@Sumon Chandra Shil](https://www.github.com/sumonchandrashil)
+- [@Muhammad Mahbubur Rahman](https://github.com/mahbub-magnetism)
 - [@Delowar Hossain](https://www.github.com/illusionist3886)
 - [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
