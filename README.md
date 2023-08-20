@@ -15,7 +15,11 @@ It is a web application that can be accessed from anywhere in the world.
   php artisan migrate --seed
   php artisan passport:install
 ```
+### Notes
 
+-   **_Models_**, **_Controllers_** and **_Routes_** should be placed according to **Laravel Module Package**.
+-   Follow https://docs.laravelmodules.com/v10/artisan-commands for **Laravel Module Package** usage.
+  
 #### Frontend
 ```bash
   cd frontend
