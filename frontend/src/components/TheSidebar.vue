@@ -5,8 +5,8 @@
 <!--        </a>-->
         <ul class="mt-6">
             <span>
-                <li class="relative px-6 py-3" v-for="sidebarElement in sidebarElements.routes" @click="togglePagesMenu(0)" :class="{ 'active': isActive === sidebarElement.label }" :key="sidebarElement.route">
-                    <span v-if="sidebarElement.route === currentRoute.name" class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                <li class="" v-for="sidebarElement in sidebarElements.routes" @click="togglePagesMenu(0)" :class="{ 'active': isActive === sidebarElement.label }" :key="sidebarElement.route">
+                    <span v-if="sidebarElement.route === currentRoute.name" class="" aria-hidden="true"></span>
                     <router-link :to="{ name: sidebarElement.route }" @click="addActiveClass(sidebarElement.label)" :class="{ ' dark:text-gray-100': sidebarElement.route === currentRoute.name }" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
                         <div v-html="sidebarElement.icon"></div>
                         <span class="ml-4">{{ sidebarElement.label }}</span>
@@ -46,35 +46,34 @@
               </li>
             </template>
           </template>
-          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
+          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold shadow-md focus:outline-none ">
             <div class="flex ml-2">
               <span class="">Control Users</span>
             </div>
-            <svg class="w-6 h-6 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
+            <svg class="w-6 h-6 ml-2 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
           </a>
           <template v-if="isControlUserMenuOpen">
             <li v-if="checkSidebarMenuPermission('user-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'User' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              
               <router-link :to="{ name: 'authorization.user.index' }" @click="addActiveClass('User')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span class="ml-2">User</span>
               </router-link>
             </li>
             <li v-if="checkSidebarMenuPermission('role-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Role' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              
               <router-link :to="{ name: 'authorization.user.role.index' }" @click="addActiveClass('Role')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
                 <span class="ml-2">Role</span>
               </router-link>
             </li>
             <li v-if="checkSidebarMenuPermission('permission-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Permission' }">
-              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
               <router-link :to="{ name: 'authorization.user.permission.index' }" @click="addActiveClass('Permission')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
                 <span class="ml-2">Permission</span>
@@ -364,8 +363,14 @@ const sidebarElements = {
 };
 
 </script>
+
 <style lang="postcss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
 .active{
   color: blueviolet;
+}
+
+body {
+  font-family: 'Inter', sans-serif; 
 }
 </style>

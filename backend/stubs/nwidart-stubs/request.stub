@@ -11,7 +11,19 @@ class $CLASS$ extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     * 
+     * @return array
+     */
+    public function messages(): array
     {
         return [
             //
@@ -23,7 +35,7 @@ class $CLASS$ extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
