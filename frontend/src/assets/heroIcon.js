@@ -16,6 +16,7 @@ export default function useHeroIcon() {
     const File = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">\n' +
         '  <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />\n' +
         '</svg>'
+    const DownArrow = '<svg class="w-6 h-6 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>';
 
     return {
         HomeSolid,
@@ -32,5 +33,6 @@ export default function useHeroIcon() {
         Currency,
         File,
         Contact,
+        DownArrow
     }
 };

@@ -46,109 +46,39 @@
               </li>
             </template>
           </template>
-
-
-
-          <a @click="toggleModuleMenu(7)" v-if="checkSidebarParentMenuPermission(['documentation-bl-generate','commercial-freight-manifest-report'])" class="flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
+          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
             <div class="flex ml-2">
-              <span class="">Pricing & Invoicing</span>
+              <span class="">Control Users</span>
             </div>
             <svg class="w-6 h-6 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
           </a>
-
-          <template v-if="isPricingInvoicingMenuOpen">
-            <li v-if="checkSidebarParentMenuPermission(['commercial-contract-create','commercial-open-slot-contract-show','commercial-force-load-contract-show','commercial-contract-show'])" class="relative px-6 py-3">
-              <button @click="togglePagesMenu(5)" class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
-                    <span class="inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span class="ml-2">Contract</span>
-                    </span>
-                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
-              <template v-if="isPriceInvoiceContractMenuOpen">
-                <ul x-transition:enter="transition-all ease-in-out duration-300" x-transition:enter-start="opacity-25 max-h-0" x-transition:enter-end="opacity-100 max-h-xl" x-transition:leave="transition-all ease-in-out duration-300" x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner sub-menu bg-gray-50 dark:text-gray-400 dark:bg-gray-900" aria-label="submenu">
-                  <li v-if="checkSidebarMenuPermission('commercial-contract-create')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'New Fixed Contract' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.contracts.create' }" @click="addActiveClass('New Fixed Contract')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">New Fixed Contract</span>
-                    </router-link>
-                  </li>
-                  <li v-if="checkSidebarMenuPermission('commercial-open-slot-contract-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'New Open Contract' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.open-slot-contract.create' }" @click="addActiveClass('New Open Contract')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">New Open Contract</span>
-                    </router-link>
-                  </li>
-                  <li v-if="checkSidebarMenuPermission('commercial-force-load-contract-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Force Load Contract' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.force-load-contract.create' }" @click="addActiveClass('Force Load Contract')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">Force Load Contract</span>
-                    </router-link>
-                  </li>
-                  <li v-if="checkSidebarMenuPermission('commercial-contract-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Contract List' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.contracts.index' }" @click="addActiveClass('Contract List')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">Contract List</span>
-                    </router-link>
-                  </li>
-                </ul>
-              </template>
-            </li>
-
-            <li v-if="checkSidebarMenuPermission('commercial-contract-assign-voyages')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Contract Assign' }">
+          <template v-if="isControlUserMenuOpen">
+            <li v-if="checkSidebarMenuPermission('user-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'User' }">
               <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-              <router-link :to="{ name: 'commercial.contract-assigns.voyages' }" @click="addActiveClass('Contract Assign')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                <span class="ml-2">Contract Assign</span>
+              <router-link :to="{ name: 'authorization.user.index' }" @click="addActiveClass('User')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="ml-2">User</span>
               </router-link>
             </li>
-
-            <li v-if="checkSidebarParentMenuPermission(['commercial-advanced-invoice-create','commercial-pending-invoice-create','commercial-invoice-list'])" class="relative px-6 py-3">
-              <button @click="togglePagesMenu(6)" class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
-                    <span class="inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
-                        </svg>
-                        <span class="ml-2">Invoicing</span>
-                    </span>
-                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <li v-if="checkSidebarMenuPermission('role-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Role' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'authorization.user.role.index' }" @click="addActiveClass('Role')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
-              </button>
-              <template v-if="isPriceInvoiceListMenuOpen">
-                <ul x-transition:enter="transition-all ease-in-out duration-300" x-transition:enter-start="opacity-25 max-h-0" x-transition:enter-end="opacity-100 max-h-xl" x-transition:leave="transition-all ease-in-out duration-300" x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner sub-menu bg-gray-50 dark:text-gray-400 dark:bg-gray-900" aria-label="submenu">
-                  <li v-if="checkSidebarMenuPermission('commercial-advanced-invoice-create')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Debit Note (Adv.)' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.advance.invoice.create' }" @click="addActiveClass('Debit Note (Adv.)')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">Debit Note (Adv.)</span>
-                    </router-link>
-                  </li>
-
-                  <li v-if="checkSidebarMenuPermission('commercial-invoice-create')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Freight Invoice' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.pending.invoice' }" @click="addActiveClass('Freight Invoice')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">Freight Invoice</span>
-                    </router-link>
-                  </li>
-                  <li v-if="checkSidebarMenuPermission('commercial-invoice-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Invoice List' }">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                    <router-link :to="{ name: 'commercial.invoice.list' }" @click="addActiveClass('Invoice List')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">Invoice List</span>
-                    </router-link>
-                  </li>
-                </ul>
-              </template>
+                <span class="ml-2">Role</span>
+              </router-link>
+            </li>
+            <li v-if="checkSidebarMenuPermission('permission-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Permission' }">
+              <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+              <router-link :to="{ name: 'authorization.user.permission.index' }" @click="addActiveClass('Permission')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <span class="ml-2">Permission</span>
+              </router-link>
             </li>
           </template>
         </ul>
@@ -171,7 +101,7 @@ const priceMenu = {
     {
       route: '',
       label: 'Pricing & Invoicing',
-      icon: icons.HomeSolid,
+      icon: icons.DownArrow,
       is_active: false,
       is_open: false,
       permissionKey: '',
