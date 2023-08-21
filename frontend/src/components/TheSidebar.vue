@@ -1,27 +1,21 @@
 <template>
     <div class="py-2 text-gray-500 dark:text-gray-400">
-<!--        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">-->
-<!--          <img aria-hidden="true" class="object-cover w-full align-middle dark:block w-32" src="/hr-line-test.png" alt="Office">-->
-<!--        </a>-->
         <ul class="mt-6">
-            <span>
-                <li class="" v-for="sidebarElement in sidebarElements.routes" @click="togglePagesMenu(0)" :class="{ 'active': isActive === sidebarElement.label }" :key="sidebarElement.route">
-                    <span v-if="sidebarElement.route === currentRoute.name" class="" aria-hidden="true"></span>
-                    <router-link :to="{ name: sidebarElement.route }" @click="addActiveClass(sidebarElement.label)" :class="{ ' dark:text-gray-100': sidebarElement.route === currentRoute.name }" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                        <div v-html="sidebarElement.icon"></div>
-                        <span class="ml-4">{{ sidebarElement.label }}</span>
-                    </router-link>
-                </li>
-            </span>
-
-          <template v-for="priceM in priceMenu.routes">
+          <li class="relative px-6 py-3">
+            <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+              <div v-html="icons.HomeSolid"></div>
+              <span class="ml-4">Dashboard</span>
+            </a>
+          </li>
+          <template v-for="element in sidebarElements.routes">
             <a class="flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
               <div class="flex ml-2">
-                <span class="">{{ priceM.label }}</span>
+                <span class="">{{ element.label }}</span>
               </div>
-              <div v-html="priceM.icon"></div>
+              <div v-html="element.icon"></div>
             </a>
-            <template v-for="priceSubMenu in priceM.subMenu">
+            <template v-for="priceSubMenu in element.subMenu">
               <li class="relative px-6 py-3">
                 <button class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
                     <span class="inline-flex items-center">
@@ -30,7 +24,7 @@
                         </svg>
                         <span class="ml-2">{{ priceSubMenu.label }}</span>
                     </span>
-                  <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                  <svg v-if="priceSubMenu.subSubMenu.length" class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                   </svg>
                 </button>
@@ -46,40 +40,40 @@
               </li>
             </template>
           </template>
-          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold shadow-md focus:outline-none ">
-            <div class="flex ml-2">
-              <span class="">Control Users</span>
-            </div>
-            <svg class="w-6 h-6 ml-2 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>
-          </a>
-          <template v-if="isControlUserMenuOpen">
-            <li v-if="checkSidebarMenuPermission('user-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'User' }">
-              
-              <router-link :to="{ name: 'authorization.user.index' }" @click="addActiveClass('User')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <span class="ml-2">User</span>
-              </router-link>
-            </li>
-            <li v-if="checkSidebarMenuPermission('role-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Role' }">
-              
-              <router-link :to="{ name: 'authorization.user.role.index' }" @click="addActiveClass('Role')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-                <span class="ml-2">Role</span>
-              </router-link>
-            </li>
-            <li v-if="checkSidebarMenuPermission('permission-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Permission' }">
-              <router-link :to="{ name: 'authorization.user.permission.index' }" @click="addActiveClass('Permission')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-                <span class="ml-2">Permission</span>
-              </router-link>
-            </li>
-          </template>
+<!--          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold shadow-md focus:outline-none ">-->
+<!--            <div class="flex ml-2">-->
+<!--              <span class="">Control Users</span>-->
+<!--            </div>-->
+<!--            <svg class="w-6 h-6 ml-2 cursor-pointer" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" data-v-46e9fe5b=""><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" data-v-46e9fe5b=""></path></svg>-->
+<!--          </a>-->
+<!--          <template v-if="isControlUserMenuOpen">-->
+<!--            <li v-if="checkSidebarMenuPermission('user-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'User' }">-->
+<!--              -->
+<!--              <router-link :to="{ name: 'authorization.user.index' }" @click="addActiveClass('User')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />-->
+<!--                </svg>-->
+<!--                <span class="ml-2">User</span>-->
+<!--              </router-link>-->
+<!--            </li>-->
+<!--            <li v-if="checkSidebarMenuPermission('role-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Role' }">-->
+<!--              -->
+<!--              <router-link :to="{ name: 'authorization.user.role.index' }" @click="addActiveClass('Role')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />-->
+<!--                </svg>-->
+<!--                <span class="ml-2">Role</span>-->
+<!--              </router-link>-->
+<!--            </li>-->
+<!--            <li v-if="checkSidebarMenuPermission('permission-show')" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'Permission' }">-->
+<!--              <router-link :to="{ name: 'authorization.user.permission.index' }" @click="addActiveClass('Permission')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />-->
+<!--                </svg>-->
+<!--                <span class="ml-2">Permission</span>-->
+<!--              </router-link>-->
+<!--            </li>-->
+<!--          </template>-->
         </ul>
     </div>
 </template>
@@ -94,12 +88,12 @@ const isActive = ref('');
 
 const permissionKey = ref('');
 
-const priceMenu = {
+const sidebarElements = {
   role: "",
   routes: [
     {
       route: '',
-      label: 'Pricing & Invoicing',
+      label: 'Control User',
       icon: icons.DownArrow,
       is_active: false,
       is_open: false,
@@ -107,37 +101,30 @@ const priceMenu = {
       subMenu: [
         {
           route: '',
-          label: 'Contract',
-          icon: icons.HomeSolid,
+          label: 'User',
+          icon: icons.User,
           is_active: false,
           is_open: false,
           permissionKey: '',
-          subSubMenu: [
-            {
-              route: '',
-              label: 'New Fixed Contract',
-              icon: icons.HomeSolid,
-              is_active: false,
-              is_open: false,
-              permissionKey: '',
-            },
-            {
-              route: '',
-              label: 'New Open Contract',
-              icon: icons.HomeSolid,
-              is_active: false,
-              is_open: false,
-              permissionKey: '',
-            },
-            {
-              route: '',
-              label: 'New Force Contract',
-              icon: icons.HomeSolid,
-              is_active: false,
-              is_open: false,
-              permissionKey: '',
-            },
-          ]
+          subSubMenu: [],
+        },
+        {
+          route: '',
+          label: 'Role',
+          icon: icons.User,
+          is_active: false,
+          is_open: false,
+          permissionKey: '',
+          subSubMenu: [],
+        },
+        {
+          route: '',
+          label: 'Permission',
+          icon: icons.User,
+          is_active: false,
+          is_open: false,
+          permissionKey: '',
+          subSubMenu: [],
         },
       ]
     },
@@ -350,17 +337,6 @@ function togglePagesMenu(sidebarElement) {
 function addActiveClass(label){
   isActive.value = label;
 }
-
-const sidebarElements = {
-    role: "",
-    routes: [
-        {
-            route: 'dashboard',
-            label: 'Dashboard',
-            icon: icons.HomeSolid,
-        },
-    ]
-};
 
 </script>
 
