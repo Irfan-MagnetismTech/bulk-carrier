@@ -14,29 +14,31 @@
               </div>
               <div v-html="element.icon"></div>
             </a>
-            <template v-for="priceSubMenu in element.subMenu">
-              <li class="relative px-6 py-3">
-                <button class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
-                    <span class="inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span class="ml-2">{{ priceSubMenu.label }}</span>
-                    </span>
-                  <svg v-if="priceSubMenu.subSubMenu.length" class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-                <ul v-if="priceSubMenu.subSubMenu.length" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner sub-menu bg-gray-50 dark:text-gray-400 dark:bg-gray-900" aria-label="submenu">
-                  <li v-for="priceSubSubMenu in priceSubMenu.subSubMenu" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'New Fixed Contract' }">
-                    <router-link :to="{ name: 'commercial.contracts.create' }" @click="addActiveClass('New Fixed Contract')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                      <span class="ml-2">{{ priceSubSubMenu.label }}</span>
-                    </router-link>
-                  </li>
-                </ul>
-              </li>
-            </template>
+            <div class="collapse">
+              <template v-for="priceSubMenu in element.subMenu">
+                <li class="relative px-6 py-3">
+                  <button class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
+                      <span class="inline-flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          <span class="ml-2">{{ priceSubMenu.label }}</span>
+                      </span>
+                    <svg v-if="priceSubMenu.subSubMenu.length" class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                  <ul v-if="priceSubMenu.subSubMenu.length" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner sub-menu bg-gray-50 dark:text-gray-400 dark:bg-gray-900" aria-label="submenu">
+                    <li v-for="priceSubSubMenu in priceSubMenu.subSubMenu" class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" :class="{ 'active': isActive === 'New Fixed Contract' }">
+                      <router-link :to="{ name: 'commercial.contracts.create' }" @click="addActiveClass('New Fixed Contract')" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                        <span class="ml-2">{{ priceSubSubMenu.label }}</span>
+                      </router-link>
+                    </li>
+                  </ul>
+                </li>
+              </template>
+            </div>
           </template>
 <!--          <a @click="toggleModuleMenu(1)" v-if="checkSidebarParentMenuPermission(['user-show','role-show','permission-show','approval-management-show'])" class="flex p-2 mb-1 cursor-pointer justify-between text-sm items-center font-semibold shadow-md focus:outline-none ">-->
 <!--            <div class="flex ml-2">-->
@@ -92,6 +94,43 @@ const sidebarElements = {
     {
       route: '',
       label: 'Control User',
+      icon: icons.DownArrow,
+      is_active: false,
+      is_open: false,
+      permissionKey: '',
+      subMenu: [
+        {
+          route: '',
+          label: 'User',
+          icon: icons.User,
+          is_active: false,
+          is_open: false,
+          permissionKey: '',
+          subSubMenu: [],
+        },
+        {
+          route: '',
+          label: 'Role',
+          icon: icons.User,
+          is_active: false,
+          is_open: false,
+          permissionKey: '',
+          subSubMenu: [],
+        },
+        {
+          route: '',
+          label: 'Permission',
+          icon: icons.User,
+          is_active: false,
+          is_open: false,
+          permissionKey: '',
+          subSubMenu: [],
+        },
+      ]
+    },
+    {
+      route: '',
+      label: 'UnControl User',
       icon: icons.DownArrow,
       is_active: false,
       is_open: false,
@@ -346,5 +385,38 @@ function addActiveClass(label){
 
 body {
   font-family: 'Inter', sans-serif; 
+}
+
+/*
+  .collapse:not(.show) {
+      display: none
+  }
+*/
+
+.collapse {
+  height: 15px;
+  display: none;
+}
+
+.collapsing {
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: height .35s ease;
+    transition: height .35s ease
+}
+
+.sidebar-auto-height {
+  height: auto;
+  overflow: visible;
+}
+
+.dropdown {
+  transition: height 1s;
+}
+
+.collapse-show {
+  height: 200px;
+  transition: height 1s;
+  display: block;
 }
 </style>
