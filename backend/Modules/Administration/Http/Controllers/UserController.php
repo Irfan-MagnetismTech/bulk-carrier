@@ -5,7 +5,7 @@ namespace Modules\Administration\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Spatie\Permission\Models\Role;
+use Spatie\User\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class UserController extends Controller
