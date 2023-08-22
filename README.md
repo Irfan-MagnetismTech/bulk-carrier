@@ -41,11 +41,8 @@ It is a web application that can be accessed from anywhere in the world.
 - Frontend routes and folder name will be in kebab-case
 - Modules, Services, Helpers, Traits name will be in PascalCase 
 - Short forms will be written in CAPITAL case like Supply Chain Management as SCM
-- Database table names will have a prefix of relevant modules like op_, acc_, cr_, scm, mnt_, gn_
+- Database table names will have a prefix of relevant modules like ops_, acc_, crw_, scm, mnt_, adm_
 
-### Business Info
-
-Business information like `name`, `logo path`, `shortname` etc. should be added in `backend/config/businessinfo.php` and this config should be used everywhere in the project inlcuding `pages`, `printables`, and `mails.`
 
 ### Storage Information
 
@@ -135,7 +132,7 @@ Project Repository
   - CRW - Crew
   - MNT - Maintenance
   - OPS - Operations
-  - SCM - Supply Chain Management
+  - SCM - Supply Chain
 - All types of issues will be fixed into Module Branch via a new Branch.
 
 ## Authors
