@@ -37,7 +37,7 @@ export const auth = {
 
         getCurrentUser(context) {
             return new Promise((resolve, reject) => {
-                axios.get('api/v1/get-current-user')
+                axios.get('api/administration/get-current-user')
                     .then((response) => {
                         context.commit("updateCurrentUser", response.data);
                         resolve(response);
