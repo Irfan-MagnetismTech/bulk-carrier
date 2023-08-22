@@ -9,7 +9,7 @@
             </a>
           </li>
           <template v-for="element in sidebarElements.routes">
-            <a class="flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
+            <a class="revealChilds flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 bg-purple-600 shadow-md focus:outline-none focus:shadow-outline-purple">
               <div class="flex ml-2">
                 <span class="">{{ element.label }}</span>
               </div>
@@ -25,7 +25,7 @@
                           </svg>
                           <span class="ml-2">{{ priceSubMenu.label }}</span>
                       </span>
-                    <svg v-if="priceSubMenu.subSubMenu.length" class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                    <svg v-if="priceSubMenu.subSubMenu.length" class="revealGrandChilds w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                   </button>
@@ -395,7 +395,6 @@ body {
 */
 
 .collapse {
-  height: 15px;
   display: none;
 }
 
@@ -416,7 +415,7 @@ body {
 }
 
 .collapse-show {
-  height: 200px;
+  height: auto;
   transition: height 1s;
   display: block;
 }
