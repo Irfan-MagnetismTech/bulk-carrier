@@ -67,13 +67,13 @@ Project Repository
     └──dev
         |
         |
-        └──general
+        └──administration
                 |
                 |
                 └──feature-name  
                         |
                         |
-                        └──username            
+                        └──task-name       
         |
         |
         └──operations
@@ -82,7 +82,7 @@ Project Repository
                 └──feature-name
                         |
                         |
-                        └──username
+                        └──task-name
         |
         |
         └──accounts
@@ -91,16 +91,16 @@ Project Repository
                 └──feature-name
                         |
                         |
-                        └──username
+                        └──task-name
         |
         |
         └──crew
               |
               |
               └──feature-name
-                      |
-                      |
-                      └──username
+                        |
+                        |
+                        └──task-name
         |
         |
         └──supply-chain
@@ -109,7 +109,7 @@ Project Repository
                 └──feature-name
                         |
                         |
-                        └──username
+                        └──task-name
         |
         |
         └──maintenance
@@ -118,7 +118,7 @@ Project Repository
                 └──feature-name
                         |
                         |
-                        └──username
+                        └──task-name
 ```
 ## Important notes
 
@@ -128,6 +128,15 @@ Project Repository
 - Field names should be synchronized in Database, Frontend forms and Backend variables. In ambiguous cases, field names could be differentiate using entity name as prefix.
 - Before execute DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that user can restore the data as necessery.
 - In Models, fields name should be in Filleable properties.
+- For git commit message, please follow the convension as MODULE-SHORT-FORM/feature-name/task-name - short message with status. For example, "SCM/product-requisition/create-form - skeleton design DONE **OR** validation WIP **OR** data population error FIXED"
+- Short forms for modules are as below:
+  - ADM - Administration
+  - ACC - Accounts
+  - CRW - Crew
+  - MNT - Maintenance
+  - OPS - Operations
+  - SCM - Supply Chain Management
+- All types of issues will be fixed into Module Branch via a new Branch.
 
 ## Authors
 
