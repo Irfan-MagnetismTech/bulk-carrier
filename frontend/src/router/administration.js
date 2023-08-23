@@ -1,9 +1,8 @@
 import Store from './../store/index.js';
 const USER = Store.getters.getCurrentUser;
 
-const BASE = "authorization";
+const BASE = "administration";
 const ROLE = USER?.role ?? null;
-//console.log(USER?.permissions);
 export default [
 	{
 		path: `/${BASE}/user/permission`,
