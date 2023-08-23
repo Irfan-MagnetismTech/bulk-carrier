@@ -1,22 +1,22 @@
 <template>
     <div class="py-2 text-gray-500 dark:text-gray-400">
         <ul class="mt-6">
-          <li class="relative px-6 py-3">
+          <li class="relative px-6 py-3 ml-2 flex rounded-md"  style="width: calc(100% - 14px);">
             <a class="inline-flex cursor-pointer items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
               <div v-html="icons.HomeSolid"></div>
               <span class="ml-4">Dashboard</span>
             </a>
           </li>
           <template v-for="element in sidebarElements.routes">
-            <a @click="revealChilds" class="flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 font-light shadow-md focus:outline-none">
+            <a @click="revealChilds" class="mx-2 flex cursor-pointer p-2 justify-between items-center mb-1 text-sm font-semibold text-purple-100 font-light shadow-md focus:outline-none">
               <div class="flex ml-2">
                 <span class="">{{ element.label }}</span>
               </div>
-              <div v-html="element.icon"></div>
+              <div v-html="element.icon" class="duration-200 ease-linear" :class="{ 'rotate-180': childsVisible }"></div>
             </a>
             <div class="collapse" :style="{ height: childsVisible ? (54 * element.subMenu.length)+'px' : '0' }">
               <template v-for="priceSubMenu in element.subMenu">
-                <li class="relative px-6 py-3">
+                <li class="relative px-6 py-3 ml-2 flex rounded-md"  style="width: calc(100% - 14px);">
                   <button class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" aria-haspopup="true">
                       <span class="inline-flex items-center">
                           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -353,7 +353,11 @@ function addActiveClass(label){
 <style lang="postcss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
 .active{
-  color: blueviolet;
+  background: #5c5c9596;
+  color: #fff;
+}
+.active button span {
+  color: #fff !important;
 }
 
 body {
