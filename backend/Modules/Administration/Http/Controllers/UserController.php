@@ -2,9 +2,14 @@
 
 namespace Modules\Administration\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
 use Spatie\User\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -13,12 +18,30 @@ class UserController extends Controller
     use HasRoles;
 
     /**
-     * Display a listing of the resource.
-     * @return Renderable
+     * get all users with their roles.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
-        return view('administration::index');
+        try {
+//            $users = User::get()->map(function($user) {
+//                $user->roles = $user->roles()->pluck('name')->first();
+//                return $user;
+//            });
+
+            $users = User::with('roles')->paginate(10);
+
+            return response()->json([
+                'value'   => $users,
+                'message' => 'Successfully retrieved Users',
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+
     }
 
     /**
@@ -32,22 +55,56 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @param UserRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(UserRequest $request) : JsonResponse
     {
-        //
+        try {
+            $input = $request->all();
+            $input['password'] = Hash::make($request->password);
+
+            $user = User::create($input);
+            $user->assignRole($request->role);
+            $user->email_signature()->create([
+                'user_id' => $user->id,
+                'signature' => $request->email_signature,
+            ]);
+
+            return response()->json([
+                'value'   => $user,
+                'message' => 'User added Successfully.',
+            ], 201);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param User $user
+     * @return JsonResponse
      */
-    public function show($id)
+
+    public function show(User $user): JsonResponse
     {
-        return view('administration::show');
+        try
+        {
+            //get user role name
+            $user->role = $user->roles()->pluck('id')->first();
+            $user->email_signature = $user->email_signature()->first()->signature;
+            return response()->json([
+                'value'   => $user,
+                'message' => 'Successfully retrieved User',
+            ], 200);
+        }
+        catch (\Exception$e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+
     }
 
     /**
@@ -73,12 +130,23 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param User $user
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(User $user) : JsonResponse
     {
-        //
+        try {
+            $user->delete();
+
+            return response()->json([
+                'value'   => '',
+                'message' => 'User is deleted',
+            ], 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     public function getCurrentUser(Request $request){

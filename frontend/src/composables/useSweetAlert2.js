@@ -10,25 +10,33 @@ export default function useSweetAlert2() {
           })
       };
 
-      const showConfirm = (message = null) => {
-         Swal.fire({
-            title: 'Are you sure?',
-            text: message,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Overwrite it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Success',
-                    'Action has been completed!',
-                    'success'
-                )
-            }
-        })
-      };
+      function showConfirm(message = null){
+             Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete this',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                return result.isConfirmed;
+            })
+      }
+
+      // const showConfirm = (message = null) => {
+      //    Swal.fire({
+      //       title: 'Are you sure?',
+      //       text: 'You want to delete this',
+      //       icon: 'warning',
+      //       showCancelButton: true,
+      //       confirmButtonColor: '#3085d6',
+      //       cancelButtonColor: '#d33',
+      //       confirmButtonText: 'Yes'
+      //   }).then((result) => {
+      //       return result.isConfirmed;
+      //   })
+      // };
 
       const closeAlert = () => {
         close();

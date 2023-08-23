@@ -4,27 +4,29 @@ const USER = Store.getters.getCurrentUser;
 const BASE = "administration";
 const ROLE = USER?.role ?? null;
 export default [
+
+	/* User Management Routes */
 	{
-		path: `/${BASE}/user/permission`,
-		name: `${BASE}.user.permission.index`,
-		component: () => import(`../views/${BASE}/permission/permissions.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'permission-show' },
+		path: `/${BASE}/users`,
+		name: `${BASE}.users.index`,
+		component: () => import(`../views/${BASE}/user/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'user-show' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/user/permission/create`,
-		name: `${BASE}.user.permission.create`,
-		component: () => import(`../views/${BASE}/permission/create-permission.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'permission-create' },
+		path: `/${BASE}/users/create`,
+		name: `${BASE}.users.create`,
+		component: () => import(`../views/${BASE}/user/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'user-create' },
 	},
 	{
-		path: `/${BASE}/user/permission/:permissionId/edit`,
-		name: `${BASE}.user.permission.edit`,
-		component: () => import(`../views/${BASE}/permission/edit-permission.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'permission-edit' },
+		path: `/${BASE}/users/:userId/edit`,
+		name: `${BASE}.users.edit`,
+		component: () => import(`../views/${BASE}/user/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'user-edit' },
 	},
 
-
+	/* User Role Management Routes */
 	{
 		path: `/${BASE}/user/role`,
 		name: `${BASE}.user.role.index`,
@@ -44,23 +46,25 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'role-edit' },
 	},
 
+	/* User Permission Management Routes */
 	{
-		path: `/${BASE}/user/index`,
-		name: `${BASE}.user.index`,
-		component: () => import(`../views/${BASE}/user/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'user-show' },
+		path: `/${BASE}/user/permission`,
+		name: `${BASE}.user.permission.index`,
+		component: () => import(`../views/${BASE}/permission/permissions.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'permission-show' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/user/create`,
-		name: `${BASE}.user.create`,
-		component: () => import(`../views/${BASE}/user/create-user.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'user-create' },
+		path: `/${BASE}/user/permission/create`,
+		name: `${BASE}.user.permission.create`,
+		component: () => import(`../views/${BASE}/permission/create-permission.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'permission-create' },
 	},
 	{
-		path: `/${BASE}/user/:userId/edit`,
-		name: `${BASE}.user.edit`,
-		component: () => import(`../views/${BASE}/user/edit-user.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'user-edit' },
+		path: `/${BASE}/user/permission/:permissionId/edit`,
+		name: `${BASE}.user.permission.edit`,
+		component: () => import(`../views/${BASE}/permission/edit-permission.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'permission-edit' },
 	},
 
 	// approval management routes

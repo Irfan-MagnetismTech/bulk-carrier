@@ -1,3 +1,9 @@
+<script setup>
+import TheHeader from "../../components/TheHeader.vue";
+import TheSidebar from "../../components/TheSidebar.vue";
+import useSidebarProfilemenu from '../../services/sidebarProfileMenu';
+const { sidebar, isSidebarOpen } = useSidebarProfilemenu();
+</script>
 <template>
     <div>
         <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': true }">
@@ -14,7 +20,7 @@
             <!-- Container -->
             <div class="flex flex-col flex-1 w-full">
                 <the-header v-once></the-header>
-                <main class="h-full overflow-y-auto">
+                <main class="h-full overflow-y-auto main_boby">
                     <div class="w-full px-6 mx-auto grid">
                         <!-- Main content here -->
                         <router-view></router-view>
@@ -24,25 +30,82 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import TheHeader from "../../components/TheHeader.vue";
-import TheSidebar from "../../components/TheSidebar.vue";
-import useSidebarProfilemenu from '../../services/sidebarProfileMenu';
-
-const { sidebar, isSidebarOpen } = useSidebarProfilemenu();
-</script>
-
 <style>
     .sidebar span, .sidebar a{
         color: #a3a6b7 !important;
         @apply duration-200 ease-linear px-2
     }
-
     .sidebar li:hover a,.sidebar li:hover span{
         color: #fff !important;
         @apply duration-200 ease-linear px-2
     }
+    .main_boby{
+        background-color: #f2f2f7;
+    }
+</style>
 
-    /* [#151529] */
+<style lang="postcss">
+@tailwind components;
+
+@layer components {
+  .tab {
+    @apply p-1.5 text-xs;
+  }
+  thead tr {
+    @apply font-semibold text-gray-600;
+  }
+  th {
+    @apply tab text-center;
+  }
+  tbody {
+    @apply bg-white;
+  }
+  tbody tr td {
+    @apply tab text-center;
+  }
+  tfoot td {
+    @apply tab text-center;
+  }
+}
+
+.input-group {
+  @apply flex flex-col items-center justify-center w-full md:flex-row md:gap-2;
+}
+.label-group {
+  @apply block w-full mt-3 text-sm;
+}
+.label-item-title {
+  @apply text-gray-700 dark:text-gray-300;
+}
+.label-item-input {
+  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+}
+.form-input {
+  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+}
+table, th,td{
+  @apply border border-collapse;
+}
+.search-result {
+  @apply px-4 py-3 text-sm text-center text-gray-600 dark:text-gray-300;
+}
+.search {
+  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray dark:border-0;
+}
+>>> {
+  --vs-controls-color: #374151;
+  --vs-border-color: #4b5563;
+
+  --vs-dropdown-bg: #282c34;
+  --vs-dropdown-color: #eeeeee;
+  --vs-dropdown-option-color: #eeeeee;
+
+  --vs-selected-bg: #664cc3;
+  --vs-selected-color: #374151;
+
+  --vs-search-input-color: #4b5563;
+
+  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-color: #eeeeee;
+}
 </style>

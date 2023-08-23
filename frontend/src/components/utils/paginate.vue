@@ -57,5 +57,6 @@ const props = defineProps({
     .paginate-active {
         @apply text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600;
     }
+
 }
 </style>

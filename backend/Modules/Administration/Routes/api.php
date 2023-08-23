@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Administration\Http\Controllers\RoleController;
 use Modules\Administration\Http\Controllers\UserController;
 
 /*
@@ -15,8 +16,11 @@ use Modules\Administration\Http\Controllers\UserController;
 |
 */
 
-Route::middleware(['auth:api'])->prefix('administration')->group(function ()
+Route::middleware(['auth:api'])->prefix('administration')->as('administration.')->group(function ()
 {
     /* Common routes */
+    Route::resource('users', UserController::class);
     Route::get('get-current-user', [UserController::class, 'getCurrentUser']);
+
+    Route::apiResource('roles', RoleController::class);
 });

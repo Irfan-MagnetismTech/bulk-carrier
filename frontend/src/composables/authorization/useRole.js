@@ -24,7 +24,7 @@ export default function useRole() {
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/roles');
+            const {data, status} = await Api.get('/administration/roles');
             roles.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

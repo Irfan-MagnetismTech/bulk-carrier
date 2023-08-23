@@ -23,12 +23,6 @@ const router = createRouter({
                     component: () => import ("../views/dashboard.vue"),
                     meta: { requiresAuth: true, role: "all", permission: "dashboard" },
                 },
-                {
-                    path: "/user/activity/log/:subject_type/:subject_id",
-                    name: "user.activity.log",
-                    component: () => import ("../views/authorization/activity-log/index.vue"),
-                    meta: { requiresAuth: true, role: "all", permission: "commercial-money-receipt-show" },
-                },
                 ...administration,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
@@ -81,7 +75,8 @@ router.beforeEach((to, from, next) => {
         const isCommon = to?.meta?.role?.includes("all");
         const currentRoutePermission = to?.meta?.permission;
         const hasPermission = PERMISSIONS.includes(currentRoutePermission);
-		if ((IS_LOGGED_IN && hasPermission) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
+		//if ((IS_LOGGED_IN && hasPermission) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
+		if ((IS_LOGGED_IN) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
 		else
             if(!IS_LOGGED_IN) {
                 next({ name: 'login' });
