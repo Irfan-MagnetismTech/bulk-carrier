@@ -1,6 +1,6 @@
 <template>
   <header class="z-10 py-1 bg-white shadow-md dark:bg-gray-800">
-    <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+    <div class="flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
       <svg @click="toggleSidebar" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sidebar-open-close-toggle inline-flex float-right mr-2 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
@@ -52,7 +52,7 @@
 <!--                </a>-->
 <!--              </li>-->
               <li class="flex mt-2">
-                <router-link :to="{ name: 'authorization.user.password.update' }" style="cursor: pointer" class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200">
+                <router-link :to="{ name: 'administration.user.password.update' }" style="cursor: pointer" class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-3">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
                   </svg>

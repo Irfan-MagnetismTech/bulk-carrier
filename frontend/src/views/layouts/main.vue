@@ -6,15 +6,15 @@ const { sidebar, isSidebarOpen } = useSidebarProfilemenu();
 </script>
 <template>
     <div>
-        <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': true }">
+        <div class="flex h-screen bg-gray-50" :class="{ 'overflow-hidden': true }">
             <!-- Sidebar -->
-            <aside class="sidebar relative bg-[#151529] z-20 hidden w-64 overflow-y-auto dark:bg-gray-800 md:block flex-shrink-0 shadow-lg" style="transition: all 0.5s ease 0s; left: 0px">
+            <aside class="sidebar relative bg-[#151529] z-20 hidden w-64 overflow-y-auto md:block flex-shrink-0 shadow-lg" style="transition: all 0.5s ease 0s; left: 0px">
                 <the-sidebar v-once></the-sidebar>
             </aside>
             <!-- Mobile menu -->
             <div v-show="isSidebarOpen" class="fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center" style="display: none;"></div>
 
-            <aside ref="sidebar" @keydown.esc="close_side_menu()" class="sidebar fixed bg-[#151529] inset-y-0 z-20 flex-shrink-0 w-64 mt-8 overflow-y-auto dark:bg-gray-800 md:hidden" style="transition: all 0.5s ease 0s; left: -260px">
+            <aside ref="sidebar" @keydown.esc="close_side_menu()" class="sidebar fixed bg-[#151529] inset-y-0 z-20 flex-shrink-0 w-64 mt-10 overflow-y-auto md:hidden" style="transition: all 0.5s ease 0s; left: -260px">
                 <the-sidebar></the-sidebar>
             </aside>
             <!-- Container -->
@@ -104,8 +104,31 @@ table, th,td{
   --vs-selected-color: #374151;
 
   --vs-search-input-color: #4b5563;
-
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
 }
+
+    .sidebar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* Track */
+    /* aside::-webkit-scrollbar-track {
+        background: #151529;
+    } */
+
+    /* Handle */
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #c8c8c85e;
+        border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #f8f8f866;
+    }
+
+    .sidebar {
+        scrollbar-gutter: stable;
+    }
 </style>
