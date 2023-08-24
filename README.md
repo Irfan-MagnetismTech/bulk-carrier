@@ -68,7 +68,11 @@ It is a web application that can be accessed from anywhere in the world.
   php artisan module:make-job JobName Blog
   php artisan module:make-job JobName Blog --sync # A synchronous job class
   ```
-  
+- Generate the given notification class name for the specified module.
+  ```bash
+   php artisan module:make-notification NotifyAdminOfNewComment Blog
+  ```
+
 #### Frontend
 ```bash
   cd frontend
