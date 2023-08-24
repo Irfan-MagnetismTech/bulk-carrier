@@ -17,7 +17,7 @@ import {onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
 import RoleForm from '../../../components/authorization/RoleForm.vue';
-import useRole from '../../../composables/authorization/useRole';
+import useRole from '../../../composables/administration/useRole';
 import Title from "../../../services/title";
 
 const route = useRoute();

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useRole from "../../../composables/authorization/useRole";
+import useRole from "../../../composables/administration/useRole";
 import Title from "../../../services/title";
 
 const { roles, getRoles, deleteRole, isLoading } = useRole();
@@ -19,7 +19,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Role List</h2>
-    <router-link :to="{ name: 'authorization.user.role.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <router-link :to="{ name: 'administration.user.role.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
@@ -47,7 +47,7 @@ onMounted(() => {
               </span>
             </td>
             <td style="width: 10%" class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-              <action-button :action="'edit'" :to="{ name: 'authorization.user.role.edit', params: { roleId: roleData?.id } }"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'administration.user.role.edit', params: { roleId: roleData?.id } }"></action-button>
               <action-button @click="deleteRole(roleData?.id)" :action="'delete'"></action-button>
               <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: roleData.subject_type,subject_id: roleData.id } }"></action-button>
             </td>

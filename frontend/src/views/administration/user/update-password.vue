@@ -16,7 +16,7 @@
 import {onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
-import useUser from '../../../composables/authorization/useUser';
+import useUser from '../../../composables/administration/useUser';
 import Title from "../../../services/title";
 import UpdateUserPasswordForm from "../../../components/authorization/UpdateUserPasswordForm.vue";
 

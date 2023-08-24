@@ -1,7 +1,7 @@
 <script setup>
 import Error from "../Error.vue";
 import {onMounted} from "vue";
-import usePermission from "../../composables/authorization/usePermission";
+import usePermission from "../../composables/administration/usePermission";
 const { permissions, getPermissionWithoutPaginate } = usePermission();
 
 const props = defineProps({

@@ -30,7 +30,7 @@
 import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
-import useRole from "../../composables/authorization/useRole";
+import useRole from "../../composables/administration/useRole";
 import {onMounted} from "vue";
 import usePort from "../../composables/usePort";
 

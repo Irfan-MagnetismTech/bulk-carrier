@@ -50,7 +50,7 @@ export default function useActivityLog() {
     //         const { data, status } = await Api.post('/permissions', form);
     //         permission.value = data.value;
     //         notification.showSuccess(status);
-    //         router.push({ name: "authorization.user.permission.index" });
+    //         router.push({ name: "administration.user.permission.index" });
     //     } catch (error) {
     //         const { data, status } = error.response;
     //         errors.value = notification.showError(status, data);
@@ -88,7 +88,7 @@ export default function useActivityLog() {
     //         );
     //         permission.value = data.value;
     //         notification.showSuccess(status);
-    //         router.push({ name: "authorization.user.permission.index" });
+    //         router.push({ name: "administration.user.permission.index" });
     //     } catch (error) {
     //         const { data, status } = error.response;
     //         errors.value = notification.showError(status, data);

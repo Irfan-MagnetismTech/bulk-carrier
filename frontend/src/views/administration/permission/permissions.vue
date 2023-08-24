@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import usePermission from "../../../composables/authorization/usePermission";
+import usePermission from "../../../composables/administration/usePermission";
 import Title from "../../../services/title";
 import {watchEffect, ref, watch} from "vue";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -41,7 +41,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Permission List</h2>
-<!--    <router-link :to="{ name: 'authorization.user.permission.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">-->
+<!--    <router-link :to="{ name: 'administration.user.permission.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">-->
 <!--      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">-->
 <!--        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />-->
 <!--      </svg>-->
@@ -74,7 +74,7 @@ onMounted(() => {
             <td>{{ permissions?.from + index }}</td>
             <td>{{ permissionData?.name }}</td>
 <!--            <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">-->
-<!--              <action-button :action="'edit'" :to="{ name: 'authorization.user.permission.edit', params: { permissionId: permissionData?.id } }"></action-button>-->
+<!--              <action-button :action="'edit'" :to="{ name: 'administration.user.permission.edit', params: { permissionId: permissionData?.id } }"></action-button>-->
 <!--              <action-button @click="deletePermission(permissionData?.id)" :action="'delete'"></action-button>-->
 <!--            </td>-->
           </tr>
@@ -96,12 +96,12 @@ onMounted(() => {
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
                         <li v-for="(link, index) in permissions?.links" :key="index">
-                            <router-link :disabled="permissions.current_page === 1" :to="{ name: 'authorization.user.permission.index', query: { page: permissions.current_page >= 2 ? permissions.current_page - 1 : 1 } }" v-if="link.label.includes('Previous')" class="paginate-btn">
+                            <router-link :disabled="permissions.current_page === 1" :to="{ name: 'administration.user.permission.index', query: { page: permissions.current_page >= 2 ? permissions.current_page - 1 : 1 } }" v-if="link.label.includes('Previous')" class="paginate-btn">
                                 <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                     <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
                             </router-link>
-                            <router-link v-else-if="link.label.includes('Next')" :disabled="permissions.current_page === permissions.last_page" :to="{ name: 'authorization.user.permission.index', query: { page: permissions.current_page <= permissions.last_page - 1 ? permissions.current_page + 1 : permissions.last_page } }" class="paginate-btn">
+                            <router-link v-else-if="link.label.includes('Next')" :disabled="permissions.current_page === permissions.last_page" :to="{ name: 'administration.user.permission.index', query: { page: permissions.current_page <= permissions.last_page - 1 ? permissions.current_page + 1 : permissions.last_page } }" class="paginate-btn">
                                 <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
                                     <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
@@ -109,7 +109,7 @@ onMounted(() => {
                             <button v-else-if="link.label == '...'" class="paginate-btn">
                                 <span>{{ link?.label }}</span>
                             </button>
-                            <router-link v-else :to="{ name: 'authorization.user.permission.index', query: { page: parseInt(link.label) } }" class="paginate-btn" :class="{ 'paginate-active': link?.active }">
+                            <router-link v-else :to="{ name: 'administration.user.permission.index', query: { page: parseInt(link.label) } }" class="paginate-btn" :class="{ 'paginate-active': link?.active }">
                                 <span>{{ link?.label }}</span>
                             </router-link>
                         </li>

@@ -17,7 +17,7 @@ import {onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
 import ApprovalForm from '../../../components/authorization/ApprovalForm.vue';
-import useApprovalManagement from '../../../composables/authorization/useApprovalManagement';
+import useApprovalManagement from '../../../composables/administration/useApprovalManagement';
 import Title from "../../../services/title";
 
 const route = useRoute();

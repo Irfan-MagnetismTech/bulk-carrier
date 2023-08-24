@@ -1,83 +1,38 @@
-import NProgress from 'nprogress';
+import NProgress from "nprogress";
 import {useLoading} from 'vue-loading-overlay';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import Api from '../../apis/Api';
-import Error from '../../services/error';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from 'sweetalert2';
 
-export default function useVoyageExpenditureHead() {
+export default function useUser() {
     const router = useRouter();
+    const users = ref([]);
     const $loading = useLoading();
-    const heads = ref([]);
     const notification = useNotification();
-	const isLoading = ref(false);
-	const errors = ref(null);
-
-    const expenditureHead = ref( {
+    const user = ref( {
         name: '',
-        is_global: '0' ,
-        subheads: [
-            {
-                head_id: '',
-                head_id_name: '',
-                name: '',
-                billing_type: ''
-            }
-        ],
+        email: '',
+        password: '',
+        confirm_password: '',
+        role: '',
     });
+    const errors = ref(null);
+    const isLoading = ref(false);
 
-    async function getHeads() {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-        
-        try {
-            const { data, status } = await Api.get('/finance/voyage-expenditure-heads');
-            heads.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-			errors.value = notification.showError(status);
-        } finally {
-            //NProgress.done();
-            loader.hide();
-			isLoading.value = false;
-        }
-    }
-
-    async function storeHead(form) {
+    async function getUsers(page) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/finance/voyage-expenditure-heads', form);
-            expenditureHead.value = data.value;
-            notification.showSuccess(status);
-            router.push({ name: "finance.voyageExpenditureHead.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
-        }
-    }
-
-    async function showHead(headId) {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        try {
-            const { data, status } = await Api.get(`/finance/voyage-expenditure-heads/${headId}`);
-            expenditureHead.value = data.value;
-            console.log(data.value)
-            if(data.value.subheads.length == 0) 
-            {
-                expenditureHead.value.subheads = [{}]
-            }
+            const {data, status} = await Api.get('/administration/users',{
+                params: {
+                    page: page || 1,
+                },
+            });
+            users.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -85,25 +40,41 @@ export default function useVoyageExpenditureHead() {
         } finally {
             loader.hide();
             isLoading.value = false;
-           // NProgress.done();
+            //NProgress.done();
         }
     }
 
-    async function updateHead(form, headId) {
-        //NProgress.start();
+    async function storeUser(form) {
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
         try {
-            const { data, status } = await Api.put(
-                `/finance/voyage-expenditure-heads/${headId}`,
-                form
-            );
-            expenditureHead.value = data.value;
+            const { data, status } = await Api.post('/administration/users', form);
+            user.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "finance.voyageExpenditureHead.index" });
+            router.push({ name: "authorization.user.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+    async function showUser(userId) {
+        //NProgress.start();
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/administration/users/${userId}`);
+            user.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -111,40 +82,77 @@ export default function useVoyageExpenditureHead() {
         }
     }
 
-    async function deleteHead(headId) {
-        if (!confirm('Are you sure you want to delete this expenditure head?')) {
+    async function updateUser(form, userId) {
+        //NProgress.start();
+        if(!form.port){
+            alert('Please select a port');
             return;
         }
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        //NProgress.start();
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/finance/voyage-expenditure-heads/${headId}`);
+            const { data, status } = await Api.put(
+                `/users/${userId}`,
+                form
+            );
+            user.value = data.value;
             notification.showSuccess(status);
-            await getHeads();
+            router.push({ name: "authorization.user.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    async function deleteUser(userId) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.delete( `/administration/users/${userId}`);
+            notification.showSuccess(status);
+            await getUsers();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
-           // NProgress.done();
         }
     }
 
-    async function getSubHead(HeadId) {
-        //NProgress.start();
+    async function updateUserPassword(form) {
+
+        if(!form.password || !form.confirm_password){
+            notification.showError(422,'','Please fill in the password fields');
+            return;
+        }
+
+        if(form.password !== form.confirm_password){
+            notification.showError(422,'','Password and confirm password do not match');
+            return;
+        }
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get( `/finance/voyage-expenditure-heads/${headId}`);
+            const { data, status } = await Api.post(
+                `/users/password/update`,
+                form
+            );
             notification.showSuccess(status);
-            await getHeads();
+            //router.push({ name: "administration.user.index" });
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -153,14 +161,15 @@ export default function useVoyageExpenditureHead() {
     }
 
     return {
-        heads,
-        expenditureHead,
-        storeHead,
-        showHead,
-        updateHead,
-        deleteHead,
+        users,
+        user,
+        getUsers,
+        storeUser,
+        showUser,
+        updateUserPassword,
+        updateUser,
+        deleteUser,
         isLoading,
-        getHeads,
-        errors
-    }
+        errors,
+    };
 }

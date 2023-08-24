@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useApprovalManagement from "../../../composables/authorization/useApprovalManagement";
+import useApprovalManagement from "../../../composables/administration/useApprovalManagement";
 import Title from "../../../services/title";
 import {ref} from "vue";
 
@@ -20,7 +20,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Approval Management</h2>
-    <router-link :to="{ name: 'authorization.approval.management.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <router-link :to="{ name: 'administration.approval.management.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
@@ -60,7 +60,7 @@ onMounted(() => {
               </ul>
             </td>
             <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-              <action-button :action="'edit'" :to="{ name: 'authorization.approval.management.edit', params: { approvalId: approver?.id } }"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'administration.approval.management.edit', params: { approvalId: approver?.id } }"></action-button>
               <action-button @click="deleteApproval(approver?.id)" :action="'delete'"></action-button>
             </td>
           </tr>

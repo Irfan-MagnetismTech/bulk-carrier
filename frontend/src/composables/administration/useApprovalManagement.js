@@ -161,7 +161,7 @@ export default function useApprovalManagement() {
             const { data, status } = await Api.post('/approved', form);
             notification.showSuccess(status);
             router.go();
-            //router.push({ name: "authorization.approval.management.index" });
+            //router.push({ name: "administration.approval.management.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

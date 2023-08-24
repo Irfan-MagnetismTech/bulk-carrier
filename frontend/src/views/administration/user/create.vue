@@ -1,6 +1,6 @@
 <script setup>
 import UserForm from '../../../components/authorization/UserForm.vue';
-import useUser from '../../../composables/authorization/useUser';
+import useUser from '../../../composables/administration/useUser';
 import Title from "../../../services/title";
 const { user, storeUser, isLoading, errors } = useUser();
 const { setTitle } = Title();

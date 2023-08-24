@@ -3,7 +3,7 @@ import {computed, ref, watch, onMounted} from "vue";
 import NProgress from "nprogress";
 import Error from "../Error.vue";
 
-import useApprovalManagement from "../../composables/authorization/useApprovalManagement";
+import useApprovalManagement from "../../composables/administration/useApprovalManagement";
 
 const { approvals, approvalSubjectUser, getApprovalSubjectUser } = useApprovalManagement();
 

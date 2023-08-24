@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useUser from "../../../composables/authorization/useUser";
+import useUser from "../../../composables/administration/useUser";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';

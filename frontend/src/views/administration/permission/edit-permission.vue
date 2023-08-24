@@ -17,7 +17,7 @@ import {onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
 import PermissionForm from '../../../components/authorization/PermissionForm.vue';
-import usePermission from '../../../composables/authorization/usePermission';
+import usePermission from '../../../composables/administration/usePermission';
 import Title from "../../../services/title";
 
 const route = useRoute();
