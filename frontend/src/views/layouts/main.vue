@@ -68,6 +68,37 @@ const { sidebar, isSidebarOpen } = useSidebarProfilemenu();
   }
 }
 
+/* sidebar css start */
+.active{
+  background: #5c5c9596;
+  color: #fff;
+}
+.active button span {
+  color: #fff !important;
+}
+body {
+  font-family: 'Inter', sans-serif;
+}
+.collapsing {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height .35s ease;
+  transition: height .35s ease
+}
+.sidebar-auto-height {
+  height: auto;
+  overflow: visible;
+}
+.dropdown {
+  transition: height 1s;
+}
+.collapse {
+  height: 0;
+  overflow: hidden;
+  transition: height .6s ease-in-out;
+}
+/* sidebar css end */
+
 .input-group {
   @apply flex flex-col items-center justify-center w-full md:flex-row md:gap-2;
 }
