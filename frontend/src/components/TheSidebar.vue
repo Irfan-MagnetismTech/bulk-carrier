@@ -1,12 +1,11 @@
 <template>
-    <div class="py-2 text-gray-500 dark:text-gray-400">
+    <div class="ml-2 py-2 text-gray-500 dark:text-gray-400">
         <ul class="mt-6">
-          <li class="relative px-6 py-3 ml-2 flex rounded-md"  style="width: calc(100% - 14px);">
-            <a class="inline-flex cursor-pointer items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-              <div v-html="icons.HomeSolid"></div>
-              <span class="ml-4">Dashboard</span>
-            </a>
-          </li>
+          <a class="mx-2 flex cursor-pointer p-2 items-center mb-1 text-sm font-semibold text-purple-100 font-light shadow-md focus:outline-none rounded-md hover:bg-indigo-900 duration-200 ease-linear px-2">
+            <div v-html="icons.HomeSolid" class="w-6"></div>
+            <span class="">Dashboard</span>
+            <span class="w-6"></span>
+          </a>
           <administration-menu></administration-menu>
           <crew-menu></crew-menu>
           <operation-menu></operation-menu>
