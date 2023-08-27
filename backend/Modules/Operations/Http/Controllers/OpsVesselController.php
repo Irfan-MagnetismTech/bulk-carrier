@@ -52,7 +52,7 @@ class OpsVesselController extends Controller
      */
     public function store(OpsVesselRequest $request): JsonResponse
     {
-        dd($request);
+        // dd($request);
         try
         {
             $vessel = OpsVessel::create($request->all());
