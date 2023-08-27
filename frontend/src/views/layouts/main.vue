@@ -35,9 +35,8 @@ const { sidebar, isSidebarOpen } = useSidebarProfilemenu();
         color: #a3a6b7 !important;
         @apply duration-200 ease-linear px-2
     }
-    .sidebar li:hover a,.sidebar li:hover span{
-        color: #fff !important;
-        @apply duration-200 ease-linear px-2
+    .group:hover span > a > span {
+      color: aqua;
     }
     .main_boby{
         background-color: #f2f2f7;
@@ -161,5 +160,13 @@ table, th,td{
 
     .sidebar {
         scrollbar-gutter: stable;
+    }
+
+    .grand-child {
+      height: 84px;
+    margin: 0 auto;
+    left: 1rem;
+    position: relative;
+    width: calc(100% - 2rem);
     }
 </style>
