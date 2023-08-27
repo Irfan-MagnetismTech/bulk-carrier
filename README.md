@@ -27,7 +27,52 @@ It is a web application that can be accessed from anywhere in the world.
 
 -   **_Models_**, **_Controllers_** and **_Routes_** should be placed according to **Laravel Module Package**.
 -   Follow https://docs.laravelmodules.com/v10/artisan-commands for **Laravel Module Package** usage.
-  
+
+### Laravel Module's basic artisan Commands
+- Generate a new module.
+  ```bash
+  php artisan module:make Blog
+  ```
+- Generate multiple modules at once.
+  ```bash
+  php artisan module:make Blog User Auth
+  ```
+- Generate the given model for the specified module.
+  ```bash
+  php artisan module:make-model (Model Name) (Module Name)
+  php artisan module:make-model Post Blog
+  ```
+- Generate additional migration, controller, request and seeder for the specified module. *This is only applicable for model creation*
+  ```bash
+  php artisan module:make-model Post -mcrs Blog
+  ```
+- Migrate the given module, or without a module (argument), migrate all modules.
+  ```bash
+  php artisan module:migrate Blog
+  php artisan module:migrate
+  ```
+- Rollback the given module, or without an argument, rollback all modules.
+  ```bash
+  php artisan module:migrate-rollback Blog
+  ```
+- Refresh the migration for the given module, or without a specified module refresh all modules migrations.
+  ```bash
+  php artisan module:migrate-refresh Blog
+  ```
+- Seed the given module, or without an argument, seed all modules
+  ```bash
+  php artisan module:seed Blog
+  ```
+- Generate the given job for the specified module.
+  ```bash
+  php artisan module:make-job JobName Blog
+  php artisan module:make-job JobName Blog --sync # A synchronous job class
+  ```
+- Generate the given notification class name for the specified module.
+  ```bash
+  php artisan module:make-notification NotifyAdminOfNewComment Blog
+  ```
+
 #### Frontend
 ```bash
   cd frontend
