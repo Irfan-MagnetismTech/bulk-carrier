@@ -50,7 +50,6 @@ import Editor from '@tinymce/tinymce-vue';
 
 import useRole from "../../composables/administration/useRole";
 import {onMounted} from "vue";
-import usePort from "../../composables/usePort";
 
 const props = defineProps({
   form: {
@@ -62,7 +61,6 @@ const props = defineProps({
 
 
 const { roles, getRoles } = useRole();
-const { portName, getPortsByNameOrCode } = usePort();
 
 function fetchOptions(search, loading) {
   getPortsByNameOrCode(search);
@@ -92,9 +90,7 @@ onMounted(() => {
 .label-item-input {
   @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
 }
-.form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
-}
+
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;
