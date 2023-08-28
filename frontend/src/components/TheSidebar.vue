@@ -2,12 +2,6 @@
 import {computed, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import useHeroIcon from '../assets/heroIcon';
-import AdministrationMenu from "./sidebar/AdministrationMenu.vue";
-import OperationMenu from "./sidebar/OperationMenu.vue";
-import SupplyChainMenu from "./sidebar/SupplyChainMenu.vue";
-import MaintenanceMenu from "./sidebar/MaintenanceMenu.vue";
-import AccountsMenu from "./sidebar/AccountMenu.vue";
-import CrewMenu from "./sidebar/CrewMenu.vue";
 const router = useRouter();
 const currentRoute = ref(computed(() => { return router.currentRoute.value; }));
 const icons = useHeroIcon();
