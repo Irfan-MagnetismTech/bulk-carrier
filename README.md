@@ -112,7 +112,7 @@ Project Repository
         └──administration
                 |
                 |
-                └──feature-name  
+                └──ADM/feature-name  
                         |
                         |
                         └──task-name       
@@ -121,7 +121,7 @@ Project Repository
         └──operations
                 |
                 |
-                └──feature-name
+                └──OPS/feature-name
                         |
                         |
                         └──task-name
@@ -130,7 +130,7 @@ Project Repository
         └──accounts
                 |
                 |
-                └──feature-name
+                └──ACC/feature-name
                         |
                         |
                         └──task-name
@@ -139,7 +139,7 @@ Project Repository
         └──crew
               |
               |
-              └──feature-name
+              └──CRW/feature-name
                         |
                         |
                         └──task-name
@@ -148,7 +148,7 @@ Project Repository
         └──supply-chain
                 |
                 |
-                └──feature-name
+                └──SCM/feature-name
                         |
                         |
                         └──task-name
@@ -157,7 +157,7 @@ Project Repository
         └──maintenance
                 |
                 |
-                └──feature-name
+                └──MNT/feature-name
                         |
                         |
                         └──task-name
