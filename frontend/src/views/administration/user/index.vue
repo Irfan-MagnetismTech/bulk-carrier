@@ -43,7 +43,7 @@ onMounted(() => {
 
 <template>
   <!-- Heading -->
-  <div class="flex flex-col items-center justify-between w-full my-3 sm:flex-row" v-once>
+  <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">User List</h2>
     <default-button :title="'Create'" :to="{ name: 'administration.users.create' }"></default-button>
   </div>
@@ -56,10 +56,8 @@ onMounted(() => {
       <input type="text" placeholder="Search..." class="search" />
     </div>
   </div>
-  <div>
-    <div class="w-full overflow-hidden">
-      <div class="w-full overflow-x-auto">
-        <table class="w-full whitespace-no-wrap">
+  <div class="overflow-x-auto table-responsive max-w-screen">
+    <table class="w-full whitespace-no-wrap">
           <thead v-once>
           <tr>
             <th>#</th>
@@ -91,9 +89,7 @@ onMounted(() => {
             <td colspan="6">No user found.</td>
           </tr>
           </tfoot>
-        </table>
-        <Paginate :data="users" to="administration.users.index" :page="page"></Paginate>
-      </div>
-    </div>
+    </table>
+    <Paginate :data="users" to="administration.users.index" :page="page"></Paginate>
   </div>
 </template>
