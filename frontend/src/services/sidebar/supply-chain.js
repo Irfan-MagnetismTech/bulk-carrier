@@ -5,7 +5,8 @@ export default [
     {
         route: '',
         label: 'Supply Chain',
-        icon: icons.DownArrow,
+        preIcon: icons.BookOpen,
+        postIcon: icons.DownArrow,
         is_active: false,
         is_open: false,
         permissionKey: '',
@@ -13,7 +14,8 @@ export default [
             {
                 route: 'administration.users.index',
                 label: 'User',
-                icon: icons.User,
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
@@ -21,7 +23,8 @@ export default [
                     {
                         route: '',
                         label: 'New User',
-                        icon: icons.User,
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
                         permissionKey: '',
@@ -30,7 +33,8 @@ export default [
                     {
                         route: '',
                         label: 'List User',
-                        icon: icons.User,
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
                         permissionKey: '',
@@ -41,7 +45,8 @@ export default [
             {
                 route: '',
                 label: 'Role',
-                icon: icons.User,
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
@@ -50,7 +55,8 @@ export default [
             {
                 route: '',
                 label: 'Permission',
-                icon: icons.User,
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
