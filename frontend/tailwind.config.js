@@ -185,6 +185,7 @@ module.exports = {
             'dark:focus-within',
             'dark:hover',
             'dark:active',
+            'group-hover'
         ],
         placeholderColor: ['focus', 'dark', 'dark:focus'],
         borderColor: ['focus', 'hover', 'dark', 'dark:focus', 'dark:hover'],
