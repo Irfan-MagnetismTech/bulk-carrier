@@ -69,28 +69,28 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
               <span :class="{'active_menu': element.is_active}">{{ element.label }}</span>
               <div v-html="element.postIcon" class="duration-200 ease-linear absolute right-3 " :class="{ 'rotate-180': element.is_open }"></div>
             </a>
-            <div v-if="element.is_open" class="collapse" :style="{ height: element.is_open ? thisHeight+'px' : '0' }">
-              <!-- <div class="collapse" :style="{ height: childsVisible ? (54 * element.subMenu.length)+'px' : '0' }"> -->
-              <template v-for="(elementSubMenu,elementSubIndex) in element.subMenu">
-                <li class="relative ml-2 rounded-md"  style="width: calc(100% - 12.5px);">
-                  <a @click="revealGrandChild(element.subMenu.length+elementSubMenu.subSubMenu.length,elementIndex,elementSubIndex)" class="flex cursor-pointer items-center justify-between w-full text-sm font-semibold transition-colors rounded-md group group-hover:text-white duration-200 ease-linear p-2" aria-haspopup="true">
+              <div v-if="element.is_open" class="collapse" :class="{ 'slide_down': element.is_open }">
+                <!-- <div class="collapse" :style="{ height: childsVisible ? (54 * element.subMenu.length)+'px' : '0' }"> -->
+                <template v-for="(elementSubMenu,elementSubIndex) in element.subMenu">
+                  <li class="relative ml-2 rounded-md"  style="width: calc(100% - 12.5px);">
+                    <a @click="revealGrandChild(element.subMenu.length+elementSubMenu.subSubMenu.length,elementIndex,elementSubIndex)" class="flex cursor-pointer items-center justify-between w-full text-sm font-semibold transition-colors rounded-md group group-hover:text-white duration-200 ease-linear p-2" aria-haspopup="true">
                       <span class="inline-flex items-center">
                         <router-link :to="{ name: elementSubMenu.route }" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-white">
                           -<span class="ml-1 font-light" :class="{'active_menu': elementSubMenu.is_active}">{{ elementSubMenu.label }}</span>
                         </router-link>
                       </span>
-                    <div v-if="elementSubMenu.subSubMenu.length" v-html="element.postIcon" class="duration-200 ease-linear" :class="{ 'rotate-180': elementSubMenu.is_open }"></div>
-                  </a>
-                  <ul v-if="elementSubMenu.subSubMenu.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" :style="{ height: elementSubMenu.is_open ? (42 * elementSubMenu.subSubMenu.length)+'px' : '0' }" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark:text-gray-400 dark:bg-gray-900 grand-child" aria-label="submenu">
-                    <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150  dark:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
-                      <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
-                        -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.is_active}">{{ elementSubSubMenu.label }}</span>
-                      </router-link>
-                    </li>
-                  </ul>
-                </li>
-              </template>
-            </div>
+                      <div v-if="elementSubMenu.subSubMenu.length" v-html="element.postIcon" class="duration-200 ease-linear" :class="{ 'rotate-180': elementSubMenu.is_open }"></div>
+                    </a>
+                    <ul v-if="elementSubMenu.subSubMenu.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" :style="{ height: elementSubMenu.is_open ? (42 * elementSubMenu.subSubMenu.length)+'px' : '0' }" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark:text-gray-400 dark:bg-gray-900 grand-child" aria-label="submenu">
+                      <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150  dark:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
+                        <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                          -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.is_active}">{{ elementSubSubMenu.label }}</span>
+                        </router-link>
+                      </li>
+                    </ul>
+                  </li>
+                </template>
+              </div>
           </template>
         </ul>
     </div>
@@ -100,5 +100,19 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
 .active_menu{
   font-weight: bold;
   color: #fff !important;
+}
+/*if element.is_open true then slide down class which down slowly and up slowly */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.slide_down{
+  transition: height 0.5s ease-in-out;
+  height: 100%;
 }
 </style>
