@@ -165,7 +165,9 @@ Project Repository
 ## Important notes
 
 - Developers should comment in necessary code points. Every function should have defination of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source. 
-- Resource functions should return responses as following format: response_code, message, value
+- Resource functions should return responses in the following format: message, value, response_code
+    - For success: return response()->success('Unit created succesfully', $scm_unit, 200);
+    - For error: return response()->error($e->getMessage(), 500);
 - Validation should be done in Request files rather then Controller files.
 - Field names should be synchronized in Database, Frontend forms and Backend variables. In ambiguous cases, field names could be differentiate using entity name as prefix.
 - Before execute DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that user can restore the data as necessery.
