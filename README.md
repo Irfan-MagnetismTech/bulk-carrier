@@ -181,6 +181,9 @@ Project Repository
   - OPS - Operations
   - SCM - Supply Chain
 - All types of issues will be fixed in the Module Branch via a new Branch.
+- If any table is using short form then add table description in comment.
+  ```php
+  $table->comment('short description');
 
 ## Authors
 
