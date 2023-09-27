@@ -69,7 +69,7 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
               <span :class="{'active_menu': element.is_active}">{{ element.label }}</span>
               <div v-html="element.postIcon" class="duration-200 ease-linear absolute right-3 " :class="{ 'rotate-180': element.is_open }"></div>
             </a>
-              <div v-if="element.is_open" class="collapse" :class="{ 'slide_down': element.is_open }">
+              <div v-show="element.is_open" class="collapse" :class="{ 'slide_down': element.is_open }">
                 <!-- <div class="collapse" :style="{ height: childsVisible ? (54 * element.subMenu.length)+'px' : '0' }"> -->
                 <template v-for="(elementSubMenu,elementSubIndex) in element.subMenu">
                   <li class="relative ml-2 rounded-md"  style="width: calc(100% - 12.5px);">

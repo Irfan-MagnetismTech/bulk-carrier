@@ -12,7 +12,7 @@
 
       <!-- Search input -->
       <div class="HeaderLogoWrapper">
-
+        <img aria-hidden="true" class="object-cover align-middle dark:block" style="width: 100px" src="/torony-small-logo.png" alt="Torony Logo">
       </div>
 
       <div class="flex items-center mr-2">
