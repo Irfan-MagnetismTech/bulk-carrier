@@ -1,6 +1,6 @@
 # bulk-carrier-erp
 
-Bulk carrier erp is a web application for managing bulk carrier shipping business.
+Bulk carrier ERP is a web application for managing bulk carrier shipping business.
 It is a complete solution for managing all the business processes of a bulk carrier shipping company.
 It is a web application that can be accessed from anywhere in the world.
 
@@ -44,9 +44,9 @@ It is a web application that can be accessed from anywhere in the world.
   ```
 - Generate additional migration, controller, request, and seeder for the specified module. *This is only applicable for model creation*
   ```bash
-  php artisan module:make-model Post -mcrs Blog
+  php artisan module:make-model Post -mcr Blog
   ```
-- Migrate the given module, or without a module (argument), migrate all modules.
+- Migrate the given module, or migrate all modules without a module (argument).
   ```bash
   php artisan module:migrate Blog
   php artisan module:migrate
@@ -93,7 +93,7 @@ It is a web application that can be accessed from anywhere in the world.
 
 Default `storage` => `storage/app/public`
 
-When using **`storeAs`** or a similar method where we need to explicitly give a storage path, please use the above convention
+When using **`storeAs`** or a similar method where we need to give a storage path explicitly, please use the above convention
 
 ### Branching
 
@@ -166,8 +166,52 @@ Project Repository
 
 - Developers should comment on necessary code points. Every function should have a definition of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source. 
 - Resource functions should return responses in the following format: message, value, response_code
-    - For success: return response()->success('Unit created succesfully', $scm_unit, 200);
-    - For error: return response()->error($e->getMessage(), 500);
+    - For success:
+      ```php
+      return response()->success('Unit created successfully, $scm_unit, 200);
+      ```
+    - For error:
+      ```php
+      return response()->error($e->getMessage(), 500);
+      ```
+- File upload service:
+
+  ```php
+      <?php
+
+        namespace Modules\SCM\Http\Controllers;
+        
+        use App\Services\FileUploadService;
+        
+        class CSController extends Controller
+        {
+            function __construct(private FileUploadService $fileUpload)
+            {
+            }
+
+            public function store(CSRequest $request)
+            {
+                $requestData = $request->all();
+                $requestData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'scm/cs');
+            }
+
+            public function update(CSRequest $request, CS $cs)
+            {
+                $requestData = $request->all();
+                if ($request->hasFile('attached_file')) {
+                    $requestData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'scm/cs', $cs->attachment);
+                } else {
+                    $requestData['attachment'] = $cs->attachment;
+                }
+            }
+
+            public function destroy(CS $cs)
+            {
+              $this->fileUpload->deleteFile($cs->attachment);
+            }
+        }
+    ```
+
 - Validation should be done in Request files rather than Controller files.
 - Field names should be synchronized in the Database, Frontend forms, and Backend variables. In ambiguous cases, field names could be differentiated using entity names as prefixes.
 - Before executing DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that users can restore the data as necessary.
@@ -181,9 +225,10 @@ Project Repository
   - OPS - Operations
   - SCM - Supply Chain
 - All types of issues will be fixed in the Module Branch via a new Branch.
-- If any table is using short form then add a table description in a comment.
+- If any table is using short form then add a table description in a comment. i.e.: Comparative Statement as cs
   ```php
-  $table->comment('short description');
+  $table->comment('cs means Comparative Statement');
+  ```
 
 ## Authors
 
@@ -193,3 +238,4 @@ Project Repository
 - [@Delowar Hossain](https://www.github.com/illusionist3886)
 - [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
 - [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
+- [@Abdul Majid Irfan](https://github.com/irfan-majid)
