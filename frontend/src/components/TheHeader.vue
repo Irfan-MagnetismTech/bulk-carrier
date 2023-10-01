@@ -12,7 +12,7 @@
 
       <!-- Search input -->
       <div class="HeaderLogoWrapper">
-
+        <img aria-hidden="true" class="object-cover align-middle dark:block" style="width: 100px" src="/torony-small-logo.png" alt="Torony Logo">
       </div>
 
       <div class="flex items-center mr-2">
@@ -93,10 +93,36 @@ function toggleSidebar(){
   if(isLeftSidebarOpen.value) {
     document.getElementsByTagName('aside')[0].style.left = "0px";
     document.getElementsByTagName('aside')[0].style.width = "260px";
+    
+    let customCss = `
+      @media only screen and (min-width: 768px) {
+        #customDataTable {
+            max-width: calc(100vw - 300px);
+        }
+      }`;
+    const styleElement = document.createElement('style');
+    // Set the CSS text of the <style> element to the rules
+    styleElement.textContent = customCss;
+
+    // Append the <style> element to the <head> of the document
+    document.head.appendChild(styleElement);
   }
   else{
     document.getElementsByTagName('aside')[0].style.left = "-260px";
     document.getElementsByTagName('aside')[0].style.width = "0px";
+
+    let customCss = `
+      @media only screen and (min-width: 768px) {
+        #customDataTable {
+            max-width: calc(100vw - 10px);
+        }
+      }`;
+    const styleElement = document.createElement('style');
+    // Set the CSS text of the <style> element to the rules
+    styleElement.textContent = customCss;
+
+    // Append the <style> element to the <head> of the document
+    document.head.appendChild(styleElement);
   }
 }
 

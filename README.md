@@ -42,7 +42,7 @@ It is a web application that can be accessed from anywhere in the world.
   php artisan module:make-model (Model Name) (Module Name)
   php artisan module:make-model Post Blog
   ```
-- Generate additional migration, controller, request and seeder for the specified module. *This is only applicable for model creation*
+- Generate additional migration, controller, request, and seeder for the specified module. *This is only applicable for model creation*
   ```bash
   php artisan module:make-model Post -mcrs Blog
   ```
@@ -55,7 +55,7 @@ It is a web application that can be accessed from anywhere in the world.
   ```bash
   php artisan module:migrate-rollback Blog
   ```
-- Refresh the migration for the given module, or without a specified module refresh all modules migrations.
+- Refresh the migration for the given module, or without a specified module refresh all module migrations.
   ```bash
   php artisan module:migrate-refresh Blog
   ```
@@ -82,10 +82,10 @@ It is a web application that can be accessed from anywhere in the world.
 ### Naming Conventions
 
 - Branch names will be in kebab-case 
-- Route resources names will be in small case with dot to concatenate featured function names
-- Frontend routes and folder name will be in kebab-case
-- Modules, Services, Helpers, Traits name will be in PascalCase 
-- Short forms will be written in CAPITAL case like Supply Chain Management as SCM
+- Route resource names will be in small cases with a dot to concatenate featured function names
+- Frontend routes and folder names will be in kebab-case
+- Modules, Services, Helpers, and Traits name will be in PascalCase 
+- Short forms will be written in CAPITAL cases like Supply Chain Management as SCM
 - Database table names will have a prefix of relevant modules like ops_, acc_, crw_, scm, mnt_, adm_
 
 
@@ -93,7 +93,7 @@ It is a web application that can be accessed from anywhere in the world.
 
 Default `storage` => `storage/app/public`
 
-When using **`storeAs`** or similar method where we need to explicitly give storage path, please use the above convention
+When using **`storeAs`** or a similar method where we need to explicitly give a storage path, please use the above convention
 
 ### Branching
 
@@ -112,7 +112,7 @@ Project Repository
         └──administration
                 |
                 |
-                └──feature-name  
+                └──ADM/feature-name  
                         |
                         |
                         └──task-name       
@@ -121,7 +121,7 @@ Project Repository
         └──operations
                 |
                 |
-                └──feature-name
+                └──OPS/feature-name
                         |
                         |
                         └──task-name
@@ -130,7 +130,7 @@ Project Repository
         └──accounts
                 |
                 |
-                └──feature-name
+                └──ACC/feature-name
                         |
                         |
                         └──task-name
@@ -139,7 +139,7 @@ Project Repository
         └──crew
               |
               |
-              └──feature-name
+              └──CRW/feature-name
                         |
                         |
                         └──task-name
@@ -148,7 +148,7 @@ Project Repository
         └──supply-chain
                 |
                 |
-                └──feature-name
+                └──SCM/feature-name
                         |
                         |
                         └──task-name
@@ -157,20 +157,22 @@ Project Repository
         └──maintenance
                 |
                 |
-                └──feature-name
+                └──MNT/feature-name
                         |
                         |
                         └──task-name
 ```
 ## Important notes
 
-- Developers should comment in necessary code points. Every function should have defination of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source. 
-- Resource functions should return responses as following format: response_code, message, value
-- Validation should be done in Request files rather then Controller files.
-- Field names should be synchronized in Database, Frontend forms and Backend variables. In ambiguous cases, field names could be differentiate using entity name as prefix.
-- Before execute DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that user can restore the data as necessery.
-- In Models, fields name should be in Filleable properties.
-- For git commit message, please follow the convension as MODULE-SHORT-FORM/feature-name/task-name - short message with status. For example, "SCM/product-requisition/create-form - skeleton design DONE **OR** validation WIP **OR** data population error FIXED"
+- Developers should comment on necessary code points. Every function should have a definition of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source. 
+- Resource functions should return responses in the following format: message, value, response_code
+    - For success: return response()->success('Unit created succesfully', $scm_unit, 200);
+    - For error: return response()->error($e->getMessage(), 500);
+- Validation should be done in Request files rather than Controller files.
+- Field names should be synchronized in the Database, Frontend forms, and Backend variables. In ambiguous cases, field names could be differentiated using entity names as prefixes.
+- Before executing DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that users can restore the data as necessary.
+- In Models, field names should be in Fillable properties.
+- For the git commit message, please follow the convension as MODULE-SHORT-FORM/feature-name/task-name - short message with status. For example, "SCM/product-requisition/create-form - skeleton design DONE **OR** validation WIP **OR** data population error FIXED"
 - Short forms for modules are as below:
   - ADM - Administration
   - ACC - Accounts
@@ -178,7 +180,10 @@ Project Repository
   - MNT - Maintenance
   - OPS - Operations
   - SCM - Supply Chain
-- All types of issues will be fixed into Module Branch via a new Branch.
+- All types of issues will be fixed in the Module Branch via a new Branch.
+- If any table is using short form then add a table description in a comment.
+  ```php
+  $table->comment('short description');
 
 ## Authors
 
