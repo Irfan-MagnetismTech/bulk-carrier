@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\Maintenance\Http\Controllers\ShipDepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +14,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/maintenance', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
+{
+    /* Common routes */
+    Route::resource('ship-departments', ShipDepartmentController::class);
 });
