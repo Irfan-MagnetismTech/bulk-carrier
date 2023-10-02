@@ -14,16 +14,16 @@ export default [
             {
                 route: '',
                 label: 'User',
-                preIcon: icons.User,
+                preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: '',
+                        route: 'administration.users.create',
                         label: 'New User',
-                        preIcon: icons.User,
+                        preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
@@ -33,7 +33,7 @@ export default [
                     {
                         route: 'administration.users.index',
                         label: 'List User',
-                        preIcon: icons.User,
+                        preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
@@ -43,9 +43,9 @@ export default [
                 ],
             },
             {
-                route: 'administration.users.index',
+                route: 'administration.user.roles.index',
                 label: 'Role',
-                preIcon: icons.User,
+                preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
@@ -53,9 +53,9 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: '',
+                route: 'administration.user.permissions.index',
                 label: 'Permission',
-                preIcon: icons.User,
+                preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,

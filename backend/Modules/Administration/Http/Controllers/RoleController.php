@@ -36,23 +36,15 @@ class RoleController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function store(Request $request) : JsonResponse
     {
-        return view('administration::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
+        try {
+            $this->valida
+        }
+        catch (\Exception$e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

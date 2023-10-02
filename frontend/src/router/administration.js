@@ -28,15 +28,16 @@ export default [
 
 	/* User Role Management Routes */
 	{
-		path: `/${BASE}/user/role`,
-		name: `${BASE}.user.role.index`,
-		component: () => import(`../views/${BASE}/role/roles.vue`),
+		path: `/${BASE}/user/roles`,
+		name: `${BASE}.user.roles.index`,
+		component: () => import(`../views/${BASE}/role/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'role-show' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/user/role/create`,
-		name: `${BASE}.user.role.create`,
-		component: () => import(`../views/${BASE}/role/create-role.vue`),
+		path: `/${BASE}/user/roles/create`,
+		name: `${BASE}.user.roles.create`,
+		component: () => import(`../views/${BASE}/role/create.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'role-create' },
 	},
 	{
@@ -48,43 +49,11 @@ export default [
 
 	/* User Permission Management Routes */
 	{
-		path: `/${BASE}/user/permission`,
-		name: `${BASE}.user.permission.index`,
-		component: () => import(`../views/${BASE}/permission/permissions.vue`),
+		path: `/${BASE}/user/permissions`,
+		name: `${BASE}.user.permissions.index`,
+		component: () => import(`../views/${BASE}/permission/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'permission-show' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-	},
-	{
-		path: `/${BASE}/user/permission/create`,
-		name: `${BASE}.user.permission.create`,
-		component: () => import(`../views/${BASE}/permission/create-permission.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'permission-create' },
-	},
-	{
-		path: `/${BASE}/user/permission/:permissionId/edit`,
-		name: `${BASE}.user.permission.edit`,
-		component: () => import(`../views/${BASE}/permission/edit-permission.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'permission-edit' },
-	},
-
-	// approval management routes
-	{
-		path: `/${BASE}/approval/management/index`,
-		name: `${BASE}.approval.management.index`,
-		component: () => import(`../views/${BASE}/approval-management/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'approval-management-show' },
-	},
-	{
-		path: `/${BASE}/approval/management/create`,
-		name: `${BASE}.approval.management.create`,
-		component: () => import(`../views/${BASE}/approval-management/create-approval.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'approval-management-create' },
-	},
-	{
-		path: `/${BASE}/approval/management/:approvalId/edit`,
-		name: `${BASE}.approval.management.edit`,
-		component: () => import(`../views/${BASE}/approval-management/edit-approval.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'approval-management-edit' },
 	},
 
 	{
@@ -93,5 +62,4 @@ export default [
 		component: () => import(`../views/${BASE}/user/update-password.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'user-password-update' },
 	},
-
 ];

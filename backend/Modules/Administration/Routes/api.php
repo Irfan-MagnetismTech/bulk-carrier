@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Administration\Http\Controllers\PermissionController;
 use Modules\Administration\Http\Controllers\RoleController;
 use Modules\Administration\Http\Controllers\UserController;
 
@@ -23,4 +24,5 @@ Route::middleware(['auth:api'])->prefix('administration')->as('administration.')
     Route::get('get-current-user', [UserController::class, 'getCurrentUser']);
 
     Route::apiResource('roles', RoleController::class);
+    Route::apiResource('permissions', PermissionController::class);
 });
