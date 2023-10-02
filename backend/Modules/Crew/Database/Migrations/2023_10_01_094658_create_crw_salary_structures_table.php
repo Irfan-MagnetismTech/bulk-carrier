@@ -15,8 +15,14 @@ return new class extends Migration
     {
         Schema::create('crw_salary_structures', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('crw_crew_id');
+			$table->integer('increment_sequence');
+			$table->date('effective_date');
+			$table->unsignedBigInteger('promotion_id')->nullable();
+			$table->string('currency');
+			$table->date('gross_salary');
+			$table->tinyInteger('is_active');
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

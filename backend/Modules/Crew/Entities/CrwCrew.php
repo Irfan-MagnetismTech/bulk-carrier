@@ -10,5 +10,5 @@ class CrwCrew extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [];
+	protected $fillable = ['crw_crew_profile_id', 'crw_rank_id', 'name', 'email', 'contact', 'business_unit'];
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwAttendanceLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['crw_crew_id', 'crw_crew_assignment_id', 'attendance_line_composite', 'present_days', 'absent_days', 'payable_days'];
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwPayrollBatchHead extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['payroll_batch_id', 'head_type', 'head_name', 'unit', 'based_on', 'amount'];
 }

@@ -15,8 +15,17 @@ return new class extends Migration
     {
         Schema::create('crw_recruitment_approvals', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->date('applied_date');
+			$table->string('page_title');
+			$table->string('subject');
+			$table->integer('total_approved');
+			$table->integer('crew_agreed_to_join');
+			$table->integer('crew_selected');
+			$table->integer('crew_panel');
+			$table->integer('crew_rest');
+			$table->text('body');
+			$table->text('remarks')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

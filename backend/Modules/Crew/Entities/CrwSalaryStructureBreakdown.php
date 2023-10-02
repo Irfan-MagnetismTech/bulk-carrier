@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwSalaryStructureBreakdown extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['component_type', 'component_category', 'component_name', 'amount'];
 }

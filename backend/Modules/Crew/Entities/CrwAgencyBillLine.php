@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwAgencyBillLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['particular', 'description', 'per', 'quantity', 'rate', 'amount'];
 }

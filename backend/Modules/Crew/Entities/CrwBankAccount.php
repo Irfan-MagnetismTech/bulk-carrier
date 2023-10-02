@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwBankAccount extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit'];
 }

@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('crw_vessel_required_crews', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('ops_vessel_id');
+			$table->integer('total_crew');
+			$table->date('effective_date');
+			$table->text('remarks')->nullable();            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

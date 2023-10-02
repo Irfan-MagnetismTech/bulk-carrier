@@ -2,78 +2,105 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Crew\Entities\CrwBankAccount;
 
 class CrwBankAccountController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('crew::index');
-    }
+        try {
+            $crwBankAccounts = CrwBankAccount::all();
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
+            return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit');
+            $crwBankAccount     = CrwBankAccount::create($crwBankAccountData);
+
+            return response()->success('Created Succesfully', $crwBankAccount, 201);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Models\CrwBankAccount  $crwBankAccount
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CrwBankAccount $crwBankAccount)
     {
-        return view('crew::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
+        try {
+            return response()->success('Retrieved succesfully', $crwBankAccount, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\CrwBankAccount  $crwBankAccount
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CrwBankAccount $crwBankAccount)
     {
-        //
+        try {
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit');
+            $crwBankAccount->update($crwBankAccountData);
+
+            return response()->success('Updated succesfully', $crwBankAccount, 202);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Models\CrwBankAccount  $crwBankAccount
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CrwBankAccount $crwBankAccount)
     {
-        //
+        try {
+            $crwBankAccount->delete();
+
+            return response()->success('Deleted Succesfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

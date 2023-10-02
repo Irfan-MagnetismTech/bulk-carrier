@@ -15,8 +15,14 @@ return new class extends Migration
     {
         Schema::create('crw_incidents', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('ops_vessel_id');
+			$table->date('date_time');
+			$table->string('type'); // example : 
+			$table->string('location');
+			$table->string('reported_by');
+			$table->string('attachment')->nullable();
+			$table->text('description')->nullable();            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

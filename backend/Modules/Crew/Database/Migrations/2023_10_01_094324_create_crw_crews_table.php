@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('crw_crews', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('crw_crew_profile_id');
+			$table->unsignedBigInteger('crw_rank_id');
+			$table->string('name');
+			$table->string('contact');
+			$table->string('email')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('crw_crew_checklists', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->date('effective_date');
+			$table->text('remarks')->nullable();            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

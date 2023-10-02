@@ -2,78 +2,134 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwCrewProfile;
 
 class CrwCrewProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('crew::index');
-    }
+        try {
+            $crwCrewProfiles = CrwCrewProfile::with('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
+            return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request)
+            {
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'picture', 'attachment', 'business_unit');
+
+                $crwCrewProfile = CrwCrewProfile::create($crwCrewProfileData);
+                $crwCrewProfile->crwCrewEducations()->createMany($request->crwCrewEducations);
+                $crwCrewProfile->crwCrewTrainings()->createMany($request->crwCrewTrainings);
+                $crwCrewProfile->crwCrewExperiences()->createMany($request->crwCrewExperiences);
+                $crwCrewProfile->crwCrewLanguages()->createMany($request->crwCrewLanguages);
+                $crwCrewProfile->crwCrewReferences()->createMany($request->crwCrewReferences);
+                $crwCrewProfile->crwCrewNominees()->createMany($request->crwCrewNominees);
+
+                return response()->success('Created Succesfully', $crwCrewProfile, 201);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Models\CrwCrewProfile  $crwCrewProfile
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CrwCrewProfile $crwCrewProfile)
     {
-        return view('crew::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
+        try {
+            return response()->success('Retrieved succesfully', $crwCrewProfile->load('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees'), 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\CrwCrewProfile  $crwCrewProfile
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CrwCrewProfile $crwCrewProfile)
     {
-        //
+        try {
+            DB::transaction(function () use ($request, $crwCrewProfile)
+            {
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'picture', 'attachment', 'business_unit');
+
+                $crwCrewProfile->update($crwCrewProfileData);
+
+                $crwCrewProfile->crwCrewEducations()->delete();
+                $crwCrewProfile->crwCrewTrainings()->delete();
+                $crwCrewProfile->crwCrewExperiences()->delete();
+                $crwCrewProfile->crwCrewLanguages()->delete();
+                $crwCrewProfile->crwCrewReferences()->delete();
+                $crwCrewProfile->crwCrewNominees()->delete();
+
+                $crwCrewProfile->crwCrewEducations()->createMany($request->crwCrewEducations);
+                $crwCrewProfile->crwCrewTrainings()->createMany($request->crwCrewTrainings);
+                $crwCrewProfile->crwCrewExperiences()->createMany($request->crwCrewExperiences);
+                $crwCrewProfile->crwCrewLanguages()->createMany($request->crwCrewLanguages);
+                $crwCrewProfile->crwCrewReferences()->createMany($request->crwCrewReferences);
+                $crwCrewProfile->crwCrewNominees()->createMany($request->crwCrewNominees);
+
+                return response()->success('Updated succesfully', $crwCrewProfile, 202);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Models\CrwCrewProfile  $crwCrewProfile
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CrwCrewProfile $crwCrewProfile)
     {
-        //
+        try {
+            $crwCrewProfile->delete();
+
+            return response()->success('Deleted Succesfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

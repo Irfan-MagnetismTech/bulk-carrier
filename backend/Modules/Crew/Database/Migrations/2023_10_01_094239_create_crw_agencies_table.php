@@ -15,8 +15,18 @@ return new class extends Migration
     {
         Schema::create('crw_agencies', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->string('name');
+			$table->string('legal_name');
+			$table->string('tax_identification')->nullable();
+			$table->string('business_license_no')->nullable();
+			$table->string('company_reg_no')->nullable();
+			$table->string('address');
+			$table->string('phone');
+			$table->string('email');
+			$table->string('website')->nullable();
+			$table->string('logo')->nullable();
+			$table->string('country')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();
         });
     }

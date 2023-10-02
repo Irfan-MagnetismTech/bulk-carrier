@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('crw_crew_education', function (Blueprint $table) {
+        Schema::create('crw_crew_requisitions', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('ops_vessel_id');
+			$table->date('applied_date');
+			$table->integer('total_required_manpower');
+			$table->text('remarks')->nullable();            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('crw_crew_education');
+        Schema::dropIfExists('crw_crew_requisitions');
     }
 };

@@ -15,8 +15,13 @@ return new class extends Migration
     {
         Schema::create('crw_agency_bill_lines', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('crw_agency_bill_id')->constrained('crw_agency_bills', 'id')->cascadeOnDelete();
+			$table->string('particular');
+			$table->text('description')->nullable();
+			$table->string('per')->nullable();
+			$table->integer('quantity');
+			$table->decimal('rate');
+			$table->decimal('amount');
             $table->timestamps();
         });
     }

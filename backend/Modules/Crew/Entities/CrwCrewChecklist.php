@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwCrewChecklist extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['effective_date', 'remarks', 'business_unit'];
+
+	public function crwCrewChecklistLines(){
+		return $this->hasMany(CrwCrewChecklistLine::class);
+	}
 }

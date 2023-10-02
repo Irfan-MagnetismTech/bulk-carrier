@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('crw_crew_checklist_lines', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('crw_crew_checklist_id')->constrained('crw_crew_checklists', 'id')->cascadeOnDelete();
+			$table->string('item_name');
+			$table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

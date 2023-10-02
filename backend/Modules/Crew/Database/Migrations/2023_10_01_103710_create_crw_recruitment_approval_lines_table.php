@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('crw_recruitment_approval_lines', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('crw_recruitment_approval_id')->constrained('crw_recruitment_approvals', 'id')->cascadeOnDelete();
+			$table->unsignedInteger('crw_rank_id');
+			$table->string('candidate_name');
+			$table->string('candidate_contact');
+			$table->string('candidate_email')->nullable();
+			$table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

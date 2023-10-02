@@ -14,9 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('crw_crew_languages', function (Blueprint $table) {
-            $table->id();
-            
-            $table->softDeletes();
+            $table->id();            
+            $table->string('language_name');
+            $table->string('writing');
+            $table->string('reading');
+            $table->string('speaking');
+            $table->string('listening');
             $table->timestamps();
         });
     }

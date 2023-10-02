@@ -14,9 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('crw_crew_trainings', function (Blueprint $table) {
-            $table->id();
-            
-            $table->softDeletes();
+            $table->id();            
+            $table->string('training_title');
+            $table->string('covered_topic');
+            $table->year('year');
+            $table->string('institute');
+            $table->string('duration')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }

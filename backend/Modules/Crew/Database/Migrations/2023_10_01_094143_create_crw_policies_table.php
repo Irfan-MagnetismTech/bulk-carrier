@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('crw_policies', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->string('name');
+			$table->string('type')->nullable();
+			$table->string('attachment')->nullable();            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

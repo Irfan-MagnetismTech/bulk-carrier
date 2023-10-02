@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('crw_crew_ranks', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('crw_crew_id');
+			$table->unsignedBigInteger('crw_rank_id');
+			$table->string('rank_name');
+			$table->date('effective_date');
             $table->timestamps();
         });
     }

@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('crw_payroll_batch_head_lines', function (Blueprint $table) {
+        Schema::create('crw_crew_educations', function (Blueprint $table) {
             $table->id();            
-            $table->unsignedBigInteger('payroll_batch_line_id');
-            $table->unsignedBigInteger('payroll_batch_head_id');
-            $table->unsignedBigInteger('crew_id');
-            $table->string('particular');
-            $table->string('amount');            
+            $table->string('exam_title');
+            $table->string('major');
+            $table->string('institute');
+            $table->string('result');
+            $table->year('passing_year');
+            $table->string('duration')->nullable();
+            $table->string('achievement')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('crw_payroll_batch_head_lines');
+        Schema::dropIfExists('crw_crew_educations');
     }
 };

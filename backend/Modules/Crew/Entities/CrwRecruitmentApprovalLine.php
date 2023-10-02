@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwRecruitmentApprovalLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['crw_rank_id', 'candidate_name', 'candidate_contact', 'candidate_email', 'remarks'];
+    
 }

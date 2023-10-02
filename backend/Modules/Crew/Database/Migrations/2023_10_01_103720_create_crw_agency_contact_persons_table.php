@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('crw_requisitions', function (Blueprint $table) {
+        Schema::create('crw_agency_contact_persons', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('crw_agency_id')->constrained('crw_agencies', 'id')->cascadeOnDelete();
+			$table->string('name');
+			$table->string('contact_no');
+			$table->string('email')->nullable();
+			$table->string('position')->nullable();
+			$table->string('purpose')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('crw_requisitions');
+        Schema::dropIfExists('crw_agency_contact_persons');
     }
 };

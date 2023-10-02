@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('crw_ranks', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->string('name');
+			$table->string('short_name');
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

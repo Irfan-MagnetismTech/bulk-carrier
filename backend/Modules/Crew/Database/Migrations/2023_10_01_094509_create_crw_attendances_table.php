@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('crw_attendances', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('ops_vessel_id');
+			$table->year('year');
+			$table->integer('month_no');
+			$table->integer('working_days');
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

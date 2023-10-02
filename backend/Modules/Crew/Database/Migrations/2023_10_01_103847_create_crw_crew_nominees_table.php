@@ -14,9 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('crw_crew_nominees', function (Blueprint $table) {
-            $table->id();
-            
-            $table->softDeletes();
+            $table->id();            
+            $table->string('name');
+            $table->string('profession');
+            $table->string('address');
+            $table->string('relationship');
+            $table->string('contact_no')->nullable();
+            $table->string('email')->nullable();
+            $table->string('is_relative');
             $table->timestamps();
         });
     }

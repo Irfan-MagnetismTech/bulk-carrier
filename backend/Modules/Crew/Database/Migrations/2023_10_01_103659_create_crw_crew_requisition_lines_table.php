@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('crw_crew_requisition_lines', function (Blueprint $table) {
-            $table->id();
-            
-            $table->softDeletes();
+            $table->id();            
+			$table->foreignId('crw_crew_requisition_id')->constrained('crw_crew_requisitions', 'id')->cascadeOnDelete();
+			$table->unsignedInteger('crw_rank_id');
+			$table->integer('required_manpower');
+			$table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

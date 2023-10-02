@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwIncident extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description', 'business_unit'];
+
+	public function crwIncidentParticipants(){
+		return $this->hasMany(CrwIncidentParticipant::class);
+	}
 }

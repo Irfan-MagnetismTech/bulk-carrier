@@ -2,78 +2,115 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwAgencyBill;
 
 class CrwAgencyBillController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('crew::index');
-    }
+        try {
+            $crwAgencyBills = CrwAgencyBill::with('crwAgencyBillLines')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
+            return response()->success('Retrieved Succesfully', $crwAgencyBills, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request)
+            {
+                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks', 'business_unit');
+                $crwAgencyBill     = CrwAgencyBill::create($crwAgencyBillData);
+                $crwAgencyBill->crwAgencyBillLines()->createMany($request->crwAgencyBillLines);
+
+                return response()->success('Created Succesfully', $crwAgencyBill, 201);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Models\CrwAgencyBill  $crwAgencyBill
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CrwAgencyBill $crwAgencyBill)
     {
-        return view('crew::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
+        try {
+            return response()->success('Retrieved succesfully', $crwAgencyBill->load('crwAgencyBillLines'), 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\CrwAgencyBill  $crwAgencyBill
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CrwAgencyBill $crwAgencyBill)
     {
-        //
+        try {
+            DB::transaction(function () use ($request, $crwAgencyBill)
+            {
+                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks', 'business_unit');
+                $crwAgencyBill->update($crwAgencyBillData);
+                $crwAgencyBill->crwAgencyBillLines()->delete();
+                $crwAgencyBill->crwAgencyBillLines()->createMany($request->crwAgencyBillLines);
+
+                return response()->success('Updated succesfully', $crwAgencyBill, 202);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Models\CrwAgencyBill  $crwAgencyBill
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CrwAgencyBill $crwAgencyBill)
     {
-        //
+        try {
+            $crwAgencyBill->delete();
+
+            return response()->success('Deleted Succesfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

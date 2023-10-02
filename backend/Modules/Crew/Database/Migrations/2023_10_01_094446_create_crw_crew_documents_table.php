@@ -15,8 +15,13 @@ return new class extends Migration
     {
         Schema::create('crw_crew_documents', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->unsignedBigInteger('crw_crew_id');
+			$table->string('name'); // document name
+			$table->string('reference_no')->nullable();
+			$table->string('issuing_authority');
+			$table->string('validity_period'); //permanent / 5 Years
+			$table->float('validity_period_in_month'); //60
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

@@ -2,78 +2,105 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwPayrollBatch;
 
 class CrwPayrollBatchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function index()
     {
-        return view('crew::index');
+        try {
+            $CrwPayrollBatches = CrwPayrollBatch::get();
+
+            return response()->success('Retrieved Succesfully', $CrwPayrollBatches, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request)
+            {
+                $crwPayrollBatchData = $request->only('ops_vessel_id', 'month_no', 'year', 'compensation_type', 'start_date', 'end_date', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
+                $crwPayrollBatch     = CrwPayrollBatch::create($crwPayrollBatchData);
+                $crwPayrollBatch->crwPayrollBatchLines()->createMany($request->crwPayrollBatchLines);
+                $crwPayrollBatch->crwPayrollBatchHeads()->createMany($request->crwPayrollBatchHeads);
+                $crwPayrollBatch->crwPayrollBatchHeadLines()->createMany($request->crwPayrollBatchHeadLines);
+
+                return response()->success('Created Succesfully', $crwPayrollBatch, 201);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param CrwPayrollBatch $crwPayrollBatch
      */
-    public function show($id)
+    public function show(CrwPayrollBatch $crwPayrollBatch)
     {
-        return view('crew::show');
+        try {
+            return response()->success('Retrieved succesfully', $crwPayrollBatch->load('crwPayrollBatchLines', 'crwPayrollBatchHeads', 'crwPayrollBatchHeadLines'), 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
      * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param CrwPayrollBatch $crwPayrollBatch
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CrwPayrollBatch $crwPayrollBatch)
     {
-        //
+        try {
+            DB::transaction(function () use ($request, $crwPayrollBatch)
+            {
+                $crwPayrollBatchData = $request->only('ops_vessel_id', 'month_no', 'year', 'compensation_type', 'start_date', 'end_date', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
+                $crwPayrollBatch->update($crwPayrollBatchData);
+                $crwPayrollBatch->crwPayrollBatchLines()->delete();
+                $crwPayrollBatch->crwPayrollBatchHeads()->delete();
+                $crwPayrollBatch->crwPayrollBatchHeadLines()->delete();
+
+                $crwPayrollBatch->crwPayrollBatchLines()->createMany($request->crwPayrollBatchLines);
+                $crwPayrollBatch->crwPayrollBatchHeads()->createMany($request->crwPayrollBatchHeads);
+                $crwPayrollBatch->crwPayrollBatchHeadLines()->createMany($request->crwPayrollBatchHeadLines);
+
+                return response()->success('Updated succesfully', $crwPayrollBatch, 202);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param CrwPayrollBatch $crwPayrollBatch
      */
-    public function destroy($id)
+    public function destroy(CrwPayrollBatch $crwPayrollBatch)
     {
-        //
+        try {
+            $crwPayrollBatch->delete();
+
+            return response()->success('Deleted Succesfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

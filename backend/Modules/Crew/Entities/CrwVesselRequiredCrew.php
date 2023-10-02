@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwVesselRequiredCrew extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['ops_vessel_id', 'total_crew', 'effective_date', 'remarks', 'business_unit'];
+
+	public function crwVesselRequiredCrewLines(){
+		return $this->hasMany(CrwVesselRequiredCrewLine::class);
+	}
 }

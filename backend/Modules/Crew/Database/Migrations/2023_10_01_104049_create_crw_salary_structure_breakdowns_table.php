@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('crw_salary_structure_breakdowns', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('crw_salary_structure_id')->constrained('crw_salary_structures', 'id')->cascadeOnDelete();
+			$table->enum('component_type', ['Earnings', 'Deductions']);
+			$table->string('component_category'); // Salary/Allowance/Deduction/Bonus
+			$table->string('component_name'); // Basic Salary 
+			$table->decimal('amount');
             $table->timestamps();
         });
     }

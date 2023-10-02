@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwCrewDocument extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+	protected $fillable = ['crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit'];
+
+	public function crwCrewDocumentRenewals(){
+		return $this->hasMany(CrwCrewDocumentRenewal::class);
+	}
 }

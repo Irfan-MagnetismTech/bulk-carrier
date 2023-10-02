@@ -2,78 +2,115 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwSalaryStructure;
 
 class CrwSalaryStructureController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('crew::index');
-    }
+        try {
+            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
+            return response()->success('Retrieved Succesfully', $crwSalaryStructures, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request)
+            {
+                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
+                $crwSalaryStructure     = CrwSalaryStructure::create($crwSalaryStructureData);
+                $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
+
+                return response()->success('Created Succesfully', $crwSalaryStructure, 201);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Models\CrwSalaryStructure  $crwSalaryStructure
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CrwSalaryStructure $crwSalaryStructure)
     {
-        return view('crew::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
+        try {
+            return response()->success('Retrieved succesfully', $crwSalaryStructure->load('crwSalaryStructureBreakdowns'), 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\CrwSalaryStructure  $crwSalaryStructure
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CrwSalaryStructure $crwSalaryStructure)
     {
-        //
+        try {
+            DB::transaction(function () use ($request, $crwSalaryStructure)
+            {
+                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
+                $crwSalaryStructure->update($crwSalaryStructureData);
+                $crwSalaryStructure->crwSalaryStructureBreakdowns()->delete();
+                $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
+
+                return response()->success('Updated succesfully', $crwSalaryStructure, 202);
+            });
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Models\CrwSalaryStructure  $crwSalaryStructure
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CrwSalaryStructure $crwSalaryStructure)
     {
-        //
+        try {
+            $crwSalaryStructure->delete();
+
+            return response()->success('Deleted Succesfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
