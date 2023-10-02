@@ -20,16 +20,17 @@ class ShipDepartmentController extends Controller
     {
         try {
 
-            $shipDepartments = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);//ShipDepartment::paginate(10);
+            $sampleData = Array(['name'=>'Engine Department', 'short_code'=>'EN'],
+                                ['name'=>'Deck Department', 'short_code'=>'DE']
+                            );
+            $shipDepartments = $sampleData;//ShipDepartment::paginate(10);
 
-            return response()->json([
-                'value'   => $shipDepartments,
-                'message' => 'Successfully retrieved ship departments',
-            ], 200);
+            return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
+            
         }
         catch (\Exception $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
 
     }
