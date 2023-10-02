@@ -142,10 +142,6 @@ table, th,td{
         width: 8px;
     }
 
-    .table-responsive {
-      overflow: auto;
-    }
-
     .table-responsive::-webkit-scrollbar {
       height: 6px;
   }

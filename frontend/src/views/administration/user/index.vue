@@ -18,6 +18,10 @@ const { users, getUsers, deleteUser, isLoading } = useUser();
 const { setTitle } = Title();
 setTitle('User List');
 
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
@@ -36,9 +40,21 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
-    getUsers(props.page);
-  });
+  getUsers(props.page)
+    .then(() => {
+      const customDataTable = document.getElementById("customDataTable");
+
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching users:", error);
+    });
 });
+
+});
+
 </script>
 
 <template>
@@ -56,16 +72,23 @@ onMounted(() => {
       <input type="text" placeholder="Search..." class="search" />
     </div>
   </div>
-  <div class="overflow-x-auto table-responsive max-w-screen">
-    <table class="w-full whitespace-no-wrap">
+
+  <div id="customDataTable">
+    <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+      
+      <table class="w-full whitespace-no-wrap" >
           <thead v-once>
-          <tr>
+          <tr class="w-full">
             <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
+            <th class="w-1/4 md:w-64">Name</th>
+            <th class="w-64">Email</th>
             <th>User Role</th>
-            <th>Port Code</th>
-            <th>Action</th>
+            <th>User Role</th>
+            <th>User Role</th>
+            <th>User Role</th>
+            <th>User Role</th>
+            <th>User Role</th>
+            <th class="w-68">Action</th>
           </tr>
           </thead>
           <tbody>
@@ -74,10 +97,16 @@ onMounted(() => {
             <td>{{ user?.name }}</td>
             <td>{{ user?.email }}</td>
             <td>{{ user?.roles }}</td>
-            <td>{{ user?.port }}</td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+            <td>{{ user?.roles }}</td>
+            <td>{{ user?.roles }}</td>
+            <td>{{ user?.roles }}</td>
+            <td>{{ user?.roles }}</td>
+            <td>{{ user?.roles }}</td>
+            <td class="">
+              <div class="flex">
+                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
+                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+              </div>
             </td>
           </tr>
           </tbody>
@@ -89,7 +118,8 @@ onMounted(() => {
             <td colspan="6">No user found.</td>
           </tr>
           </tfoot>
-    </table>
+      </table>
+    </div>
     <Paginate :data="users" to="administration.users.index" :page="page"></Paginate>
   </div>
 </template>
