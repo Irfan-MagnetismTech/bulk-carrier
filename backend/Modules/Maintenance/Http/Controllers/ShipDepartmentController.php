@@ -69,7 +69,17 @@ class ShipDepartmentController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+            
+            $shipDepartment = MntShipDepartment::find($id);
+            
+            return response()->success('Ship department found successfully', $shipDepartment, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -90,7 +100,19 @@ class ShipDepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $shipDepartment = MntShipDepartment::findorfail($id);
+            $shipDepartment->update($input);
+            
+            return response()->success('Ship departments updated successfully', $shipDepartment, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
