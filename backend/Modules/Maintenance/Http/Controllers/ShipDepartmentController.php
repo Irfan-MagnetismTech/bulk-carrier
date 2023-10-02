@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Maintenance\Entities\ShipDepartment;
+use Modules\Maintenance\Entities\MntShipDepartment;
 
 class ShipDepartmentController extends Controller
 {
@@ -20,10 +20,7 @@ class ShipDepartmentController extends Controller
     {
         try {
 
-            $sampleData = Array(['name'=>'Engine Department', 'short_code'=>'EN'],
-                                ['name'=>'Deck Department', 'short_code'=>'DE']
-                            );
-            $shipDepartments = $sampleData;//ShipDepartment::paginate(10);
+            $shipDepartments = MntShipDepartment::select('*')->paginate(10);
 
             return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
             
@@ -51,7 +48,18 @@ class ShipDepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $shipDepartment = MntShipDepartment::create($input);
+            
+            return response()->success('Ship departments created successfully', $shipDepartment, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
