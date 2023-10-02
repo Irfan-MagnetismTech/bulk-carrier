@@ -7,9 +7,9 @@
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.short_name" placeholder="Short Name" class="form-input" />
-        <Error v-if="errors?.short_name" :errors="errors.short_name" />
+        <span class="text-gray-700 dark:text-gray-300">Short Code <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.short_code" placeholder="Short code" class="form-input" />
+        <Error v-if="errors?.short_code" :errors="errors.short_code" />
       </label>
     </div>
     
@@ -30,7 +30,7 @@ const props = defineProps({
 });
 
 
-const { shipDepartments, getShipDepartments } = useShipDepartment();
+// const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
 // onMounted(() => {

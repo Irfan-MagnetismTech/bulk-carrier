@@ -22,7 +22,7 @@ export default [
                 subSubMenu: [
                     {
                         route: 'maintenance.ship-department.create',
-                        label: 'New Ship Department',
+                        label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -32,7 +32,7 @@ export default [
                     },
                     {
                         route: 'maintenance.ship-department.index',
-                        label: 'List Ship Department',
+                        label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
                         is_active: false,

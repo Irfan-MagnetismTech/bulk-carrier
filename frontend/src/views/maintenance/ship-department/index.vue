@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useUser from "../../../composables/administration/useUser";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -17,7 +16,7 @@ const props = defineProps({
 
 const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading } = useShipDepartment();
 const { setTitle } = Title();
-setTitle('User List');
+setTitle('Ship Department List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -26,7 +25,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this user!",
+    text: "You want to change delete this ship department!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -73,6 +72,7 @@ onMounted(() => {
       <input type="text" placeholder="Search..." class="search" />
     </div>
   </div>
+  
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
@@ -80,31 +80,32 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th>#</th>
-            <th class="w-1/4 md:w-64">Name</th>
-            <th class="w-64">Short Name</th>
-            <th class="w-68">Action</th>
+            <th class="w-1/5">#</th>
+            <th class="w-2/5">Name</th>
+            <th class="w-1/5">Short Code</th>
+            <th class="w-1/5">Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
+            
+          <tr v-for="(shipDepartment,index) in shipDepartments" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ shipDepartment?.name }}</td>
-            <td>{{ shipDepartment?.short_name }}</td>
+            <td>{{ shipDepartment?.short_code }}</td>
             
             <td class="">
               <div class="flex">
-                <action-button :action="'edit'" :to="{ name: 'maintenance.ship-departments.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'maintenance.ship-department.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
               </div>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!shipDepartments?.data?.length">
+          <tfoot v-if="!shipDepartments?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
-          <tr v-else-if="!shipDepartments?.data?.length">
+          <tr v-else-if="!shipDepartments?.length">
             <td colspan="6">No ship department found.</td>
           </tr>
           </tfoot>

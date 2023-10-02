@@ -13,7 +13,7 @@ export default function useShipDepartment() {
     const notification = useNotification();
     const shipDepartment = ref( {
         name: '',
-        short_name: '',
+        short_code: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
@@ -24,7 +24,7 @@ export default function useShipDepartment() {
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/maintenance/ship-departments',{
+            const {data, status} = await Api.get('/mnt/ship-departments',{
                 params: {
                     page: page || 1,
                 },
@@ -47,7 +47,7 @@ export default function useShipDepartment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/maintenance/ship-departments', form);
+            const { data, status } = await Api.post('/mnt/ship-departments', form);
             shipDepartment.value = data.value;
             notification.showSuccess(status);
             router.push({ name: "maintenance.ship-department.index" });
@@ -66,7 +66,7 @@ export default function useShipDepartment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/maintenance/ship-departments/${shipDepartmentId}`);
+            const { data, status } = await Api.get(`/mnt/ship-departments/${shipDepartmentId}`);
             shipDepartment.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -86,7 +86,7 @@ export default function useShipDepartment() {
 
         try {
             const { data, status } = await Api.put(
-                `/maintenance/ship-departments/${shipDepartmentId}`,
+                `/mnt/ship-departments/${shipDepartmentId}`,
                 form
             );
             shipDepartment.value = data.value;
@@ -108,7 +108,7 @@ export default function useShipDepartment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/maintenance/ship-departments/${shipDepartmentId}`);
+            const { data, status } = await Api.delete( `/mnt/ship-departments/${shipDepartmentId}`);
             notification.showSuccess(status);
             await getShipDepartments();
         } catch (error) {
