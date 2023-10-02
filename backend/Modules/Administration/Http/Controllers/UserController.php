@@ -12,10 +12,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Spatie\User\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Passport\HasApiTokens;
 
 class UserController extends Controller
 {
-    use HasRoles;
+    use HasApiTokens, HasRoles;
 
     /**
      * get all users with their roles.
@@ -157,4 +158,5 @@ class UserController extends Controller
         $user['port'] = $request->user()->port;
         return $user;
     }
+
 }
