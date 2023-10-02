@@ -15,16 +15,14 @@ use Modules\Operations\Http\Controllers\OpsVesselController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware(['auth:api'])->prefix('operations')->as('operations.')->group(function ()
+Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    // return $request->user();
-    
+    // return $request->user();    
+    Route::resources([
+        'ports' => OpsPortController::class,
+        'vessels' => OpsVesselController::class,
+    ]);
 });
-Route::resources([
-    'ports' => OpsPortController::class,
-    'vessels' => OpsVesselController::class,
-    
-]);
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
 Route::get('vessels/without/paginate', [OpsVesselController::class, 'getVesselWithoutPaginate']);
 Route::post('vessel-search', [OpsVesselController::class, 'search']);

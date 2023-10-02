@@ -24,8 +24,9 @@ class OpsPortRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this);
         return [
-            'code'  => ['required', 'string', 'max:5', Rule::unique('ops_ports')->ignore($this->port)],
+            'code'  => ['required', 'string', 'max:20', Rule::unique('ops_ports')->ignore($this->port)],
             'name'  => ['required', 'string', 'max:255'],
         ];
     }

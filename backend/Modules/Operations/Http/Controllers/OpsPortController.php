@@ -30,7 +30,6 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        // dd($request);
         try {
             $ports = OpsPort::latest()->paginate(15);
             // if($request->searchKey != null) {
@@ -50,7 +49,7 @@ class OpsPortController extends Controller
                 'message' => 'Successfully retrieved ports.',
             ], 200);
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
@@ -75,7 +74,7 @@ class OpsPortController extends Controller
                 'message' => 'Port added Successfully.'
             ], 201);
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
@@ -95,8 +94,9 @@ class OpsPortController extends Controller
                 'value' => $port,
                 'message' => 'Successfully retrieved port.'
             ], 200);
-        } catch (\Exception $e){
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+            // return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 
@@ -110,7 +110,7 @@ class OpsPortController extends Controller
      */
     public function update(OpsPortRequest $request, OpsPort $port): JsonResponse
     {
-        dd($request);
+        // dd($request);
         try {
             $port->update($request->all());
 
@@ -119,9 +119,10 @@ class OpsPortController extends Controller
                 'message' => 'Port updated Successfully.'
             ], 202);
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
+            // return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 
@@ -143,7 +144,8 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
+            // return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 }

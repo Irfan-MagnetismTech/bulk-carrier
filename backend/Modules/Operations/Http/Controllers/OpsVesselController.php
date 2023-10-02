@@ -38,9 +38,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessels.',
             ], 200);
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -54,6 +54,7 @@ class OpsVesselController extends Controller
     {
         try
         {
+            // dd($request->all());
             $vessel = OpsVessel::create($request->all());
 
             return response()->json([
@@ -61,9 +62,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully created vessel.',
             ], 201);
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -82,9 +83,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessel.',
             ], 200);
         }
-        catch (\Exception$e)
+        catch (QueryException$e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
 
     }
@@ -100,15 +101,16 @@ class OpsVesselController extends Controller
     {
         try
         {
+            // dd($request->all());
             $vessel->update($request->all());
 
             return response()->json([
                 'message' => 'Successfully updated vessel.',
             ], 202);
         }
-        catch (\Exception$e)
+        catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -128,9 +130,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully deleted vessel.',
             ], 204);
         }
-        catch (\Exception$e)
+        catch (QueryException$e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
     
@@ -143,9 +145,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessels.',
             ], 200);
         }
-        catch (\Exception$e)
+        catch (QueryException$e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -157,8 +159,8 @@ class OpsVesselController extends Controller
                 'value' => collect($vessels->pluck('name'))->unique()->values()->all(),
                 'message' => 'Successfully retrieved vessels name.'
             ], 200);
-        } catch (\Exception $e){
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -171,9 +173,9 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessels.',
             ], 200);
         }
-        catch (\Exception$e)
+        catch (QueryException$e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 }
