@@ -73,7 +73,7 @@ class ShipDepartmentController extends Controller
             
             $shipDepartment = MntShipDepartment::find($id);
             
-            return response()->success('Ship department found successfully', $shipDepartment, 201);
+            return response()->success('Ship department found successfully', $shipDepartment, 200);
             
         }
         catch (\Exception $e)
@@ -106,7 +106,7 @@ class ShipDepartmentController extends Controller
             $shipDepartment = MntShipDepartment::findorfail($id);
             $shipDepartment->update($input);
             
-            return response()->success('Ship departments updated successfully', $shipDepartment, 201);
+            return response()->success('Ship departments updated successfully', $shipDepartment, 202);
             
         }
         catch (\Exception $e)
@@ -126,7 +126,7 @@ class ShipDepartmentController extends Controller
             $shipDepartment = MntShipDepartment::findorfail($id);
             $shipDepartment->delete();
             
-            return response()->success('Ship departments deleted successfully', $shipDepartment, 201);
+            return response()->success('Ship departments deleted successfully', $shipDepartment, 204);
             
         }
         catch (\Exception $e)
