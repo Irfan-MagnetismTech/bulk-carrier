@@ -88,7 +88,7 @@ onMounted(() => {
           </thead>
           <tbody>
             
-          <tr v-for="(shipDepartment,index) in shipDepartments" :key="index">
+          <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ shipDepartment?.name }}</td>
             <td>{{ shipDepartment?.short_code }}</td>
@@ -101,11 +101,11 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!shipDepartments?.length">
+          <tfoot v-if="!shipDepartments?.data?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
-          <tr v-else-if="!shipDepartments?.length">
+          <tr v-else-if="!shipDepartments?.data?.length">
             <td colspan="6">No ship department found.</td>
           </tr>
           </tfoot>
