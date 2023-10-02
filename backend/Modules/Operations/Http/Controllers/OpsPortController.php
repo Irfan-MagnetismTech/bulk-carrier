@@ -51,7 +51,7 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
 
     }
@@ -76,16 +76,16 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
 
     /**
-     * Display the specified resource.
+     * Display the specified port.
      *
      * @param  OpsPort  $port
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show(OpsPort $port): JsonResponse
     {
@@ -106,7 +106,7 @@ class OpsPortController extends Controller
      *
      * @param  OpsPortRequest  $request
      * @param  OpsPort  $port
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(OpsPortRequest $request, OpsPort $port): JsonResponse
     {

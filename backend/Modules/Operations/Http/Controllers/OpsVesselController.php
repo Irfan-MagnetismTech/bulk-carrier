@@ -76,6 +76,7 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
+        // dd($vessel);
         try
         {
             return response()->json([
@@ -83,7 +84,7 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessel.',
             ], 200);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -130,7 +131,7 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully deleted vessel.',
             ], 204);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -145,7 +146,7 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessels.',
             ], 200);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -173,7 +174,7 @@ class OpsVesselController extends Controller
                 'message' => 'Successfully retrieved vessels.',
             ], 200);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
