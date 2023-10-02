@@ -83,34 +83,22 @@ onMounted(() => {
             <th class="w-1/4 md:w-64">Name</th>
             <th class="w-64">Email</th>
             <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
             <th class="w-68">Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(user,index) in users?.data" :key="index">
+          <tr v-for="(user,index) in users" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ user?.name }}</td>
             <td>{{ user?.email }}</td>
             <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td class="">
-              <div class="flex">
-                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
-              </div>
+            <td>
+              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
+              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!users?.data?.length">
+          <tfoot v-if="!users?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
