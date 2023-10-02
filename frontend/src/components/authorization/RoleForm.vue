@@ -37,10 +37,6 @@ function inputCheckedBySubject(permissionMenuKey, permissionSubjectKey) {
   });
 }
 
-onMounted(() => {
-  getPermissions(props.page, false);
-});
-
 </script>
 
 <template>

@@ -53,7 +53,7 @@ export default function useUser() {
             const { data, status } = await Api.post('/administration/users', form);
             user.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.index" });
+            router.push({ name: "administration.users.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -83,23 +83,18 @@ export default function useUser() {
     }
 
     async function updateUser(form, userId) {
-        //NProgress.start();
-        if(!form.port){
-            alert('Please select a port');
-            return;
-        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/users/${userId}`,
+                `/administration/users/${userId}`,
                 form
             );
             user.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.index" });
+            router.push({ name: "administration.users.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

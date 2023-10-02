@@ -3,12 +3,29 @@ import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRole from "../../../composables/administration/useRole";
 import Title from "../../../services/title";
+import Swal from "sweetalert2";
 
 const { roles, getRoles, deleteRole, isLoading } = useRole();
 
 const { setTitle } = Title();
 
 setTitle('Roles');
+
+function deleteRoleByID(roleId) {
+  Swal.fire({
+    title: '',
+    text: 'Are you sure you want to delete this role?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, Delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteRole(roleId);
+    }
+  })
+}
 
 onMounted(() => {
   getRoles();
@@ -47,8 +64,8 @@ onMounted(() => {
               </span>
             </td>
             <td style="width: 10%" class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-              <action-button :action="'edit'" :to="{ name: 'administration.user.role.edit', params: { roleId: roleData?.id } }"></action-button>
-              <action-button @click="deleteRole(roleData?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'administration.user.roles.edit', params: { roleId: roleData?.id } }"></action-button>
+              <action-button @click="deleteRoleByID(roleData?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>

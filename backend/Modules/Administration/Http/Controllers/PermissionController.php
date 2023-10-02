@@ -2,12 +2,12 @@
 
 namespace Modules\Administration\Http\Controllers;
 
-use App\Http\Requests\PermissionRequest;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Administration\Http\Requests\PermissionRequest;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -39,13 +39,8 @@ class PermissionController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(PermissionRequest $permissionRequest)
+
+    public function store(PermissionRequest $permissionRequest) : JsonResponse
     {
         try {
             $permissions = Permission::create($permissionRequest->all());

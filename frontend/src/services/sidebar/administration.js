@@ -3,6 +3,16 @@ const icons = useHeroIcon();
 
 export default [
     {
+        route: 'dashboard',
+        label: 'Dashboard',
+        preIcon: icons.HomeSolid,
+        postIcon: '',
+        is_active: false,
+        is_open: false,
+        permissionKey: '',
+        subMenu: [],
+    },
+    {
         route: '',
         label: 'Control User',
         preIcon: icons.User,
@@ -12,35 +22,14 @@ export default [
         permissionKey: '',
         subMenu: [
             {
-                route: '',
+                route: 'administration.users.index',
                 label: 'User',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
-                subSubMenu: [
-                    {
-                        route: 'administration.users.create',
-                        label: 'New User',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: [],
-                    },
-                    {
-                        route: 'administration.users.index',
-                        label: 'List User',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: [],
-                    },
-                ],
+                subSubMenu: [],
             },
             {
                 route: 'administration.user.roles.index',

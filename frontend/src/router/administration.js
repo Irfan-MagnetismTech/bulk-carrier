@@ -41,9 +41,9 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'role-create' },
 	},
 	{
-		path: `/${BASE}/user/role/:roleId/edit`,
-		name: `${BASE}.user.role.edit`,
-		component: () => import(`../views/${BASE}/role/edit-role.vue`),
+		path: `/${BASE}/user/roles/:roleId/edit`,
+		name: `${BASE}.user.roles.edit`,
+		component: () => import(`../views/${BASE}/role/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'role-edit' },
 	},
 
