@@ -122,6 +122,16 @@ class ShipDepartmentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {            
+            $shipDepartment = MntShipDepartment::findorfail($id);
+            $shipDepartment->delete();
+            
+            return response()->success('Ship departments deleted successfully', $shipDepartment, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
