@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import administration from "./administration";
+import operations from "./operations";
 
 const router = createRouter({
 
@@ -24,6 +25,7 @@ const router = createRouter({
                     meta: { requiresAuth: true, role: "all", permission: "dashboard" },
                 },
                 ...administration,
+                ...operations,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },
