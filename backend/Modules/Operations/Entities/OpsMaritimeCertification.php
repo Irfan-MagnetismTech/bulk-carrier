@@ -26,4 +26,6 @@ class OpsMaritimeCertification extends Model
     {
         return \Modules\Operations\Database\factories\OpsMaritimeCertificationFactory::new();
     }
+
+    
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsPortController;
 use Modules\Operations\Http\Controllers\OpsVesselController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
+use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
         'maritime-certifications' => OpsMaritimeCertificationController::class,
+        'vessel-certificates' => OpsVesselCertificateController::class,
     ]);
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

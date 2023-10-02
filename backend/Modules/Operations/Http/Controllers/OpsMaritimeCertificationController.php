@@ -30,11 +30,8 @@ class OpsMaritimeCertificationController extends Controller
     {
         try {
             $maritimeCertifications = OpsMaritimeCertification::latest()->paginate(15);
-
-            return response()->json([
-                'value'   => $maritimeCertifications,
-                'message' => 'Successfully retrieved Maritime Certifications.',
-            ], 200);
+            
+            return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertification, 200);
         }
         catch (QueryException $e)
         {
