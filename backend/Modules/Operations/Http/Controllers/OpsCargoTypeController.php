@@ -9,6 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsCargoType;
 use Modules\Operations\Http\Requests\OpsCargoTypeRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsCargoTypeController extends Controller
 {
@@ -51,12 +52,14 @@ class OpsCargoTypeController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $cargo_type = OpsCargoType::create($request->all());
-
+            DB::commit();
             return response()->success('Cargo types added Successfully.', $cargo_type, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -89,11 +92,14 @@ class OpsCargoTypeController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $cargo_type->update($request->all());
+            DB::commit();
             return response()->success('Cargo type updated Successfully.', $cargo_type, 200);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

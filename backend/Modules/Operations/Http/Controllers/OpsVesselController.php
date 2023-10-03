@@ -9,6 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Http\Requests\OpsVesselRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsVesselController extends Controller
 {
@@ -54,9 +55,10 @@ class OpsVesselController extends Controller
     {
         try
         {
-            // dd($request->all());
+            DB::beginTransaction();
             $vessel = OpsVessel::create($request->all());
-
+            DB::commit();
+            
             return response()->json([
                 'value'   => $vessel,
                 'message' => 'Successfully created vessel.',
@@ -64,6 +66,7 @@ class OpsVesselController extends Controller
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -102,15 +105,17 @@ class OpsVesselController extends Controller
     {
         try
         {
-            // dd($request->all());
+            DB::beginTransaction();
             $vessel->update($request->all());
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Successfully updated vessel.',
             ], 202);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

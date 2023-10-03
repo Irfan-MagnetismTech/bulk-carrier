@@ -9,6 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsVesselCertificateController extends Controller
 {
@@ -49,11 +50,14 @@ class OpsVesselCertificateController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $vesselCertificate = OpsVesselCertificate::create($request->all());
+            DB::commit();
             return response()->success('Vessel certificate added successfully.', $vesselCertificate, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -89,11 +93,14 @@ class OpsVesselCertificateController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $vessel_certificate->update($request->all());
+            DB::commit();
             return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 200);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

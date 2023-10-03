@@ -4,7 +4,7 @@ namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OpsCargoTypeRequest extends FormRequest
+class OpsCargoTariffRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,14 @@ class OpsCargoTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cargo_type'    => ['required', 'string', 'max:255'],
-            'description'   => ['nullable', 'string', 'max:5000'],
+            'tariff_name'       => ['required', 'string', 'max:255'],
+            'ops_vessel_id'     => ['required', 'number', 'max:10'],
+            'loading_point'     => ['required', 'string', 'max:255'],
+            'unloading_point'   => ['required', 'string', 'max:255'],
+            'ops_cargo_type_id' => ['required', 'number', 'max:255'],
+            'currency'          => ['required', 'string', 'max:255'],
+            'status'            => ['required', 'enum', 'max:5'],
+            'business_unit'     => ['required', 'string', 'max:255'],
         ];
     }
 

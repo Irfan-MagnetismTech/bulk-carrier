@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\DB;
 
 class OpsVesselParticularController extends Controller
 {
@@ -51,6 +52,7 @@ class OpsVesselParticularController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $vesselParticular = $request->except(
                 '_token',
                 'attachment',
@@ -58,10 +60,12 @@ class OpsVesselParticularController extends Controller
             $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars');
             $vesselParticular['attachment'] = $attachment;
             $vesselParticular = OpsVesselParticular::create($vesselParticular);
+            DB::commit();
             return response()->success('Vessel particular added successfully.', $vesselParticular, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -96,6 +100,7 @@ class OpsVesselParticularController extends Controller
     public function update(OpsVesselParticularRequest $request, OpsVesselParticular $vessel_particular): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $vesselParticular = $request->except(
                 '_token',
                 'attachment',
@@ -107,10 +112,12 @@ class OpsVesselParticularController extends Controller
             }
             
             $vessel_particular->update($vesselParticular);
+            DB::commit();
             return response()->success('Vessel particular updated successfully.', $vessel_particular, 200);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

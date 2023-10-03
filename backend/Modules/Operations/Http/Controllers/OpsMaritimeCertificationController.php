@@ -9,6 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsMaritimeCertification;
 use Modules\Operations\Http\Requests\OpsMaritimeCertificationRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsMaritimeCertificationController extends Controller
 {
@@ -49,11 +50,14 @@ class OpsMaritimeCertificationController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $maritimeCertification = OpsMaritimeCertification::create($request->all());
+            DB::commit();
             return response()->success('Maritime Certification added Successfully.', $maritimeCertification, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -89,11 +93,14 @@ class OpsMaritimeCertificationController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $maritime_certification->update($request->all());
+            DB::commit();
             return response()->success('Maritime certification updated successfully.', $maritime_certification, 200);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
