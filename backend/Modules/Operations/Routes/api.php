@@ -6,6 +6,7 @@ use Modules\Operations\Http\Controllers\OpsPortController;
 use Modules\Operations\Http\Controllers\OpsVesselController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
 use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
+use Modules\Operations\Http\Controllers\OpsVesselParticularController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +21,13 @@ use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
     // return $request->user();    
+    Route::post('vessel-particulars/{vessel_particular}', [OpsVesselParticularController::class, 'update']);
     Route::resources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
         'maritime-certifications' => OpsMaritimeCertificationController::class,
         'vessel-certificates' => OpsVesselCertificateController::class,
+        'vessel-particulars' => OpsVesselParticularController::class,
     ]);
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

@@ -17,12 +17,14 @@ return new class extends Migration
             $table->id();            
             $table->string('vessel_type');
             $table->string('name');
+            $table->string('previous_name')->nullable();
             $table->string('short_code')->unique();
             $table->string('call_sign');
             $table->string('owner_name');
             $table->string('manager');
             $table->string('classification');
             $table->string('flag');
+            $table->string('previous_flag')->nullable();
             $table->string('port_of_registry');
             $table->dateTime('delivery_date')->nullable();
             $table->string('nrt');
