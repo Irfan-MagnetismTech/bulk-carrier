@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntShipDepartment;
 use Modules\Maintenance\Http\Requests\MntShipDepartmentRequest;
 
-class ShipDepartmentController extends Controller
+class MntShipDepartmentController extends Controller
 {
     
     /**
