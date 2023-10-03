@@ -32,4 +32,35 @@ export default [
 	},
 
 	/* Ship Department Route end */
+
+	/* Item Group start */
+	{
+		path: `/${BASE}/item-group`,
+		name: `${BASE}.item-group.index`,
+		component: () => import(`../views/${BASE}/item-group/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-group-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/item-group/create`,
+		name: `${BASE}.item-group.create`,
+		component: () => import(`../views/${BASE}/item-group/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-group-create' },
+	},
+	{
+		path: `/${BASE}/item-group/:itemGroupId/edit`,
+		name: `${BASE}.item-group.edit`,
+		component: () => import(`../views/${BASE}/item-group/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-group-edit' },
+	},
+	{
+		path: `/${BASE}/item-group/:itemGroupId`,
+		name: `${BASE}.item-group.show`,
+		component: () => import(`../views/${BASE}/item-group/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-group-show'  },
+	},
+
+	/* Ship Department Route end */
+
+	
 ];
