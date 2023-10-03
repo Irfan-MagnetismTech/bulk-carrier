@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ShipDepartmentRequest extends FormRequest
 {
@@ -14,7 +15,8 @@ class ShipDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'  => ['required', 'unique:mnt_ship_departments'],
+            'short_code' => 'required',
         ];
     }
 
