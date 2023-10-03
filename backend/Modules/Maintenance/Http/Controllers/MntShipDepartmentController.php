@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntShipDepartment;
-use Modules\Maintenance\Http\Requests\ShipDepartmentRequest;
+use Modules\Maintenance\Http\Requests\MntShipDepartmentRequest;
 
 class ShipDepartmentController extends Controller
 {
@@ -47,7 +47,7 @@ class ShipDepartmentController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(ShipDepartmentRequest $request)
+    public function store(MntShipDepartmentRequest $request)
     {
         try {
             $input = $request->all();

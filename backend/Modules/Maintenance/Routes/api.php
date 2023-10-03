@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Maintenance\Http\Controllers\ShipDepartmentController;
+use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +17,5 @@ use Modules\Maintenance\Http\Controllers\ShipDepartmentController;
 Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
 {
     /* Common routes */
-    Route::resource('ship-departments', ShipDepartmentController::class);
+    Route::resource('ship-departments', MntShipDepartmentController::class);
 });
