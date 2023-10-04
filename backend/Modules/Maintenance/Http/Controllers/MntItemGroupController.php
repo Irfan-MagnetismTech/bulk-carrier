@@ -3,34 +3,30 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Maintenance\Entities\MntShipDepartment;
-use Modules\Maintenance\Http\Requests\ShipDepartmentRequest;
+use Modules\Maintenance\Entities\MntItemGroup;
+use Modules\Maintenance\Http\Requests\MntItemGroupRequest;
 
-class ShipDepartmentController extends Controller
+class MntItemGroupController extends Controller
 {
-    
     /**
-     * get all ship departments.
-     * @param Request $request
-     * @return JsonResponse
+     * Display a listing of the resource.
+     * @return Renderable
      */
-    public function index(Request $request) : JsonResponse
+    public function index()
     {
         try {
 
-            $shipDepartments = MntShipDepartment::select('*')->paginate(10);
+            $itemGroups = MntItemGroup::select('*')->paginate(10);
 
-            return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
+            return response()->success('Item groups retrieved successfully', $itemGroups, 200);
             
         }
         catch (\Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
     /**
@@ -47,14 +43,14 @@ class ShipDepartmentController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(ShipDepartmentRequest $request)
+    public function store(MntItemGroupRequest $request)
     {
         try {
             $input = $request->all();
             
-            $shipDepartment = MntShipDepartment::create($input);
+            $itemGroup = MntItemGroup::create($input);
             
-            return response()->success('Ship departments created successfully', $shipDepartment, 201);
+            return response()->success('Item group created successfully', $itemGroup, 201);
             
         }
         catch (\Exception $e)
@@ -72,9 +68,9 @@ class ShipDepartmentController extends Controller
     {
         try {
             
-            $shipDepartment = MntShipDepartment::find($id);
+            $itemGroup = MntItemGroup::find($id);
             
-            return response()->success('Ship department found successfully', $shipDepartment, 200);
+            return response()->success('Item group found successfully', $itemGroup, 200);
             
         }
         catch (\Exception $e)
@@ -99,15 +95,15 @@ class ShipDepartmentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntItemGroupRequest $request, $id)
     {
         try {
             $input = $request->all();
             
-            $shipDepartment = MntShipDepartment::findorfail($id);
-            $shipDepartment->update($input);
+            $itemGroup = MntItemGroup::findorfail($id);
+            $itemGroup->update($input);
             
-            return response()->success('Ship departments updated successfully', $shipDepartment, 202);
+            return response()->success('Item group updated successfully', $itemGroup, 202);
             
         }
         catch (\Exception $e)
@@ -124,10 +120,30 @@ class ShipDepartmentController extends Controller
     public function destroy($id)
     {
         try {            
-            $shipDepartment = MntShipDepartment::findorfail($id);
-            $shipDepartment->delete();
+            $itemGroup = MntItemGroup::findorfail($id);
+            $itemGroup->delete();
             
-            return response()->success('Ship departments deleted successfully', $shipDepartment, 204);
+            return response()->success('Item group deleted successfully', $itemGroup, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * Get the item groups without pagination.
+     * 
+     */
+    public function getMntItemGroups()
+    {
+        
+        try {
+
+            $itemGroups = MntItemGroup::select('*')->get();
+
+            return response()->success('Item groups retrieved successfully', $itemGroups, 200);
             
         }
         catch (\Exception $e)
