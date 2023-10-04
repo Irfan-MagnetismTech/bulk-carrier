@@ -28,4 +28,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
     // get mnt item groups without pagination
     Route::get('get-mnt-item-groups', [MntItemGroupController::class, 'getMntItemGroups']);
+    //get Mnt Item Code
+    Route::get('get-mnt-item-code/{mntItemGroupId}', [MntItemController::class, 'getMntItemCode']);
 });
