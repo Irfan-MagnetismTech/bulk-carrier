@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ops_vessel_certificates', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ops_vessel_id');
-            $table->bigInteger('ops_maritime_certificate_id');
+            $table->foreignId('ops_vessel_id')->constrained();            
+            $table->foreignId('ops_maritime_certificate_id')->constrained();
             $table->date('issue_date');
             $table->date('expire_date');
             $table->text('attachment')->nullable();
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('reference_number');
             $table->bigInteger('created_by')->nullable();
             
-            // $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
-            $table->foreign('ops_maritime_certificate_id')->references('id')->on('ops_maritime_certifications')->name('maritime_certificate_id');
             $table->timestamps();
         });
     }

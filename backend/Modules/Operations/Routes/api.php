@@ -9,6 +9,7 @@ use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
 use Modules\Operations\Http\Controllers\OpsVesselParticularController;
 use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
+use Modules\Operations\Http\Controllers\OpsCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,6 @@ use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 */
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    // return $request->user();    
-    Route::post('vessel-particulars/{vessel_particular}', [OpsVesselParticularController::class, 'update']);
     Route::resources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
@@ -32,6 +31,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'vessel-particulars' => OpsVesselParticularController::class,
         'cargo-types' => OpsCargoTypeController::class,
         'cargo-tariffs' => OpsCargoTariffController::class,
+        'customers' => OpsCustomerController::class,
     ]);
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

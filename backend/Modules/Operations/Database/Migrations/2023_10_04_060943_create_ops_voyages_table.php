@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Operations\Entities\OPSCustomer;
 
 return new class extends Migration
 {
@@ -13,17 +14,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ops_cargo_tariffs', function (Blueprint $table) {
+        Schema::create('ops_voyages', function (Blueprint $table) {
             $table->id();
-            $table->string('tariff_name');
+            $table->foreignId('ops_customer_id')->constrained();
             $table->foreignId('ops_vessel_id')->constrained();
-            $table->string('loading_point');
-            $table->string('unloading_point');
+            $table->bigInteger('mother_vessel_id')->nullable();
+            $table->string('voyage_no');
+            $table->string('route');
             $table->foreignId('ops_cargo_type_id')->constrained();
-            $table->string('currency');
-            $table->tinyInteger('status');
+            $table->string('load_port_distance');
+            $table->dateTime('sail_date');
+            $table->dateTime('transit_date');
+            $table->text('remarks');
             $table->string('business_unit');
-            
             $table->timestamps();
         });
     }
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ops_cargo_tariffs');
+        Schema::dropIfExists('ops_voyages');
     }
 };

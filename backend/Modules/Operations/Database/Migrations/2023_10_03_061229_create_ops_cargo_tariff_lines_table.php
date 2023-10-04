@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_cargo_tariff_lines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ops_cargo_tariff_id');
+            $table->foreignId('ops_cargo_tariff_id')->constrained();
             $table->string('particular');
             $table->string('unit');
             $table->float('jan');
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->float('oct');
             $table->float('nov');
             $table->float('dec');
+            
             $table->timestamps();
-            $table->foreign('ops_cargo_tariff_id')->references('id')->on('ops_cargo_tariffs');
         });
     }
 
