@@ -17,8 +17,8 @@ export default function useItem() {
         name: '',
         item_code: '',
         description: '',
-        has_run_hour: '',
-        present_run_hour: '',
+        has_run_hour: false,
+        present_run_hour: 0,
     });
     const errors = ref(null);
     const isLoading = ref(false);

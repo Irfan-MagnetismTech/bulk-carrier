@@ -3,21 +3,20 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <!-- <input type="text" v-model="form.name" placeholder="Ship Department Name" class="form-input" /> -->
-            <select v-model="form.ship_department_id" required name="ship_department_id" id="ship_department_id" class="form-input">
-                    <!-- <option v-for="unit, index in units">{{ unit }}</option> -->
-              
+            <select v-model="form.mnt_ship_department_id" class="form-input">
+              <option value="" disabled selected>Select Ship Department</option>
+              <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option>
             </select>
-          <Error v-if="errors?.ship_department_id" :errors="errors.ship_department_id" />
+          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-          <!-- <input type="text" v-model="form.item_group_id" placeholder="Short Name" class="form-input" /> -->
-          <select v-model="form.item_group_id" required name="item_group_id" id="item_group_id" class="form-input">
-                    <!-- <option v-for="unit, index in units">{{ unit }}</option> -->
+          <select v-model="form.mnt_item_group_id" required class="form-input">
+            <option value="" disabled selected>Select Item Group</option>
+            <option v-for="itemGroup in itemGroups" :value="itemGroup.id">{{ itemGroup.name }}</option>
               
             </select>
-          <Error v-if="errors?.item_group_id" :errors="errors.item_group_id" />
+          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Code <span class="text-red-500">*</span></span>
@@ -33,11 +32,33 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
-            <!-- <input type="text" v-model="form.name" placeholder="Ship Department Name" class="form-input" /> -->
             <textarea v-model="form.description" placeholder="Description" class="form-input"></textarea>
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
     </div>
+
+    <div class="flex flex-col justify-center  w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300"> </span>
+            <input type="checkbox" v-model="form.has_run_hour" /> Enable Regular Run Hour Entry
+          <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
+        </label>        
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.has_run_hour">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour<span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" />
+          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+        </label>        
+    </div>
+
+    
+    
+
+    
+
+
     
 
     
@@ -48,6 +69,7 @@ import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {onMounted} from "vue";
+import useItemGroup from "../../../composables/maintenance/useItemGroup";
 
 const props = defineProps({
   form: {
@@ -58,12 +80,16 @@ const props = defineProps({
 });
 
 
-// const { shipDepartments, getShipDepartments } = useShipDepartment();
+const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { itemGroups, getItemGroupsWithoutPagination } = useItemGroup();
 
 
-// onMounted(() => {
-//   getRoles();
-// });
+onMounted(() => {
+  getShipDepartmentsWithoutPagination();
+  getItemGroupsWithoutPagination();
+});
+
+
 
 </script>
 
