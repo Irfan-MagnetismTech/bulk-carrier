@@ -79,17 +79,21 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th>#</th>
-            <th class="w-1/4 md:w-64">Name</th>
-            <th class="w-64">Short Code</th>
-            <th class="w-68">Action</th>
+            <th class="w-1/6">#</th>
+            <th class="w-1/6">Ship Department</th>
+            <th class="w-1/6">Item Group</th>
+            <th class="w-1/6">Item Code</th>
+            <th class="w-1/6">Item Name</th>
+            <th class="w-1/6">Action</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(item,index) in items?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ item?.mnt_ship_department?.name }}</td>
+            <td>{{ item?.mnt_item_group?.name }}</td>
+            <td>{{ item?.item_code }}</td>
             <td>{{ item?.name }}</td>
-            <td>{{ item?.short_code }}</td>
             
             <td class="">
               <div class="flex">

@@ -19,18 +19,19 @@
   import { useRoute } from 'vue-router';
   
   import ItemGroupForm from '../../../components/maintenance/item-group/ItemGroupForm.vue'; 
+  import ItemForm from '../../../components/maintenance/item/ItemForm.vue';
   import Title from "../../../services/title";
-import useItemGroup from '../../../composables/maintenance/useItemGroup';
+  import useItem from '../../../composables/maintenance/useItem';
   
   const route = useRoute();
-  const itemGroupId = route.params.itemGroupId;
-  const { itemGroup, showItemGroup, updateItemGroup, errors } = useItemGroup();
+  const itemId = route.params.itemId;
+  const { item, showItem, updateItem, errors } = useItem();
   
   const { setTitle } = Title();
   
-  setTitle('Edit Item Group');
+  setTitle('Edit Item');
   
   onMounted(() => {
-      showItemGroup(itemGroupId);
+      showItem(itemId);
   });
   </script>
