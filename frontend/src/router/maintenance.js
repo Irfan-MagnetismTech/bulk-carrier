@@ -60,7 +60,38 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'item-group-show'  },
 	},
 
-	/* Ship Department Route end */
+	/* Item Group end */
+
+	/* Item start */
+	{
+		path: `/${BASE}/item`,
+		name: `${BASE}.item.index`,
+		component: () => import(`../views/${BASE}/item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/item/create`,
+		name: `${BASE}.item.create`,
+		component: () => import(`../views/${BASE}/item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-create' },
+	},
+	{
+		path: `/${BASE}/item/:itemId/edit`,
+		name: `${BASE}.item.edit`,
+		component: () => import(`../views/${BASE}/item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-edit' },
+	},
+	{
+		path: `/${BASE}/item/:itemId`,
+		name: `${BASE}.item.show`,
+		component: () => import(`../views/${BASE}/item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'item-show'  },
+	},
+
+	/* Item end */
+
+	
 
 	
 ];
