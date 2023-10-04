@@ -23,4 +23,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'item-groups' => MntItemGroupController::class,
     ]);
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
+    
+    Route::get('get-mnt-item-groups', [MntItemGroupController::class, 'getMntItemGroups']);
 });

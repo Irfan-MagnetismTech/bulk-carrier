@@ -131,4 +131,24 @@ class MntItemGroupController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    /**
+     * Get the item groups without pagination.
+     * 
+     */
+    public function getMntItemGroups()
+    {
+        
+        try {
+
+            $itemGroups = MntItemGroup::select('*')->get();
+
+            return response()->success('Item groups retrieved successfully', $itemGroups, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
