@@ -17,7 +17,7 @@ class MntItemController extends Controller
     {
         try {
 
-            $item = MntItem::select('*')->paginate(10);
+            $item = MntItem::with(['mntItemGroup','mntShipDepartment'])->paginate(10);
 
             return response()->success('Items retrieved successfully', $item, 200);
             
