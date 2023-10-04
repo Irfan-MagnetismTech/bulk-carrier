@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntItem;
+use Modules\Maintenance\Entities\MntItemGroup;
 
 class MntItemController extends Controller
 {
@@ -123,6 +124,28 @@ class MntItemController extends Controller
             $item->delete();
             
             return response()->success('Item deleted successfully', $item, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * Get the item code.
+     * 
+     */
+    public function getMntItemCode($mntItemGroupId)
+    {
+        
+        try {
+
+            $items = MntItem::where('mnt_item_group_id', $mntItemGroupId)->get();
+            $itemGroup = MntItemGroup::where('id', $mntItemGroupId)->first();
+            $itemCount = count($items);
+            $itemCode = $itemGroup->short_code.'-'.str_pad($itemCount+1, 3, '0', STR_PAD_LEFT);
+            return response()->success('Item code retrieved successfully', $itemCode, 200);
             
         }
         catch (\Exception $e)
