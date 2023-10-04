@@ -135,4 +135,24 @@ class MntShipDepartmentController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Get the ship departments without pagination.
+     * @return JsonResponse
+     */
+    public function getMntShipDepartments() : JsonResponse
+    {
+        
+        try {
+
+            $shipDepartments = MntShipDepartment::select('*')->get();
+
+            return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
