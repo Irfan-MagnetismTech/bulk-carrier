@@ -42,6 +42,38 @@ export default [
                     },
                 ],
             },
+            {
+                route: '',
+                label: 'Item Group',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'maintenance.item-group.create',
+                        label: 'New',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    {
+                        route: 'maintenance.item-group.index',
+                        label: 'List',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                ],
+            },
+            
             
         ]
     },
