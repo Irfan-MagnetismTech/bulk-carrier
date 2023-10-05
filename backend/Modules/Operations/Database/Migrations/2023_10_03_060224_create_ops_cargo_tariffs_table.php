@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('ops_cargo_tariffs', function (Blueprint $table) {
             $table->id();
             $table->string('tariff_name');
-            $table->foreignId('ops_vessel_id')->constrained();
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
+            $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types');
             $table->string('loading_point');
             $table->string('unloading_point');
-            $table->foreignId('ops_cargo_type_id')->constrained();
             $table->string('currency');
             $table->tinyInteger('status');
             $table->string('business_unit');

@@ -11,6 +11,7 @@ use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsCustomerController;
 use Modules\Operations\Http\Controllers\OpsVoyageController;
+use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'vessel-certificates' => OpsVesselCertificateController::class,
         'vessel-particulars' => OpsVesselParticularController::class,
         'voyages' => OpsVoyageController::class,
+        'voyage-boat-notes' => OpsVoyageBoatNoteController::class,
     ]);
 
     //start for without pagination
@@ -46,6 +48,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('vessel-certificates/without/paginate', [OpsVesselCertificateController::class, 'getVesselCertificateWithoutPaginate']);
     Route::get('vessel-particulars/without/paginate', [OpsVesselParticularController::class, 'getVesselParticularWithoutPaginate']);
     Route::get('voyages/without/paginate', [OpsVoyageController::class, 'getVoyageWithoutPaginate']);
+    Route::get('voyage-boat-notes/without/paginate', [OpsVoyageBoatNoteController::class, 'getVoyageBoatNoteWithoutPaginate']);
     //end for without pagination
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

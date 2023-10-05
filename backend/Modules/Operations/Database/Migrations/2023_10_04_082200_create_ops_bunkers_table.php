@@ -19,7 +19,8 @@ return new class extends Migration
             $table->bigInteger('bunkerable_id');
             $table->bigInteger('scm_vendor_id')->nullable();  
             $table->bigInteger('scm_material_id')->nullable();        
-            // $table->foreignId('scm_material_id')->constrained();
+            // $table->foreignId('scm_vendor_id')->constrained('scm_vendors');
+            // $table->foreignId('scm_material_id')->constrained('scm_materials');
             $table->string('unit')->nullable();
             $table->float('quantity')->nullable();
             $table->float('requested_quantity')->nullable();

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_sectors', function (Blueprint $table) {
             $table->id();       
-            $table->foreignId('ops_voyage_id')->constrained();
-            $table->foreignId('ops_cargo_tariff_id')->constrained();
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages');
+            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs');
             $table->string('loading_point');
             $table->string('unloading_point');
             $table->string('rate');

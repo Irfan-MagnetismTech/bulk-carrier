@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_cargo_tariff_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_cargo_tariff_id')->constrained();
+            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs');
             $table->string('particular');
             $table->string('unit');
             $table->float('jan');

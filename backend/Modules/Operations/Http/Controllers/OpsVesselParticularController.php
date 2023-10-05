@@ -107,6 +107,7 @@ class OpsVesselParticularController extends Controller
             );
 
             if(isset($request->attachment)){
+                $this->fileUpload->deleteFile($vessel_particular->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars', $vessel_particular->attachment);
                 $vesselParticular['attachment'] = $attachment;
             }

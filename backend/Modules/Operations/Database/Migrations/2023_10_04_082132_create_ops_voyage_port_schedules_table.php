@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_port_schedules', function (Blueprint $table) {
             $table->id();            
-            $table->foreignId('ops_voyage_id')->constrained();
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages');
             $table->string('port_code');
             $table->dateTime('eta');
             $table->dateTime('etb');

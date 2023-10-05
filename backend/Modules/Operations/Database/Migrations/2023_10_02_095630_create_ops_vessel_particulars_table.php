@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_vessel_particulars', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_vessel_id')->constrained();
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
             $table->text('attachment');
             $table->string('class_no');
             $table->string('loa');
