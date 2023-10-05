@@ -12,6 +12,9 @@ class MntItem extends Model
     use HasFactory;
 
     protected $fillable = ['mnt_ship_department_id', 'mnt_item_group_id', 'name', 'item_code', 'description', 'has_run_hour', 'present_run_hour'];
+    protected $casts = [
+        'has_run_hour' => 'boolean',
+    ];
 
     public function mntShipDepartment () : BelongsTo
     {
