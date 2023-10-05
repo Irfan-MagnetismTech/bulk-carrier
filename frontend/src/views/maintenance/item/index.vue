@@ -61,7 +61,10 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Item List</h2>
-    <default-button :title="'Create'" :to="{ name: 'maintenance.item.create' }"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Add Item Group'" :to="{ name: 'maintenance.item-group.create' }"></default-button>
+      <default-button :title="'Add Item'" :to="{ name: 'maintenance.item.create' }"></default-button>
+    </div>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->

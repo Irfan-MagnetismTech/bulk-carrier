@@ -16,7 +16,7 @@ export default function useItem() {
         mnt_item_group_id: '',
         name: '',
         item_code: '',
-        description: '',
+        description: [{ key: '', value: '' }],
         has_run_hour: false,
         present_run_hour: 0,
     });
@@ -125,6 +125,21 @@ export default function useItem() {
         }
     }
 
+    async function getItemCodeByGroupId(formData, mntItemGroupId){
+        // NProgress.start();
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-mnt-item-code/${mntItemGroupId}`);
+            formData.item_code = data.value;
+        } catch (error) {
+            error.value = Error.showError(error);
+        } finally {
+            isLoading.value = false;
+            // NProgress.done();
+        }
+    }
+
     
 
     return {
@@ -135,6 +150,7 @@ export default function useItem() {
         showItem,
         updateItem,
         deleteItem,
+        getItemCodeByGroupId,
         isLoading,
         errors,
     };
