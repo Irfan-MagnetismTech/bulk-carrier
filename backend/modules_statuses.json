@@ -1,4 +1,6 @@
 {
     "Administration": true,
-    "Maintenance": true
+    "Maintenance": true,
+    "Crew": true,
+    "Operations": true
 }

@@ -16,7 +16,7 @@ use Modules\Administration\Http\Controllers\UserController;
 |
 */
 
-Route::middleware(['auth:api'])->prefix('administration')->as('administration.')->group(function ()
+Route::middleware(['auth:api'])->prefix('administration')->group(function ()
 {
     /* Common routes */
     Route::resource('users', UserController::class);
