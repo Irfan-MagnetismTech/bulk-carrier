@@ -11,7 +11,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-          <select v-model="form.mnt_item_group_id" required class="form-input">
+          <select v-model="form.mnt_item_group_id" required class="form-input" @change="fetchItemCode" >
             <option value="" disabled selected>Select Item Group</option>
             <option v-for="itemGroup in itemGroups" :value="itemGroup.id">{{ itemGroup.name }}</option>
               
@@ -29,10 +29,33 @@
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <!-- <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
             <textarea v-model="form.description" placeholder="Description" class="form-input"></textarea>
+          <Error v-if="errors?.description" :errors="errors.description" />
+        </label>
+    </div> -->
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
+            <table class="w-full border border-gray-500">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Value</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(des, index) in form.description" :key="index">
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="des.key" placeholder="Key" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="des.value" placeholder="Value" /></td>
+                  <td><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index==0" @click="addRow">Add</button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index!=0" @click="removeRow(index)" >Remove</button></td>
+                </tr>
+              </tbody>
+            </table>
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
     </div>
@@ -70,6 +93,9 @@ import Editor from '@tinymce/tinymce-vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {onMounted} from "vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
+import useItem from "../../../composables/maintenance/useItem";
+
+const { getItemCodeByGroupId, errors } = useItem();
 
 const props = defineProps({
   form: {
@@ -79,6 +105,16 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
+function addRow() {
+  props.form.description.push({ key: '', value: '' });
+}
+function removeRow(index) {
+  props.form.description.splice(index, 1);
+}
+
+function fetchItemCode(){
+  getItemCodeByGroupId(props.form, props.form.mnt_item_group_id);
+}
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { itemGroups, getItemGroupsWithoutPagination } = useItemGroup();
