@@ -128,18 +128,37 @@ class OpsVesselParticularController extends Controller
      * @param  OpsVesselParticular  $vessel_particular
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(OpsVesselCertificate $vessel_particular): JsonResponse
+    public function destroy(OpsVesselParticular $vessel_particular): JsonResponse
     {
         try
         {
-            if(isset($vessel_particular->attachment)){
-                $this->fileUpload->deleteFile($vessel_particular->attachment);
-            }
+            $this->fileUpload->deleteFile($vessel_particular->attachment);
             $vessel_particular->delete();
 
             return response()->json([
                 'message' => 'Successfully deleted vessel certificate.',
             ], 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getVesselParticularName(){
+        try {
+            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();
+            return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getVesselParticularWithoutPaginate(){
+        try
+        {
+            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();        
+            return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
         }
         catch (QueryException $e)
         {

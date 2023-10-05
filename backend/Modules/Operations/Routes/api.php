@@ -10,6 +10,7 @@ use Modules\Operations\Http\Controllers\OpsVesselParticularController;
 use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsCustomerController;
+use Modules\Operations\Http\Controllers\OpsVoyageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,14 +27,26 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::resources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
-        'maritime-certifications' => OpsMaritimeCertificationController::class,
-        'vessel-certificates' => OpsVesselCertificateController::class,
-        'vessel-particulars' => OpsVesselParticularController::class,
         'cargo-types' => OpsCargoTypeController::class,
         'cargo-tariffs' => OpsCargoTariffController::class,
         'customers' => OpsCustomerController::class,
+        'maritime-certifications' => OpsMaritimeCertificationController::class,
+        'vessel-certificates' => OpsVesselCertificateController::class,
+        'vessel-particulars' => OpsVesselParticularController::class,
+        'voyages' => OpsVoyageController::class,
     ]);
+
+    //start for without pagination
+    Route::get('ports/without/paginate', [OpsPortController::class, 'getPortWithoutPaginate']);
+    Route::get('vessels/without/paginate', [OpsVesselController::class, 'getVesselWithoutPaginate']);
+    Route::get('cargo-types/without/paginate', [OpsCargoTypeController::class, 'getCargoTypeWithoutPaginate']);
+    Route::get('cargo-tariffs/without/paginate', [OpsCargoTariffController::class, 'getCargoTariffWithoutPaginate']);
+    Route::get('customers/without/paginate', [OpsCustomerController::class, 'getCustomerWithoutPaginate']);
+    Route::get('maritime-certifications/without/paginate', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationWithoutPaginate']);
+    Route::get('vessel-certificates/without/paginate', [OpsVesselCertificateController::class, 'getVesselCertificateWithoutPaginate']);
+    Route::get('vessel-particulars/without/paginate', [OpsVesselParticularController::class, 'getVesselParticularWithoutPaginate']);
+    Route::get('voyages/without/paginate', [OpsVoyageController::class, 'getVoyageWithoutPaginate']);
+    //end for without pagination
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
-Route::get('vessels/without/paginate', [OpsVesselController::class, 'getVesselWithoutPaginate']);
 Route::post('vessel-search', [OpsVesselController::class, 'search']);

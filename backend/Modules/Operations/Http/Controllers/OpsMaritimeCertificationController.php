@@ -126,4 +126,26 @@ class OpsMaritimeCertificationController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    
+    public function getMaritimeCertificationName(){
+        try {
+            $maritime_certifications = OpsMaritimeCertification::all();
+            return response()->success('Successfully retrieved maritime certifications name.', collect($maritime_certifications->pluck('name'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getMaritimeCertificationWithoutPaginate(){
+        try
+        {
+            $maritime_certifications = OpsMaritimeCertification::all();            
+            return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

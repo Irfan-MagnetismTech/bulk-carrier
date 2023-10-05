@@ -129,7 +129,7 @@ class OpsCargoTypeController extends Controller
         try
         {
             $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
+            return response()->success('Successfully retrieved cargo types for without paginate.', $cargo_types, 200);
         }
         catch (QueryException $e)
         {

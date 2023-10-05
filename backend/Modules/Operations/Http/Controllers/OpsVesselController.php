@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class OpsVesselController extends Controller
 {
-    use HasRoles; 
+    // use HasRoles; 
 
     // function __construct()
     // {
@@ -32,12 +32,8 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessel = OpsVessel::orderBy('id','DESC')->Paginate();
-
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
+            $vessels = OpsVessel::orderBy('id','DESC')->Paginate();                       
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
         {
@@ -58,11 +54,8 @@ class OpsVesselController extends Controller
             DB::beginTransaction();
             $vessel = OpsVessel::create($request->all());
             DB::commit();
-            
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully created vessel.',
-            ], 201);
+                 
+            return response()->success('Successfully created vessel.', $vessel, 201);
         }
         catch (QueryException $e)
         {
@@ -79,13 +72,9 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
-        // dd($vessel);
         try
-        {
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessel.',
-            ], 200);
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
         catch (QueryException $e)
         {
@@ -108,10 +97,7 @@ class OpsVesselController extends Controller
             DB::beginTransaction();
             $vessel->update($request->all());
             DB::commit();
-            
-            return response()->json([
-                'message' => 'Successfully updated vessel.',
-            ], 202);
+            return response()->success('Successfully updated vessel.', $vessel, 202);
         }
         catch (QueryException $e)
         {
@@ -131,7 +117,6 @@ class OpsVesselController extends Controller
         try
         {
             $vessel->delete();
-
             return response()->json([
                 'message' => 'Successfully deleted vessel.',
             ], 204);
@@ -145,11 +130,7 @@ class OpsVesselController extends Controller
     public function search(Request $request) {
         try {
             $vessel = OpsVessel::where('name', 'like', '%' . $request->search . '%')->get();
-
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
+            return response()->success('Successfully retrieved vessels.', $vessel, 200);
         }
         catch (QueryException $e)
         {
@@ -161,10 +142,7 @@ class OpsVesselController extends Controller
     public function getVesselName(){
         try {
             $vessels = OpsVessel::all();
-            return response()->json([
-                'value' => collect($vessels->pluck('name'))->unique()->values()->all(),
-                'message' => 'Successfully retrieved vessels name.'
-            ], 200);
+            return response()->success('Successfully retrieved vessels name.', collect($vessels->pluck('name'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -173,11 +151,8 @@ class OpsVesselController extends Controller
     public function getVesselWithoutPaginate(){
         try
         {
-            $vessels = OpsVessel::all();
-            return response()->json([
-                'value'   => $vessels,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
+            $vessels = OpsVessel::all();            
+            return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
         }
         catch (QueryException $e)
         {

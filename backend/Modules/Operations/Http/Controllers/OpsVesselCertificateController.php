@@ -129,12 +129,9 @@ class OpsVesselCertificateController extends Controller
 
     public function search(Request $request) {
         try {
-            $vesselCertificate = OpsVesselCertificate::where('reference_number', '=', $request->search)->get();
+            $vesselCertificates = OpsVesselCertificate::where('reference_number', '=', $request->search)->get();
 
-            return response()->json([
-                'value'   => $vesselCertificate,
-                'message' => 'Successfully retrieved vessel certificate.',
-            ], 200);
+            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -147,10 +144,7 @@ class OpsVesselCertificateController extends Controller
         try
         {
             $vesselCertificates = OpsVesselCertificate::all();
-            return response()->json([
-                'value'   => $vesselCertificates,
-                'message' => 'Successfully retrieved vessel certificates.',
-            ], 200);
+            return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignId('ops_customer_id')->constrained();
             $table->foreignId('ops_vessel_id')->constrained();
             $table->bigInteger('mother_vessel_id')->nullable();
+            $table->foreignId('ops_cargo_type_id')->constrained();
             $table->string('voyage_no');
             $table->string('route');
-            $table->foreignId('ops_cargo_type_id')->constrained();
             $table->string('load_port_distance');
             $table->dateTime('sail_date');
             $table->dateTime('transit_date');
