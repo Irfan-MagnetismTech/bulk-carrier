@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
+use Modules\Maintenance\Http\Requests\MntItemRequest;
+use Modules\Maintenance\Http\Requests\MntItemUpdateRequest;
 
 class MntItemController extends Controller
 {
@@ -40,13 +42,15 @@ class MntItemController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param MntItemRequest $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntItemRequest $request)
     {
         try {
             $input = $request->all();
+
+            $input['description'] = json_encode($input['description']);
             
             $item = MntItem::create($input);
             
@@ -69,6 +73,8 @@ class MntItemController extends Controller
         try {
             
             $item = MntItem::find($id);
+
+            $item['description'] = json_decode($item['description']);
             
             return response()->success('Item found successfully', $item, 200);
             
@@ -91,14 +97,15 @@ class MntItemController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param MntItemRequest $request
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntItemUpdateRequest $request, $id, MntItem $mntItem)
     {
         try {
             $input = $request->all();
+            $input['description'] = json_encode($input['description']);
             
             $item = MntItem::findorfail($id);
             $item->update($input);

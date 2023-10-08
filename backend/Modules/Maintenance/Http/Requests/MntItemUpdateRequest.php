@@ -5,7 +5,7 @@ namespace Modules\Maintenance\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MntItemRequest extends FormRequest
+class MntItemUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,8 +17,8 @@ class MntItemRequest extends FormRequest
         return [
             'mnt_ship_department_id' => 'required',
             'mnt_item_group_id' => 'required',
-            'name'  => ['required', Rule::unique('mnt_items')],
-            'item_code' => ['required', Rule::unique('mnt_items')],
+            'name'  => ['required', Rule::unique('mnt_items')->ignore($this->mntItem)],
+            'item_code' => ['required', Rule::unique('mnt_items')->ignore($this->mntItem)],
         ];
     }
 
