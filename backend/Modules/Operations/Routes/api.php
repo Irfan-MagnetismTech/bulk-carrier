@@ -14,6 +14,7 @@ use Modules\Operations\Http\Controllers\OpsVoyageController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
 use Modules\Operations\Http\Controllers\OpsChartererProfileController;
 use Modules\Operations\Http\Controllers\OpsChartererContractController;
+use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'voyage-boat-notes' => OpsVoyageBoatNoteController::class,
         'charterer-profiles' => OpsChartererProfileController::class,
         'charterer-contracts' => OpsChartererContractController::class,
+        'handover-takeovers' => OpsHandoverTakeoverController::class,
     ]);
 
     //start for without pagination
@@ -55,6 +57,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('voyage-boat-notes/without/paginate', [OpsVoyageBoatNoteController::class, 'getVoyageBoatNoteWithoutPaginate']);
     Route::get('charterer-profiles/without/paginate', [OpsChartererProfileController::class, 'getCargoTariffWithoutPaginate']);
     Route::get('charterer-contracts/without/paginate', [OpsChartererContractController::class, 'getChartererContractWithoutPaginate']);
+    Route::get('handover-takeovers/without/paginate', [OpsHandoverTakeoverController::class, 'getHandoverTakeoverWithoutPaginate']);
     //end for without pagination
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
