@@ -21,14 +21,6 @@ return new class extends Migration
             $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
             $table->unsignedBigInteger('mnt_item_id');
             $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
-            $table->text('job_description');
-            $table->string('cycle', 255)->nullable();
-            $table->string('cycle_unit', 255)->nullable();
-            $table->date('last_done')->nullable();
-            $table->string('min_limit', 255)->nullable();
-            $table->string('next_due')->nullable();
-            $table->text('remarks')->nullable();
-            $table->string('status', 255)->nullable();
             $table->enum('business_unit',['TSLL','PSML'])->default('TSLL');
             $table->timestamps();
         });
