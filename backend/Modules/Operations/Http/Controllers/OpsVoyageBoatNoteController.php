@@ -31,7 +31,7 @@ class OpsVoyageBoatNoteController extends Controller
     public function index()
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVessel','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            $voyage_boat_notes = OpsVoyageBoatNote::with('ops_vessel','ops_voyage','ops_voyage_boat_note_lines')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
@@ -55,12 +55,12 @@ class OpsVoyageBoatNoteController extends Controller
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
                 '_token',
-                'opsVoyageBoatNoteLines',
+                'ops_voyage_boat_note_lines',
             );
 
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
-            $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
+            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->ops_voyage_boat_note_lines);
+            $voyageBoatNote->ops_voyage_boat_note_lines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
         }
@@ -80,7 +80,7 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function show(OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-        $voyage_boat_note->load('opsVessel','opsVessel','opsVoyageBoatNoteLines');
+        $voyage_boat_note->load('ops_vessel','ops_voyage','ops_voyage_boat_note_lines');
         try
         {
             return response()->success('Successfully retrieved voyage boat note.', $voyage_boat_note, 200);
@@ -105,14 +105,14 @@ class OpsVoyageBoatNoteController extends Controller
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
                 '_token',
-                'opsVoyageBoatNoteLines',
+                'ops_voyage_boat_note_lines',
             );
-            $voyage_boat_note->load('opsVoyageBoatNoteLines');
+            $voyage_boat_note->load('ops_voyage_boat_note_lines');
             
             $voyageBoatNote->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$voyage_boat_note->opsVoyageBoatNoteLines);
-            $voyageBoatNote->opsVoyageBoatNoteLines()->delete();
-            $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
+            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->ops_voyage_boat_note_lines,$voyage_boat_note->ops_voyage_boat_note_lines);
+            $voyageBoatNote->ops_voyage_boat_note_lines()->delete();
+            $voyageBoatNote->ops_voyage_boat_note_lines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Vessel particular updated successfully.', $voyage_boat_note, 200);
         }
@@ -133,11 +133,11 @@ class OpsVoyageBoatNoteController extends Controller
     {
         try
         {
-            $voyage_boat_note->load('opsVoyageBoatNoteLines');
-            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $boat_note_line){
+            $voyage_boat_note->load('ops_voyage_boat_note_lines');
+            foreach($voyage_boat_note->ops_voyage_boat_note_lines as $boat_note_line){
                 $this->fileUpload->deleteFile($boat_note_line->attachment);
             }
-            $voyage_boat_note->opsCargoTariffLines()->delete();
+            $voyage_boat_note->ops_voyage_boat_note_lines()->delete();
             $voyage_boat_note->delete();
 
             return response()->json([
@@ -153,7 +153,7 @@ class OpsVoyageBoatNoteController extends Controller
     public function getVoyageBoatNoteWithoutPaginate()
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVessel','opsVoyageBoatNoteLines')->latest()->get();
+            $voyage_boat_notes = OpsVoyageBoatNote::with('ops_vessel','ops_voyage','ops_voyage_boat_note_lines')->latest()->get();
             
             return response()->success('Successfully retrieved voyage boat notes for without paginate.', $voyage_boat_notes, 200);
         }

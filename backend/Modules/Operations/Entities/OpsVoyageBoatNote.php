@@ -18,17 +18,17 @@ class OpsVoyageBoatNote extends Model
         'water_density'
     ];
 
-    public function opsVoyage()
+    public function ops_voyage()
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
 
-    public function opsVessel()
+    public function ops_vessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsVoyageBoatNoteLines()
+    public function ops_voyage_boat_note_lines()
     {
         return $this->hasMany(OpsVoyageBoatNoteLine::class, 'ops_voyage_boat_note_id', 'id');
     }

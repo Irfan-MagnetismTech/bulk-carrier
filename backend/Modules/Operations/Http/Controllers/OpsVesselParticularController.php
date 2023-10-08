@@ -31,7 +31,7 @@ class OpsVesselParticularController extends Controller
     public function index()
     {
         try {
-            $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);
+            $vesselParticular = OpsVesselParticular::with('ops_vessel')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }
@@ -78,7 +78,7 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('opsVessel');
+        $vessel_particular->load('ops_vessel');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
@@ -158,7 +158,7 @@ class OpsVesselParticularController extends Controller
     public function getVesselParticularWithoutPaginate(){
         try
         {
-            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();        
+            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();        
             return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
         }
         catch (QueryException $e)

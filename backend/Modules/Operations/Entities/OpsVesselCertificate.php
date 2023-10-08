@@ -25,11 +25,11 @@ class OpsVesselCertificate extends Model
         'created_by',
     ];
 
-    public function opsVessel()
+    public function ops_vessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
-    public function opsMaritimeCertification()
+    public function ops_maritime_certification()
     {
         return $this->belongsTo(OpsMaritimeCertification::class, 'ops_maritime_certificate_id' , 'id');
     }

@@ -30,7 +30,7 @@ class OpsVesselCertificateController extends Controller
     public function index()
     {
         try {
-            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
+            $vesselCertificates = OpsVesselCertificate::with('ops_vessel','ops_maritime_certification')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
@@ -70,7 +70,7 @@ class OpsVesselCertificateController extends Controller
      */
     public function show(OpsVesselCertificate $vessel_certificate): JsonResponse
     {
-        $vessel_certificate->load('opsVessel','opsMaritimeCertification');
+        $vessel_certificate->load('ops_vessel','ops_maritime_certification');
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);

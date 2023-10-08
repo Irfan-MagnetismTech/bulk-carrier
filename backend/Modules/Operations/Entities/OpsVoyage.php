@@ -23,37 +23,37 @@ class OpsVoyage extends Model
         'business_unit'
     ];
 
-    public function opsCustomer()
+    public function ops_customer()
     {
         return $this->belongsTo(OpsCustomer::class, 'ops_customer_id' , 'id');
     }
 
-    public function opsVessel()
+    public function ops_vessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsMotherVessel()
+    public function ops_mother_vessel()
     {
         return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
     }
 
-    public function opsCargoType()
+    public function ops_cargo_type()
     {
         return $this->belongsTo(OpsCargoType::class, 'ops_voyage_id' , 'id');
     }
 
-    public function opsVoyageSectors()
+    public function ops_voyage_sectors()
     {
         return $this->hasMany(OpsVoyageSector::class, 'ops_cargo_tariff_id', 'id');
     }
 
-    public function opsVoyagePortSchedules()
+    public function ops_voyage_port_schedules()
     {
         return $this->hasMany(OpsVoyagePortSchedule::class, 'ops_cargo_tariff_id', 'id');
     }
 
-    public function opsBunkers()
+    public function ops_bunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }

@@ -30,11 +30,11 @@ class OpsBunker extends Model
         'status',
     ];
 
-    // public function scmVendor()
+    // public function scm_vendor()
     // {
     //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
     // }
-    // public function scmMaterial()
+    // public function scm_material()
     // {
     //     return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
     // }

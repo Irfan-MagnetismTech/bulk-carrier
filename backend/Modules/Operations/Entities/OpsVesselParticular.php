@@ -24,7 +24,7 @@ class OpsVesselParticular extends Model
         'lbc'
     ];
 
-    public function opsVessel()
+    public function ops_vessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }

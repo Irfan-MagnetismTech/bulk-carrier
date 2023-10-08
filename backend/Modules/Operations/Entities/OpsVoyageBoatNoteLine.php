@@ -18,7 +18,7 @@ class OpsVoyageBoatNoteLine extends Model
         'attachment'
     ];
 
-    public function opsVoyageBoatNote()
+    public function ops_voyage_boat_note()
     {
         return $this->belongsTo(OpsVoyageBoatNote::class, 'ops_voyage_boat_note_id' , 'id');
     }
