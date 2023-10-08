@@ -30,4 +30,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-mnt-item-groups', [MntItemGroupController::class, 'getMntItemGroups']);
     //get Mnt Item Code
     Route::get('get-mnt-item-code/{mntItemGroupId}', [MntItemController::class, 'getMntItemCode']);
+    //get mnt ship department wise items
+    Route::get('get-mnt-ship-department-wise-items/{mntShipDepartment}', [MntItemController::class, 'getMntShipDepartmentWiseItems']);
 });

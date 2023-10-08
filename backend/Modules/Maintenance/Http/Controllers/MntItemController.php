@@ -160,4 +160,19 @@ class MntItemController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getMntShipDepartmentWiseItems($mntShipDepartment)
+    {
+        
+        try {
+
+            $items = MntItem::select('id','name','item_code')->where('mnt_ship_department_id', $mntShipDepartment)->get();
+            return response()->success('Item code retrieved successfully', $items, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
