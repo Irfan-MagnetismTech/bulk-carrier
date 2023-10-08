@@ -3,7 +3,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <select v-model="form.mnt_ship_department_id" class="form-input">
+            <select v-model="form.mnt_ship_department_id" required class="form-input">
               <option value="" disabled selected>Select Ship Department</option>
               <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option>
             </select>
@@ -20,12 +20,12 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.item_code" placeholder="Item Code" class="form-input" />
+            <input type="text" v-model="form.item_code" placeholder="Item Code" class="form-input" required />
           <Error v-if="errors?.item_code" :errors="errors.item_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.name" placeholder="Item Name" class="form-input" />
+          <input type="text" v-model="form.name" placeholder="Item Name" class="form-input" required />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
     </div>
@@ -39,7 +39,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Description </span>
             <table class="w-full border border-gray-500">
               <thead>
                 <tr>
@@ -50,8 +50,8 @@
               </thead>
               <tbody>
                 <tr v-for="(des, index) in form.description" :key="index">
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="des.key" placeholder="Key" /></td>
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="des.value" placeholder="Value" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required v-model="des.key" placeholder="Key" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required v-model="des.value" placeholder="Value" /></td>
                   <td><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index==0" @click="addRow">Add</button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index!=0" @click="removeRow(index)" >Remove</button></td>
                 </tr>
               </tbody>
@@ -70,7 +70,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.has_run_hour">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour<span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour</span>
             <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>        
