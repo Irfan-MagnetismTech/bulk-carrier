@@ -148,7 +148,7 @@ class OpsVesselParticularController extends Controller
 
     public function getVesselParticularName(){
         try {
-            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();
+            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();
             return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);

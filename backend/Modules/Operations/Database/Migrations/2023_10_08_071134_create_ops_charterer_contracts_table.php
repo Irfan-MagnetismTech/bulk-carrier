@@ -15,18 +15,16 @@ return new class extends Migration
     {
         Schema::create('ops_charterer_contracts', function (Blueprint $table) {
             $table->id();
-            $table->enum('contract_type');
-            $table->bigInteger('ops_vessel_id');
-            $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
-            $table->bigInteger('ops_charterer_profile_id');
-            $table->foreign('ops_charterer_profile_id')->references('id')->on('ops_charterer_profiles');
-            $table->string('country');
+            $table->enum('contract_type', ['Voyage Wise', 'Day Wise']);
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
+            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
+            $table->string('country')->nullable();
             $table->string('address')->nullable();
-            $table->string('billing_address');
-            $table->string('email');
-            $table->string('billing_email');
-            $table->string('contact_no');
-            $table->bigInteger('bank_branche_id');
+            $table->string('billing_address')->nullable();
+            $table->string('email')->nullable();
+            $table->string('billing_email')->nullable();
+            $table->string('contact_no')->nullable();
+            $table->bigInteger('bank_branche_id')->nullable();
             $table->string('attachment')->nullable();
             $table->bigInteger('bank_id')->nullable();
             $table->string('bank_account_name')->nullable();
