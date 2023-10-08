@@ -193,3 +193,4 @@ Project Repository
 - [@Delowar Hossain](https://www.github.com/illusionist3886)
 - [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
 - [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
+- [@Abdul Majid Irfan](https://github.com/irfan-majid)
