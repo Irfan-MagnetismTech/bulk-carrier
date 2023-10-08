@@ -32,7 +32,7 @@
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
+            <!-- <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span> -->
             <table class="w-full border border-gray-500">
               <thead>
                 <tr>

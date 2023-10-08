@@ -80,12 +80,12 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-1/6">#</th>
-            <th class="w-1/6">Ship Department</th>
-            <!-- <th class="w-1/6">Item Group</th>
-            <th class="w-1/6">Item Code</th>
-            <th class="w-1/6">Item Name</th> -->
-            <th class="w-1/6">Action</th>
+            <th class="w-1/5">#</th>
+            <th class="w-1/5">Vessel Name</th>
+            <th class="w-1/5">Ship Department</th>
+            <th class="w-1/5">Item</th>
+            
+            <th class="w-1/5">Action</th>
           </tr>
           </thead>
           <tbody>
