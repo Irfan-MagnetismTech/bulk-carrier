@@ -101,7 +101,7 @@ class MntItemController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(MntItemUpdateRequest $request, $id, MntItem $mntItem)
+    public function update(MntItemRequest $request, $id)
     {
         try {
             $input = $request->all();
