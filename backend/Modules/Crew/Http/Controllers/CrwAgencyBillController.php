@@ -39,7 +39,7 @@ class CrwAgencyBillController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks', 'business_unit');
+                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks');
                 $crwAgencyBill     = CrwAgencyBill::create($crwAgencyBillData);
                 $crwAgencyBill->crwAgencyBillLines()->createMany($request->crwAgencyBillLines);
 
@@ -81,7 +81,7 @@ class CrwAgencyBillController extends Controller
         try {
             DB::transaction(function () use ($request, $crwAgencyBill)
             {
-                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks', 'business_unit');
+                $crwAgencyBillData = $request->only('crw_agency_id', 'crw_agency_contract_id', 'applied_date', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_currency', 'invoice_amount', 'grand_total', 'discount', 'net_amount', 'remarks');
                 $crwAgencyBill->update($crwAgencyBillData);
                 $crwAgencyBill->crwAgencyBillLines()->delete();
                 $crwAgencyBill->crwAgencyBillLines()->createMany($request->crwAgencyBillLines);

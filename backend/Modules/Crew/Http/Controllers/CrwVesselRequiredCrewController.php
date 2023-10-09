@@ -39,7 +39,7 @@ class CrwVesselRequiredCrewController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwVesselRequiredCrewData = $request->only('ops_vessel_id', 'total_crew', 'effective_date', 'remarks', 'business_unit');
+                $crwVesselRequiredCrewData = $request->only('ops_vessel_id', 'total_crew', 'effective_date', 'remarks');
                 $crwVesselRequiredCrew     = CrwVesselRequiredCrew::create($crwVesselRequiredCrewData);
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->createMany($request->crwVesselRequiredCrewLines);
 
@@ -81,7 +81,7 @@ class CrwVesselRequiredCrewController extends Controller
         try {
             DB::transaction(function () use ($request, $crwVesselRequiredCrew)
             {
-                $crwVesselRequiredCrewData = $request->only('ops_vessel_id', 'total_crew', 'effective_date', 'remarks', 'business_unit');
+                $crwVesselRequiredCrewData = $request->only('ops_vessel_id', 'total_crew', 'effective_date', 'remarks');
                 $crwVesselRequiredCrew->update($crwVesselRequiredCrewData);
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->delete();
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->createMany($request->crwVesselRequiredCrewLines);

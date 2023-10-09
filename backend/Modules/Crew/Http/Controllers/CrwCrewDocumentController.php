@@ -39,7 +39,7 @@ class CrwCrewDocumentController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit');
+                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period');
                 $crwCrewDocument     = CrwCrewDocument::create($crwCrewDocumentData);
                 $crwCrewDocument->crwCrewDocumentRenewals()->createMany($request->crwCrewDocumentRenewals);
 
@@ -81,7 +81,7 @@ class CrwCrewDocumentController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewDocument)
             {
-                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit');
+                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period');
                 $crwCrewDocument->update($crwCrewDocumentData);
                 $crwCrewDocument->crwCrewDocumentRenewals()->delete();
                 $crwCrewDocument->crwCrewDocumentRenewals()->createMany($request->crwCrewDocumentRenewals);

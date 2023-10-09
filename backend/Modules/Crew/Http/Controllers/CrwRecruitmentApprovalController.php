@@ -39,7 +39,7 @@ class CrwRecruitmentApprovalController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwRecruitmentApprovalData = $request->only('applied_date', 'page_title', 'subject', 'total_approved', 'crew_agreed_to_join', 'crew_selected', 'crew_panel', 'crew_rest', 'body', 'remarks', 'business_unit');
+                $crwRecruitmentApprovalData = $request->only('applied_date', 'page_title', 'subject', 'total_approved', 'crew_agreed_to_join', 'crew_selected', 'crew_panel', 'crew_rest', 'body', 'remarks');
                 $crwRecruitmentApproval     = CrwRecruitmentApproval::create($crwRecruitmentApprovalData);
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
@@ -81,7 +81,7 @@ class CrwRecruitmentApprovalController extends Controller
         try {
             DB::transaction(function () use ($request, $crwRecruitmentApproval)
             {
-                $crwRecruitmentApprovalData = $request->only('applied_date', 'page_title', 'subject', 'total_approved', 'crew_agreed_to_join', 'crew_selected', 'crew_panel', 'crew_rest', 'body', 'remarks', 'business_unit');
+                $crwRecruitmentApprovalData = $request->only('applied_date', 'page_title', 'subject', 'total_approved', 'crew_agreed_to_join', 'crew_selected', 'crew_panel', 'crew_rest', 'body', 'remarks');
                 $crwRecruitmentApproval->update($crwRecruitmentApprovalData);
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->delete();
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
