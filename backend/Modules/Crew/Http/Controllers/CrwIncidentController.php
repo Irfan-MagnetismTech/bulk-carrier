@@ -39,7 +39,7 @@ class CrwIncidentController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description', 'business_unit');
+                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description');
                 $crwIncident     = CrwIncident::create($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);
 
@@ -81,7 +81,7 @@ class CrwIncidentController extends Controller
         try {
             DB::transaction(function () use ($request, $crwIncident)
             {
-                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description', 'business_unit');
+                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description');
                 $crwIncident->update($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->delete();
                 $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);

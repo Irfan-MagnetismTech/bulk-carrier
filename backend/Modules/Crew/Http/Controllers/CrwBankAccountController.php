@@ -36,7 +36,7 @@ class CrwBankAccountController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active');
             $crwBankAccount     = CrwBankAccount::create($crwBankAccountData);
 
             return response()->success('Created Succesfully', $crwBankAccount, 201);
@@ -74,7 +74,7 @@ class CrwBankAccountController extends Controller
     public function update(Request $request, CrwBankAccount $crwBankAccount)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active');
             $crwBankAccount->update($crwBankAccountData);
 
             return response()->success('Updated succesfully', $crwBankAccount, 202);

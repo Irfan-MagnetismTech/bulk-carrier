@@ -38,7 +38,7 @@ class CrwAgencyContractController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
             $crwAgencyContract     = CrwAgencyContract::create($crwAgencyContractData);
 
             return response()->success('Created Succesfully', $crwAgencyContract, 201);
@@ -76,7 +76,7 @@ class CrwAgencyContractController extends Controller
     public function update(Request $request, CrwAgencyContract $crwAgencyContract)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
             $crwAgencyContract->update($crwAgencyContractData);
 
             return response()->success('Updated succesfully', $crwAgencyContract, 202);

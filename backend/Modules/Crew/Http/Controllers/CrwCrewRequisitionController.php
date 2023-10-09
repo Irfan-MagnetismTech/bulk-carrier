@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewRequisition;
 
-class CrwRequisitionController extends Controller
+class CrwCrewRequisitionController extends Controller
 {
 
     public function index()
@@ -29,7 +29,7 @@ class CrwRequisitionController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
+                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks');
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
@@ -59,7 +59,7 @@ class CrwRequisitionController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewRequisition)
             {
-                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
+                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks');
                 $crwCrewRequisition->update($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->delete();
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);

@@ -39,7 +39,7 @@ class CrwCrewChecklistController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwCrewChecklistData = $request->only('effective_date', 'remarks', 'business_unit');
+                $crwCrewChecklistData = $request->only('effective_date', 'remarks');
                 $crwCrewChecklist     = CrwCrewChecklist::create($crwCrewChecklistData);
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
@@ -81,7 +81,7 @@ class CrwCrewChecklistController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewChecklist)
             {
-                $crwCrewChecklistData = $request->only('effective_date', 'remarks', 'business_unit');
+                $crwCrewChecklistData = $request->only('effective_date', 'remarks');
                 $crwCrewChecklist->update($crwCrewChecklistData);
                 $crwCrewChecklist->crwCrewChecklistLines()->delete();
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);

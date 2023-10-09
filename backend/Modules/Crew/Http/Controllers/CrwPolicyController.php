@@ -36,7 +36,7 @@ class CrwPolicyController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwPolicyData = $request->only('name', 'type', 'attachment', 'business_unit');
+            $crwPolicyData = $request->only('name', 'type', 'attachment');
             $crwPolicy     = CrwPolicy::create($crwPolicyData);
 
             return response()->success('Created Succesfully', $crwPolicy, 201);
@@ -74,7 +74,7 @@ class CrwPolicyController extends Controller
     public function update(Request $request, CrwPolicy $crwPolicy)
     {
         try {
-            $crwPolicyData = $request->only('name', 'type', 'attachment', 'business_unit');
+            $crwPolicyData = $request->only('name', 'type', 'attachment');
             $crwPolicy->update($crwPolicyData);
 
             return response()->success('Updated succesfully', $crwPolicy, 202);

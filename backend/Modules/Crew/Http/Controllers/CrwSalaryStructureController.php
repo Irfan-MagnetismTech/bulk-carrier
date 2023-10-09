@@ -39,7 +39,7 @@ class CrwSalaryStructureController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
+                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active');
                 $crwSalaryStructure     = CrwSalaryStructure::create($crwSalaryStructureData);
                 $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
 
@@ -81,7 +81,7 @@ class CrwSalaryStructureController extends Controller
         try {
             DB::transaction(function () use ($request, $crwSalaryStructure)
             {
-                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
+                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active');
                 $crwSalaryStructure->update($crwSalaryStructureData);
                 $crwSalaryStructure->crwSalaryStructureBreakdowns()->delete();
                 $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
