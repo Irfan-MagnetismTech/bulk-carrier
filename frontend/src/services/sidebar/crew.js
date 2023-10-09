@@ -42,7 +42,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.checklists.index',
                 label: 'Onboard Checklist',
                 preIcon: '',
                 postIcon: icons.DownArrow,
