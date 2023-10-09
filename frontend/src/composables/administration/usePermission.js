@@ -17,18 +17,16 @@ export default function usePermission() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getPermissions(page, columns = null, searchKey = null, table = null) {
+    async function getPermissions(page,isPaginate = true) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get('/permissions', {
+            const { data, status } = await Api.get('/administration/permissions', {
                 params: {
                     page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
+                    isPaginate: isPaginate,
                 },
             });
             permissions.value = data.value;

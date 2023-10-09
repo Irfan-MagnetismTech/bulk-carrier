@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -61,7 +63,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">User List</h2>
-    <default-button :title="'Create'" :to="{ name: 'administration.users.create' }"></default-button>
+    <default-button :title="'Create User'" :to="{ name: 'administration.users.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -80,37 +82,29 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
+            <th>User Role</th>
             <th class="w-1/4 md:w-64">Name</th>
             <th class="w-64">Email</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
-            <th>User Role</th>
+            <th>Business Unit</th>
             <th class="w-68">Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(user,index) in users?.data" :key="index">
+          <tr v-for="(user,index) in users" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ user?.roles }}</td>
             <td>{{ user?.name }}</td>
             <td>{{ user?.email }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.roles }}</td>
-            <td class="">
-              <div class="flex">
-                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
-              </div>
+            <td>
+              <strong>{{ user?.business_unit }}</strong>
+            </td>
+            <td>
+              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
+              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!users?.data?.length">
+          <tfoot v-if="!users?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
