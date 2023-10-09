@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsCargoTariff extends Model
 {
     use HasFactory;
+    use \App\Traits\CreateBusinessUnit;
 
     protected $fillable = [
         'tariff_name',
