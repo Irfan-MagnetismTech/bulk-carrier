@@ -4,7 +4,7 @@ import { ref } from 'vue';
 export default function Title() {
     const title = useTitle('');
     const divider = ref(" - ");
-    const suffix = ref('TSLL');
+    const suffix = ref('TORONY');
 
     function setTitle(value) {
         if(value === null || value === undefined || value === '') {
