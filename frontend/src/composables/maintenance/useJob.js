@@ -14,6 +14,7 @@ export default function useItemGroup() {
     const job = ref( {
         ops_vessel_id: '',
         mnt_ship_department_id: '',
+        item_name: '',
         mnt_item_id: '',
         job_details: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
     });

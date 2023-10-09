@@ -12,7 +12,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-          <select v-model="form.mnt_ship_department_id" required class="form-input" >
+          <select v-model="form.mnt_ship_department_id" required class="form-input" @change="fetchShipDepartmentWiseItems" >
             <option value="" disabled selected>Select Department</option>
             <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option>
               
@@ -21,11 +21,13 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item <span class="text-red-500">*</span></span>
-          <select v-model="form.mnt_item_id" required class="form-input" >
+          <!-- <select v-model="form.mnt_item_id" required class="form-input" >
             <option value="" disabled selected>Select Item</option>
-            <option v-for="item in items" :value="item.id">{{ item.item_code + ' ' + item.name }}</option>
+            <option v-for="item in shipDepartmentWiseItems" :value="item.id">{{ item.item_code + ' ' + item.name }}</option>
               
-            </select>
+            </select> -->
+            <v-select placeholder="Select Item" :options="shipDepartmentWiseItemsWithItemCode" @search="fetchItem" v-model="form.item_name" label="displayName" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+            <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         
@@ -34,13 +36,14 @@
         <label class="block w-full mt-2 text-sm">
             <!-- <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span> -->
             <table class="w-full border border-gray-500">
-              <thead>
-                <tr>
-                  <th>Job Description</th>
-                  <th>Cycle Unit</th>
-                  <th>Cycle</th>
-                  <th>Add To Upcoming List</th>
-                  <th>Action</th>
+              <thead class="w-full">
+                <tr class="w-full">
+                  <th class="w-3/12">Job Description</th>
+                  <th class="w-2/12">Cycle Unit</th>
+                  <th class="w-2/12">Cycle</th>
+                  <th class="w-2/12">Add To Upcoming List</th>
+                  <th class="w-2/12">Remarks</th>
+                  <th class="w-1/12">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,7 +63,10 @@
                   
                   <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.min_limit" placeholder="Add To Upcoming List" /></td>
                   
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.remarks" placeholder="Remarks" /></td>
                   
+                  
+
                   <td><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index==0" @click="addJob">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -84,7 +90,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {ref, onMounted} from "vue";
+import {ref, onMounted, watch, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
 
 const props = defineProps({
@@ -104,8 +110,30 @@ function removeJob(index) {
   props.form.job_details.splice(index, 1);
 }
 
+function fetchShipDepartmentWiseItems()
+{
+  getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
+}
+
+// function fetchItem(query, loading) {
+//   searchMaterialCategory(query, loading);
+//   loading(true)
+// }
+watch(() => props.form.item_name, (value) => {
+  props.form.mnt_item_id = value?.id;
+});
+
+const shipDepartmentWiseItemsWithItemCode = computed(() => {
+  if(shipDepartmentWiseItems.value.length)
+    return shipDepartmentWiseItems.value.map(item => ({
+      ...item,
+      displayName: `${item.item_code} ${item.name}`
+      }));
+  return [];
+});
+
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { items, getItemsWithoutPagination } = useItem();
+const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useItem();
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
