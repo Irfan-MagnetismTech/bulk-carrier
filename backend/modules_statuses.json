@@ -1,5 +1,6 @@
 {
     "Administration": true,
     "Crew": true,
-    "Operations": true
+    "Operations": true,
+    "SupplyChain": true
 }
