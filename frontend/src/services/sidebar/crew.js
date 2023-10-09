@@ -12,7 +12,7 @@ export default [
         permissionKey: '',
         subMenu: [
             {
-                route: 'administration.users.index',
+                route: 'crw.ranks.index',
                 label: 'Rank List',
                 preIcon: '',
                 postIcon: icons.DownArrow,
