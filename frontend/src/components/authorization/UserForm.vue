@@ -7,8 +7,9 @@
         <option value="" disabled selected>Select</option>
         <option value="PSML">PSML</option>
         <option value="TSLL">TSLL</option>
+        <option value="BOTH">BOTH</option>
       </select>
-      <Error v-if="errors?.role" :errors="errors.role" />
+      <Error v-if="errors?.business_unit" :errors="errors.business_unit" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Role <span class="text-red-500">*</span></span>

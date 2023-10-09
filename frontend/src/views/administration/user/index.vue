@@ -96,7 +96,7 @@ onMounted(() => {
             <td>{{ user?.name }}</td>
             <td>{{ user?.email }}</td>
             <td>
-              <span :class="user?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ user?.business_unit }}</span>
+              <strong>{{ user?.business_unit }}</strong>
             </td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
