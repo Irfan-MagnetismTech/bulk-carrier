@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsPort extends Model
 {
     use HasFactory;
+    use \App\Traits\CreateComId;
 
     /**
      * The attributes that are mass assignable.

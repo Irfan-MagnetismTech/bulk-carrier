@@ -39,27 +39,36 @@ export default function useRole() {
 
     async function storeRole(form) {
 
+        form.current_permissions = [];
+        Object.entries(form.permissions).forEach(([permissionMenuIndex, permissionMenuData]) => {
+            Object.entries(permissionMenuData).forEach(([permissionSubjectIndex, permissionSubjectData]) => {
+                Object.entries(permissionSubjectData).forEach(([permissionIndex, permissionData]) => {
+                    if(permissionData.is_checked){
+                        form.current_permissions.push(permissionData.id);
+                    }
+                });
+            });
+        });
+
         if(!form.current_permissions.length){
             alert('Please select at least one permission');
             return;
         }
 
-        NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/roles', form);
+            const { data, status } = await Api.post('/administration/roles', form);
             role.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.role.index" });
+            router.push({ name: "administration.user.roles.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
@@ -69,7 +78,7 @@ export default function useRole() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/roles/${roleId}`);
+            const { data, status } = await Api.get(`/administration/roles/${roleId}`);
             role.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -83,38 +92,50 @@ export default function useRole() {
     }
 
     async function updateRole(form, roleId) {
-        //NProgress.start();
+
+        form.current_permissions = [];
+        Object.entries(form.permissions).forEach(([permissionMenuIndex, permissionMenuData]) => {
+            Object.entries(permissionMenuData).forEach(([permissionSubjectIndex, permissionSubjectData]) => {
+                Object.entries(permissionSubjectData).forEach(([permissionIndex, permissionData]) => {
+                    if(permissionData.is_checked){
+                        form.current_permissions.push(permissionData.id);
+                    }
+                });
+            });
+        });
+
+        if(!form.current_permissions.length){
+            alert('Please select at least one permission');
+            return;
+        }
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/roles/${roleId}`,
+                `/administration/roles/${roleId}`,
                 form
             );
             role.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.role.index" });
+            router.push({ name: "administration.user.roles.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
     async function deleteRole(roleId) {
-        if (!confirm('Are you sure you want to delete this role?')) {
-            return;
-        }
-        //NProgress.start();
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/roles/${roleId}`);
+            const { data, status } = await Api.delete( `/administration/roles/${roleId}`);
             notification.showSuccess(status);
             await getRoles();
         } catch (error) {
@@ -123,7 +144,6 @@ export default function useRole() {
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
