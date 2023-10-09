@@ -184,4 +184,38 @@ class OpsVoyageBoatNoteController extends Controller
         }
         return $results;
     }
+
+
+    public function handleMultipleFile($file, $path, $previousFile = null)
+    {
+        try {
+            if (is_string($file)) return $file;
+            $fileNames = null;
+            if(is_array($file)){
+                $fileNames=[];
+                $newData = $file;
+                $previousFileLength= count($previousFile);
+        
+                foreach($newData as $key=>$value){
+                    $data = $value->except(
+                        'attachment',
+                    );
+                    if(isset($value->attachment)){
+                        if($key < $previousFileLength){
+                            $this->deleteFile($previousFile[$key]->attachment);
+                        }
+                        $attachment = $this->handleFile($value->attachment, $path);
+                        $data['attachment'] = $attachment;
+                    }
+                    $fileNames[$key]= $data;
+                }
+                return $fileNames;
+            }
+            return $fileNames;
+        } catch (ValidationException) {
+            return null;
+        }
+    }
+
+
 }
