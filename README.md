@@ -1,9 +1,13 @@
-# bulk-carrier-erp
+# Bulk Carrier ERP
 
-Bulk carrier erp is a web application for managing bulk carrier shipping business.
+Bulk carrier ERP is a web application for managing bulk carrier shipping business.
 It is a complete solution for managing all the business processes of a bulk carrier shipping company.
 It is a web application that can be accessed from anywhere in the world.
 
+### Business Units
+Business Unit should be `enum` data type.
+- TSLL
+- PSML
 ### Project Environment
 
 - Laravel 10.*
