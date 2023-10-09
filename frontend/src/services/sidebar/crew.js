@@ -32,7 +32,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.policies.index',
                 label: 'Policies',
                 preIcon: '',
                 postIcon: icons.DownArrow,
