@@ -2,10 +2,12 @@
 import {computed, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import useHeroIcon from '../assets/heroIcon';
+import useAuth from "../services/auth";
 const router = useRouter();
 const currentRoute = ref(computed(() => { return router.currentRoute.value; }));
 const icons = useHeroIcon();
 const isActive = ref('');
+const { userBusinessUnit } = useAuth();
 
 import mainSidebar from '../services/sidebar/mainSidebar.js';
 
@@ -57,6 +59,9 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
 </script>
 <template>
     <div class="ml-2 py-2 text-gray-500 dark:text-gray-400">
+      <a v-if="userBusinessUnit !== 'BOTH'" class="business_unit text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+        {{ userBusinessUnit }}
+      </a>
         <ul class="mt-6">
           <template v-for="(element,elementIndex) in mainSidebar">
             <a @click="revealChild(element.subMenu.length,elementIndex)" class="mx-2 flex cursor-pointer p-2 items-center mb-1 text-sm font-semibold text-purple-100 font-light shadow-md focus:outline-none rounded-md hover:bg-indigo-900 duration-200 ease-linear px-2">
