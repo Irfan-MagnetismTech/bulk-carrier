@@ -47,23 +47,23 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(job_detail, index) in form.job_details" :key="index">
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.job_description" placeholder="Job Description" /></td>
+                <tr v-for="(job_line, index) in form.job_lines" :key="index">
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.job_description" placeholder="Job Description" /></td>
 
                   <td>
-                    <!-- <input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.cycle_unit" placeholder="Cycle Unit" /> -->
+                    <!-- <input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.cycle_unit" placeholder="Cycle Unit" /> -->
                 
-                    <select v-model="job_detail.cycle_unit" class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <select v-model="job_line.cycle_unit" class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="" disabled selected>Select Cycle Unit</option>
                         <option v-for="jobCycleUnit in jobCycleUnits" :value="jobCycleUnit">{{ jobCycleUnit }}</option>
                     </select>
                 </td>
 
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.cycle" placeholder="Cycle" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.cycle" placeholder="Cycle" /></td>
                   
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.min_limit" placeholder="Add To Upcoming List" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
                   
-                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_detail.remarks" placeholder="Remarks" /></td>
+                  <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.remarks" placeholder="Remarks" /></td>
                   
                   
 
@@ -104,10 +104,10 @@ const props = defineProps({
 const jobCycleUnits = ref(['Hrs', 'Weeks', 'Months', 'Years']);
 
 function addJob() {
-  props.form.job_details.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
+  props.form.job_lines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
 }
 function removeJob(index) {
-  props.form.job_details.splice(index, 1);
+  props.form.job_lines.splice(index, 1);
 }
 
 function fetchShipDepartmentWiseItems()
