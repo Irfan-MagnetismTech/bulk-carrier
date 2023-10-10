@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use ReflectionClass;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
