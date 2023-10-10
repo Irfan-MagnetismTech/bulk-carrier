@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwAgencyContract;
 use Illuminate\Database\QueryException;
+use App\Services\FileUploadService;
 
 
 class CrwAgencyContractController extends Controller
 {
+
+    public function __construct(private FileUploadService $fileUpload)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +45,9 @@ class CrwAgencyContractController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
+            $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract');
+
             $crwAgencyContract     = CrwAgencyContract::create($crwAgencyContractData);
 
             return response()->success('Created Succesfully', $crwAgencyContract, 201);
@@ -76,7 +85,9 @@ class CrwAgencyContractController extends Controller
     public function update(Request $request, CrwAgencyContract $crwAgencyContract)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'attachment', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code');
+            $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract', $crwAgencyContract->attachment);
+
             $crwAgencyContract->update($crwAgencyContractData);
 
             return response()->success('Updated succesfully', $crwAgencyContract, 202);
