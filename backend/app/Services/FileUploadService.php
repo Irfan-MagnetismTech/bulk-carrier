@@ -22,8 +22,10 @@ class FileUploadService
             if ($previousFile) {
                 $this->deleteFile($previousFile);
             }
+
             return $fileName;
         } catch (ValidationException) {
+
             return null;
         }
     }
@@ -35,6 +37,34 @@ class FileUploadService
             if (file_exists($oldPath)) {
                 File::delete($oldPath);
             }
+        }
+    }
+
+    // note : new data, file storing path, previous data which is get from database and, field name if it's not attachment
+    public function handleMultipleFiles(string $path, array $newData, array $oldData = null, string $field = 'attachment'): array|null
+    {
+        try {
+            $results = [];
+            $oldLength = count($oldData);
+
+            foreach ($newData as $key => $value) {
+                $data = $value->except(
+                    $field,
+                );
+                if (isset($value->attachment)) {
+                    if ($key < $oldLength) {
+                        $this->deleteFile($oldData[$key]->attachment);
+                    }
+                    $attachment = $this->handleFile($value->attachment, $path);
+                    $data[$field] = $attachment;
+                }
+                $results[$key] = $data;
+            }
+
+            return $results;
+        } catch (ValidationException) {
+
+            return null;
         }
     }
 }
