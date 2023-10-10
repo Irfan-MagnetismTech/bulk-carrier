@@ -65,4 +65,64 @@ export default [
         component: () => import(`../views/crew/checklist/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    /* Vessel Required Crew Routes */
+    {
+        path: `/${BASE}/vessel-required-crews`,
+        name: `${BASE}.vesselRequiredCrews.index`,
+        component: () => import(`../views/crew/vessel-required-crew/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/vessel-required-crews/create`,
+        name: `${BASE}.vesselRequiredCrews.create`,
+        component: () => import(`../views/crew/vessel-required-crew/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/vessel-required-crews/:vesselRequiredCrewId/edit`,
+        name: `${BASE}.vesselRequiredCrews.edit`,
+        component: () => import(`../views/crew/vessel-required-crew/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    /* Crew Requisition Routes */
+    {
+        path: `/${BASE}/crew-requisitions`,
+        name: `${BASE}.crewRequisitions.index`,
+        component: () => import(`../views/crew/crew-requisition/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-requisitions/create`,
+        name: `${BASE}.crewRequisitions.create`,
+        component: () => import(`../views/crew/crew-requisition/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-requisitions/:crewRequisitionId/edit`,
+        name: `${BASE}.crewRequisitions.edit`,
+        component: () => import(`../views/crew/crew-requisition/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    /* Recruitment Approval Routes */
+    {
+        path: `/${BASE}/recruitment-approvals`,
+        name: `${BASE}.recruitmentApprovals.index`,
+        component: () => import(`../views/crew/recruitment-approval/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/recruitment-approvals/create`,
+        name: `${BASE}.recruitmentApprovals.create`,
+        component: () => import(`../views/crew/recruitment-approval/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/recruitment-approvals/:recruitmentApprovalId/edit`,
+        name: `${BASE}.recruitmentApprovals.edit`,
+        component: () => import(`../views/crew/recruitment-approval/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 ];

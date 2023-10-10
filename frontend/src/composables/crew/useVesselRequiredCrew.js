@@ -4,17 +4,21 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useCheckList() {
+export default function useVesselRequiredCrew() {
     const router = useRouter();
-    const checklists = ref([]);
+    const vesselRequiredCrews = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const checkList = ref( {
+    const vesselRequiredCrew = ref( {
+        ops_vessel_id: '',
+        total_crew: '',
         effective_date: '',
         remarks: '',
-        crwCrewChecklistLines: [
+        crwVesselRequiredCrewLines: [
             {
-                item_name: '',
+                crw_rank_id: '',
+                required_manpower: '',
+                eligibility: '',
                 remarks: '',
             }
         ]
@@ -23,18 +27,18 @@ export default function useCheckList() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCheckLists(page) {
+    async function getVesselRequiredCrews(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-crew-checklists',{
+            const {data, status} = await Api.get('/crw/crw-vessel-required-crews',{
                 params: {
                     page: page || 1,
                 },
             });
-            checklists.value = data.value;
+            vesselRequiredCrews.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -45,16 +49,16 @@ export default function useCheckList() {
         }
     }
 
-    async function storeCheckList(form) {
+    async function storeVesselRequiredCrew(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
-            checkList.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-vessel-required-crews', form);
+            vesselRequiredCrew.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crw-crew-checklists.index" });
+            await router.push({ name: "crw.vesselRequiredCrews.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -64,14 +68,14 @@ export default function useCheckList() {
         }
     }
 
-    async function showCheckList(checkListId) {
+    async function showVesselRequiredCrew(VesselRequiredCrewId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-crew-checklists/${checkListId}`);
-            checkList.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`);
+            vesselRequiredCrew.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -82,19 +86,19 @@ export default function useCheckList() {
         }
     }
 
-    async function updateCheckList(form, checkListId) {
+    async function updateVesselRequiredCrew(form, VesselRequiredCrewId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-crew-checklists/${checkListId}`,
+                `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`,
                 form
             );
-            checkList.value = data.value;
+            vesselRequiredCrew.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.checklists.index" });
+            await router.push({ name: "crw.vesselRequiredCrews.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -104,15 +108,15 @@ export default function useCheckList() {
         }
     }
 
-    async function deleteCheckList(checkListId) {
+    async function deleteVesselRequiredCrew(VesselRequiredCrewId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-crew-checklists/${checkListId}`);
+            const { data, status } = await Api.delete( `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`);
             notification.showSuccess(status);
-            await getCheckLists();
+            await getVesselRequiredCrews();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -123,13 +127,13 @@ export default function useCheckList() {
     }
 
     return {
-        checklists,
-        checkList,
-        getCheckLists,
-        storeCheckList,
-        showCheckList,
-        updateCheckList,
-        deleteCheckList,
+        vesselRequiredCrews,
+        vesselRequiredCrew,
+        getVesselRequiredCrews,
+        storeVesselRequiredCrew,
+        showVesselRequiredCrew,
+        updateVesselRequiredCrew,
+        deleteVesselRequiredCrew,
         isLoading,
         errors,
     };

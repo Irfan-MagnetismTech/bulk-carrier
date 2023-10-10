@@ -4,17 +4,28 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useCheckList() {
+export default function useRecruitmentApproval() {
     const router = useRouter();
-    const checklists = ref([]);
+    const recruitmentApprovals = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const checkList = ref( {
-        effective_date: '',
+    const recruitmentApproval = ref( {
+        applied_date: '',
+        page_title: '',
+        subject: '',
+        total_approved: '',
+        crew_agreed_to_join: '',
+        crew_selected: '',
+        crew_panel: '',
+        crew_rest: '',
+        body: '',
         remarks: '',
-        crwCrewChecklistLines: [
+        crwRecruitmentApprovalLines: [
             {
-                item_name: '',
+                crw_rank_id: '',
+                candidate_name: '',
+                candidate_contact: '',
+                candidate_email: '',
                 remarks: '',
             }
         ]
@@ -23,18 +34,18 @@ export default function useCheckList() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCheckLists(page) {
+    async function getRecruitmentApprovals(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-crew-checklists',{
+            const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
                 params: {
                     page: page || 1,
                 },
             });
-            checklists.value = data.value;
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -45,16 +56,16 @@ export default function useCheckList() {
         }
     }
 
-    async function storeCheckList(form) {
+    async function storeRecruitmentApproval(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
-            checkList.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crw-crew-checklists.index" });
+            await router.push({ name: "crw.recruitmentApprovals.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -64,14 +75,14 @@ export default function useCheckList() {
         }
     }
 
-    async function showCheckList(checkListId) {
+    async function showRecruitmentApproval(recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-crew-checklists/${checkListId}`);
-            checkList.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -82,19 +93,19 @@ export default function useCheckList() {
         }
     }
 
-    async function updateCheckList(form, checkListId) {
+    async function updateRecruitmentApproval(form, recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-crew-checklists/${checkListId}`,
+                `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
                 form
             );
-            checkList.value = data.value;
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.checklists.index" });
+            await router.push({ name: "crw.recruitmentApprovals.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -104,15 +115,15 @@ export default function useCheckList() {
         }
     }
 
-    async function deleteCheckList(checkListId) {
+    async function deleteRecruitmentApproval(recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-crew-checklists/${checkListId}`);
+            const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
             notification.showSuccess(status);
-            await getCheckLists();
+            await getRecruitmentApprovals();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -123,13 +134,13 @@ export default function useCheckList() {
     }
 
     return {
-        checklists,
-        checkList,
-        getCheckLists,
-        storeCheckList,
-        showCheckList,
-        updateCheckList,
-        deleteCheckList,
+        recruitmentApprovals,
+        recruitmentApproval,
+        getRecruitmentApprovals,
+        storeRecruitmentApproval,
+        showRecruitmentApproval,
+        updateRecruitmentApproval,
+        deleteRecruitmentApproval,
         isLoading,
         errors,
     };
