@@ -91,8 +91,11 @@ onMounted(() => {
           <tr v-for="(chkList,index) in checklists" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ chkList?.effective_date }}</td>
-            <td>
-              <span v-for="(chkListLine,lineIndex) in chkList?.crwCrewChecklistLines">{{ chkListLine?.item_name }},</span>
+            <td style="text-align: left !important;">
+              <span v-for="(chkListLine,index) in chkList?.crw_crew_checklist_lines" :key="index"
+                    class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+                {{ chkListLine?.item_name }}
+              </span>
             </td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'crw.checklists.edit', params: { checkListId: chkList?.id } }"></action-button>
