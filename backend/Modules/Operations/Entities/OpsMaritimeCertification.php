@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsMaritimeCertification extends Model
 {
     use HasFactory;
+    use App\Traits\CreateBusinessUnit;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +21,7 @@ class OpsMaritimeCertification extends Model
         'type',
         'validity',
         'authority',
+        'business_unit'
     ];
     
     protected static function newFactory()

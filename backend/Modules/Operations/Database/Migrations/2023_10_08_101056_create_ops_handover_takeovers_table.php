@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('currency');
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
             $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
+            $table->string('business_unit')->nullable();
             $table->timestamps();
         });
     }

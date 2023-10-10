@@ -4,11 +4,11 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OpsChartererProfile extends Model
 {
     use HasFactory;
+    use \App\Traits\CreateBusinessUnit;
 
     protected $fillable = [
         'company_legal_name',

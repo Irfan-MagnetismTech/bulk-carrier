@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsChartererContract extends Model
 {
     use HasFactory;
+    use \App\Traits\CreateBusinessUnit;
 
     protected $fillable = [
         'contract_type',
@@ -33,7 +34,6 @@ class OpsChartererContract extends Model
         'agent_name',
         'billing_name',
         'business_unit',
-
     ];
 
     public function ops_vessel()

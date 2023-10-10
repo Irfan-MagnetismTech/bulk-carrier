@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OpsChartererInvoice extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use \App\Traits\CreateBusinessUnit;
 
     protected $fillable = [
         'ops_charterer_profile_id',

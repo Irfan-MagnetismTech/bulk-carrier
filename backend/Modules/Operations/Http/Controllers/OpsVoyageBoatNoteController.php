@@ -59,7 +59,7 @@ class OpsVoyageBoatNoteController extends Controller
             );
 
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->ops_voyage_boat_note_lines);
+            $boat_note_lines= $this->handleMultipleFile($request->ops_voyage_boat_note_lines,'ops/voyage/boat_note_line');
             $voyageBoatNote->ops_voyage_boat_note_lines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
@@ -110,7 +110,7 @@ class OpsVoyageBoatNoteController extends Controller
             $voyage_boat_note->load('ops_voyage_boat_note_lines');
             
             $voyageBoatNote->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload('ops/voyage/boat_note_line',$request->ops_voyage_boat_note_lines,$voyage_boat_note->ops_voyage_boat_note_lines);
+            $boat_note_lines= $this->handleMultipleFile($request->ops_voyage_boat_note_lines,'ops/voyage/boat_note_line',$voyage_boat_note->ops_voyage_boat_note_lines);
             $voyageBoatNote->ops_voyage_boat_note_lines()->delete();
             $voyageBoatNote->ops_voyage_boat_note_lines()->createMany($boat_note_lines);
             DB::commit();
@@ -163,59 +163,9 @@ class OpsVoyageBoatNoteController extends Controller
         }
     }
 
-    // for multiple file upload
-    function fileUpload($path, $newData , $oldData = null){
-        $results=[];
-        // $newLength= count($newData);
-        $oldLength= count($oldData);
-
-        foreach($newData as $key=>$value){
-            $data = $value->except(
-                'attachment',
-            );
-            if(isset($value->attachment)){
-                if($key < $oldLength){
-                    $this->fileUpload->deleteFile($oldData[$key]->attachment);
-                }
-                $attachment = $this->fileUpload->handleFile($value->attachment, $path);
-                $data['attachment'] = $attachment;
-            }
-            $results[$key]= $data;
-        }
-        return $results;
-    }
 
 
-    public function handleMultipleFile($file, $path, $previousFile = null)
-    {
-        try {
-            if (is_string($file)) return $file;
-            $fileNames = null;
-            if(is_array($file)){
-                $fileNames=[];
-                $newData = $file;
-                $previousFileLength= count($previousFile);
-        
-                foreach($newData as $key=>$value){
-                    $data = $value->except(
-                        'attachment',
-                    );
-                    if(isset($value->attachment)){
-                        if($key < $previousFileLength){
-                            $this->deleteFile($previousFile[$key]->attachment);
-                        }
-                        $attachment = $this->handleFile($value->attachment, $path);
-                        $data['attachment'] = $attachment;
-                    }
-                    $fileNames[$key]= $data;
-                }
-                return $fileNames;
-            }
-            return $fileNames;
-        } catch (ValidationException) {
-            return null;
-        }
-    }
+
 
 
 }

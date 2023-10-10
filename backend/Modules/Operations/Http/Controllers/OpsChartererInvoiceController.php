@@ -49,7 +49,6 @@ class OpsChartererInvoiceController extends Controller
      */
      public function store(OpsChartererInvoiceRequest $request): JsonResponse
      {
-         // dd($request);
          try {
              DB::beginTransaction();
              $charterer_invoice_info = $request->except(
@@ -60,7 +59,7 @@ class OpsChartererInvoiceController extends Controller
              $charterer_invoice = OpsChartererInvoice::create($charterer_invoice_info);
              $charterer_invoice->ops_charterer_invoice_lines()->createMany($request->ops_charterer_invoice_lines);
              DB::commit();
-             return response()->success('Charterer invoice added successfully.', $cargoTariff, 201);
+             return response()->success('Charterer invoice added successfully.', $charterer_invoice, 201);
          }
          catch (QueryException $e)
          {
@@ -77,10 +76,10 @@ class OpsChartererInvoiceController extends Controller
       */
      public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
      {
-         $charterer_invoice->load('ops_vessel','ops_cargo_type','ops_charterer_invoice_lines');
+         $charterer_invoice->load('ops_charterer_profile','ops_charterer_contract','ops_charterer_invoice_lines');
          try
          {
-             return response()->success('Successfully retrieved cargo tariff.', $charterer_invoice, 200);
+             return response()->success('Successfully retrieved charterer invoice.', $charterer_invoice, 200);
          }
          catch (QueryException $e)
          {

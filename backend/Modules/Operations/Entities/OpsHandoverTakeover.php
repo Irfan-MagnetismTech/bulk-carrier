@@ -9,14 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsHandoverTakeover extends Model
 {
     use HasFactory;
-
+    use App\Traits\CreateBusinessUnit;
+    
     protected $fillable = [
         'note_type',
         'effective_date',
         'exchange_rate',
         'currency',
         'ops_vessel_id',
-        'ops_charterer_profile_id'
+        'ops_charterer_profile_id',
+        'business_unit'
     ];
 
     public function ops_vessel()
