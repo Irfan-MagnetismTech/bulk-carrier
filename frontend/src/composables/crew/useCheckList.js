@@ -4,30 +4,37 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useRank() {
+export default function useCheckList() {
     const router = useRouter();
-    const ranks = ref([]);
+    const checklists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const rank = ref( {
-        name: '',
-        short_name: '',
+    const checkList = ref( {
+        effective_date: '',
+        remarks: '',
+        crwCrewChecklistLines: [
+            {
+                item_name: '',
+                remarks: '',
+            }
+        ]
     });
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRanks(page) {
+    async function getCheckLists(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-ranks',{
+            const {data, status} = await Api.get('/crw/crw-crew-checklists',{
                 params: {
                     page: page || 1,
                 },
             });
-            ranks.value = data.value;
+            checklists.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -38,16 +45,16 @@ export default function useRank() {
         }
     }
 
-    async function storeRank(form) {
+    async function storeCheckList(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-ranks', form);
-            rank.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
+            checklists.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "crw.crw-crew-checklists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -57,14 +64,14 @@ export default function useRank() {
         }
     }
 
-    async function showRank(rankId) {
+    async function showCheckList(checkListId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-ranks/${rankId}`);
-            rank.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-crew-checklists/${checkListId}`);
+            checkList.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -75,19 +82,19 @@ export default function useRank() {
         }
     }
 
-    async function updateRank(form, rankId) {
+    async function updateCheckList(form, checkListId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-ranks/${rankId}`,
+                `/crw/crw-crew-checklists/${checkListId}`,
                 form
             );
-            rank.value = data.value;
+            checkList.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "crw.checklists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,15 +104,15 @@ export default function useRank() {
         }
     }
 
-    async function deleteRank(rankId) {
+    async function deleteCheckList(checkListId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-ranks/${rankId}`);
+            const { data, status } = await Api.delete( `/crw/crw-crew-checklists/${checkListId}`);
             notification.showSuccess(status);
-            await getRanks();
+            await getCheckLists();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -116,13 +123,13 @@ export default function useRank() {
     }
 
     return {
-        ranks,
-        rank,
-        getRanks,
-        storeRank,
-        showRank,
-        updateRank,
-        deleteRank,
+        checklists,
+        checkList,
+        getCheckLists,
+        storeCheckList,
+        showCheckList,
+        updateCheckList,
+        deleteCheckList,
         isLoading,
         errors,
     };

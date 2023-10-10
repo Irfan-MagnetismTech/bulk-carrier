@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useUser from "../../../composables/administration/useUser";
+import usePolicy from "../../../composables/crew/usePolicy";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -16,9 +16,9 @@ const props = defineProps({
   },
 });
 
-const { users, getUsers, deleteUser, isLoading } = useUser();
+const { poli, getRanks, deleteRank, isLoading } = usePolicy();
 const { setTitle } = Title();
-setTitle('User List');
+setTitle('Rank List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -27,7 +27,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this user!",
+    text: "You want to change delete this rank!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -35,14 +35,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteUser(id);
+      deleteRank(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-  getUsers(props.page)
+  getRanks(props.page)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -51,7 +51,7 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching ranks:", error);
     });
 });
 
@@ -62,8 +62,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">User List</h2>
-    <default-button :title="'Create User'" :to="{ name: 'administration.users.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Rank List</h2>
+    <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -82,38 +82,35 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>User Role</th>
-            <th class="w-1/4 md:w-64">Name</th>
-            <th class="w-64">Email</th>
+            <th>Rank Name</th>
+            <th>Rank Short Name</th>
             <th>Business Unit</th>
-            <th class="w-68">Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(user,index) in users" :key="index">
+          <tr v-for="(rank,index) in ranks" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ user?.roles }}</td>
-            <td>{{ user?.name }}</td>
-            <td>{{ user?.email }}</td>
+            <td>{{ rank?.name }}</td>
+            <td>{{ rank?.short_name }}</td>
             <td>
-              <strong>{{ user?.business_unit }}</strong>
+              <span :class="rank?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rank?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'crw.ranks.edit', params: { rankId: rank?.id } }"></action-button>
+              <action-button @click="confirmDelete(rank?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!users?.length">
+          <tfoot v-if="!ranks?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="4">Loading...</td>
           </tr>
-          <tr v-else-if="!users?.data?.length">
-            <td colspan="6">No user found.</td>
+          <tr v-else-if="!ranks?.data?.length">
+            <td colspan="4">No rank found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="users" to="administration.users.index" :page="page"></Paginate>
+    <Paginate :data="ranks" to="crw.ranks.index" :page="page"></Paginate>
   </div>
 </template>

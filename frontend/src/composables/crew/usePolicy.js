@@ -4,12 +4,12 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useRank() {
+export default function usePolicy() {
     const router = useRouter();
-    const ranks = ref([]);
+    const policies = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const rank = ref( {
+    const policy = ref( {
         name: '',
         short_name: '',
     });
