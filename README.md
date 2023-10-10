@@ -255,6 +255,10 @@ Project Repository
     -   401 => 'Unauthorized, request is not valid.'
     -   500 => 'Internal server error.'
 
+-   For PDF, used Laravel Mpdf package.
+    
+    [Laravel Mpdf: Generate PDF](https://github.com/mccarlosen/laravel-mpdf)
+
 ## Authors
 
 -   [@Hasan Md Shahriare](https://github.com/hasashah)
