@@ -51,7 +51,7 @@ class MntJobController extends Controller
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = Auth::user()->business_unit ?? 'BOTH';
 
-            $jobLines = $request->get('job_details');
+            $jobLines = $request->get('job_lines');
             
             $job = MntJob::create($jobInput);
             $job->mntJobLines()->createMany($jobLines);
@@ -104,10 +104,17 @@ class MntJobController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $input = $request->all();
+            // var_dump($request->all());
+            $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
+            $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
+            $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
+            $jobInput['business_unit'] = Auth::user()->business_unit;
+
+            $jobLines = $request->get('job_lines');
             
             $job = MntJob::findorfail($id);
-            $job->update($input);
+            $job->update($jobInput);
+            $job->mntJobLines()->createUpdateOrDelete($jobLines);
             
             return response()->success('Job updated successfully', $job, 202);
             
