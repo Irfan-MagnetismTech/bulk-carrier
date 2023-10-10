@@ -4,10 +4,11 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\CreateBusinessUnit;
 
 class OpsVesselCertificate extends Model
 {
-    use HasFactory;
+    use HasFactory, CreateBusinessUnit;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,7 @@ class OpsVesselCertificate extends Model
         'attachment',
         'status',
         'reference_number',
+        'business_unit'
         'created_by',
     ];
 

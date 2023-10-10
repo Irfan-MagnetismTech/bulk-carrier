@@ -163,6 +163,53 @@ class OpsVoyageBoatNoteController extends Controller
         }
     }
 
+    // for multiple file upload
+    function fileUpload($path, $newData , $oldData = null){
+        $results=[];
+        // $newLength= count($newData);
+        $oldLength= count($oldData);
+
+        foreach($newData as $key=>$value){
+            $data = $value->except(
+                'attachment',
+            );
+            if(isset($value->attachment)){
+                if($key < $oldLength){
+                    $this->fileUpload->deleteFile($oldData[$key]->attachment);
+                }
+                $attachment = $this->fileUpload->handleFile($value->attachment, $path);
+                $data['attachment'] = $attachment;
+            }
+            $results[$key]= $data;
+        }
+        return $results;
+    }
+
+    public function handleMultipleFile($path, $newData , $oldData = null, $field='attachment',)
+    {
+        try {
+            $results=[];
+            $oldLength= count($oldData);
+    
+            foreach($newData as $key=>$value){
+                $data = $value->except(
+                    $field,
+                );
+                if(isset($value->attachment)){
+                    if($key < $oldLength){
+                        $this->fileUpload->deleteFile($oldData[$key]->attachment);
+                    }
+                    $attachment = $this->fileUpload->handleFile($value->attachment, $path);
+                    $data[$field] = $attachment;
+                }
+                $results[$key]= $data;
+            }
+            return $results;
+            
+        } catch (ValidationException) {
+            return null;
+        }
+    }
 
 
 

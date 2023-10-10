@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('attachment')->nullable();
             $table->string('status')->nullable();
             $table->string('reference_number');
+            $table->string('business_unit')->nullable();
             $table->bigInteger('created_by')->nullable();
             
             $table->timestamps();

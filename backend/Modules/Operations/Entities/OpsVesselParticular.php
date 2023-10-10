@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsVesselParticular extends Model
 {
     use HasFactory;
+    // public static $snakeAttributes = false;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -24,7 +25,7 @@ class OpsVesselParticular extends Model
         'lbc'
     ];
 
-    public function ops_vessel()
+    public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }

@@ -31,7 +31,7 @@ class OpsVesselParticularController extends Controller
     public function index()
     {
         try {
-            $vesselParticular = OpsVesselParticular::with('ops_vessel')->latest()->paginate(15);
+            $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);
 
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }

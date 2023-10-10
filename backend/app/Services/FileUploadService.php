@@ -28,39 +28,6 @@ class FileUploadService
         }
     }
 
-    // note : new files, file storing path, previous files which is get from database and field name is not like as attachment 
-    public function handleMultipleFile($files, $path, $previousFiles = null, $field='attachment',)
-    {
-        try {
-            if (is_string($files)) return $files;
-            $fileNames = null;
-            if(is_array($files)){
-                $fileNames=[];
-                $newData = $files;
-                $previousFilesLength= count($previousFiles);
-        
-                foreach($newData as $key=>$value){
-                    $data = $value->except(
-                        $field,
-                    );
-                    if(isset($value->attachment)){
-                        if($key < $previousFilesLength){
-                            $this->deleteFile($previousFiles[$key]->attachment);
-                        }
-                        $attachment = $this->handleFile($value->attachment, $path);
-                        $data[$field] = $attachment;
-                    }
-                    $fileNames[$key]= $data;
-                }
-                return $fileNames;
-            }
-            return $fileNames;
-        } catch (ValidationException) {
-            return null;
-        }
-    }
-
-
     public function deleteFile($oldFile)
     {
         if ($oldFile) {
@@ -68,6 +35,35 @@ class FileUploadService
             if (file_exists($oldPath)) {
                 File::delete($oldPath);
             }
+        }
+    }
+
+
+    
+    // note : new data, file storing path, previous data which is get from database and field name is not like as attachment 
+    public function handleMultipleFile($path, $newData , $oldData = null, $field='attachment',)
+    {
+        try {
+            $results=[];
+            $oldLength= count($oldData);
+    
+            foreach($newData as $key=>$value){
+                $data = $value->except(
+                    $field,
+                );
+                if(isset($value->attachment)){
+                    if($key < $oldLength){
+                        $this->fileUpload->deleteFile($oldData[$key]->attachment);
+                    }
+                    $attachment = $this->fileUpload->handleFile($value->attachment, $path);
+                    $data[$field] = $attachment;
+                }
+                $results[$key]= $data;
+            }
+            return $results;
+            
+        } catch (ValidationException) {
+            return null;
         }
     }
 }

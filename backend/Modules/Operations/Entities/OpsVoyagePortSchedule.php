@@ -4,11 +4,11 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreateBusinessUnit;
 
 class OpsVoyagePortSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, CreateBusinessUnit;
 
     protected $fillable = [
         'ops_voyage_id',
