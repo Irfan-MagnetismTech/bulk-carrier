@@ -14,7 +14,18 @@ class OpsLighterNoonReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id',
+            'ops_voyage_id',
+            'ship_master',
+            'chief_engineer',
+            'noon_position',
+            'status',
+            'engine_running_hours',
+            'date',
+            'last_port',
+            'next_port',
+            'business_unit',
+            'remarks',
         ];
     }
 

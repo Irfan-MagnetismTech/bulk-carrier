@@ -29,8 +29,8 @@ return new class extends Migration
             $table->dateTime('date');
             $table->string('last_port')->nullable();
             $table->string('next_port')->nullable();
-            $table->text('remarks')->nullable();
             $table->string('business_unit')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();

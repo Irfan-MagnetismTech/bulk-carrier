@@ -37,8 +37,6 @@ class FileUploadService
             }
         }
     }
-
-
     
     // note : new data, file storing path, previous data which is get from database and field name is not like as attachment 
     public function handleMultipleFile($path, $newData , $oldData = null, $field='attachment',)
