@@ -16,6 +16,7 @@ export default function useRunHour() {
         ops_vessel_id: '',
         previous_run_hour: '',
         present_run_hour: '',
+        updated_on: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);

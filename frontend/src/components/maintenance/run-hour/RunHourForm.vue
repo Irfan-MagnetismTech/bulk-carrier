@@ -1,16 +1,42 @@
 <template>
     <!-- Basic information -->
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" />
+            <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
+            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Short Code <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.short_code" placeholder="Short Code" class="form-input" />
-        <Error v-if="errors?.short_code" :errors="errors.short_code" />
-      </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Department </span>
+            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Item Group </span>
+            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Item Name </span>
+            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Previous Run Hour </span>
+            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" :readonly="1" />
+          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input"  />
+          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Updated On </span>
+            <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input"  />
+          <Error v-if="errors?.updated_on" :errors="errors.updated_on" />
+        </label>
+        
     </div>
     
 </template>
@@ -33,9 +59,10 @@ const props = defineProps({
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
-// onMounted(() => {
-//   getRoles();
-// });
+onMounted(() => {
+  const today = new Date().toISOString().substr(0, 10);
+  props.form.updated_on = today;
+});
 
 </script>
 
