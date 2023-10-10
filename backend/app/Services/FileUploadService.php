@@ -15,7 +15,7 @@ class FileUploadService
             $fileName = null;
             if ($file) {
                 $myRandomString = Str::random(10);
-                $fileName = $path . '/' . $myRandomString . '.' . $file->getClientOriginalExtension();
+                $fileName = $path . '/' . $myRandomString . time() . '.' . $file->getClientOriginalExtension();
                 $file->move($path, $fileName);
             }
 
