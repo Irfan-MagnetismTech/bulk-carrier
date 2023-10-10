@@ -5,9 +5,12 @@ It is a complete solution for managing all the business processes of a bulk carr
 It is a web application that can be accessed from anywhere in the world.
 
 ### Business Units
+
 Business Unit should be `enum` data type.
-- TSLL
-- PSML
+
+-   TSLL
+-   PSML
+
 ### Project Environment
 
 -   Laravel 10.\*
@@ -174,16 +177,19 @@ Project Repository
 
 -   Developers should comment on necessary code points. Every function should have a definition of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source.
 -   Resource functions should return responses in the following format: message, value, response_code
+
     -   For success:
 
         ```php
         return response()->success('Unit created successfully, $scm_unit, 200);
         ```
+
     -   For error:
-    
+
         ```php
         return response()->error($e->getMessage(), 500);
         ```
+
 -   File upload service:
 
     ```php
@@ -227,9 +233,17 @@ Project Repository
     -   SCM - Supply Chain
 -   All types of issues will be fixed in the Module Branch via a new Branch.
 -   If any table is using short form then add a table description in a comment. i.e.: Comparative Statement as cs
+
     ```php
     $table->comment('cs means Comparative Statement');
     ```
+
+-   Add comment to address necessary information against a particular column name
+
+    ```php
+    $table->string('mmr_no')->comment('Material received number');
+    ```
+
 -   Response status codes and messages
 
     -   200 => 'Data retrieved successfully.',
@@ -243,10 +257,10 @@ Project Repository
 
 ## Authors
 
-- [@Hasan Md Shahriare](https://github.com/hasashah)
-- [@Sumon Chandra Shil](https://www.github.com/sumonchandrashil)
-- [@Muhammad Mahbubur Rahman](https://github.com/mahbub-magnetism)
-- [@Delowar Hossain](https://www.github.com/illusionist3886)
-- [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
-- [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
-- [@Abdul Majid Irfan](https://github.com/irfan-majid)
+-   [@Hasan Md Shahriare](https://github.com/hasashah)
+-   [@Sumon Chandra Shil](https://www.github.com/sumonchandrashil)
+-   [@Muhammad Mahbubur Rahman](https://github.com/mahbub-magnetism)
+-   [@Delowar Hossain](https://www.github.com/illusionist3886)
+-   [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
+-   [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
+-   [@Abdul Majid Irfan](https://github.com/irfan-majid)
