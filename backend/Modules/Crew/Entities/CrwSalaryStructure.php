@@ -15,4 +15,9 @@ class CrwSalaryStructure extends Model
 	public function crwSalaryStructureBreakdowns(){
 		return $this->hasMany(CrwSalaryStructureBreakdown::class);
 	}
+
+	public function crwCrew()
+    {
+        return $this->belongsTo(CrwCrew::class);
+    }  
 }

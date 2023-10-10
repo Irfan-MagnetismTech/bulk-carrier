@@ -2,13 +2,23 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\Crew\Entities\CrwPolicy;
 
 class CrwPolicyController extends Controller
 {
+    /**
+     * @param FileUploadService $fileUpload
+     */
+    public function __construct(private FileUploadService $fileUpload)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,8 +46,10 @@ class CrwPolicyController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwPolicyData = $request->only('name', 'type', 'attachment');
-            $crwPolicy     = CrwPolicy::create($crwPolicyData);
+            $crwPolicyData               = $request->only('name', 'type');
+            $crwPolicyData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/policy');
+
+            $crwPolicy = CrwPolicy::create($crwPolicyData);
 
             return response()->success('Created Succesfully', $crwPolicy, 201);
         }
@@ -74,7 +86,9 @@ class CrwPolicyController extends Controller
     public function update(Request $request, CrwPolicy $crwPolicy)
     {
         try {
-            $crwPolicyData = $request->only('name', 'type', 'attachment');
+            $crwPolicyData               = $request->only('name', 'type');
+            $crwPolicyData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/policy', $crwPolicy->attachment);
+
             $crwPolicy->update($crwPolicyData);
 
             return response()->success('Updated succesfully', $crwPolicy, 202);

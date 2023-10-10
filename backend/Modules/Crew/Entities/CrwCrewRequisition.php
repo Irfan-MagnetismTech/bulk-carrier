@@ -15,4 +15,9 @@ class CrwCrewRequisition extends Model
 	public function crwCrewRequisitionLines(){
 		return $this->hasMany(CrwCrewRequisitionLine::class);
 	}
+
+	public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class);
+    }	
 }

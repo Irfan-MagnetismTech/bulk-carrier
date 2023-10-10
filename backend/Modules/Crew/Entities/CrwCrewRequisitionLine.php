@@ -11,4 +11,9 @@ class CrwCrewRequisitionLine extends Model
     use HasFactory;
 
 	protected $fillable = ['crw_crew_requisition_id', 'crw_rank_id', 'required_manpower', 'remarks'];
+
+    public function crwRank()
+    {
+        return $this->belongsTo(CrwRank::class);
+    }
 }

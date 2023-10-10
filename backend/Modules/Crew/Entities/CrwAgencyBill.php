@@ -15,4 +15,9 @@ class CrwAgencyBill extends Model
 	public function crwAgencyBillLines(){
 		return $this->hasMany(CrwAgencyBillLine::class);
 	}
+
+	public function crwAgency()
+    {
+        return $this->belongsTo(CrwAgency::class);
+    } 
 }

@@ -15,4 +15,9 @@ class CrwCrewDocument extends Model
 	public function crwCrewDocumentRenewals(){
 		return $this->hasMany(CrwCrewDocumentRenewal::class);
 	}
+
+    public function crwCrew()
+    {
+        return $this->belongsTo(CrwCrew::class);
+    }  	
 }

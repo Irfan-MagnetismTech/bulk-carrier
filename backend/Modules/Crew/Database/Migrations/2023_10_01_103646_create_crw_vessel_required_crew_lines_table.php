@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('crw_vessel_required_crew_lines', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('crw_vessel_required_crew_id')->constrained('crw_vessel_required_crews', 'id')->cascadeOnDelete();            
+            $table->unsignedBigInteger('crw_vessel_required_crew_id');
+            $table->foreign('crw_vessel_required_crew_id', 'fk_crw_vessel_required_crew_id')->references('id')->on('crw_vessel_required_crews')->cascadeOnDelete();            
 			$table->unsignedInteger('crw_rank_id');
 			$table->integer('required_manpower');
 			$table->text('eligibility')->nullable();

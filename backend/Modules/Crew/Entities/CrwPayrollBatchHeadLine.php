@@ -11,4 +11,9 @@ class CrwPayrollBatchHeadLine extends Model
     use HasFactory;
 
     protected $fillable = ['payroll_batch_line_id','payroll_batch_head_id','crw_crew_id','particular','amount'];
+
+    public function crwCrew()
+    {
+        return $this->belongsTo(CrwCrew::class);
+    }  
 }
