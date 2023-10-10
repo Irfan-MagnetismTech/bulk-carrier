@@ -15,4 +15,9 @@ class CrwAttendance extends Model
 	public function crwAttendanceLines(){
 		return $this->hasMany(CrwAttendanceLine::class);
 	}
+
+	public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class);
+    }	
 }

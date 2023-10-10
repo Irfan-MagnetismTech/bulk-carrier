@@ -15,4 +15,9 @@ class CrwIncident extends Model
 	public function crwIncidentParticipants(){
 		return $this->hasMany(CrwIncidentParticipant::class);
 	}
+
+	public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class);
+    }	
 }

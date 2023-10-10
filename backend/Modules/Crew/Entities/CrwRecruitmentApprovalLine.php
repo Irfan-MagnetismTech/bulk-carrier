@@ -11,5 +11,9 @@ class CrwRecruitmentApprovalLine extends Model
     use HasFactory;
 
 	protected $fillable = ['crw_rank_id', 'candidate_name', 'candidate_contact', 'candidate_email', 'remarks'];
-    
+
+    public function crwRank()
+    {
+        return $this->belongsTo(CrwRank::class);
+    }    
 }

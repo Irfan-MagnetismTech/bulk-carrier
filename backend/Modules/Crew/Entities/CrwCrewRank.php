@@ -10,4 +10,9 @@ class CrwCrewRank extends Model
     use HasFactory;
 
     protected $fillable = ['crw_crew_id', 'crw_rank_id', 'rank_name', 'effective_date'];
+
+    public function crwRank()
+    {
+        return $this->belongsTo(CrwRank::class);
+    } 
 }

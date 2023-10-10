@@ -15,4 +15,9 @@ class CrwVesselRequiredCrew extends Model
 	public function crwVesselRequiredCrewLines(){
 		return $this->hasMany(CrwVesselRequiredCrewLine::class);
 	}
+
+	public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class);
+    }
 }
