@@ -1,9 +1,13 @@
-# bulk-carrier-erp
+# Bulk Carrier ERP
 
 Bulk carrier ERP is a web application for managing bulk carrier shipping business.
 It is a complete solution for managing all the business processes of a bulk carrier shipping company.
 It is a web application that can be accessed from anywhere in the world.
 
+### Business Units
+Business Unit should be `enum` data type.
+- TSLL
+- PSML
 ### Project Environment
 
 -   Laravel 10.\*
@@ -229,10 +233,10 @@ Project Repository
 
 ## Authors
 
--   [@Hasan Md Shahriare](https://github.com/hasashah)
--   [@Sumon Chandra Shil](https://www.github.com/sumonchandrashil)
--   [@Muhammad Mahbubur Rahman](https://github.com/mahbub-magnetism)
--   [@Delowar Hossain](https://www.github.com/illusionist3886)
--   [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
--   [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
--   [@Abdul Majid Irfan](https://github.com/irfan-majid)
+- [@Hasan Md Shahriare](https://github.com/hasashah)
+- [@Sumon Chandra Shil](https://www.github.com/sumonchandrashil)
+- [@Muhammad Mahbubur Rahman](https://github.com/mahbub-magnetism)
+- [@Delowar Hossain](https://www.github.com/illusionist3886)
+- [@Showrav Biswas](https://github.com/Showrav-Biswas-Mtech)
+- [@Hossain Mohammad Shahidullah Jaber](https://github.com/jaberWiki)
+- [@Abdul Majid Irfan](https://github.com/irfan-majid)
