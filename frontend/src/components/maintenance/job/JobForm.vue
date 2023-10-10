@@ -26,7 +26,7 @@
             <option v-for="item in shipDepartmentWiseItems" :value="item.id">{{ item.item_code + ' ' + item.name }}</option>
               
             </select> -->
-            <v-select placeholder="Select Item" :options="shipDepartmentWiseItemsWithItemCode" @search="fetchItem" v-model="form.item_name" label="displayName" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+            <v-select placeholder="Select Item" :options="shipDepartmentWiseItemsWithItemCode" @search="" v-model="form.item_name" label="displayName" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
             <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
@@ -47,7 +47,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(job_line, index) in form.job_lines" :key="index">
+                <tr v-for="(job_line, index) in form.mnt_job_lines" :key="index">
                   <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.job_description" placeholder="Job Description" /></td>
 
                   <td>
@@ -104,14 +104,16 @@ const props = defineProps({
 const jobCycleUnits = ref(['Hrs', 'Weeks', 'Months', 'Years']);
 
 function addJob() {
-  props.form.job_lines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
+  props.form.mnt_job_lines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
 }
 function removeJob(index) {
-  props.form.job_lines.splice(index, 1);
+  props.form.mnt_job_lines.splice(index, 1);
 }
 
 function fetchShipDepartmentWiseItems()
 {
+  props.form.item_name = '';
+  props.form.mnt_item_id = '';
   getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
 }
 
@@ -139,7 +141,7 @@ const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useItem();
 
 onMounted(() => {
     getShipDepartmentsWithoutPagination();
-    // getItemsWithoutPagination();
+    
 });
 
 </script>
