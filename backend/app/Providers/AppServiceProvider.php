@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use ReflectionClass;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
                 $modelClass::addGlobalScope(new \App\Traits\CreateBusinessUnit);
             }
         }
+
+        //relational method name case changing issue fix
+        (new ReflectionClass(Model::class))->getProperty('snakeAttributes')->setValue(null, false);
+
         Response::macro('success', function ($message, $value, $statusCode = 200) {
             return response()->json([
                 'message' => $message,
