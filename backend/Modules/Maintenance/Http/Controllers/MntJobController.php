@@ -74,7 +74,7 @@ class MntJobController extends Controller
     {
         try {
             
-            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name','mntJobLines'])->find($id);
+            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment.mntItem','mntJobLines'])->find($id);
             
             return response()->success('Job found successfully', $job, 200);
             
@@ -134,6 +134,7 @@ class MntJobController extends Controller
     {
         try {            
             $job = MntJob::findorfail($id);
+            $job->mntJobLines()->delete();
             $job->delete();
             
             return response()->success('Item deleted successfully', $job, 204);
