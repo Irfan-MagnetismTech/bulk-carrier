@@ -19,7 +19,7 @@
   import { useRoute } from 'vue-router';
   
   import ItemGroupForm from '../../../components/maintenance/item-group/ItemGroupForm.vue'; 
-  import ItemForm from '../../../components/maintenance/item/ItemForm.vue';
+  import JobForm from '../../../components/maintenance/job/JobForm.vue';
   import Title from "../../../services/title";
   import useJob from '../../../composables/maintenance/useJob';
   
@@ -30,6 +30,10 @@
   const { setTitle } = Title();
   
   setTitle('Edit Job');
+
+  watch(job, (value) => {
+    console.log("job =>" , value);
+  });
   
   onMounted(() => {
       showJob(jobId);

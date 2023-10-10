@@ -16,7 +16,7 @@ export default function useItemGroup() {
         mnt_ship_department_id: '',
         item_name: '',
         mnt_item_id: '',
-        job_lines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
+        mnt_job_lines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
     });
     const errors = ref(null);
     const isLoading = ref(false);

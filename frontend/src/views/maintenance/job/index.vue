@@ -91,13 +91,12 @@ onMounted(() => {
           <tbody>
           <tr v-for="(job,index) in jobs?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ job?.ops_vessel?.name }}</td>
             <td>{{ job?.mnt_ship_department?.name }}</td>
-            <!-- <td>{{ item?.mnt_item_group?.name }}</td>
-            <td>{{ item?.item_code }}</td>
-            <td>{{ item?.name }}</td> -->
+            <td>{{ job?.mnt_item?.name }}</td>
             
             <td class="">
-              <div class="flex">
+              <div class="flex justify-center">
                 <action-button :action="'edit'" :to="{ name: 'maintenance.job.edit', params: { jobId: job?.id } }"></action-button>
                 <action-button @click="confirmDelete(job?.id)" :action="'delete'"></action-button>
               </div>
@@ -106,10 +105,10 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!jobs?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="!jobs?.data?.length">
-            <td colspan="6">No job found.</td>
+            <td colspan="5">No job found.</td>
           </tr>
           </tfoot>
       </table>
