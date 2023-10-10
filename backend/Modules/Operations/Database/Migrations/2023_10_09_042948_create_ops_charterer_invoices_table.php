@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('ops_charterer_invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
-            $table->foreignId('ops_charterer_contract_id')->constrained('ops_charterer_contracts');
-            $table->foreignId('ops_voyage_id')->constrained('ops_voyages');
+            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');
+            $table->foreignId('ops_charterer_contract_id')->constrained('ops_charterer_contracts')->onDelete('cascade');
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
             $table->string('contract_type');
             $table->dateTime('bill_from');
             $table->dateTime('bill_till');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('discount_unit');
             $table->float('discounted_amount');
             $table->float('grand_total');
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
             $table->timestamps();
         });
     }

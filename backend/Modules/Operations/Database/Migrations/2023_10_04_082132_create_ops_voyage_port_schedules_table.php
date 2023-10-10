@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_port_schedules', function (Blueprint $table) {
             $table->id();            
-            $table->foreignId('ops_voyage_id')->constrained('ops_voyages');
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
             $table->string('port_code');
             $table->dateTime('eta');
             $table->dateTime('etb');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('unload_commence')->nullable();
             $table->dateTime('unload_complete')->nullable();
             $table->string('operation_type');
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

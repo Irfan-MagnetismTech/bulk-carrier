@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_cargo_tariff_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs');
+            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs')->onDelete('cascade');
             $table->string('particular');
             $table->string('unit');
             $table->float('jan');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->float('oct');
             $table->float('nov');
             $table->float('dec');
-            
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

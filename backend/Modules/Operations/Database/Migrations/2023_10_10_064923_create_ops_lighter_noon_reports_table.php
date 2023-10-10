@@ -13,27 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
         Schema::create('ops_lighter_noon_reports', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ops_vessel_id');
-            $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
-            $table->bigInteger('ops_voyage_id');
-            $table->foreign('ops_voyage_id')->references('id')->on('ops_voyages');
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
             $table->string('ship_master')->nullable();
             $table->string('chief_engineer');
             $table->string('noon_position')->nullable();
             $table->string('status')->nullable();
             $table->string('engine_running_hours')->nullable();
-            $table->string('lat_long');->nullable();
+            $table->string('lat_long')->nullable();
             $table->dateTime('date');
             $table->string('last_port')->nullable();
             $table->string('next_port')->nullable();
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

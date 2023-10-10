@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_charterer_bank_accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
+            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');
             $table->bigInteger('bank_id')->nullable();
             $table->bigInteger('bank_branch_id')->nullable();
             $table->string('bank_name')->nullable();
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('state_division')->nullable();
             $table->string('city')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

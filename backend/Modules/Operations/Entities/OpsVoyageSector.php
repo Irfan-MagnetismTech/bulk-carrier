@@ -5,10 +5,11 @@ namespace Modules\Operations\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreateBusinessUnit;
 
 class OpsVoyageSector extends Model
 {
-    use HasFactory;
+    use HasFactory, CreateBusinessUnit;
 
     protected $fillable = [
         'ops_voyage_id',
@@ -23,6 +24,7 @@ class OpsVoyageSector extends Model
         'approx_amount_after_disscount',
         'final_survey_qty',
         'final_received_qty',
-        'boat_note_qty'
+        'boat_note_qty',
+        'business_unit'
     ];
 }

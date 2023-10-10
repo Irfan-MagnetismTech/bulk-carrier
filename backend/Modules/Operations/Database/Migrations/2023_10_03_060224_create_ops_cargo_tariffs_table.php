@@ -16,14 +16,13 @@ return new class extends Migration
         Schema::create('ops_cargo_tariffs', function (Blueprint $table) {
             $table->id();
             $table->string('tariff_name');
-            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
-            $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types');
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
+            $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
             $table->string('loading_point');
             $table->string('unloading_point');
             $table->string('currency');
             $table->tinyInteger('status');
-            $table->string('business_unit');
-            
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();            
             $table->timestamps();
         });
     }

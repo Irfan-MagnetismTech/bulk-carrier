@@ -22,17 +22,17 @@ class OpsCargoTariff extends Model
         'business_unit'
     ];
     
-    public function ops_cargo_type()
+    public function opsCargoType()
     {
         return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
     }
     
-    public function ops_vessel()
+    public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_cargo_tariff_id' , 'id');
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function ops_cargo_tariff_lines()
+    public function opsCargoTariffLines()
     {
         return $this->hasMany(OpsCargoTariffLine::class, 'ops_cargo_tariff_id', 'id');
     }

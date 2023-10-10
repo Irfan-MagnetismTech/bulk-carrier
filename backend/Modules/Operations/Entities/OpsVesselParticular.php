@@ -5,10 +5,12 @@ namespace Modules\Operations\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreateBusinessUnit;
+
 
 class OpsVesselParticular extends Model
 {
-    use HasFactory;
+    use HasFactory, CreateBusinessUnit;
     // public static $snakeAttributes = false;
 
     protected $fillable = [
@@ -22,7 +24,8 @@ class OpsVesselParticular extends Model
         'engine_type',
         'bhp',
         'email',
-        'lbc'
+        'lbc',
+        'business_unit'
     ];
 
     public function opsVessel()

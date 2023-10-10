@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('ops_handover_takeovers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
+            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');
             $table->enum('note_type', ['Delivery', 'Re-delivery']);
             $table->dateTime('effective_date');
             $table->float('exchange_rate');
             $table->string('currency');
-            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
-            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

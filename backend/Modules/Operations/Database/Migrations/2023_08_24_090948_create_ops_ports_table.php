@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('code',10);
             $table->string('name');
             $table->integer('is_active')->default(1);
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

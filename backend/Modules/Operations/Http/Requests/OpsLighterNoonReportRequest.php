@@ -14,18 +14,18 @@ class OpsLighterNoonReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id',
-            'ops_voyage_id',
-            'ship_master',
-            'chief_engineer',
-            'noon_position',
-            'status',
-            'engine_running_hours',
-            'date',
-            'last_port',
-            'next_port',
-            'business_unit',
-            'remarks',
+            'ops_vessel_id'         => ['required', 'string', 'max:10'],
+            'ops_voyage_id'         => ['required', 'string', 'max:10'],
+            'ship_master'           => ['required', 'string', 'max:255'],
+            'chief_engineer'        => ['required', 'string', 'max:255'],
+            'noon_position'         => ['required', 'string', 'max:255'],
+            'status'                => ['nullable', 'string', 'max:255'],
+            'engine_running_hours'  => ['nullable', 'string', 'max:255'],
+            'date'                  => ['required', 'datetime', 'max:255'],
+            'last_port'             => ['required', 'string', 'max:255'],
+            'next_port'             => ['required', 'string', 'max:255'],
+            'business_unit'         => ['required', 'string', 'max:255'],
+            'remarks'               => ['required', 'string', 'max:1000'],
         ];
     }
 

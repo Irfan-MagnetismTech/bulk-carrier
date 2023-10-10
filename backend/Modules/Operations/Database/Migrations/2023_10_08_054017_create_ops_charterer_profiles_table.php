@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('billing_email');
             $table->string('email');
             $table->string('website')->nullable();
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

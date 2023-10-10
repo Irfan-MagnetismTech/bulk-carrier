@@ -19,8 +19,8 @@ return new class extends Migration
             $table->bigInteger('bunkerable_id');
             $table->bigInteger('scm_vendor_id')->nullable();  
             $table->bigInteger('scm_material_id')->nullable();        
-            // $table->foreignId('scm_vendor_id')->constrained('scm_vendors');
-            // $table->foreignId('scm_material_id')->constrained('scm_materials');
+            // $table->foreignId('scm_vendor_id')->constrained('scm_vendors')->onDelete('cascade');
+            // $table->foreignId('scm_material_id')->constrained('scm_materials')->onDelete('cascade');
             $table->string('unit')->nullable();
             $table->float('quantity')->nullable();
             $table->float('requested_quantity')->nullable();
@@ -34,6 +34,7 @@ return new class extends Migration
             $table->float('fuel_con_voyage')->nullable();
             $table->string('currency')->nullable();
             $table->string('status')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('ops_charterer_contracts', function (Blueprint $table) {
             $table->id();
             $table->enum('contract_type', ['Voyage Wise', 'Day Wise']);
-            $table->foreignId('ops_vessel_id')->constrained('ops_vessels');
-            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles');
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
+            $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');
             $table->string('country')->nullable();
             $table->string('address')->nullable();
             $table->string('billing_address')->nullable();
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('port_code')->nullable();
             $table->string('agent_name')->nullable();
             $table->string('billing_name')->nullable();
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

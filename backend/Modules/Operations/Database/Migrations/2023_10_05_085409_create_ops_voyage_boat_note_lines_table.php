@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_boat_note_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_voyage_boat_note_id')->constrained('ops_voyage_boat_notes');
+            $table->foreignId('ops_voyage_boat_note_id')->constrained('ops_voyage_boat_notes')->onDelete('cascade');
             $table->enum('voyage_note_type', ['Boat Note', 'Draft Survey','Receipt Copy','Final Survey']);
             $table->date('date');
             $table->dateTime('discharge_date');
             $table->text('attachment');
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }
