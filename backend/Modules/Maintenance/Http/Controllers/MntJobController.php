@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Modules\Maintenance\Entities\MntJob;
 
 class MntJobController extends Controller
@@ -17,7 +18,7 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel','mntItem','mntShipDepartment'])->paginate(10);
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name'])->paginate(10);
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
             
@@ -45,9 +46,15 @@ class MntJobController extends Controller
     public function store(Request $request)
     {
         try {
-            $input = $request->all();
+            $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
+            $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
+            $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
+            $jobInput['business_unit'] = Auth::user()->business_unit ?? 'BOTH';
+
+            $jobLines = $request->get('job_details');
             
-            $job = MntJob::create($input);
+            $job = MntJob::create($jobInput);
+            $job->mntJobLines()->createMany($jobLines);
             
             return response()->success('Job created successfully', $job, 201);
             
@@ -67,7 +74,7 @@ class MntJobController extends Controller
     {
         try {
             
-            $job = MntJob::find($id);
+            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name','mntJobLines'])->find($id);
             
             return response()->success('Job found successfully', $job, 200);
             
