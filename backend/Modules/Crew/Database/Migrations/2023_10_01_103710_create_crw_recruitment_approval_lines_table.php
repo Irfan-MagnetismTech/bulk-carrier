@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('crw_recruitment_approval_lines', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('crw_recruitment_approval_id')->constrained('crw_recruitment_approvals', 'id')->cascadeOnDelete();
+
+            $table->unsignedBigInteger('crw_recruitment_approval_id');
+            $table->foreign('crw_recruitment_approval_id', 'fk_crw_recruitment_approval_id')->references('id')->on('crw_recruitment_approvals')->cascadeOnDelete(); 
+
 			$table->unsignedInteger('crw_rank_id');
 			$table->string('candidate_name');
 			$table->string('candidate_contact');

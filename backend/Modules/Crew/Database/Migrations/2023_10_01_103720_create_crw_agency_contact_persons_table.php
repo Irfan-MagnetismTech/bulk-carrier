@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('crw_agency_contact_persons', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('crw_agency_id')->constrained('crw_agencies', 'id')->cascadeOnDelete();
+            $table->unsignedBigInteger('crw_agency_id');
+            $table->foreign('crw_agency_id', 'fk_crw_agency_contact_person_id')->references('id')->on('crw_agencies')->cascadeOnDelete();
 			$table->string('name');
 			$table->string('contact_no');
 			$table->string('email')->nullable();

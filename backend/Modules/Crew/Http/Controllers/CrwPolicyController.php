@@ -6,9 +6,15 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwPolicy;
+use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Storage;
 
 class CrwPolicyController extends Controller
 {
+    function __construct(private FileUploadService $fileUpload)
+    {
+
+    }    
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +42,9 @@ class CrwPolicyController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwPolicyData = $request->only('name', 'type', 'attachment');
+            $crwPolicyData = $request->only('name', 'type');
+            $crwPolicyData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/policies');
+
             $crwPolicy     = CrwPolicy::create($crwPolicyData);
 
             return response()->success('Created Succesfully', $crwPolicy, 201);

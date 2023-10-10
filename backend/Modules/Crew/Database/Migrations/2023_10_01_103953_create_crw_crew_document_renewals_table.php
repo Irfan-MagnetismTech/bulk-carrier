@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('crw_crew_document_renewals', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('crw_crew_document_id')->constrained('crw_crew_documents', 'id')->cascadeOnDelete();
+            $table->unsignedBigInteger('crw_crew_document_id');
+            $table->foreign('crw_crew_document_id', 'fk_crw_crew_document_renewal_id')->references('id')->on('crw_crew_documents')->cascadeOnDelete();
+
 			$table->date('issue_date');
 			$table->date('expire_date');
 			$table->string('reference_no')->nullable();
