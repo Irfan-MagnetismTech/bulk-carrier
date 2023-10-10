@@ -230,6 +230,16 @@ Project Repository
     ```php
     $table->comment('cs means Comparative Statement');
     ```
+-   Response status codes and messages
+
+    -   200 => 'Data retrieved successfully.',
+    -   201 => 'Data created successfully.',
+    -   202 => 'Data updated successfully.',
+    -   204 => 'Data deleted successfully.'
+    -   404 => "Api is not found.",
+    -   422 => 'Credential error.',
+    -   401 => 'Unauthorized, request is not valid.'
+    -   500 => 'Internal server error.'
 
 ## Authors
 
