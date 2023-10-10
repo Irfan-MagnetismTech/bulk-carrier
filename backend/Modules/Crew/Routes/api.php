@@ -6,6 +6,7 @@ use Modules\Crew\Http\Controllers\CrwAgencyContractController;
 use Modules\Crew\Http\Controllers\CrwAgencyController;
 use Modules\Crew\Http\Controllers\CrwAttendanceController;
 use Modules\Crew\Http\Controllers\CrwBankAccountController;
+use Modules\Crew\Http\Controllers\CrwCommonController;
 use Modules\Crew\Http\Controllers\CrwCrewAssignmentController;
 use Modules\Crew\Http\Controllers\CrwCrewChecklistController;
 use Modules\Crew\Http\Controllers\CrwCrewController;
@@ -55,4 +56,9 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-incidents', CrwIncidentController::class);
     Route::apiResource('crw-salary-structures', CrwSalaryStructureController::class);
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
+
+
+    //helper apis 
+    Route::post('get-crew-ranks', [CrwCommonController::class, 'getCrewRanks']);
+
 });
