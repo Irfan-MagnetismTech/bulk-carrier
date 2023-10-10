@@ -131,6 +131,7 @@ class UserController extends Controller
         $user['permissions'] = $request->user()->getPermissionsViaRoles()->pluck('name')->toArray();
         $user['permissions'] = array_merge($user['permissions'], ['dashboard']);
         $user['port'] = $request->user()->port;
+        $user['business_unit'] = $request->user()->business_unit;
         return $user;
     }
 
