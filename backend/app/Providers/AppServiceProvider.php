@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Support\Macros\CreateUpdateOrDelete;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
@@ -32,5 +34,12 @@ class AppServiceProvider extends ServiceProvider
                 'message' => 'Error: ' . $error,
             ], $statusCode);
         });
+
+        HasMany::macro('createUpdateOrDelete', function (iterable $records) {
+            /** @var HasMany */
+            $hasMany = $this;
+          
+            return (new CreateUpdateOrDelete($hasMany, $records))();
+          });
     }
 }

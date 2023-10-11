@@ -122,6 +122,34 @@ export default [
 
 	
 
+	/* Job start */
+	{
+		path: `/${BASE}/job`,
+		name: `${BASE}.job.index`,
+		component: () => import(`../views/${BASE}/job/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'job-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/job/create`,
+		name: `${BASE}.job.create`,
+		component: () => import(`../views/${BASE}/job/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'job-create' },
+	},
+	{
+		path: `/${BASE}/job/:jobId/edit`,
+		name: `${BASE}.job.edit`,
+		component: () => import(`../views/${BASE}/job/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'job-edit' },
+	},
+	{
+		path: `/${BASE}/job/:jobId`,
+		name: `${BASE}.job.show`,
+		component: () => import(`../views/${BASE}/job/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'job-show'  },
+	},
+
+	/* Job end */
 	
 
 	
