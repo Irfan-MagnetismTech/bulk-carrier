@@ -22,7 +22,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'ops.configurations.ports.index',
+                        route: 'operation.configurations.ports.index',
                         label: 'Ports',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -32,7 +32,7 @@ export default [
                         subSubMenu: []
                     },
                     // {
-                    //     route: 'ops.configurations.cargo-types.index',
+                    //     route: 'operation.configurations.cargo-types.index',
                     //     label: 'Cargo Types',
                     //     preIcon: '',
                     //     postIcon: icons.DownArrow,
@@ -42,7 +42,7 @@ export default [
                     //     subSubMenu: []
                     // },
                     // {
-                    //     route: 'ops.configurations.cargo-tariffs.index',
+                    //     route: 'operation.configurations.cargo-tariffs.index',
                     //     label: 'Cargo Tariffs',
                     //     preIcon: '',
                     //     postIcon: icons.DownArrow,
@@ -52,7 +52,7 @@ export default [
                     //     subSubMenu: []
                     // },
                     // {
-                    //     route: 'ops.configurations.customers.index',
+                    //     route: 'operation.configurations.customers.index',
                     //     label: 'Customers',
                     //     preIcon: '',
                     //     postIcon: icons.DownArrow,
