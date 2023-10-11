@@ -1,5 +1,8 @@
 <script setup>
 import Error from "../Error.vue";
+import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import useRecruitmentApproval from "../../composables/crew/useRecruitmentApproval";
+import {onMounted} from "vue";
 
 const props = defineProps({
   form: {
@@ -8,6 +11,9 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+
+const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+
 
 function addItem() {
   let obj = {
@@ -23,6 +29,10 @@ function addItem() {
 function removeItem(index){
   props.form.crwRecruitmentApprovalLines.splice(index, 1);
 }
+
+onMounted(() => {
+  getCrewRankLists();
+});
 
 </script>
 
@@ -102,8 +112,7 @@ function removeItem(index){
         <td class="px-1 py-1">
           <select class="form-input" v-model="form.crwRecruitmentApprovalLines[index].crw_rank_id">
             <option value="" disabled>select</option>
-            <option value="Master">Master</option>
-            <option value="Sukani">Sukani</option>
+            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
         </td>
         <td class="px-1 py-1">
