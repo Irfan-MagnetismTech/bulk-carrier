@@ -18,6 +18,7 @@ export default function useItemGroup() {
         item_name: '',
         mnt_item_id: '',
         mnt_job_lines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
+        dept_wise_items: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);

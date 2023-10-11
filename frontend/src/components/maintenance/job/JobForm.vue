@@ -26,7 +26,7 @@
             <option v-for="item in shipDepartmentWiseItems" :value="item.id">{{ item.item_code + ' ' + item.name }}</option>
               
             </select> -->
-            <v-select placeholder="Select Item" :options="shipDepartmentWiseItems" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+            <v-select placeholder="Select Item" :options="form.dept_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
             <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
@@ -94,6 +94,9 @@ import useJob from "../../../composables/maintenance/useJob";
 import {ref, onMounted, watch, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
 
+const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useJob();
+
 const props = defineProps({
   form: {
     required: false,
@@ -118,6 +121,10 @@ function fetchShipDepartmentWiseItems()
   getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
 }
 
+watch(() => shipDepartmentWiseItems.value, (val) => {
+  props.form.dept_wise_items = val;
+});
+
 // function fetchItem(query, loading) {
 //   searchMaterialCategory(query, loading);
 //   loading(true)
@@ -134,9 +141,6 @@ const shipDepartmentWiseItemsWithItemCode = computed(() => {
       }));
   return [];
 });
-
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useJob();
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 

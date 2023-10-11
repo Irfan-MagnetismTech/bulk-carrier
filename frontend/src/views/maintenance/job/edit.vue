@@ -32,7 +32,7 @@
   setTitle('Edit Job');
 
   watch(job, (value) => {
-    shipDepartmentWiseItems.value = value.mnt_ship_department.mnt_item;
+    job.value.dept_wise_items = value.mnt_ship_department.mnt_item;
   });
   
   onMounted(() => {
