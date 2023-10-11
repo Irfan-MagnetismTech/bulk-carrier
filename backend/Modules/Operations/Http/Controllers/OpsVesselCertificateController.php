@@ -30,7 +30,7 @@ class OpsVesselCertificateController extends Controller
     public function index()
     {
         try {
-            $vesselCertificates = OpsVesselCertificate::with('ops_vessel','ops_maritime_certification')->latest()->paginate(15);
+            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
@@ -70,7 +70,7 @@ class OpsVesselCertificateController extends Controller
      */
     public function show(OpsVesselCertificate $vessel_certificate): JsonResponse
     {
-        $vessel_certificate->load('ops_vessel','ops_maritime_certification');
+        $vessel_certificate->load('opsVessel','opsMaritimeCertification');
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
@@ -143,7 +143,7 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateWithoutPaginate(){
         try
         {
-            $vesselCertificates = OpsVesselCertificate::all();
+            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
             return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
         }
         catch (QueryException $e)

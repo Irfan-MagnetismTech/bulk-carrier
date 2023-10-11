@@ -22,4 +22,9 @@ class OpsVoyagePortSchedule extends Model
         'operation_type',
         'business_unit'
     ];
+    
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
 }

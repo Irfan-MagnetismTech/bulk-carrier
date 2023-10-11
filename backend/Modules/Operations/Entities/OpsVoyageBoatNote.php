@@ -19,17 +19,17 @@ class OpsVoyageBoatNote extends Model
         'business_unit'
     ];
 
-    public function ops_voyage()
+    public function opsVoyage()
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
 
-    public function ops_vessel()
+    public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function ops_voyage_boat_note_lines()
+    public function opsVoyageBoatNoteLines()
     {
         return $this->hasMany(OpsVoyageBoatNoteLine::class, 'ops_voyage_boat_note_id', 'id');
     }

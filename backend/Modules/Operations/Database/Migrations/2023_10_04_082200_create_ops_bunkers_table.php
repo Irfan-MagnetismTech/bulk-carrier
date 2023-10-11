@@ -34,7 +34,6 @@ return new class extends Migration
             $table->float('fuel_con_voyage')->nullable();
             $table->string('currency')->nullable();
             $table->string('status')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

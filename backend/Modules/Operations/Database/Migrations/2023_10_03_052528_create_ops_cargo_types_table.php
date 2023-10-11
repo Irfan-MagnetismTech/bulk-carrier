@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('cargo_type');
             $table->string('description')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

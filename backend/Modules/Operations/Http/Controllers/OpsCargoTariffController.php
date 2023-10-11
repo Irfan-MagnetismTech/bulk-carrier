@@ -151,15 +151,5 @@ class OpsCargoTariffController extends Controller
         }
     }
 
-    public function getCargoTariffWithoutPaginate(){
-        try
-        {
-            $cargo_tariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->get();          
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $cargo_tariffs, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

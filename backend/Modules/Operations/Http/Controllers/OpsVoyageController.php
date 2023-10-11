@@ -31,7 +31,7 @@ class OpsVoyageController extends Controller
     {
         // dd('voyage');
         try {
-            $voyages = OpsVoyage::with('ops_customer','ops_vessel','ops_mother_vessel','ops_cargo_type','ops_voyage_sectors','ops_voyage_port_schedules','ops_bunkers')->latest()->paginate(15);
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }
@@ -54,15 +54,15 @@ class OpsVoyageController extends Controller
             DB::beginTransaction();
             $voyageInfo = $request->except(
                 '_token',
-                'ops_voyage_sectors',
-                'ops_voyage_port_schedules',
-                'ops_bunkers',
+                'opsVoyageSectors',
+                'opsVoyagePortSchedules',
+                'opsBunkers',
             );
 
             $voyage = OpsCargoTariff::create($voyageInfo);
-            $voyage->ops_voyage_sectors()->createMany($request->ops_voyage_sectors);
-            $voyage->ops_voyage_port_schedules()->createMany($request->ops_voyage_port_schedules);
-            $voyage->ops_bunkers()->createMany($request->ops_bunkers);
+            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
+            $voyage->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Voyage added successfully.', $voyage, 201);
         }
@@ -81,7 +81,7 @@ class OpsVoyageController extends Controller
       */
      public function show(OpsVoyageRequest $voyage): JsonResponse
      {
-        $voyage->load('ops_customer','ops_vessel','ops_mother_vessel','ops_cargo_type','ops_voyage_sectors','ops_voyage_port_schedules','ops_bunkers');
+        $voyage->load('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
         try
         {
             return response()->success('Successfully retrieved voyage.', $voyage, 200);
@@ -107,21 +107,21 @@ class OpsVoyageController extends Controller
             DB::beginTransaction();
             $voyageInfo = $request->except(
                 '_token',
-                'ops_voyage_sectors',
-                'ops_voyage_port_schedules',
-                'ops_bunkers',
+                'opsVoyageSectors',
+                'opsVoyagePortSchedules',
+                'opsBunkers',
             );
 
             $voyageUpdate->update($voyageInfo);  
 
-            $voyageUpdate->ops_voyage_sectors()->delete();
-            $voyageUpdate->ops_voyage_sectors()->createMany($request->ops_voyage_sectors);
+            $voyageUpdate->opsVoyageSectors()->delete();
+            $voyageUpdate->opsVoyageSectors()->createMany($request->opsVoyageSectors);
 
-            $voyageUpdate->ops_voyage_port_schedules()->delete();
-            $voyageUpdate->ops_voyage_port_schedules()->createMany($request->ops_voyage_port_schedule);
+            $voyageUpdate->opsVoyagePortSchedules()->delete();
+            $voyageUpdate->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
 
-            $voyageUpdate->ops_bunkers()->delete();
-            $voyageUpdate->ops_bunkers()->createMany($request->ops_bunkers);
+            $voyageUpdate->opsBunkers()->delete();
+            $voyageUpdate->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
             return response()->success('Voyage updated successfully.', $voyage, 200);
@@ -143,9 +143,9 @@ class OpsVoyageController extends Controller
     {
         try
         {
-            $voyage->ops_voyage_sectors()->delete();
-            $voyage->ops_voyage_port_schedules()->delete();
-            $voyage->ops_bunkers()->delete();
+            $voyage->opsVoyageSectors()->delete();
+            $voyage->opsVoyagePortSchedules()->delete();
+            $voyage->opsBunkers()->delete();
             $voyage->delete();
 
             return response()->json([
@@ -170,7 +170,7 @@ class OpsVoyageController extends Controller
     public function getVoyageWithoutPaginate(){
         try
         {
-            $voyages = OpsVoyage::with('ops_customer','ops_vessel','ops_mother_vessel','ops_cargo_type','ops_voyage_sectors','ops_voyage_port_schedules','ops_bunkers')->latest()->get();        
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        
             return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
         }
         catch (QueryException $e)

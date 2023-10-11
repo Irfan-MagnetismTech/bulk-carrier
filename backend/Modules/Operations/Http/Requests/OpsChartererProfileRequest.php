@@ -17,7 +17,7 @@ class OpsChartererProfileRequest extends FormRequest
         return [
             'company_legal_name'    => ['required', 'string', 'max:255'],
             'name'                  => ['required', 'string', 'max:255'],
-            'owner_code'            => ['string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->ops_charterer_profile)],
+            'owner_code'            => ['string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'country'               => ['required', 'string', 'max:255'],
             'contact_no'            => ['required', 'string', 'max:255'],
             'address'               => ['required', 'string', 'max:255'],

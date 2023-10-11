@@ -20,8 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->dateTime('discharge_date');
             $table->text('attachment');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
-            $table->timestamps();
+             $table->timestamps();
         });
     }
 

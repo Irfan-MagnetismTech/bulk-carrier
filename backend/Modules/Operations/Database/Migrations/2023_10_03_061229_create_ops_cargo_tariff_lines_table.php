@@ -30,7 +30,6 @@ return new class extends Migration
             $table->float('oct');
             $table->float('nov');
             $table->float('dec');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->timestamps();
         });
     }

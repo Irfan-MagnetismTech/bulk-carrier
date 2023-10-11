@@ -125,15 +125,4 @@ class OpsCargoTypeController extends Controller
         }
     }
 
-    public function getCargoTypeWithoutPaginate(){
-        try
-        {
-            $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types for without paginate.', $cargo_types, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

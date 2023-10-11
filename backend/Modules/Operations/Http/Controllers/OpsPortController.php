@@ -146,15 +146,4 @@ class OpsPortController extends Controller
         }
     }
 
-    public function getPortWithoutPaginate(){
-        try
-        {
-            $ports = OpsPort::all();            
-            return response()->success('Successfully retrieved ports for without paginate.', $ports, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

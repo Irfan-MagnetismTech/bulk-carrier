@@ -22,17 +22,17 @@ class OpsVesselCertificate extends Model
         'attachment',
         'status',
         'reference_number',
-        'business_unit'
-        'created_by',
+        'business_unit',
+        'created_by'
     ];
 
-    public function ops_vessel()
+    public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+        return $this->belongsTo(OpsVessel::class);
     }
-    public function ops_maritime_certification()
+    public function opsMaritimeCertification()
     {
-        return $this->belongsTo(OpsMaritimeCertification::class, 'ops_maritime_certificate_id' , 'id');
+        return $this->belongsTo(OpsMaritimeCertification::class);
     }
 
 }

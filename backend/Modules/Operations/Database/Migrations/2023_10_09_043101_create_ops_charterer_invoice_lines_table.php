@@ -27,7 +27,6 @@ return new class extends Migration
             $table->float('amount')->nullable();
             $table->float('amount_bdt')->nullable();
             $table->float('amount_usd')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
             $table->timestamps();
         });
     }

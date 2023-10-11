@@ -26,4 +26,15 @@ class OpsVoyageSector extends Model
         'boat_note_qty',
         'business_unit'
     ];
+
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
+    
+    public function opsCargoTariff()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_cargo_tariff_id' , 'id');
+    }
+
 }
