@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsVessel extends Model
 {
     use HasFactory;
-    use \App\Traits\CreateBusinessUnit;
-
     /**
      * The attributes that are mass assignable.
      *
