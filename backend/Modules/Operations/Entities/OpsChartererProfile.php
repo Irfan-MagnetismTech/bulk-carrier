@@ -24,7 +24,7 @@ class OpsChartererProfile extends Model
         'business_unit'
     ];
 
-    public function ops_charterer_bank_accounts()
+    public function opsChartererBankAccounts()
     {
         return $this->hasMany(OpsChartererBankAccount::class, 'ops_charterer_profile_id', 'id');
     }

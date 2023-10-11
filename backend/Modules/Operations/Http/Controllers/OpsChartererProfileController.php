@@ -30,7 +30,7 @@ class OpsChartererProfileController extends Controller
     public function index()
     {
         try {
-            $charterer_profiles = OpsChartererProfile::with('ops_charterer_bank_accounts')->latest()->paginate(15);
+            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved charterer profiles.', $charterer_profiles, 200);
         }
@@ -54,11 +54,11 @@ class OpsChartererProfileController extends Controller
              DB::beginTransaction();
              $charterer_profile_info = $request->except(
                  '_token',
-                 'ops_charterer_bank_accounts',
+                 'opsChartererBankAccounts',
              );
  
              $charterer_profile = OpsCargoTariff::create($charterer_profile_info);
-             $charterer_profile->ops_charterer_bank_accounts()->createMany($request->ops_charterer_bank_accounts);
+             $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
              return response()->success('Charterer profile added successfully.', $charterer_profile, 201);
          }
@@ -77,7 +77,7 @@ class OpsChartererProfileController extends Controller
       */
      public function show(OpsChartererProfile $charterer_profile): JsonResponse
      {
-         $charterer_profile->load('ops_charterer_bank_accounts');
+         $charterer_profile->load('opsChartererBankAccounts');
          try
          {
              return response()->success('Successfully retrieved charterer profile.', $charterer_profile, 200);
@@ -103,12 +103,12 @@ class OpsChartererProfileController extends Controller
              DB::beginTransaction();
              $charterer_profile_info = $request->except(
                  '_token',
-                 'ops_charterer_bank_accounts',
+                 'opsChartererBankAccounts',
              );
             
              $charterer_profile->update($charterer_profile_info);            
-             $charterer_profile->ops_charterer_bank_accounts()->delete();
-             $charterer_profile->ops_charterer_bank_accounts()->createMany($request->ops_charterer_bank_accounts);
+             $charterer_profile->opsChartererBankAccounts()->delete();
+             $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
              return response()->success('Charterer profile updated successfully.', $cargo_tariff, 200);
          }
@@ -129,7 +129,7 @@ class OpsChartererProfileController extends Controller
      {
          try
          {
-             $charterer_profile->ops_charterer_bank_accounts()->delete();
+             $charterer_profile->opsChartererBankAccounts()->delete();
              $charterer_profile->delete();
  
              return response()->json([
@@ -154,7 +154,7 @@ class OpsChartererProfileController extends Controller
      public function getCargoTariffWithoutPaginate(){
          try
          {
-             $charterer_profiles = OpsChartererProfile::with('ops_charterer_bank_accounts')->latest()->get();       
+             $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->get();       
              return response()->success('Successfully retrieved charterer profiles for without paginate.', $charterer_profiles, 200);
          }
          catch (QueryException $e)

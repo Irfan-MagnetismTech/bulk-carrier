@@ -29,17 +29,17 @@ class OpsChartererInvoice extends Model
 
     ];
 
-    public function ops_charterer_profile()
+    public function opsChartererProfile()
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');
     }
     
-    public function ops_charterer_contract()
+    public function opsChartererContract()
     {
         return $this->belongsTo(OpsChartererContract::class, 'ops_charterer_contract_id' , 'id');
     }
 
-    public function ops_charterer_invoice_lines()
+    public function opsChartererInvoiceLines()
     {
         return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id');
     }

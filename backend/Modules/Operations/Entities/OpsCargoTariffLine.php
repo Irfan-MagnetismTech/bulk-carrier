@@ -29,7 +29,7 @@ class OpsCargoTariffLine extends Model
         'dec',
     ];
 
-    public function ops_cargo_tariff()
+    public function opsCargoTariff()
     {
         return $this->belongsTo(OpsCargoTariff::class, 'ops_cargo_tariff_id' , 'id');
     }

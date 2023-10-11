@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OpsBunker extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'bunkerable_type',
@@ -30,11 +30,11 @@ class OpsBunker extends Model
         'status',
     ];
 
-    // public function scm_vendor()
+    // public function scmVendor()
     // {
     //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
     // }
-    // public function scm_material()
+    // public function scmMaterial()
     // {
     //     return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
     // }

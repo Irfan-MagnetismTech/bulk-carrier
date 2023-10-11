@@ -31,7 +31,7 @@ class OpsHandoverTakeoverController extends Controller
     public function index()
     {
         try {
-            $handover_takeovers = OpsHandoverTakeover::with('ops_charterer_profile','ops_vessel','ops_bunkers')->latest()->paginate(15);
+            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }
@@ -54,11 +54,11 @@ class OpsHandoverTakeoverController extends Controller
         DB::beginTransaction();
         $handover_takeover_info = $request->except(
             '_token',
-            'ops_bunkers',
+            'opsBunkers',
         );
 
         $handover_takeover = OpsHandoverTakeover::create($handover_takeover_info);            
-        $handover_takeover->ops_bunkers()->createMany($request->ops_bunkers);
+        $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
         DB::commit();
         return response()->success('Handover takeover added successfully.', $handover_takeover, 201);
     }
@@ -77,7 +77,7 @@ class OpsHandoverTakeoverController extends Controller
     */
     public function show(OpsHandoverTakeover $handover_takeover): JsonResponse
     {
-    $handover_takeover->load('ops_charterer_profile','ops_vessel','ops_bunkers');
+    $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers');
     try
     {
         return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
@@ -103,12 +103,12 @@ class OpsHandoverTakeoverController extends Controller
         DB::beginTransaction();
         $handover_takeover_info = $request->except(
             '_token',
-            'ops_bunkers',
+            'opsBunkers',
         );
 
         $handover_takeover->update($handover_takeover_info);  
-        $handover_takeover->ops_bunkers()->delete();
-        $handover_takeover->ops_bunkers()->createMany($request->ops_bunkers);
+        $handover_takeover->opsBunkers()->delete();
+        $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
 
         DB::commit();
         return response()->success('Handover takeover updated successfully.', $voyage, 200);
@@ -130,7 +130,7 @@ class OpsHandoverTakeoverController extends Controller
     {
         try
         {
-            $handover_takeover->ops_bunkers()->delete();
+            $handover_takeover->opsBunkers()->delete();
             $handover_takeover->delete();
 
             return response()->json([
@@ -155,7 +155,7 @@ class OpsHandoverTakeoverController extends Controller
     public function getHandoverTakeoverWithoutPaginate(){
         try
         {
-            $handover_takeovers = OpsHandoverTakeover::with('ops_charterer_profile','ops_vessel','ops_bunkers')->latest()->get();        
+            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->get();        
             return response()->success('Successfully retrieved handover takeovers for without paginate.', $handover_takeovers, 200);
         }
         catch (QueryException $e)

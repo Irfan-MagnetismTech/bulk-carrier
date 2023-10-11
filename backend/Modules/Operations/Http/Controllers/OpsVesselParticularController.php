@@ -11,13 +11,13 @@ use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class OpsVesselParticularController extends Controller
 {
    // use HasRoles;
-    
-    function __construct(private FileUploadService $fileUpload)
-    {
+   function __construct(private FileUploadService $fileUpload,)
+   {
     //     $this->middleware('permission:vessel-particular-create|vessel-particular-edit|vessel-particular-show|vessel-particular-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-particular-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-particular-edit', ['only' => ['update']]);
@@ -32,7 +32,6 @@ class OpsVesselParticularController extends Controller
     {
         try {
             $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);
-
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }
         catch (QueryException $e)

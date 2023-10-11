@@ -37,11 +37,11 @@ class OpsChartererContract extends Model
         'business_unit',
     ];
 
-    public function ops_vessel()
+    public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
-    public function ops_charterer_profile()
+    public function opsChartererProfile()
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');
     }

@@ -31,7 +31,7 @@ class OpsChartererContractController extends Controller
    public function index()
    {
        try {
-           $charterer_contracts = OpsChartererContract::with('ops_vessel','ops_charterer_profile')->latest()->paginate(15);
+           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->paginate(15);
            
            return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
        }
@@ -80,7 +80,7 @@ class OpsChartererContractController extends Controller
     */
    public function show(OpsChartererContract $charterer_contract): JsonResponse
    {
-       $charterer_contract->load('ops_vessel','ops_charterer_profile');
+       $charterer_contract->load('opsVessel','opsChartererProfile');
        try
        {
            return response()->success('Successfully retrieved charterer contract.', $charterer_contract, 200);
@@ -150,7 +150,7 @@ class OpsChartererContractController extends Controller
 
    public function getChartererContractType(){
        try {
-           $charterer_contracts = OpsChartererContract::with('ops_vessel','ops_charterer_profile')->latest()->get();
+           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();
            return response()->success('Successfully retrieved charterer contracts contract type.', collect($charterer_contracts->pluck('contract_type'))->unique()->values()->all(), 200);
        } catch (QueryException $e){
            return response()->error($e->getMessage(), 500);
@@ -160,7 +160,7 @@ class OpsChartererContractController extends Controller
    public function getChartererContractWithoutPaginate(){
        try
        {
-           $charterer_contracts = OpsChartererContract::with('ops_vessel','ops_charterer_profile')->latest()->get();        
+           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();        
            return response()->success('Successfully retrieved charterer contracts for without paginate.', $charterer_contracts, 200);
        }
        catch (QueryException $e)
