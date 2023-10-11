@@ -33,6 +33,7 @@
 
   watch(job, (value) => {
     job.value.dept_wise_items = value.mnt_ship_department.mnt_item;
+    job.value.item_name = value.mnt_item;
   });
   
   onMounted(() => {
