@@ -1,44 +1,27 @@
 <script setup>
 import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useUnit from "../../../composables/supply-chain/useUnit";
+import useMaterial from "../../../composables/supply-chain/useMaterial";
 import Title from "../../../services/title";
 import { ref } from "vue";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import Swal from "sweetalert2";
 
-const { units, getUnits, deleteUnit, isLoading } = useUnit();
+const { materials, getMaterials, deleteMaterial, isLoading } = useMaterial();
 
 const { setTitle } = Title();
 
-setTitle('Units');
+setTitle('Materials');
 
 onMounted(() => {
-  getUnits();
+  getMaterials();
 });
-
-function confirmDelete(id) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You want to delete this unit!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      deleteUnit(id);
-    }
-  })
-}
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Units</h2>
-    <router-link :to="{ name: 'supply-chain.unit.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600  rounded-lg active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Material</h2>
+    <router-link :to="{ name: 'supply-chain.material.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600  rounded-lg active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
@@ -57,22 +40,22 @@ function confirmDelete(id) {
         </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-        <tr class="text-gray-700 dark:text-gray-400 text-center" v-for="(unit,index) in units" :key="unit.id">
+        <tr class="text-gray-700 dark:text-gray-400 text-center" v-for="(material,index) in materials" :key="material.id">
           <td class="px-4 py-3 text-sm">{{ index + 1 }}</td>
-          <td class="px-4 py-3 text-sm">{{ unit.name }}</td>
-          <td class="px-4 py-3 text-sm">{{ unit.short_code }}</td>
+          <td class="px-4 py-3 text-sm">{{ material.name }}</td>
+          <td class="px-4 py-3 text-sm">{{ material.material_code }}</td>
           <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-            <action-button :action="'edit'" :to="{ name: 'supply-chain.unit.edit', params: { unitId: unit.id } }"></action-button>
-            <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
+            <action-button :action="'edit'" :to="{ name: 'supply-chain.material.edit', params: { materialId: material.id } }"></action-button>
+            <action-button @click="deleteMaterial(material.id)" :action="'delete'"></action-button>
           </td>
         </tr>
         </tbody>
-        <tfoot v-if="!units?.length" class="bg-white dark:bg-gray-800">
+        <tfoot v-if="!materials?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
-        <tr v-else-if="!units?.length">
-          <td colspan="7">No Units found.</td>
+        <tr v-else-if="!materials?.length">
+          <td colspan="7">No Material found.</td>
         </tr>
         </tfoot>
       </table>
