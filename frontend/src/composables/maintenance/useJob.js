@@ -11,14 +11,13 @@ export default function useItemGroup() {
     const jobs = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const shipDepartmentWiseItems = ref([]);
     const job = ref( {
         ops_vessel_id: '',
         mnt_ship_department_id: '',
         item_name: '',
         mnt_item_id: '',
         mnt_job_lines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
-        dept_wise_items: '',
+        dept_wise_items: [],
     });
     const errors = ref(null);
     const isLoading = ref(false);
@@ -125,37 +124,17 @@ export default function useItemGroup() {
         }
     }
 
-    async function getShipDepartmentWiseItems(mntShipDepartmentId){
-        //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        try {
-            const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-items/${mntShipDepartmentId}`);
-            shipDepartmentWiseItems.value = data.value;
-            console.log(shipDepartmentWiseItems);
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
-        }
-    }
+    
 
     
     return {
         jobs,
         job,
-        shipDepartmentWiseItems,
         getJobs,
         storeJob,
         showJob,
         updateJob,
         deleteJob,
-        getShipDepartmentWiseItems,
         isLoading,
         errors,
     };

@@ -90,12 +90,11 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import useJob from "../../../composables/maintenance/useJob";
 import {ref, onMounted, watch, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useJob();
+const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useItem();
 
 const props = defineProps({
   form: {
@@ -133,14 +132,6 @@ watch(() => props.form.item_name, (value) => {
   props.form.mnt_item_id = value?.id;
 });
 
-const shipDepartmentWiseItemsWithItemCode = computed(() => {
-  if(shipDepartmentWiseItems.value.length)
-    return shipDepartmentWiseItems.value.map(item => ({
-      ...item,
-      displayName: `${item.item_code} ${item.name}`
-      }));
-  return [];
-});
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
