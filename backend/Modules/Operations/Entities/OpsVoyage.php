@@ -5,11 +5,11 @@ namespace Modules\Operations\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\CreateBusinessUnit;
 
 class OpsVoyage extends Model
 {
-    use HasFactory, CreateBusinessUnit;
+    use HasFactory;
+
     protected $fillable = [
         'ops_customer_id',
         'ops_vessel_id',

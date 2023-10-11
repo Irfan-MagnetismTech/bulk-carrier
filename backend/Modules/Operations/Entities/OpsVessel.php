@@ -4,13 +4,10 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\CreateBusinessUnit;
 
 class OpsVessel extends Model
 {
-    use HasFactory, CreateBusinessUnit;
-
-
+    use HasFactory;
     /**
      * The attributes that are mass assignable.
      *

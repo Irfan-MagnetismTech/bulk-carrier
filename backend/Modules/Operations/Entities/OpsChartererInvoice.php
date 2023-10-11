@@ -5,11 +5,10 @@ namespace Modules\Operations\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\CreateBusinessUnit;
 
 class OpsChartererInvoice extends Model
 {
-    use HasFactory, CreateBusinessUnit;
+    use HasFactory;
 
     protected $fillable = [
         'ops_charterer_profile_id',
