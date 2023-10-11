@@ -25,14 +25,14 @@
   
   const route = useRoute();
   const jobId = route.params.jobId;
-  const { job, jobCycleUnits, showJob, updateJob, errors } = useJob();
+  const { job, jobCycleUnits, shipDepartmentWiseItems, showJob, updateJob, errors } = useJob();
   
   const { setTitle } = Title();
   
   setTitle('Edit Job');
 
   watch(job, (value) => {
-    console.log("job =>" , value);
+    shipDepartmentWiseItems.value = value.mnt_ship_department.mnt_item;
   });
   
   onMounted(() => {

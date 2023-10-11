@@ -26,7 +26,7 @@
             <option v-for="item in shipDepartmentWiseItems" :value="item.id">{{ item.item_code + ' ' + item.name }}</option>
               
             </select> -->
-            <v-select placeholder="Select Item" :options="shipDepartmentWiseItemsWithItemCode" @search="" v-model="form.item_name" label="displayName" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+            <v-select placeholder="Select Item" :options="shipDepartmentWiseItems" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
             <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
@@ -90,6 +90,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
+import useJob from "../../../composables/maintenance/useJob";
 import {ref, onMounted, watch, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
 
@@ -135,7 +136,7 @@ const shipDepartmentWiseItemsWithItemCode = computed(() => {
 });
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useItem();
+const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useJob();
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
