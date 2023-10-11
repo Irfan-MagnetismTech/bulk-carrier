@@ -17,7 +17,7 @@ class MntRunHourController extends Controller
     {
         try {
 
-            $runHours = MntRunHour::with(['opsVessel:id,name','mntItem:id,name,item_code,present_run_hour'])->paginate(10);
+            $runHours = MntRunHour::with(['opsVessel:id,name','mntItem.mntItemGroup'])->paginate(10);
 
             return response()->success('Run hours retrieved successfully', $runHours, 200);
             
