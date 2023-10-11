@@ -89,10 +89,12 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(itemGroup,index) in itemGroups?.data" :key="index">
+          <tr v-for="(runHour,index) in runHours?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ itemGroup?.name }}</td>
-            <td>{{ itemGroup?.short_code }}</td>
+            <td>{{ runHour?.ops_vessel?.name }}</td>
+            <td>{{ runHour?.mnt_item?.mnt_item_group?.name }}</td>
+            <td>{{ runHour?.mnt_item?.name }}</td>
+            <td>{{ runHour?.mnt_item?.present_run_hour }}</td>
             
             <td class="">
               <div class="flex">

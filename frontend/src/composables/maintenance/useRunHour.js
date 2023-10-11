@@ -17,6 +17,7 @@ export default function useRunHour() {
         previous_run_hour: '',
         present_run_hour: '',
         updated_on: '',
+        form_type: 'create'
     });
     const errors = ref(null);
     const isLoading = ref(false);

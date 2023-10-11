@@ -2,23 +2,40 @@
     <!-- Basic information -->
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            <span class="text-gray-700 dark:text-gray-300">Vessel Name {{ form.formType }} </span>
+            <div v-if="form.form_type === 'create'">
+              <v-select placeholder="Select Item" :options="form.dept_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <input type="hidden" v-model="form.mnt_item_id">
+            </div>
+            <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Department </span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            <div v-if="form.form_type === 'create'">
+              <v-select placeholder="Select Item" :options="form.dept_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <input type="hidden" v-model="form.mnt_item_id">
+            </div>
+            <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Group </span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            <div v-if="form.form_type === 'create'">
+              <v-select placeholder="Select Item" :options="form.dept_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <input type="hidden" v-model="form.mnt_item_id">
+            </div>
+            <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name </span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            <div v-if="form.form_type === 'create'">
+              <v-select placeholder="Select Item" :options="form.dept_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <input type="hidden" v-model="form.mnt_item_id">
+            </div>
+            <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
