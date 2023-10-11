@@ -6,36 +6,35 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useItem() {
+export default function useItemGroup() {
     const router = useRouter();
-    const items = ref([]);
+    const jobs = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    
-    const item = ref( {
+    const shipDepartmentWiseItems = ref([]);
+    const job = ref( {
+        ops_vessel_id: '',
         mnt_ship_department_id: '',
-        mnt_item_group_id: '',
-        name: '',
-        item_code: '',
-        description: [{ key: '', value: '' }],
-        has_run_hour: false,
-        present_run_hour: 0,
+        item_name: '',
+        mnt_item_id: '',
+        mnt_job_lines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
+        dept_wise_items: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getItems(page) {
+    async function getJobs(page) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/mnt/items',{
+            const {data, status} = await Api.get('/mnt/jobs',{
                 params: {
                     page: page || 1,
                 },
             });
-            items.value = data.value;
+            jobs.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -47,16 +46,16 @@ export default function useItem() {
         }
     }
 
-    async function storeItem(form) {
+    async function storeJob(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/mnt/items', form);
-            item.value = data.value;
+            const { data, status } = await Api.post('/mnt/jobs', form);
+            job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item.index" });
+            router.push({ name: "maintenance.job.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -66,14 +65,14 @@ export default function useItem() {
         }
     }
 
-    async function showItem(itemId) {
+    async function showJob(jobId) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/items/${itemId}`);
-            item.value = data.value;
+            const { data, status } = await Api.get(`/mnt/jobs/${jobId}`);
+            job.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -85,19 +84,19 @@ export default function useItem() {
         }
     }
 
-    async function updateItem(form, itemId) {
+    async function updateJob(form, jobId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/items/${itemId}`,
+                `/mnt/jobs/${jobId}`,
                 form
             );
-            item.value = data.value;
+            job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item.index" });
+            router.push({ name: "maintenance.job.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -108,15 +107,15 @@ export default function useItem() {
         }
     }
 
-    async function deleteItem(itemId) {
+    async function deleteJob(jobId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/items/${itemId}`);
+            const { data, status } = await Api.delete( `/mnt/jobs/${jobId}`);
             notification.showSuccess(status);
-            await getItems();
+            await getJobs();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -126,36 +125,37 @@ export default function useItem() {
         }
     }
 
-    async function getItemCodeByGroupId(formData, mntItemGroupId){
-        // NProgress.start();
+    async function getShipDepartmentWiseItems(mntShipDepartmentId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/get-mnt-item-code/${mntItemGroupId}`);
-            formData.item_code = data.value;
+            const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-items/${mntShipDepartmentId}`);
+            shipDepartmentWiseItems.value = data.value;
+            console.log(shipDepartmentWiseItems);
+            notification.showSuccess(status);
         } catch (error) {
-            error.value = Error.showError(error);
+            const { data, status } = error.response;
+            notification.showError(status);
         } finally {
+            // loader.hide();
             isLoading.value = false;
-            // NProgress.done();
+            //NProgress.done();
         }
     }
 
     
-
-    
-
     return {
-        items,
-        item,
-        
-        getItems,
-        storeItem,
-        showItem,
-        updateItem,
-        deleteItem,
-        getItemCodeByGroupId,
-        
+        jobs,
+        job,
+        shipDepartmentWiseItems,
+        getJobs,
+        storeJob,
+        showJob,
+        updateJob,
+        deleteJob,
+        getShipDepartmentWiseItems,
         isLoading,
         errors,
     };

@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('mnt_items', function (Blueprint $table) {
+        Schema::create('mnt_jobs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('ops_vessel_id');
+            $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
             $table->unsignedBigInteger('mnt_ship_department_id');
             $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
-            $table->unsignedBigInteger('mnt_item_group_id');
-            $table->foreign('mnt_item_group_id')->references('id')->on('mnt_item_groups');
-            $table->string('name', 255)->unique();
-            $table->string('item_code', 255)->unique();
-            $table->text('description')->nullable();
-            $table->integer('has_run_hour');
-            $table->integer('present_run_hour');
+            $table->unsignedBigInteger('mnt_item_id');
+            $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
+            $table->enum('business_unit',['TSLL','PSML'])->default('TSLL');
             $table->timestamps();
         });
 
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mnt_items');
+        Schema::dropIfExists('mnt_jobs');
     }
 };
