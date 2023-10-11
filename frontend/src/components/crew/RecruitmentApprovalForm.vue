@@ -45,74 +45,78 @@ function removeItem(index){
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.total_approved" placeholder="Total Approved" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.total_approved" :errors="errors.total_approved" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Agreed To Join <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_agreed_to_join" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
+      <input type="number" v-model="form.crew_agreed_to_join" placeholder="Ex: 5" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.crew_agreed_to_join" :errors="errors.crew_agreed_to_join" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Page Title <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.page_title" placeholder="Page Title" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.page_title" :errors="errors.page_title" />
+      <span class="text-gray-700 dark:text-gray-300">Total Selected <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.crew_selected" :errors="errors.crew_selected" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.subject" placeholder="Subject" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.subject" :errors="errors.subject" />
+      <span class="text-gray-700 dark:text-gray-300">Total Panel <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.crew_panel" :errors="errors.crew_panel" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.total_approved" placeholder="Total Approved" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.total_approved" :errors="errors.total_approved" />
+      <span class="text-gray-700 dark:text-gray-300">Total Rest <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.crew_rest" :errors="errors.crew_rest" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Body</span>
+      <textarea v-model="form.body" placeholder="Type here....." class="form-input" autocomplete="off"></textarea>
+      <Error v-if="errors?.body" :errors="errors.body" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-      <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+      <textarea type="text" v-model="form.remarks" placeholder="Type here...." class="form-input" autocomplete="off"></textarea>
       <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Item List <span class="text-red-500">*</span></legend>
+    <legend class="px-2 text-gray-700 dark:text-gray-300">Candidate List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Eligibility <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Candidate Name <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Contact <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Email <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwVesselRequiredCrewLines" :key="requiredCrewLine.id">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model="form.crwVesselRequiredCrewLines[index].crw_rank_id">
+          <select class="form-input" v-model="form.crwRecruitmentApprovalLines[index].crw_rank_id">
             <option value="" disabled>select</option>
             <option value="Master">Master</option>
             <option value="Sukani">Sukani</option>
           </select>
-          <!--          <v-select v-model="form.crwVesselRequiredCrewLines[index].crw_rank_id" :id="'pod' + index" name="pod" required value="id" :options="portName" label="code_name" placeholder="Enter Port Code or Name" class="mt-1 placeholder-gray-600 w-full">-->
-<!--            <template #search="{attributes, events}">-->
-<!--              <input class="vs__search" :required="!form.crwVesselRequiredCrewLines[index].crw_rank_id" v-bind="attributes" v-on="events"/>-->
-<!--            </template>-->
-<!--          </v-select>-->
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Crew name" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].eligibility" placeholder="EX: COC-III" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_contact" placeholder="Contact" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_email" placeholder="Email" class="form-input" autocomplete="off" />
+        </td>
+        <td class="px-1 py-1">
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
