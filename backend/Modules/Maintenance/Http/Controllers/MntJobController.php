@@ -6,7 +6,10 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntJob;
+use Modules\Maintenance\Entities\MntRunHour;
+use Modules\Maintenance\Http\Requests\MntJobRequest;
 
 class MntJobController extends Controller
 {
@@ -43,18 +46,25 @@ class MntJobController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntJobRequest $request)
     {
         try {
-            $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
+            $jobInput['ops_vessel_id'] = $runHourInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
-            $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
-            $jobInput['business_unit'] = Auth::user()->business_unit ?? 'BOTH';
+            $jobInput['mnt_item_id'] = $runHourInput['mnt_item_id'] = $request->get('mnt_item_id');
+            $jobInput['business_unit'] = $runHourInput['business_unit'] = Auth::user()->business_unit;
 
-            $jobLines = $request->get('job_lines');
+            $jobLines = $request->get('mnt_job_lines');
             
             $job = MntJob::create($jobInput);
             $job->mntJobLines()->createMany($jobLines);
+
+            $mntItem = MntItem::where('id', $jobInput['mnt_item_id'])->first();
+            if ($mntItem->has_run_hour == true) {
+                $runHourInput['present_run_hour'] = $mntItem->present_run_hour;
+                $runHourInput['updated_on'] = date('Y-m-d', strtotime($mntItem->updated_at));
+                $runHour = MntRunHour::create($runHourInput);
+            }
             
             return response()->success('Job created successfully', $job, 201);
             
@@ -110,7 +120,7 @@ class MntJobController extends Controller
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = Auth::user()->business_unit;
 
-            $jobLines = $request->get('job_lines');
+            $jobLines = $request->get('mnt_job_lines');
             
             $job = MntJob::findorfail($id);
             $job->update($jobInput);
