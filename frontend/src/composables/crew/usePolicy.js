@@ -11,23 +11,24 @@ export default function usePolicy() {
     const notification = useNotification();
     const policy = ref( {
         name: '',
-        short_name: '',
+        type: '',
+        attachment: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRanks(page) {
+    async function getPolicies(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-ranks',{
+            const {data, status} = await Api.get('/crw/crw-policies',{
                 params: {
                     page: page || 1,
                 },
             });
-            ranks.value = data.value;
+            policies.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -38,16 +39,16 @@ export default function usePolicy() {
         }
     }
 
-    async function storeRank(form) {
+    async function storePolicy(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-ranks', form);
-            rank.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-policies', form);
+            policy.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "crw.policies.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -57,14 +58,14 @@ export default function usePolicy() {
         }
     }
 
-    async function showRank(rankId) {
+    async function showPolicy(policyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-ranks/${rankId}`);
-            rank.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-policies/${policyId}`);
+            policy.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -75,19 +76,19 @@ export default function usePolicy() {
         }
     }
 
-    async function updateRank(form, rankId) {
+    async function updatePolicy(form, policyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-ranks/${rankId}`,
+                `/crw/crw-policies/${policyId}`,
                 form
             );
-            rank.value = data.value;
+            policy.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "crw.policies.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,15 +98,15 @@ export default function usePolicy() {
         }
     }
 
-    async function deleteRank(rankId) {
+    async function deletePolicy(policyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-ranks/${rankId}`);
+            const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
             notification.showSuccess(status);
-            await getRanks();
+            await getPolicies();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -116,13 +117,13 @@ export default function usePolicy() {
     }
 
     return {
-        ranks,
-        rank,
-        getRanks,
-        storeRank,
-        showRank,
-        updateRank,
-        deleteRank,
+        policies,
+        policy,
+        getPolicies,
+        storePolicy,
+        showPolicy,
+        updatePolicy,
+        deletePolicy,
         isLoading,
         errors,
     };
