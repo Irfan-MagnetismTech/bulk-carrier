@@ -104,6 +104,38 @@ export default [
                     },
                 ],
             },
+            {
+                route: '',
+                label: 'Job',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'maintenance.job.create',
+                        label: 'New',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    {
+                        route: 'maintenance.job.index',
+                        label: 'List',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                ],
+            },
+            
             
             
         ]
