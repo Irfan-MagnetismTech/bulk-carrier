@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntRunHour;
 
 class MntRunHourController extends Controller
 {
@@ -14,7 +15,17 @@ class MntRunHourController extends Controller
      */
     public function index()
     {
-        return view('maintenance::index');
+        try {
+
+            $runHours = MntRunHour::with(['opsVessel:id,name','mntItem:id,name,item_code,present_run_hour'])->paginate(10);
+
+            return response()->success('Run hours retrieved successfully', $runHours, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
