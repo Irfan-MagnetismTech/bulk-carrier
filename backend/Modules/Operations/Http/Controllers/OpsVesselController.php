@@ -148,15 +148,5 @@ class OpsVesselController extends Controller
         }
     }
 
-    public function getVesselWithoutPaginate(){
-        try
-        {
-            $vessels = OpsVessel::all();            
-            return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

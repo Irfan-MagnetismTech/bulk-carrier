@@ -154,15 +154,5 @@ class OpsVesselParticularController extends Controller
         }
     }
 
-    public function getVesselParticularWithoutPaginate(){
-        try
-        {
-            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();        
-            return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

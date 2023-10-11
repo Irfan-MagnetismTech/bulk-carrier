@@ -135,15 +135,4 @@ class OpsCustomerController extends Controller
         }
     }
 
-    public function getCustomerWithoutPaginate(){
-        try
-        {
-            $customers = OpsCustomer::all();            
-            return response()->success('Successfully retrieved customers for without paginate.', $customers, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

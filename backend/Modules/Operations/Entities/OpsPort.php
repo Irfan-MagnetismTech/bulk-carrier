@@ -13,7 +13,7 @@ class OpsPort extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['code', 'name','business_unit'];
+    protected $fillable = ['code', 'name'];
     
     protected static function newFactory()
     {

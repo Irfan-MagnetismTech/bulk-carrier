@@ -137,7 +137,7 @@ class OpsVoyageBoatNoteController extends Controller
             foreach($voyage_boat_note->opsVoyageBoatNoteLines as $boat_note_line){
                 $this->fileUpload->deleteFile($boat_note_line->attachment);
             }
-            
+
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->delete();
 
@@ -151,18 +151,6 @@ class OpsVoyageBoatNoteController extends Controller
         }
     }
 
-    public function getVoyageBoatNoteWithoutPaginate()
-    {
-        try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->get();
-            
-            return response()->success('Successfully retrieved voyage boat notes for without paginate.', $voyage_boat_notes, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 
 
 }

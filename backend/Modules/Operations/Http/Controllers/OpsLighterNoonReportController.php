@@ -142,16 +142,4 @@ class OpsLighterNoonReportController extends Controller
          }
      }
      
- 
-     public function getLighterNoonReportWithoutPaginate(){
-         try
-         {
-             $lighterNoonReports = OpsLighterNoonReport::all();            
-             return response()->success('Successfully retrieved cargo tariffs for without paginate.', $lighterNoonReports, 200);
-         }
-         catch (QueryException $e)
-         {
-             return response()->error($e->getMessage(), 500);
-         }
-     }
 }

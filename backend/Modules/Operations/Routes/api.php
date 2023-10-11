@@ -51,20 +51,20 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 
     //start for without pagination
     Route::get('ports/without/paginate', [OpsCommonController::class, 'getPortWithoutPaginate']);
-    Route::get('vessels/without/paginate', [OpsVesselController::class, 'getVesselWithoutPaginate']);
+    Route::get('vessels/without/paginate', [OpsCommonController::class, 'getVesselWithoutPaginate']);
     Route::get('cargo-types/without/paginate', [OpsCommonController::class, 'getCargoTypeWithoutPaginate']);
     Route::get('cargo-tariffs/without/paginate', [OpsCommonController::class, 'getCargoTariffWithoutPaginate']);
-    Route::get('customers/without/paginate', [OpsCustomerController::class, 'getCustomerWithoutPaginate']);
-    Route::get('maritime-certifications/without/paginate', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationWithoutPaginate']);
-    Route::get('vessel-certificates/without/paginate', [OpsVesselCertificateController::class, 'getVesselCertificateWithoutPaginate']);
-    Route::get('vessel-particulars/without/paginate', [OpsVesselParticularController::class, 'getVesselParticularWithoutPaginate']);
-    Route::get('voyages/without/paginate', [OpsVoyageController::class, 'getVoyageWithoutPaginate']);
-    Route::get('voyage-boat-notes/without/paginate', [OpsVoyageBoatNoteController::class, 'getVoyageBoatNoteWithoutPaginate']);
-    Route::get('charterer-profiles/without/paginate', [OpsChartererProfileController::class, 'getCargoTariffWithoutPaginate']);
-    Route::get('charterer-contracts/without/paginate', [OpsChartererContractController::class, 'getChartererContractWithoutPaginate']);
-    Route::get('handover-takeovers/without/paginate', [OpsHandoverTakeoverController::class, 'getHandoverTakeoverWithoutPaginate']);
-    Route::get('charterer-invoices/without/paginate', [OpsChartererInvoiceController::class, 'getChartererInvoiceWithoutPaginate']);
-    Route::get('lighter-noon-reports/without/paginate', [OpsLighterNoonReportController::class, 'getLighterNoonReportWithoutPaginate']);
+    Route::get('customers/without/paginate', [OpsCommonController::class, 'getCustomerWithoutPaginate']);
+    Route::get('maritime-certifications/without/paginate', [OpsCommonController::class, 'getMaritimeCertificationWithoutPaginate']);
+    Route::get('vessel-certificates/without/paginate', [OpsCommonController::class, 'getVesselCertificateWithoutPaginate']);
+    Route::get('vessel-particulars/without/paginate', [OpsCommonController::class, 'getVesselParticularWithoutPaginate']);
+    Route::get('voyages/without/paginate', [OpsCommonController::class, 'getVoyageWithoutPaginate']);
+    Route::get('voyage-boat-notes/without/paginate', [OpsCommonController::class, 'getVoyageBoatNoteWithoutPaginate']);
+    Route::get('charterer-profiles/without/paginate', [OpsCommonController::class, 'getCargoProfileWithoutPaginate']);
+    Route::get('charterer-contracts/without/paginate', [OpsCommonController::class, 'getChartererContractWithoutPaginate']);
+    Route::get('handover-takeovers/without/paginate', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
+    Route::get('charterer-invoices/without/paginate', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
+    Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
     //end for without pagination
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

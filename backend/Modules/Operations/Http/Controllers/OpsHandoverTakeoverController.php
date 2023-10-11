@@ -152,15 +152,5 @@ class OpsHandoverTakeoverController extends Controller
     //     }
     // }
 
-    public function getHandoverTakeoverWithoutPaginate(){
-        try
-        {
-            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->get();        
-            return response()->success('Successfully retrieved handover takeovers for without paginate.', $handover_takeovers, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

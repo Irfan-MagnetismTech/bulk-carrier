@@ -167,15 +167,5 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageWithoutPaginate(){
-        try
-        {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        
-            return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

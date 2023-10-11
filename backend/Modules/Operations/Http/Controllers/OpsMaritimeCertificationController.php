@@ -137,15 +137,4 @@ class OpsMaritimeCertificationController extends Controller
         }
     }
 
-    public function getMaritimeCertificationWithoutPaginate(){
-        try
-        {
-            $maritime_certifications = OpsMaritimeCertification::all();            
-            return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

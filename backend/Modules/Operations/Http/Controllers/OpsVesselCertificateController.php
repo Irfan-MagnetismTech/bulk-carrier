@@ -140,15 +140,5 @@ class OpsVesselCertificateController extends Controller
     }
 
 
-    public function getVesselCertificateWithoutPaginate(){
-        try
-        {
-            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
-            return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

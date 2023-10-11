@@ -151,16 +151,5 @@ class OpsChartererInvoiceController extends Controller
          }
      }
  
-     public function getChartererInvoiceWithoutPaginate(){
-        try
-        {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->get();
 
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $charterer_invoices, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-     }
 }

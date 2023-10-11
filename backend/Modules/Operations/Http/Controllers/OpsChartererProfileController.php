@@ -151,15 +151,4 @@ class OpsChartererProfileController extends Controller
          }
      }
  
-     public function getCargoTariffWithoutPaginate(){
-         try
-         {
-             $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->get();       
-             return response()->success('Successfully retrieved charterer profiles for without paginate.', $charterer_profiles, 200);
-         }
-         catch (QueryException $e)
-         {
-             return response()->error($e->getMessage(), 500);
-         }
-     }
 }

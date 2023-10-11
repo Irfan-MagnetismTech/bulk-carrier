@@ -157,15 +157,4 @@ class OpsChartererContractController extends Controller
        }
    }
 
-   public function getChartererContractWithoutPaginate(){
-       try
-       {
-           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();        
-           return response()->success('Successfully retrieved charterer contracts for without paginate.', $charterer_contracts, 200);
-       }
-       catch (QueryException $e)
-       {
-           return response()->error($e->getMessage(), 500);
-       }
-   }
 }
