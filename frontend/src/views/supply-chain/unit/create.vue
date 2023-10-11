@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useUnit from "../../../composables/supply-chain/useUnit.js";
 import UnitForm from '../../../components/supply-chain/unit/UnitForm.vue';
 
-const { unit, storeUnit  } = useUnit();
+const { unit, storeUnit,errors,isLoading } = useUnit();
 const { setTitle } = Title();
 
 setTitle('Create Unit');
