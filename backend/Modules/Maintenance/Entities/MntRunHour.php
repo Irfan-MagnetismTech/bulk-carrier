@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MntRunHour extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['ops_vessel_id','mnt_item_id','previous_run_hour','present_run_hour','updated_on','business_unit'];
 }
