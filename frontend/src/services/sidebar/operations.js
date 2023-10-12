@@ -31,16 +31,16 @@ export default [
                         permissionKey: '',
                         subSubMenu: []
                     },
-                    // {
-                    //     route: 'operation.configurations.cargo-types.index',
-                    //     label: 'Cargo Types',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
+                    {
+                        route: 'operation.configurations.cargo-types.index',
+                        label: 'Cargo Types',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
                     // {
                     //     route: 'operation.configurations.cargo-tariffs.index',
                     //     label: 'Cargo Tariffs',

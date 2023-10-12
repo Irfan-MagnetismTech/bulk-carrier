@@ -24,4 +24,24 @@ export default [
 		component: () => import (`../views/${BASE}/port/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Cargo Types */
+	{
+		path: `/${BASE}/cargo-types`,
+		name: `${BASE}.configurations.cargo-types.index`,
+		component: () => import(`../views/${BASE}/cargo-types/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/cargo-types/create`,
+		name: `${BASE}.configurations.cargo-types.create`,
+		component: () => import (`../views/${BASE}/cargo-types/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/cargo-types/:cargoTypeId/edit`,
+		name: `${BASE}.configurations.cargo-types.edit`,
+		component: () => import (`../views/${BASE}/cargo-types/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

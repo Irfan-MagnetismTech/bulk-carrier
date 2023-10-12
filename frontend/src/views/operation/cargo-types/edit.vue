@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Port</h2>
-    <default-button :title="'Port List'" :to="{ name: 'operation.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Cargo Type</h2>
+    <default-button :title="'Cargo Type List'" :to="{ name: 'operation.configurations.cargo-types.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-      <form @submit.prevent="updatePort(port, portId)">
+      <form @submit.prevent="updateCargoType(cargoType, cargoTypeId)">
           <!-- Port Form -->
-          <port-form v-model:form="port" :errors="errors"></port-form>
+          <cargo-type-form v-model:form="cargoType" :errors="errors"></cargo-type-form>
           <!-- Submit button -->
           <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
       </form>
@@ -15,8 +15,8 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import PortForm from '../../../components/operations/configurations/PortForm.vue';
-import usePort from '../../../composables/operations/usePort';
+import CargoTypeForm from '../../../components/operations/configurations/CargoTypeForm.vue';
+import useCargoType from '../../../composables/operations/useCargoType';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
@@ -24,14 +24,14 @@ import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 
 const route = useRoute();
-const portId = route.params.portId;
-const { port, showPort, updatePort, errors } = usePort();
+const cargoTypeId = route.params.cargoTypeId;
+const { cargoType, showCargoType, updateCargoType, errors } = useCargoType();
 
 const { setTitle } = Title();
 
 setTitle('Edit Port');
 
 onMounted(() => {
-  showPort(portId);
+  showCargoType(cargoTypeId);
 });
 </script>

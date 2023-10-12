@@ -2,14 +2,14 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Port/Ghat Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.code" placeholder="Code" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.code" :errors="errors.code" />
+            <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Port/Ghat Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.name" :errors="errors.name" />
+            <span class="text-gray-700 dark:text-gray-300">Description</span>
+            <input type="text" v-model="form.description" placeholder="Name" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.description" :errors="errors.description" />
         </label>
     </div>
 </template>
