@@ -4,7 +4,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
-import Swal from 'sweetalert2';
 
 export default function useUser() {
     const router = useRouter();
@@ -17,12 +16,13 @@ export default function useUser() {
         password: '',
         confirm_password: '',
         role: '',
+        business_unit: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
     async function getUsers(page) {
-        //NProgress.start();
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -40,7 +40,6 @@ export default function useUser() {
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
@@ -53,7 +52,7 @@ export default function useUser() {
             const { data, status } = await Api.post('/administration/users', form);
             user.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.index" });
+            await router.push({ name: "administration.users.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -64,7 +63,7 @@ export default function useUser() {
     }
 
     async function showUser(userId) {
-        //NProgress.start();
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -78,35 +77,28 @@ export default function useUser() {
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
     async function updateUser(form, userId) {
-        //NProgress.start();
-        if(!form.port){
-            alert('Please select a port');
-            return;
-        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/users/${userId}`,
+                `/administration/users/${userId}`,
                 form
             );
             user.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "authorization.user.index" });
+            router.push({ name: "administration.users.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 
@@ -149,14 +141,12 @@ export default function useUser() {
                 form
             );
             notification.showSuccess(status);
-            //router.push({ name: "administration.user.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
-            //NProgress.done();
         }
     }
 

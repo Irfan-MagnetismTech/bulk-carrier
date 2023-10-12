@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import administration from "./administration";
 import maintenance from "./maintenance";
+import operations from "./operations";
 
 const router = createRouter({
 
@@ -26,6 +27,7 @@ const router = createRouter({
                 },
                 ...administration,
                 ...maintenance,
+                ...operations,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },

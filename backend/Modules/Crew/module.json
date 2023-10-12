@@ -1,0 +1,11 @@
+{
+    "name": "Crew",
+    "alias": "crew",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Crew\\Providers\\CrewServiceProvider"
+    ],
+    "files": []
+}
