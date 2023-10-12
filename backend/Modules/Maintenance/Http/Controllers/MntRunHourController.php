@@ -54,7 +54,17 @@ class MntRunHourController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+            
+            $job = MntRunHour::with(['opsVessel:id,name','mntItem.mntShipDepartment','mntItem.mntItemGroup'])->find($id);
+            
+            return response()->success('Job found successfully', $job, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
