@@ -7,7 +7,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
+import Store from './../../../store/index.js';
 
 const props = defineProps({
   page: {
@@ -15,14 +15,15 @@ const props = defineProps({
     default: 1,
   },
 });
-
+const icons = useHeroIcon();
 const { ranks, getRanks, deleteRank, isLoading } = useRank();
 const { setTitle } = Title();
 setTitle('Rank List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -40,9 +41,13 @@ function confirmDelete(id) {
   })
 }
 
+function setBusinessUnit($el){
+  businessUnit.value = $el.target.value;
+}
+
 onMounted(() => {
   watchEffect(() => {
-  getRanks(props.page)
+  getRanks(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -66,6 +71,15 @@ onMounted(() => {
     <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
+    <div class="relative w-full">
+      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
+      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
+      >
+        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
+        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
+        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
+      </select>
+    </div>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
@@ -88,7 +102,7 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(rank,index) in ranks" :key="index">
+          <tr v-for="(rank,index) in ranks?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ rank?.name }}</td>
             <td>{{ rank?.short_name }}</td>
@@ -101,11 +115,11 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!ranks?.length">
+          <tfoot v-if="!ranks?.data?.length">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
-          <tr v-else-if="!ranks?.data?.length">
+          <tr v-else-if="!ranks?.data?.data?.length">
             <td colspan="4">No rank found.</td>
           </tr>
           </tfoot>

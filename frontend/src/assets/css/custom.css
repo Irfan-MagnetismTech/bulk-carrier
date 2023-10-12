@@ -225,6 +225,21 @@ input.custom_date::-webkit-calendar-picker-indicator{
     justify-content: center;
 }
 
+.business_filter_input{
+    border-radius: 0.25rem;
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgba(213, 214, 215, var(--tw-border-opacity));
+    padding-right: 2.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    min-width: 200px;
+}
+
+.business_filter_input:focus{
+    border-color: rgba(213, 214, 215, var(--tw-border-opacity));
+}
+
 
 /*body {*/
 /*    font-family: 'Calibri', Times, serif;*/

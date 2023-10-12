@@ -12,11 +12,13 @@ export default function useRank() {
     const rank = ref( {
         name: '',
         short_name: '',
+        business_unit: '',
     });
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRanks(page) {
+    async function getRanks(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -25,6 +27,7 @@ export default function useRank() {
             const {data, status} = await Api.get('/crw/crw-ranks',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             ranks.value = data.value;
