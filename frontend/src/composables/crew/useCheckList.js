@@ -52,7 +52,7 @@ export default function useCheckList() {
 
         try {
             const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
-            checklists.value = data.value;
+            checkList.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.crw-crew-checklists.index" });
         } catch (error) {

@@ -4,31 +4,40 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function usePolicy() {
+export default function useCrewRequisition() {
     const router = useRouter();
-    const policies = ref([]);
+    const crewRequisitions = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const policy = ref( {
-        name: '',
-        type: '',
-        attachment: '',
+    const crewRequisition = ref( {
+        ops_vessel_id: '',
+        applied_date: '',
+        total_required_manpower: '',
+        remarks: '',
+        crwCrewRequisitionLines: [
+            {
+                crw_rank_id: '',
+                required_manpower: '',
+                remarks: '',
+            }
+        ]
     });
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getPolicies(page) {
+    async function getCrewRequisitions(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-policies',{
+            const {data, status} = await Api.get('/crw/crw-requisitions',{
                 params: {
                     page: page || 1,
                 },
             });
-            policies.value = data.value;
+            crewRequisition.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -39,16 +48,16 @@ export default function usePolicy() {
         }
     }
 
-    async function storePolicy(form) {
+    async function storeCrewRequisition(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-policies', form);
-            policy.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-requisitions', form);
+            crewRequisition.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.policies.index" });
+            await router.push({ name: "crw.crewRequisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -58,14 +67,14 @@ export default function usePolicy() {
         }
     }
 
-    async function showPolicy(policyId) {
+    async function showCrewRequisition(crewRequisitionId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-policies/${policyId}`);
-            policy.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-requisitions/${crewRequisitionId}`);
+            crewRequisition.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -76,19 +85,19 @@ export default function usePolicy() {
         }
     }
 
-    async function updatePolicy(form, policyId) {
+    async function updateCrewRequisition(form, crewRequisitionId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-policies/${policyId}`,
+                `/crw/crw-requisitions/${crewRequisitionId}`,
                 form
             );
-            policy.value = data.value;
+            crewRequisition.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.policies.index" });
+            await router.push({ name: "crw.crewRequisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -98,15 +107,15 @@ export default function usePolicy() {
         }
     }
 
-    async function deletePolicy(policyId) {
+    async function deleteCrewRequisition(crewRequisitionId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
+            const { data, status } = await Api.delete( `/crw/crw-requisitions/${crewRequisitionId}`);
             notification.showSuccess(status);
-            await getPolicies();
+            await getCrewRequisitions();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -117,13 +126,13 @@ export default function usePolicy() {
     }
 
     return {
-        policies,
-        policy,
-        getPolicies,
-        storePolicy,
-        showPolicy,
-        updatePolicy,
-        deletePolicy,
+        crewRequisitions,
+        crewRequisition,
+        getCrewRequisitions,
+        storeCrewRequisition,
+        showCrewRequisition,
+        updateCrewRequisition,
+        deleteCrewRequisition,
         isLoading,
         errors,
     };

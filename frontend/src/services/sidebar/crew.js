@@ -52,7 +52,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.vesselRequiredCrews.index',
                 label: 'Vessel Crew Manning',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -62,7 +62,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.crewRequisitions.index',
                 label: 'Crew Requisition',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -72,7 +72,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.recruitmentApprovals.index',
                 label: 'Recruitment Approval',
                 preIcon: '',
                 postIcon: icons.DownArrow,

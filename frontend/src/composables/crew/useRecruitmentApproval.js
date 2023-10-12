@@ -4,31 +4,48 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function usePolicy() {
+export default function useRecruitmentApproval() {
     const router = useRouter();
-    const policies = ref([]);
+    const recruitmentApprovals = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const policy = ref( {
-        name: '',
-        type: '',
-        attachment: '',
+    const recruitmentApproval = ref( {
+        applied_date: '',
+        page_title: '',
+        subject: '',
+        total_approved: '',
+        crew_agreed_to_join: '',
+        crew_selected: '',
+        crew_panel: '',
+        crew_rest: '',
+        body: '',
+        remarks: '',
+        crwRecruitmentApprovalLines: [
+            {
+                crw_rank_id: '',
+                candidate_name: '',
+                candidate_contact: '',
+                candidate_email: '',
+                remarks: '',
+            }
+        ]
     });
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getPolicies(page) {
+    async function getRecruitmentApprovals(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-policies',{
+            const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
                 params: {
                     page: page || 1,
                 },
             });
-            policies.value = data.value;
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -39,16 +56,16 @@ export default function usePolicy() {
         }
     }
 
-    async function storePolicy(form) {
+    async function storeRecruitmentApproval(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-policies', form);
-            policy.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.policies.index" });
+            await router.push({ name: "crw.recruitmentApprovals.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -58,14 +75,14 @@ export default function usePolicy() {
         }
     }
 
-    async function showPolicy(policyId) {
+    async function showRecruitmentApproval(recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-policies/${policyId}`);
-            policy.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -76,19 +93,19 @@ export default function usePolicy() {
         }
     }
 
-    async function updatePolicy(form, policyId) {
+    async function updateRecruitmentApproval(form, recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-policies/${policyId}`,
+                `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
                 form
             );
-            policy.value = data.value;
+            recruitmentApproval.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.policies.index" });
+            await router.push({ name: "crw.recruitmentApprovals.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -98,15 +115,15 @@ export default function usePolicy() {
         }
     }
 
-    async function deletePolicy(policyId) {
+    async function deleteRecruitmentApproval(recruitmentApprovalId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
+            const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
             notification.showSuccess(status);
-            await getPolicies();
+            await getRecruitmentApprovals();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -117,13 +134,13 @@ export default function usePolicy() {
     }
 
     return {
-        policies,
-        policy,
-        getPolicies,
-        storePolicy,
-        showPolicy,
-        updatePolicy,
-        deletePolicy,
+        recruitmentApprovals,
+        recruitmentApproval,
+        getRecruitmentApprovals,
+        storeRecruitmentApproval,
+        showRecruitmentApproval,
+        updateRecruitmentApproval,
+        deleteRecruitmentApproval,
         isLoading,
         errors,
     };

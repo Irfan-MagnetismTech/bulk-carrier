@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useCheckList from "../../../composables/crew/useCheckList";
+import useRecruitmentApproval from "../../../composables/crew/useRecruitmentApproval";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -16,9 +16,9 @@ const props = defineProps({
   },
 });
 
-const { checklists, getCheckLists, deleteCheckList, isLoading } = useCheckList();
+const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading } = useRecruitmentApproval();
 const { setTitle } = Title();
-setTitle('Onboard Check List');
+setTitle('Recruitment Approval');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -35,14 +35,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteCheckList(id);
+      deleteRecruitmentApproval(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-  getCheckLists(props.page)
+  getRecruitmentApprovals(props.page)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -62,8 +62,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Onboard Check List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.checklists.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Recruitment Approval List</h2>
+    <default-button :title="'Create Item'" :to="{ name: 'crw.recruitmentApprovals.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -82,37 +82,44 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Effective Date</th>
-            <th>Items</th>
+            <th>Applied Date</th>
+            <th>Page Title</th>
+            <th>Subject</th>
+            <th>Approved</th>
+            <th>Agreed to Join</th>
+            <th>Selected</th>
+            <th>Panel</th>
+            <th>Rest</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(chkList,index) in checklists" :key="index">
+          <tr v-for="(rcrApproval,index) in recruitmentApprovals" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ chkList?.effective_date }}</td>
-            <td style="text-align: left !important;">
-              <span v-for="(chkListLine,index) in chkList?.crwCrewChecklistLines" :key="index"
-                    class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                {{ chkListLine?.item_name }}
-              </span>
-            </td>
+            <td>{{ rcrApproval?.applied_date }}</td>
+            <td>{{ rcrApproval?.page_title }}</td>
+            <td>{{ rcrApproval?.subject }}</td>
+            <td>{{ rcrApproval?.total_approved }}</td>
+            <td>{{ rcrApproval?.crew_agreed_to_join }}</td>
+            <td>{{ rcrApproval?.crew_selected }}</td>
+            <td>{{ rcrApproval?.crew_panel }}</td>
+            <td>{{ rcrApproval?.crew_rest }}</td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.checklists.edit', params: { checkListId: chkList?.id } }"></action-button>
-              <action-button @click="confirmDelete(chkList?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
+              <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!checklists?.length">
+          <tfoot v-if="!recruitmentApprovals?.length">
           <tr v-if="isLoading">
-            <td colspan="4">Loading...</td>
+            <td colspan="10">Loading...</td>
           </tr>
-          <tr v-else-if="!checklists?.data?.length">
-            <td colspan="4">No checklist found.</td>
+          <tr v-else-if="!recruitmentApprovals?.data?.length">
+            <td colspan="10">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="checklists" to="crw.checklists.index" :page="page"></Paginate>
+    <Paginate :data="recruitmentApprovals" to="crw.crewRequisitions.index" :page="page"></Paginate>
   </div>
 </template>
