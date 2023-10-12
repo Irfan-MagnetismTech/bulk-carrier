@@ -151,4 +151,24 @@ class MntItemGroupController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Get Mnt Ship Department wise Item Groups
+     * @param $mntShipDepartmentId
+     * @return array of item groups
+     */
+    public function getMntShipDepartmentWiseItemGroups($mntShipDepartmentId)
+    {
+        
+        try {
+
+            $itemGroups = MntItemGroup::select('id','name','short_code')->where('mnt_ship_department_id', $mntShipDepartmentId)->get();
+            return response()->success('Item groups retrieved successfully', $itemGroups, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
