@@ -16,7 +16,6 @@ class MntItem extends Model
         'has_run_hour' => 'boolean',
     ];
     
-    public static $snakeAttributes = false;
 
     public function mntShipDepartment () : BelongsTo
     {
