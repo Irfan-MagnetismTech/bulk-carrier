@@ -38,7 +38,7 @@ class CrwCrewAssignmentController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'date_of_joining', 'port_of_joining', 'approx_duration', 'remarks');
+            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'date_of_joining', 'port_of_joining', 'approx_duration', 'remarks', 'business_unit');
             $crwCrewAssignment     = CrwCrewAssignment::create($crwCrewAssignmentData);
 
             return response()->success('Created Succesfully', $crwCrewAssignment, 201);
@@ -76,7 +76,7 @@ class CrwCrewAssignmentController extends Controller
     public function update(Request $request, CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'date_of_joining', 'port_of_joining', 'approx_duration', 'remarks');
+            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'date_of_joining', 'port_of_joining', 'approx_duration', 'remarks', 'business_unit');
             $crwCrewAssignment->update($crwCrewAssignmentData);
 
             return response()->success('Updated succesfully', $crwCrewAssignment, 202);

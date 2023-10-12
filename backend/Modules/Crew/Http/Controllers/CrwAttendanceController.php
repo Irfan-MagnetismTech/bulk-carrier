@@ -42,7 +42,7 @@ class CrwAttendanceController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
                 $crwAttendance     = CrwAttendance::create($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);
 
@@ -84,7 +84,7 @@ class CrwAttendanceController extends Controller
         try {
             DB::transaction(function () use ($request, $crwAttendance)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
                 $crwAttendance->update($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->delete();
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);

@@ -43,7 +43,7 @@ class CrwBankAccountController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'is_active');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'is_active', 'business_unit');
             $crwBankAccountData['benificiary_attachment'] = $this->fileUpload->handleFile($request->benificiary_attachment, 'crw/crew-bank-account');
 
             $crwBankAccount     = CrwBankAccount::create($crwBankAccountData);
@@ -83,7 +83,7 @@ class CrwBankAccountController extends Controller
     public function update(Request $request, CrwBankAccount $crwBankAccount)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'is_active');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'is_active', 'business_unit');
             $crwBankAccountData['benificiary_attachment'] = $this->fileUpload->handleFile($request->benificiary_attachment, 'crw/crew-bank-account', $crwBankAccount->benificiary_attachment);
 
             $crwBankAccount->update($crwBankAccountData);

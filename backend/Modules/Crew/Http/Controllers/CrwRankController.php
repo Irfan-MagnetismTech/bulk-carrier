@@ -38,7 +38,7 @@ class CrwRankController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwRankData = $request->only('name', 'short_name');
+            $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank     = CrwRank::create($crwRankData);
 
             return response()->success('Created Succesfully', $crwRank, 201);
@@ -76,7 +76,7 @@ class CrwRankController extends Controller
     public function update(Request $request, CrwRank $crwRank)
     {
         try {
-            $crwRankData = $request->only('name', 'short_name');
+            $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank->update($crwRankData);
 
             return response()->success('Updated succesfully', $crwRank, 202);

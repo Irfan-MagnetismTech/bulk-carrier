@@ -47,7 +47,7 @@ class CrwIncidentController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description');
+                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident');
 
                 $crwIncident     = CrwIncident::create($crwIncidentData);
@@ -91,7 +91,7 @@ class CrwIncidentController extends Controller
         try {
             DB::transaction(function () use ($request, $crwIncident)
             {
-                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description');
+                $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident', $crwIncident->attachment);
 
                 $crwIncident->update($crwIncidentData);
