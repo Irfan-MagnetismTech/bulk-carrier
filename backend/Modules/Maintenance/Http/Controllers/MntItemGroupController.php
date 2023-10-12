@@ -18,7 +18,7 @@ class MntItemGroupController extends Controller
     {
         try {
 
-            $itemGroups = MntItemGroup::select('*')->paginate(10);
+            $itemGroups = MntItemGroup::with('mntShipDepartment')->paginate(10);
 
             return response()->success('Item groups retrieved successfully', $itemGroups, 200);
             
@@ -68,7 +68,7 @@ class MntItemGroupController extends Controller
     {
         try {
             
-            $itemGroup = MntItemGroup::find($id);
+            $itemGroup = MntItemGroup::with('mntShipDepartment')->find($id);
             
             return response()->success('Item group found successfully', $itemGroup, 200);
             

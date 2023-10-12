@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {        
+    {
         //relational method name case changing issue fix
         (new ReflectionClass(Model::class))->getProperty('snakeAttributes')->setValue(null, false);
 
@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         HasMany::macro('createUpdateOrDelete', function (iterable $records) {
             /** @var HasMany */
             $hasMany = $this;
-          
+
             return (new CreateUpdateOrDelete($hasMany, $records))();
         });
     }

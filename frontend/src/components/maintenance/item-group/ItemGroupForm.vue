@@ -1,6 +1,12 @@
 <template>
     <!-- Basic information -->
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
+          <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+          <input type="hidden" v-model="form.mnt_ship_department_id">
+        <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+      </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" />
@@ -19,7 +25,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 
 const props = defineProps({
   form: {
@@ -29,13 +35,15 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
+watch(() => props.form.mnt_ship_department, (value) => {
+  props.form.mnt_ship_department_id = value?.id;
+});
+const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 
-// const { shipDepartments, getShipDepartments } = useShipDepartment();
 
-
-// onMounted(() => {
-//   getRoles();
-// });
+onMounted(() => {
+  getShipDepartmentsWithoutPagination();
+});
 
 </script>
 

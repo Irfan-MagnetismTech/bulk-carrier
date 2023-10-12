@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -62,8 +64,9 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Item List</h2>
     <div class="flex gap-2">
-      <default-button :title="'Add Item Group'" :to="{ name: 'maintenance.item-group.create' }"></default-button>
-      <default-button :title="'Add Item'" :to="{ name: 'maintenance.item.create' }"></default-button>
+      <!-- <default-button :title="'Add Item Group'" :to="{ name: 'maintenance.item-group.create' }"></default-button> -->
+      <!-- <default-button :title="'Add Item'" :to="{ name: 'maintenance.item.create' }"></default-button> -->
+      <default-button :title="'Create Item'" :to="{ name: 'maintenance.item.create' }" :icon="icons.AddIcon"></default-button>
     </div>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -93,8 +96,8 @@ onMounted(() => {
           <tbody>
           <tr v-for="(item,index) in items?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ item?.mnt_ship_department?.name }}</td>
-            <td>{{ item?.mnt_item_group?.name }}</td>
+            <td>{{ item?.mntShipDepartment?.name }}</td>
+            <td>{{ item?.mntItemGroup?.name }}</td>
             <td>{{ item?.item_code }}</td>
             <td>{{ item?.name }}</td>
             

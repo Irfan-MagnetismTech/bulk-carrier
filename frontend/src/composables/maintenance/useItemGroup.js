@@ -12,6 +12,8 @@ export default function useItemGroup() {
     const $loading = useLoading();
     const notification = useNotification();
     const itemGroup = ref( {
+        mnt_ship_department_id: '',
+        mnt_ship_department: '',
         name: '',
         short_code: '',
     });

@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -61,7 +63,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Item Group List</h2>
-    <default-button :title="'Create'" :to="{ name: 'maintenance.item-group.create' }"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.item-group.create' }"></default-button> -->
+    <default-button :title="'Create Item Group'" :to="{ name: 'maintenance.item-group.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -79,20 +82,22 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th>#</th>
-            <th class="w-1/4 md:w-64">Name</th>
-            <th class="w-64">Short Code</th>
-            <th class="w-68">Action</th>
+            <th class="w-1/12">#</th>
+            <th class="w-3/12">Ship Department</th>
+            <th class="w-4/12">Name</th>
+            <th class="w-2/12">Short Code</th>
+            <th class="w-2/12">Action</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(itemGroup,index) in itemGroups?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ itemGroup?.mntShipDepartment?.name }}</td>
             <td>{{ itemGroup?.name }}</td>
             <td>{{ itemGroup?.short_code }}</td>
             
             <td class="">
-              <div class="flex">
+              <div class="flex justify-center">
                 <action-button :action="'edit'" :to="{ name: 'maintenance.item-group.edit', params: { itemGroupId: itemGroup?.id } }"></action-button>
                 <action-button @click="confirmDelete(itemGroup?.id)" :action="'delete'"></action-button>
               </div>
@@ -101,10 +106,10 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!itemGroups?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="!itemGroups?.data?.length">
-            <td colspan="6">No item group found.</td>
+            <td colspan="5">No item group found.</td>
           </tr>
           </tfoot>
       </table>
