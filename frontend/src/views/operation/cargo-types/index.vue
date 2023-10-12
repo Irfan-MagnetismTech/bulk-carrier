@@ -27,7 +27,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this user!",
+    text: "You want to delete this data!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -63,7 +63,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Cargo Type List</h2>
-    <default-button :title="'Create User'" :to="{ name: 'operation.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Cargo Type'" :to="{ name: 'operation.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->

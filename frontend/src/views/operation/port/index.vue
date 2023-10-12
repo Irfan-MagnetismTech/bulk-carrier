@@ -27,7 +27,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this user!",
+    text: "You want to delete this data!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
