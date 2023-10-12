@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntItemGroupRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class MntItemGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'unique:mnt_item_groups'],
+            'name'  => ['required', Rule::unique('mnt_item_groups')->ignore($this->id)],
             'short_code' => 'required',
         ];
     }
