@@ -106,9 +106,7 @@ export default function usePort() {
 	}
 
 	async function deletePort(portId) {
-		if (!confirm('Are you sure you want to delete this port?')) {
-			return;
-		}
+		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;

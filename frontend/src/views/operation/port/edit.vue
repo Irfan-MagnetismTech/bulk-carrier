@@ -1,7 +1,7 @@
 <template>
-  <div class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2" v-once>
-      <span>Update Port:</span>
-      <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">#{{ portId }}</span>
+  <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Port</h2>
+    <default-button :title="'User List'" :to="{ name: 'operation.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <form @submit.prevent="updatePort(port, portId)">
@@ -15,9 +15,13 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import PortForm from '../../../components/operations/PortForm.vue';
+import PortForm from '../../../components/operations/configurations/PortForm.vue';
 import usePort from '../../../composables/operations/usePort';
 import Title from "../../../services/title";
+import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import useHeroIcon from "../../../assets/heroIcon";
+
+const icons = useHeroIcon();
 
 const route = useRoute();
 const portId = route.params.portId;
