@@ -125,4 +125,24 @@ export default [
         component: () => import(`../views/crew/recruitment-approval/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    /* Crew agencies Routes */
+    {
+        path: `/${BASE}/agencies`,
+        name: `${BASE}.agencies.index`,
+        component: () => import(`../views/crew/agency/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/agencies/create`,
+        name: `${BASE}.agencies.create`,
+        component: () => import(`../views/crew/agency/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/agencies/:agencyId/edit`,
+        name: `${BASE}.agencies.edit`,
+        component: () => import(`../views/crew/agency/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 ];

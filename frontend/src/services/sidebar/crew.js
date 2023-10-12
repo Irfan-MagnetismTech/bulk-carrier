@@ -82,7 +82,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: '',
                 label: 'Agencies',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -91,7 +91,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.agencies.index',
                         label: 'Agency List',
                         preIcon: '',
                         postIcon: icons.DownArrow,

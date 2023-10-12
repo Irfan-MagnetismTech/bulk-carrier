@@ -4,29 +4,30 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useRecruitmentApproval() {
+export default function useAgency() {
     const router = useRouter();
-    const recruitmentApprovals = ref([]);
+    const agencies = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const recruitmentApproval = ref( {
-        applied_date: '',
-        page_title: '',
-        subject: '',
-        total_approved: '',
-        crew_agreed_to_join: '',
-        crew_selected: '',
-        crew_panel: '',
-        crew_rest: '',
-        body: '',
-        remarks: '',
-        crwRecruitmentApprovalLines: [
+    const agency = ref( {
+        name: '',
+        legal_name: '',
+        tax_identification: '',
+        business_license_no: '',
+        company_reg_no: '',
+        address: '',
+        phone: '',
+        email: '',
+        website: '',
+        logo: '',
+        country: '',
+        crwAgencyContactPeople: [
             {
-                crw_rank_id: '',
-                candidate_name: '',
-                candidate_contact: '',
-                candidate_email: '',
-                remarks: '',
+                name: '',
+                contact_no: '',
+                email: '',
+                position: '',
+                purpose: '',
             }
         ]
     });
@@ -34,18 +35,18 @@ export default function useRecruitmentApproval() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRecruitmentApprovals(page) {
+    async function getAgencies(page) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
+            const {data, status} = await Api.get('/crw/crw-agencies',{
                 params: {
                     page: page || 1,
                 },
             });
-            recruitmentApprovals.value = data.value;
+            agencies.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -56,16 +57,16 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function storeRecruitmentApproval(form) {
+    async function storeAgency(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
-            recruitmentApproval.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-agencies', form);
+            agency.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
+            await router.push({ name: "crw.agencies.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -75,14 +76,14 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function showRecruitmentApproval(recruitmentApprovalId) {
+    async function showAgency(agencyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
-            recruitmentApproval.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-agencies/${agencyId}`);
+            agency.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -93,19 +94,19 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function updateRecruitmentApproval(form, recruitmentApprovalId) {
+    async function updateAgency(form, agencyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
+                `/crw/crw-agencies/${agencyId}`,
                 form
             );
-            recruitmentApproval.value = data.value;
+            agency.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
+            await router.push({ name: "crw.agencies.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -115,15 +116,15 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function deleteRecruitmentApproval(recruitmentApprovalId) {
+    async function deleteAgency(agencyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
+            const { data, status } = await Api.delete( `/crw/crw-agencies/${agencyId}`);
             notification.showSuccess(status);
-            await getRecruitmentApprovals();
+            await getAgencies();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -134,13 +135,13 @@ export default function useRecruitmentApproval() {
     }
 
     return {
-        recruitmentApprovals,
-        recruitmentApproval,
-        getRecruitmentApprovals,
-        storeRecruitmentApproval,
-        showRecruitmentApproval,
-        updateRecruitmentApproval,
-        deleteRecruitmentApproval,
+        agencies,
+        agency,
+        getAgencies,
+        storeAgency,
+        showAgency,
+        updateAgency,
+        deleteAgency,
         isLoading,
         errors,
     };
