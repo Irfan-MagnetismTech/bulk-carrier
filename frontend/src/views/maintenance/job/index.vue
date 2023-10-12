@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -61,7 +63,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Job List</h2>
-    <default-button :title="'Add Job'" :to="{ name: 'maintenance.job.create' }"></default-button>
+    <!-- <default-button :title="'Add Job'" :to="{ name: 'maintenance.job.create' }"></default-button> -->
+    <default-button :title="'Add Job'" :to="{ name: 'maintenance.job.create' }" :icon="icons.AddIcon"></default-button>
     
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -91,9 +94,9 @@ onMounted(() => {
           <tbody>
           <tr v-for="(job,index) in jobs?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ job?.ops_vessel?.name }}</td>
-            <td>{{ job?.mnt_ship_department?.name }}</td>
-            <td>{{ job?.mnt_item?.name }}</td>
+            <td>{{ job?.opsVessel?.name }}</td>
+            <td>{{ job?.mntShipDepartment?.name }}</td>
+            <td>{{ job?.mntItem?.name }}</td>
             
             <td class="">
               <div class="flex justify-center">

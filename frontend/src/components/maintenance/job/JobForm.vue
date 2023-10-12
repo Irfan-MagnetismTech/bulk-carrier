@@ -47,7 +47,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(job_line, index) in form.mnt_job_lines" :key="index">
+                <tr v-for="(job_line, index) in form.mntJobLines" :key="index">
                   <td><input class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="job_line.job_description" placeholder="Job Description" /></td>
 
                   <td>
@@ -73,7 +73,7 @@
                 </svg>
                 
                 </button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index!=0" @click="removeJob(index)" >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
                 </button></td>
@@ -104,13 +104,13 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const jobCycleUnits = ref(['Hrs', 'Weeks', 'Months', 'Years']);
+const jobCycleUnits = ref(['Hours', 'Weeks', 'Months', 'Years']);
 
 function addJob() {
-  props.form.mnt_job_lines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
+  props.form.mntJobLines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' });
 }
 function removeJob(index) {
-  props.form.mnt_job_lines.splice(index, 1);
+  props.form.mntJobLines.splice(index, 1);
 }
 
 function fetchShipDepartmentWiseItems()
