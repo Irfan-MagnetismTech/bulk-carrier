@@ -19,7 +19,9 @@ class CrwAgencyController extends Controller
     public function index()
     {
         try {
-            $crwAgencies = CrwAgency::with('crwAgencyContactPeople')->get();
+            $crwAgencies = CrwAgency::with('crwAgencyContactPeople')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwAgencies, 200);
         }

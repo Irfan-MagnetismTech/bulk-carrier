@@ -18,7 +18,9 @@ class CrwAgencyBillController extends Controller
     public function index()
     {
         try {
-            $crwAgencyBills = CrwAgencyBill::with('crwAgencyBillLines')->get();
+            $crwAgencyBills = CrwAgencyBill::with('crwAgencyBillLines')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwAgencyBills, 200);
         }

@@ -17,7 +17,9 @@ class CrwCrewRankController extends Controller
     public function index()
     {
         try {
-            $crwCrewRanks = CrwCrewRank::all();
+            $crwCrewRanks = CrwCrewRank::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
         }

@@ -23,7 +23,9 @@ class CrwCrewProfileController extends Controller
     public function index()
     {
         try {
-            $crwCrewProfiles = CrwCrewProfile::with('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees')->get();
+            $crwCrewProfiles = CrwCrewProfile::with('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
         }

@@ -18,7 +18,9 @@ class CrwCrewChecklistController extends Controller
     public function index()
     {
         try {
-            $crwCrewChecklists = CrwCrewChecklist::with('crwCrewChecklistLines')->get();
+            $crwCrewChecklists = CrwCrewChecklist::with('crwCrewChecklistLines')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewChecklists, 200);
         }

@@ -22,7 +22,9 @@ class CrwBankAccountController extends Controller
     public function index()
     {
         try {
-            $crwBankAccounts = CrwBankAccount::all();
+            $crwBankAccounts = CrwBankAccount::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
         }

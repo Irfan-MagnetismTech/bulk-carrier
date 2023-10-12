@@ -24,7 +24,9 @@ class CrwIncidentController extends Controller
     public function index()
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->get();
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwIncidents, 200);
         }
