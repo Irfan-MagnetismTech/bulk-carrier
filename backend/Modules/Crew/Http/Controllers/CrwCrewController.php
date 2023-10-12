@@ -38,7 +38,7 @@ class CrwCrewController extends Controller
     public function store(Request $request)
     {
         try {
-            $crwCrewData = $request->only('crw_crew_profile_id', 'crw_rank_id', 'name', 'email', 'contact');
+            $crwCrewData = $request->only('crw_crew_profile_id', 'crw_rank_id', 'name', 'email', 'contact', 'business_unit');
             $crwCrew     = CrwCrew::create($crwCrewData);
 
             return response()->success('Created Succesfully', $crwCrew, 201);
@@ -76,7 +76,7 @@ class CrwCrewController extends Controller
     public function update(Request $request, CrwCrew $crwCrew)
     {
         try {
-            $crwCrewData = $request->only('crw_crew_profile_id', 'crw_rank_id', 'name', 'email', 'contact');
+            $crwCrewData = $request->only('crw_crew_profile_id', 'crw_rank_id', 'name', 'email', 'contact', 'business_unit');
             $crwCrew->update($crwCrewData);
 
             return response()->success('Updated succesfully', $crwCrew, 202);

@@ -42,7 +42,7 @@ class CrwAgencyController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country');
+                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit');
                 $crwAgency     = CrwAgency::create($crwAgencyData);
                 $crwAgency->crwAgencyContactPeople()->createMany($request->crwAgencyContactPeople);
 
@@ -84,7 +84,7 @@ class CrwAgencyController extends Controller
         try {
             DB::transaction(function () use ($request, $crwAgency)
             {
-                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country');
+                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit');
                 $crwAgency->update($crwAgencyData);
                 $crwAgency->crwAgencyContactPeople()->delete();
                 $crwAgency->crwAgencyContactPeople()->createMany($request->crwAgencyContactPeople);

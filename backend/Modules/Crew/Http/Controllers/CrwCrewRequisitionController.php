@@ -31,7 +31,7 @@ class CrwCrewRequisitionController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks');
+                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
@@ -61,7 +61,7 @@ class CrwCrewRequisitionController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewRequisition)
             {
-                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks');
+                $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
                 $crwCrewRequisition->update($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->delete();
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
