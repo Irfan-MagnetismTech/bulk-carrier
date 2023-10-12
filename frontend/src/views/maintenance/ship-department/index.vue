@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -61,7 +63,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Ship Department List</h2>
-    <default-button :title="'Create'" :to="{ name: 'maintenance.ship-department.create' }"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.ship-department.create' }"></default-button> -->
+    <default-button :title="'Create Ship Department'" :to="{ name: 'maintenance.ship-department.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
