@@ -2,7 +2,7 @@
   <div id="login_page_body" class="flex items-center justify-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
     <div class="overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800 w-full md:w-1/3" style="z-index: 999;">
       <div class="flex items-center justify-center">
-        <img aria-hidden="true" class="object-cover align-middle py-4 w-2/4" src="/tsll-logo.gif" alt="Toggi Shipping & Logistics Limited">
+        <img aria-hidden="true" class="object-cover align-middle py-4 w-2/4" src="/torony-small-logo.png" alt="Torony">
       </div>
       <div class="flex flex-col overflow-y-auto md:flex-row">
         <div class="flex items-center justify-center p-6 sm:p-8 w-full">
