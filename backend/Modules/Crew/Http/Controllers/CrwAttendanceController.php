@@ -19,7 +19,9 @@ class CrwAttendanceController extends Controller
     public function index()
     {
         try {
-            $crwAttendances = CrwAttendance::with('crwAttendanceLines')->get();
+            $crwAttendances = CrwAttendance::with('crwAttendanceLines')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwAttendances, 200);
         }

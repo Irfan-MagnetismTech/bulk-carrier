@@ -14,7 +14,9 @@ class CrwCrewRequisitionController extends Controller
     public function index()
     {
         try {
-            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines')->get();
+            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewRequisitions, 200);
         }

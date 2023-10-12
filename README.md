@@ -1,8 +1,15 @@
-# bulk-carrier-erp
+# Bulk Carrier ERP
 
 Bulk carrier ERP is a web application for managing bulk carrier shipping business.
 It is a complete solution for managing all the business processes of a bulk carrier shipping company.
 It is a web application that can be accessed from anywhere in the world.
+
+### Business Units
+
+Business Unit should be `enum` data type.
+
+-   TSLL
+-   PSML
 
 ### Project Environment
 
@@ -170,16 +177,19 @@ Project Repository
 
 -   Developers should comment on necessary code points. Every function should have a definition of parameters and return value. Comment out the example of return values where a function is called so that another developer will understand without going to the definition source.
 -   Resource functions should return responses in the following format: message, value, response_code
+
     -   For success:
 
         ```php
         return response()->success('Unit created successfully, $scm_unit, 200);
         ```
+
     -   For error:
-    
+
         ```php
         return response()->error($e->getMessage(), 500);
         ```
+
 -   File upload service:
 
     ```php
@@ -223,9 +233,31 @@ Project Repository
     -   SCM - Supply Chain
 -   All types of issues will be fixed in the Module Branch via a new Branch.
 -   If any table is using short form then add a table description in a comment. i.e.: Comparative Statement as cs
+
     ```php
     $table->comment('cs means Comparative Statement');
     ```
+
+-   Add comment to address necessary information against a particular column name
+
+    ```php
+    $table->string('mmr_no')->comment('Material received number');
+    ```
+
+-   Response status codes and messages
+
+    -   200 => 'Data retrieved successfully.',
+    -   201 => 'Data created successfully.',
+    -   202 => 'Data updated successfully.',
+    -   204 => 'Data deleted successfully.'
+    -   404 => "Api is not found.",
+    -   422 => 'Credential error.',
+    -   401 => 'Unauthorized, request is not valid.'
+    -   500 => 'Internal server error.'
+
+-   For PDF, used Laravel Mpdf package.
+    
+    [Laravel Mpdf: Generate PDF](https://github.com/mccarlosen/laravel-mpdf)
 
 ## Authors
 

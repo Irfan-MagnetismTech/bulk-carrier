@@ -17,7 +17,9 @@ class CrwCrewController extends Controller
     public function index()
     {
         try {
-            $crwCrews = CrwCrew::all();
+            $crwCrews = CrwCrew::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrews, 200);
         }
