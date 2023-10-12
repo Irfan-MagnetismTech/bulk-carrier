@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Port</h2>
-    <default-button :title="'Port List'" :to="{ name: 'operation.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
+    <default-button :title="'Port List'" :to="{ name: 'ops.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <form @submit.prevent="updatePort(port, portId)">

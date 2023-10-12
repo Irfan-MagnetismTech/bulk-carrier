@@ -7,8 +7,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
-import usePort from '../../../composables/operations/usePort';
-const { ports, getPorts, deletePort, isLoading } = usePort();
+import useCustomer from '../../../composables/operations/useCustomer';
+const { customers, getCustomers, deleteCustomer, isLoading } = useCustomer();
 
 const props = defineProps({
   page: {
@@ -18,7 +18,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Port List');
+setTitle('Customer List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -35,14 +35,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deletePort(id);
+        deleteCustomer(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-    getPorts(props.page)
+    getCustomers(props.page)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -62,8 +62,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Port List</h2>
-    <default-button :title="'Create Port'" :to="{ name: 'ops.configurations.ports.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Customer List</h2>
+    <default-button :title="'Create Customer'" :to="{ name: 'ops.configurations.customers.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -82,34 +82,40 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Code</th>
-            <th>Name</th>
+            <th>Customer Code</th>
+            <th>Customer Name</th>
+            <th>Legal Name</th>
+            <th>Phone</th>
+            <th>Email</th>
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody v-if="ports?.data?.length">
-              <tr v-for="(port, index) in ports.data" :key="port?.id">
-                  <td>{{ ports.from + index }}</td>
-                  <td>{{ port?.code }}</td>
-                  <td>{{ port?.name }}</td>
+          <tbody v-if="customers?.data?.length">
+              <tr v-for="(customer, index) in customers.data" :key="customer?.id">
+                  <td>{{ customers.from + index }}</td>
+                  <td>{{ customer?.code }}</td>
+                  <td>{{ customer?.name }}</td>
+                  <td>{{ customer?.legal_name }}</td>
+                  <td>{{ customer?.phone }}</td>
+                  <td>{{ customer?.email_general }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.ports.edit', params: { portId: port.id } }"></action-button>
-                      <action-button @click="confirmDelete(port.id)" :action="'delete'"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>
+                      <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
           </tbody>
           
-          <tfoot v-if="!ports?.length">
+          <tfoot v-if="!customers?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
-          <tr v-else-if="!ports?.data?.length">
+          <tr v-else-if="!customers?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="ports" to="ops.configurations.ports.index" :page="page"></Paginate>
+    <Paginate :data="customers" to="ops.configurations.customers.index" :page="page"></Paginate>
   </div>
 </template>

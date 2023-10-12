@@ -63,7 +63,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Cargo Type List</h2>
-    <default-button :title="'Create Cargo Type'" :to="{ name: 'operation.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Cargo Type'" :to="{ name: 'ops.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -93,7 +93,7 @@ onMounted(() => {
                   <td>{{ cargoType?.cargo_type }}</td>
                   <td>{{ cargoType?.description }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'operation.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
                       <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
@@ -110,6 +110,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="cargoTypes" to="operation.configurations.cargo-types.index" :page="page"></Paginate>
+    <Paginate :data="cargoTypes" to="ops.configurations.cargo-types.index" :page="page"></Paginate>
   </div>
 </template>
