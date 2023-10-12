@@ -15,6 +15,7 @@ class MntItem extends Model
     protected $casts = [
         'has_run_hour' => 'boolean',
     ];
+    
 
     public function mntShipDepartment () : BelongsTo
     {
