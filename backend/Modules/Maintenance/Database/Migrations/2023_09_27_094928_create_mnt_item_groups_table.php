@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('mnt_item_groups', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('mnt_ship_department_id');
+            $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
             $table->string('name', 255)->unique();
             $table->string('short_code', 255)->unique();
             $table->timestamps();
