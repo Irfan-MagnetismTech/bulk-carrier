@@ -22,7 +22,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'operation.configurations.ports.index',
+                        route: 'ops.configurations.ports.index',
                         label: 'Ports',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -31,28 +31,28 @@ export default [
                         permissionKey: '',
                         subSubMenu: []
                     },
+                    {
+                        route: 'ops.configurations.cargo-types.index',
+                        label: 'Cargo Types',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
+                    {
+                        route: 'ops.configurations.customers.index',
+                        label: 'Customers',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
                     // {
-                    //     route: 'operation.configurations.cargo-types.index',
-                    //     label: 'Cargo Types',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
-                    // {
-                    //     route: 'operation.configurations.cargo-tariffs.index',
-                    //     label: 'Cargo Tariffs',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
-                    // {
-                    //     route: 'operation.configurations.customers.index',
+                    //     route: 'ops.configurations.customers.index',
                     //     label: 'Customers',
                     //     preIcon: '',
                     //     postIcon: icons.DownArrow,

@@ -52,7 +52,7 @@ export default function usePort() {
 			const { data, status } = await Api.post('/ops/ports', form);
 			port.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'operation.configurations.ports.index' });
+			router.push({ name: 'ops.configurations.ports.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -94,7 +94,7 @@ export default function usePort() {
 			);
 			port.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'operation.configurations.ports.index' });
+			router.push({ name: 'ops.configurations.ports.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -106,9 +106,7 @@ export default function usePort() {
 	}
 
 	async function deletePort(portId) {
-		if (!confirm('Are you sure you want to delete this port?')) {
-			return;
-		}
+		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
