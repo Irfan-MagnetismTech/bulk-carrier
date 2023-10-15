@@ -26,7 +26,7 @@ class OpsVesselRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->vessel)],
+            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
             'vessel_type'     => ['required', 'string', 'max:255'],
             'short_code'      => ['required','string', 'max:50', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->vessel)],
