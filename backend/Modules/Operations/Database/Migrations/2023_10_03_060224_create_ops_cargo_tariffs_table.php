@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('loading_point');
             $table->string('unloading_point');
             $table->string('currency');
-            $table->tinyInteger('status');
+            $table->enum('status',['Active','Inactive']);
             $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();            
             $table->timestamps();
         });

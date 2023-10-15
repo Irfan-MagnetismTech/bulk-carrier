@@ -20,7 +20,7 @@ class OpsCargoTariffRequest extends FormRequest
             'unloading_point'   => ['required', 'string', 'max:255'],
             'ops_cargo_type_id' => ['required', 'number', 'max:255'],
             'currency'          => ['required', 'string', 'max:255'],
-            'status'            => ['required', 'enum', 'max:5'],
+            'status'            => ['required', 'enum', 'max:10'],
             'business_unit'     => ['required', 'string', 'max:255'],
         ];
     }

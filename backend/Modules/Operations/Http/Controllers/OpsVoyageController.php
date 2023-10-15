@@ -158,9 +158,15 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageName(){
+    public function getVoyageByName(Request $request){
         try {
-            $voyages = OpsVoyage::all();
+            $voyages = OpsVoyage::query()
+            ->where(function ($query) use($request) {
+                $query->where('route', 'like', '%' . $request->route . '%');                
+            })
+            ->limit(10)
+            ->get();
+
             return response()->success('Successfully retrieved voyages name.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);

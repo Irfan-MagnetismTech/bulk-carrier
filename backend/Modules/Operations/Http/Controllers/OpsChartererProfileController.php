@@ -142,10 +142,16 @@ class OpsChartererProfileController extends Controller
          }
      }
  
-     public function getCargoTariffName(){
+     public function getChartererProfileByNameorCode(Request $request){
          try {
-             $charterer_profiles = OpsChartererProfile::all();
-             return response()->success('Successfully retrieved charterer profile name.', collect($charterer_profiles->pluck('name'))->unique()->values()->all(), 200);
+             $charterer_profiles = OpsChartererProfile::query()
+             ->where(function ($query) use($request) {
+                 $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                 $query->orWhere('owner_code', 'like', '%' . $request->name_or_code . '%');
+             })
+             ->limit(10)
+             ->get();
+             return response()->success('Successfully retrieved charterer profile name.', $charterer_profiles, 200);
          } catch (QueryException $e){
              return response()->error($e->getMessage(), 500);
          }
