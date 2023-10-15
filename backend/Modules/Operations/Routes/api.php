@@ -67,10 +67,14 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
     //end for without pagination
 
+    // start for search api route
+    Route::get('search-ports', [OpsPortController::class, 'getPortByNameOrCode']);
+    Route::get('search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeByName']);
+    Route::get('search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffByName']);
+    Route::get('search-vessels', [OpsVesselController::class, 'getVesselByName']);
+    Route::get('search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationByName']);
+    
+    // end for search api route
 
-    Route::get('get/ports/nameOrcode', [OpsPortController::class, 'getPortByNameOrCode']);
-    Route::get('get/cargo-types/name', [OpsCargoTypeController::class, 'getCargoTypeByName']);
-    Route::get('get/cargo-tariffs/name', [OpsCargoTariffController::class, 'getCargoTariffByName']);
-    Route::get('get/vessels/name', [OpsVesselController::class, 'getVesselName']);
 });
 Route::post('vessel-search', [OpsVesselController::class, 'search']);
