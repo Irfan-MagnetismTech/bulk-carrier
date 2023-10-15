@@ -68,9 +68,9 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     //end for without pagination
 
 
-    Route::get('get/ports/nameOrcode', [OpsPortController::class, 'getPortByNameOrCode']);
-    Route::get('get/cargo-types/name', [OpsCargoTypeController::class, 'getCargoTypeByName']);
-    Route::get('get/cargo-tariffs/name', [OpsCargoTariffController::class, 'getCargoTariffByName']);
-    Route::get('get/vessels/name', [OpsVesselController::class, 'getVesselByName']);
+    Route::get('search-ports', [OpsPortController::class, 'getPortByNameOrCode']);
+    Route::get('search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeByName']);
+    Route::get('search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffByName']);
+    Route::get('search-vessels', [OpsVesselController::class, 'getVesselByName']);
 });
 Route::post('vessel-search', [OpsVesselController::class, 'search']);
