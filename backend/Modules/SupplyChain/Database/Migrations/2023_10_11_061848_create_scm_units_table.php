@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('scm_units', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+            $table->string('name')->unique();
+            $table->string('short_code')->unique()->nullable();
+            $table->softDeletes();  
             $table->timestamps();
         });
     }

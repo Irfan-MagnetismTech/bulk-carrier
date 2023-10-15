@@ -10,5 +10,7 @@ class ScmUnit extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'name', 'short_code'
+    ];
 }

@@ -4,6 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsPortController;
 use Modules\Operations\Http\Controllers\OpsVesselController;
+use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
+use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
+use Modules\Operations\Http\Controllers\OpsVesselParticularController;
+use Modules\Operations\Http\Controllers\OpsCargoTypeController;
+use Modules\Operations\Http\Controllers\OpsCargoTariffController;
+use Modules\Operations\Http\Controllers\OpsCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +23,15 @@ use Modules\Operations\Http\Controllers\OpsVesselController;
 */
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    // return $request->user();    
     Route::resources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
+        'maritime-certifications' => OpsMaritimeCertificationController::class,
+        'vessel-certificates' => OpsVesselCertificateController::class,
+        'vessel-particulars' => OpsVesselParticularController::class,
+        'cargo-types' => OpsCargoTypeController::class,
+        'cargo-tariffs' => OpsCargoTariffController::class,
+        'customers' => OpsCustomerController::class,
     ]);
 });
 Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
