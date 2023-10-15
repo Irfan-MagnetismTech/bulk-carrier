@@ -22,7 +22,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.vesselParticulars.index',
                 label: 'Vessel Particulars',
                 preIcon: '',
                 postIcon: icons.DownArrow,

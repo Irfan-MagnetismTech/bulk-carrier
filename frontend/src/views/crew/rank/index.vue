@@ -120,7 +120,7 @@ onMounted(() => {
             <td colspan="4">Loading...</td>
           </tr>
           <tr v-else-if="!ranks?.data?.data?.length">
-            <td colspan="4">No rank found.</td>
+            <td colspan="4">No data found.</td>
           </tr>
           </tfoot>
       </table>
