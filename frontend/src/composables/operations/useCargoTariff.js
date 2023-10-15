@@ -11,6 +11,22 @@ export default function useCargoTariff() {
 	const cargoTariffs = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
+	const cargoTariffLineObject = {
+		particular: '',
+		unit: '',
+		jan: '',
+		feb: '',
+		mar: '',
+		apr: '',
+		may: '',
+		jun: '',
+		jul: '',
+		aug: '',
+		sep: '',
+		oct: '',
+		nov: '',
+		dec: '',
+	};
 	const cargoTariff = ref({
 		tariff_name: '',
 		ops_vessel_id: '',
@@ -18,7 +34,10 @@ export default function useCargoTariff() {
 		unloading_point: '',
 		ops_cargo_type_id: '',
 		currency: '',
-		status: ''
+		status: '',
+		opsCargoTariffLines: [
+			{ ...cargoTariffLineObject }
+		]
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -154,6 +173,7 @@ export default function useCargoTariff() {
 	}
 
 	return {
+		cargoTariffLineObject,
 		cargoTariffs,
 		cargoTariff,
 		getCargoTariffs,

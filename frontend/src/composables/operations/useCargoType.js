@@ -130,8 +130,8 @@ export default function useCargoType() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/cargo-types/${searchParam}`);
-			cargoType.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-cargo-types?cargo_type=${searchParam}`);
+			cargoTypes.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
