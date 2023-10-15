@@ -144,7 +144,7 @@ class OpsCargoTariffController extends Controller
     
     public function getCargoTariffName(){
         try {
-            $cargo_tariffs = OpsCargoTariff::with('opsCargoTariffLines')->latest()->paginate(15);
+            $cargo_tariffs = OpsCargoTariff::with('opsCargoTariffLines')->latest()->get();
             return response()->success('Successfully retrieved cargo tariffs name.', collect($cargo_tariffs->pluck('tariff_name'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);

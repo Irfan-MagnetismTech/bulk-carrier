@@ -148,7 +148,7 @@ class OpsChartererContractController extends Controller
        }
    }
 
-   public function getChartererContractType(){
+   public function getChartererContractWithoutPaginate(){
        try {
            $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();
            return response()->success('Successfully retrieved charterer contracts contract type.', collect($charterer_contracts->pluck('contract_type'))->unique()->values()->all(), 200);
