@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useUnit() {
     const router = useRouter();
@@ -15,18 +16,38 @@ export default function useUnit() {
         short_code: '',
     });
 
-    const errors = ref('');
+    const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getUnits() {
+    function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this rank!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteUnit(id);
+          }
+        })
+      }
+
+    async function getUnits(page) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/scm/units');
+            const {data, status} = await Api.get('/scm/units',{
+                params: {
+                    page: page || 1,
+                },
+            });
             units.value = data.value;
-            console.log(units);
+            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -104,6 +125,7 @@ export default function useUnit() {
 
         try {
             const { data, status } = await Api.delete( `/scm/units/${unitId}`);
+            console.log(status);
             notification.showSuccess(status);
             await getUnits();
         } catch (error) {
@@ -145,5 +167,6 @@ export default function useUnit() {
         deleteUnit,
         isLoading,
         errors,
+        confirmDelete,
     };
 }

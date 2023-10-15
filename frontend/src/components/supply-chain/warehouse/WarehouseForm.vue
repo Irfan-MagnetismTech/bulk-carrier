@@ -2,6 +2,7 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
+    import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     
     const props = defineProps({
         warehouse: { type: Object, required: true },
@@ -22,6 +23,7 @@
     const store_category = ['Warehouse', 'Tank']
 </script>
 <template>
+    <business-unit-input v-model="warehouse.business_unit"></business-unit-input>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
         <legend>
             <div class="input-group">

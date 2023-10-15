@@ -15,6 +15,7 @@ export default function useOpeningStock() {
         date: '',
         scm_warehouse_name: '',
         scm_warehouse_id: '',
+        business_unit: '',
         materials: [
             {
                 material_id: '',

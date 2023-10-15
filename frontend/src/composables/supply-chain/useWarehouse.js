@@ -16,6 +16,7 @@ export default function useWarehouse() {
         name: '',
         address: '',
         short_code: '',
+        business_unit: '',
         warehouse_contact_person: {
             name: '',
             designation: '',
