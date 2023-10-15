@@ -131,10 +131,15 @@ class OpsMaritimeCertificationController extends Controller
     }
 
     
-    public function getMaritimeCertificationName(){
+    public function getMaritimeCertificationByName(Request $request){
         try {
-            $maritime_certifications = OpsMaritimeCertification::all();
-            return response()->success('Successfully retrieved maritime certifications name.', collect($maritime_certifications->pluck('name'))->unique()->values()->all(), 200);
+            $maritime_certifications = OpsMaritimeCertification::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->limit(10)
+            ->get();
+            return response()->success('Successfully retrieved maritime certifications name.', $maritime_certifications, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
