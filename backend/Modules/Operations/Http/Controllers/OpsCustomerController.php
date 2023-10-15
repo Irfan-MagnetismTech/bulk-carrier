@@ -126,7 +126,7 @@ class OpsCustomerController extends Controller
         }
     }
 
-    public function getCustomerByName(Request $request){
+    public function getCustomerByNameorCode(Request $request){
         try {
             $customers = OpsCustomer::query()
             ->where(function ($query) use($request) {
