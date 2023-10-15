@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsPort;
 use Modules\Operations\Http\Requests\OpsPortRequest;
-
+use Illuminate\Support\Facades\DB;
 
 class OpsPortController extends Controller
 {
@@ -51,7 +51,7 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->error($e->getMessage(), 500);
         }
 
     }
@@ -67,25 +67,27 @@ class OpsPortController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $ports = OpsPort::create($request->all());
-
+            DB::commit();            
             return response()->json([
-                'value' => $ports,
-                'message' => 'Port added Successfully.'
+                'message' => 'Port added Successfully.',
+                'value' => $ports
             ], 201);
         }
         catch (QueryException $e)
         {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
         }
     }
 
 
     /**
-     * Display the specified resource.
+     * Display the specified port.
      *
      * @param  OpsPort  $port
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show(OpsPort $port): JsonResponse
     {
@@ -106,14 +108,15 @@ class OpsPortController extends Controller
      *
      * @param  OpsPortRequest  $request
      * @param  OpsPort  $port
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(OpsPortRequest $request, OpsPort $port): JsonResponse
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $port->update($request->all());
-
+            DB::commit();            
             return response()->json([
                 'value' => $port,
                 'message' => 'Port updated Successfully.'
@@ -121,8 +124,8 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
-            // return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 

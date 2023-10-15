@@ -28,10 +28,10 @@ class OpsVesselRequest extends FormRequest
     {
         // dd($this);
         return [
-            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->vessel)],
+            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
             'vessel_type'     => ['required', 'string', 'max:255'],
-            'short_code'      => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->vessel)],
-            'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->vessel)],
+            'short_code'      => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
+            'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
             'owner_name'      => ['required', 'string', 'max:255'],
             'manager'         => ['required', 'string', 'max:255'],
             'classification'  => ['required', 'alpha', 'max:50'],

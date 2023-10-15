@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import administration from "./administration";
 import operations from "./operations";
 import supplyChain from "./supply-chain";
+import crew from "./crew";git 
 
 const router = createRouter({
 
@@ -28,6 +29,7 @@ const router = createRouter({
                 ...administration,
                 ...operations,
                 ...supplyChain,
+                ...crew,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },
