@@ -5,28 +5,28 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 
-export default function useUnit() {
+export default function useService() {
     const router = useRouter();
-    const units = ref([]);
+    const services = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const unit = ref( {
+    const service = ref( {
         name: '',
         short_code: '',
+        description: ''
     });
 
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getUnits() {
+    async function getServices() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/scm/units');
-            units.value = data.value;
-            console.log(units);
+            const {data, status} = await Api.get('/scm/Service');
+            services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -38,17 +38,17 @@ export default function useUnit() {
         }
     }
 
-    async function storeUnit(form) {
+    async function storeService(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/units', form);
-            unit.value = data.value;
+            const { data, status } = await Api.post('/scm/services', form);
+            service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.unit.index" });
-        } catch (error) { 
+            router.push({ name: "supply-chain.service.index" });
+        } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
@@ -57,14 +57,14 @@ export default function useUnit() {
         }
     }
 
-    async function showUnit(unitId) {
+    async function showService(serviceId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/units/${unitId}`);
-            unit.value = data.value;
+            const { data, status } = await Api.get(`/scm/services/${vendorId}`);
+            service.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -75,19 +75,19 @@ export default function useUnit() {
         }
     }
 
-    async function updateUnit(form, unitId) {
+    async function updateService(form, serviceId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/units/${unitId}`,
+                `/scm/services/${serviceId}`,
                 form
             );
-            unit.value = data.value;
+            service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.unit.index" });
+            router.push({ name: "supply-chain.service.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,15 +97,19 @@ export default function useUnit() {
         }
     }
 
-    async function deleteUnit(unitId) {
+    async function deleteService(serviceId) {
+
+        if (!confirm('Are you sure you want to delete this service?')) {
+            return;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/units/${unitId}`);
+            const { data, status } = await Api.delete( `/scm/services/${serviceId}`);
             notification.showSuccess(status);
-            await getUnits();
+            await getServices();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -115,14 +119,14 @@ export default function useUnit() {
         }
     }
 
-    async function searchUnit(searchParam, loading) {
+    async function searchService(searchParam, loading) {
 
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-unit`, {params: { searchParam: searchParam }});
-            units.value = data.value;
+            const { data, status } = await Api.get(`scm/search-service`, {params: { searchParam: searchParam }});
+            services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -135,14 +139,14 @@ export default function useUnit() {
     }
 
     return {
-        units,
-        unit,
-        getUnits,
-        searchUnit,
-        storeUnit,
-        showUnit,
-        updateUnit,
-        deleteUnit,
+        services,
+        service,
+        getServices,
+        searchService,
+        storeService,
+        showService,
+        updateService,
+        deleteService,
         isLoading,
         errors,
     };

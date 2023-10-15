@@ -1,45 +1,27 @@
 <script setup>
 import { onMounted } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useUnit from "../../../composables/supply-chain/useUnit";
+import useVendor from "../../../composables/supply-chain/useVendor";
 import Title from "../../../services/title";
 import { ref } from "vue";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import Swal from "sweetalert2";
-import Paginate from '../../../components/utils/paginate.vue';
 
-const { units, getUnits, deleteUnit, isLoading } = useUnit();
+const { vendors, getVendors, deleteVendor, isLoading } = useVendor();
 
 const { setTitle } = Title();
 
-setTitle('Units');
+setTitle('Vendors');
 
 onMounted(() => {
-  getUnits();
+  getVendors();
 });
-
-function confirmDelete(id) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You want to delete this unit!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      deleteUnit(id);
-    }
-  })
-}
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Units</h2>
-    <router-link :to="{ name: 'supply-chain.unit.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600  rounded-lg active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Vendors</h2>
+    <router-link :to="{ name: 'supply-chain.vendor.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
@@ -53,32 +35,31 @@ function confirmDelete(id) {
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
           <th class="px-4 py-3">SL. </th>
           <th class="px-4 py-3">Name</th>
-          <th class="px-4 py-3">Short Code</th>
+          <th class="px-4 py-3">Contact</th>
           <th class="px-4 py-3 text-center">Actions</th>
         </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-        <tr class="text-gray-700 dark:text-gray-400 text-center" v-for="(unit,index) in units" :key="unit.id">
+        <tr class="text-gray-700 dark:text-gray-400 text-center" v-for="(vendor,index) in vendors" :key="vendor.id">
           <td class="px-4 py-3 text-sm">{{ index + 1 }}</td>
-          <td class="px-4 py-3 text-sm">{{ unit.name }}</td>
-          <td class="px-4 py-3 text-sm">{{ unit.short_code }}</td>
+          <td class="px-4 py-3 text-sm">{{ vendor.name }}</td>
+          <td class="px-4 py-3 text-sm">{{ vendor.contact }}</td>
           <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-            <action-button :action="'edit'" :to="{ name: 'supply-chain.unit.edit', params: { unitId: unit.id } }"></action-button>
-            <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
+            <action-button :action="'edit'" :to="{ name: 'supply-chain.vendor.edit', params: { vendorId: vendor.id } }"></action-button>
+            <action-button @click="deleteVendor(vendor.id)" :action="'delete'"></action-button>
           </td>
         </tr>
         </tbody>
-        <tfoot v-if="!units?.length" class="bg-white dark:bg-gray-800">
+        <tfoot v-if="!vendors?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
-        <tr v-else-if="!units?.length">
-          <td colspan="7">No Units found.</td>
+        <tr v-else-if="!vendors?.length">
+          <td colspan="7">No Vendor found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="users" to="supply-chain.unit.index" :page="page"></Paginate>
   </div>
 </template>
 <style lang="postcss" scoped>
