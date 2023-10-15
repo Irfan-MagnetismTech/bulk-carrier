@@ -66,6 +66,11 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('charterer-invoices/without/paginate', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
     //end for without pagination
+
+
+    Route::get('get/ports/name', [OpsPortController::class, 'getPortNameCode']);
+    Route::get('get/vessels/name', [OpsVesselController::class, 'getVesselName']);
+    // Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
+    // Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
 });
-Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
 Route::post('vessel-search', [OpsVesselController::class, 'search']);

@@ -30,7 +30,7 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        dd('dfdf');
+        // dd('dfdf');
         try {
             $ports = OpsPort::latest()->paginate(15);
             // if($request->searchKey != null) {
