@@ -51,6 +51,16 @@ export default [
                         permissionKey: '',
                         subSubMenu: []
                     },
+                    {
+                        route: 'ops.configurations.cargo-tariffs.index',
+                        label: 'Cargo Tariffs',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
                     // {
                     //     route: 'ops.configurations.customers.index',
                     //     label: 'Customers',

@@ -6,25 +6,30 @@ import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
 
-export default function useCargoType() {
+export default function useCargoTariff() {
 	const router = useRouter();
-	const cargoTypes = ref([]);
+	const cargoTariffs = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
-	const cargoType = ref({
-		cargo_type: '',
-		description: ''
+	const cargoTariff = ref({
+		tariff_name: '',
+		ops_vessel_id: '',
+		loading_point: '',
+		unloading_point: '',
+		ops_cargo_type_id: '',
+		currency: '',
+		status: ''
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCargoTypes(page,columns = null, searchKey = null, table = null) {
+	async function getCargoTariffs(page,columns = null, searchKey = null, table = null) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/cargo-types', {
+			const { data, status } = await Api.get('/ops/cargo-tariffs', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -32,7 +37,7 @@ export default function useCargoType() {
 					table: table || null,
 				},
 			});
-			cargoTypes.value = data.value;
+			cargoTariffs.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -44,16 +49,16 @@ export default function useCargoType() {
 		}
 	}
 
-	async function storeCargoType(form) {
+	async function storeCargoTariff(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.post('/ops/cargo-types', form);
-			cargoType.value = data.value;
+			const { data, status } = await Api.post('/ops/cargo-tariffs', form);
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.cargo-types.index' });
+			router.push({ name: 'ops.configurations.cargo-tariffs.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -64,14 +69,14 @@ export default function useCargoType() {
 		}
 	}
 
-	async function showCargoType(cargoTypeId) {
+	async function showCargoTariff(cargoTariffId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/cargo-types/${cargoTypeId}`);
-			cargoType.value = data.value;
+			const { data, status } = await Api.get(`/ops/cargo-tariffs/${cargoTariffId}`);
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -83,19 +88,19 @@ export default function useCargoType() {
 		}
 	}
 
-	async function updateCargoType(form, cargoTypeId) {
+	async function updateCargoTariff(form, cargoTariffId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.put(
-				`/ops/cargo-types/${cargoTypeId}`,
+				`/ops/cargo-tariffs/${cargoTariffId}`,
 				form
 			);
-			cargoType.value = data.value;
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.cargo-types.index' });
+			router.push({ name: 'ops.configurations.cargo-tariffs.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -106,16 +111,16 @@ export default function useCargoType() {
 		}
 	}
 
-	async function deleteCargoType(cargoTypeId) {
+	async function deleteCargoTariff(cargoTariffId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/cargo-types/${cargoTypeId}`);
+			const { data, status } = await Api.delete( `/ops/cargo-tariffs/${cargoTariffId}`);
 			notification.showSuccess(status);
-			await getCargoTypes();
+			await getCargoTariffs();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -126,31 +131,37 @@ export default function useCargoType() {
 		}
 	}
 
-	async function searchCargoTypes(searchParam, loading) {
-		//NProgress.start();
+	// Get ports by name or code
+	async function getCargoTariffsByNameOrCode(name_or_code, service = null) {
+		NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/cargo-types/${searchParam}`);
-			cargoType.value = data.value;
-			notification.showSuccess(status);
+			const { data } = await Api.post(
+				'dataencoding/ports/get-ports-by-name-or-code',
+				{ name_or_code , service }
+			);
+			cargoTariffs.value = data.value;
+			cargoTariff.value = data.value;
 		} catch (error) {
-			const { data, status } = error.response;
-			notification.showError(status);
+			error.value = Error.showError(error);
 		} finally {
-			loading(false)
-			//NProgress.done();
+			//loader.hide();
+			isLoading.value = false;
+			NProgress.done();
 		}
 	}
 
 	return {
-		cargoTypes,
-		cargoType,
-		getCargoTypes,
-		storeCargoType,
-		showCargoType,
-		updateCargoType,
-		deleteCargoType,
-		searchCargoTypes,
+		cargoTariffs,
+		cargoTariff,
+		getCargoTariffs,
+		storeCargoTariff,
+		showCargoTariff,
+		updateCargoTariff,
+		deleteCargoTariff,
+		getCargoTariffsByNameOrCode,
 		isLoading,
 		errors,
 	};
