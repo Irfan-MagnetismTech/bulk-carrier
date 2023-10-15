@@ -7,7 +7,7 @@
         <option value="" disabled selected>Select</option>
         <option value="PSML">PSML</option>
         <option value="TSLL">TSLL</option>
-        <option value="BOTH">BOTH</option>
+        <option value="ALL">ALL</option>
       </select>
       <Error v-if="errors?.business_unit" :errors="errors.business_unit" />
     </label>
