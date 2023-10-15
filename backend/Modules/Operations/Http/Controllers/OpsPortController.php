@@ -155,7 +155,7 @@ class OpsPortController extends Controller
 
     public function getPortNameCode(){
         try {
-            $ports = OpsPort::->latest()->get();
+            $ports = OpsPort::latest()->get();
             return response()->success('Successfully retrieved port code and name.', collect($ports->pluck("CONCAT(code, ' - ', name) AS name"))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
