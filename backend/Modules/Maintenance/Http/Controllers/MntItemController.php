@@ -185,7 +185,26 @@ class MntItemController extends Controller
         
         try {
 
-            $items = MntItem::select('id','name','item_code')->where('mnt_item_group_id', $mntItemGroupId)->get();
+            $items = MntItem::select('id','name','item_code')->where(['mnt_item_group_id'=>$mntItemGroupId])->get();
+            return response()->success('Items retrieved successfully', $items, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get item group wise items which has run hour
+     * @param $mntItemGroupId
+     */
+    public function getMntItemGroupWiseHourlyItems($mntItemGroupId)
+    {
+        
+        try {
+
+            $items = MntItem::select('id','name','item_code','present_run_hour')->where(['mnt_item_group_id'=>$mntItemGroupId, 'has_run_hour'=>true])->get();
             return response()->success('Items retrieved successfully', $items, 200);
             
         }
