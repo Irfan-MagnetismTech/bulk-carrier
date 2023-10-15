@@ -141,7 +141,6 @@ class OpsPortController extends Controller
 
     public function getPortByNameOrCode(Request $request){
         try {
-            // dd($request);
             $ports = OpsPort::query()
                 ->where(function ($query) use($request) {
                     $query->where('name', 'like', '%' . $request->name_or_code . '%');

@@ -123,10 +123,16 @@ class OpsCargoTypeController extends Controller
         }
     }
 
-    public function getCargoTypeName(){
+    public function getCargoTypeByName(Request $request){
         try {
-            $cargo_tariffs = OpsCargoType::latest()->get();
-            return response()->success('Successfully retrieved cargo types name.', collect($cargo_tariffs->pluck('cargo_type'))->unique()->values()->all(), 200);
+            $cargo_tariffs = OpsCargoType::query()
+            ->where(function ($query) use($request) {
+                $query->where('cargo_type', 'like', '%' . $request->cargo_type . '%');
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved cargo types name.', $cargo_tariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
