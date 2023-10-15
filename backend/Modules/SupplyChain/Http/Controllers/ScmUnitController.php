@@ -2,78 +2,98 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Modules\SupplyChain\Entities\ScmUnit;
+use Modules\SupplyChain\Http\Requests\ScmUnitRequest;
 
 class ScmUnitController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return view('supplychain::index');
-    }
+        try {
+            $scm_units = ScmUnit::paginate(5);
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
+            return response()->success('Unit list', $scm_units, 200);
+        } catch (\Exception $e) {
+            
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmUnitRequest $request)
     {
-        //
+        try {
+            $scm_unit = ScmUnit::create($request->all());
+
+            return response()->success('Unit created succesfully', $scm_unit, 201);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param ScmUnit $unit
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(ScmUnit $unit): JsonResponse
     {
-        return view('supplychain::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
+        try {
+            return response()->json([
+                'status' => 'success',
+                'value' => $unit,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param ScmUnitRequest $request
+     * @param ScmUnit $unit
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(ScmUnitRequest $request, ScmUnit $unit): JsonResponse
     {
-        //
+        try {
+            $unit->update($request->all());
+
+            return response()->json([
+                'status' => 'success',
+                'value' => $unit,
+            ], 202);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param ScmUnit $unit
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ScmUnit $unit): JsonResponse
     {
-        //
+        try {
+            $unit->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => null,
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 }
