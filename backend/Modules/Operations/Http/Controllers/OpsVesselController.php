@@ -139,10 +139,15 @@ class OpsVesselController extends Controller
     }
 
     
-    public function getVesselName(){
+    public function getVesselByName(Request $request){
         try {
-            $vessels = OpsVessel::all();
-            return response()->success('Successfully retrieved vessels name.', collect($vessels->pluck('name'))->unique()->values()->all(), 200);
+            $vessels = OpsVessel::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->limit(10)
+            ->get();
+            return response()->success('Successfully retrieved vessels name.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
