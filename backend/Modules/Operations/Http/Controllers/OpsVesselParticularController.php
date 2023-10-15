@@ -28,7 +28,7 @@ class OpsVesselParticularController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
             $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);

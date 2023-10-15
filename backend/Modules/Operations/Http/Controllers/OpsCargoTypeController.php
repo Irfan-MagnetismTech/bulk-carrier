@@ -41,8 +41,6 @@ class OpsCargoTypeController extends Controller
 
     }
 
-
-    
     /**
      * Store a newly created resource in storage.
      * @param OpsCargoTypeRequest $request
@@ -121,6 +119,15 @@ class OpsCargoTypeController extends Controller
         }
         catch (QueryException $e)
         {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCargoTypeName(){
+        try {
+            $cargo_tariffs = OpsCargoType::->latest()->get();
+            return response()->success('Successfully retrieved cargo types name.', collect($cargo_tariffs->pluck('cargo_type'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
