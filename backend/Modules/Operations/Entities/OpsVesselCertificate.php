@@ -16,22 +16,23 @@ class OpsVesselCertificate extends Model
      */
     protected $fillable = [
         'ops_vessel_id',
-        'ops_maritime_certificate_id',
+        'ops_maritime_certification_id',
         'issue_date',
         'expire_date',
         'attachment',
         'status',
         'reference_number',
-        'created_by',
+        'business_unit',
+        'created_by'
     ];
 
     public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+        return $this->belongsTo(OpsVessel::class);
     }
     public function opsMaritimeCertification()
     {
-        return $this->belongsTo(OpsMaritimeCertification::class, 'ops_maritime_certificate_id' , 'id');
+        return $this->belongsTo(OpsMaritimeCertification::class);
     }
 
 }

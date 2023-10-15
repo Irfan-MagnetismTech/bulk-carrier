@@ -41,8 +41,6 @@ class OpsCargoTypeController extends Controller
 
     }
 
-
-    
     /**
      * Store a newly created resource in storage.
      * @param OpsCargoTypeRequest $request
@@ -125,15 +123,19 @@ class OpsCargoTypeController extends Controller
         }
     }
 
-    public function getCargoTypeWithoutPaginate(){
-        try
-        {
-            $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
-        }
-        catch (QueryException $e)
-        {
+    public function getCargoTypeByName(Request $request){
+        try {
+            $cargo_types = OpsCargoType::query()
+            ->where(function ($query) use($request) {
+                $query->where('cargo_type', 'like', '%' . $request->cargo_type . '%');
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved cargo types name.', $cargo_types, 200);
+        } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
+
 }

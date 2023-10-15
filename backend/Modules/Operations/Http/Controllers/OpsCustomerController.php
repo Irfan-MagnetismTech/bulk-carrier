@@ -125,4 +125,14 @@ class OpsCustomerController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getCustomerName(){
+        try {
+            $customers = OpsCustomer::all();
+            return response()->success('Successfully retrieved customers name.', collect($customers->pluck('name'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
