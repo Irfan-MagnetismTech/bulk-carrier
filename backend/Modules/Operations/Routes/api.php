@@ -68,7 +68,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     //end for without pagination
 
 
-    Route::get('get/ports/name', [OpsPortController::class, 'getPortNameCode']);
+    Route::get('get/ports/nameOrcode', [OpsPortController::class, 'getPortByNameOrCode']);
     Route::get('get/vessels/name', [OpsVesselController::class, 'getVesselName']);
     // Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);
     // Route::get('get/vessel/name', [OpsVesselController::class, 'getVesselName']);

@@ -139,10 +139,18 @@ class OpsPortController extends Controller
     }
 
 
-    public function getPortNameCode(){
+    public function getPortByNameOrCode(Request $request){
         try {
-            $ports = OpsPort::latest()->get();
-            return response()->success('Successfully retrieved port code and name.', collect($ports->pluck("CONCAT(code, ' - ', name) AS name"))->unique()->values()->all(), 200);
+            // dd($request);
+            $ports = OpsPort::query()
+                ->where(function ($query) use($request) {
+                    $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                    $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+                })
+                ->limit(10)
+                ->get();
+
+            return response()->success('Successfully retrieved port code and name.', $ports, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
