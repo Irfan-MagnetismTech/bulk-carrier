@@ -5,27 +5,29 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 
-export default function useUnit() {
+export default function useMaterialCategory() {
     const router = useRouter();
-    const units = ref([]);
+    const materialCategories = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const unit = ref( {
+    const materialCategory = ref( {
         name: '',
         short_code: '',
+        parent_category_name: '',
+        parent_category: '',
     });
 
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getUnits() {
+    async function getMaterialCategories() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/scm/units');
-            units.value = data.value;
+            const {data, status} = await Api.get('/scm/material-categories');
+            materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -37,16 +39,16 @@ export default function useUnit() {
         }
     }
 
-    async function storeUnit(form) {
+    async function storeMaterialCategory(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/units', form);
-            unit.value = data.value;
+            const { data, status } = await Api.post('/scm/material-categories', form);
+            materialCategory.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.unit.index" });
+            router.push({ name: "supply-chain.material-category.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -56,14 +58,14 @@ export default function useUnit() {
         }
     }
 
-    async function showUnit(unitId) {
+    async function showMaterialCategory(materialCategoryId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/units/${unitId}`);
-            unit.value = data.value;
+            const { data, status } = await Api.get(`/scm/material-categories/${materialCategoryId}`);
+            materialCategory.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -74,19 +76,19 @@ export default function useUnit() {
         }
     }
 
-    async function updateUnit(form, unitId) {
+    async function updateMaterialCategory(form, materialCategoryId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/units/${unitId}`,
+                `/scm/material-categories/${materialCategoryId}`,
                 form
             );
-            unit.value = data.value;
+            materialCategory.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.unit.index" });
+            router.push({ name: "supply-chain.material-category.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -96,15 +98,19 @@ export default function useUnit() {
         }
     }
 
-    async function deleteUnit(unitId) {
+    async function deleteMaterialCategory(materialCategoryId) {
+
+        if (!confirm('Are you sure you want to delete this materialCategory?')) {
+            return;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/units/${unitId}`);
+            const { data, status } = await Api.delete( `/scm/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);
-            await getUnits();
+            await getMaterialCategories();
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -114,14 +120,14 @@ export default function useUnit() {
         }
     }
 
-    async function searchUnit(searchParam, loading) {
+    async function searchMaterialCategory(searchParam, loading) {
 
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-unit`, {params: { searchParam: searchParam }});
-            units.value = data.value;
+            const { data, status } = await Api.get(`scm/search-material-category`, {params: { searchParam: searchParam }});
+            materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -134,14 +140,14 @@ export default function useUnit() {
     }
 
     return {
-        units,
-        unit,
-        getUnits,
-        searchUnit,
-        storeUnit,
-        showUnit,
-        updateUnit,
-        deleteUnit,
+        materialCategories,
+        materialCategory,
+        getMaterialCategories,
+        searchMaterialCategory,
+        storeMaterialCategory,
+        showMaterialCategory,
+        updateMaterialCategory,
+        deleteMaterialCategory,
         isLoading,
         errors,
     };
