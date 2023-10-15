@@ -142,10 +142,17 @@ class OpsCargoTariffController extends Controller
         }
     }
     
-    public function getCargoTariffName(){
+    public function getCargoTariffByName(Request $request){
         try {
-            $cargo_tariffs = OpsCargoTariff::with('opsCargoTariffLines')->latest()->get();
-            return response()->success('Successfully retrieved cargo tariffs name.', collect($cargo_tariffs->pluck('tariff_name'))->unique()->values()->all(), 200);
+            $cargo_tariffs = OpsCargoTariff::query()->with('opsVessel','opsCargoType','opsCargoTariffLines')
+            ->where(function ($query) use($request) {
+                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');
+                $query->where('business_unit',$request->business_unit);
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved cargo tariffs name.', $cargo_tariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
