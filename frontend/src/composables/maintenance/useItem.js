@@ -12,7 +12,7 @@ export default function useItem() {
     const $loading = useLoading();
     const notification = useNotification();
     const shipDepartmentWiseItems = ref([]);    
-    const itemGroupWiseItems = ref([]);
+    const itemGroupWiseHourlyItems = ref([]);
     const item = ref( {
         mnt_ship_department_id: '',
         mnt_item_group_id: '',
@@ -163,14 +163,14 @@ export default function useItem() {
         }
     }
 
-    async function getItemGroupWiseItems(mntItemGroupId){
+    async function getItemGroupWiseHourlyItems(mntItemGroupId){
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/get-mnt-item-group-wise-items/${mntItemGroupId}`);
-            itemGroupWiseItems.value = data.value;
+            const { data, status } = await Api.get(`/mnt/get-mnt-item-group-wise-hourly-items/${mntItemGroupId}`);
+            itemGroupWiseHourlyItems.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -187,7 +187,7 @@ export default function useItem() {
         items,
         item,
         shipDepartmentWiseItems,
-        itemGroupWiseItems,
+        itemGroupWiseHourlyItems,
         getItems,
         storeItem,
         showItem,
@@ -195,7 +195,7 @@ export default function useItem() {
         deleteItem,
         getItemCodeByGroupId,
         getShipDepartmentWiseItems,
-        getItemGroupWiseItems,
+        getItemGroupWiseHourlyItems,
         isLoading,
         errors,
     };

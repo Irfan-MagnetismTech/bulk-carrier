@@ -32,7 +32,7 @@
         <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name </span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item" :options="form.itemGroupWiseItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_item_id">
             </div>
             <input v-else type="text" v-model="form.name" placeholder="Item Name" class="form-input" readonly />
@@ -78,7 +78,7 @@ const props = defineProps({
 const vessels = [{id:1, name: 'vessel'}];
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
-const { itemGroupWiseItems, getItemGroupWiseItems } = useItem();
+const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
 
 watch(() => props.form.vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
@@ -93,23 +93,24 @@ watch(() => props.form.department_name, (value) => {
   fetchShipDepartmentWiseItemGroups();
 });
 
-function fetchItemGroupWiseItems(){
-  getItemGroupWiseItems(props.form.mnt_item_group_id);
+function fetchItemGroupWiseHourlyItems(){
+  getItemGroupWiseHourlyItems(props.form.mnt_item_group_id);
 }
 
 watch(() => props.form.item_group_name, (value) => {
   props.form.mnt_item_group_id = value?.id;
-  fetchItemGroupWiseItems();
+  fetchItemGroupWiseHourlyItems();
 });
 
 watch(() => props.form.item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
   props.form.item_name = value;
+  props.form.previous_run_hour = value.length == 1 ? value[0].present_run_hour : '';
   props.form.mnt_item_id = value ? value.map(val=>val.id) : null;
 });
 
-watch(() => itemGroupWiseItems.value, (value) => {
-  props.form.itemGroupWiseItems  = [{id: 'all', item_code: '', name: 'All'}, ...value];
+watch(() => itemGroupWiseHourlyItems.value, (value) => {
+  props.form.itemGroupWiseHourlyItems  = [{id: 'all', item_code: '', name: 'All', present_run_hour: ''}, ...value];
 });
 
 
