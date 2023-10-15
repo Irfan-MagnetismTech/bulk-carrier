@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 export default function useItemGroup() {
     const router = useRouter();
     const itemGroups = ref([]);
+    const shipDepartmentWiseItemGroups = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const itemGroup = ref( {
@@ -141,16 +142,38 @@ export default function useItemGroup() {
         }
     }
 
+    async function getShipDepartmentWiseItemGroups(mntShipDepartmentId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-item-groups/${mntShipDepartmentId}`);
+            shipDepartmentWiseItemGroups.value = data.value;
+            console.log(shipDepartmentWiseItemGroups.value);
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
     
     return {
         itemGroups,
         itemGroup,
+        shipDepartmentWiseItemGroups,
         getItemGroups,
         storeItemGroup,
         showItemGroup,
         updateItemGroup,
         deleteItemGroup,
         getItemGroupsWithoutPagination,
+        getShipDepartmentWiseItemGroups,
         isLoading,
         errors,
     };

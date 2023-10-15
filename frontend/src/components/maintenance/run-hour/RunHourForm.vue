@@ -2,9 +2,9 @@
     <!-- Basic information -->
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Name {{ form.formType }} </span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Vessel" :options="form.vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
             </div>
             <input v-else type="text" v-model="form.name" placeholder="Vessel Name" class="form-input" readonly />
@@ -14,7 +14,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Department </span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_ship_department_id">
             </div>
             <input v-else type="text" v-model="form.name" placeholder="Ship Department Name" class="form-input" readonly />
@@ -23,7 +23,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Group </span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item Group" :options="form.dept_wise_item_groups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_item_group_id">
             </div>
             <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
@@ -64,6 +64,7 @@ import Editor from '@tinymce/tinymce-vue';
 import useRunHour from "../../../composables/maintenance/useRunHour";
 import {onMounted, watch} from "vue";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
+import useItemGroup from "../../../composables/maintenance/useItemGroup";
 
 const props = defineProps({
   form: {
@@ -73,17 +74,18 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-
+const vessels = [{id:1, name: 'vessel'}];
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+
+function fetchShipDepartmentWiseItemGroups(){
+  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+}
 
 watch(() => props.form.department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
 });
-
 onMounted(() => {
-  const today = new Date().toISOString().substr(0, 10);
-  props.form.updated_on = today;
-
   getShipDepartmentsWithoutPagination();
 
 });

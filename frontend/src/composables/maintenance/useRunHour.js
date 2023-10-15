@@ -15,7 +15,7 @@ export default function useRunHour() {
         mnt_item_id: '',
         mnt_item_group_id: '',
         mnt_ship_department_id: '',
-        department_name: {},
+        department_name: '',
         ops_vessel_id: '',
         previous_run_hour: '',
         present_run_hour: '',

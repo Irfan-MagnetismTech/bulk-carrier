@@ -7,6 +7,8 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useRunHour from "../../../composables/maintenance/useRunHour";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -62,7 +64,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Run Hour List</h2>
-    <default-button :title="'Create'" :to="{ name: 'maintenance.run-hours.create' }"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.run-hours.create' }"></default-button> -->
+    <default-button :title="'Create'" :to="{ name: 'maintenance.run-hours.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -91,10 +94,10 @@ onMounted(() => {
           <tbody>
           <tr v-for="(runHour,index) in runHours?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ runHour?.ops_vessel?.name }}</td>
-            <td>{{ runHour?.mnt_item?.mnt_item_group?.name }}</td>
-            <td>{{ runHour?.mnt_item?.name }}</td>
-            <td>{{ runHour?.mnt_item?.present_run_hour }}</td>
+            <td>{{ runHour?.opsVessel?.name }}</td>
+            <td>{{ runHour?.mntItem?.mntItemGroup?.name }}</td>
+            <td>{{ runHour?.mntItem?.name }}</td>
+            <td>{{ runHour?.mntItem?.presentRunHour }}</td>
             
             <td class="">
               <div class="flex">
