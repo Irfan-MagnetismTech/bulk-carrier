@@ -83,12 +83,12 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-1/6">#</th>
-            <th class="w-1/6 ">Vessel</th>
-            <th class="w-1/6 ">Item Group</th>
-            <th class="w-1/6 ">Item Name</th>
-            <th class="w-1/6 ">Present Run Hour</th>
-            <th class="w-1/6">Action</th>
+            <th class="w-1/12">#</th>
+            <th class="w-2/12 ">Vessel</th>
+            <th class="w-2/12 ">Item Group</th>
+            <th class="w-3/12 ">Item Name</th>
+            <th class="w-2/12 ">Present Run Hour</th>
+            <th class="w-2/12">Action</th>
           </tr>
           </thead>
           <tbody>
@@ -97,10 +97,10 @@ onMounted(() => {
             <td>{{ runHour?.opsVessel?.name }}</td>
             <td>{{ runHour?.mntItem?.mntItemGroup?.name }}</td>
             <td>{{ runHour?.mntItem?.name }}</td>
-            <td>{{ runHour?.mntItem?.presentRunHour }}</td>
+            <td>{{ runHour?.mntItem?.present_run_hour }}</td>
             
             <td class="">
-              <div class="flex">
+              <div class="flex justify-center">
                 <action-button :action="'edit'" :to="{ name: 'maintenance.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button>
               </div>
