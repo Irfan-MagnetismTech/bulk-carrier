@@ -54,11 +54,11 @@ class OpsCargoTariffController extends Controller
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
 
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
         }
@@ -75,7 +75,7 @@ class OpsCargoTariffController extends Controller
      * @param  OpsCargoTariff  $cargo_tariff
      * @return JsonResponse
      */
-    public function show(OpsVesselParticular $cargo_tariff): JsonResponse
+    public function show(OpsCargoTariff $cargo_tariff): JsonResponse
     {
         $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines');
         try
@@ -93,24 +93,24 @@ class OpsCargoTariffController extends Controller
       /**
      * Update the specified resource in storage.
      *
-     * @param OpsVesselParticularRequest $request
-     * @param  OpsVesselParticular  $vessel_particular
+     * @param OpsCargoTariffRequest $request
+     * @param  OpsCargoTariff  $cargo_tariff
      * @return JsonResponse
      */
-    public function update(OpsVesselParticularRequest $request, OpsVesselParticular $vessel_particular): JsonResponse
+    public function update(OpsCargoTariffRequest $request, OpsCargoTariff $cargo_tariff): JsonResponse
     {
         try {
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
            
             $cargoTariff->update($cargoTariffInfo);            
             $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
-            return response()->success('Cargo tariff updated successfully.', $vessel_particular, 200);
+            return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
         }
         catch (QueryException $e)
         {            
@@ -122,18 +122,18 @@ class OpsCargoTariffController extends Controller
     /**
      * Remove the specified vessel from storage.
      *
-     * @param  OpsVesselParticular  $vessel_particular
+     * @param  OpsCargoTariff  $cargo_tariff
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(OpsVesselCertificate $vessel_particular): JsonResponse
+    public function destroy(OpsCargoTariff $cargo_tariff): JsonResponse
     {
         try
         {
-            $vessel_particular->opsCargoTariffLines()->delete();
-            $vessel_particular->delete();
+            $cargo_tariff->opsCargoTariffLines()->delete();
+            $cargo_tariff->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted vessel certificate.',
+                'message' => 'Successfully deleted cargo tariff.',
             ], 204);
         }
         catch (QueryException $e)
@@ -141,4 +141,15 @@ class OpsCargoTariffController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    public function getCargoTariffName(){
+        try {
+            $cargo_tariffs = OpsCargoTariff::with('opsCargoTariffLines')->latest()->get();
+            return response()->success('Successfully retrieved cargo tariffs name.', collect($cargo_tariffs->pluck('tariff_name'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
 }

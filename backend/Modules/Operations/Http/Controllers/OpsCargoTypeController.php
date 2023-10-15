@@ -125,7 +125,6 @@ class OpsCargoTypeController extends Controller
         }
     }
 
-
     public function getCargoTypeName(){
         try {
             $cargo_tariffs = OpsCargoType::->latest()->get();
