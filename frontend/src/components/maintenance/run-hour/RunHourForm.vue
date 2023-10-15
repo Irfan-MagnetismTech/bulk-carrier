@@ -1,6 +1,6 @@
 <template>
     <!-- Basic information -->
-    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
             <div v-if="form.form_type === 'create'">
@@ -29,22 +29,22 @@
             <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+        <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name </span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item" :options="form.item_group_wise_items" @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Item" :options="form.itemGroupWiseItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_item_id">
             </div>
             <input v-else type="text" v-model="form.name" placeholder="Item Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
-        </label>
+          </div>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Previous Run Hour </span>
             <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" :readonly="1" />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) </span>
             <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input"  />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
@@ -65,6 +65,7 @@ import useRunHour from "../../../composables/maintenance/useRunHour";
 import {onMounted, watch} from "vue";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
+import useItem from "../../../composables/maintenance/useItem";
 
 const props = defineProps({
   form: {
@@ -77,6 +78,11 @@ const props = defineProps({
 const vessels = [{id:1, name: 'vessel'}];
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+const { itemGroupWiseItems, getItemGroupWiseItems } = useItem();
+
+watch(() => props.form.vessel_name, (value) => {
+  props.form.ops_vessel_id = value?.id;
+});
 
 function fetchShipDepartmentWiseItemGroups(){
   getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
@@ -84,10 +90,31 @@ function fetchShipDepartmentWiseItemGroups(){
 
 watch(() => props.form.department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
+  fetchShipDepartmentWiseItemGroups();
 });
+
+function fetchItemGroupWiseItems(){
+  getItemGroupWiseItems(props.form.mnt_item_group_id);
+}
+
+watch(() => props.form.item_group_name, (value) => {
+  props.form.mnt_item_group_id = value?.id;
+  fetchItemGroupWiseItems();
+});
+
+watch(() => props.form.item_name, (value) => {
+  value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
+  props.form.item_name = value;
+  props.form.mnt_item_id = value ? value.map(val=>val.id) : null;
+});
+
+watch(() => itemGroupWiseItems.value, (value) => {
+  props.form.itemGroupWiseItems  = [{id: 'all', item_code: '', name: 'All'}, ...value];
+});
+
+
 onMounted(() => {
   getShipDepartmentsWithoutPagination();
-
 });
 
 </script>
@@ -109,6 +136,10 @@ onMounted(() => {
 }
 .label-item-input {
   @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+}
+
+.vs--searchable .vs__dropdown-toggle{
+  height: auto !important;
 }
 
 >>> {

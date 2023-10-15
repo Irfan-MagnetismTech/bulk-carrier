@@ -12,7 +12,7 @@ export default function useRunHour() {
     const $loading = useLoading();
     const notification = useNotification();
     const runHour = ref( {
-        mnt_item_id: '',
+        mnt_item_id: [],
         mnt_item_group_id: '',
         mnt_ship_department_id: '',
         department_name: '',
@@ -20,6 +20,7 @@ export default function useRunHour() {
         previous_run_hour: '',
         present_run_hour: '',
         updated_on: '',
+        itemGroupWiseItems: [],
         form_type: 'create'
     });
     const errors = ref(null);
