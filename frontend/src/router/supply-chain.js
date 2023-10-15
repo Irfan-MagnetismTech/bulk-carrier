@@ -121,4 +121,95 @@ export default [
     },
 
     /* Material Route end */
+
+    /* Service Route start */
+
+    {
+        path: `/${BASE}/service`,
+        name: `${BASE}.service.index`,
+        component: () => import(`../views/${BASE}/service/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/service/create`,
+        name: `${BASE}.service.create`,
+        component: () => import(`../views/${BASE}/service/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-create' },
+    },
+    {
+        path: `/${BASE}/service/:serviceId/edit`,
+        name: `${BASE}.service.edit`,
+        component: () => import(`../views/${BASE}/service/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-edit' },
+    },
+    {
+        path: `/${BASE}/service/:serviceId`,
+        name: `${BASE}.service.show`,
+        component: () => import(`../views/${BASE}/service/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-show'  },
+    },
+
+    /* Service Route end */
+
+    
+    /* Vendor Route start */
+
+    {
+        path: `/${BASE}/vendor`,
+        name: `${BASE}.vendor.index`,
+        component: () => import(`../views/${BASE}/vendor/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/vendor/create`,
+        name: `${BASE}.vendor.create`,
+        component: () => import(`../views/${BASE}/vendor/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-create' },
+    },
+    {
+        path: `/${BASE}/vendor/:vendorId/edit`,
+        name: `${BASE}.vendor.edit`,
+        component: () => import(`../views/${BASE}/vendor/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-edit' },
+    },
+    {
+        path: `/${BASE}/vendor/:vendorId`,
+        name: `${BASE}.vendor.show`,
+        component: () => import(`../views/${BASE}/vendor/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-show'  },
+    },
+
+    /* Vendor Route end */
+
+    /* Opening Stock Route start */
+
+    {
+        path: `/${BASE}/opening-stock`,
+        name: `${BASE}.opening-stock.index`,
+        component: () => import(`../views/${BASE}/opening-stock/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'opening-stock-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/opening-stock/create`,
+        name: `${BASE}.opening-stock.create`,
+        component: () => import(`../views/${BASE}/opening-stock/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'opening-stock-create' },
+    },
+    {
+        path: `/${BASE}/opening-stock/:openingStockId/edit`,
+        name: `${BASE}.opening-stock.edit`,
+        component: () => import(`../views/${BASE}/opening-stock/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'opening-stock-edit' },
+    },
+    {
+        path: `/${BASE}/opening-stock/:openingStockId`,
+        name: `${BASE}.opening-stock.show`,
+        component: () => import(`../views/${BASE}/opening-stock/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'opening-stock-show'  },
+    },
+
+    /* Opening Stock Route end */
 ];
