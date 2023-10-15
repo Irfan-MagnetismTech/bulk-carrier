@@ -125,6 +125,16 @@ class OpsCargoTypeController extends Controller
         }
     }
 
+
+    public function getCargoTypeName(){
+        try {
+            $cargo_tariffs = OpsCargoType::->latest()->get();
+            return response()->success('Successfully retrieved cargo types name.', collect($cargo_tariffs->pluck('cargo_type'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
     public function getCargoTypeWithoutPaginate(){
         try
         {
