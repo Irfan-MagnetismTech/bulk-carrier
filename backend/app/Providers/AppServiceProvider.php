@@ -4,10 +4,11 @@ namespace App\Providers;
 
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Model;
-use App\Support\Macros\CreateUpdateOrDelete;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use App\Support\Macros\CreateUpdateOrDelete;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {        
+    {
         //relational method name case changing issue fix
         (new ReflectionClass(Model::class))->getProperty('snakeAttributes')->setValue(null, false);
 
@@ -34,10 +35,18 @@ class AppServiceProvider extends ServiceProvider
             ], $statusCode);
         });
 
+        // Response::macro('error', function ($error, $statusCode = 400) {
+        //     return response()->json([
+        //         'message' => 'Error: ' . $error,
+        //     ], $statusCode);
+        // });
+        
         Response::macro('error', function ($error, $statusCode = 400) {
-            return response()->json([
-                'message' => 'Error: ' . $error,
-            ], $statusCode);
+            throw new HttpResponseException(response()->json([
+                'success'   => false,
+                'message'   => 'Validation errors',
+                'data'      => $error,
+            ], 500));
         });
 
         HasMany::macro('createUpdateOrDelete', function (iterable $records) {
