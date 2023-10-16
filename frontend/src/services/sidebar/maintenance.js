@@ -135,6 +135,37 @@ export default [
                     },
                 ],
             },
+            {
+                route: '',
+                label: 'Run Hour Entry',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'maintenance.run-hours.create',
+                        label: 'New',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    {
+                        route: 'maintenance.run-hours.index',
+                        label: 'List',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                ],
+            },
             
             
             

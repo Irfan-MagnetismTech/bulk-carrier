@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
             $table->integer('previous_run_hour')->nullable();
             $table->integer('present_run_hour')->nullable();
-            $table->timestamp('updated_on')->nullable();
-            $table->string('business_unit', 255)->nullable();
+            $table->date('updated_on')->nullable();
+            $table->enum('business_unit',['TSLL','PSML'])->default('TSLL');
             $table->timestamps();
         });
 
