@@ -1,14 +1,13 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useRank from "../../../composables/crew/useRank";
+import useCrewRequisition from "../../../composables/crew/useCrewRequisition";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import Store from './../../../store/index.js';
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -16,19 +15,19 @@ const props = defineProps({
     default: 1,
   },
 });
-const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading } = useRank();
+
+const { crewRequisitions, getCrewRequisitions, deleteCrewRequisition, isLoading } = useCrewRequisition();
 const { setTitle } = Title();
-setTitle('Rank List');
+setTitle('Crew Requisition');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this rank!",
+    text: "You want to change delete this item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -36,14 +35,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteRank(id);
+      deleteCrewRequisition(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-  getRanks(props.page, businessUnit.value)
+  getCrewRequisitions(props.page)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -63,11 +62,9 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Rank List</h2>
-    <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Particulars List</h2>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
@@ -84,35 +81,29 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Rank Name</th>
-            <th>Rank Short Name</th>
-            <th>Business Unit</th>
+            <th>Vessel Name</th>
+            <th>IMO</th>
+            <th>Class No</th>
+            <th>Official No.</th>
+            <th>Call Sign</th>
+            <th>Length(LBP)</th>
+            <th>LOA</th>
+            <th>Breath</th>
+            <th>GRT</th>
+            <th>NRT</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(rank,index) in ranks?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ rank?.name }}</td>
-            <td>{{ rank?.short_name }}</td>
-            <td>
-              <span :class="rank?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rank?.business_unit }}</span>
-            </td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.ranks.edit', params: { rankId: rank?.id } }"></action-button>
-              <action-button @click="confirmDelete(rank?.id)" :action="'delete'"></action-button>
-            </td>
+          <tr>
           </tr>
           </tbody>
-          <tfoot v-if="!ranks?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="4">Loading...</td>
-          </tr>
-          <tr v-else-if="!ranks?.data?.data?.length">
-            <td colspan="4">No data found.</td>
+          <tfoot>
+          <tr>
+            <td colspan="11">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="ranks" to="crw.ranks.index" :page="page"></Paginate>
+    <Paginate :data="crewRequisitions" to="crw.crewRequisitions.index" :page="page"></Paginate>
   </div>
 </template>

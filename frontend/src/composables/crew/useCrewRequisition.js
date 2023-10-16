@@ -11,6 +11,7 @@ export default function useCrewRequisition() {
     const notification = useNotification();
     const crewRequisition = ref( {
         ops_vessel_id: '',
+        ops_vessel_name: '',
         applied_date: '',
         total_required_manpower: '',
         remarks: '',
@@ -23,21 +24,28 @@ export default function useCrewRequisition() {
         ]
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewRequisitions(page) {
+    async function getCrewRequisitions(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-requisitions',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
-            crewRequisition.value = data.value;
+            crewRequisitions.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -115,7 +123,7 @@ export default function useCrewRequisition() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-requisitions/${crewRequisitionId}`);
             notification.showSuccess(status);
-            await getCrewRequisitions();
+            await getCrewRequisitions(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
