@@ -54,11 +54,11 @@ class OpsCargoTariffController extends Controller
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
 
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
         }
@@ -103,12 +103,12 @@ class OpsCargoTariffController extends Controller
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
            
             $cargoTariff->update($cargoTariffInfo);            
             $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff updated successfully.', $vessel_particular, 200);
         }
