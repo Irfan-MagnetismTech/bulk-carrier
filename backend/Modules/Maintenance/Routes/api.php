@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
+use Modules\Maintenance\Http\Controllers\MntRunHourController;
 use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
 
 /*
@@ -25,6 +26,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'item-groups' => MntItemGroupController::class,
         'items' => MntItemController::class,
         'jobs' => MntJobController::class,
+        'run-hours' => MntRunHourController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
@@ -33,5 +35,11 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     //get Mnt Item Code
     Route::get('get-mnt-item-code/{mntItemGroupId}', [MntItemController::class, 'getMntItemCode']);
     //get mnt ship department wise items
-    Route::get('get-mnt-ship-department-wise-items/{mntShipDepartment}', [MntItemController::class, 'getMntShipDepartmentWiseItems']);
+    Route::get('get-mnt-ship-department-wise-items/{mntShipDepartmentId}', [MntItemController::class, 'getMntShipDepartmentWiseItems']);
+    //get mnt item group wise items
+    Route::get('get-mnt-item-group-wise-items/{mntItemGroupId}', [MntItemController::class, 'getMntItemGroupWiseItems']);
+    //get mnt item group wise items which has run hour
+    Route::get('get-mnt-item-group-wise-hourly-items/{mntItemGroupId}', [MntItemController::class, 'getMntItemGroupWiseHourlyItems']);
+    //get mnt ship department wise item groups 
+    Route::get('get-mnt-ship-department-wise-item-groups/{mntShipDepartmentId}', [MntItemGroupController::class, 'getMntShipDepartmentWiseItemGroups']);
 });

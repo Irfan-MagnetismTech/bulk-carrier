@@ -12,6 +12,7 @@ export default function useItem() {
     const $loading = useLoading();
     const notification = useNotification();
     const shipDepartmentWiseItems = ref([]);    
+    const itemGroupWiseHourlyItems = ref([]);
     const item = ref( {
         mnt_ship_department_id: '',
         mnt_item_group_id: '',
@@ -161,12 +162,32 @@ export default function useItem() {
             //NProgress.done();
         }
     }
+
+    async function getItemGroupWiseHourlyItems(mntItemGroupId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-mnt-item-group-wise-hourly-items/${mntItemGroupId}`);
+            itemGroupWiseHourlyItems.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
     
 
     return {
         items,
         item,
         shipDepartmentWiseItems,
+        itemGroupWiseHourlyItems,
         getItems,
         storeItem,
         showItem,
@@ -174,6 +195,7 @@ export default function useItem() {
         deleteItem,
         getItemCodeByGroupId,
         getShipDepartmentWiseItems,
+        getItemGroupWiseHourlyItems,
         isLoading,
         errors,
     };
