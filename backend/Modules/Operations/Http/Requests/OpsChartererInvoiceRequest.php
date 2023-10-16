@@ -27,7 +27,7 @@ class OpsChartererInvoiceRequest extends FormRequest
             'discount_unit'                 => ['required', 'string', 'max:50'],
             'discounted_amount'             => ['required', 'string', 'max:50'],
             'grand_total'                   => ['required', 'string', 'max:50'],
-            'business_unit'                 => ['required','numeric','gte:0'],
+            'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }
 
