@@ -31,7 +31,9 @@ class OpsCargoTypeController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $cargo_types = OpsCargoType::latest()->paginate(15);
+            $cargo_types = OpsCargoType::when(request()->business_unit != "ALL", function($q){
+                    $q->where('business_unit', request()->business_unit);  
+                })->latest()->paginate(10);
             return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
         }
         catch (QueryException $e)

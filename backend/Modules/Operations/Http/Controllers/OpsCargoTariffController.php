@@ -27,7 +27,7 @@ class OpsCargoTariffController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-   public function index()
+   public function index(Request $request): JsonResponse
    {
        try {
            $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->paginate(15);
@@ -107,8 +107,8 @@ class OpsCargoTariffController extends Controller
             );
            
             $cargoTariff->update($cargoTariffInfo);            
-            $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
+            // $cargoTariff->opsCargoTariffLines()->delete();
+            $cargoTariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
         }
