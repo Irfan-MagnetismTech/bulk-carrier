@@ -11,6 +11,7 @@ export default function useVesselRequiredCrew() {
     const notification = useNotification();
     const vesselRequiredCrew = ref( {
         ops_vessel_id: '',
+        ops_vessel_name: '',
         total_crew: '',
         effective_date: '',
         remarks: '',
@@ -25,18 +26,25 @@ export default function useVesselRequiredCrew() {
         ]
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getVesselRequiredCrews(page) {
+    async function getVesselRequiredCrews(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-vessel-required-crews',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             vesselRequiredCrews.value = data.value;
@@ -117,7 +125,7 @@ export default function useVesselRequiredCrew() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`);
             notification.showSuccess(status);
-            await getVesselRequiredCrews();
+            await getVesselRequiredCrews(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

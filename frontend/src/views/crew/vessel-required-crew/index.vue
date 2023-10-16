@@ -98,9 +98,9 @@ onMounted(() => {
           <tbody>
           <tr v-for="(requiredCrew,index) in vesselRequiredCrews?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ requiredCrew?.ops_vessel_id }}</td>
-            <td>{{ requiredCrew?.ops_vessel_id }}</td>
-            <td>{{ requiredCrew?.ops_vessel_id }}</td>
+            <td>{{ requiredCrew?.opsVessel?.name }}</td>
+            <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
+            <td>{{ requiredCrew?.opsVessel?.vessel_type }}</td>
             <td>{{ requiredCrew?.total_crew }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>

@@ -278,6 +278,23 @@ input.custom_date::-webkit-calendar-picker-indicator{
     @apply w-5 h-5 transition duration-150 ease-in-out hover:translate-y-1 hover:transform;
 }
 
+.v-select {
+    --vs-controls-color: #374151;
+    --vs-border-color: #4b5563;
+
+    --vs-dropdown-bg: #282c34;
+    --vs-dropdown-color: #eeeeee;
+    --vs-dropdown-option-color: #eeeeee;
+
+    --vs-selected-bg: #664cc3;
+    --vs-selected-color: #374151;
+
+    --vs-search-input-color: #4b5563;
+
+    --vs-dropdown-option--active-bg: #664cc3;
+    --vs-dropdown-option--active-color: #eeeeee;
+}
+
 
 @media only screen and (min-width: 768px) {
     #customDataTable {
