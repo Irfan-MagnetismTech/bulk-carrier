@@ -65,17 +65,7 @@ export default [
             },
             {
                 route: '',
-                label: 'Operation',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [],
-            },
-            {
-                route: '',
-                label: 'Vessel Certificates',
+                label: 'Certification',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -83,8 +73,28 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: '',
+                        route: 'ops.maritime-certifications.index',
                         label: 'All Certificates',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
+                    {
+                        route: '',
+                        label: 'Vessel Wise Certificate',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
+                    {
+                        route: '',
+                        label: 'Renew Schedule',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
