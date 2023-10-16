@@ -80,9 +80,15 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/cargo-tariffs/:cargoTypeId/edit`,
+		path: `/${BASE}/cargo-tariffs/:cargoTariffId/edit`,
 		name: `${BASE}.configurations.cargo-tariffs.edit`,
 		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/cargo-tariffs/:cargoTariffId`,
+		name: `${BASE}.configurations.cargo-tariffs.show`,
+		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 ];
