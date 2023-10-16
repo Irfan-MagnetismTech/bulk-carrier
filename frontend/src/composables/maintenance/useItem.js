@@ -153,7 +153,6 @@ export default function useItem() {
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-items/${mntShipDepartmentId}`);
             shipDepartmentWiseItems.value = data.value;
-            console.log(shipDepartmentWiseItems);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

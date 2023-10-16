@@ -81,7 +81,7 @@ class MntRunHourController extends Controller
                 $runHour['ops_vessel_id'] = $input['ops_vessel_id'];
                 $runHour['mnt_item_id'] = $mntItemId['id'];
                 $runHour['previous_run_hour'] = $mntItemId['present_run_hour'];
-                $runHour['present_run_hour'] = $presentRunHour;
+                $runHour['present_run_hour'] = $input['present_run_hour'];
                 $runHour['updated_on'] = $input['updated_on'];
                 $runHour['business_unit'] = Auth::user()->business_unit;
 
@@ -135,7 +135,23 @@ class MntRunHourController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $mntItem = new MntItem();
+            
+            $presentRunHour = $input['previous_run_hour'] + $input['present_run_hour'];
+            //update present run hour = previous run hour + present run hour
+            $mntItemUpdate = $mntItem->find($input['mnt_item_id'])->update(['present_run_hour' => $presentRunHour]); // mnt_items updated
+            $mntRunHour = MntRunHour::find($id)->update(['present_run_hour' => $input['present_run_hour']]); // mnt_run_hours updated
+
+            return response()->success('Run hour updated successfully', $mntRunHour, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
