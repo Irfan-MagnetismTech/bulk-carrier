@@ -75,7 +75,7 @@ class OpsChartererContractController extends Controller
    /**
     * Display the specified maritime certification.
     *
-    * @param  OpsChartererContract  $maritime_certification
+    * @param  OpsChartererContract  $charterer_contract
     * @return JsonResponse
     */
    public function show(OpsChartererContract $charterer_contract): JsonResponse

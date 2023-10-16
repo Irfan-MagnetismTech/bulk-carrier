@@ -107,8 +107,8 @@ class OpsCargoTariffController extends Controller
             );
            
             $cargoTariff->update($cargoTariffInfo);            
-            $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
+            // $cargoTariff->opsCargoTariffLines()->delete();
+            $cargoTariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
         }
