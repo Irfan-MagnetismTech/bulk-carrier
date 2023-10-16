@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsVessel extends Model
 {
     use HasFactory;
-    use \App\Traits\CreateBusinessUnit;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -40,10 +38,16 @@ class OpsVessel extends Model
         'total_cargo_hold',
         'live_tracking_config',
         'remarks',
+        'business_unit'
     ];
     
     protected static function newFactory()
     {
         return \Modules\Operations\Database\factories\OpsVesselFactory::new();
     }
+
+    // public function vesselCertificates()
+    // {
+    //     return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
+    // }
 }

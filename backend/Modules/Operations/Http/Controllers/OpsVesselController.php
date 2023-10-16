@@ -9,10 +9,11 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Http\Requests\OpsVesselRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsVesselController extends Controller
 {
-    use HasRoles; 
+    // use HasRoles; 
 
     // function __construct()
     // {
@@ -31,12 +32,8 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessel = OpsVessel::orderBy('id','DESC')->Paginate();
-
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
+            $vessels = OpsVessel::orderBy('id','DESC')->Paginate();                       
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
         {
@@ -54,16 +51,15 @@ class OpsVesselController extends Controller
     {
         try
         {
-            // dd($request->all());
+            DB::beginTransaction();
             $vessel = OpsVessel::create($request->all());
-
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully created vessel.',
-            ], 201);
+            DB::commit();
+                 
+            return response()->success('Successfully created vessel.', $vessel, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -77,13 +73,10 @@ class OpsVesselController extends Controller
     public function show(OpsVessel $vessel): JsonResponse
     {
         try
-        {
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessel.',
-            ], 200);
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -101,15 +94,14 @@ class OpsVesselController extends Controller
     {
         try
         {
-            // dd($request->all());
+            DB::beginTransaction();
             $vessel->update($request->all());
-
-            return response()->json([
-                'message' => 'Successfully updated vessel.',
-            ], 202);
+            DB::commit();
+            return response()->success('Successfully updated vessel.', $vessel, 202);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -125,12 +117,11 @@ class OpsVesselController extends Controller
         try
         {
             $vessel->delete();
-
             return response()->json([
                 'message' => 'Successfully deleted vessel.',
             ], 204);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -139,43 +130,28 @@ class OpsVesselController extends Controller
     public function search(Request $request) {
         try {
             $vessel = OpsVessel::where('name', 'like', '%' . $request->search . '%')->get();
-
-            return response()->json([
-                'value'   => $vessel,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
+            return response()->success('Successfully retrieved vessels.', $vessel, 200);
         }
-        catch (QueryException$e)
+        catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
 
     
-    public function getVesselName(){
+    public function getVesselByName(Request $request){
         try {
-            $vessels = OpsVessel::all();
-            return response()->json([
-                'value' => collect($vessels->pluck('name'))->unique()->values()->all(),
-                'message' => 'Successfully retrieved vessels name.'
-            ], 200);
+            $vessels = OpsVessel::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->limit(10)
+            ->get();
+            return response()->success('Successfully retrieved vessels name.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
 
-    public function getVesselWithoutPaginate(){
-        try
-        {
-            $vessels = OpsVessel::all();
-            return response()->json([
-                'value'   => $vessels,
-                'message' => 'Successfully retrieved vessels.',
-            ], 200);
-        }
-        catch (QueryException$e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }
