@@ -140,6 +140,7 @@ class OpsCargoTariffController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
 
     public function getCargoTariffByName(Request $request){
         try {
