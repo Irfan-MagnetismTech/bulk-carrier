@@ -4,26 +4,51 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Api from '../../apis/Api';
 import Error from '../../services/error';
-import useNotification from '../../composables/useNotification.js';
+import useNotification from '../useNotification.js';
 
-export default function usePort() {
+export default function useCargoTariff() {
 	const router = useRouter();
-	const ports = ref([]);
+	const cargoTariffs = ref([]);
 	const $loading = useLoading();
-	const portName = ref([]);
-	const voyagePorts = ref([]);
 	const notification = useNotification();
-	const port = ref({});
+	const cargoTariffLineObject = {
+		particular: '',
+		unit: '',
+		jan: '',
+		feb: '',
+		mar: '',
+		apr: '',
+		may: '',
+		jun: '',
+		jul: '',
+		aug: '',
+		sep: '',
+		oct: '',
+		nov: '',
+		dec: '',
+	};
+	const cargoTariff = ref({
+		tariff_name: '',
+		ops_vessel_id: '',
+		loading_point: '',
+		unloading_point: '',
+		ops_cargo_type_id: '',
+		currency: '',
+		status: '',
+		opsCargoTariffLines: [
+			{ ...cargoTariffLineObject }
+		]
+	});
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getPorts(page,columns = null, searchKey = null, table = null) {
+	async function getCargoTariffs(page,columns = null, searchKey = null, table = null) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/ports', {
+			const { data, status } = await Api.get('/ops/cargo-tariffs', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -31,7 +56,7 @@ export default function usePort() {
 					table: table || null,
 				},
 			});
-			ports.value = data.value;
+			cargoTariffs.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -43,16 +68,16 @@ export default function usePort() {
 		}
 	}
 
-	async function storePort(form) {
+	async function storeCargoTariff(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.post('/ops/ports', form);
-			port.value = data.value;
+			const { data, status } = await Api.post('/ops/cargo-tariffs', form);
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.ports.index' });
+			router.push({ name: 'ops.configurations.cargo-tariffs.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -63,14 +88,14 @@ export default function usePort() {
 		}
 	}
 
-	async function showPort(portId) {
+	async function showCargoTariff(cargoTariffId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/ports/${portId}`);
-			port.value = data.value;
+			const { data, status } = await Api.get(`/ops/cargo-tariffs/${cargoTariffId}`);
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -82,19 +107,19 @@ export default function usePort() {
 		}
 	}
 
-	async function updatePort(form, portId) {
+	async function updateCargoTariff(form, cargoTariffId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.put(
-				`/ops/ports/${portId}`,
+				`/ops/cargo-tariffs/${cargoTariffId}`,
 				form
 			);
-			port.value = data.value;
+			cargoTariff.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.ports.index' });
+			router.push({ name: 'ops.configurations.cargo-tariffs.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -105,16 +130,16 @@ export default function usePort() {
 		}
 	}
 
-	async function deletePort(portId) {
+	async function deleteCargoTariff(cargoTariffId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/ports/${portId}`);
+			const { data, status } = await Api.delete( `/ops/cargo-tariffs/${cargoTariffId}`);
 			notification.showSuccess(status);
-			await getPorts();
+			await getCargoTariffs();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -126,7 +151,7 @@ export default function usePort() {
 	}
 
 	// Get ports by name or code
-	async function getPortsByNameOrCode(name_or_code, service = null) {
+	async function getCargoTariffsByNameOrCode(name_or_code, service = null) {
 		NProgress.start();
 		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -136,64 +161,27 @@ export default function usePort() {
 				'dataencoding/ports/get-ports-by-name-or-code',
 				{ name_or_code , service }
 			);
-			ports.value = data.value;
-			portName.value = data.value;
+			cargoTariffs.value = data.value;
+			cargoTariff.value = data.value;
 		} catch (error) {
 			error.value = Error.showError(error);
 		} finally {
 			//loader.hide();
 			isLoading.value = false;
 			NProgress.done();
-		}
-	}
-
-	async function getPortsByVoyage(voyage_id) {
-		NProgress.start();
-		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
-
-		try {
-			const { data, status } = await Api.get(`/common/voyage-ports/${voyage_id}`);
-			voyagePorts.value = data;
-			notification.showSuccess(status);
-		} catch (error) {
-			error.value = Error.showError(error);
-		} finally {
-			//loader.hide();
-			isLoading.value = false;
-			NProgress.done();
-		}
-	}
-
-	async function searchPorts(searchParam, loading) {
-		//NProgress.start();
-
-		try {
-			const { data, status } = await Api.get(`/ops/search-ports?name_or_code=${searchParam}`);
-			ports.value = data.value;
-			notification.showSuccess(status);
-		} catch (error) {
-			const { data, status } = error.response;
-			notification.showError(status);
-		} finally {
-			loading(false)
-			//NProgress.done();
 		}
 	}
 
 	return {
-		ports,
-		port,
-		portName,
-		getPorts,
-		storePort,
-		showPort,
-		updatePort,
-		deletePort,
-		searchPorts,
-		getPortsByNameOrCode,
-		voyagePorts,
-		getPortsByVoyage,
+		cargoTariffLineObject,
+		cargoTariffs,
+		cargoTariff,
+		getCargoTariffs,
+		storeCargoTariff,
+		showCargoTariff,
+		updateCargoTariff,
+		deleteCargoTariff,
+		getCargoTariffsByNameOrCode,
 		isLoading,
 		errors,
 	};

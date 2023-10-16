@@ -177,4 +177,8 @@ table, th,td{
     position: relative;
     width: calc(100% - 2rem);
     }
+
+    .show-block {
+      @apply flex items-center w-full mt-1 text-sm rounded dark:text-gray-300 border border-gray-600 dark:bg-gray-700 bg-white p-2
+    }
 </style>

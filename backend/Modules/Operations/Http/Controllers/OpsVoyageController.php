@@ -158,11 +158,11 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageByName(Request $request){
+    public function getVoyageByVoyageNo(Request $request){
         try {
             $voyages = OpsVoyage::query()
             ->where(function ($query) use($request) {
-                $query->where('route', 'like', '%' . $request->route . '%');                
+                $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
             })
             ->limit(10)
             ->get();
