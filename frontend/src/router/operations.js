@@ -91,4 +91,24 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Maritime Certifications */
+	{
+		path: `/${BASE}/maritime-certifications`,
+		name: `${BASE}.maritime-certifications.index`,
+		component: () => import(`../views/${ViEWBASE}/maritime-certifications/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/maritime-certifications/create`,
+		name: `${BASE}.maritime-certifications.create`,
+		component: () => import (`../views/${ViEWBASE}/maritime-certifications/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/maritime-certifications/:maritimeCertificateId/edit`,
+		name: `${BASE}.maritime-certifications.edit`,
+		component: () => import (`../views/${ViEWBASE}/maritime-certifications/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
