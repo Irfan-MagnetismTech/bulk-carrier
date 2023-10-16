@@ -167,7 +167,7 @@ class OpsVoyageController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved voyages name.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
+            return response()->success('Successfully retrieved voyages name.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
