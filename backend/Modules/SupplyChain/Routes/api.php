@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     // Route::prefix('scm')->group(function () {
     Route::apiResources([
-        // 'material-categories' => ScmMaterialCategoryController::class,
+        'material-categories' => ScmMaterialCategoryController::class,
         'units' => ScmUnitController::class,
         // 'materials' => ScmMaterialController::class,
         // 'wearhouses' => ScmWearhouseController::class,

@@ -16,12 +16,10 @@ const props = defineProps({
   },
 });
 
-
 const { units, getUnits, deleteUnit, isLoading ,confirmDelete} = useUnit();
 const icons = useHeroIcon();
 const { setTitle } = Title();
 setTitle('Units');
-
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -37,7 +35,7 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching ranks:", error);
+      console.error("Error fetching units:", error);
     });
 });
 
@@ -82,7 +80,7 @@ onMounted(() => {
             <td>{{ unit?.short_code }}</td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'supply-chain.unit.edit', params: { unitId: unit?.id } }"></action-button>
-              <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
+              <action-button @click="deleteUnit(unit?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
