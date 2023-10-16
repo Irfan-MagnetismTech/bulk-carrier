@@ -21,11 +21,12 @@ export default function useItem() {
         description: [{ key: '', value: '' }],
         has_run_hour: false,
         present_run_hour: 0,
+        business_unit: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getItems(page) {
+    async function getItems(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -34,6 +35,7 @@ export default function useItem() {
             const {data, status} = await Api.get('/mnt/items',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             items.value = data.value;

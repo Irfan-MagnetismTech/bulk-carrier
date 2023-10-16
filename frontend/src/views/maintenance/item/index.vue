@@ -22,6 +22,8 @@ setTitle('Item List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
 function confirmDelete(id) {
@@ -40,9 +42,13 @@ function confirmDelete(id) {
   })
 }
 
+function setBusinessUnit($el){
+  businessUnit.value = $el.target.value;
+}
+
 onMounted(() => {
   watchEffect(() => {
-  getItems(props.page)
+  getItems(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -70,6 +76,15 @@ onMounted(() => {
     </div>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
+    <div class="relative w-full">
+      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
+      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
+      >
+        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
+        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
+        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
+      </select>
+    </div>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
