@@ -14,6 +14,7 @@ export default function useVesselRequiredCrew() {
         total_crew: '',
         effective_date: '',
         remarks: '',
+        business_unit: '',
         crwVesselRequiredCrewLines: [
             {
                 crw_rank_id: '',

@@ -1,5 +1,5 @@
 <template>
-    <div @dragenter.prevent="toggleActive()" @dragleave.prevent="toggleActive()" style="max-height: 100px" @dragover.prevent @drop.prevent="drop" :class="{ 'bg-green-100 border-green-300 dark:bg-green-700': dragActive }" class="flex items-center justify-center w-full px-4 py-6 border-4 border-dashed rounded dark:border-2">
+    <div @dragenter.prevent="toggleActive()" @dragleave.prevent="toggleActive()" style="height: auto" @dragover.prevent @drop.prevent="drop" :class="{ 'bg-green-100 border-green-300 dark:bg-green-700': dragActive }" class="flex items-center justify-center w-full px-4 py-6 border-4 border-dashed rounded dark:border-2">
         <div class="flex custom-dropzone flex-col items-center justify-center gap-2 text-gray-500 dark:text-gray-100">
             <p class="text-sm font-semibold">Drag a file here</p>
             <!-- File input -->

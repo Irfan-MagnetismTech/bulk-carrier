@@ -15,6 +15,8 @@ export default function usePolicy() {
         type: '',
         attachment: '',
     });
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -22,6 +24,9 @@ export default function usePolicy() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-policies',{
@@ -112,7 +117,7 @@ export default function usePolicy() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
             notification.showSuccess(status);
-            await getPolicies();
+            await getPolicies(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

@@ -14,6 +14,8 @@ export default function useRank() {
         short_name: '',
         business_unit: '',
     });
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -22,6 +24,9 @@ export default function useRank() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-ranks',{
@@ -108,7 +113,7 @@ export default function useRank() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-ranks/${rankId}`);
             notification.showSuccess(status);
-            await getRanks();
+            await getRanks(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
