@@ -85,4 +85,10 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/cargo-tariffs/:cargoTariffId`,
+		name: `${BASE}.configurations.cargo-tariffs.show`,
+		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

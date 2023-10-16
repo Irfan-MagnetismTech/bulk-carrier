@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
+  <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Port</h2>
     <default-button :title="'Port List'" :to="{ name: 'ops.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
   </div>
