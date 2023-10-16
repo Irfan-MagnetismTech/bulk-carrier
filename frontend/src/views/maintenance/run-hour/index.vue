@@ -102,7 +102,7 @@ onMounted(() => {
             <td class="">
               <div class="flex justify-center">
                 <action-button :action="'edit'" :to="{ name: 'maintenance.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
-                <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button>
+                <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
               </div>
             </td>
           </tr>

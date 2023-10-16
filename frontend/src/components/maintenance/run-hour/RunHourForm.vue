@@ -7,7 +7,7 @@
               <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
             </div>
-            <input v-else type="text" v-model="form.name" placeholder="Vessel Name" class="form-input" readonly />
+            <input v-else type="text" :value="form.opsVessel.name" placeholder="Vessel Name" class="form-input" readonly />
             
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
@@ -17,7 +17,7 @@
               <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_ship_department_id">
             </div>
-            <input v-else type="text" v-model="form.name" placeholder="Ship Department Name" class="form-input" readonly />
+            <input v-else type="text" :value="form.mntItem.mntShipDepartment.name" placeholder="Ship Department Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -26,7 +26,7 @@
               <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_item_group_id">
             </div>
-            <input v-else type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" readonly />
+            <input v-else type="text" :value="form.mntItem.mntItemGroup.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <div class="block w-full mt-2 text-sm">
@@ -35,12 +35,12 @@
               <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
               <input type="hidden" v-model="form.mnt_item_id">
             </div>
-            <input v-else type="text" v-model="form.name" placeholder="Item Name" class="form-input" readonly />
+            <input v-else type="text" :value="form.mntItem.name" placeholder="Item Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
           </div>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Previous Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" :readonly="1" />
+            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" readonly />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
