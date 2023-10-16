@@ -140,5 +140,21 @@ class OpsVesselCertificateController extends Controller
     }
 
 
+    public function getVesselCertificateByReferenceNumber(Request $request) {
+        try {
+            $vesselCertificates = OpsVesselCertificate::query()
+                ->where(function ($query) use($request) {
+                    $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+                })
+                ->limit(10)
+                ->get();
+
+            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 }
