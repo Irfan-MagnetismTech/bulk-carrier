@@ -17,11 +17,12 @@ export default function useItemGroup() {
         mnt_ship_department: '',
         name: '',
         short_code: '',
+        business_unit: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getItemGroups(page) {
+    async function getItemGroups(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -30,6 +31,7 @@ export default function useItemGroup() {
             const {data, status} = await Api.get('/mnt/item-groups',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             itemGroups.value = data.value;
