@@ -1,5 +1,5 @@
 <template>
-    <!-- Basic information -->
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
@@ -92,6 +92,7 @@ import Editor from '@tinymce/tinymce-vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {ref, onMounted, watch, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
+import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItems, getShipDepartmentWiseItems } = useItem();

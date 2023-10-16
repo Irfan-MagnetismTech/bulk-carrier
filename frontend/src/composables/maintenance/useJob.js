@@ -18,11 +18,12 @@ export default function useItemGroup() {
         mnt_item_id: '',
         mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
         dept_wise_items: [],
+        business_unit: '',
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getJobs(page) {
+    async function getJobs(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -31,6 +32,7 @@ export default function useItemGroup() {
             const {data, status} = await Api.get('/mnt/jobs',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             jobs.value = data.value;
