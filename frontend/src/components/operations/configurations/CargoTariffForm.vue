@@ -1,6 +1,5 @@
 <template>
     <business-unit-input v-model="form.business_unit"></business-unit-input>
-
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
@@ -116,7 +115,7 @@
                 </tr>
               </thead>
 
-              <tbody v-if="form.opsCargoTariffLines.length > 0">
+              <tbody>
                   <tr v-for="(cargoTariff, index) in form.opsCargoTariffLines">
                     <td>
                       <input type="text" v-model="form.opsCargoTariffLines[index].particular" placeholder="Particular" class="form-input" required autocomplete="off" />
@@ -177,6 +176,7 @@
 
 </template>
 <script setup>
+import { ref, watch } from 'vue';
 import Error from "../../Error.vue";
 import usePort from '../../../composables/operations/usePort';
 import useVessel from '../../../composables/operations/useVessel';
@@ -193,8 +193,11 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
-    cargoTariffLineObject: { type: Object }
+    cargoTariffLineObject: { type: Object },
+    formType: { type: String, required : false }
 });
+
+const editInitiated = ref(false);
 
 function fetchVessels(search, loading) {
       loading(true);
@@ -219,6 +222,21 @@ function removeItem(index){
   props.form.opsCargoTariffLines.splice(index, 1);
 }
 
+watch(() => props.form, (value) => {
+
+    if(props?.formType == 'edit' && editInitiated.value != true) {
+      console.log("Initiating Bro, ", value)
+
+      cargoTypes.value = [props?.form?.opsCargoType]
+      vessels.value = [props?.form?.opsVessel]
+
+      if(cargoTypes.value.length> 0 && vessels.value.length > 0) {
+        editInitiated.value = true
+        console.log("Initiated Successfully")
+      }
+    }
+  }, {deep: true});
+
 </script>
 <style lang="postcss" scoped>
 .input-group {
@@ -235,5 +253,16 @@ function removeItem(index){
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
 }
 </style>

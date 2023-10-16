@@ -6,7 +6,7 @@
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <form @submit.prevent="updateCargoTariff(cargoTariff, cargoTariffId)">
           <!-- Port Form -->
-          <cargo-tariff-form v-model:form="cargoTariff" :errors="errors"></cargo-tariff-form>
+          <cargo-tariff-form v-model:form="cargoTariff" :errors="errors" :formType="formType" :cargoTariffLineObject="cargoTariffLineObject"></cargo-tariff-form>
           <!-- Submit button -->
           <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
       </form>
@@ -25,11 +25,13 @@ const icons = useHeroIcon();
 
 const route = useRoute();
 const cargoTariffId = route.params.cargoTariffId;
-const { cargoTariff, showCargoTariff, updateCargoTariff, errors } = useCargoTariff();
+const { cargoTariff, cargoTariffLineObject, showCargoTariff, updateCargoTariff, errors } = useCargoTariff();
 
 const { setTitle } = Title();
 
 setTitle('Edit Cargo Tariff');
+
+const formType = 'edit';
 
 onMounted(() => {
   showCargoTariff(cargoTariffId);

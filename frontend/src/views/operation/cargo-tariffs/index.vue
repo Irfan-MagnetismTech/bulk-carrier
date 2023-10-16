@@ -82,16 +82,24 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Cargo Tariff</th>
-            <th>Description</th>
+            <th>Tariff Name</th>
+            <th>Vessel</th>
+            <th>Loading Point</th>
+            <th>Unloading Point</th>
+            <th>Cargo Type</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
           </thead>
           <tbody v-if="cargoTariffs?.data?.length">
               <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
                   <td>{{ cargoTariffs.from + index }}</td>
-                  <td>{{ cargoTariff?.cargo_type }}</td>
-                  <td>{{ cargoTariff?.description }}</td>
+                  <td>{{ cargoTariff?.tariff_name }}</td>
+                  <td>{{ cargoTariff?.opsVessel?.name }}</td>
+                  <td>{{ cargoTariff?.loading_point }}</td>
+                  <td>{{ cargoTariff?.unloading_point }}</td>
+                  <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
+                  <td>{{ cargoTariff?.status }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
                       <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
