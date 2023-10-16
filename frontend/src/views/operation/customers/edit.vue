@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
+  <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Customer</h2>
     <default-button :title="'Customer List'" :to="{ name: 'ops.configurations.customers.index' }" :icon="icons.DataBase"></default-button>
   </div>

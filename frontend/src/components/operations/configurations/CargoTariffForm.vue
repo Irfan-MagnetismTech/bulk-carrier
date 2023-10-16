@@ -225,14 +225,12 @@ function removeItem(index){
 watch(() => props.form, (value) => {
 
     if(props?.formType == 'edit' && editInitiated.value != true) {
-      console.log("Initiating Bro, ", value)
 
       cargoTypes.value = [props?.form?.opsCargoType]
       vessels.value = [props?.form?.opsVessel]
 
       if(cargoTypes.value.length> 0 && vessels.value.length > 0) {
         editInitiated.value = true
-        console.log("Initiated Successfully")
       }
     }
   }, {deep: true});
