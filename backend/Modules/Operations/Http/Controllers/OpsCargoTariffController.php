@@ -49,18 +49,18 @@ class OpsCargoTariffController extends Controller
     */
     public function store(OpsCargoTariffRequest $request): JsonResponse
     {
-        // dd($request);
+        dd($request);
         try {
-            DB::beginTransaction();
-            $cargoTariffInfo = $request->except(
-                '_token',
-                'opsCargoTariffLines',
-            );
+            // DB::beginTransaction();
+            // $cargoTariffInfo = $request->except(
+            //     '_token',
+            //     'opsCargoTariffLines',
+            // );
 
-            $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
-            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
-            DB::commit();
-            return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
+            // $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
+            // $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
+            // DB::commit();
+            // return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
         }
         catch (QueryException $e)
         {
