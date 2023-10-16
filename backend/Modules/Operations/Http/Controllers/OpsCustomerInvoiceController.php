@@ -131,18 +131,18 @@ class OpsCustomerInvoiceController extends Controller
       */
      public function destroy(OpsCustomerInvoice $customer_invoice): JsonResponse
      {
-         try
-         {
-             $customer_invoice->opsCustomerInvoiceLines()->delete();
-             $customer_invoice->delete();
- 
-             return response()->json([
-                 'message' => 'Successfully deleted vessel certificate.',
-             ], 204);
-         }
-         catch (QueryException $e)
-         {
-             return response()->error($e->getMessage(), 500);
-         }
+        try
+        {
+            $customer_invoice->opsCustomerInvoiceLines()->delete();
+            $customer_invoice->delete();
+
+            return response()->json([
+                'message' => 'Successfully deleted customer invoice.',
+            ], 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
      }
 }
