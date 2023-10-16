@@ -105,10 +105,9 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
-           
-            $cargoTariff->update($cargoTariffInfo);            
-            // $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
+                       
+            $cargo_tariff->update($cargoTariffInfo);            
+            $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
         }
