@@ -27,7 +27,7 @@ class OpsCargoTariffController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-   public function index()
+   public function index(Request $request): JsonResponse
    {
        try {
            $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->paginate(15);
