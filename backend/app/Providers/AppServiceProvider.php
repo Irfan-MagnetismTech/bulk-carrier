@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         //relational method name case changing issue fix
         (new ReflectionClass(Model::class))->getProperty('snakeAttributes')->setValue(null, false);
 
-        Response::macro('success', function ($message, $value, $statusCode = 200) {
+        Response::macro('success', function ($message = "data", $value, $statusCode = 200) {
             return response()->json([
                 'message' => $message,
                 'value' => $value,
