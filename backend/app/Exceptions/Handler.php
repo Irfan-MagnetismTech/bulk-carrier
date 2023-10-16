@@ -35,49 +35,49 @@ class Handler extends ExceptionHandler
         /**
          * Handle the Authentication exception
          */
-        $this->renderable(function (QueryException $e) {
-            $errorMessage = $e->getMessage();
+        // $this->renderable(function (QueryException $e) {
+        //     $errorMessage = $e->getMessage();
 
-            if (app()->environment('production')) {
-                switch ($e->errorInfo[1]) {
-                    case 1366:
-                        $errorMessage = 'Data type is not matching for some columns!';
-                        break;
+        //     if (app()->environment('production')) {
+        //         switch ($e->errorInfo[1]) {
+        //             case 1366:
+        //                 $errorMessage = 'Data type is not matching for some columns!';
+        //                 break;
 
-                    case 3730:
-                        $errorMessage = 'Data is already used in another section!';
-                        break;
+        //             case 3730:
+        //                 $errorMessage = 'Data is already used in another section!';
+        //                 break;
 
-                    case 1451:
-                        $errorMessage = 'Related data is used in another section!';
-                        break;
-                    case 1264:
-                        $errorMessage = 'Invaled number range!';
-                        break;
-                }
-            }
+        //             case 1451:
+        //                 $errorMessage = 'Related data is used in another section!';
+        //                 break;
+        //             case 1264:
+        //                 $errorMessage = 'Invaled number range!';
+        //                 break;
+        //         }
+        //     }
 
-            return response()->error($errorMessage, 500);
-        });
+        //     return response()->error($errorMessage, 500);
+        // });
 
         /**
          * Handle the validation exception
          */
-        $this->renderable(fn (ValidationException $e)  => response()->error($e->getMessage(), 406));
+        // $this->renderable(fn (ValidationException $e)  => response()->error($e->getMessage(), 406));
 
         /**
          * Handle the Authentication exception
          */
-        $this->renderable(fn (AuthenticationException $e) => response()->error($e->getMessage(), 401));
+        // $this->renderable(fn (AuthenticationException $e) => response()->error($e->getMessage(), 401));
 
         /**
          * Handle all exceptions
          */
-        $this->renderable(fn (Exception $e) => response()->error($e->getMessage(), 200));
+        // $this->renderable(fn (Exception $e) => response()->error($e->getMessage(), 200));
 
         /**
          * Handle the error thrown by the application.
          */
-        $this->renderable(fn (Error $e, $request) => response()->error($e->getMessage(), 500));
+        // $this->renderable(fn (Error $e, $request) => response()->error($e->getMessage(), 500));
     }
 }
