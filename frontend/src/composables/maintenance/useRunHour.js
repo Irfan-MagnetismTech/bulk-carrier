@@ -21,12 +21,13 @@ export default function useRunHour() {
         present_run_hour: '',
         updated_on: '',
         itemGroupWiseItems: [],
+        business_unit: '',
         form_type: 'create'
     });
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRunHours(page) {
+    async function getRunHours(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -35,6 +36,7 @@ export default function useRunHour() {
             const {data, status} = await Api.get('/mnt/run-hours',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             runHours.value = data.value;

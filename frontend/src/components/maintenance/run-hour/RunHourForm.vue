@@ -1,5 +1,5 @@
 <template>
-    <!-- Basic information -->
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
@@ -66,6 +66,7 @@ import {onMounted, watch} from "vue";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
+import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const props = defineProps({
   form: {
