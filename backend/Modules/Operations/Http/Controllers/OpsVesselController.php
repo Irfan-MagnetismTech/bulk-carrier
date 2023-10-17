@@ -58,8 +58,8 @@ class OpsVesselController extends Controller
                 'opsBunkers',
             );
             $vessel = OpsVessel::create($vesselInfo);
-            $voyageBoatNote->opsVesselCertificates()->createMany($request->opsVesselCertificates);
-            $voyageBoatNote->opsBunkers()->createMany($request->opsVesselCertificates);
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->createMany($request->opsVesselCertificates);
             DB::commit();
                  
             return response()->success('Successfully created vessel.', $vessel, 201);
