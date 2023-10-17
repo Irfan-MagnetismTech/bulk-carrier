@@ -17,8 +17,8 @@ class MntItemRequest extends FormRequest
         return [
             'mnt_ship_department_id' => 'required',
             'mnt_item_group_id' => 'required',
-            'name'  => ['required', Rule::unique('mnt_items')->ignore($this->id)],
-            'item_code' => ['required', Rule::unique('mnt_items')->ignore($this->id)],
+            'name'  => ['required', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'item_code' => ['required', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }
 
@@ -30,7 +30,8 @@ class MntItemRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.unique' => 'Item name on selected business unit already exists.',
+            'item_code.unique' => 'Item code on selected business unit already exists.',
         ];
     }
 

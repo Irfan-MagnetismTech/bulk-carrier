@@ -15,8 +15,8 @@ class MntItemGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', Rule::unique('mnt_item_groups')->ignore($this->id)],
-            'short_code' => 'required',
+            'name'  => ['required', Rule::unique('mnt_item_groups')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'short_code' => ['required', Rule::unique('mnt_item_groups')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }
 
@@ -28,7 +28,8 @@ class MntItemGroupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.unique' => 'Item group name on selected business unit already exists.',
+            'short_code.unique' => 'Item group short code on selected business unit already exists.',
         ];
     }
 

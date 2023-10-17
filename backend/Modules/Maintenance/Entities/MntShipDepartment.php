@@ -11,7 +11,7 @@ class MntShipDepartment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','short_code'];
+    protected $fillable = ['name','short_code','business_unit'];
 
     public function mntItem () : HasMany
     {

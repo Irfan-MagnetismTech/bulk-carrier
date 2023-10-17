@@ -19,9 +19,10 @@ return new class extends Migration
             $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
             $table->unsignedBigInteger('mnt_item_group_id');
             $table->foreign('mnt_item_group_id')->references('id')->on('mnt_item_groups');
-            $table->string('name', 255)->unique();
-            $table->string('item_code', 255)->unique();
+            $table->string('name', 255);
+            $table->string('item_code', 255);
             $table->text('description')->nullable();
+            $table->enum('business_unit',['TSLL','PSML']);
             $table->integer('has_run_hour');
             $table->integer('present_run_hour');
             $table->timestamps();

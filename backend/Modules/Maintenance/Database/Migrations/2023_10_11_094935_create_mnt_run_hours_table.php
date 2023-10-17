@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('previous_run_hour')->nullable();
             $table->integer('present_run_hour')->nullable();
             $table->date('updated_on')->nullable();
-            $table->enum('business_unit',['TSLL','PSML'])->default('TSLL');
+            $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();
         });
 

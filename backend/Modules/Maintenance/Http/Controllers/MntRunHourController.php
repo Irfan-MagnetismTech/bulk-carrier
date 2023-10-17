@@ -21,15 +21,15 @@ class MntRunHourController extends Controller
         try {
 
             $runHours = MntRunHour::with(['opsVessel:id,name','mntItem.mntItemGroup'])
-            ->whereIn('id',function ($query) {
-                $query->from('mnt_run_hours')
-                    ->select(DB::raw("MAX(id)"))
-                    ->groupBy('mnt_item_id');
-            })
-            // ->when(request()->business_unit != "ALL", function($q){
-            //     $q->where('business_unit', request()->business_unit);  
-            //     })
-            ->paginate(10);
+                        ->whereIn('id',function ($query) {
+                            $query->from('mnt_run_hours')
+                                ->select(DB::raw("MAX(id)"))
+                                ->groupBy('mnt_item_id');
+                        })
+                        ->when(request()->business_unit != "ALL", function($q){
+                            $q->where('business_unit', request()->business_unit);  
+                        })
+                        ->paginate(10);
 
             return response()->success('Run hours retrieved successfully', $runHours, 200);
             
@@ -83,7 +83,7 @@ class MntRunHourController extends Controller
                 $runHour['previous_run_hour'] = $mntItemId['present_run_hour'];
                 $runHour['present_run_hour'] = $input['present_run_hour'];
                 $runHour['updated_on'] = $input['updated_on'];
-                $runHour['business_unit'] = Auth::user()->business_unit;
+                $runHour['business_unit'] = $input['business_unit'];
 
                 $mntRunHour = MntRunHour::create($runHour);
             }

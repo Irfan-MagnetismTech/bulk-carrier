@@ -21,7 +21,11 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name'])->paginate(10);
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name'])
+                        ->when(request()->business_unit != "ALL", function($q){
+                            $q->where('business_unit', request()->business_unit);  
+                        })
+                        ->paginate(10);
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
             
@@ -52,7 +56,7 @@ class MntJobController extends Controller
             $jobInput['ops_vessel_id'] = $runHourInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
             $jobInput['mnt_item_id'] = $runHourInput['mnt_item_id'] = $request->get('mnt_item_id');
-            $jobInput['business_unit'] = $runHourInput['business_unit'] = Auth::user()->business_unit;
+            $jobInput['business_unit'] = $runHourInput['business_unit'] = $request->get('business_unit');
 
             $jobLines = $request->get('mnt_job_lines');
             
@@ -118,7 +122,7 @@ class MntJobController extends Controller
             $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
-            $jobInput['business_unit'] = Auth::user()->business_unit;
+            $jobInput['business_unit'] = $request->get('business_unit');
 
             $jobLines = $request->get('mnt_job_lines');
             

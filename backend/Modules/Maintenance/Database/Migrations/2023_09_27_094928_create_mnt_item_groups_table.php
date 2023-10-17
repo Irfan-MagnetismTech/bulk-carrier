@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('mnt_ship_department_id');
             $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
-            $table->string('name', 255)->unique();
-            $table->string('short_code', 255)->unique();
+            $table->string('name', 255);
+            $table->string('short_code', 255);
+            $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();
         });
     }

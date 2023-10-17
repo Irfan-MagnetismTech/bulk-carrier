@@ -11,7 +11,7 @@ class MntItemGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['mnt_ship_department_id','name','short_code'];
+    protected $fillable = ['mnt_ship_department_id','name','short_code','business_unit'];
 
     public function mntShipDepartment () : BelongsTo
     {

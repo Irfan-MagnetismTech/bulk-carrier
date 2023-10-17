@@ -15,8 +15,9 @@ return new class extends Migration
 
         Schema::create('mnt_ship_departments', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->unique();
-            $table->string('short_code', 255)->unique();
+            $table->string('name', 255);
+            $table->string('short_code', 255);
+            $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();
         });
 
