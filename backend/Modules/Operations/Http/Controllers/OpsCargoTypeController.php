@@ -107,7 +107,7 @@ class OpsCargoTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  OpsCargoType  $port
+     * @param  OpsCargoType  $cargo_type
      * @return \Illuminate\Http\Response
      */
     public function destroy(OpsCargoType $cargo_type): JsonResponse
@@ -116,7 +116,7 @@ class OpsCargoTypeController extends Controller
             $cargo_type->delete($cargo_type);
 
             return response()->json([
-                'message' => 'Port deleted Successfully.'
+                'message' => 'Cargo type deleted Successfully.'
             ], 204);
         }
         catch (QueryException $e)
