@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     // Route::prefix('scm')->group(function () {
@@ -11,5 +12,5 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         // 'wearhouses' => ScmWearhouseController::class,
         // 'vendors' => ScmVendorController::class
     ]);
-    // Route::get('search-material-category',[ScmMaterialCategoryController::class,"searchMaterialCategory"])->name('searchMaterialCategory');
+    Route::get('search-material-category',[ScmMaterialCategoryController::class,"searchMaterialCategory"])->name('searchMaterialCategory');
 });
