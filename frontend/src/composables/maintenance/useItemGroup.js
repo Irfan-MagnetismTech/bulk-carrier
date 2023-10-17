@@ -55,7 +55,7 @@ export default function useItemGroup() {
             const { data, status } = await Api.post('/mnt/item-groups', form);
             itemGroup.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item-group.index" });
+            router.push({ name: "mnt.item-groups.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -96,7 +96,7 @@ export default function useItemGroup() {
             );
             itemGroup.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item-group.index" });
+            router.push({ name: "mnt.item-groups.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

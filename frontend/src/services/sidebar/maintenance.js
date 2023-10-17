@@ -52,7 +52,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'maintenance.item-group.create',
+                        route: 'mnt.item-groups.create',
                         label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -62,7 +62,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'maintenance.item-group.index',
+                        route: 'mnt.item-groups.index',
                         label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

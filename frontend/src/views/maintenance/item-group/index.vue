@@ -68,8 +68,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Item Group List</h2>
-    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.item-group.create' }"></default-button> -->
-    <default-button :title="'Create Item Group'" :to="{ name: 'maintenance.item-group.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'mnt.item-groups.create' }"></default-button> -->
+    <default-button :title="'Create Item Group'" :to="{ name: 'mnt.item-groups.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <div class="relative w-full">
@@ -112,7 +112,7 @@ onMounted(() => {
             
             <td class="">
               <div class="flex justify-center">
-                <action-button :action="'edit'" :to="{ name: 'maintenance.item-group.edit', params: { itemGroupId: itemGroup?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.item-groups.edit', params: { itemGroupId: itemGroup?.id } }"></action-button>
                 <action-button @click="confirmDelete(itemGroup?.id)" :action="'delete'"></action-button>
               </div>
             </td>
@@ -128,6 +128,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="itemGroups" to="maintenance.item-group.index" :page="page"></Paginate>
+    <Paginate :data="itemGroups" to="mnt.item-groups.index" :page="page"></Paginate>
   </div>
 </template>
