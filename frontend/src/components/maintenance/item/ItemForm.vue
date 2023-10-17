@@ -125,16 +125,6 @@
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>        
     </div>
-
-    
-    
-
-    
-
-
-    
-
-    
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -157,10 +147,23 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-watch(() => props.form.mnt_ship_department_name, (value) => {
-  props.form.mnt_ship_department_id = value?.id;
-  fetchShipDepartmentWiseItemGroups();
+watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
+  props.form.mnt_ship_department_id = props.form.mnt_ship_department_name?.id;
+  console.log("New:" + newValue + "Old:" + oldValue)
+  if(oldValue !== ''){
+    props.form.mnt_item_group_name = null;
+  }
+  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
 });
+
+
+// watch(props.form.mnt_ship_department_name, (newValue, oldValue) => {
+//   alert("s")
+//   if(newValue !== oldValue){
+//     props.form.mnt_item_group_name = null;
+//   }
+//   getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+// });
 
 watch(() => props.form.mnt_item_group_name, (value) => {
   props.form.mnt_item_group_id = value?.id;
