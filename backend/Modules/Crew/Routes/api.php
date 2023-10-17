@@ -58,7 +58,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
 
 
-    //helper apis 
+    //helper apis
     Route::post('get-crew-ranks', [CrwCommonController::class, 'getCrewRanks']);
 
 });

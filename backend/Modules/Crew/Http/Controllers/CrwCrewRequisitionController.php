@@ -14,8 +14,8 @@ class CrwCrewRequisitionController extends Controller
     public function index()
     {
         try {
-            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines','opsVessel:id,name')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewRequisitions, 200);
@@ -44,11 +44,10 @@ class CrwCrewRequisitionController extends Controller
         }
     }
 
-
-    public function show(CrwCrewRequisition $crwCrewRequisition)
+    public function show(CrwCrewRequisition $crwRequisition)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewRequisition->load('crwCrewRequisitionLines'), 200);
+            return response()->success('Retrieved succesfully', $crwRequisition->load('crwCrewRequisitionLines','opsVessel'), 200);
         }
         catch (QueryException $e)
         {
@@ -56,17 +55,17 @@ class CrwCrewRequisitionController extends Controller
         }
     }
 
-    public function update(Request $request, CrwCrewRequisition $crwCrewRequisition)
+    public function update(Request $request, CrwCrewRequisition $crwRequisition)
     {
         try {
-            DB::transaction(function () use ($request, $crwCrewRequisition)
+            DB::transaction(function () use ($request, $crwRequisition)
             {
                 $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
-                $crwCrewRequisition->update($crwRequisitionData);
-                $crwCrewRequisition->crwCrewRequisitionLines()->delete();
-                $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
+                $crwRequisition->update($crwRequisitionData);
+                $crwRequisition->crwCrewRequisitionLines()->delete();
+                $crwRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
-                return response()->success('Updated succesfully', $crwCrewRequisition, 202);
+                return response()->success('Updated succesfully', $crwRequisition, 202);
             });
         }
         catch (QueryException $e)
@@ -75,10 +74,10 @@ class CrwCrewRequisitionController extends Controller
         }
     }
 
-    public function destroy(CrwCrewRequisition $crwCrewRequisition)
+    public function destroy(CrwCrewRequisition $crwRequisition)
     {
         try {
-            $crwCrewRequisition->delete();
+            $crwRequisition->delete();
 
             return response()->success('Deleted Succesfully', null, 204);
         }

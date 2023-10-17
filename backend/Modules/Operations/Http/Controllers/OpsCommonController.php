@@ -23,8 +23,7 @@ use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsLighterNoonReport;
-
-use Modules\Operations\Http\Requests\OpsPortRequest;
+use Modules\Operations\Entities\OpsCustomerInvoice;
 
 class OpsCommonController extends Controller
 {
@@ -267,6 +266,24 @@ class OpsCommonController extends Controller
             })
             ->latest()->get();        
             return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // To get customer invoice data
+    public function getCustomerInvoiceWithoutPaginate(Request $request)
+    {
+        try
+        {
+            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
+            return response()->success('Successfully retrieved customer invoices for without paginate.', $customerInvoices, 200);
         }
         catch (QueryException $e)
         {

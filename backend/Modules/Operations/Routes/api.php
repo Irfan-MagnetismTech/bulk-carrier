@@ -18,6 +18,7 @@ use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
+use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'handover-takeovers' => OpsHandoverTakeoverController::class,
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
+        'customer-invoices' => OpsCustomerInvoiceController::class,
     ]);
 
     //start for without pagination
@@ -65,6 +67,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('handover-takeovers/without/paginate', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
     Route::get('charterer-invoices/without/paginate', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
+    Route::get('customer-invoices/without/paginate', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
     //end for without pagination
 
     // start for search api route

@@ -1,39 +1,71 @@
-<template>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Rank Name" class="form-input" autocomplete="off" required />
-          <Error v-if="errors?.name" :errors="errors.name" />
-        </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.short_name" placeholder="Short Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.short_name" :errors="errors.short_name" />
-      </label>
-    </div>
-</template>
 <script setup>
 import Error from "../Error.vue";
-import Editor from '@tinymce/tinymce-vue';
-
-import useRole from "../../composables/administration/useRole";
-import {onMounted} from "vue";
+import DropZoneV2 from '../../components/DropZoneV2.vue';
+import {onMounted, computed, ref, watch} from "vue";
+import {useStore} from "vuex";
+import env from '../../config/env';
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 
 const props = defineProps({
   form: {
     required: false,
     default: {}
   },
+  page: {
+    required: false,
+    default: {}
+  },
   errors: { type: [Object, Array], required: false },
 });
 
-const { roles, getRoles } = useRole();
+const store = useStore();
+const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+
+watch(dropZoneFile, (value) => {
+  if (value !== null && value !== undefined) {
+    props.form.attachment = value;
+  }
+});
 
 onMounted(() => {
-  getRoles();
+
 });
 
 </script>
+<template>
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Policy Name <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.name" placeholder="Policy Name" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.name" :errors="errors.name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Policy Type <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.type" autocomplete="off" required>
+        <option value="" selected disabled>select</option>
+        <option value="Drug">Drug</option>
+        <option value="Environment">Environment</option>
+      </select>
+      <Error v-if="errors?.short_name" :errors="errors.short_name" />
+    </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">
+        Attachment
+        <template v-if="form.attachment">
+           <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.attachment">{{
+            (typeof $props.form?.attachment === 'string')
+                ? '('+$props.form?.attachment.split('/').pop()+')'
+                : ''
+          }}</a>
+        </template>
+      </span>
+      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+    </label>
+  </div>
+</template>
 
 <style lang="postcss" scoped>
 #table, #table th, #table td{
