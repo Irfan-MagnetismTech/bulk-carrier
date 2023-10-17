@@ -3,19 +3,41 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <select v-model="form.mnt_ship_department_id" required class="form-input">
+            <!-- <select v-model="form.mnt_ship_department_id" required class="form-input">
               <option value="" disabled selected>Select Ship Department</option>
               <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option>
-            </select>
+            </select> -->
+            <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.mnt_ship_department_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+          </v-select>
+          <input type="hidden" v-model="form.mnt_ship_department_id">
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-          <select v-model="form.mnt_item_group_id" required class="form-input" @change="fetchItemCode" >
+          <!-- <select v-model="form.mnt_item_group_id" required class="form-input" @change="fetchItemCode" >
             <option value="" disabled selected>Select Item Group</option>
             <option v-for="itemGroup in itemGroups" :value="itemGroup.id">{{ itemGroup.name }}</option>
               
-            </select>
+            </select> -->
+            <v-select placeholder="Select Item Group" :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.mnt_item_group_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+          </v-select>
+          <input type="hidden" v-model="form.mnt_item_group_id">
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -119,12 +141,13 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const { getItemCodeByGroupId, errors } = useItem();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 
 const props = defineProps({
   form: {
@@ -133,6 +156,26 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+
+watch(() => props.form.mnt_ship_department_name, (value) => {
+  props.form.mnt_ship_department_id = value?.id;
+  fetchShipDepartmentWiseItemGroups();
+});
+
+watch(() => props.form.mnt_item_group_name, (value) => {
+  props.form.mnt_item_group_id = value?.id;
+  fetchItemCode();
+});
+
+watch(() => shipDepartmentWiseItemGroups.value, (val) => {
+  props.form.mnt_item_groups = val;
+});
+
+function fetchShipDepartmentWiseItemGroups(){
+  props.form.mnt_item_group_name = '';
+  props.form.mnt_item_group_id = '';
+  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+}
 
 function addRow() {
   props.form.description.push({ key: '', value: '' });
@@ -146,12 +189,11 @@ function fetchItemCode(){
 }
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { itemGroups, getItemGroupsWithoutPagination } = useItemGroup();
+
 
 
 onMounted(() => {
   getShipDepartmentsWithoutPagination();
-  getItemGroupsWithoutPagination();
 });
 
 
