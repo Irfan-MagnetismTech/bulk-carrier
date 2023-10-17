@@ -46,8 +46,13 @@ class OpsVessel extends Model
         return \Modules\Operations\Database\factories\OpsVesselFactory::new();
     }
 
-    // public function vesselCertificates()
-    // {
-    //     return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
-    // }
+    public function opsVesselCertificates()
+    {
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
+    }
+
+    public function opsBunkers()
+    {
+        return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
 }
