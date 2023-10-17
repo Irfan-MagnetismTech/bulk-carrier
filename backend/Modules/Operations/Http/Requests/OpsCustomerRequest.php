@@ -15,7 +15,7 @@ class OpsCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'                  => ['string', 'max:20', Rule::unique('ops_customers')->ignore($this->ops_customer)],
+            'code'                  => ['string', 'max:20', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
             'legal_name'            => ['required', 'string', 'max:255'],
             'name'                  => ['required', 'string', 'max:255'],
             'postal_address'        => ['nullable', 'string', 'max:255'],

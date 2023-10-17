@@ -15,7 +15,7 @@ class OpsVesselCertificateRequest extends FormRequest
     {
         return [
             'ops_vessel_id' => ['required'],
-            'ops_maritime_certificate_id' => ['required'],
+            'ops_maritime_certification_id' => ['required'],
             'issue_date' => ['required'],
             'expire_date' => ['required'],
             'attachment' => ['required'],

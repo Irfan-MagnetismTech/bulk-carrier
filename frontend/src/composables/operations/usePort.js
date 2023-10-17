@@ -165,6 +165,22 @@ export default function usePort() {
 		}
 	}
 
+	async function searchPorts(searchParam, loading) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/search-ports?name_or_code=${searchParam}`);
+			ports.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		ports,
 		port,
@@ -174,6 +190,7 @@ export default function usePort() {
 		showPort,
 		updatePort,
 		deletePort,
+		searchPorts,
 		getPortsByNameOrCode,
 		voyagePorts,
 		getPortsByVoyage,
