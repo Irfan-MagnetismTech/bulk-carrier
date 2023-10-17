@@ -19,6 +19,7 @@ use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
+use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
         'customer-invoices' => OpsCustomerInvoiceController::class,
+        'cash-requisitions' => OpsCashRequisitionController::class,
     ]);
 
     //start for without pagination
