@@ -97,9 +97,10 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th class="w-1/12">#</th>
-            <th class="w-3/12">Ship Department</th>
-            <th class="w-4/12">Name</th>
+            <th class="w-2/12">Ship Department</th>
+            <th class="w-3/12">Name</th>
             <th class="w-2/12">Short Code</th>
+            <th class="w-2/12">Business Unit</th>
             <th class="w-2/12">Action</th>
           </tr>
           </thead>
@@ -109,21 +110,19 @@ onMounted(() => {
             <td>{{ itemGroup?.mntShipDepartment?.name }}</td>
             <td>{{ itemGroup?.name }}</td>
             <td>{{ itemGroup?.short_code }}</td>
-            
-            <td class="">
-              <div class="flex justify-center">
+            <td><span :class="itemGroup?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ itemGroup?.business_unit }}</span></td>
+            <td>
                 <action-button :action="'edit'" :to="{ name: 'mnt.item-groups.edit', params: { itemGroupId: itemGroup?.id } }"></action-button>
                 <action-button @click="confirmDelete(itemGroup?.id)" :action="'delete'"></action-button>
-              </div>
             </td>
           </tr>
           </tbody>
           <tfoot v-if="!itemGroups?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="5">Loading...</td>
+            <td colspan="6">Loading...</td>
           </tr>
           <tr v-else-if="!itemGroups?.data?.length">
-            <td colspan="5">No item group found.</td>
+            <td colspan="6">No item group found.</td>
           </tr>
           </tfoot>
       </table>
