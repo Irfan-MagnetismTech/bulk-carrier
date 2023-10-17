@@ -20,7 +20,7 @@ class MntItemController extends Controller
     {
         try {
 
-            $item = MntItem::with(['mntItemGroup','mntShipDepartment'])
+            $item = MntItem::with(['mntItemGroup.mntShipDepartment'])
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
@@ -76,7 +76,7 @@ class MntItemController extends Controller
     {
         try {
             
-            $item = MntItem::with(['mntItemGroup','mntShipDepartment.mntItemGroup'])->find($id);
+            $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups'])->find($id);
 
             $item['description'] = json_decode($item['description']);
             

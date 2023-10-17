@@ -15,8 +15,6 @@ return new class extends Migration
 
         Schema::create('mnt_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mnt_ship_department_id');
-            $table->foreign('mnt_ship_department_id')->references('id')->on('mnt_ship_departments');
             $table->unsignedBigInteger('mnt_item_group_id');
             $table->foreign('mnt_item_group_id')->references('id')->on('mnt_item_groups');
             $table->string('name', 255);

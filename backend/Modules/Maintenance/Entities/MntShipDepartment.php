@@ -13,12 +13,7 @@ class MntShipDepartment extends Model
 
     protected $fillable = ['name','short_code','business_unit'];
 
-    public function mntItem () : HasMany
-    {
-        return $this->hasMany(MntItem::class);
-    }
-
-    public function mntItemGroup () : HasMany
+    public function mntItemGroups () : HasMany
     {
         return $this->hasMany(MntItemGroup::class);
     }
