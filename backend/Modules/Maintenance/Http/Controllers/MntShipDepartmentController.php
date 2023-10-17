@@ -21,7 +21,11 @@ class MntShipDepartmentController extends Controller
     {
         try {
 
-            $shipDepartments = MntShipDepartment::select('*')->paginate(10);
+            $shipDepartments = MntShipDepartment::select('*')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->paginate(10);
 
             return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
             

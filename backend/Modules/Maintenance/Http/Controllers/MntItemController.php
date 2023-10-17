@@ -20,7 +20,11 @@ class MntItemController extends Controller
     {
         try {
 
-            $item = MntItem::with(['mntItemGroup','mntShipDepartment'])->paginate(10);
+            $item = MntItem::with(['mntItemGroup','mntShipDepartment'])
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->paginate(10);
 
             return response()->success('Items retrieved successfully', $item, 200);
             
