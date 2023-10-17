@@ -13,7 +13,42 @@ export default function useVessel() {
 	const vesselName = ref([]);
 	const voyageVessels = ref([]);
 	const notification = useNotification();
-	const vessel = ref({});
+	const vessel = ref({
+		vessel_type: '',
+		name: '',
+		previous_name: '',
+		short_code: '',
+		call_sign: '',
+		owner_name: '',
+		manager: '',
+		classification: '',
+		flag: '',
+		previous_flag: '',
+		port_of_registry: '',
+		delivery_date: '',
+		nrt: '',
+		dwt: '',
+		imo: '',
+		grt: '',
+		official_number: '',
+		keel_laying_date: '',
+		launching_date: '',
+		mmsi: '',
+		overall_length: '',
+		overall_width: '',
+		year_built: '',
+		capacity: '',
+		total_cargo_hold: '',
+		live_tracking_config: '',
+		remarks: '',
+		opsVesselCertificates: [],
+		opsBunkers: []
+	});
+	const maritimeCertificateObject = {
+		ops_vessel_certificate_id: '',
+		certificate_type: '',
+		validity: ''
+	}
 	const errors = ref(null);
 	const isLoading = ref(false);
 
@@ -47,6 +82,10 @@ export default function useVessel() {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
+
+		form.opsVesselCertificates.map((element) => {
+			element.ops_maritime_certification_id = element.id
+		})
 
 		try {
 			const { data, status } = await Api.post('/ops/vessels', form);
@@ -186,6 +225,7 @@ export default function useVessel() {
 		vessel,
 		vesselName,
 		getVessels,
+		maritimeCertificateObject,
 		storeVessel,
 		showVessel,
 		updateVessel,
