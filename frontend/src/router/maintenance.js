@@ -65,28 +65,28 @@ export default [
 
 	/* Item start */
 	{
-		path: `/${BASE}/item`,
-		name: `${BASE}.item.index`,
-		component: () => import(`../views/${BASE}/item/index.vue`),
+		path: `/${BASE}/items`,
+		name: `${BASE}.items.index`,
+		component: () => import(`../views/${VIEWBASE}/item/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'item-index' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/item/create`,
-		name: `${BASE}.item.create`,
-		component: () => import(`../views/${BASE}/item/create.vue`),
+		path: `/${BASE}/items/create`,
+		name: `${BASE}.items.create`,
+		component: () => import(`../views/${VIEWBASE}/item/create.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'item-create' },
 	},
 	{
-		path: `/${BASE}/item/:itemId/edit`,
-		name: `${BASE}.item.edit`,
-		component: () => import(`../views/${BASE}/item/edit.vue`),
+		path: `/${BASE}/items/:itemId/edit`,
+		name: `${BASE}.items.edit`,
+		component: () => import(`../views/${VIEWBASE}/item/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'item-edit' },
 	},
 	{
-		path: `/${BASE}/item/:itemId`,
-		name: `${BASE}.item.show`,
-		component: () => import(`../views/${BASE}/item/show.vue`),
+		path: `/${BASE}/items/:itemId`,
+		name: `${BASE}.items.show`,
+		component: () => import(`../views/${VIEWBASE}/item/show.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'item-show'  },
 	},
 

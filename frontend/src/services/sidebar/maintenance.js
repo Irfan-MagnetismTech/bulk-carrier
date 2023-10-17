@@ -83,7 +83,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'maintenance.item.create',
+                        route: 'mnt.items.create',
                         label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -93,7 +93,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'maintenance.item.index',
+                        route: 'mnt.items.index',
                         label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

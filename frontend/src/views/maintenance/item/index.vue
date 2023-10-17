@@ -70,9 +70,9 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Item List</h2>
     <div class="flex gap-2">
-      <!-- <default-button :title="'Add Item Group'" :to="{ name: 'maintenance.item-group.create' }"></default-button> -->
-      <!-- <default-button :title="'Add Item'" :to="{ name: 'maintenance.item.create' }"></default-button> -->
-      <default-button :title="'Create Item'" :to="{ name: 'maintenance.item.create' }" :icon="icons.AddIcon"></default-button>
+      <!-- <default-button :title="'Add Item Group'" :to="{ name: 'mnt.item-groups.create' }"></default-button> -->
+      <!-- <default-button :title="'Add Item'" :to="{ name: 'mnt.items.create' }"></default-button> -->
+      <default-button :title="'Create Item'" :to="{ name: 'mnt.items.create' }" :icon="icons.AddIcon"></default-button>
     </div>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -118,7 +118,7 @@ onMounted(() => {
             
             <td class="">
               <div class="flex">
-                <action-button :action="'edit'" :to="{ name: 'maintenance.item.edit', params: { itemId: item?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.items.edit', params: { itemId: item?.id } }"></action-button>
                 <action-button @click="confirmDelete(item?.id)" :action="'delete'"></action-button>
               </div>
             </td>
@@ -134,6 +134,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="items" to="maintenance.item.index" :page="page"></Paginate>
+    <Paginate :data="items" to="mnt.items.index" :page="page"></Paginate>
   </div>
 </template>

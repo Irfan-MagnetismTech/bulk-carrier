@@ -59,7 +59,7 @@ export default function useItem() {
             const { data, status } = await Api.post('/mnt/items', form);
             item.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item.index" });
+            router.push({ name: "mnt.items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -100,7 +100,7 @@ export default function useItem() {
             );
             item.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.item.index" });
+            router.push({ name: "mnt.items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
