@@ -2,6 +2,7 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class CrwAgencyController extends Controller
 {
+    public function __construct(private FileUploadService $fileUpload)
+    {
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,11 +24,11 @@ class CrwAgencyController extends Controller
     public function index()
     {
         try {
-            $crwAgencies = CrwAgency::with('crwAgencyContactPeople')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $crwAgencies = CrwAgency::with('crwAgencyContactPersons')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $crwAgencies, 200);
+            return response()->success('Retrieved Successfully', $crwAgencies, 200);
         }
         catch (QueryException $e)
         {
@@ -43,10 +48,11 @@ class CrwAgencyController extends Controller
             DB::transaction(function () use ($request)
             {
                 $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit');
+                $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
                 $crwAgency     = CrwAgency::create($crwAgencyData);
-                $crwAgency->crwAgencyContactPeople()->createMany($request->crwAgencyContactPeople);
+                $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
 
-                return response()->success('Created Succesfully', $crwAgency, 201);
+                return response()->success('Created Successfully', $crwAgency, 201);
             });
         }
         catch (QueryException $e)
