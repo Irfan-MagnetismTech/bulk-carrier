@@ -18,6 +18,7 @@ use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
+use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'handover-takeovers' => OpsHandoverTakeoverController::class,
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
+        'customer-invoices' => OpsCustomerInvoiceController::class,
     ]);
 
     //start for without pagination
