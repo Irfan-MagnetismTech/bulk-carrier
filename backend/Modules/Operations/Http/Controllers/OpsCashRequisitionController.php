@@ -127,10 +127,31 @@ class OpsCashRequisitionController extends Controller
     public function getCashRequisitionBySerial(Request $request){
         try {
             $cash_requisitions = OpsCashRequisition::query()
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })            
             ->where(function ($query) use($request) {
                 $query->where('serial', 'like', '%' . $request->serial . '%');
             })
             ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved cash requisitions.', $cash_requisitions, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCashRequisitionApproved(Request $request){
+        try {
+            $cash_requisitions = OpsCashRequisition::query()
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })   
+            ->where(function ($query) use($request) {
+                $query->where('serial', 'like', '%' . $request->serial . '%');
+            })
+            ->where('status', 'approved')
             ->get();
 
             return response()->success('Successfully retrieved cash requisitions.', $cash_requisitions, 200);
