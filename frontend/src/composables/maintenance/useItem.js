@@ -25,6 +25,7 @@ export default function useItem() {
         has_run_hour: false,
         present_run_hour: 0,
         business_unit: '',
+        form_type: 'create'
     });
     const errors = ref(null);
     const isLoading = ref(false);

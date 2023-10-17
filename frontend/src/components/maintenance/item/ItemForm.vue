@@ -149,36 +149,30 @@ const props = defineProps({
 
 watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
   props.form.mnt_ship_department_id = props.form.mnt_ship_department_name?.id;
-  console.log("New:" + newValue + "Old:" + oldValue)
   if(oldValue !== ''){
     props.form.mnt_item_group_name = null;
+    props.form.mnt_item_group_id = null;
   }
   getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
 });
 
-
-// watch(props.form.mnt_ship_department_name, (newValue, oldValue) => {
-//   alert("s")
-//   if(newValue !== oldValue){
-//     props.form.mnt_item_group_name = null;
-//   }
-//   getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
-// });
-
-watch(() => props.form.mnt_item_group_name, (value) => {
-  props.form.mnt_item_group_id = value?.id;
-  fetchItemCode();
+watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
+  props.form.mnt_item_group_id = props.form.mnt_item_group_name?.id;
+  
+  if(oldValue !== '' || props.form.form_type !== 'edit'){
+    fetchItemCode();
+  }
 });
 
 watch(() => shipDepartmentWiseItemGroups.value, (val) => {
   props.form.mnt_item_groups = val;
 });
 
-function fetchShipDepartmentWiseItemGroups(){
-  props.form.mnt_item_group_name = '';
-  props.form.mnt_item_group_id = '';
-  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
-}
+// function fetchShipDepartmentWiseItemGroups(){
+//   props.form.mnt_item_group_name = '';
+//   props.form.mnt_item_group_id = '';
+//   getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+// }
 
 function addRow() {
   props.form.description.push({ key: '', value: '' });

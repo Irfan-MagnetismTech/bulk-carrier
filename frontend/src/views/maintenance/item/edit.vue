@@ -39,6 +39,7 @@
     item.value.mnt_ship_department_name = value?.mntItemGroup?.mntShipDepartment;
     item.value.mnt_item_groups = value?.mntItemGroup?.mntShipDepartment?.mntItemGroups;
     item.value.mnt_item_group_name = value?.mntItemGroup;
+    item.value.form_type = 'edit';
   });
 
   onMounted(() => {
