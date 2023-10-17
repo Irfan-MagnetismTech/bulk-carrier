@@ -124,18 +124,5 @@ class OpsCashRequisitionController extends Controller
         }
     }
 
-    public function getCashRequisitionBySerial(Request $request){
-        try {
-            $cash_requisitions = OpsCashRequisition::query()
-            ->where(function ($query) use($request) {
-                $query->where('serial', 'like', '%' . $request->serial . '%');
-            })
-            ->limit(10)
-            ->get();
 
-            return response()->success('Successfully retrieved cash requisitions.', $cash_requisitions, 200);
-        } catch (QueryException $e){
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }
