@@ -55,7 +55,16 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.port_of_registry" placeholder="Port of Registry" class="form-input" required autocomplete="off" />
+        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="name" class="block form-input" :reduce="port=>port.code">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.port_of_registry"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select>
         <Error v-if="errors?.port_of_registry" :errors="errors.port_of_registry" />
       </label>
     </div>
@@ -237,6 +246,7 @@
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
+import usePort from '../../composables/operations/usePort';
 
 const props = defineProps({
     form: {
@@ -248,6 +258,7 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
+const { ports, searchPorts } = usePort();
 
 function addVesselCertificate() {
   console.log(props.maritimeCertificateObject, "dfdf")
@@ -261,6 +272,11 @@ function removeVesselCertificate(index){
 function fetchMaritimeCertificates(search, loading) {
   loading(true);
   searchMaritimeCertificates(search, loading)
+}
+
+function fetchPorts(search, loading) {
+      loading(true);
+      searchPorts(search, loading)
 }
 </script>
 <style lang="postcss" scoped>
