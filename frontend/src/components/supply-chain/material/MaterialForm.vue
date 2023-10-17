@@ -5,16 +5,15 @@
     import useUnit from "../../../composables/supply-chain/useUnit.js";
 
     
+    const { materialCategories, searchMaterialCategory } = useMaterialCategory();
+    const { materialUnits, searchUnit } = useUnit();
+    const store_category = ['Deck Store', 'Saloon Store'];
 
     const props = defineProps({
         material: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
     });
-
-    
-    const store_category = ['Deck Store', 'Saloon Store'];
-    
-    const { materialCategories, searchMaterialCategory } = useMaterialCategory();
+       
 
     function fetchCategory(query, loading) {
         searchMaterialCategory(query, loading);
@@ -25,15 +24,11 @@
         props.material.parent_category_id = value?.id;
     });
 
-
-    const { materialUnits, searchUnit } = useUnit();
-
     function fetchUnit(query, loading) {
         searchUnit(query, loading);
         loading(true)
     }
 
-    
 
 </script>
 <template>
@@ -77,9 +72,6 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
-                    <!-- <select name="" id="" class="label-item-input" v-model="material.store_category">
-                        <option v-for="(item, index) in store_category" :key="index" value="{{item}}">{{item}}</option>
-                    </select> -->
                     <v-select name="user" v-model="material.store_category" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                     </v-select>
                     <Error v-if="errors?.store_category" :errors="errors.store_category" />
@@ -109,7 +101,7 @@
       }
 
       .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 font-bold;
+        @apply text-gray-700 dark:text-gray-300;
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;

@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted, watchEffect } from 'vue';
     import Error from "../../Error.vue";
     import useMaterialCategory from "../../../composables/supply-chain/useMaterialCategory.js";
 
@@ -16,9 +16,8 @@
     }
 
     watch(() => props.materialCategory.parent_category_name, (value) => {
-        props.materialCategory.parent_category = value?.id;
+        props.materialCategory.parent_id = value?.id;
     });
-
 
 </script>
 <template>
@@ -29,8 +28,8 @@
                 <label class="label-group">
                     <span class="label-item-title">Parent Category </span>
                     <v-select :options="materialCategories" placeholder="--Choose an option--" @search="fetchCategory" v-model="materialCategory.parent_category_name" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-                    <input type="hidden" v-model="materialCategory.parent_category" class="label-item-input" name="parent_category" :id="'parent_category'" />
-                    <Error v-if="errors?.parent_category" :errors="errors.parent_category" />
+                    <input type="hidden" v-model="materialCategory.parent_id" class="label-item-input" name="parent_category" :id="'parent_category'" />
+                    <Error v-if="errors?.parent_id" :errors="errors.parent_id" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Name <span class="required-style">*</span></span>
@@ -60,7 +59,7 @@
       }
 
       .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 font-bold;
+        @apply text-gray-700 dark:text-gray-300;
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;

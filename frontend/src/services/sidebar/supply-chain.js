@@ -1,6 +1,6 @@
 import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
-const BASE = "supply-chain";
+const BASE = "scm";
 
 export default [
         {
@@ -93,6 +93,7 @@ export default [
                     },
                 ]
             },
+            
         ]
     },
 ];

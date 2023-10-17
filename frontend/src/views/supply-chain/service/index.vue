@@ -40,13 +40,29 @@ onMounted(() => {
 });
 
 });
+
+function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this Unit!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteService(id);
+          }
+        })
+      }
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Service List</h2>
-    <default-button :title="'Create Service'" :to="{ name: 'supply-chain.service.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Service'" :to="{ name: 'scm.service.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -75,7 +91,7 @@ onMounted(() => {
               <td>{{ service.short_code }}</td>
               <td>
                 <action-button :action="'edit'" :to="{ name: 'supply-chain.service.edit', params: { serviceId: service.id } }"></action-button>
-                <action-button @click="deleteService(service.id)" :action="'delete'"></action-button>
+                <action-button @click="confirmDelete(service.id)" :action="'delete'"></action-button>
               </td>
             </tr>
           </tbody>
@@ -89,6 +105,6 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="services" to="supply-chain.service.index" :page="page"></Paginate>
+    <Paginate :data="services" to="scm.service.index" :page="page"></Paginate>
   </div>
 </template>

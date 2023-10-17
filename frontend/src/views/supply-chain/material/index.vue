@@ -43,13 +43,29 @@ onMounted(() => {
 
 });
 
+function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this Unit!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteMaterial(id);
+          }
+        })
+      }
+
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Material List</h2>
-    <default-button :title="'Create Material'" :to="{ name: 'supply-chain.material.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Material'" :to="{ name: 'scm.material.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -78,7 +94,7 @@ onMounted(() => {
             <td>{{ material.material_code }}</td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'supply-chain.material.edit', params: { materialId: material.id } }"></action-button>
-              <action-button @click="deleteMaterial(material.id)" :action="'delete'"></action-button>
+              <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
@@ -92,6 +108,6 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="materials" to="supply-chain.material.index" :page="page"></Paginate>
+    <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
   </div>
 </template>

@@ -19,22 +19,6 @@ export default function useUnit() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    function confirmDelete() {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes'
-        }).then((result) => {
-          if (!result.isConfirmed) {
-            return false;
-          }
-        })
-      }
-
       
 
     async function getUnits(page) {
@@ -49,7 +33,6 @@ export default function useUnit() {
                 },
             });
             units.value = data.value;
-            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -121,7 +104,6 @@ export default function useUnit() {
     }
 
     async function deleteUnit(unitId) {
-        confirmDelete();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
@@ -169,6 +151,5 @@ export default function useUnit() {
         deleteUnit,
         isLoading,
         errors,
-        confirmDelete,
     };
 }

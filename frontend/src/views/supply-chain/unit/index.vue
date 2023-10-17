@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const { units, getUnits, deleteUnit, isLoading ,confirmDelete} = useUnit();
+const { units, getUnits, deleteUnit, isLoading} = useUnit();
 const icons = useHeroIcon();
 const { setTitle } = Title();
 setTitle('Units');
@@ -41,6 +41,21 @@ onMounted(() => {
 
 });
 
+function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this Unit!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteUnit(id);
+          }
+        })
+      }
 
 </script>
 
@@ -50,7 +65,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Unit List</h2>
-    <default-button :title="'Create Unit'" :to="{ name: 'supply-chain.unit.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Unit'" :to="{ name: 'scm.unit.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -79,8 +94,8 @@ onMounted(() => {
             <td>{{ unit?.name }}</td>
             <td>{{ unit?.short_code }}</td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'supply-chain.unit.edit', params: { unitId: unit?.id } }"></action-button>
-              <action-button @click="deleteUnit(unit?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'scm.unit.edit', params: { unitId: unit?.id } }"></action-button>
+              <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
@@ -94,6 +109,6 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="units" to="supply-chain.unit.index" :page="page"></Paginate>
+    <Paginate :data="units" to="scm.unit.index" :page="page"></Paginate>
   </div>
 </template>

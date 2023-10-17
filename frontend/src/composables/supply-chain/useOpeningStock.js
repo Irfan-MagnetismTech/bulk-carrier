@@ -116,11 +116,6 @@ export default function useOpeningStock() {
     }
 
     async function deleteOpeningStock(openingStockId) {
-
-        if (!confirm('Are you sure you want to delete this data?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
