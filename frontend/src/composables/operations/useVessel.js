@@ -127,6 +127,11 @@ export default function useVessel() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		form.opsVesselCertificates.map((element) => {
+			element.ops_maritime_certification_id = element.id
+			element.business_unit = form.business_unit
+		})
+		
 		try {
 			const { data, status } = await Api.put(
 				`/ops/vessels/${vesselId}`,
