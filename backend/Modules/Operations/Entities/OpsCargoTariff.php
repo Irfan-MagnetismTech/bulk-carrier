@@ -28,7 +28,7 @@ class OpsCargoTariff extends Model
     
     public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_cargo_tariff_id' , 'id');
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
     public function opsCargoTariffLines()

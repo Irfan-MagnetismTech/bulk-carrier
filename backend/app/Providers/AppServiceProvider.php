@@ -43,10 +43,9 @@ class AppServiceProvider extends ServiceProvider
         
         Response::macro('error', function ($error, $statusCode = 400) {
             throw new HttpResponseException(response()->json([
-                'success'   => false,
                 'message'   => 'Validation errors',
                 'data'      => $error,
-            ], 500));
+            ]));
         });
 
         HasMany::macro('createUpdateOrDelete', function (iterable $records) {

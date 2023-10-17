@@ -16,7 +16,7 @@ class OpsMaritimeCertificationRequest extends FormRequest
     {
         // dd($this);
         return [
-            'name'  => ['required', 'string', 'max:255',Rule::unique('ops_maritime_certifications')->ignore($this->ops_maritime_certification)],
+            'name'  => ['required', 'string', 'max:255',Rule::unique('ops_maritime_certifications')->ignore($this->route('maritime_certification'), 'id')],
             'type'  => ['required', 'string', 'max:255'],
             'validity'  => ['required', 'string', 'max:50'],
             'authority'  => ['nullable', 'string', 'max:255'],

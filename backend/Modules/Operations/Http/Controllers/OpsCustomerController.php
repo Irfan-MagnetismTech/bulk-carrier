@@ -125,4 +125,21 @@ class OpsCustomerController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getCustomerByNameorCode(Request $request){
+        try {
+            $customers = OpsCustomer::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved customers name.', $customers, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }

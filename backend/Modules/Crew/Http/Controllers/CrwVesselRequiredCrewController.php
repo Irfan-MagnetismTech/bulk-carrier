@@ -18,8 +18,8 @@ class CrwVesselRequiredCrewController extends Controller
     public function index()
     {
         try {
-            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwVesselRequiredCrews, 200);
@@ -63,7 +63,7 @@ class CrwVesselRequiredCrewController extends Controller
     public function show(CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines'), 200);
+            return response()->success('Retrieved succesfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines','opsVessel'), 200);
         }
         catch (QueryException $e)
         {
