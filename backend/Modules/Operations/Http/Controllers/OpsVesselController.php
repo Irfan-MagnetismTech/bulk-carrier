@@ -32,7 +32,7 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessels = OpsVessel::orderBy('id','DESC')->Paginate();                       
+            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')->latest()->paginate(10);                     
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -52,7 +52,14 @@ class OpsVesselController extends Controller
         try
         {
             DB::beginTransaction();
-            $vessel = OpsVessel::create($request->all());
+            $vesselInfo = $request->except(
+                '_token',
+                'opsVesselCertificates',
+                'opsBunkers',
+            );
+            $vessel = OpsVessel::create($vesselInfo);
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->createMany($request->opsVesselCertificates);
             DB::commit();
                  
             return response()->success('Successfully created vessel.', $vessel, 201);
@@ -72,6 +79,7 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
+        $vessel->load('opsVesselCertificates','opsBunkers');
         try
         {            
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
@@ -95,7 +103,14 @@ class OpsVesselController extends Controller
         try
         {
             DB::beginTransaction();
-            $vessel->update($request->all());
+            $vesselInfo = $request->except(
+                '_token',
+                'opsVesselCertificates',
+                'opsBunkers',
+            );
+            $vessel->update($vesselInfo);
+            $vessel->opsVesselCertificates()->createUpdateOrDelete($request->opsVesselCertificates);
+            $vessel->opsBunkers()->createUpdateOrDelete($request->opsBunkers);
             DB::commit();
             return response()->success('Successfully updated vessel.', $vessel, 202);
         }
@@ -116,6 +131,8 @@ class OpsVesselController extends Controller
     {
         try
         {
+            $vessel->opsVesselCertificates()->delete();
+            $vessel->opsBunkers()->delete();
             $vessel->delete();
             return response()->json([
                 'message' => 'Successfully deleted vessel.',
