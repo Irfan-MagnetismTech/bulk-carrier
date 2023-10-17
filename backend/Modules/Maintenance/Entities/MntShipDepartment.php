@@ -17,4 +17,9 @@ class MntShipDepartment extends Model
     {
         return $this->hasMany(MntItem::class);
     }
+
+    public function mntItemGroup () : HasMany
+    {
+        return $this->hasMany(MntItemGroup::class);
+    }
 }
