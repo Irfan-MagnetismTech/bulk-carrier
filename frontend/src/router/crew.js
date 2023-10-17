@@ -25,6 +25,15 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    /* Crew Vessel Particulars Routes */
+    {
+        path: `/${BASE}/vessel-particulars`,
+        name: `${BASE}.vesselParticulars.index`,
+        component: () => import(`../views/crew/vessel-particulars/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+
     /* Crew Policy Management Routes */
     {
         path: `/${BASE}/policies`,

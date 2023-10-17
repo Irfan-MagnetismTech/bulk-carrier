@@ -12,6 +12,7 @@ export default function useCheckList() {
     const checkList = ref( {
         effective_date: '',
         remarks: '',
+        business_unit: '',
         crwCrewChecklistLines: [
             {
                 item_name: '',
@@ -20,18 +21,25 @@ export default function useCheckList() {
         ]
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCheckLists(page) {
+    async function getCheckLists(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-crew-checklists',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             checklists.value = data.value;
@@ -54,7 +62,7 @@ export default function useCheckList() {
             const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
             checkList.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crw-crew-checklists.index" });
+            await router.push({ name: "crw.checklists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -112,7 +120,7 @@ export default function useCheckList() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-checklists/${checkListId}`);
             notification.showSuccess(status);
-            await getCheckLists();
+            await getCheckLists(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

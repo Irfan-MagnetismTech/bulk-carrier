@@ -10,22 +10,29 @@ export default function usePolicy() {
     const $loading = useLoading();
     const notification = useNotification();
     const policy = ref( {
+        business_unit: '',
         name: '',
         type: '',
         attachment: '',
     });
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getPolicies(page) {
+    async function getPolicies(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-policies',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             policies.value = data.value;
@@ -44,8 +51,10 @@ export default function usePolicy() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        const formData = processFormData(form);
+
         try {
-            const { data, status } = await Api.post('/crw/crw-policies', form);
+            const { data, status } = await Api.post('/crw/crw-policies', formData);
             policy.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.policies.index" });
@@ -80,11 +89,13 @@ export default function usePolicy() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        const formData = processFormData(form);
+        formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.put(
+            const { data, status } = await Api.post(
                 `/crw/crw-policies/${policyId}`,
-                form
+                formData
             );
             policy.value = data.value;
             notification.showSuccess(status);
@@ -106,7 +117,7 @@ export default function usePolicy() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
             notification.showSuccess(status);
-            await getPolicies();
+            await getPolicies(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -114,6 +125,16 @@ export default function usePolicy() {
             loader.hide();
             isLoading.value = false;
         }
+    }
+
+    function processFormData(form){
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('name', form.name);
+        formData.append('type', form.type);
+        formData.append('business_unit', form.business_unit);
+
+        return formData;
     }
 
     return {

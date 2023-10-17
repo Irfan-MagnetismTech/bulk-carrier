@@ -38,6 +38,7 @@ class OpsVessel extends Model
         'total_cargo_hold',
         'live_tracking_config',
         'remarks',
+        'business_unit'
     ];
     
     protected static function newFactory()

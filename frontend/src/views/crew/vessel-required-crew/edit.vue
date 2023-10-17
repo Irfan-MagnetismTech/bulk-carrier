@@ -18,6 +18,12 @@ const { setTitle } = Title();
 
 setTitle('Edit Vessel Required Crew');
 
+watch(vesselRequiredCrew, (value) => {
+  if(value) {
+    vesselRequiredCrew.value.ops_vessel_name = vesselRequiredCrew.value.opsVessel;
+  }
+});
+
 onMounted(() => {
   showVesselRequiredCrew(vesselRequiredCrewId);
 });

@@ -20,6 +20,7 @@ class OpsMaritimeCertification extends Model
         'type',
         'validity',
         'authority',
+        'business_unit'
     ];
     
     protected static function newFactory()

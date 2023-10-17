@@ -15,12 +15,12 @@ class OpsCargoTariffRequest extends FormRequest
     {
         return [
             'tariff_name'       => ['required', 'string', 'max:255'],
-            'ops_vessel_id'     => ['required', 'number', 'max:10'],
+            'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'loading_point'     => ['required', 'string', 'max:255'],
             'unloading_point'   => ['required', 'string', 'max:255'],
-            'ops_cargo_type_id' => ['required', 'number', 'max:255'],
+            'ops_cargo_type_id' => ['required', 'numeric', 'max:50'],
             'currency'          => ['required', 'string', 'max:255'],
-            'status'            => ['required', 'enum', 'max:5'],
+            'status'            => ['required', 'string', 'max:50'],
             'business_unit'     => ['required', 'string', 'max:255'],
         ];
     }
