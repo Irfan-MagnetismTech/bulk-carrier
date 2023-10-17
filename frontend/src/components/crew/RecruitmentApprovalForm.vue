@@ -2,6 +2,7 @@
 import Error from "../Error.vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import useRecruitmentApproval from "../../composables/crew/useRecruitmentApproval";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted} from "vue";
 
 const props = defineProps({
@@ -37,6 +38,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
@@ -55,7 +57,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
+        <input type="number" v-model="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.total_approved" :errors="errors.total_approved" />
       </label>
     </div>
@@ -67,24 +69,24 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Total Selected <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
+      <input type="number" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.crew_selected" :errors="errors.crew_selected" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Total Panel <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
+      <input type="number" v-model="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.crew_panel" :errors="errors.crew_panel" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Total Rest <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
+      <input type="number" v-model="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.crew_rest" :errors="errors.crew_rest" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Body</span>
-      <textarea v-model="form.body" placeholder="Type here....." class="form-input" autocomplete="off"></textarea>
+      <span class="text-gray-700 dark:text-gray-300">Body <span class="text-red-500">*</span></span>
+      <textarea v-model="form.body" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
       <Error v-if="errors?.body" :errors="errors.body" />
     </label>
     <label class="block w-full mt-2 text-sm">
@@ -101,7 +103,7 @@ onMounted(() => {
         <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Candidate Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Contact <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Email <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Email</th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
@@ -110,19 +112,19 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model="form.crwRecruitmentApprovalLines[index].crw_rank_id">
+          <select class="form-input" v-model="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
             <option value="" disabled>select</option>
             <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Crew name" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Crew name" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_contact" placeholder="Contact" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_contact" placeholder="Contact" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_email" placeholder="Email" class="form-input" autocomplete="off" />
+          <input type="email" v-model="form.crwRecruitmentApprovalLines[index].candidate_email" placeholder="Email" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.crwRecruitmentApprovalLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />

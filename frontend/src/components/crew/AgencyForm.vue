@@ -2,7 +2,8 @@
 import Error from "../Error.vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import useAgency from "../../composables/crew/useAgency";
-import {onMounted} from "vue";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps({
   form: {
@@ -23,20 +24,21 @@ function addItem() {
     position: '',
     purpose: '',
   };
-  props.form.crwAgencyContactPeople.push(obj);
+  props.form.crwAgencyContactPersons.push(obj);
 }
 
 function removeItem(index){
-  props.form.crwAgencyContactPeople.splice(index, 1);
+  props.form.crwAgencyContactPersons.splice(index, 1);
 }
 
-onMounted(() => {
-  getCrewRankLists();
-});
+const selectedFile = (event) => {
+  props.form.logo = event.target.files[0];
+};
 
 </script>
 
 <template>
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
@@ -77,26 +79,27 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" required />
+      <input type="email" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.email" :errors="errors.email" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Website <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.website" placeholder="Website" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.website" :errors="errors.website" />
-    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Country <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.country" placeholder="Country" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.country" :errors="errors.country" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Logo <span class="text-red-500">*</span></span>
-      <input type="file" placeholder="Logo" class="form-input" autocomplete="off" required />
+      <span class="text-gray-700 dark:text-gray-300">Website</span>
+      <input type="text" v-model="form.website" placeholder="Website" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.website" :errors="errors.website" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Logo </span>
+      <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
       <Error v-if="errors?.logo" :errors="errors.logo" />
     </label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Contact Person</legend>
@@ -112,21 +115,21 @@ onMounted(() => {
       </tr>
       </thead>
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(crewAgencyContact, index) in form.crwAgencyContactPeople" :key="crewAgencyContact.id">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(crewAgencyContact, index) in form.crwAgencyContactPersons" :key="crewAgencyContact.id">
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyContactPeople[index].name" placeholder="Name" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyContactPersons[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyContactPeople[index].position" placeholder="Position" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyContactPersons[index].position" placeholder="Position" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyContactPeople[index].contact_no" placeholder="Contact no" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyContactPersons[index].contact_no" placeholder="Contact no" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyContactPeople[index].email" placeholder="Email" class="form-input" autocomplete="off" />
+          <input type="email" v-model="form.crwAgencyContactPersons[index].email" placeholder="Email" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyContactPeople[index].purpose" placeholder="Purpose" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyContactPersons[index].purpose" placeholder="Purpose" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
