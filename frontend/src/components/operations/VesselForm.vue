@@ -105,7 +105,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Keel Laying Date <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.keel_laying_date" placeholder="Keel Laying Date" class="form-input" required autocomplete="off" />
+        <input type="date" v-model="form.keel_laying_date" placeholder="Keel Laying Date" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.keel_laying_date" :errors="errors.keel_laying_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
