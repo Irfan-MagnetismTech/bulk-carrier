@@ -15,7 +15,10 @@ export default function useItem() {
     const itemGroupWiseHourlyItems = ref([]);
     const item = ref( {
         mnt_ship_department_id: '',
+        mnt_ship_department_name: '',
         mnt_item_group_id: '',
+        mnt_item_group_name: '',
+        mnt_item_groups:[],
         name: '',
         item_code: '',
         description: [{ key: '', value: '' }],
