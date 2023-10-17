@@ -97,10 +97,11 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-1/5">#</th>
-            <th class="w-2/5">Name</th>
-            <th class="w-1/5">Short Code</th>
-            <th class="w-1/5">Action</th>
+            <th class="w-2/12">#</th>
+            <th class="w-4/12">Name</th>
+            <th class="w-2/12">Short Code</th>
+            <th class="w-2/12">Business Unit</th>
+            <th class="w-2/12">Action</th>
           </tr>
           </thead>
           <tbody>
@@ -109,22 +110,21 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td>{{ shipDepartment?.name }}</td>
             <td>{{ shipDepartment?.short_code }}</td>
+            <td><span :class="shipDepartment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ shipDepartment?.business_unit }}</span></td>
             
-            <td class="">
-              <div class="flex">
+            <td>
                 <action-button :action="'edit'" :to="{ name: 'maintenance.ship-department.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
-              </div>
             </td>
           </tr>
           </tbody>
           <tfoot v-if="!shipDepartments?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
-          </tr>
-          <tr v-else-if="!shipDepartments?.data?.length">
-            <td colspan="6">No ship department found.</td>
-          </tr>
+            <tr v-if="isLoading">
+              <td colspan="5">Loading...</td>
+            </tr>
+            <tr v-else-if="!shipDepartments?.data?.length">
+              <td colspan="5">No ship department found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>
