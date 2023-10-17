@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
       <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Ship Department</h2>
-      <!-- <router-link :to="{ name: 'maintenance.ship-department.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+      <!-- <router-link :to="{ name: 'mnt.ship-departments.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
         Ship Department List
       </router-link> -->
-      <default-button :title="'Ship Department List'" :to="{ name: 'maintenance.ship-department.index' }" :icon="icons.DataBase"></default-button>
+      <default-button :title="'Ship Department List'" :to="{ name: 'mnt.ship-departments.index' }" :icon="icons.DataBase"></default-button>
     </div>
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
           <form @submit.prevent="updateShipDepartment(shipDepartment, shipDepartmentId)">

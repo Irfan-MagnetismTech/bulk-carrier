@@ -52,7 +52,7 @@ export default function useShipDepartment() {
             const { data, status } = await Api.post('/mnt/ship-departments', form);
             shipDepartment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.ship-department.index" });
+            router.push({ name: "mnt.ship-departments.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -93,7 +93,7 @@ export default function useShipDepartment() {
             );
             shipDepartment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.ship-department.index" });
+            router.push({ name: "mnt.ship-departments.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

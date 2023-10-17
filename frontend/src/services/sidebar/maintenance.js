@@ -21,7 +21,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'maintenance.ship-department.create',
+                        route: 'mnt.ship-departments.create',
                         label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -31,7 +31,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'maintenance.ship-department.index',
+                        route: 'mnt.ship-departments.index',
                         label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

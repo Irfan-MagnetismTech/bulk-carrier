@@ -1,33 +1,34 @@
 import Store from './../store/index.js';
 const USER = Store.getters.getCurrentUser;
 
-const BASE = "maintenance";
+const BASE = "mnt";
+const VIEWBASE = "maintenance";
 const ROLE = USER?.role ?? null;
 export default [
     /* Ship Department Route start */
 	{
-		path: `/${BASE}/ship-department`,
-		name: `${BASE}.ship-department.index`,
-		component: () => import(`../views/${BASE}/ship-department/index.vue`),
+		path: `/${BASE}/ship-departments`,
+		name: `${BASE}.ship-departments.index`,
+		component: () => import(`../views/${VIEWBASE}/ship-department/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'ship-department-index' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/ship-department/create`,
-		name: `${BASE}.ship-department.create`,
-		component: () => import(`../views/${BASE}/ship-department/create.vue`),
+		path: `/${BASE}/ship-departments/create`,
+		name: `${BASE}.ship-departments.create`,
+		component: () => import(`../views/${VIEWBASE}/ship-department/create.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'ship-department-create' },
 	},
 	{
-		path: `/${BASE}/ship-department/:shipDepartmentId/edit`,
-		name: `${BASE}.ship-department.edit`,
-		component: () => import(`../views/${BASE}/ship-department/edit.vue`),
+		path: `/${BASE}/ship-departments/:shipDepartmentId/edit`,
+		name: `${BASE}.ship-departments.edit`,
+		component: () => import(`../views/${VIEWBASE}/ship-department/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'ship-department-edit' },
 	},
 	{
-		path: `/${BASE}/ship-department/:shipDepartmentId`,
-		name: `${BASE}.ship-department.show`,
-		component: () => import(`../views/${BASE}/ship-department/show.vue`),
+		path: `/${BASE}/ship-departments/:shipDepartmentId`,
+		name: `${BASE}.ship-departments.show`,
+		component: () => import(`../views/${VIEWBASE}/ship-department/show.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'ship-department-show'  },
 	},
 

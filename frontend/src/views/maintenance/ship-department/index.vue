@@ -68,8 +68,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Ship Department List</h2>
-    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.ship-department.create' }"></default-button> -->
-    <default-button :title="'Create Ship Department'" :to="{ name: 'maintenance.ship-department.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'mnt.ship-departments.create' }"></default-button> -->
+    <default-button :title="'Create Ship Department'" :to="{ name: 'mnt.ship-departments.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <div class="relative w-full">
@@ -113,7 +113,7 @@ onMounted(() => {
             <td><span :class="shipDepartment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ shipDepartment?.business_unit }}</span></td>
             
             <td>
-                <action-button :action="'edit'" :to="{ name: 'maintenance.ship-department.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.ship-departments.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
@@ -128,6 +128,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="shipDepartments" to="maintenance.ship-department.index" :page="page"></Paginate>
+    <Paginate :data="shipDepartments" to="mnt.ship-departments.index" :page="page"></Paginate>
   </div>
 </template>
