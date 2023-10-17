@@ -85,6 +85,7 @@ export default function useVessel() {
 
 		form.opsVesselCertificates.map((element) => {
 			element.ops_maritime_certification_id = element.id
+			element.business_unit = form.business_unit
 		})
 
 		try {
