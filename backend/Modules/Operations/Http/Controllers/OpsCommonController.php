@@ -24,6 +24,7 @@ use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Entities\OpsCustomerInvoice;
+use Modules\Operations\Entities\OpsCashRequisition;
 
 class OpsCommonController extends Controller
 {
@@ -284,6 +285,23 @@ class OpsCommonController extends Controller
             })
             ->latest()->get();        
             return response()->success('Successfully retrieved customer invoices for without paginate.', $customerInvoices, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // To get Cash Requisition data
+    public function getCashRequisitionWithoutPaginate(Request $request)
+    {
+        try
+        {
+            $cashRequisitions = OpsCashRequisition::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
+            return response()->success('Successfully retrieved customer invoices for without paginate.', $cashRequisitions, 200);
         }
         catch (QueryException $e)
         {

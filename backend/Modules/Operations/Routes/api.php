@@ -70,6 +70,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('charterer-invoices/without/paginate', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
     Route::get('customer-invoices/without/paginate', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
+    Route::get('cash-requisitions/without/paginate', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
     //end for without pagination
 
     // start for search api route
@@ -82,6 +83,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
     Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByVoyageNo']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
+    Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
     
     // end for search api route
 
