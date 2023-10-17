@@ -21,7 +21,7 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment:id,name'])
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code'])
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
@@ -54,7 +54,6 @@ class MntJobController extends Controller
     {
         try {
             $jobInput['ops_vessel_id'] = $runHourInput['ops_vessel_id'] = $request->get('ops_vessel_id');
-            $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
             $jobInput['mnt_item_id'] = $runHourInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = $runHourInput['business_unit'] = $request->get('business_unit');
 
@@ -88,7 +87,7 @@ class MntJobController extends Controller
     {
         try {
             
-            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntShipDepartment.mntItem','mntJobLines'])->find($id);
+            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntJobLines'])->find($id);
             
             return response()->success('Job found successfully', $job, 200);
             
@@ -120,7 +119,6 @@ class MntJobController extends Controller
         try {
             // var_dump($request->all());
             $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
-            $jobInput['mnt_ship_department_id'] = $request->get('mnt_ship_department_id');
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = $request->get('business_unit');
 
@@ -150,8 +148,8 @@ class MntJobController extends Controller
             $job = MntJob::findorfail($id);
             $job->mntJobLines()->delete();
             $job->delete();
-            
-            return response()->success('Item deleted successfully', $job, 204);
+            // todo: delete run hour item
+            return response()->success('Job deleted successfully', $job, 204);
             
         }
         catch (\Exception $e)

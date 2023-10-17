@@ -13,17 +13,11 @@ class MntJob extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['ops_vessel_id','mnt_ship_department_id','mnt_item_id','business_unit'];
+    protected $fillable = ['ops_vessel_id','mnt_item_id','business_unit'];
 
     public function opsVessel () : BelongsTo
     {
         return $this->belongsTo(OpsVessel::class);
-    }
-    
-
-    public function mntShipDepartment () : BelongsTo
-    {
-        return $this->belongsTo(MntShipDepartment::class);
     }
     
     public function mntItem () : BelongsTo

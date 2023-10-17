@@ -16,7 +16,6 @@ class MntJobRequest extends FormRequest
     {
         return [
             'ops_vessel_id' => 'required',
-            'mnt_ship_department_id' => 'required',
             'mnt_item_id' => ['required', Rule::unique('mnt_jobs')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->id)],
         ];
     }
