@@ -15,7 +15,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import MaritimeCertificateForm from '../../../components/operations/configurations/MaritimeCertificateForm.vue';
+import MaritimeCertificateForm from '../../../components/operations/MaritimeCertificateForm.vue';
 import useMaritimeCertificate from '../../../composables/operations/useMaritimeCertificate';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";

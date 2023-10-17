@@ -24,7 +24,7 @@
     </div>
 </template>
 <script setup>
-import Error from "../../Error.vue";
+import Error from "../Error.vue";
 const props = defineProps({
     form: {
         required: false,
