@@ -4,33 +4,27 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useAgency() {
+export default function useAgencyContract() {
     const router = useRouter();
-    const agencies = ref([]);
+    const agencyContracts = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const agency = ref( {
-        name: '',
-        legal_name: '',
-        tax_identification: '',
-        business_license_no: '',
-        company_reg_no: '',
-        address: '',
-        phone: '',
-        email: '',
-        website: '',
-        logo: '',
-        country: '',
+    const agencyContract = ref( {
+        crw_agency_id: '',
+        billing_cycle: '',
+        billing_currency: '',
+        validity_from: '',
+        validity_till: '',
+        service_offered: '',
+        terms_and_conditions: '',
+        remarks: '',
+        attachment: '',
+        account_holder_name: '',
+        bank_name: '',
+        bank_address: '',
+        account_no: '',
+        swift_code: '',
         business_unit: '',
-        crwAgencyContactPersons: [
-            {
-                name: '',
-                contact_no: '',
-                email: '',
-                position: '',
-                purpose: '',
-            }
-        ]
     });
 
     const indexPage = ref(null);
@@ -39,7 +33,7 @@ export default function useAgency() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencies(page,businessUnit) {
+    async function getAgencyContracts(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -48,13 +42,13 @@ export default function useAgency() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-agencies',{
+            const {data, status} = await Api.get('/crw/crw-agency-contracts',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            agencies.value = data.value;
+            agencyContracts.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -65,20 +59,20 @@ export default function useAgency() {
         }
     }
 
-    async function storeAgency(form) {
+    async function storeAgencyContract(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('logo', form.logo);
+        formData.append('attachment', form.attachment);
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/crw/crw-agencies', formData);
-            agency.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-agency-contracts', formData);
+            agencyContract.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencies.index" });
+            await router.push({ name: "crw.agencyContracts.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -88,14 +82,14 @@ export default function useAgency() {
         }
     }
 
-    async function showAgency(agencyId) {
+    async function showAgencyContract(agencyContractId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-agencies/${agencyId}`);
-            agency.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-agency-contracts/${agencyContractId}`);
+            agencyContract.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -106,24 +100,24 @@ export default function useAgency() {
         }
     }
 
-    async function updateAgency(form, agencyId) {
+    async function updateAgencyContract(form, agencyContractId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('logo', form.logo);
+        formData.append('attachment', form.attachment);
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
         try {
             const { data, status } = await Api.post(
-                `/crw/crw-agencies/${agencyId}`,
+                `/crw/crw-agency-contracts/${agencyContractId}`,
                 formData
             );
-            agency.value = data.value;
+            agencyContract.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencies.index" });
+            await router.push({ name: "crw.agencyContracts.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -133,15 +127,15 @@ export default function useAgency() {
         }
     }
 
-    async function deleteAgency(agencyId) {
+    async function deleteAgencyContract(agencyContractId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-agencies/${agencyId}`);
+            const { data, status } = await Api.delete( `/crw/crw-agency-contracts/${agencyContractId}`);
             notification.showSuccess(status);
-            await getAgencies(indexPage.value,indexBusinessUnit.value);
+            await getAgencyContracts(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -152,13 +146,13 @@ export default function useAgency() {
     }
 
     return {
-        agencies,
-        agency,
-        getAgencies,
-        storeAgency,
-        showAgency,
-        updateAgency,
-        deleteAgency,
+        agencyContracts,
+        agencyContract,
+        getAgencyContracts,
+        storeAgencyContract,
+        showAgencyContract,
+        updateAgencyContract,
+        deleteAgencyContract,
         isLoading,
         errors,
     };

@@ -1,17 +1,18 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useAgency from "../../../composables/crew/useAgency";
+import useAgencyContract from "../../../composables/crew/useAgencyContract";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import Store from './../../../store/index.js';
+import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 const icons = useHeroIcon();
 const router = useRouter();
+import env from '../../../config/env';
 
 const props = defineProps({
   page: {
@@ -20,13 +21,14 @@ const props = defineProps({
   },
 });
 
-const { agencies, getAgencies, deleteAgency, isLoading } = useAgency();
+const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading } = useAgencyContract();
 const { setTitle } = Title();
-setTitle('Agency List');
+setTitle('Agency Contract');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 
 function confirmDelete(id) {
   Swal.fire({
@@ -39,7 +41,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteAgency(id);
+      deleteAgencyContract(id);
     }
   })
 }
@@ -48,14 +50,14 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "crw.agencies.index", query: { page: 1 } })
+        router.push({ name: "crw.agencyContracts.index", query: { page: 1 } })
       }
     }
 );
 
 onMounted(() => {
   watchEffect(() => {
-  getAgencies(props.page,businessUnit.value)
+  getAgencyContracts(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -75,8 +77,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Agency List</h2>
-    <default-button :title="'Create Agency'" :to="{ name: 'crw.agencies.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Agency Contract List</h2>
+    <default-button :title="'Create Item'" :to="{ name: 'crw.agencyContracts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -97,39 +99,47 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Agency Name</th>
-            <th>Address</th>
-            <th>Contact No.</th>
-            <th>Email</th>
+            <th>Validity From</th>
+            <th>Validity Till</th>
+            <th>Billing Cycle</th>
             <th>Business Unit</th>
+            <th>Attachment</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(crewAgency,index) in agencies?.data" :key="index">
+          <tr v-for="(contract,index) in agencyContracts?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crewAgency?.name }}</td>
-            <td>{{ crewAgency?.address }}</td>
-            <td>{{ crewAgency?.phone }}</td>
-            <td>{{ crewAgency?.email }}</td>
+            <td>{{ contract?.crwAgency?.name }}</td>
+            <td>{{ contract?.validity_from }}</td>
+            <td>{{ contract?.validity_till }}</td>
+            <td>{{ contract?.billing_cycle }}</td>
             <td>
-              <span :class="crewAgency?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewAgency?.business_unit }}</span>
+              <span :class="contract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contract?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.agencies.edit', params: { agencyId: crewAgency?.id } }"></action-button>
-              <action-button @click="confirmDelete(crewAgency?.id)" :action="'delete'"></action-button>
+              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+contract?.attachment">{{
+                  (typeof contract?.attachment === 'string')
+                      ? '('+contract?.attachment.split('/').pop()+')'
+                      : '----'
+                }}</a>
+            </td>
+            <td>
+              <action-button :action="'edit'" :to="{ name: 'crw.agencyContracts.edit', params: { agencyContractId: contract?.id } }"></action-button>
+              <action-button @click="confirmDelete(contract?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!agencies?.data?.length">
+          <tfoot v-if="!agencyContracts?.data?.length">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
-          <tr v-else-if="!agencies?.data?.length">
+          <tr v-else-if="!agencyContracts?.data?.length">
             <td colspan="7">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="agencies" to="crw.agencies.index" :page="page"></Paginate>
+    <Paginate :data="agencyContracts" to="crw.agencyContracts.index" :page="page"></Paginate>
   </div>
 </template>

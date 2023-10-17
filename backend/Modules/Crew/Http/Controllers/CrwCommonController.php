@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwRank;
 
 class CrwCommonController extends Controller
@@ -31,27 +32,16 @@ class CrwCommonController extends Controller
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function dam()
+    public function getCrewAgencies(Request $request)
     {
         try {
-            // $ranks = CrwRank::query()
-            //     ->where(function ($query) use($request) {
-            //         $query->where('name', 'like', '%' . $request->name_or_code . '%');
-            //         $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
-            //     })
-            //     ->when(!empty($request->service), function ($query) use($request) {
-            //         $service_ports = $this->servicePorts($request->service)->original['value'];
-            //         return $query->whereIn('code', $service_ports);
-            //     })
-            //     ->limit(10)
-            //     ->get();
+            $business_unit = Auth::user()->business_unit;
+            $crwAgencies      = CrwAgency::when($business_unit != "ALL", function ($q) use ($business_unit)
+            {
+                $q->where('business_unit', $business_unit);
+            })->get();
 
-            $crwCrews = CrwRank::when()->get();
-
-            return response()->success('Retrieved Succesfully', $crwCrews, 200);
+            return response()->success('Retrieved Successfully', $crwAgencies, 200);
         }
         catch (QueryException $e)
         {

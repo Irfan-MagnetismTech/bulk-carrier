@@ -4,6 +4,7 @@ import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import useAgency from "../../composables/crew/useAgency";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref} from "vue";
+import env from '../../config/env';
 
 const props = defineProps({
   form: {
@@ -99,7 +100,16 @@ const selectedFile = (event) => {
       <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
       <Error v-if="errors?.logo" :errors="errors.logo" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm">
+      <span v-if="form.prev_logo" class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Previous Logo </span>
+      <template v-if="form.prev_logo">
+        <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.prev_logo">{{
+            (typeof $props.form?.prev_logo === 'string')
+                ? '('+$props.form?.prev_logo.split('/').pop()+')'
+                : ''
+          }}</a>
+      </template>
+    </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Contact Person</legend>

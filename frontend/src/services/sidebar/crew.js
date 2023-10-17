@@ -101,7 +101,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.agencyContracts.index',
                         label: 'Contract List',
                         preIcon: '',
                         postIcon: icons.DownArrow,

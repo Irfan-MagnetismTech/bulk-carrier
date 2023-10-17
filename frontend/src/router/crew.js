@@ -154,4 +154,25 @@ export default [
         component: () => import(`../views/crew/agency/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
+    /* Agency Contract Routes */
+    {
+        path: `/${BASE}/agency-contracts`,
+        name: `${BASE}.agencyContracts.index`,
+        component: () => import(`../views/crew/agency-contract/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/agency-contracts/create`,
+        name: `${BASE}.agencyContracts.create`,
+        component: () => import(`../views/crew/agency-contract/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/agency-contracts/:agencyContractId/edit`,
+        name: `${BASE}.agencyContracts.edit`,
+        component: () => import(`../views/crew/agency-contract/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 ];

@@ -1,7 +1,7 @@
 <script setup>
 import Error from "../Error.vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
-import useRecruitmentApproval from "../../composables/crew/useRecruitmentApproval";
+import useAgencyContract from "../../composables/crew/useAgencyContract";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted} from "vue";
 
@@ -14,22 +14,6 @@ const props = defineProps({
 });
 
 const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
-
-
-function addItem() {
-  let obj = {
-    crw_rank_id: '',
-    candidate_name: '',
-    candidate_contact: '',
-    candidate_email: '',
-    remarks: '',
-  };
-  props.form.crwRecruitmentApprovalLines.push(obj);
-}
-
-function removeItem(index){
-  props.form.crwRecruitmentApprovalLines.splice(index, 1);
-}
 
 onMounted(() => {
   getCrewRankLists();

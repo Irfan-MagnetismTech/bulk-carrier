@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCommonApiRequest() {
     const router = useRouter();
     const crwRankLists = ref([]);
+    const crwAgencies = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -30,9 +31,28 @@ export default function useCommonApiRequest() {
         }
     }
 
+    async function getCrewAgencyLists(form = null) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/crw/get-crew-agencies', form);
+            crwAgencies.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         crwRankLists,
+        crwAgencies,
         getCrewRankLists,
+        getCrewAgencyLists,
         isLoading,
         errors,
     };

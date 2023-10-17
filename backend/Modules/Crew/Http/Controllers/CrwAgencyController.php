@@ -48,9 +48,10 @@ class CrwAgencyController extends Controller
             DB::transaction(function () use ($request)
             {
                 $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit');
+                $crwAgencyData = json_decode($request->get('data'),true);
                 $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
                 $crwAgency     = CrwAgency::create($crwAgencyData);
-                $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
+                $crwAgency->crwAgencyContactPersons()->createMany($crwAgencyData['crwAgencyContactPersons']);
 
                 return response()->success('Created Successfully', $crwAgency, 201);
             });
@@ -70,7 +71,7 @@ class CrwAgencyController extends Controller
     public function show(CrwAgency $crwAgency)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgency->load('crwAgencyContactPeople'), 200);
+            return response()->success('Retrieved succesfully', $crwAgency->load('crwAgencyContactPersons'), 200);
         }
         catch (QueryException $e)
         {
@@ -91,11 +92,13 @@ class CrwAgencyController extends Controller
             DB::transaction(function () use ($request, $crwAgency)
             {
                 $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit');
+                $crwAgencyData = json_decode($request->get('data'),true);
+                $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
                 $crwAgency->update($crwAgencyData);
-                $crwAgency->crwAgencyContactPeople()->delete();
-                $crwAgency->crwAgencyContactPeople()->createMany($request->crwAgencyContactPeople);
+                $crwAgency->crwAgencyContactPersons()->delete();
+                $crwAgency->crwAgencyContactPersons()->createMany($crwAgencyData['crwAgencyContactPersons']);
 
-                return response()->success('Updated succesfully', $crwAgency, 202);
+                return response()->success('Updated successfully', $crwAgency, 202);
             });
         }
         catch (QueryException $e)
