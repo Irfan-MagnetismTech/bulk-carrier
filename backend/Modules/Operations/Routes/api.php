@@ -60,7 +60,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('vessel-particulars/without/paginate', [OpsCommonController::class, 'getVesselParticularWithoutPaginate']);
     Route::get('voyages/without/paginate', [OpsCommonController::class, 'getVoyageWithoutPaginate']);
     Route::get('voyage-boat-notes/without/paginate', [OpsCommonController::class, 'getVoyageBoatNoteWithoutPaginate']);
-    Route::get('charterer-profiles/without/paginate', [OpsCommonController::class, 'getCargoProfileWithoutPaginate']);
+    Route::get('charterer-profiles/without/paginate', [OpsCommonController::class, 'getChartererProfileWithoutPaginate']);
     Route::get('charterer-contracts/without/paginate', [OpsCommonController::class, 'getChartererContractWithoutPaginate']);
     Route::get('handover-takeovers/without/paginate', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
     Route::get('charterer-invoices/without/paginate', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);

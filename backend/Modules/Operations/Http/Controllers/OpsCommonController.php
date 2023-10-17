@@ -55,10 +55,14 @@ class OpsCommonController extends Controller
     }
 
     // To get cargo tariff data
-    public function getCargoTariffWithoutPaginate(){
+    public function getCargoTariffWithoutPaginate(Request $request){
         try
         {
-            $cargo_tariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->get();          
+            $cargo_tariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
+
             return response()->success('Successfully retrieved cargo tariffs for without paginate.', $cargo_tariffs, 200);
         }
         catch (QueryException $e)
@@ -68,10 +72,14 @@ class OpsCommonController extends Controller
     }
 
     // To get Charterer Contract data
-    public function getChartererContractWithoutPaginate(){
+    public function getChartererContractWithoutPaginate(Request $request){
         try
         {
-            $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();        
+            $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
+
             return response()->success('Successfully retrieved charterer contracts for without paginate.', $charterer_contracts, 200);
         }
         catch (QueryException $e)
@@ -81,10 +89,13 @@ class OpsCommonController extends Controller
     }
 
     // To get Charterer Invoice data
-    public function getChartererInvoiceWithoutPaginate(){
+    public function getChartererInvoiceWithoutPaginate(Request $request){
         try
         {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->get();
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
 
             return response()->success('Successfully retrieved cargo tariffs for without paginate.', $charterer_invoices, 200);
         }
@@ -96,10 +107,13 @@ class OpsCommonController extends Controller
     
 
     // To get Charterer Profile data
-     public function getCargoProfileWithoutPaginate(){
+     public function getChartererProfileWithoutPaginate(Request $request){
         try
         {
-            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->get();       
+            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();         
             return response()->success('Successfully retrieved charterer profiles for without paginate.', $charterer_profiles, 200);
         }
         catch (QueryException $e)
@@ -109,10 +123,13 @@ class OpsCommonController extends Controller
     }
 
     // To get Customer data
-    public function getCustomerWithoutPaginate(){
+    public function getCustomerWithoutPaginate(Request $request){
         try
         {
-            $customers = OpsCustomer::all();            
+            $customers = OpsCustomer::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();  
+
             return response()->success('Successfully retrieved customers for without paginate.', $customers, 200);
         }
         catch (QueryException $e)
@@ -122,10 +139,14 @@ class OpsCommonController extends Controller
     }
 
     // To get Handover Takeover data
-    public function getHandoverTakeoverWithoutPaginate(){
+    public function getHandoverTakeoverWithoutPaginate(Request $request){
         try
         {
-            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->get();        
+            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();  
+
             return response()->success('Successfully retrieved handover takeovers for without paginate.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
@@ -136,10 +157,12 @@ class OpsCommonController extends Controller
 
 
     // To get Lighter Noon data
-    public function getLighterNoonReportWithoutPaginate(){
+    public function getLighterNoonReportWithoutPaginate(Request $request){
         try
         {
-            $lighterNoonReports = OpsLighterNoonReport::all();            
+            $lighterNoonReports = OpsLighterNoonReport::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
             return response()->success('Successfully retrieved cargo tariffs for without paginate.', $lighterNoonReports, 200);
         }
         catch (QueryException $e)
@@ -150,10 +173,12 @@ class OpsCommonController extends Controller
 
 
     // To get Maritime Certification data
-    public function getMaritimeCertificationWithoutPaginate(){
+    public function getMaritimeCertificationWithoutPaginate(Request $request){
         try
         {
-            $maritime_certifications = OpsMaritimeCertification::all();            
+            $maritime_certifications = OpsMaritimeCertification::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();  
             return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
         }
         catch (QueryException $e)
@@ -164,10 +189,12 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel data
-    public function getVesselWithoutPaginate(){
+    public function getVesselWithoutPaginate(Request $request){
         try
         {
-            $vessels = OpsVessel::all();            
+            $vessels = OpsVessel::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();            
             return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -178,10 +205,14 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel Certificate data
-    public function getVesselCertificateWithoutPaginate(){
+    public function getVesselCertificateWithoutPaginate(Request $request){
         try
         {
-            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
+            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->paginate(15);
             return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
@@ -192,10 +223,14 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel Particular data
-    public function getVesselParticularWithoutPaginate(){
+    public function getVesselParticularWithoutPaginate(Request $request){
         try
         {
-            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();        
+            $vessel_particulars = OpsVesselParticular::with('ops_vessel')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
             return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
         }
         catch (QueryException $e)
@@ -205,10 +240,14 @@ class OpsCommonController extends Controller
     }
 
     // To get Vessel Boat Note data
-    public function getVoyageBoatNoteWithoutPaginate()
+    public function getVoyageBoatNoteWithoutPaginate(Request $request)
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->get();
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();
             
             return response()->success('Successfully retrieved voyage boat notes for without paginate.', $voyage_boat_notes, 200);
         }
@@ -219,10 +258,14 @@ class OpsCommonController extends Controller
     }
 
     // To get Voyage data
-    public function getVoyageWithoutPaginate(){
+    public function getVoyageWithoutPaginate(Request $request){
         try
         {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
             return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
         }
         catch (QueryException $e)
