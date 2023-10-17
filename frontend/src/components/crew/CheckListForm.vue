@@ -1,5 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 
 const props = defineProps({
   form: {
@@ -24,6 +25,7 @@ function removeCheckListItem(index){
 </script>
 
 <template>
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>

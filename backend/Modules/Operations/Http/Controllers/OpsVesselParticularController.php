@@ -11,13 +11,13 @@ use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class OpsVesselParticularController extends Controller
 {
    // use HasRoles;
-    
-    function __construct(private FileUploadService $fileUpload)
-    {
+   function __construct(private FileUploadService $fileUpload,)
+   {
     //     $this->middleware('permission:vessel-particular-create|vessel-particular-edit|vessel-particular-show|vessel-particular-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-particular-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-particular-edit', ['only' => ['update']]);
@@ -28,11 +28,10 @@ class OpsVesselParticularController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
             $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);
-            
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }
         catch (QueryException $e)
@@ -78,7 +77,7 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('opsVessel');
+        $vessel_particular->load('ops_vessel');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
@@ -107,6 +106,7 @@ class OpsVesselParticularController extends Controller
             );
 
             if(isset($request->attachment)){
+                $this->fileUpload->deleteFile($vessel_particular->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars', $vessel_particular->attachment);
                 $vesselParticular['attachment'] = $attachment;
             }
@@ -128,13 +128,11 @@ class OpsVesselParticularController extends Controller
      * @param  OpsVesselParticular  $vessel_particular
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(OpsVesselCertificate $vessel_particular): JsonResponse
+    public function destroy(OpsVesselParticular $vessel_particular): JsonResponse
     {
         try
         {
-            if(isset($vessel_particular->attachment)){
-                $this->fileUpload->deleteFile($vessel_particular->attachment);
-            }
+            $this->fileUpload->deleteFile($vessel_particular->attachment);
             $vessel_particular->delete();
 
             return response()->json([
@@ -146,4 +144,15 @@ class OpsVesselParticularController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getVesselParticularName(){
+        try {
+            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();
+            return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
 }

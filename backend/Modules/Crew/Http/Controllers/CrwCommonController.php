@@ -18,7 +18,7 @@ class CrwCommonController extends Controller
     {
         try {
             $business_unit = Auth::user()->business_unit;
-            $crwRanks      = CrwRank::when($business_unit, function ($q) use ($business_unit)
+            $crwRanks      = CrwRank::when($business_unit != "ALL", function ($q) use ($business_unit)
             {
                 $q->where('business_unit', $business_unit);
             })->get();
