@@ -75,8 +75,9 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffByName']);
     Route::get('search-vessels', [OpsVesselController::class, 'getVesselByName']);
     Route::get('search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationByName']);
+    Route::get('search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateByReferenceNumber']);
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
-    Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByName']);
+    Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByVoyageNo']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     
     // end for search api route

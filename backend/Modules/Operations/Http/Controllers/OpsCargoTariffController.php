@@ -141,7 +141,6 @@ class OpsCargoTariffController extends Controller
         }
     }
 
-
     public function getCargoTariffByName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()

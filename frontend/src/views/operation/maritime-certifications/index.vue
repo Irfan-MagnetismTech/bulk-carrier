@@ -7,8 +7,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
-import useCargoTariff from '../../../composables/operations/useCargoTariff';
-const { cargoTariffs, getCargoTariffs, deleteCargoTariff, isLoading } = useCargoTariff();
+import useMaritimeCertificate from '../../../composables/operations/useMaritimeCertificate';
+const { maritimeCertificates, getMaritimeCertificates, deleteMaritimeCertificate, isLoading } = useMaritimeCertificate();
 
 const props = defineProps({
   page: {
@@ -18,7 +18,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Cargo Tariff List');
+setTitle('Maritime Certificate List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -35,14 +35,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteCargoTariff(id);
+        deleteMaritimeCertificate(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-    getCargoTariffs(props.page)
+    getMaritimeCertificates(props.page)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -62,8 +62,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Cargo Tariff List</h2>
-    <default-button :title="'Create Cargo Tariff'" :to="{ name: 'ops.configurations.cargo-tariffs.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Maritime Certificate List</h2>
+    <default-button :title="'Create Maritime Certificate'" :to="{ name: 'ops.maritime-certifications.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -82,43 +82,38 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Tariff Name</th>
-            <th>Vessel</th>
-            <th>Loading Point</th>
-            <th>Unloading Point</th>
-            <th>Cargo Type</th>
-            <th>Status</th>
+            <th>Certificate Authority</th>
+            <th>Certificate Name</th>
+            <th>Certificate Type</th>
+            <th>Validity Period</th>
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody v-if="cargoTariffs?.data?.length">
-              <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
-                  <td>{{ cargoTariffs.from + index }}</td>
-                  <td>{{ cargoTariff?.tariff_name }}</td>
-                  <td>{{ cargoTariff?.opsVessel?.name }}</td>
-                  <td>{{ cargoTariff?.loading_point }}</td>
-                  <td>{{ cargoTariff?.unloading_point }}</td>
-                  <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
-                  <td>{{ cargoTariff?.status }}</td>
+          <tbody v-if="maritimeCertificates?.data?.length">
+              <tr v-for="(maritimeCertificate, index) in maritimeCertificates.data" :key="maritimeCertificate?.id">
+                  <td>{{ maritimeCertificates.from + index }}</td>
+                  <td>{{ maritimeCertificate?.authority }}</td>
+                  <td>{{ maritimeCertificate?.name }}</td>
+                  <td>{{ maritimeCertificate?.type }}</td>
+                  <td>{{ maritimeCertificate?.validity }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                      <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                      <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.maritime-certifications.edit', params: { maritimeCertificateId: maritimeCertificate.id } }"></action-button>
+                      <action-button @click="confirmDelete(maritimeCertificate.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
           </tbody>
           
-          <tfoot v-if="!cargoTariffs?.length">
+          <tfoot v-if="!maritimeCertificates?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
-          <tr v-else-if="!cargoTariffs?.data?.length">
+          <tr v-else-if="!maritimeCertificates?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="cargoTariffs" to="ops.configurations.cargo-tariffs.index" :page="page"></Paginate>
+    <Paginate :data="maritimeCertificates" to="ops.configurations.maritime-certificates.index" :page="page"></Paginate>
   </div>
 </template>
