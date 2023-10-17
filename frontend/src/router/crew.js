@@ -175,4 +175,25 @@ export default [
         component: () => import(`../views/crew/agency-contract/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
+    /* Agency Bills Routes */
+    {
+        path: `/${BASE}/agency-bills`,
+        name: `${BASE}.agencyBills.index`,
+        component: () => import(`../views/crew/agency-bill/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/agency-bills/create`,
+        name: `${BASE}.agencyBills.create`,
+        component: () => import(`../views/crew/agency-bill/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/agency-bills/:agencyBillId/edit`,
+        name: `${BASE}.agencyBills.edit`,
+        component: () => import(`../views/crew/agency-bill/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 ];

@@ -111,7 +111,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.agencyBills.index',
                         label: 'Agency Bills',
                         preIcon: '',
                         postIcon: icons.DownArrow,
