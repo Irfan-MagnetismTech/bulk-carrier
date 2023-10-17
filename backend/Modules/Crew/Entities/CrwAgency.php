@@ -13,6 +13,6 @@ class CrwAgency extends Model
 	protected $fillable = ['name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'website', 'phone', 'email', 'logo', 'country', 'business_unit'];
 
 	public function crwAgencyContactPersons(){
-		return $this->hasMany(CrwAgencyContactPerson::class);
+		return $this->hasMany(CrwAgencyContactPerson::class, 'crw_agency_id', 'id');
 	}
 }
