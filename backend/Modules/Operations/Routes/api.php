@@ -20,6 +20,7 @@ use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
+use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,7 @@ use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 */
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    Route::resources([
+    Route::apiResources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
         'cargo-types' => OpsCargoTypeController::class,
@@ -51,6 +52,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'cash-requisitions' => OpsCashRequisitionController::class,
+        'bunker-requisitions' => OpsBunkerRequisitionController::class,
     ]);
 
     //start for without pagination
@@ -71,6 +73,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('lighter-noon-reports/without/paginate', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
     Route::get('customer-invoices/without/paginate', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
     Route::get('cash-requisitions/without/paginate', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
+    Route::get('bunker-requisitions/without/paginate', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
     //end for without pagination
 
     // start for search api route
@@ -88,4 +91,3 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // end for search api route
 
 });
-Route::post('vessel-search', [OpsVesselController::class, 'search']);

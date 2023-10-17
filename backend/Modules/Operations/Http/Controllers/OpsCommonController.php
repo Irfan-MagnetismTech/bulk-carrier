@@ -33,7 +33,7 @@ class OpsCommonController extends Controller
         try
         {
             $ports = OpsPort::all();            
-            return response()->success('Successfully retrieved ports for without paginate.', $ports, 200);
+            return response()->success('Successfully retrieved ports.', $ports, 200);
         }
         catch (QueryException $e)
         {
@@ -46,7 +46,7 @@ class OpsCommonController extends Controller
         try
         {
             $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types for without paginate.', $cargo_types, 200);
+            return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
         }
         catch (QueryException $e)
         {
@@ -63,7 +63,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();
 
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $cargo_tariffs, 200);
+            return response()->success('Successfully retrieved cargo tariffs.', $cargo_tariffs, 200);
         }
         catch (QueryException $e)
         {
@@ -80,7 +80,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();
 
-            return response()->success('Successfully retrieved charterer contracts for without paginate.', $charterer_contracts, 200);
+            return response()->success('Successfully retrieved charterer contracts.', $charterer_contracts, 200);
         }
         catch (QueryException $e)
         {
@@ -97,7 +97,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();
 
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $charterer_invoices, 200);
+            return response()->success('Successfully retrieved cargo tariffs.', $charterer_invoices, 200);
         }
         catch (QueryException $e)
         {
@@ -114,7 +114,7 @@ class OpsCommonController extends Controller
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();         
-            return response()->success('Successfully retrieved charterer profiles for without paginate.', $charterer_profiles, 200);
+            return response()->success('Successfully retrieved charterer profiles.', $charterer_profiles, 200);
         }
         catch (QueryException $e)
         {
@@ -130,7 +130,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();  
 
-            return response()->success('Successfully retrieved customers for without paginate.', $customers, 200);
+            return response()->success('Successfully retrieved customers.', $customers, 200);
         }
         catch (QueryException $e)
         {
@@ -147,7 +147,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();  
 
-            return response()->success('Successfully retrieved handover takeovers for without paginate.', $handover_takeovers, 200);
+            return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
         {
@@ -163,7 +163,7 @@ class OpsCommonController extends Controller
             $lighterNoonReports = OpsLighterNoonReport::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $lighterNoonReports, 200);
+            return response()->success('Successfully retrieved cargo tariffs.', $lighterNoonReports, 200);
         }
         catch (QueryException $e)
         {
@@ -179,7 +179,7 @@ class OpsCommonController extends Controller
             $maritime_certifications = OpsMaritimeCertification::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();  
-            return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
+            return response()->success('Successfully retrieved maritime certifications.', $maritime_certifications, 200);
         }
         catch (QueryException $e)
         {
@@ -195,7 +195,7 @@ class OpsCommonController extends Controller
             $vessels = OpsVessel::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();            
-            return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
         {
@@ -213,7 +213,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->paginate(15);
-            return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
+            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -231,7 +231,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
+            return response()->success('Successfully retrieved vessel particulars.', $vessel_particulars, 200);
         }
         catch (QueryException $e)
         {
@@ -249,7 +249,7 @@ class OpsCommonController extends Controller
             })
             ->latest()->get();
             
-            return response()->success('Successfully retrieved voyage boat notes for without paginate.', $voyage_boat_notes, 200);
+            return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
         catch (QueryException $e)
         {
@@ -266,7 +266,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
+            return response()->success('Successfully retrieved voyages.', $voyages, 200);
         }
         catch (QueryException $e)
         {
@@ -284,7 +284,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved customer invoices for without paginate.', $customerInvoices, 200);
+            return response()->success('Successfully retrieved customer invoices.', $customerInvoices, 200);
         }
         catch (QueryException $e)
         {
@@ -301,7 +301,23 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved customer invoices for without paginate.', $cashRequisitions, 200);
+            return response()->success('Successfully retrieved cash requisitions.', $cashRequisitions, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    // To get bunker Requisition data
+    public function getBunkerRequisitionWithoutPaginate(Request $request)
+    {
+        try
+        {
+            $bunkerRequisitions = OpsBunkerRequisition::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
+            return response()->success('Successfully retrieved bunker requisitions.', $bunkerRequisitions, 200);
         }
         catch (QueryException $e)
         {
