@@ -2,10 +2,12 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmMaterialCategory;
+use Modules\SupplyChain\Http\Requests\ScmMaterialCategoryRequest;
 
 class ScmMaterialCategoryController extends Controller
 {
@@ -26,62 +28,83 @@ class ScmMaterialCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmMaterialCategoryRequest $request): JsonResponse
     {
-        //
+        try {
+            $scm_material_category = ScmMaterialCategory::create($request->all());
+
+            return response()->json([
+                'status' => 'success',
+                'value' => $scm_material_category,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param ScmMaterialCategory $materialCategory
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(ScmMaterialCategory $materialCategory): JsonResponse
     {
-        return view('supplychain::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
+        try {
+            return response()->json([
+                'status' => 'success',
+                'value' => $materialCategory,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param ScmMaterialCategoryRequest $request
+     * @param ScmMaterialCategory $materialCategory
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(ScmMaterialCategoryRequest $request, ScmMaterialCategory $materialCategory): JsonResponse
     {
-        //
+        try {
+            $materialCategory->update($request->all());
+
+            return response()->json([
+                'status' => 'success',
+                'value' => $materialCategory,
+            ], 202);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param ScmMaterialCategory $materialCategory
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ScmMaterialCategory $materialCategory): JsonResponse
     {
-        //
+        try {
+            $materialCategory->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => null,
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function searchMaterialCategory(Request $request)
+    {
+        $materialCategory = ScmMaterialCategory::where('name', 'like', "%$request->searchParam%")->orderBy('name')->limit(10)->get();
+
+        return response()->success('Unit Name', $materialCategory, 200);
     }
 }

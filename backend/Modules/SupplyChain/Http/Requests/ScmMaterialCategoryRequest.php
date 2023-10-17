@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ScmMaterialCategoryRequest extends FormRequest
@@ -14,7 +15,8 @@ class ScmMaterialCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', Rule::unique('scm_material_categories')->ignore($this->material_category, 'name')],
+            'short_code' => ['required', Rule::unique('scm_material_categories')->ignore($this->material_category, 'short_code')],
         ];
     }
 
@@ -26,7 +28,11 @@ class ScmMaterialCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'name.unique' => 'Name is already taken',
+
+            'short_code.required' => 'Short code is required',
+            'short_code.unique' => 'Short code is already taken',
         ];
     }
 

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('short_code')->unique()->nullable();
             $table->bigInteger('parent_id')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
