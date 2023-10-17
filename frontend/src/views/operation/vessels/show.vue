@@ -1,6 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Vessel Details</h2>
+    <default-button :title="'Vessel List'" :to="{ name: 'ops.vessels.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div class="flex md:gap-4">
@@ -166,6 +167,7 @@ import { useRoute } from 'vue-router';
 import useVessel from '../../../composables/operations/useVessel';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
+import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 
 const icons = useHeroIcon();
 
