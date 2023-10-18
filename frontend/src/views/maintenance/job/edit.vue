@@ -36,8 +36,13 @@
   setTitle('Edit Job');
 
   watch(job, (value) => {
-    job.value.dept_wise_items = value?.mntShipDepartment?.mntItem;
-    job.value.item_name = value?.mntItem;
+    job.value.mnt_ship_department_name = value?.mntItem?.mntItemGroup?.mntShipDepartment;
+
+    job.value.mnt_item_groups = value?.mntItem?.mntItemGroup?.mntShipDepartment?.mntItemGroups;
+    job.value.mnt_item_group_name = value?.mntItem?.mntItemGroup;
+
+    job.value.mnt_items = value?.mntItem?.mntItemGroup?.mntItems;
+    job.value.mnt_item_name = value?.mntItem;
   });
   
   onMounted(() => {

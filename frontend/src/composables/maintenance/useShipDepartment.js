@@ -124,7 +124,7 @@ export default function useShipDepartment() {
 
     async function getShipDepartmentsWithoutPagination(businessUnit) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {

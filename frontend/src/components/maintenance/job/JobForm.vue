@@ -235,6 +235,13 @@ watch(() => props.form.mnt_item_name, (value) => {
   props.form.mnt_item_id = value?.id;
 });
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.mnt_ship_department_name = null;
+  }
+});
+
+
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
