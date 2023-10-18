@@ -122,13 +122,17 @@ export default function useShipDepartment() {
         }
     }
 
-    async function getShipDepartmentsWithoutPagination() {
+    async function getShipDepartmentsWithoutPagination(businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get('/mnt/get-mnt-ship-departments');
+            const {data, status} = await Api.get('/mnt/get-mnt-ship-departments',{
+                params: {
+                    business_unit: businessUnit,
+                },
+            });
             shipDepartments.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

@@ -14,10 +14,14 @@ export default function useItemGroup() {
     const job = ref( {
         ops_vessel_id: '',
         mnt_ship_department_id: '',
-        item_name: '',
+        mnt_ship_department_name: '',
+        mnt_item_group_id: '',
+        mnt_item_group_name: '',
+        mnt_item_name: '',
         mnt_item_id: '',
-        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', remarks: '' }],
-        dept_wise_items: [],
+        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', remarks: '' }],
+        mnt_item_groups: [],
+        mnt_items: [],
         business_unit: '',
     });
     const errors = ref(null);
