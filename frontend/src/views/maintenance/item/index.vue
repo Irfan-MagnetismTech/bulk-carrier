@@ -100,36 +100,35 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-1/6">#</th>
-            <th class="w-1/6">Ship Department</th>
-            <th class="w-1/6">Item Group</th>
-            <th class="w-1/6">Item Code</th>
-            <th class="w-1/6">Item Name</th>
-            <th class="w-1/6">Action</th>
+            <th class="w-1/12">#</th>
+            <th class="w-2/12">Ship Department</th>
+            <th class="w-2/12">Item Group</th>
+            <th class="w-2/12">Item Code</th>
+            <th class="w-2/12">Item Name</th>
+            <th class="w-2/12">Business Unit</th>
+            <th class="w-1/12">Action</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(item,index) in items?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ item?.mntShipDepartment?.name }}</td>
+            <td>{{ item?.mntItemGroup?.mntShipDepartment?.name }}</td>
             <td>{{ item?.mntItemGroup?.name }}</td>
             <td>{{ item?.item_code }}</td>
             <td>{{ item?.name }}</td>
-            
-            <td class="">
-              <div class="flex">
+            <td><span :class="item?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ item?.business_unit }}</span></td>
+            <td>
                 <action-button :action="'edit'" :to="{ name: 'mnt.items.edit', params: { itemId: item?.id } }"></action-button>
                 <action-button @click="confirmDelete(item?.id)" :action="'delete'"></action-button>
-              </div>
             </td>
           </tr>
           </tbody>
           <tfoot v-if="!items?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="!items?.data?.length">
-            <td colspan="6">No item found.</td>
+            <td colspan="7">No item found.</td>
           </tr>
           </tfoot>
       </table>
