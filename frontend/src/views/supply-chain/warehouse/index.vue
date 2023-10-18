@@ -74,7 +74,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Warehouse List</h2>
-    <default-button :title="'Create Warehouse'" :to="{ name: 'supply-chain.warehouse.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Warehouse'" :to="{ name: 'scm.warehouse.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <div class="relative w-full">
@@ -117,7 +117,7 @@ onMounted(() => {
               <span :class="warehouse?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ warehouse?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'supply-chain.warehouse.edit', params: { warehouseId: warehouse?.id } }"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'scm.warehouse.edit', params: { warehouseId: warehouse?.id } }"></action-button>
               <action-button @click="confirmDelete(warehouse?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
@@ -132,7 +132,7 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="ranks" to="supply-chain.warehouse.index" :page="page"></Paginate>
+    <Paginate :data="ranks" to="scm.warehouse.index" :page="page"></Paginate>
   </div>
 </template>
 

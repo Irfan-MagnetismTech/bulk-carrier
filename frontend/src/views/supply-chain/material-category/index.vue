@@ -42,14 +42,28 @@ onMounted(() => {
 });
 
 });
-
+function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this Category!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteMaterialCategory(id);
+          }
+        })
+      }
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Material Category List</h2>
-    <default-button :title="'Create Category Material'" :to="{ name: 'supply-chain.material-category.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Category Material'" :to="{ name: 'scm.material-category.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -68,17 +82,19 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Name</th>
+            <th>Parent Name</th>
             <th>Short Code</th>
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(materialCategory,index) in materialCategories" :key="materialCategory.id">
+            <tr v-for="(materialCategory,index) in materialCategories?.data" :key="materialCategory.id">
               <td>{{ index + 1 }}</td>
               <td>{{ materialCategory.name }}</td>
+              <td>{{ materialCategory?.parent?.name ?? 'N/a' }}</td>
               <td>{{ materialCategory.short_code }}</td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'supply-chain.material-category.edit', params: { materialCategoryId: materialCategory.id } }"></action-button>
-                <action-button @click="deleteMaterialCategory(materialCategory.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.material-category.edit', params: { materialCategoryId: materialCategory.id } }"></action-button>
+                <action-button @click="confirmDelete(materialCategory.id)" :action="'delete'"></action-button>
               </td>
             </tr>
           </tbody>
@@ -92,6 +108,6 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="materialCategories" to="supply-chain.material-category.index" :page="page"></Paginate>
+    <Paginate :data="materialCategories" to="scm.material-category.index" :page="page"></Paginate>
   </div>
 </template>

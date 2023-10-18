@@ -104,11 +104,6 @@ export default function useMaterial() {
     }
 
     async function deleteMaterial(materialId) {
-
-        if (!confirm('Are you sure you want to delete this material?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
 

@@ -107,11 +107,6 @@ export default function useWarehouse() {
     }
 
     async function deleteWarehouse(warehouseId) {
-
-        if (!confirm('Are you sure you want to delete this warehouse?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
