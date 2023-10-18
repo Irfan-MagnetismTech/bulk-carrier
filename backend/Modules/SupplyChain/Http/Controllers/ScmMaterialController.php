@@ -29,7 +29,7 @@ class ScmMaterialController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_material_categories = ScmMaterial::latest()->paginate(10);
+            $scm_material_categories = ScmMaterial::with('scmMaterialCategory')->latest()->paginate(10);
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {

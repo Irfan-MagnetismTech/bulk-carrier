@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('hs_code')->nullable();
             $table->string('store_category')->nullable();
             $table->string('unit')->nullable();
-            $table->integer('minimum_stcok')->nullable();
+            $table->integer('minimum_stock')->nullable();
             $table->string('description')->nullable();
             $table->string('sample_photo')->nullable();
             $table->bigInteger('account_id')->nullable();
