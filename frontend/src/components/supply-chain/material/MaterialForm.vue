@@ -26,10 +26,10 @@
         props.material.scm_material_category_id = value?.id;
     });
 
-    watch(() => props.material.unit, (value) => {
-        console.log('value', value);
-        props.material.unit = value?.name;
-    });
+    // watch(() => props.material.unit, (value) => {
+    //     console.log('value', value);
+    //     props.material.unit = value?.name;
+    // });
 
     function fetchUnit(query, loading) {
         searchUnit(query, loading);
@@ -73,7 +73,7 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Unit <span class="text-red-500">*</span></span>
-                    <v-select :options="units" placeholder="--Choose an option--" @search="fetchUnit"  v-model="material.unit" label="name" class="block form-input">
+                    <v-select :options="units" placeholder="--Choose an option--" @search="fetchUnit"  v-model="material.unit" label="name" :reduce="units => units.name" class="block form-input">
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
