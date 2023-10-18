@@ -170,7 +170,13 @@ class MntItemController extends Controller
         
         try {
 
-            $items = MntItem::select('id','name','item_code')->where('mnt_ship_department_id', $mntShipDepartmentId)->get();
+            $items = MntItem::select('id','name','item_code')
+                    ->whereIn('mnt_item_group_id', function($query) use($mntShipDepartmentId){
+                        $query->from('mnt_item_groups')
+                                ->select('id')
+                                ->where('mnt_ship_department_id', $mntShipDepartmentId);
+                    })
+                    ->get();
             return response()->success('Items retrieved successfully', $items, 200);
             
         }

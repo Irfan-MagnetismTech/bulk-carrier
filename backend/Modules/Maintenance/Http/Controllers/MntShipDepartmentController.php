@@ -149,7 +149,10 @@ class MntShipDepartmentController extends Controller
         
         try {
 
-            $shipDepartments = MntShipDepartment::select('*')->get();
+            $shipDepartments = MntShipDepartment::select('*')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->get();
 
             return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
             
@@ -160,23 +163,5 @@ class MntShipDepartmentController extends Controller
         }
     }
 
-    /**
-     * Get the ship departments without pagination.
-     * @return JsonResponse
-     */
-    public function getBusinessUnitWiseMntShipDepartments($businessUnit) : JsonResponse
-    {
-        
-        try {
-
-            $shipDepartments = MntShipDepartment::select('*')->where('business_unit', $businessUnit)->get();
-
-            return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
-            
-        }
-        catch (\Exception $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+    
 }
