@@ -11,6 +11,7 @@ class FileUploadService
     public function handleFile($file, $path, $previousFile = null)
     {
         try {
+            dd(is_string($file));
             if (is_string($file)) return $file;
 
             $fileName = null;

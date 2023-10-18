@@ -67,7 +67,7 @@ class ScmMaterialController extends Controller
     public function show(ScmMaterial $material): JsonResponse
     {
         try {
-            return response()->success('data', $material, 200);
+            return response()->success('data', $material->load('scmMaterialCategory'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -82,8 +82,14 @@ class ScmMaterialController extends Controller
      */
     public function update(ScmMaterialRequest $request, ScmMaterial $material)
     {
+        $requestData = $request->all();
+
         try {
-            $material->update($request->all());
+            if (isset($request->sample_photo)) {
+                $sample_photos = $this->fileUpload->handleFile($request->sample_photo, 'scm/materials', $material->sample_photo);
+                $requestData['sample_photo'] = $sample_photos;
+            }
+            $material->update($requestData);
 
             return response()->success('Data updated sucessfully!', $material, 202);
         } catch (\Exception $e) {
@@ -100,6 +106,7 @@ class ScmMaterialController extends Controller
     public function destroy(ScmMaterial $material): JsonResponse
     {
         try {
+            $this->fileUpload->deleteFile($material->sample_photo);
             $material->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
@@ -107,5 +114,21 @@ class ScmMaterialController extends Controller
 
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function searchMaterial(Request $request)
+    {
+        $searchParam = $request->searchParam;
+
+        $materialCategory = ScmMaterial::query()
+            ->where(function ($query) use ($searchParam) {
+                $query->where('name', 'like', "%$searchParam%")
+                    ->orWhere('material_code', 'like', "%$searchParam%");
+            })
+            ->orderByDesc('name')
+            ->limit(10)
+            ->get();
+
+        return response()->success('Search result', $materialCategory, 200);
     }
 }

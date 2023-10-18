@@ -10,6 +10,8 @@ class ScmMaterial extends Model
 {
     use HasFactory;
 
+    protected $appends = ['material_name_and_code'];
+
     protected $fillable = [
         'scm_material_category_id', 'name', 'material_code', 'hs_code', 'store_category', 'unit', 'minimum_stock', 'description', 'sample_photo', 'account_id'
     ];
@@ -17,5 +19,10 @@ class ScmMaterial extends Model
     public function scmMaterialCategory()
     {
         return $this->belongsTo(ScmMaterialCategory::class);
+    }
+
+    public function getMaterialNameAndCodeAttribute()
+    {
+        return $this->name . ' - ' . $this->material_code;
     }
 }

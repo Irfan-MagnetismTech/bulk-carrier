@@ -16,5 +16,6 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     ]);
     Route::get('search-material-category', [ScmMaterialCategoryController::class, "searchMaterialCategory"])->name('searchMaterialCategory');
     Route::get('search-unit', [ScmUnitController::class, "searchUnit"])->name('searchUnit');
+    Route::get('search-materials', [ScmMaterialController::class, "searchMaterial"])->name('searchMaterial');
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
 });
