@@ -69,8 +69,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Job List</h2>
-    <!-- <default-button :title="'Add Job'" :to="{ name: 'maintenance.job.create' }"></default-button> -->
-    <default-button :title="'Add Job'" :to="{ name: 'maintenance.job.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Add Job'" :to="{ name: 'mnt.jobs.create' }"></default-button> -->
+    <default-button :title="'Add Job'" :to="{ name: 'mnt.jobs.create' }" :icon="icons.AddIcon"></default-button>
     
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -115,7 +115,7 @@ onMounted(() => {
             
             <td class="">
               <div class="flex justify-center">
-                <action-button :action="'edit'" :to="{ name: 'maintenance.job.edit', params: { jobId: job?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.jobs.edit', params: { jobId: job?.id } }"></action-button>
                 <action-button @click="confirmDelete(job?.id)" :action="'delete'"></action-button>
               </div>
             </td>
@@ -131,6 +131,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="jobs" to="maintenance.job.index" :page="page"></Paginate>
+    <Paginate :data="jobs" to="mnt.jobs.index" :page="page"></Paginate>
   </div>
 </template>

@@ -114,7 +114,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'maintenance.job.create',
+                        route: 'mnt.jobs.create',
                         label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -124,7 +124,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'maintenance.job.index',
+                        route: 'mnt.jobs.index',
                         label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
