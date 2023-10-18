@@ -106,7 +106,7 @@ class MntRunHourController extends Controller
     {
         try {
             
-            $job = MntRunHour::with(['opsVessel:id,name','mntItem.mntShipDepartment','mntItem.mntItemGroup'])->find($id);
+            $job = MntRunHour::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment'])->find($id);
             
             return response()->success('Item run hour found successfully', $job, 200);
             
