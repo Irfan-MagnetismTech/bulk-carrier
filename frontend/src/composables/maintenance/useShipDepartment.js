@@ -139,7 +139,7 @@ export default function useShipDepartment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }

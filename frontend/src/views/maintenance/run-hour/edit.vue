@@ -33,6 +33,11 @@
   const { setTitle } = Title();
   
   setTitle('Edit Run Hour');
+
+  watch(runHour, (value) => {
+    console.log(runHour.value, value);
+    // runHour.value.form_type = 'edit';
+  });
   
   onMounted(() => {
       showRunHour(runHourId);

@@ -62,7 +62,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useRunHour from "../../../composables/maintenance/useRunHour";
-import {onMounted, watch} from "vue";
+import {onMounted, watch, watchEffect, ref} from "vue";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
@@ -80,6 +80,7 @@ const vessels = [{id:1, name: 'vessel'}];
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 watch(() => props.form.vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
@@ -114,9 +115,17 @@ watch(() => itemGroupWiseHourlyItems.value, (value) => {
   props.form.itemGroupWiseHourlyItems  = [{id: 'all', item_code: '', name: 'All', present_run_hour: ''}, ...value];
 });
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.mnt_ship_department_name = null;
+  }
+});
 
 onMounted(() => {
-  getShipDepartmentsWithoutPagination();
+  watchEffect(() => {
+      getShipDepartmentsWithoutPagination(businessUnit.value);
+    });
 });
 
 </script>
