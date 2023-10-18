@@ -145,7 +145,10 @@ class MntItemGroupController extends Controller
         
         try {
 
-            $itemGroups = MntItemGroup::select('*')->get();
+            $itemGroups = MntItemGroup::select('*')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->get();
 
             return response()->success('Item groups retrieved successfully', $itemGroups, 200);
             
