@@ -88,7 +88,7 @@ class MntJobController extends Controller
     {
         try {
             
-            $job = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment.mntItemGroups.mntItems','mntJobLines'])->find($id);
+            $job = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment.mntItemGroups','mntItem.mntItemGroup.mntItems','mntJobLines'])->find($id);
             
             return response()->success('Job found successfully', $job, 200);
             
