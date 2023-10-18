@@ -22,7 +22,7 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code'])
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment'])
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
@@ -123,7 +123,7 @@ class MntJobController extends Controller
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = $request->get('business_unit');
 
-            $jobLines = $request->get('mnt_job_lines');
+            $jobLines = $request->get('mntJobLines');
             
             $job = MntJob::findorfail($id);
             $job->update($jobInput);
