@@ -3,8 +3,9 @@ import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useRole from "../../composables/administration/useRole";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import Store from "../../store";
 
 const props = defineProps({
   form: {
@@ -15,14 +16,18 @@ const props = defineProps({
 });
 
 const { roles, getRoles } = useRole();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
-  getRoles();
+  props.form.business_unit = businessUnit.value;
 });
 
 </script>
 <template>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>

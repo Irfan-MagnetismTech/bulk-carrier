@@ -4,35 +4,20 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useAgencyBill() {
+export default function useCrewAssign() {
     const router = useRouter();
-    const agencyBills = ref([]);
+    const crewAssigns = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const agencyBill = ref( {
+    const crewAssign = ref( {
         business_unit: '',
-        crw_agency_id: '',
-        crw_agency_contract_id: '',
-        applied_date: '',
-        invoice_date: '',
-        invoice_no: '',
-        invoice_type: '',
-        invoice_currency: '',
-        invoice_amount: 0.0,
-        grand_total: 0.0,
-        discount: 0.0,
-        net_amount: 0.0,
+        ops_vessel_id: '',
+        crw_crew_id: '',
+        position_onboard: '',
+        date_of_joining: '',
+        port_of_joining: '',
+        approx_duration: '',
         remarks: '',
-        crwAgencyBillLines: [
-            {
-                particular: '',
-                description: '',
-                per: '',
-                quantity: 0.0,
-                rate: 0.0,
-                amount: 0.0,
-            }
-        ]
     });
 
     const indexPage = ref(null);
@@ -41,7 +26,7 @@ export default function useAgencyBill() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencyBills(page,businessUnit) {
+    async function getCrewAssigns(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -50,13 +35,13 @@ export default function useAgencyBill() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-agency-bills',{
+            const {data, status} = await Api.get('/crw/crw-crew-assignments',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            agencyBills.value = data.value;
+            crewAssigns.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -67,16 +52,16 @@ export default function useAgencyBill() {
         }
     }
 
-    async function storeAgencyBill(form) {
+    async function storeCrewAssign(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-agency-bills', form);
-            agencyBill.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-crew-assignments', form);
+            crewAssign.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencyBills.index" });
+            await router.push({ name: "crw.crewAssigns.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -86,14 +71,14 @@ export default function useAgencyBill() {
         }
     }
 
-    async function showAgencyBill(agencyBillId) {
+    async function showCrewAssign(crewAssignId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-agency-bills/${agencyBillId}`);
-            agencyBill.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-crew-assignments/${crewAssignId}`);
+            crewAssign.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -104,19 +89,19 @@ export default function useAgencyBill() {
         }
     }
 
-    async function updateAgencyBill(form, agencyBillId) {
+    async function updateCrewAssign(form, crewAssignId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-agency-bills/${agencyBillId}`,
+                `/crw/crw-crew-assignments/${crewAssignId}`,
                 form
             );
-            agencyBill.value = data.value;
+            crewAssign.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencyBills.index" });
+            await router.push({ name: "crw.crewAssigns.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -126,15 +111,15 @@ export default function useAgencyBill() {
         }
     }
 
-    async function deleteAgencyBill(agencyBillId) {
+    async function deleteCrewAssign(crewAssignId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-agency-bills/${agencyBillId}`);
+            const { data, status } = await Api.delete( `/crw/crw-crew-assignments/${crewAssignId}`);
             notification.showSuccess(status);
-            await getAgencyBills(indexPage.value, indexBusinessUnit.value);
+            await getCrewAssigns(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -145,13 +130,13 @@ export default function useAgencyBill() {
     }
 
     return {
-        agencyBills,
-        agencyBill,
-        getAgencyBills,
-        storeAgencyBill,
-        showAgencyBill,
-        updateAgencyBill,
-        deleteAgencyBill,
+        crewAssigns,
+        crewAssign,
+        getCrewAssigns,
+        storeCrewAssign,
+        showCrewAssign,
+        updateCrewAssign,
+        deleteCrewAssign,
         isLoading,
         errors,
     };

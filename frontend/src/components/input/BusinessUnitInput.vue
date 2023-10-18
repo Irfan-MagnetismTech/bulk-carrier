@@ -1,14 +1,3 @@
-<!--<script setup>-->
-<!--import Error from "../Error.vue";-->
-<!--import Store from './../../store/index.js';-->
-<!--import { ref, onMounted } from "vue";-->
-
-<!--const businessUnit = ref(Store.getters.getCurrentUser.business_unit);-->
-
-<!--onMounted(() => {-->
-<!--  emit('update:modelValue', businessUnit.value);-->
-<!--});-->
-<!--</script>-->
 
 <script>
 import { ref, onMounted, defineProps, defineEmits } from "vue";

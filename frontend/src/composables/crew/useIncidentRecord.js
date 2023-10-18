@@ -4,33 +4,25 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useAgencyBill() {
+export default function useIncidentRecord() {
     const router = useRouter();
-    const agencyBills = ref([]);
+    const incidentRecords = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const agencyBill = ref( {
+    const incidentRecord = ref( {
         business_unit: '',
-        crw_agency_id: '',
-        crw_agency_contract_id: '',
-        applied_date: '',
-        invoice_date: '',
-        invoice_no: '',
-        invoice_type: '',
-        invoice_currency: '',
-        invoice_amount: 0.0,
-        grand_total: 0.0,
-        discount: 0.0,
-        net_amount: 0.0,
-        remarks: '',
-        crwAgencyBillLines: [
+        ops_vessel_id: '',
+        date_time: '',
+        type: '',
+        location: '',
+        reported_by: '',
+        attachment: '',
+        description: '',
+        crwIncidentParticipants: [
             {
-                particular: '',
-                description: '',
-                per: '',
-                quantity: 0.0,
-                rate: 0.0,
-                amount: 0.0,
+                crw_crew_id: '',
+                injury_status: '',
+                notes: '',
             }
         ]
     });
@@ -41,7 +33,7 @@ export default function useAgencyBill() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencyBills(page,businessUnit) {
+    async function getIncidentRecords(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -50,13 +42,13 @@ export default function useAgencyBill() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-agency-bills',{
+            const {data, status} = await Api.get('/crw/crw-incidents',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            agencyBills.value = data.value;
+            incidentRecords.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -67,16 +59,16 @@ export default function useAgencyBill() {
         }
     }
 
-    async function storeAgencyBill(form) {
+    async function storeIncidentRecord(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-agency-bills', form);
-            agencyBill.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-incidents', form);
+            incidentRecord.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencyBills.index" });
+            await router.push({ name: "crw.incidentRecords.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -86,14 +78,14 @@ export default function useAgencyBill() {
         }
     }
 
-    async function showAgencyBill(agencyBillId) {
+    async function showIncidentRecord(incidentRecordId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-agency-bills/${agencyBillId}`);
-            agencyBill.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-incidents/${incidentRecordId}`);
+            incidentRecord.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -104,19 +96,19 @@ export default function useAgencyBill() {
         }
     }
 
-    async function updateAgencyBill(form, agencyBillId) {
+    async function updateIncidentRecord(form, incidentRecordId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-agency-bills/${agencyBillId}`,
+                `/crw/crw-incidents/${incidentRecordId}`,
                 form
             );
-            agencyBill.value = data.value;
+            incidentRecord.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.agencyBills.index" });
+            await router.push({ name: "crw.incidentRecords.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -126,15 +118,15 @@ export default function useAgencyBill() {
         }
     }
 
-    async function deleteAgencyBill(agencyBillId) {
+    async function deleteIncidentRecord(incidentRecordId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-agency-bills/${agencyBillId}`);
+            const { data, status } = await Api.delete( `/crw/crw-incidents/${incidentRecordId}`);
             notification.showSuccess(status);
-            await getAgencyBills(indexPage.value, indexBusinessUnit.value);
+            await getIncidentRecords(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -145,13 +137,13 @@ export default function useAgencyBill() {
     }
 
     return {
-        agencyBills,
-        agencyBill,
-        getAgencyBills,
-        storeAgencyBill,
-        showAgencyBill,
-        updateAgencyBill,
-        deleteAgencyBill,
+        incidentRecords,
+        incidentRecord,
+        getIncidentRecords,
+        storeIncidentRecord,
+        showIncidentRecord,
+        updateIncidentRecord,
+        deleteIncidentRecord,
         isLoading,
         errors,
     };

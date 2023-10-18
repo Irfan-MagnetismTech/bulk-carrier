@@ -41,21 +41,31 @@ function calculateAmount($e,index){
   props.form.crwAgencyBillLines[index].amount = (props.form.crwAgencyBillLines[index].quantity * props.form.crwAgencyBillLines[index].rate).toFixed(2);
 }
 
-props.form.grand_total = computed(() => {
+const grandTotal = computed(() => {
   let total = 0;
-  props.form.crwAgencyBillLines.forEach((line) => {
-    alert("d")
+  props.form?.crwAgencyBillLines?.forEach((line) => {
     total += parseFloat(line.amount);
   });
   return total;
 });
 
-props.form.net_amount = computed(() => {
+watch(() => grandTotal, (value) => {
+  if(value){
+    props.form.grand_total = value;
+  }
+}, {deep: true});
+
+const netAmount = computed(() => {
   let total = 0;
   total = props.form.grand_total - props.form.discount;
   return total;
 });
 
+watch(() => netAmount, (value) => {
+  if(value){
+    props.form.net_amount = value;
+  }
+}, {deep: true});
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
