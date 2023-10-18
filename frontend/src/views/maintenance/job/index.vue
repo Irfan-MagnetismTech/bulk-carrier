@@ -98,12 +98,13 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-1/5">#</th>
-            <th class="w-1/5">Vessel Name</th>
-            <th class="w-1/5">Ship Department</th>
-            <th class="w-1/5">Item</th>
-            
-            <th class="w-1/5">Action</th>
+            <th class="w-1/12">#</th>
+            <th class="w-2/12">Vessel Name</th>
+            <th class="w-2/12">Ship Department</th>
+            <th class="w-2/12">Item Group</th>
+            <th class="w-2/12">Item</th>
+            <th class="w-2/12">Business Unit</th>
+            <th class="w-1/12">Action</th>
           </tr>
           </thead>
           <tbody>
@@ -112,21 +113,20 @@ onMounted(() => {
             <td>{{ job?.opsVessel?.name }}</td>
             <td>{{ job?.mntShipDepartment?.name }}</td>
             <td>{{ job?.mntItem?.name }}</td>
-            
-            <td class="">
-              <div class="flex justify-center">
+            <td>{{ job?.mntItem?.name }}</td>
+            <td><span :class="job?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ job?.business_unit }}</span></td>
+            <td>
                 <action-button :action="'edit'" :to="{ name: 'mnt.jobs.edit', params: { jobId: job?.id } }"></action-button>
                 <action-button @click="confirmDelete(job?.id)" :action="'delete'"></action-button>
-              </div>
             </td>
           </tr>
           </tbody>
           <tfoot v-if="!jobs?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="5">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="!jobs?.data?.length">
-            <td colspan="5">No job found.</td>
+            <td colspan="7">No job found.</td>
           </tr>
           </tfoot>
       </table>
