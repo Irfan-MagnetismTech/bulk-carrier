@@ -22,7 +22,7 @@ export default [
                     permissionKey: '',
                     subSubMenu: [
                     {
-                        route: `${BASE}.unit.index`,
+                        route: `${BASE}.units.index`,
                         label: 'Unit',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

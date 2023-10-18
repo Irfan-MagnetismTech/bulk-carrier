@@ -45,7 +45,7 @@ onMounted(() => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to change delete this Category!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',

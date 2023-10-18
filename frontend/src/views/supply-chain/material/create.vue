@@ -1,6 +1,5 @@
 <script setup>
-import {ref} from "vue";
-import { onMounted } from '@vue/runtime-core';
+import {ref,onMounted} from "vue";
 
 import Title from "../../../services/title";
 import useMaterial from "../../../composables/supply-chain/useMaterial.js";

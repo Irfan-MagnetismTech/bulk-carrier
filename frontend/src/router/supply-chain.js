@@ -10,7 +10,7 @@ export default [
     
     {
         path: `/${BASE}/units`,
-        name: `${BASE}.unit.index`,
+        name: `${BASE}.units.index`,
         component: () => import(`../views/${PATH_BASE}/unit/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'unit-index' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),

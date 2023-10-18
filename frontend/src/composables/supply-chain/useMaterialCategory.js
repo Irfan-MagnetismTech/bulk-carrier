@@ -67,6 +67,7 @@ export default function useMaterialCategory() {
         try {
             const { data, status } = await Api.get(`/scm/material-categories/${materialCategoryId}`);
             materialCategory.value = data.value;
+            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -102,7 +103,6 @@ export default function useMaterialCategory() {
     async function deleteMaterialCategory(materialCategoryId) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
-
         try {
             const { data, status } = await Api.delete( `/scm/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);

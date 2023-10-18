@@ -2,12 +2,14 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useMaterialCategory from "../../../composables/supply-chain/useMaterialCategory.js";
-    import useUnit from "../../../composables/supply-chain/useUnit.js";
+    import useUnit from "../../../composables/supply-chain/useUnit.js";    
+    import useBusinessInfo from "../../../composables/useBusinessInfo.js";
 
     
     const { materialCategories, searchMaterialCategory } = useMaterialCategory();
-    const { materialUnits, searchUnit } = useUnit();
-    const store_category = ['Deck Store', 'Saloon Store'];
+    const { getAllStoreCategories } = useBusinessInfo();
+    const { units, searchUnit } = useUnit();
+    const store_category = ref([]);
 
     const props = defineProps({
         material: { type: Object, required: true },
@@ -20,15 +22,31 @@
         loading(true)
     }
 
-    watch(() => props.material.parent_category_name, (value) => {
-        props.material.parent_category_id = value?.id;
+    watch(() => props.material.scm_material_category_name, (value) => {
+        props.material.scm_material_category_id = value?.id;
+    });
+
+    watch(() => props.material.unit, (value) => {
+        console.log('value', value);
+        props.material.unit = value?.name;
     });
 
     function fetchUnit(query, loading) {
         searchUnit(query, loading);
         loading(true)
     }
+    function fetchAllStoreCategories() {
+      getAllStoreCategories().then(AllStoreCategories => {
+        store_category.value = Object.values(AllStoreCategories);
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+    }
 
+    onMounted(() => {
+      fetchAllStoreCategories();
+    });
 
 </script>
 <template>
@@ -55,7 +73,16 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Unit <span class="text-red-500">*</span></span>
-                    <v-select :options="materialUnits" placeholder="--Choose an option--" @search="fetchUnit" v-model="material.unit" label="unit" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <v-select :options="units" placeholder="--Choose an option--" @search="fetchUnit"  v-model="material.unit" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!material.unit"
+                            v-bind="attributes"
+                            v-on="events"
+                        />
+                    </template>
+                    </v-select>
                     <Error v-if="errors?.unit" :errors="errors.unit" />
                 </label>
             </div>

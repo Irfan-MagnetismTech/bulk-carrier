@@ -88,12 +88,12 @@ function confirmDelete(id) {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(material,index) in materials" :key="material.id">
+          <tr v-for="(material,index) in materials?.data" :key="material.id">
             <td>{{ index + 1 }}</td>
             <td>{{ material.name }}</td>
             <td>{{ material.material_code }}</td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'supply-chain.material.edit', params: { materialId: material.id } }"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
             </td>
           </tr>
