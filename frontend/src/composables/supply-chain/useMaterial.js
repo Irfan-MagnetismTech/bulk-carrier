@@ -33,10 +33,12 @@ export default function useMaterial() {
         try {
             const {data, status} = await Api.get('/scm/materials');
             materials.value = data.value;
+            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
+            console.log(status);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -53,7 +55,7 @@ export default function useMaterial() {
             const { data, status } = await Api.post('/scm/materials', form);
             material.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.material.index" });
+            router.push({ name: "scm.material.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -71,6 +73,7 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.get(`/scm/materials/${materialId}`);
             material.value = data.value;
+            console.log('show', data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -93,7 +96,7 @@ export default function useMaterial() {
             );
             material.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.material.index" });
+            router.push({ name: "scm.material.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

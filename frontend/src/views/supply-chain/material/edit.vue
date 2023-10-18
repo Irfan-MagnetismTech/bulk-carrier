@@ -1,7 +1,6 @@
 <script setup>
 import MaterialForm from '../../../components/supply-chain/material/MaterialForm.vue';
-import {ref} from "vue";
-import { onMounted } from '@vue/runtime-core';
+import {ref ,onMounted , watch} from "vue";
 import Title from "../../../services/title";
 import useMaterial from "../../../composables/supply-chain/useMaterial.js";
 import { useRoute } from 'vue-router';
@@ -18,7 +17,12 @@ setTitle('Edit Material');
 
 onMounted(() => {
     showMaterial(materialId);
-    
+});
+
+watch(material, (value) => {
+  if(value) {
+    material.value.scm_material_category_name = material.value?.scmMaterialCategory;
+  }
 });
 
 </script>
