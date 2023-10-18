@@ -159,4 +159,84 @@ class MntJobController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Display a list of items with all jobs
+     * @return Renderable
+     */
+    public function allJobs()
+    {
+        try {
+
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code,present_run_hour','mntJobLines'])
+                        ->when(request()->business_unit != "ALL", function($q){
+                            $q->where('business_unit', request()->business_unit);  
+                        })
+                        ->when(request()->has('ops_vessel_id'), function($q){
+                            $q->where('ops_vessel_id', request()->vessel_id);  
+                        })
+                        ->get();
+
+            return response()->success('Jobs retrieved successfully', $jobs, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display a list of items with up coming jobs
+     * @return Renderable
+     */
+    public function upcomingJobs()
+    {
+        try {
+            // DB::enableQueryLog(); 
+            $jobs = MntItem::with(['mntJobs', 'mntJobLines' => function($q){
+                                $q->where(function ($subQuery){
+                                    $subQuery->whereHas('mntJob.mntItem',function($q){
+                                        $q->havingRaw('mnt_items.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                            ->where('mnt_job_lines.cycle_unit', 'Hours');
+                                    })->orWhereHas('mntJob',function($q){
+                                        $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
+                                            ->where('mnt_job_lines.cycle_unit', 'Days');
+                                    })
+                                    ->orWhereHas('mntJob',function($q){
+                                        $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
+                                            ->where('mnt_job_lines.cycle_unit', 'Weeks');
+                                    })
+                                    ->orWhereHas('mntJob',function($q){
+                                        $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
+                                            ->where('mnt_job_lines.cycle_unit', 'Months');
+                                    });
+                                });
+                            }])
+                            ->whereHas('mntJobs.mntJobLines',function($q){
+                                $q->havingRaw('mnt_items.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                    ->where('mnt_job_lines.cycle_unit', 'Hours');
+                            })
+                            ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
+                                    ->where('mnt_job_lines.cycle_unit', 'Days');
+                            })
+                            ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
+                                    ->where('mnt_job_lines.cycle_unit', 'Weeks');
+                            })
+                            ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
+                                    ->where('mnt_job_lines.cycle_unit', 'Months');
+                            })
+                            ->get();
+            // dd(DB::getQueryLog());
+            return response()->success('Jobs retrieved successfully', $jobs, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

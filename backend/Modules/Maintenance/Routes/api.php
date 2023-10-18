@@ -42,4 +42,8 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-mnt-item-group-wise-hourly-items/{mntItemGroupId}', [MntItemController::class, 'getMntItemGroupWiseHourlyItems']);
     //get mnt ship department wise item groups 
     Route::get('get-mnt-ship-department-wise-item-groups/{mntShipDepartmentId}', [MntItemGroupController::class, 'getMntShipDepartmentWiseItemGroups']);
+    // allJobs
+    Route::get('get-all-jobs', [MntJobController::class, 'allJobs']);
+    // upcoming Jobs
+    Route::get('get-upcoming-jobs', [MntJobController::class, 'upcomingJobs']);
 });
