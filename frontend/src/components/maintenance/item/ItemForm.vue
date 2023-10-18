@@ -113,7 +113,7 @@
     <div class="flex flex-col justify-center  w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> </span>
-            <input type="checkbox" v-model="form.has_run_hour" /> Enable Regular Run Hour Entry
+            <input type="checkbox" v-model="form.has_run_hour" :disabled="form.form_type === 'edit'" /> Enable Regular Run Hour Entry
           <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
         </label>        
     </div>
@@ -121,7 +121,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.has_run_hour">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour</span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" />
+            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :disabled="form.form_type === 'edit'" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>        
     </div>
