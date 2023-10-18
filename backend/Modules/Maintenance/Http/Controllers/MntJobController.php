@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntRunHour;
@@ -57,7 +58,7 @@ class MntJobController extends Controller
             $jobInput['mnt_item_id'] = $runHourInput['mnt_item_id'] = $request->get('mnt_item_id');
             $jobInput['business_unit'] = $runHourInput['business_unit'] = $request->get('business_unit');
 
-            $jobLines = $request->get('mnt_job_lines');
+            $jobLines = $request->get('mntJobLines');
             
             $job = MntJob::create($jobInput);
             $job->mntJobLines()->createMany($jobLines);
@@ -87,7 +88,7 @@ class MntJobController extends Controller
     {
         try {
             
-            $job = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntJobLines'])->find($id);
+            $job = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment.mntItemGroups.mntItems','mntJobLines'])->find($id);
             
             return response()->success('Job found successfully', $job, 200);
             
