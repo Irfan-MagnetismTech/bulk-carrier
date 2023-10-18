@@ -60,7 +60,7 @@ export default function useRunHour() {
             const { data, status } = await Api.post('/mnt/run-hours', form);
             runHour.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.run-hours.index" });
+            router.push({ name: "mnt.run-hours.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -101,7 +101,7 @@ export default function useRunHour() {
             );
             runHour.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.run-hours.index" });
+            router.push({ name: "mnt.run-hours.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

@@ -70,8 +70,8 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Run Hour List</h2>
-    <!-- <default-button :title="'Create'" :to="{ name: 'maintenance.run-hours.create' }"></default-button> -->
-    <default-button :title="'Create'" :to="{ name: 'maintenance.run-hours.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }"></default-button> -->
+    <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <div class="relative w-full">
@@ -116,7 +116,7 @@ onMounted(() => {
             
             <td class="">
               <div class="flex justify-center">
-                <action-button :action="'edit'" :to="{ name: 'maintenance.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
               </div>
             </td>
@@ -132,6 +132,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="runHours" to="maintenance.run-hours.index" :page="page"></Paginate>
+    <Paginate :data="runHours" to="mnt.run-hours.index" :page="page"></Paginate>
   </div>
 </template>

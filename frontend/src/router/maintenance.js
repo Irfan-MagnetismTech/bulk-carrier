@@ -96,26 +96,26 @@ export default [
 	{
 		path: `/${BASE}/run-hours`,
 		name: `${BASE}.run-hours.index`,
-		component: () => import(`../views/${BASE}/run-hour/index.vue`),
+		component: () => import(`../views/${VIEWBASE}/run-hour/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'run-hour-index' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
 		path: `/${BASE}/run-hours/create`,
 		name: `${BASE}.run-hours.create`,
-		component: () => import(`../views/${BASE}/run-hour/create.vue`),
+		component: () => import(`../views/${VIEWBASE}/run-hour/create.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'run-hour-create' },
 	},
 	{
 		path: `/${BASE}/run-hours/:runHourId/edit`,
 		name: `${BASE}.run-hours.edit`,
-		component: () => import(`../views/${BASE}/run-hour/edit.vue`),
+		component: () => import(`../views/${VIEWBASE}/run-hour/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'run-hour-edit' },
 	},
 	{
 		path: `/${BASE}/run-hours/:runHourId`,
 		name: `${BASE}.run-hours.show`,
-		component: () => import(`../views/${BASE}/run-hour/show.vue`),
+		component: () => import(`../views/${VIEWBASE}/run-hour/show.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'run-hour-show'  },
 	},
 

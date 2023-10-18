@@ -145,7 +145,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'maintenance.run-hours.create',
+                        route: 'mnt.run-hours.create',
                         label: 'New',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -155,7 +155,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'maintenance.run-hours.index',
+                        route: 'mnt.run-hours.index',
                         label: 'List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
