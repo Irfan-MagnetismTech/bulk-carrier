@@ -2,8 +2,9 @@
 import Error from "../Error.vue";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {onMounted,watch} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import Store from "../../store";
 
 const { vessels, searchVessels } = useVessel();
 const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
@@ -14,6 +15,7 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function addItem() {
   let obj = {
@@ -41,7 +43,10 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  getCrewRankLists();
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrewRankLists(props.form.business_unit);
+  });
 });
 
 </script>

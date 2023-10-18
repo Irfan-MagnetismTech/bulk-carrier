@@ -41,7 +41,8 @@ export default {
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
       <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-input" required>
-        <option value="" selected disabled>Select</option>
+<!--        <option value="Select" selected disabled>Select</option>-->
+        <option value="ALL" disabled>ALL</option>
         <option value="PSML">PSML</option>
         <option value="TSLL">TSLL</option>
       </select>

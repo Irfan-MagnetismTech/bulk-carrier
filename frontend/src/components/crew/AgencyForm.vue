@@ -3,8 +3,9 @@ import Error from "../Error.vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import useAgency from "../../composables/crew/useAgency";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import env from '../../config/env';
+import Store from "../../store";
 
 const props = defineProps({
   form: {
@@ -13,7 +14,7 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
-
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
 
 
@@ -35,6 +36,10 @@ function removeItem(index){
 const selectedFile = (event) => {
   props.form.logo = event.target.files[0];
 };
+
+onMounted(() => {
+  props.form.business_unit = businessUnit.value;
+});
 
 </script>
 

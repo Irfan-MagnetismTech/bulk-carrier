@@ -18,19 +18,19 @@ export default function useAgencyBill() {
         invoice_no: '',
         invoice_type: '',
         invoice_currency: '',
-        invoice_amount: '',
-        grand_total: '',
-        discount: '',
-        net_amount: '',
+        invoice_amount: 0.0,
+        grand_total: 0.0,
+        discount: 0.0,
+        net_amount: 0.0,
         remarks: '',
         crwAgencyBillLines: [
             {
                 particular: '',
                 description: '',
                 per: '',
-                quantity: '',
-                rate: '',
-                amount: '',
+                quantity: 0.0,
+                rate: 0.0,
+                amount: 0.0,
             }
         ]
     });

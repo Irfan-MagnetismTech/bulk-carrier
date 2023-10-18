@@ -1,12 +1,12 @@
 <script setup>
 import Error from "../Error.vue";
-import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {onMounted,watch} from "vue";
+import {computed, onMounted, ref, watch, watchEffect} from "vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import Store from "../../store";
 
-const { vessels, searchVessels } = useVessel();
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { crwAgencies, getCrewAgencyLists, crwAgencyContracts, getCrewAgencyContracts } = useCommonApiRequest();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const props = defineProps({
   form: {
     required: false,
@@ -17,21 +17,18 @@ const props = defineProps({
 
 function addItem() {
   let obj = {
-    crw_rank_id: '',
-    required_manpower: '',
-    eligibility: '',
-    remarks: '',
+    particular: '',
+    description: '',
+    per: '',
+    quantity: 0.0,
+    rate: 0.0,
+    amount: 0.0,
   };
-  props.form.crwVesselRequiredCrewLines.push(obj);
+  props.form.crwAgencyBillLines.push(obj);
 }
 
 function removeItem(index){
-  props.form.crwVesselRequiredCrewLines.splice(index, 1);
-}
-
-function fetchVessels(search, loading) {
-  loading(true);
-  searchVessels(search, loading)
+  props.form.crwAgencyBillLines.splice(index, 1);
 }
 
 watch(() => props.form, (value) => {
@@ -40,76 +37,137 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
+function calculateAmount($e,index){
+  props.form.crwAgencyBillLines[index].amount = (props.form.crwAgencyBillLines[index].quantity * props.form.crwAgencyBillLines[index].rate).toFixed(2);
+}
+
+props.form.grand_total = computed(() => {
+  let total = 0;
+  props.form.crwAgencyBillLines.forEach((line) => {
+    alert("d")
+    total += parseFloat(line.amount);
+  });
+  return total;
+});
+
+props.form.net_amount = computed(() => {
+  let total = 0;
+  total = props.form.grand_total - props.form.discount;
+  return total;
+});
+
+
 onMounted(() => {
-  getCrewRankLists();
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrewAgencyLists(props.form.business_unit);
+    getCrewAgencyContracts(props.form.business_unit,props.form.crw_agency_id);
+  });
 });
 
 </script>
 
 <template>
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_name" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-            <input
-                class="vs__search"
-                :required="!form.ops_vessel_name"
-                v-bind="attributes"
-                v-on="events"
-            />
-          </template>
-        </v-select>
-        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.effective_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.total_crew" placeholder="Ex: 14" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.total_crew" :errors="errors.total_crew" />
-      </label>
-    </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.crw_agency_id">
+        <option value="" selected disabled>Select</option>
+        <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.name }}</option>
+      </select>
+      <Error v-if="errors?.crw_agency_id" :errors="errors.crw_agency_id" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.crw_agency_contract_id">
+        <option value="" selected disabled>Select</option>
+        <option v-for="(agencyContract,index) in crwAgencyContracts" :value="agencyContract.id" :key="index">{{ agencyContract?.crw_agency_id }}</option>
+      </select>
+      <Error v-if="errors?.crw_agency_contract_id" :errors="errors.crw_agency_contract_id" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Bill Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model="form.invoice_date" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.invoice_date" :errors="errors.invoice_date" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Bill No <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.invoice_no" placeholder="Invoice no" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.invoice_no" :errors="errors.invoice_no" />
+    </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Bill Type <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.invoice_type" placeholder="Invoice type" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.invoice_type" :errors="errors.invoice_type" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Billing Currency <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.invoice_currency">
+        <option value="" selected disabled>Select</option>
+        <option value="BDT">BDT</option>
+        <option value="USD">USD</option>
+      </select>
+      <Error v-if="errors?.invoice_currency" :errors="errors.invoice_currency" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model="form.invoice_amount" placeholder="Bill amount" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.invoice_amount" :errors="errors.invoice_amount" />
+    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks</span>
       <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
       <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Item List</legend>
+    <legend class="px-2 text-gray-700 dark:text-gray-300">Billing Info</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Eligibility <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Remarks</th>
+        <th class="px-4 py-3 align-bottom">Particular <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Description </th>
+        <th class="px-4 py-3 align-bottom">Per </th>
+        <th class="px-4 py-3 align-bottom">Quantity <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Rate <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Amount <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
-
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwVesselRequiredCrewLines" :key="requiredCrewLine.id">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(creAgencyBillLine, index) in form.crwAgencyBillLines" :key="creAgencyBillLine.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model="form.crwVesselRequiredCrewLines[index].crw_rank_id">
-            <option value="" disabled>select</option>
-            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
-          </select>
+          <input type="text" v-model="form.crwAgencyBillLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" v-model="form.crwVesselRequiredCrewLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyBillLines[index].description" placeholder="Description" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].eligibility" placeholder="EX: COC-III" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwAgencyBillLines[index].per" placeholder="Per" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].quantity" @input="calculateAmount($event,index)" placeholder="Quantity" class="form-input" autocomplete="off" />
+        </td>
+        <td class="px-1 py-1">
+          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].rate" @input="calculateAmount($event,index)" placeholder="Rate" class="form-input" autocomplete="off" />
+        </td>
+        <td class="px-1 py-1">
+          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].amount" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -122,6 +180,27 @@ onMounted(() => {
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
           </button>
+        </td>
+      </tr>
+      <tr class="text-gray-700 dark:text-gray-400">
+        <td class="px-1 py-1" colspan="4"></td>
+        <td class="px-1 py-1 font-bold uppercase">Grand Total</td>
+        <td class="px-1 py-1">
+          <input type="number" step=".01" v-model="form.grand_total" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
+        </td>
+      </tr>
+      <tr class="text-gray-700 dark:text-gray-400">
+        <td class="px-1 py-1" colspan="4"></td>
+        <td class="px-1 py-1 font-bold uppercase">Discount</td>
+        <td class="px-1 py-1">
+          <input type="number" step=".01" v-model="form.discount" placeholder="Amount" class="form-input" autocomplete="off" />
+        </td>
+      </tr>
+      <tr class="text-gray-700 dark:text-gray-400">
+        <td class="px-1 py-1" colspan="4"></td>
+        <td class="px-1 py-1 font-bold uppercase">Net Amount</td>
+        <td class="px-1 py-1">
+          <input type="number" step=".01" v-model="form.net_amount" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
         </td>
       </tr>
       </tbody>

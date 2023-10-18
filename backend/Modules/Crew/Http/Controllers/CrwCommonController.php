@@ -7,24 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Modules\Crew\Entities\CrwAgency;
+use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwRank;
 
 class CrwCommonController extends Controller
 {
 
-    /**
-     * @param Request $request
-     */
-    public function getCrewRanks(Request $request)
+    public function getCrewRanks()
     {
         try {
-            $business_unit = Auth::user()->business_unit;
-            $crwRanks      = CrwRank::when($business_unit != "ALL", function ($q) use ($business_unit)
+
+            $crwRanks      = CrwRank::when(request()->business_unit != "ALL", function ($q)
             {
-                $q->where('business_unit', $business_unit);
+                $q->where('business_unit', request()->business_unit);
             })->get();
 
-            return response()->success('Retrieved Succesfully', $crwRanks, 200);
+            return response()->success('Retrieved Successfully', $crwRanks, 200);
         }
         catch (QueryException $e)
         {
@@ -32,13 +30,33 @@ class CrwCommonController extends Controller
         }
     }
 
-    public function getCrewAgencies(Request $request)
+    public function getCrewAgencies()
     {
         try {
-            $business_unit = Auth::user()->business_unit;
-            $crwAgencies      = CrwAgency::when($business_unit != "ALL", function ($q) use ($business_unit)
+
+            $crwAgencies      = CrwAgency::when(request()->business_unit != "ALL", function ($q)
             {
-                $q->where('business_unit', $business_unit);
+                $q->where('business_unit', request()->business_unit);
+            })->get();
+
+            return response()->success('Retrieved Successfully', $crwAgencies, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCrewAgencyContracts()
+    {
+        try {
+
+            $crwAgencies      = CrwAgencyContract::when(request()->business_unit != "ALL", function ($q)
+            {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->crw_agency_id != null, function ($q) {
+                    return $q->where('crw_agency_id',request()->crw_agency_id);
             })->get();
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);

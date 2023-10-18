@@ -99,7 +99,7 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Agency Name</th>
-            <th>Contact</th>
+            <th>Agency Contact</th>
             <th>Billing Amount</th>
             <th>Currency</th>
             <th>Status</th>
@@ -110,10 +110,10 @@ onMounted(() => {
           <tbody>
           <tr v-for="(bill,index) in agencyBills?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>Agency name</td>
-            <td>Contact no</td>
-            <td>150000</td>
-            <td>BDT</td>
+            <td>{{ bill?.crwAgency?.name }}</td>
+            <td>{{ bill?.crwAgency?.phone }}</td>
+            <td>{{ bill?.invoice_amount }}</td>
+            <td>{{ bill?.invoice_currency }}</td>
             <td>Waiting</td>
             <td>
               <span :class="bill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bill?.business_unit }}</span>

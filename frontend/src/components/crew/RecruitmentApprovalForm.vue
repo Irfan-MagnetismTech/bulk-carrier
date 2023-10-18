@@ -3,7 +3,8 @@ import Error from "../Error.vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import useAgencyContract from "../../composables/crew/useAgencyContract";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {onMounted} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
+import Store from "../../store";
 
 const props = defineProps({
   form: {
@@ -12,11 +13,14 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
-
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
 
 onMounted(() => {
-  getCrewRankLists();
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrewRankLists(props.form.business_unit);
+  });
 });
 
 </script>
