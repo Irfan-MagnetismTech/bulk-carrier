@@ -111,8 +111,8 @@ onMounted(() => {
           <tr v-for="(job,index) in jobs?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ job?.opsVessel?.name }}</td>
-            <td>{{ job?.mntShipDepartment?.name }}</td>
-            <td>{{ job?.mntItem?.name }}</td>
+            <td>{{ job?.mntItem?.mntItemGroup?.mntShipDepartment?.name }}</td>
+            <td>{{ job?.mntItem?.mntItemGroup?.name }}</td>
             <td>{{ job?.mntItem?.name }}</td>
             <td><span :class="job?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ job?.business_unit }}</span></td>
             <td>
