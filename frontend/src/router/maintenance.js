@@ -125,28 +125,28 @@ export default [
 
 	/* Job start */
 	{
-		path: `/${BASE}/job`,
-		name: `${BASE}.job.index`,
-		component: () => import(`../views/${BASE}/job/index.vue`),
+		path: `/${BASE}/jobs`,
+		name: `${BASE}.jobs.index`,
+		component: () => import(`../views/${VIEWBASE}/job/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'job-index' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/job/create`,
-		name: `${BASE}.job.create`,
-		component: () => import(`../views/${BASE}/job/create.vue`),
+		path: `/${BASE}/jobs/create`,
+		name: `${BASE}.jobs.create`,
+		component: () => import(`../views/${VIEWBASE}/job/create.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'job-create' },
 	},
 	{
-		path: `/${BASE}/job/:jobId/edit`,
-		name: `${BASE}.job.edit`,
-		component: () => import(`../views/${BASE}/job/edit.vue`),
+		path: `/${BASE}/jobs/:jobId/edit`,
+		name: `${BASE}.jobs.edit`,
+		component: () => import(`../views/${VIEWBASE}/job/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'job-edit' },
 	},
 	{
-		path: `/${BASE}/job/:jobId`,
-		name: `${BASE}.job.show`,
-		component: () => import(`../views/${BASE}/job/show.vue`),
+		path: `/${BASE}/jobs/:jobId`,
+		name: `${BASE}.jobs.show`,
+		component: () => import(`../views/${VIEWBASE}/job/show.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'job-show'  },
 	},
 

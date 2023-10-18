@@ -56,7 +56,7 @@ export default function useItemGroup() {
             const { data, status } = await Api.post('/mnt/jobs', form);
             job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.job.index" });
+            router.push({ name: "mnt.jobs.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,7 +97,7 @@ export default function useItemGroup() {
             );
             job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "maintenance.job.index" });
+            router.push({ name: "mnt.jobs.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
