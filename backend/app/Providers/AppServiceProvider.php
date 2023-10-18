@@ -40,18 +40,18 @@ class AppServiceProvider extends ServiceProvider
         //         'message' => 'Error: ' . $error,
         //     ], $statusCode);
         // });
-        
+
         Response::macro('error', function ($error, $statusCode = 400) {
             throw new HttpResponseException(response()->json([
                 'message'   => 'Validation errors',
                 'data'      => $error,
-            ]));
+            ], $statusCode));
         });
 
         HasMany::macro('createUpdateOrDelete', function (iterable $records) {
             /** @var HasMany */
             $hasMany = $this;
-          
+
             return (new CreateUpdateOrDelete($hasMany, $records))();
         });
     }

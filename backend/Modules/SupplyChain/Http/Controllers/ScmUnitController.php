@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\SupplyChain\Entities\ScmUnit;
@@ -89,5 +90,16 @@ class ScmUnitController extends Controller
 
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function searchUnit(Request $request)
+    {
+        $materialCategory = ScmUnit::query()
+            ->where('name', 'like', "%{$request->searchParam}%")
+            ->orderByDesc('name')
+            ->limit(10)
+            ->get();
+
+        return response()->success('Search result', $materialCategory, 200);
     }
 }

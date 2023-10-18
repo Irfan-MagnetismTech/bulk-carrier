@@ -12,6 +12,7 @@ class FileUploadService
     {
         try {
             if (is_string($file)) return $file;
+
             $fileName = null;
             if ($file) {
                 $myRandomString = Str::random(10);
