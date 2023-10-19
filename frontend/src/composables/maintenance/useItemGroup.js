@@ -14,7 +14,7 @@ export default function useItemGroup() {
     const notification = useNotification();
     const itemGroup = ref( {
         mnt_ship_department_id: '',
-        mnt_ship_department: '',
+        mnt_ship_department_name: '',
         name: '',
         short_code: '',
         business_unit: '',

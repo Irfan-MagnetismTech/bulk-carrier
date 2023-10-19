@@ -131,13 +131,14 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted, watch} from "vue";
+import {onMounted, watch, watchEffect, ref} from "vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const { getItemCodeByGroupId, errors } = useItem();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   form: {
@@ -187,10 +188,18 @@ function fetchItemCode(){
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.mnt_ship_department_name = null;
+  }
+});
 
 
 onMounted(() => {
-  getShipDepartmentsWithoutPagination();
+  watchEffect(() => {
+    getShipDepartmentsWithoutPagination(businessUnit.value);
+  });
 });
 
 

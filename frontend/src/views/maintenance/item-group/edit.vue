@@ -35,7 +35,7 @@
   setTitle('Edit Item Group');
 
   watch(itemGroup, (value) => {
-    itemGroup.value.mnt_ship_department = value?.mntShipDepartment;
+    itemGroup.value.mnt_ship_department_name = value?.mntShipDepartment;
   });
   
   onMounted(() => {

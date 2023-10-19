@@ -3,11 +3,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
-                :required="!form.mnt_ship_department"
+                :required="!form.mnt_ship_department_name"
                 v-bind="attributes"
                 v-on="events"
             />
@@ -34,8 +34,9 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted, watch} from "vue";
+import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   form: {
@@ -45,14 +46,22 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-watch(() => props.form.mnt_ship_department, (value) => {
+watch(() => props.form.mnt_ship_department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
 });
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.mnt_ship_department_name = null;
+  }
+});
 
 onMounted(() => {
-  getShipDepartmentsWithoutPagination();
+  watchEffect(() => {
+    getShipDepartmentsWithoutPagination(businessUnit.value);
+  });
 });
 
 </script>
