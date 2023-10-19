@@ -1,14 +1,17 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted ,computed} from 'vue';
     import Error from "../../Error.vue";
     import useMaterialCategory from "../../../composables/supply-chain/useMaterialCategory.js";
     import useUnit from "../../../composables/supply-chain/useUnit.js";    
     import useBusinessInfo from "../../../composables/useBusinessInfo.js";
+    import DropZone from "../../DropZone.vue";
+    import { useStore } from 'vuex';
 
     
     const { materialCategories, searchMaterialCategory } = useMaterialCategory();
     const { getAllStoreCategories } = useBusinessInfo();
     const { units, searchUnit } = useUnit();
+    const store = useStore();
     const store_category = ref([]);
 
     const props = defineProps({
@@ -26,10 +29,14 @@
         props.material.scm_material_category_id = value?.id;
     });
 
-    // watch(() => props.material.unit, (value) => {
-    //     console.log('value', value);
-    //     props.material.unit = value?.name;
-    // });
+    const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+
+    watch(dropZoneFile, (value) => {
+        console.log("dropZoneFile", value);
+        if (value !== null && value !== undefined) {
+            props.material.sample_photo = value;
+        }
+        });
 
     function fetchUnit(query, loading) {
         searchUnit(query, loading);
@@ -50,9 +57,7 @@
 
 </script>
 <template>
-    <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
-        <legend>
-                        
+    <div class="border-b border-gray-200 dark:border-gray-700 pb-5">                        
             <div class="input-group">
                 
                 <label class="label-group">
@@ -107,11 +112,17 @@
             <div class="input-group !w-1/2">
                 <label class="label-group">
                     <span class="label-item-title">Description <span class="required-style">*</span></span>
-                    <input type="text" required v-model="material.description" class="form-input" name="description" :id="'description'" />
+                    <textarea v-model="material.description" class="form-input" name="description" :id="'description'"></textarea>
                     <Error v-if="errors?.description" :errors="errors.description" />
                 </label>
             </div>
-        </legend>
+            <div class="input-group !w-1/2">
+                <label class="label-group">
+                    <span class="label-item-title">Sample Photo <span class="required-style text-red-700">*</span></span>
+                    <drop-zone/>
+                    <Error v-if="errors?.description" :errors="errors.description" />
+                </label>
+            </div>
     </div>
 </template>
 <style lang="postcss" scoped>

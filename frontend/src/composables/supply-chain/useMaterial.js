@@ -4,23 +4,25 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import useDropZone from '../../services/dropZone.js';
 
 export default function useMaterial() {
     const router = useRouter();
     const materials = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const material = ref( {
-        name: '',
-        material_code: '',
-        scm_material_category_id: '',
-        scm_material_category_name: '',
-        unit: '',
-        hs_code: '',
-        minimum_stock: 0,
-        store_category: '',
-        description: ''
-    });
+        const material = ref( {
+            name: '',
+            material_code: '',
+            scm_material_category_id: '',
+            scm_material_category_name: '',
+            unit: '',
+            hs_code: '',
+            minimum_stock: 0,
+            store_category: '',
+            description: '',
+            sample_photo: null,
+        });
 
     const errors = ref('');
     const isLoading = ref(false);
@@ -50,19 +52,20 @@ export default function useMaterial() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
+        
 
-        try {
-            const { data, status } = await Api.post('/scm/materials', form);
-            material.value = data.value;
-            notification.showSuccess(status);
-            router.push({ name: "scm.material.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
-        }
+        // try {
+        //     const { data, status } = await Api.post('/scm/materials', form);
+        //     material.value = data.value;
+        //     notification.showSuccess(status);
+        //     router.push({ name: "scm.material.index" });
+        // } catch (error) {
+        //     const { data, status } = error.response;
+        //     errors.value = notification.showError(status, data);
+        // } finally {
+        //     loader.hide();
+        //     isLoading.value = false;
+        // }
     }
 
     async function showMaterial(materialId) {
@@ -85,14 +88,16 @@ export default function useMaterial() {
     }
 
     async function updateMaterial(form, materialId) {
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-
+        let formData = new FormData();
+		formData.append('info',JSON.stringify(form));
+		// formData.append('sample_photo',form.sample_photo);
+        // console.log(formData);
         try {
             const { data, status } = await Api.put(
                 `/scm/materials/${materialId}`,
-                form
+                formData
             );
             material.value = data.value;
             notification.showSuccess(status);

@@ -32,7 +32,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: `${BASE}.material-category.create`,
+                        route: `${BASE}.material-category.index`,
                         label: 'Material Category',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -42,7 +42,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                    route: `${BASE}.material.create`,
+                    route: `${BASE}.material.index`,
                     label: 'Material',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
