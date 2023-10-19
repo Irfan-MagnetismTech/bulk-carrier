@@ -226,6 +226,23 @@ export default function useVessel() {
 		}
 	}
 
+	async function getVesselsWithoutPaginate(businessUnit) {
+		NProgress.start();
+		isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-vessels?business_unit=${businessUnit}`);
+			vessels.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			NProgress.done();
+		}
+	}
+
 	return {
 		vessels,
 		vessel,
@@ -240,6 +257,7 @@ export default function useVessel() {
 		getVesselsByNameOrCode,
 		voyageVessels,
 		getVesselsByVoyage,
+		getVesselsWithoutPaginate,
 		isLoading,
 		errors,
 	};
