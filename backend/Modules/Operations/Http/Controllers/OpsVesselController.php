@@ -32,7 +32,10 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')->latest()->paginate(10);                     
+            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->paginate(10);                     
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -80,6 +83,13 @@ class OpsVesselController extends Controller
     public function show(OpsVessel $vessel): JsonResponse
     {
         $vessel->load('opsVesselCertificates','opsBunkers');
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->opsMaritimeCertification->id;
+            return $certificate;
+        });
         try
         {            
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
@@ -100,17 +110,21 @@ class OpsVesselController extends Controller
      */
     public function update(OpsVesselRequest $request, OpsVessel $vessel): JsonResponse
     {
+        // dd($request);
         try
         {
             DB::beginTransaction();
             $vesselInfo = $request->except(
                 '_token',
                 'opsVesselCertificates',
-                'opsBunkers',
+                // 'opsBunkers',
             );
+            // dd($request);
             $vessel->update($vesselInfo);
-            $vessel->opsVesselCertificates()->createUpdateOrDelete($request->opsVesselCertificates);
-            $vessel->opsBunkers()->createUpdateOrDelete($request->opsBunkers);
+            $vessel->opsVesselCertificates()->delete();
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->delete();
+            $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Successfully updated vessel.', $vessel, 202);
         }
@@ -161,6 +175,9 @@ class OpsVesselController extends Controller
             $vessels = OpsVessel::query()
             ->where(function ($query) use($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
             })
             ->limit(10)
             ->get();
