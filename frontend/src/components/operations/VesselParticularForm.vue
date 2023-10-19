@@ -34,8 +34,8 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Previous Name </span>
-            <input type="text" v-model="form.name" placeholder="Previous Name" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.name" :errors="errors.name" />
+            <input type="text" v-model="form.previous_name" placeholder="Previous Name" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.previous_name" :errors="errors.previous_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Short Code </span>
