@@ -52,7 +52,7 @@ export default function useVessel() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getVessels(page,columns = null, searchKey = null, table = null) {
+	async function getVessels(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -61,9 +61,7 @@ export default function useVessel() {
 			const { data, status } = await Api.get('/ops/vessels', {
 				params: {
 					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
+					business_unit: businessUnit,
 				},
 			});
 			vessels.value = data.value;
