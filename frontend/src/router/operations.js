@@ -111,4 +111,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/maritime-certifications/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Vessels */
+	{
+		path: `/${BASE}/vessels`,
+		name: `${BASE}.vessels.index`,
+		component: () => import(`../views/${ViEWBASE}/vessels/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessels/create`,
+		name: `${BASE}.vessels.create`,
+		component: () => import (`../views/${ViEWBASE}/vessels/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessels/:vesselId/edit`,
+		name: `${BASE}.vessels.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessels/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessels/:vesselId/show`,
+		name: `${BASE}.vessels.show`,
+		component: () => import (`../views/${ViEWBASE}/vessels/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
