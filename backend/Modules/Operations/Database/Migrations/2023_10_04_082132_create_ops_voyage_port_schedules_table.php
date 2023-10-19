@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('unload_commence')->nullable();
             $table->dateTime('unload_complete')->nullable();
             $table->string('operation_type');
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
             $table->timestamps();
         });
     }

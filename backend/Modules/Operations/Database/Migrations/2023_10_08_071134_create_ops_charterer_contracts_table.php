@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('port_code')->nullable();
             $table->string('agent_name')->nullable();
             $table->string('billing_name')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
             $table->timestamps();
         });
     }

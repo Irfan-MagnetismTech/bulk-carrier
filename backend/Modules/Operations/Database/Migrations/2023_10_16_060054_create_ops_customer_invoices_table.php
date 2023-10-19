@@ -19,7 +19,7 @@ return new class extends Migration
             $table->float('sub_total');
             $table->float('discount');
             $table->float('grand_total');
-            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH']);
+            $table->enum('business_unit', ['PSML', 'TSLL', 'ALL']);
             $table->timestamps();
         });
     }

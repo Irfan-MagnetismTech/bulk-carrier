@@ -20,7 +20,7 @@ return new class extends Migration
             $table->bigInteger('created_by')->nullable();            
             $table->text('remarks')->nullable(); 
             $table->string('status')->default('pending');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH']);            
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);            
             $table->timestamps();
         });
     }

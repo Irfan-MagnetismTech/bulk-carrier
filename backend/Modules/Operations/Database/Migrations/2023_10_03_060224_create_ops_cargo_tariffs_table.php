@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('unloading_point');
             $table->string('currency');
             $table->enum('status',['Active','Inactive']);
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();          
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);          
             $table->timestamps();
         });
     }

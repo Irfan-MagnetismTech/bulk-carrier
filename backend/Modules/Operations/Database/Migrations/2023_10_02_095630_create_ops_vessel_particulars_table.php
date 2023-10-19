@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('lbc');
             $table->text('attachment');
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
             $table->timestamps();
         });
     }

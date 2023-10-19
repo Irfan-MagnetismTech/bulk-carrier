@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('validity');
             $table->string('authority')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
             $table->timestamps();
         });
     }
