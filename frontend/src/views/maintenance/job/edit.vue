@@ -36,6 +36,8 @@
   setTitle('Edit Job');
 
   watch(job, (value) => {
+    job.value.ops_vessel_name = value?.opsVessel;
+
     job.value.mnt_ship_department_name = value?.mntItem?.mntItemGroup?.mntShipDepartment;
 
     job.value.mnt_item_groups = value?.mntItem?.mntItemGroup?.mntShipDepartment?.mntItemGroups;

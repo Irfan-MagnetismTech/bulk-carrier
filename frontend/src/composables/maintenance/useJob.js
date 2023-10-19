@@ -13,13 +13,14 @@ export default function useItemGroup() {
     const notification = useNotification();
     const job = ref( {
         ops_vessel_id: '',
+        ops_vessel_name: '',
         mnt_ship_department_id: '',
         mnt_ship_department_name: '',
         mnt_item_group_id: '',
         mnt_item_group_name: '',
         mnt_item_name: '',
         mnt_item_id: '',
-        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', remarks: '' }],
+        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', next_due: '', remarks: '' }],
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',

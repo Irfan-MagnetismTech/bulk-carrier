@@ -3,11 +3,21 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <select v-model="form.ops_vessel_id" class="form-input">
+            <!-- <select v-model="form.ops_vessel_id" class="form-input">
               <option value="" disabled selected>Select Vessel</option>
               <option value="1" > Vessel</option>
-              <!-- <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option> -->
-            </select>
+            </select> -->
+            <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.ops_vessel_name"
+                      v-bind="attributes"
+                      v-on="events"
+                  />
+                </template>
+              </v-select>
+              <input type="hidden" v-model="form.ops_vessel_id">
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -125,12 +135,13 @@
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-3/12 px-4 py-3 align-bottom">Job Description <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Job Description <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Cycle Unit <span class="text-red-500">*</span></th>
             <th class="w-1/12 px-4 py-3 align-bottom">Cycle <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Add To Upcoming List <span class="text-red-500">*</span></th>
             <th class="w-1/12 px-4 py-3 align-bottom">Last Done</th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Next Due <span class="text-red-500">*</span></th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Remarks</th>
             <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
           </tr>
         </thead>
@@ -146,6 +157,7 @@
             <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.cycle" placeholder="Cycle" /></td>
             <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
             <td class="px-1 py-1"><input type="date" class="form-input"  v-model="job_line.last_done"/></td>
+            <td class="px-1 py-1"><input :type="job_line.cycle_unit === 'Hours' ? 'number' : 'date'" :min="job_line.cycle_unit === 'Hours' ? 0 : null" class="form-input" required v-model="job_line.next_due"/></td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="job_line.remarks" placeholder="Remarks" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addJob"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -167,10 +179,13 @@ import {ref, onMounted, watch, watchEffect, computed} from "vue";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
+import useVessel from "../../../composables/operations/useVessel";
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartmentWiseItems, itemGroupWiseItems, getShipDepartmentWiseItems, getItemGroupWiseItems } = useItem();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   form: {
@@ -183,7 +198,7 @@ const props = defineProps({
 const jobCycleUnits = ref(['Hours', 'Weeks', 'Months', 'Years']);
 
 function addJob() {
-  props.form.mntJobLines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', remarks: '' });
+  props.form.mntJobLines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', next_due: '', remarks: '' });
 }
 function removeJob(index) {
   props.form.mntJobLines.splice(index, 1);
@@ -195,6 +210,10 @@ function fetchShipDepartmentWiseItems()
   props.form.mnt_item_id = '';
   getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
 }
+
+watch(() => props.form.ops_vessel_name, (value) => {
+  props.form.ops_vessel_id = value?.id;
+});
 
 watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
   props.form.mnt_ship_department_id = props.form.mnt_ship_department_name?.id;
@@ -236,7 +255,9 @@ watch(() => props.form.mnt_item_name, (value) => {
 });
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
+    props.form.ops_vessel_name = null;
     props.form.mnt_ship_department_name = null;
   }
 });
@@ -247,7 +268,8 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
     watchEffect(() => {
-      getShipDepartmentsWithoutPagination(props.form.business_unit ? props.form.business_unit : 'ALL');
+      getShipDepartmentsWithoutPagination(businessUnit.value);
+      getVesselsWithoutPaginate(businessUnit.value);
     });
 });
 
