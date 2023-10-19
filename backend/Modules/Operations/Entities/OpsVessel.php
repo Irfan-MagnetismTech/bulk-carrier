@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsVessel extends Model
 {
     use HasFactory;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -39,6 +38,7 @@ class OpsVessel extends Model
         'total_cargo_hold',
         'live_tracking_config',
         'remarks',
+        'business_unit'
     ];
     
     protected static function newFactory()
@@ -46,8 +46,13 @@ class OpsVessel extends Model
         return \Modules\Operations\Database\factories\OpsVesselFactory::new();
     }
 
-    // public function vesselCertificates()
-    // {
-    //     return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
-    // }
+    public function opsVesselCertificates()
+    {
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
+    }
+
+    public function opsBunkers()
+    {
+        return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
 }

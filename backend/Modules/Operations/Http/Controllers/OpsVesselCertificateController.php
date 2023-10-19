@@ -9,6 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
+use Illuminate\Support\Facades\DB;
 
 class OpsVesselCertificateController extends Controller
 {
@@ -49,11 +50,14 @@ class OpsVesselCertificateController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $vesselCertificate = OpsVesselCertificate::create($request->all());
+            DB::commit();
             return response()->success('Vessel certificate added successfully.', $vesselCertificate, 201);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -89,11 +93,14 @@ class OpsVesselCertificateController extends Controller
     {
         // dd($request);
         try {
+            DB::beginTransaction();
             $vessel_certificate->update($request->all());
+            DB::commit();
             return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 200);
         }
         catch (QueryException $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -122,12 +129,9 @@ class OpsVesselCertificateController extends Controller
 
     public function search(Request $request) {
         try {
-            $vesselCertificate = OpsVesselCertificate::where('reference_number', '=', $request->search)->get();
+            $vesselCertificates = OpsVesselCertificate::where('reference_number', '=', $request->search)->get();
 
-            return response()->json([
-                'value'   => $vesselCertificate,
-                'message' => 'Successfully retrieved vessel certificate.',
-            ], 200);
+            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -136,18 +140,21 @@ class OpsVesselCertificateController extends Controller
     }
 
 
-    public function getVesselCertificateWithoutPaginate(){
-        try
-        {
-            $vesselCertificates = OpsVesselCertificate::all();
-            return response()->json([
-                'value'   => $vesselCertificates,
-                'message' => 'Successfully retrieved vessel certificates.',
-            ], 200);
+    public function getVesselCertificateByReferenceNumber(Request $request) {
+        try {
+            $vesselCertificates = OpsVesselCertificate::query()
+                ->where(function ($query) use($request) {
+                    $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+                })
+                ->limit(10)
+                ->get();
+
+            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
+
 }

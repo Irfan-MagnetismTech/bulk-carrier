@@ -96,7 +96,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(70, 46, 46, 0.5);
     /*background: rgba(0, 0, 0, 0.5);*/
 }
 
@@ -109,8 +109,8 @@
 
 /* cursor not allowed */
 .custom_disabled {
-    background-color: #e7e6e6;
     pointer-events: none;
+    opacity: .6;
 }
 
 .custom_required_field {
@@ -219,41 +219,81 @@ input.custom_date::-webkit-calendar-picker-indicator{
     transform: scale(12)
 }
 
+.business_unit{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
 
-/*body {*/
-/*    font-family: 'Calibri', Times, serif;*/
-/*}*/
+.business_filter_input{
+    border-radius: 0.25rem;
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgba(213, 214, 215, var(--tw-border-opacity));
+    padding-right: 2.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    min-width: 200px;
+}
 
-/*!*You can use [title] selector as well*!*/
-/*[data-title] {*/
-/*    font-size: 30px; !*optional styling*!*/
-/*    position: relative;*/
-/*    cursor: help;*/
-/*}*/
+.business_filter_input:focus{
+    border-color: rgba(213, 214, 215, var(--tw-border-opacity));
+}
 
-/*[data-title]:hover::before {*/
-/*    content: attr(data-title);*/
-/*    position: absolute;*/
-/*    bottom: -26px;*/
-/*    display: inline-block;*/
-/*    padding: 3px 6px;*/
-/*    border-radius: 2px;*/
-/*    background: #000;*/
-/*    color: #fff;*/
-/*    font-size: 12px;*/
-/*    font-family: sans-serif;*/
-/*    white-space: nowrap;*/
-/*}*/
-/*[data-title]:hover::after {*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    bottom: -10px;*/
-/*    left: 8px;*/
-/*    display: inline-block;*/
-/*    color: #fff;*/
-/*    border: 8px solid transparent;*/
-/*    border-bottom: 8px solid #000;*/
-/*}*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    text-transform: capitalize;
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -140%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+.icn {
+    @apply w-5 h-5 transition duration-150 ease-in-out hover:translate-y-1 hover:transform;
+}
+
+.v-select {
+    --vs-controls-color: #374151;
+    --vs-border-color: #4b5563;
+
+    --vs-dropdown-bg: #282c34;
+    --vs-dropdown-color: #eeeeee;
+    --vs-dropdown-option-color: #eeeeee;
+
+    --vs-selected-bg: #664cc3;
+    --vs-selected-color: #374151;
+
+    --vs-search-input-color: #4b5563;
+
+    --vs-dropdown-option--active-bg: #664cc3;
+    --vs-dropdown-option--active-color: #eeeeee;
+}
 
 
 @media only screen and (min-width: 768px) {

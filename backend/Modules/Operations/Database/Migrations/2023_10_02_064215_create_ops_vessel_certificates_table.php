@@ -15,17 +15,16 @@ return new class extends Migration
     {
         Schema::create('ops_vessel_certificates', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ops_vessel_id');
-            $table->bigInteger('ops_maritime_certificate_id');
-            $table->date('issue_date');
-            $table->date('expire_date');
+            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');           
+            $table->foreignId('ops_maritime_certification_id')->constrained('ops_maritime_certifications')->onDelete('cascade');
+            $table->date('issue_date')->nullable();
+            $table->date('expire_date')->nullable();
             $table->text('attachment')->nullable();
             $table->string('status')->nullable();
-            $table->string('reference_number');
+            $table->string('reference_number')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->bigInteger('created_by')->nullable();
             
-            // $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
-            $table->foreign('ops_maritime_certificate_id')->references('id')->on('ops_maritime_certifications')->name('maritime_certificate_id');
             $table->timestamps();
         });
     }
