@@ -171,7 +171,7 @@ class OpsVesselController extends Controller
     }
 
     
-    public function getVesselByName(Request $request){
+    public function getVesselByNameorCode(Request $request){
         try {
             $vessels = OpsVessel::query()
             ->where(function ($query) use($request) {
@@ -179,7 +179,7 @@ class OpsVesselController extends Controller
                 $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
             })
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })
             ->limit(10)
             ->get();
