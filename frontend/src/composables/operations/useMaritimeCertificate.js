@@ -132,7 +132,7 @@ export default function useMaritimeCertificate() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-maritime-certifications?cargo_type=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-maritime-certifications?name=${searchParam}`);
 			maritimeCertificates.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {

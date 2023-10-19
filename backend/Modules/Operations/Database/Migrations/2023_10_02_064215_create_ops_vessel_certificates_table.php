@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');           
             $table->foreignId('ops_maritime_certification_id')->constrained('ops_maritime_certifications')->onDelete('cascade');
-            $table->date('issue_date');
-            $table->date('expire_date');
+            $table->date('issue_date')->nullable();
+            $table->date('expire_date')->nullable();
             $table->text('attachment')->nullable();
             $table->string('status')->nullable();
-            $table->string('reference_number');
+            $table->string('reference_number')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
             $table->bigInteger('created_by')->nullable();
             
