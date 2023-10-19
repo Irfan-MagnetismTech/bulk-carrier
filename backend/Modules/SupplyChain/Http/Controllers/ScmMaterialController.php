@@ -80,7 +80,7 @@ class ScmMaterialController extends Controller
      * @param ScmMaterial $material
      * @return JsonResponse
      */
-    public function update(ScmMaterialRequest $request, ScmMaterial $material)
+    public function update(ScmMaterialRequest $request, ScmMaterial $material): JsonResponse
     {
         $requestData = $request->all();
 
@@ -116,31 +116,15 @@ class ScmMaterialController extends Controller
         }
     }
 
-    public function searchMaterial(Request $request)
+    public function searchMaterial(): JsonResponse
     {
-        $searchParam = $request->searchParam;
-
         $materialCategory = ScmMaterial::query()
-            ->where(function ($query) use ($searchParam) {
-                $query->where('name', 'like', "%$searchParam%")
-                    ->orWhere('material_code', 'like', "%$searchParam%");
+            ->when(request()->has('materialCategoryId'), function ($query) {
+                $query->whereScmMaterialCategoryId(request()->materialCategoryId);
             })
-            ->orderByDesc('name')
-            ->limit(10)
-            ->get();
-
-        return response()->success('Search result', $materialCategory, 200);
-    }
-
-    public function searchMaterialByCategory()
-    {
-        $materialCategory = ScmMaterial::query()
-            ->when(request()->scmMaterialCategoryId, function ($query) {
-                $query->where('scm_material_category_id', request()->scmMaterialCategoryId)
-                    ->where(function ($query2) {
-                        $query2->where('name', 'like', "%" . request()->searchParam . "%")
-                            ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
-                    });
+            ->where(function ($query) {
+                $query->whereName('like', "%" . request()->searchParam . "%")
+                    ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
             })
             ->orderByDesc('name')
             ->limit(10)
