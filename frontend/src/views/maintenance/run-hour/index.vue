@@ -101,9 +101,10 @@ onMounted(() => {
             <th class="w-1/12">#</th>
             <th class="w-2/12 ">Vessel</th>
             <th class="w-2/12 ">Item Group</th>
-            <th class="w-3/12 ">Item Name</th>
+            <th class="w-2/12 ">Item Name</th>
             <th class="w-2/12 ">Present Run Hour</th>
-            <th class="w-2/12">Action</th>
+            <th class="w-2/12">Business Unit</th>
+            <th class="w-1/12">Action</th>
           </tr>
           </thead>
           <tbody>
@@ -113,21 +114,20 @@ onMounted(() => {
             <td>{{ runHour?.mntItem?.mntItemGroup?.name }}</td>
             <td>{{ runHour?.mntItem?.name }}</td>
             <td>{{ runHour?.mntItem?.present_run_hour }}</td>
+            <td><span :class="runHour?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ runHour?.business_unit }}</span></td>
             
-            <td class="">
-              <div class="flex justify-center">
+            <td>
                 <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
-              </div>
             </td>
           </tr>
           </tbody>
           <tfoot v-if="!runHours?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="!runHours?.data?.length">
-            <td colspan="6">No run hour found.</td>
+            <td colspan="7">No run hour found.</td>
           </tr>
           </tfoot>
       </table>

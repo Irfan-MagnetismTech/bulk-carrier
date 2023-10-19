@@ -1,10 +1,23 @@
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input v-if="form.form_type === 'create'" v-model="form.business_unit"></business-unit-input>
+    <div v-else-if="defaultBusinessUnit === 'ALL'">
+      <input  type="text" :value="form.business_unit" placeholder="Business Unit" class="form-input" readonly />
+    </div>
+
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Name </span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.vessel_name"
+                      v-bind="attributes"
+                      v-on="events"
+                  />
+                </template>
+              </v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
             </div>
             <input v-else type="text" :value="form?.opsVessel?.name" placeholder="Vessel Name" class="form-input" readonly />
@@ -12,27 +25,54 @@
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Department </span>
+            <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.department_name"
+                      v-bind="attributes"
+                      v-on="events"
+                  />
+                </template>
+              </v-select>
               <input type="hidden" v-model="form.mnt_ship_department_id">
             </div>
-            <input v-else type="text" :value="form?.mntItem?.mntShipDepartment?.name" placeholder="Ship Department Name" class="form-input" readonly />
+            <input v-else type="text" :value="form?.mntItem?.mntItemGroup?.mntShipDepartment?.name" placeholder="Ship Department Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Item Group </span>
+            <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.item_group_name"
+                      v-bind="attributes"
+                      v-on="events"
+                  />
+                </template>
+              </v-select>
               <input type="hidden" v-model="form.mnt_item_group_id">
             </div>
             <input v-else type="text" :value="form?.mntItem?.mntItemGroup?.name" placeholder="Item Group Name" class="form-input" readonly />
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <div class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Item Name </span>
+            <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.item_name"
+                      v-bind="attributes"
+                      v-on="events"
+                  />
+                </template>
+              </v-select>
               <input type="hidden" v-model="form.mnt_item_id">
             </div>
             <input v-else type="text" :value="form?.mntItem?.name" placeholder="Item Name" class="form-input" readonly />
@@ -44,13 +84,13 @@
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) </span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input"  />
+            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" required />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Updated On </span>
-            <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input"  />
+            <span class="text-gray-700 dark:text-gray-300">Updated On <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  />
           <Error v-if="errors?.updated_on" :errors="errors.updated_on" />
         </label>
         
@@ -81,6 +121,7 @@ const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartme
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 watch(() => props.form.vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
