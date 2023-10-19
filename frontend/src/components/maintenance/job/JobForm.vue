@@ -195,7 +195,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const jobCycleUnits = ref(['Hours', 'Weeks', 'Months', 'Years']);
+const jobCycleUnits = ref(['Hours', 'Days', 'Weeks', 'Months']);
 
 function addJob() {
   props.form.mntJobLines.push({ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', next_due: '', remarks: '' });
