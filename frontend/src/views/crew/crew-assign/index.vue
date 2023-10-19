@@ -101,8 +101,8 @@ onMounted(() => {
           <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ crwAssign?.opsVessel?.name }}</td>
-            <td>{{ crwAssign?.crwCrew?.first_name }} {{ crwAssign?.crwCrew?.last_name }}</td>
-            <td>{{ crwAssign?.crwCrew?.crwRank?.name }}</td>
+            <td>{{ crwAssign?.crwCrew?.name }}</td>
+            <td>{{ crwAssign?.position_onboard }}</td>
             <td>Status</td>
             <td>{{ crwAssign?.date_of_joining }}</td>
             <td>{{ crwAssign?.port_of_joining }}</td>

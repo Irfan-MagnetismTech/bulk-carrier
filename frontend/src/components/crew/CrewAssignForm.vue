@@ -9,7 +9,7 @@ import usePort from "../../composables/operations/usePort";
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { crews, getCrews, crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
-const { portName, getPortsByNameOrCode, isLoading } = usePort();
+const { ports, searchPorts, isLoading } = usePort();
 const props = defineProps({
   form: {
     required: false,
@@ -28,13 +28,13 @@ watch(() => props.form, (value) => {
     props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
 
     //for port
-    props.form.port_of_joining_code = props.form?.port_of_joining?.code ?? '';
+    props.form.port_of_joining = props.form?.port_of_joining_name?.code ?? '';
   }
 }, {deep: true});
 
 function fetchPorts(search, loading) {
   loading(true);
-  getPortsByNameOrCode(search, loading)
+  searchPorts(search, loading)
 }
 
 onMounted(() => {
@@ -90,7 +90,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Position Onboard/Joining Rank <span class="text-red-500">*</span></span>
-        <v-select :options="crwRankLists" placeholder="--Choose an option--"  v-model="form.position_onboard" label="name" class="block form-input">
+        <v-select :options="crwRankLists" placeholder="--Choose an option--"  v-model="form.position_onboard" :reduce="crwRankLists => crwRankLists.name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -111,17 +111,17 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Port of Joining <span class="text-red-500">*</span></span>
-      <v-select :options="portName" placeholder="--Choose an option--" @search="fetchPorts" v-model="form.port_of_joining" label="name" class="block form-input">
+      <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts" v-model="form.port_of_joining_name" label="name" class="block form-input">
         <template #search="{attributes, events}">
           <input
               class="vs__search"
-              :required="!form.port_of_joining"
+              :required="!form.port_of_joining_name"
               v-bind="attributes"
               v-on="events"
           />
         </template>
       </v-select>
-      <Error v-if="errors?.port_of_joining" :errors="errors.port_of_joining" />
+      <Error v-if="errors?.port_of_joining_name" :errors="errors.port_of_joining_name" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Duration in Months <span class="text-red-500">*</span></span>
@@ -130,7 +130,7 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks </span>
-      <input type="number" v-model="form.remarks" class="form-input" autocomplete="off" placeholder="Remarks" />
+      <input type="text" v-model="form.remarks" class="form-input" autocomplete="off" placeholder="Remarks" />
       <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
