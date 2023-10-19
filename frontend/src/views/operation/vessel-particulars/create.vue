@@ -2,29 +2,29 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add Cargo Tariff</h2>
-      <default-button :title="'Cargo Tariff List'" :to="{ name: 'ops.configurations.cargo-tariffs.index' }" :icon="icons.DataBase"></default-button>
+        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add Vessel Particular</h2>
+      <default-button :title="'Vessel Particular List'" :to="{ name: 'ops.vessel-particulars.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-      <form @submit.prevent="storeCargoTariff(cargoTariff)">
+      <form @submit.prevent="storeVesselParticular(vesselParticular)">
           <!-- Port Form -->
-          <cargo-tariff-form v-model:form="cargoTariff" :errors="errors" :cargoTariffLineObject="cargoTariffLineObject"></cargo-tariff-form>
+          <vessel-particular-form v-model:form="vesselParticular" :errors="errors" :vesselParticularLineObject="vesselParticularLineObject"></vessel-particular-form>
           <!-- Submit button -->
           <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
       </form>
   </div>
 </template>
 <script setup>
-import CargoTariffForm from '../../../components/operations/configurations/CargoTariffForm.vue';
+import VesselParticularForm from '../../../components/operations/VesselParticularForm.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
-import useCargoTariff from '../../../composables/operations/useCargoTariff';
+import useVesselParticular from '../../../composables/operations/useVesselParticular';
 const icons = useHeroIcon();
 
-const { cargoTariffLineObject, cargoTariff, storeCargoTariff, isLoading, errors } = useCargoTariff();
+const { vesselParticularLineObject, vesselParticular, storeVesselParticular, isLoading, errors } = useVesselParticular();
 
 const { setTitle } = Title();
 
-setTitle('Create Cargo Tariff');
+setTitle('Create Vessel Particular');
 </script>
