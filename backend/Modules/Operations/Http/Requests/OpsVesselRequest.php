@@ -29,8 +29,13 @@ class OpsVesselRequest extends FormRequest
         return [
             'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'vessel_type'     => ['required', 'string', 'max:255'],
+<<<<<<< HEAD
+            'short_code'      => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
+            'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
+=======
             'short_code'      => ['required','string', 'max:50', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->vessel)],
+>>>>>>> c3e4482a703c5f61af21e3cab3dcbbe8fd3cf1df
             'owner_name'      => ['required', 'string', 'max:255'],
             'manager'         => ['required', 'string', 'max:255'],
             'classification'  => ['required', 'alpha', 'max:50'],
