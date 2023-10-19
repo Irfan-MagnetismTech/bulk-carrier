@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useVesselRequiredCrew from "../../../composables/crew/useVesselRequiredCrew";
+import useCrewAssign from "../../../composables/crew/useCrewAssign";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -18,9 +18,9 @@ const props = defineProps({
   },
 });
 
-const { vesselRequiredCrews, getVesselRequiredCrews, deleteVesselRequiredCrew, isLoading } = useVesselRequiredCrew();
+const { crewAssigns, getCrewAssigns, deleteCrewAssign, isLoading } = useCrewAssign();
 const { setTitle } = Title();
-setTitle('Vessel Required Crew');
+setTitle('Crew Assigns');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -37,7 +37,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteVesselRequiredCrew(id);
+      deleteCrewAssign(id);
     }
   })
 }
@@ -46,7 +46,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
   watchEffect(() => {
-  getVesselRequiredCrews(props.page,businessUnit.value)
+  getCrewAssigns(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -66,7 +66,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Required Crew List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Crew Assign List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.crewAssigns.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -88,15 +88,17 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Vessel Name</th>
-            <th>Vessel Code</th>
-            <th>Vessel Type</th>
-            <th>Total Crew</th>
-            <th>Business Unit</th>
+            <th>Crew Name</th>
+            <th>Rank</th>
+            <th>Status</th>
+            <th>Joining Date</th>
+            <th>Joining Port</th>
+            <th>Duration(Months)</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(requiredCrew,index) in vesselRequiredCrews?.data" :key="index">
+          <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ requiredCrew?.opsVessel?.name }}</td>
             <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
