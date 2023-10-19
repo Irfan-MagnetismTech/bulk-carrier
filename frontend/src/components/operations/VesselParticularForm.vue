@@ -1,5 +1,7 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <business-unit-input v-model="form.business_unit"></business-unit-input>
+
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
         <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
@@ -13,7 +15,6 @@
             </template>
         </v-select>
       </label>
-      <business-unit-input v-model="form.business_unit"></business-unit-input>
       
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
@@ -268,7 +269,7 @@ const { vessel, vessels, searchVessels, showVessel } = useVessel();
 
 function fetchVessels(search, loading) {
       loading(true);
-      searchVessels(search, loading);
+      searchVessels(search, props.form.business_unit, loading);
 }
 
 function fetchPorts(search, loading) {
