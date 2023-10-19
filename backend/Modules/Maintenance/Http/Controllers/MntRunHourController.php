@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntItem;
+use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntRunHour;
 
 class MntRunHourController extends Controller
@@ -95,6 +96,17 @@ class MntRunHourController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function updateNextDue(Request $request)
+    {
+        $itemArray = json_decode($request->get('itemArray'));
+        $mntItem = new MntItem();
+        foreach ($itemArray as $itemId) {
+            $mntItem->find($itemId)->mntJobLines()->decrement('next_due', 5);
+        }
+        $jobs = MntJob::with(['mntJobLines'])->whereIn('mnt_item_id', $itemArray)->get();
+        return response()->success('Run hour updated successfully', $jobs, 201);
     }
 
     /**

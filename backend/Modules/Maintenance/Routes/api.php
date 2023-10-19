@@ -46,4 +46,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-all-jobs', [MntJobController::class, 'allJobs']);
     // upcoming Jobs
     Route::get('get-upcoming-jobs', [MntJobController::class, 'upcomingJobs']);
+
+    Route::put('update-next-due', [MntRunHourController::class, 'updateNextDue']);
 });
