@@ -52,7 +52,7 @@ class OpsVessel extends Model
     protected $appends = ['code_name'];
 
     /**
-     * Concatenate the code and name of the port.
+     * Concatenate the short code and name of the port.
      *
      * @return string
      */

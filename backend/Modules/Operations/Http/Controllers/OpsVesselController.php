@@ -160,11 +160,12 @@ class OpsVesselController extends Controller
         try {
             $vessels = OpsVessel::query()
             ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name . '%');
+                $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
             })
             ->limit(10)
             ->get();
-            return response()->success('Successfully retrieved vessels name.', $vessels, 200);
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
