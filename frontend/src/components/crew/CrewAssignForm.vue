@@ -6,8 +6,8 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 import Store from "../../store";
 
-const { vessels, searchVessels } = useVessel();
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { vessels, getVesselsWithoutPaginate } = useVessel();
+const { crews, getCrews, crwRankLists, getCrewRankLists } = useCommonApiRequest();
 const props = defineProps({
   form: {
     required: false,
@@ -17,20 +17,21 @@ const props = defineProps({
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-function fetchVessels(search, loading) {
-  loading(true);
-  searchVessels(search, loading)
-}
-
 watch(() => props.form, (value) => {
   if(value){
     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+    props.form.ops_vessel_flag = props.form?.ops_vessel_name?.flag;
+
+    //for crew
+    props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
   }
 }, {deep: true});
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {
+    getVesselsWithoutPaginate(props.form.business_unit);
+    getCrews(props.form.business_unit);
     getCrewRankLists(props.form.business_unit);
   });
 });
@@ -46,7 +47,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -59,9 +60,36 @@ onMounted(() => {
         <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.effective_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
+        <span class="text-gray-700 dark:text-gray-300">Flag </span>
+        <input type="text" v-model="form.ops_vessel_flag" class="form-input vms-readonly-input" autocomplete="off" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
+        <v-select :options="crews" placeholder="--Choose an option--"  v-model="form.crw_crew_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.crw_crew_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.crw_crew_name" :errors="errors.crw_crew_name" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Position Onboard/Joining Rank <span class="text-red-500">*</span></span>
+        <v-select :options="crews" placeholder="--Choose an option--"  v-model="form.crw_crew_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.crw_crew_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.crw_crew_name" :errors="errors.crw_crew_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>

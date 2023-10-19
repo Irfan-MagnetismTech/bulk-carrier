@@ -12,7 +12,10 @@ export default function useCrewAssign() {
     const crewAssign = ref( {
         business_unit: '',
         ops_vessel_id: '',
+        ops_vessel_name: '',
+        ops_vessel_flag: '',
         crw_crew_id: '',
+        crw_crew_name: '',
         position_onboard: '',
         date_of_joining: '',
         port_of_joining: '',

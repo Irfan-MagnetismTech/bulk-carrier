@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwAgencyContract;
+use Modules\Crew\Entities\CrwCrew;
 use Modules\Crew\Entities\CrwRank;
 
 class CrwCommonController extends Controller
@@ -57,6 +58,23 @@ class CrwCommonController extends Controller
             })
             ->when(request()->crw_agency_id != null, function ($q) {
                     return $q->where('crw_agency_id',request()->crw_agency_id);
+            })->get();
+
+            return response()->success('Retrieved Successfully', $crwAgencies, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCrews()
+    {
+        try {
+
+            $crwAgencies      = CrwCrew::when(request()->business_unit != "ALL", function ($q)
+            {
+                $q->where('business_unit', request()->business_unit);
             })->get();
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);

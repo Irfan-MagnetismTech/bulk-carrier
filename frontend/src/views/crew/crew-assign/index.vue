@@ -100,29 +100,33 @@ onMounted(() => {
           <tbody>
           <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ requiredCrew?.opsVessel?.name }}</td>
-            <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
-            <td>{{ requiredCrew?.opsVessel?.vessel_type }}</td>
-            <td>{{ requiredCrew?.total_crew }}</td>
+            <td>{{ crwAssign?.opsVessel?.name }}</td>
+            <td>{{ crwAssign?.crwCrew?.first_name }} {{ crwAssign?.crwCrew?.last_name }}</td>
+            <td>{{ crwAssign?.crwCrew?.crwRank?.name }}</td>
+            <td>Status</td>
+            <td>{{ crwAssign?.date_of_joining }}</td>
+            <td>{{ crwAssign?.port_of_joining }}</td>
+            <td>{{ crwAssign?.port_of_joining }}</td>
+            <td>{{ crwAssign?.approx_duration }}</td>
             <td>
-              <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>
+              <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.vesselRequiredCrews.edit', params: { vesselRequiredCrewId: requiredCrew?.id } }"></action-button>
-              <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
+              <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!vesselRequiredCrews?.data?.length">
+          <tfoot v-if="!crewAssigns?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="9">Loading...</td>
           </tr>
-          <tr v-else-if="!vesselRequiredCrews?.data?.length">
-            <td colspan="7">No data found.</td>
+          <tr v-else-if="!crewAssigns?.data?.length">
+            <td colspan="9">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="vesselRequiredCrews" to="crw.checklists.index" :page="page"></Paginate>
+    <Paginate :data="crewAssigns" to="crw.crewAssigns.index" :page="page"></Paginate>
   </div>
 </template>
