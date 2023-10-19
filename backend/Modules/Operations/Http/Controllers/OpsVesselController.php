@@ -32,7 +32,10 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')->latest()->paginate(10);                     
+            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->paginate(10);                     
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -172,6 +175,9 @@ class OpsVesselController extends Controller
             $vessels = OpsVessel::query()
             ->where(function ($query) use($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
             })
             ->limit(10)
             ->get();
