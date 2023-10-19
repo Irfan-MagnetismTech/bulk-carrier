@@ -16,6 +16,10 @@ export default function useShipDepartment() {
         short_code: '',
         business_unit: '',
     });
+
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -23,6 +27,9 @@ export default function useShipDepartment() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/mnt/ship-departments',{
@@ -112,7 +119,7 @@ export default function useShipDepartment() {
         try {
             const { data, status } = await Api.delete( `/mnt/ship-departments/${shipDepartmentId}`);
             notification.showSuccess(status);
-            await getShipDepartments();
+            await getShipDepartments(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

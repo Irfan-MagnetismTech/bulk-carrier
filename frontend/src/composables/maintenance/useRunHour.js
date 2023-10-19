@@ -24,6 +24,10 @@ export default function useRunHour() {
         business_unit: '',
         form_type: 'create'
     });
+
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -31,6 +35,9 @@ export default function useRunHour() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/mnt/run-hours',{
@@ -120,7 +127,7 @@ export default function useRunHour() {
         try {
             const { data, status } = await Api.delete( `/mnt/run-hours/${runHourId}`);
             notification.showSuccess(status);
-            await getRunHours();
+            await getRunHours(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

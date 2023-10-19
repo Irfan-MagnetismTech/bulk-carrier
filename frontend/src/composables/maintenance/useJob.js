@@ -24,6 +24,10 @@ export default function useItemGroup() {
         mnt_items: [],
         business_unit: '',
     });
+
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -31,6 +35,9 @@ export default function useItemGroup() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/mnt/jobs',{
@@ -120,7 +127,7 @@ export default function useItemGroup() {
         try {
             const { data, status } = await Api.delete( `/mnt/jobs/${jobId}`);
             notification.showSuccess(status);
-            await getJobs();
+            await getJobs(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

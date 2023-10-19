@@ -28,6 +28,10 @@ export default function useItem() {
         business_unit: '',
         form_type: 'create'
     });
+
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -35,6 +39,9 @@ export default function useItem() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/mnt/items',{
@@ -124,7 +131,7 @@ export default function useItem() {
         try {
             const { data, status } = await Api.delete( `/mnt/items/${itemId}`);
             notification.showSuccess(status);
-            await getItems();
+            await getItems(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
