@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('preferred_adjustment_method');
             $table->string('approximate_adjustment_date');
             $table->string('status');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();            
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();             
             $table->date('approved_date')->nullable();
             $table->date('received_date')->nullable();
             $table->float('received_amount')->nullable();
