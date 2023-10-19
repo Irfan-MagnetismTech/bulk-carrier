@@ -3,9 +3,9 @@ import {ref} from "vue";
 import { onMounted } from '@vue/runtime-core';
 import env from '../../../config/env';
 import Title from "../../../services/title";
-import useMaterialRequisition from "../../../composables/scm/useMaterialRequisition.js";
+import useMaterialRequisition from "../../../composables/supply-chain/useMaterialRequisition.js";
 import useHelper from "../../../composables/useHelper.js";
-import MaterialRequisitionForm from "../../../components/scm/material-requisition/MaterialRequisitionForm.vue";
+import MaterialRequisitionForm from "../../../components/supply-chain/material-requisition/MaterialRequisitionForm.vue";
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 

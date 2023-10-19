@@ -2,6 +2,7 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
+    import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     
     const { material, materials, getMaterials } = useMaterial();
     
@@ -54,6 +55,7 @@
 </script>
 <template>
   <!-- Basic information -->
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-1/4 mt-3 text-sm md:w-1/4">
       <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>

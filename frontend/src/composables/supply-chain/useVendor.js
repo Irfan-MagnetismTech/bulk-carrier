@@ -108,11 +108,6 @@ export default function useVendor() {
     }
 
     async function deleteVendor(vendorId) {
-
-        if (!confirm('Are you sure you want to delete this vendor?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 

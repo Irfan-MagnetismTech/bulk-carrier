@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_units', function (Blueprint $table) {
+        Schema::create('scm_material_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('short_code')->unique()->nullable();
+            $table->bigInteger('parent_id')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_units');
+        Schema::dropIfExists('scm_material_categories');
     }
 };
