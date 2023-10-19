@@ -152,10 +152,11 @@ class MntItemController extends Controller
         
         try {
 
-            $items = MntItem::where('mnt_item_group_id', $mntItemGroupId)->get();
+            $lastItem = MntItem::where('mnt_item_group_id', $mntItemGroupId)->latest()->first();
+            $lastItemCode = $lastItem->item_code;
+            $lastItemCodeSplit = explode('-', $lastItemCode);
             $itemGroup = MntItemGroup::where('id', $mntItemGroupId)->first();
-            $itemCount = count($items);
-            $itemCode = $itemGroup->short_code.'-'.str_pad($itemCount+1, 3, '0', STR_PAD_LEFT);
+            $itemCode = $itemGroup->short_code.'-'.str_pad($lastItemCodeSplit[1]+1, 3, '0', STR_PAD_LEFT);
             return response()->success('Item code retrieved successfully', $itemCode, 200);
             
         }
