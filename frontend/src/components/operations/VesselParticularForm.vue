@@ -23,13 +23,22 @@
             </select>
           <Error v-if="errors?.vessel_type" :errors="errors.vessel_type" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">Owner Name <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.owner_name" placeholder="Owner Name" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
+        </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.name" placeholder="Vessel Name" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.name" :errors="errors.name" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Previous Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.name" placeholder="Previous Name" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -42,11 +51,7 @@
             <input type="text" v-model="form.call_sign" placeholder="Call Sign" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.call_sign" :errors="errors.call_sign" />
         </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Owner Name <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.owner_name" placeholder="Owner Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
-        </label>
+        
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -66,19 +71,11 @@
         <Error v-if="errors?.flag" :errors="errors.flag" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="name" class="block form-input" :reduce="port=>port.code">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.port_of_registry"
-                    v-bind="attributes"
-                    v-on="events"
-                    />
-            </template>
-        </v-select>
-        <Error v-if="errors?.port_of_registry" :errors="errors.port_of_registry" />
+        <span class="text-gray-700 dark:text-gray-300">Previous Flag <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.previous_flag" placeholder="Previous Flag" class="form-input" required autocomplete="off" />
+        <Error v-if="errors?.previous_flag" :errors="errors.previous_flag" />
       </label>
+      
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -152,6 +149,85 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Breadth <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.breadth" placeholder="Breadth" class="form-input" required autocomplete="off" />
+        <Error v-if="errors?.breadth" :errors="errors.breadth" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Depth (Moulded) <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.moulded_depth" placeholder="Depth (Moulded)" class="form-input" required autocomplete="off" />
+        <Error v-if="errors?.moulded_depth" :errors="errors.moulded_depth" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Maker SSAS <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.maker_ssas" placeholder="Maker SSAS" class="form-input" required autocomplete="off" />
+        <Error v-if="errors?.maker_ssas" :errors="errors.maker_ssas" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
+        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="name" class="block form-input" :reduce="port=>port.code">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.port_of_registry"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select>
+        <Error v-if="errors?.port_of_registry" :errors="errors.port_of_registry" />
+      </label>
+    </div> 
+
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Class No <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.class_no" placeholder="Class No" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.class_no" :errors="errors.class_no" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">LOA <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.loa" placeholder="LOA" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.loa" :errors="errors.loa" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Depth <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.depth" placeholder="Depth" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.depth" :errors="errors.depth" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">ECDIS Type <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.ecdis_type" placeholder="ECDIS Type" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.ecdis_type" :errors="errors.ecdis_type" />
+        </label>
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Engine Type <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.engine_type" placeholder="Engine Type" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.engine_type" :errors="errors.engine_type" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">BHP <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.bhp" placeholder="BHP" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.bhp" :errors="errors.bhp" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.email" placeholder="Email" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.email" :errors="errors.email" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">LBC <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.lbc" placeholder="LBC" class="form-input" required autocomplete="off" />
+          <Error v-if="errors?.lbc" :errors="errors.lbc" />
+        </label>
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Cargo Hold <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.total_cargo_hold" :errors="errors.total_cargo_hold" />
@@ -161,98 +237,13 @@
         <input type="text" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.capacity" :errors="errors.capacity" />
       </label>
+      
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Remarks </span>
-        <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.remarks" :errors="errors.remarks" />
-      </label>
-    </div>
 
-    <div class="mt-3 md:mt-8">
-      <h4 class="text-md font-semibold uppercase mb-2">Vessel Certificates</h4>
-      <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
-          <tr class="w-full">
-            <th>SL</th>
-            <th class="!w-72">Certificate Name</th>
-            <th>Certificate Type</th>
-            <th>Validity Period</th>
-            <th class="w-16">
-              <button type="button" @click="addVesselCertificate()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(certificate, index) in form.opsVesselCertificates">
-            <td>
-              {{ index+1 }}
-            </td>
-            <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates"  v-model="form.opsVesselCertificates[index]" label="name" class="block form-input">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.opsVesselCertificates[index]"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
-            </td>
-            <td>
-              <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
-            </td>
-            <td>
-              <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity">{{ form.opsVesselCertificates[index]?.validity }}</span>
-            </td>
-            <td>
-              <button type="button" @click="removeVesselCertificate(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button> 
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 
-    <div class="mt-3 md:mt-8">
-      <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
-      <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
-          <tr class="w-full">
-            <th>SL</th>
-            <th>Bunker Name</th>
-            <th>Unit</th>
-            <th>Opening Balance</th>
-            <th class="w-16">
-              <button type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 </template>
 <script setup>
 import Error from "../Error.vue";
