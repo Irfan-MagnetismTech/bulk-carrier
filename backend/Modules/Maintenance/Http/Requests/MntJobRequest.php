@@ -17,6 +17,11 @@ class MntJobRequest extends FormRequest
         return [
             'ops_vessel_id' => 'required',
             'mnt_item_id' => ['required', Rule::unique('mnt_jobs')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->id)],
+            'mntJobLines.*.job_description' => 'required',
+            'mntJobLines.*.cycle' => 'required|integer',
+            'mntJobLines.*.cycle_unit' => 'required',
+            'mntJobLines.*.min_limit' => 'required|integer',
+            'mntJobLines.*.next_due' => 'required',
         ];
     }
 
