@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'path' => env('TELESCOPE_PATH', 'telescope'),
+    'path' => env('TELESCOPE_PATH', 'jQjGoDqzISo6ERb4Ca'),
 
     /*
     |--------------------------------------------------------------------------
@@ -92,11 +92,12 @@ return [
     */
 
     'only_paths' => [
-        // 'api/*'
+        'api/scm/*'
     ],
 
     'ignore_paths' => [
-        'nova-api*',
+        // 'api/ops/*',
+        // 'api/mnt/*',
     ],
 
     'ignore_commands' => [
