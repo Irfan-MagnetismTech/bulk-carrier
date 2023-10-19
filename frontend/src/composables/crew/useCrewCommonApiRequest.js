@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useCommonApiRequest() {
+export default function useCrewCommonApiRequest() {
     const router = useRouter();
     const crwRankLists = ref([]);
     const crwAgencies = ref([]);

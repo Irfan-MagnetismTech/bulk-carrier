@@ -2,11 +2,11 @@
 import Error from "../Error.vue";
 import useVessel from "../../composables/operations/useVessel";
 import {onMounted, ref, watch, watchEffect} from "vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 const { vessels, searchVessels } = useVessel();
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
 const props = defineProps({
   form: {

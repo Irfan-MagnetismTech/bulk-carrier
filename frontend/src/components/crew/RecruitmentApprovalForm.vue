@@ -1,6 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import useAgencyContract from "../../composables/crew/useAgencyContract";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watchEffect} from "vue";
@@ -14,7 +14,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;

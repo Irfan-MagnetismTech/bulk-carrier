@@ -2,10 +2,10 @@
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {computed, onMounted, ref, watch, watchEffect} from "vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import Store from "../../store";
 
-const { crwAgencies, getCrewAgencyLists, crwAgencyContracts, getCrewAgencyContracts } = useCommonApiRequest();
+const { crwAgencies, getCrewAgencyLists, crwAgencyContracts, getCrewAgencyContracts } = useCrewCommonApiRequest();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const props = defineProps({
   form: {

@@ -19,6 +19,7 @@ export default function useCrewAssign() {
         position_onboard: '',
         date_of_joining: '',
         port_of_joining: '',
+        port_of_joining_code: '',
         approx_duration: '',
         remarks: '',
     });

@@ -1,6 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import useRecruitmentApproval from "../../composables/crew/useRecruitmentApproval";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watchEffect} from "vue";
@@ -14,7 +14,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const { crwAgencies, getCrewAgencyLists } = useCommonApiRequest();
+const { crwAgencies, getCrewAgencyLists } = useCrewCommonApiRequest();
 
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
