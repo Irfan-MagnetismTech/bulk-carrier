@@ -35,7 +35,8 @@ class OpsVesselController extends Controller
             $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
-            })->latest()->paginate(10);                     
+            })
+            ->latest()->paginate(10);                     
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
