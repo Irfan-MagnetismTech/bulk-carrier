@@ -49,15 +49,17 @@ class OpsVesselParticularController extends Controller
     */
     public function store(OpsVesselParticularRequest $request): JsonResponse
     {
-        // dd($request);
         try {
             DB::beginTransaction();
             $vesselParticular = $request->except(
                 '_token',
                 'attachment',
             );
-            $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars');
-            $vesselParticular['attachment'] = $attachment;
+
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars');
+                $vesselParticular['attachment'] = $attachment;
+            }
             $vesselParticular = OpsVesselParticular::create($vesselParticular);
             DB::commit();
             return response()->success('Vessel particular added successfully.', $vesselParticular, 201);

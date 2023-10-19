@@ -15,7 +15,7 @@ class OpsVesselParticular extends Model
         'ops_vessel_id',
         'vessel_type',
         'depth',
-        'class_no'
+        'class_no',
         'attachment',
         'loa',
         'depth',
@@ -24,7 +24,7 @@ class OpsVesselParticular extends Model
         'engine_type',
         'bhp',
         'email',
-        'lbc'
+        'lbc',
         'previous_name',
         'call_sign',
         'owner_name',
