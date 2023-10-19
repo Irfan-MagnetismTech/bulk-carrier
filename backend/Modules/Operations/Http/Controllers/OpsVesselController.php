@@ -107,17 +107,21 @@ class OpsVesselController extends Controller
      */
     public function update(OpsVesselRequest $request, OpsVessel $vessel): JsonResponse
     {
+        // dd($request);
         try
         {
             DB::beginTransaction();
             $vesselInfo = $request->except(
                 '_token',
                 'opsVesselCertificates',
-                'opsBunkers',
+                // 'opsBunkers',
             );
+            // dd($request);
             $vessel->update($vesselInfo);
-            $vessel->opsVesselCertificates()->createUpdateOrDelete($request->opsVesselCertificates);
-            $vessel->opsBunkers()->createUpdateOrDelete($request->opsBunkers);
+            $vessel->opsVesselCertificates()->delete();
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->delete();
+            $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Successfully updated vessel.', $vessel, 202);
         }
