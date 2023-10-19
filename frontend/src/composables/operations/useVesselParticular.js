@@ -11,33 +11,37 @@ export default function useVesselParticular() {
 	const vesselParticulars = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
-	const vesselParticularLineObject = {
-		particular: '',
-		unit: '',
-		jan: '',
-		feb: '',
-		mar: '',
-		apr: '',
-		may: '',
-		jun: '',
-		jul: '',
-		aug: '',
-		sep: '',
-		oct: '',
-		nov: '',
-		dec: '',
-	};
+	
 	const vesselParticular = ref({
-		tariff_name: '',
-		ops_vessel_id: '',
-		loading_point: '',
-		unloading_point: '',
-		ops_cargo_type_id: '',
-		currency: '',
-		status: '',
-		opsVesselParticularLines: [
-			{ ...vesselParticularLineObject }
-		]
+		vessel_type: '',
+		class_no: '',
+		loa: '',
+		depth: '',
+		ecdis_type: '',
+		maker_ssas: '',
+		engine_type: '',
+		previous_name: '',
+		call_sign: '',
+		owner_name: '',
+		classification: '',
+		flag: '',
+		previous_flag: '',
+		port_of_registry: '',
+		nrt: '',
+		dwt: '',
+		imo: '',
+		grt: '',
+		official_number: '',
+		keel_laying_date: '',
+		mmsi: '',
+		year_built: '',
+		tues_capacity: '',
+		overall_length: '',
+		overall_width: '',
+		depth_moulded: '',
+		bhp: '',
+		email: '',
+		lbc: '',
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -173,7 +177,6 @@ export default function useVesselParticular() {
 	}
 
 	return {
-		vesselParticularLineObject,
 		vesselParticulars,
 		vesselParticular,
 		getVesselParticulars,
