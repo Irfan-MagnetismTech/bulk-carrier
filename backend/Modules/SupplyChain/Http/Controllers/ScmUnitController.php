@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\SupplyChain\Entities\ScmUnit;
@@ -16,11 +17,11 @@ class ScmUnitController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_units = ScmUnit::paginate(5);
+            $scm_units = ScmUnit::latest()->paginate(10);
 
             return response()->success('Unit list', $scm_units, 200);
         } catch (\Exception $e) {
-            
+
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -49,12 +50,10 @@ class ScmUnitController extends Controller
     public function show(ScmUnit $unit): JsonResponse
     {
         try {
-            return response()->json([
-                'status' => 'success',
-                'value' => $unit,
-            ], 200);
+            return response()->success('data', $unit, 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -64,17 +63,15 @@ class ScmUnitController extends Controller
      * @param ScmUnit $unit
      * @return JsonResponse
      */
-    public function update(ScmUnitRequest $request, ScmUnit $unit): JsonResponse
+    public function update(ScmUnitRequest $request, ScmUnit $unit)
     {
         try {
             $unit->update($request->all());
 
-            return response()->json([
-                'status' => 'success',
-                'value' => $unit,
-            ], 202);
+            return response()->success('Data updated sucessfully!', $unit, 202);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -88,12 +85,21 @@ class ScmUnitController extends Controller
         try {
             $unit->delete();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => null,
-            ], 204);
+            return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+
+            return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function searchUnit(Request $request)
+    {
+        $materialCategory = ScmUnit::query()
+            ->where('name', 'like', "%{$request->searchParam}%")
+            ->orderByDesc('name')
+            ->limit(10)
+            ->get();
+
+        return response()->success('Search result', $materialCategory, 200);
     }
 }

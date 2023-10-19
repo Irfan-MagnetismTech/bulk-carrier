@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup>
-import MaritimeCertificateForm from '../../../components/operations/configurations/MaritimeCertificateForm.vue';
+import MaritimeCertificateForm from '../../../components/operations/MaritimeCertificateForm.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
