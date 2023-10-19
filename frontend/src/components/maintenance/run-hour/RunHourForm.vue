@@ -8,11 +8,11 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.vessel_name"
+                      :required="!form.ops_vessel_name"
                       v-bind="attributes"
                       v-on="events"
                   />
@@ -27,11 +27,11 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.department_name"
+                      :required="!form.mnt_ship_department_name"
                       v-bind="attributes"
                       v-on="events"
                   />
@@ -45,11 +45,11 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.item_group_name"
+                      :required="!form.mnt_item_group_name"
                       v-bind="attributes"
                       v-on="events"
                   />
@@ -63,11 +63,11 @@
         <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
             <div v-if="form.form_type === 'create'">
-              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.item_name"
+                      :required="!form.mnt_item_name"
                       v-bind="attributes"
                       v-on="events"
                   />
@@ -107,6 +107,7 @@ import useShipDepartment from "../../../composables/maintenance/useShipDepartmen
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import useVessel from "../../../composables/operations/useVessel";
 
 const props = defineProps({
   form: {
@@ -116,38 +117,41 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const vessels = [{id:1, name: 'vessel'}];
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-watch(() => props.form.vessel_name, (value) => {
+watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
 });
 
-function fetchShipDepartmentWiseItemGroups(){
-  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
-}
 
-watch(() => props.form.department_name, (value) => {
+
+watch(() => props.form.mnt_ship_department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
-  fetchShipDepartmentWiseItemGroups();
+
+  props.form.mnt_item_group_name = null;
+  props.form.mnt_item_group_id = null;
+  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  // fetchShipDepartmentWiseItemGroups();
 });
 
-function fetchItemGroupWiseHourlyItems(){
-  getItemGroupWiseHourlyItems(props.form.mnt_item_group_id);
-}
 
-watch(() => props.form.item_group_name, (value) => {
+watch(() => props.form.mnt_item_group_name, (value) => {
   props.form.mnt_item_group_id = value?.id;
-  fetchItemGroupWiseHourlyItems();
+
+  props.form.mnt_item_name = [];
+  props.form.mnt_item_id = [];
+  getItemGroupWiseHourlyItems(props.form.mnt_item_group_id);
+  // fetchItemGroupWiseHourlyItems();
 });
 
-watch(() => props.form.item_name, (value) => {
+watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
-  props.form.item_name = value;
+  props.form.mnt_item_name = value;
   props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
   props.form.mnt_item_id = value ? value.map(val=>val.id) : null;
 });
@@ -160,12 +164,14 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
     props.form.mnt_ship_department_name = null;
+    props.form.ops_vessel_name = null;
   }
 });
 
 onMounted(() => {
   watchEffect(() => {
       getShipDepartmentsWithoutPagination(businessUnit.value);
+      getVesselsWithoutPaginate(businessUnit.value);
     });
 });
 

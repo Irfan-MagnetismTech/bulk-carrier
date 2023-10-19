@@ -12,11 +12,14 @@ export default function useRunHour() {
     const $loading = useLoading();
     const notification = useNotification();
     const runHour = ref( {
-        mnt_item_id: [],
-        mnt_item_group_id: '',
-        mnt_ship_department_id: '',
-        department_name: '',
         ops_vessel_id: '',
+        ops_vessel_name: '',
+        mnt_ship_department_id: '',
+        mnt_ship_department_name: '',
+        mnt_item_group_id: '',
+        mnt_item_group_name: '',
+        mnt_item_id: [],
+        mnt_item_name: '',
         previous_run_hour: '',
         present_run_hour: '',
         updated_on: '',
