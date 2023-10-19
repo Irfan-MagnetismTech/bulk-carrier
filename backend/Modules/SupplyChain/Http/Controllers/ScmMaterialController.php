@@ -131,4 +131,21 @@ class ScmMaterialController extends Controller
 
         return response()->success('Search result', $materialCategory, 200);
     }
+
+    public function searchMaterialByCategory()
+    {
+        $materialCategory = ScmMaterial::query()
+            ->when(request()->scmMaterialCategoryId, function ($query) {
+                $query->where('scm_material_category_id', request()->scmMaterialCategoryId)
+                    ->where(function ($query2) {
+                        $query2->where('name', 'like', "%" . request()->searchParam . "%")
+                            ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
+                    });
+            })
+            ->orderByDesc('name')
+            ->limit(10)
+            ->get();
+
+        return response()->success('Search result', $materialCategory, 200);
+    }
 }
