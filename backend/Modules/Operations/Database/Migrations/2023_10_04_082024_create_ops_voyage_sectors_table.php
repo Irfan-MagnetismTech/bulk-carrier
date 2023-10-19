@@ -28,7 +28,7 @@ return new class extends Migration
             $table->float('final_survey_qty');
             $table->float('final_received_qty');
             $table->float('boat_note_qty');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }
