@@ -12,8 +12,10 @@ class OpsVesselParticular extends Model
 
     protected $fillable = [
         'ops_vessel_id',
+        'vessel_type',
+        'depth',
+        'class_no'
         'attachment',
-        'class_no',
         'loa',
         'depth',
         'ecdis_type',
@@ -22,6 +24,26 @@ class OpsVesselParticular extends Model
         'bhp',
         'email',
         'lbc'
+        'previous_name',
+        'call_sign',
+        'owner_name',
+        'classification',
+        'flag',
+        'previous_flag',
+        'port_of_registry',
+        'nrt',
+        'dwt',
+        'imo',
+        'grt',
+        'official_number',
+        'keel_laying_date',
+        'mmsi',
+        'year_built',
+        'tues_capacity',
+        'overall_length',
+        'overall_width',
+        'depth_moulded',
+        'business_unit',
     ];
 
     public function opsVessel()
