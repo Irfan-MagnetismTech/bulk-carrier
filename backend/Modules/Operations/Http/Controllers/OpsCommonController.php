@@ -164,11 +164,13 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel data
-    public function getVesselWithoutPaginate(){
+    public function getVesselWithoutPaginate(Request $request){
         try
         {
-            $vessels = OpsVessel::all();            
-            return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
+            $vessels = OpsVessel::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();            
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
         {
