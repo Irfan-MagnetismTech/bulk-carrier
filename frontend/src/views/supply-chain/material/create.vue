@@ -5,7 +5,7 @@ import Title from "../../../services/title";
 import useMaterial from "../../../composables/supply-chain/useMaterial.js";
 import MaterialForm from '../../../components/supply-chain/material/MaterialForm.vue';
 
-const { material, storeMaterial ,isLoading,errors} = useMaterial();
+const { material, storeMaterial,isLoading,errors} = useMaterial();
 const { setTitle } = Title();
 
 setTitle('Create Material');

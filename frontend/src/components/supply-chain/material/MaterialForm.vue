@@ -120,7 +120,7 @@
                 <label class="label-group">
                     <span class="label-item-title">Sample Photo <span class="required-style text-red-700">*</span></span>
                     <drop-zone/>
-                    <Error v-if="errors?.description" :errors="errors.description" />
+                    <Error v-if="errors?.sample_photo" :errors="errors.sample_photo" />
                 </label>
             </div>
     </div>

@@ -21,7 +21,7 @@ export default function useMaterial() {
             minimum_stock: 0,
             store_category: '',
             description: '',
-            sample_photo: null,
+            sample_photo: null
         });
 
     const errors = ref('');
@@ -52,20 +52,20 @@ export default function useMaterial() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-        
+        const formData = processFormData(form);
 
-        // try {
-        //     const { data, status } = await Api.post('/scm/materials', form);
-        //     material.value = data.value;
-        //     notification.showSuccess(status);
-        //     router.push({ name: "scm.material.index" });
-        // } catch (error) {
-        //     const { data, status } = error.response;
-        //     errors.value = notification.showError(status, data);
-        // } finally {
-        //     loader.hide();
-        //     isLoading.value = false;
-        // }
+        try {
+            const { data, status } = await Api.post('/scm/materials', formData);
+            material.value = data.value;
+            notification.showSuccess(status);
+            router.push({ name: "scm.material.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
     }
 
     async function showMaterial(materialId) {
@@ -147,6 +147,21 @@ export default function useMaterial() {
         }
     }
 
+    function processFormData(form){
+        let formData = new FormData();
+        formData.append('sample_photo', form.sample_photo);
+        formData.append('description', form.description);
+        formData.append('store_category', form.store_category);
+        formData.append('minimum_stock', form.minimum_stock);
+        formData.append('hs_code', form.hs_code);
+        formData.append('unit', form.unit);
+        formData.append('scm_material_category_id', form.scm_material_category_id);
+        formData.append('material_code', form.material_code);
+        formData.append('name', form.name);
+
+        return formData;
+    }
+
     return {
         materials,
         material,
@@ -157,6 +172,6 @@ export default function useMaterial() {
         updateMaterial,
         deleteMaterial,
         isLoading,
-        errors,
+        errors
     };
 }
