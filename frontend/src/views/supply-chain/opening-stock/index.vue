@@ -11,6 +11,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 
 const { getOpeningStocks, openingStocks, deleteService, isLoading } = useOpeningStock();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 
@@ -37,7 +39,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
-    getOpeningStocks(props.page)
+    getOpeningStocks(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {

@@ -24,18 +24,28 @@ export default function useMaterial() {
             sample_photo: null
         });
 
+    const indexPage = ref(null);
+    
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getMaterials() {
+    async function getMaterials(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/materials');
+            const {data, status} = await Api.get('/scm/materials', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             materials.value = data.value;
-            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -76,7 +86,6 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.get(`/scm/materials/${materialId}`);
             material.value = data.value;
-            console.log('show', data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -90,10 +99,7 @@ export default function useMaterial() {
     async function updateMaterial(form, materialId) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-        let formData = new FormData();
-		formData.append('info',JSON.stringify(form));
-		// formData.append('sample_photo',form.sample_photo);
-        // console.log(formData);
+        const formData = processFormData(form,true);
         try {
             const { data, status } = await Api.put(
                 `/scm/materials/${materialId}`,
@@ -118,7 +124,7 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.delete( `/scm/materials/${materialId}`);
             notification.showSuccess(status);
-            await getMaterials();
+            await getMaterials(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -147,7 +153,7 @@ export default function useMaterial() {
         }
     }
 
-    function processFormData(form){
+    function processFormData(form,is_update = false){
         let formData = new FormData();
         formData.append('sample_photo', form.sample_photo);
         formData.append('description', form.description);
@@ -158,7 +164,9 @@ export default function useMaterial() {
         formData.append('scm_material_category_id', form.scm_material_category_id);
         formData.append('material_code', form.material_code);
         formData.append('name', form.name);
-
+        if(is_update){
+            formData.append('_method', 'PUT');
+        }
         return formData;
     }
 

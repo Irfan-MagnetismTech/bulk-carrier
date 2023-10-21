@@ -26,16 +26,26 @@ export default function useVendor() {
         
     });
 
+    const indexPage = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getVendors() {
+    async function getVendors(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/Vendor');
+            const {data, status} = await Api.get('/scm/Vendor', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             vendors.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -114,7 +124,7 @@ export default function useVendor() {
         try {
             const { data, status } = await Api.delete( `/scm/vendors/${vendorId}`);
             notification.showSuccess(status);
-            await getVendors();
+            await getVendors(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

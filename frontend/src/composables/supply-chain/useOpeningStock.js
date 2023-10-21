@@ -28,13 +28,19 @@ export default function useOpeningStock() {
         ],
     });
 
+    
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getOpeningStocks(page, columns = null, searchKey = null, table = null) {
+    async function getOpeningStocks(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/scm/opening-stocks',{
@@ -43,6 +49,7 @@ export default function useOpeningStock() {
                     columns: columns || null,
                     searchKey: searchKey || null,
                     table: table || null,
+                    business_unit: businessUnit,
                 },
             });
             openingStocks.value = data.value;
@@ -122,7 +129,7 @@ export default function useOpeningStock() {
         try {
             const { data, status } = await Api.delete( `/scm/opening-stocks/${openingStockId}`);
             notification.showSuccess(status);
-            await getOpeningStocks();
+            await getOpeningStocks(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

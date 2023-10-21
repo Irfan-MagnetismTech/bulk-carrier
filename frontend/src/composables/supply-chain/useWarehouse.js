@@ -25,16 +25,29 @@ export default function useWarehouse() {
         },
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getWarehouses() {
+    async function getWarehouses(page,businessUnit,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
+
         try {
-            const {data, status} = await Api.get('/scm/Warehouse');
+            const {data, status} = await Api.get('/scm/Warehouse', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+                    business_unit: businessUnit,
+				},
+			});
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -113,7 +126,7 @@ export default function useWarehouse() {
         try {
             const { data, status } = await Api.delete( `/scm/warehouses/${warehouseId}`);
             notification.showSuccess(status);
-            await getWarehouses();
+            await getWarehouses(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

@@ -16,16 +16,26 @@ export default function useService() {
         description: ''
     });
 
+    const indexPage = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getServices() {
+    async function getServices(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/Service');
+            const {data, status} = await Api.get('/scm/Service', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -104,7 +114,7 @@ export default function useService() {
         try {
             const { data, status } = await Api.delete( `/scm/services/${serviceId}`);
             notification.showSuccess(status);
-            await getServices();
+            await getServices(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
