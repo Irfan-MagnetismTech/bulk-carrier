@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('scm_warehouse_contact_people', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
+            $table->string('name');
+            $table->string('designation')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->date('assign_date')->default(now());
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

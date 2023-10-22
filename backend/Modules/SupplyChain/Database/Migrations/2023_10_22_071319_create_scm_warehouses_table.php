@@ -15,7 +15,12 @@ return new class extends Migration
     {
         Schema::create('scm_warehouses', function (Blueprint $table) {
             $table->id();
-            
+            $table->string('name');
+            $table->bigInteger('cost_center_id')->nullable();
+            $table->string('address')->nullable();
+            $table->string('short_code')->unique()->nullable();
+            $table->bigInteger('ops_vessel_id')->nullable();
+            $table->string('business_unit')->nullable();
             $table->timestamps();
         });
     }

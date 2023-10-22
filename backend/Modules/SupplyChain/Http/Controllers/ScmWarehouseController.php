@@ -2,78 +2,119 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\SupplyChain\Entities\ScmWarehouse;
 
 class ScmWarehouseController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return view('supplychain::index');
-    }
+        try {
+            $scm_warehouses = ScmWarehouse::query()
+                ->with('scmWarehouseContactPersons')
+                ->latest()
+                ->when(request()->business_unit != "ALL", function ($q) {
+                    $q->where('business_unit', request()->business_unit);
+                })
+                ->paginate(10);;
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
+            return response()->success('Data list', $scm_warehouses, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        // return response()->json($request->all(), 422);
+        try {
+            DB::beginTransaction();
+            $scm_warehouse = ScmWarehouse::create($request->all());
+            $scm_warehouse->scmWarehouseContactPersons()->createMany($request->scmWarehouseContactPersons);
+            DB::commit();
+
+            return response()->success('Data created succesfully', $scm_warehouse, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param ScmWarehouse $warehouse
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(ScmWarehouse $warehouse): JsonResponse
     {
-        return view('supplychain::show');
-    }
+        try {
+            return response()->success('data', $warehouse->load('scmWarehouseContactPersons'), 200);
+        } catch (\Exception $e) {
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param ScmWarehouse $warehouse
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmWarehouse $warehouse)
     {
-        //
+        try {
+            $warehouse->update($request->all());
+
+            $warehouse->scmWarehouseContactPersons()->createMany($request->scmWarehouseContactPersons);
+
+            return response()->success('Data updated sucessfully!', $warehouse, 202);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param ScmWarehouse $warehouse
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ScmWarehouse $warehouse): JsonResponse
     {
-        //
+        try {
+            $warehouse->scmWarehouseContactPersons()->delete();
+            $warehouse->delete();
+
+            return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function searchVendor(Request $request)
+    {
+        $warehouse = ScmWarehouse::query()
+            ->with('scmWarehouseContactPersons')
+            ->where('name', 'like', "%{$request->searchParam}%")
+            ->orderByDesc('name')
+            ->limit(10)
+            ->get();
+
+        return response()->success('Search result', $warehouse, 200);
     }
 }

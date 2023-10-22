@@ -9,5 +9,7 @@ class ScmWarehouseContactPerson extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'scm_warehouse_id', 'name', 'designation', 'phone', 'email', 'status', 'assign_date', 'end_date',
+    ];
 }
