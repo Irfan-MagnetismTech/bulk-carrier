@@ -94,6 +94,7 @@ onMounted(() => {
             <th>Joining Date</th>
             <th>Joining Port</th>
             <th>Duration(Months)</th>
+            <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -103,7 +104,6 @@ onMounted(() => {
             <td>{{ crwAssign?.opsVessel?.name }}</td>
             <td>{{ crwAssign?.crwCrew?.name }}</td>
             <td>{{ crwAssign?.position_onboard }}</td>
-            <td>Status</td>
             <td>{{ crwAssign?.date_of_joining }}</td>
             <td>{{ crwAssign?.port_of_joining }}</td>
             <td>{{ crwAssign?.port_of_joining }}</td>

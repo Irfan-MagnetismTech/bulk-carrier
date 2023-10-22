@@ -21,7 +21,8 @@ setTitle('Edit Assign Crew');
 watch(crewAssign, (value) => {
   if(value) {
     crewAssign.value.ops_vessel_name = crewAssign.value.opsVessel;
-    crewAssign.value.crw_crew_name = crewAssign.value.opsVessel;
+    crewAssign.value.crw_crew_name = crewAssign.value.crwCrew;
+    crewAssign.value.port_of_joining_name = crewAssign.value.port;
   }
 });
 

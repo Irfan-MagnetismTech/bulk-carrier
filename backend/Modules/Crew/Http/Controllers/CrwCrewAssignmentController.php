@@ -59,7 +59,7 @@ class CrwCrewAssignmentController extends Controller
     public function show(CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewAssignment, 200);
+            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrew','port'), 200);
         }
         catch (QueryException $e)
         {
