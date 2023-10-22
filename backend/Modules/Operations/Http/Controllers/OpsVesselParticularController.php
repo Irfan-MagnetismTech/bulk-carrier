@@ -49,6 +49,7 @@ class OpsVesselParticularController extends Controller
     */
     public function store(OpsVesselParticularRequest $request): JsonResponse
     {
+        // dd($request);
         try {
             DB::beginTransaction();
             $vesselParticular = $request->except(
