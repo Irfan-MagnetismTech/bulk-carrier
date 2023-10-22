@@ -8,7 +8,7 @@
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <form @submit.prevent="storeVesselParticular(vesselParticular)">
           <!-- Port Form -->
-          <vessel-particular-form v-model:form="vesselParticular" :errors="errors" :vesselParticularLineObject="vesselParticularLineObject"></vessel-particular-form>
+          <vessel-particular-form v-model:form="vesselParticular" :errors="errors" ></vessel-particular-form>
           <!-- Submit button -->
           <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
       </form>
@@ -22,7 +22,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useVesselParticular from '../../../composables/operations/useVesselParticular';
 const icons = useHeroIcon();
 
-const { vesselParticularLineObject, vesselParticular, storeVesselParticular, isLoading, errors } = useVesselParticular();
+const { vesselParticular, storeVesselParticular, isLoading, errors } = useVesselParticular();
 
 const { setTitle } = Title();
 
