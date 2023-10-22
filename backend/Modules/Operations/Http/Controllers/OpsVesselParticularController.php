@@ -80,7 +80,7 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('ops_vessel');
+        $vessel_particular->load('opsVessel');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);

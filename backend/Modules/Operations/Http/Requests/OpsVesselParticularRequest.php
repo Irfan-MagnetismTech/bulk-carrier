@@ -36,7 +36,7 @@ class OpsVesselParticularRequest extends FormRequest
             'email'             => ['required', 'string', 'max:255'],
             'lbc'               => ['required', 'string', 'max:255'],
             'previous_name'     => ['string', 'max:255'],
-            'call_sign'         => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
+            'call_sign'         => ['required','max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'owner_name'        => ['required', 'string', 'max:255'],
             'classification'    => ['required', 'alpha', 'max:50'],
             'flag'              => ['required', 'string', 'max:50'],

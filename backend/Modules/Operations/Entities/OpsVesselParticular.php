@@ -49,6 +49,6 @@ class OpsVesselParticular extends Model
 
     public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id', 'id');
     }
 }
