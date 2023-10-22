@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntItem;
+use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntRunHour;
 
 class MntRunHourController extends Controller
@@ -59,10 +60,11 @@ class MntRunHourController extends Controller
         try {
             $input = $request->all();
 
-            $mntItem = new MntItem();
+            $mntJob = new MntJob();
             // determine the items require to update 
             if ($input['mnt_item_id'][0] == "all") {
-                $removedItem = array_shift($input['itemGroupWiseHourlyItems']); // remove the first item which contains "all" to get all other items
+                // remove the first item which contains "all" to get other items
+                $removedItem = array_shift($input['itemGroupWiseHourlyItems']); 
                 $mntItemIds = $input['itemGroupWiseHourlyItems'];
             } else {
                 $mntItemIds = array_filter($input['itemGroupWiseHourlyItems'], function($item) use($input){
@@ -73,22 +75,25 @@ class MntRunHourController extends Controller
 
             //foreach item 
             foreach ($mntItemIds as $mntItemId) {
-                $presentRunHour = $mntItemId['present_run_hour'] + $input['present_run_hour'];
+                $presentRunHour = $mntItemId['present_run_hour'] + $input['running_hour'];
                 //update present run hour = previous run hour + present run hour
-                $mntItem->find($mntItemId['id'])->update(['present_run_hour' => $presentRunHour]);
+                $mntJobItem = $mntJob->find($mntItemId['id']);
 
                 // create run hour record
                 $runHour['ops_vessel_id'] = $input['ops_vessel_id'];
                 $runHour['mnt_item_id'] = $mntItemId['id'];
-                $runHour['previous_run_hour'] = $mntItemId['present_run_hour'];
+                $runHour['previous_run_hour'] = $mntJobItem['present_run_hour'];
+                $runHour['running_hour'] = $input['running_hour'];
                 $runHour['present_run_hour'] = $input['present_run_hour'];
                 $runHour['updated_on'] = $input['updated_on'];
                 $runHour['business_unit'] = $input['business_unit'];
-
                 $mntRunHour = MntRunHour::create($runHour);
+                if ($mntRunHour)
+                    $mntJobItem->update(['present_run_hour' => $presentRunHour]);// update mnt job for this item
+
             }
             
-            return response()->success('Run hour updated successfully', $mntRunHour, 201);
+            return response()->success('Run hour updated successfully', $mntItemIds, 201);
             
         }
         catch (\Exception $e)

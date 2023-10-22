@@ -42,4 +42,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-mnt-item-group-wise-hourly-items/{mntItemGroupId}', [MntItemController::class, 'getMntItemGroupWiseHourlyItems']);
     //get mnt ship department wise item groups 
     Route::get('get-mnt-ship-department-wise-item-groups/{mntShipDepartmentId}', [MntItemGroupController::class, 'getMntShipDepartmentWiseItemGroups']);
+    // get vessel item present hour
+    Route::get('get-item-present-run-hour/{opsVesselId}/{mntItemId}', [MntJobController::class, 'getItemPresentRunHour']);
 });

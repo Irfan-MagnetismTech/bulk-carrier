@@ -14,7 +14,7 @@ class MntRunHourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'running_hour' => 'required|integer',
         ];
     }
 
