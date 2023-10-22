@@ -25,7 +25,7 @@ class MntRunHourController extends Controller
                         ->whereIn('id',function ($query) {
                             $query->from('mnt_run_hours')
                                 ->select(DB::raw("MAX(id)"))
-                                ->groupBy('mnt_item_id');
+                                ->groupBy(['ops_vessel_id','mnt_item_id']);
                         })
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
