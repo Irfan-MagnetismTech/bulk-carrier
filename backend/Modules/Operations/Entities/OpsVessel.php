@@ -23,6 +23,7 @@ class OpsVessel extends Model
         'classification',
         'flag',
         'port_of_registry',
+        'delivery_date',
         'grt',
         'nrt',
         'dwt',
