@@ -84,13 +84,13 @@
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" required />
+            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span v-show="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
           <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" :value="(parseInt(form.previous_run_hour) + parseInt(form.running_hour))|| ''" placeholder="Present Run Hour" class="form-input" readonly />
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour <span v-show="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <input type="text" :value="form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0 ? form.present_run_hour :(parseInt(form.previous_run_hour) + parseInt(form.running_hour))|| '' " placeholder="Present Run Hour" class="form-input" :required="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -158,12 +158,11 @@ watch(() => props.form.mnt_item_group_name, (value) => {
 watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
   props.form.mnt_item_name = value;
-  console.log(props.form.form_type, value, value.length, props.form.form_type === 'create' && value.length == 1 && value[0].id !== 'all');
   // props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
-  if(props.form.form_type === 'create' && value.length == 1 && value[0].id !== 'all'){
+  if(props.form.form_type === 'create' && value?.length == 1 && value[0]?.id !== 'all'){
       getItemPresentRunHour(props.form.ops_vessel_id, value[0].id);
   }
-  else{
+  else if(props.form.form_type !== 'edit'){
     props.form.previous_run_hour = '';
     presentRunHour.value = '';
   }
@@ -172,7 +171,7 @@ watch(() => props.form.mnt_item_name, (value) => {
 });
 
 watch(()=> presentRunHour.value, (value) => {
-  props.form.previous_run_hour = (value == null ? 0 : '');
+  props.form.previous_run_hour = (value ? value.previous_run_hour : 0);
 });
 
 watch(() => itemGroupWiseHourlyItems.value, (value) => {
