@@ -85,7 +85,12 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" required />
+            <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" required />
+          <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <input type="text" :value="(parseInt(form.previous_run_hour) + parseInt(form.running_hour))|| ''" placeholder="Present Run Hour" class="form-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -121,6 +126,7 @@ const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartme
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
+const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -152,8 +158,21 @@ watch(() => props.form.mnt_item_group_name, (value) => {
 watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
   props.form.mnt_item_name = value;
-  props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
+  console.log(props.form.form_type, value, value.length, props.form.form_type === 'create' && value.length == 1 && value[0].id !== 'all');
+  // props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
+  if(props.form.form_type === 'create' && value.length == 1 && value[0].id !== 'all'){
+      getItemPresentRunHour(props.form.ops_vessel_id, value[0].id);
+  }
+  else{
+    props.form.previous_run_hour = '';
+    presentRunHour.value = '';
+  }
+
   props.form.mnt_item_id = value ? value.map(val=>val.id) : null;
+});
+
+watch(()=> presentRunHour.value, (value) => {
+  props.form.previous_run_hour = (value == null ? 0 : '');
 });
 
 watch(() => itemGroupWiseHourlyItems.value, (value) => {

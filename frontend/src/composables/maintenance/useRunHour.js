@@ -11,6 +11,7 @@ export default function useRunHour() {
     const runHours = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
+    const presentRunHour = ref('');
     const runHour = ref( {
         ops_vessel_id: '',
         ops_vessel_name: '',
@@ -21,7 +22,8 @@ export default function useRunHour() {
         mnt_item_id: [],
         mnt_item_name: '',
         previous_run_hour: '',
-        present_run_hour: '',
+        running_hour: '',
+        // present_run_hour: '',
         updated_on: '',
         itemGroupWiseItems: [],
         business_unit: '',
@@ -140,15 +142,36 @@ export default function useRunHour() {
         }
     }
 
+    async function getItemPresentRunHour(opsVesselId, mntItemId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-item-present-run-hour/${opsVesselId}/${mntItemId}`);
+            presentRunHour.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
     
     return {
         runHours,
         runHour,
+        presentRunHour,
         getRunHours,
         storeRunHour,
         showRunHour,
         updateRunHour,
         deleteRunHour,
+        getItemPresentRunHour,
         isLoading,
         errors,
     };

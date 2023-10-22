@@ -113,7 +113,7 @@ onMounted(() => {
             <td>{{ runHour?.opsVessel?.name }}</td>
             <td>{{ runHour?.mntItem?.mntItemGroup?.name }}</td>
             <td>{{ runHour?.mntItem?.name }}</td>
-            <td>{{ runHour?.mntItem?.present_run_hour }}</td>
+            <td>{{ runHour?.present_run_hour }}</td>
             <td><span :class="runHour?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ runHour?.business_unit }}</span></td>
             
             <td>
