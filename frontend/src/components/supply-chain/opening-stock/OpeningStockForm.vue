@@ -14,17 +14,17 @@
       materialObject: { type: Object, required: false },
     });
 
-    function addMaterial() {
-      props.form.materials.push(props.materialObject);
+    function addRow() {
+      props.form.scmOpeningStockLines.push(props.materialObject);
     }
 
-    function removeMaterial(index){
-      props.form.materials.splice(index, 1);
+    function removeRow(index){
+      props.form.scmOpeningStockLines.splice(index, 1);
     }
 
     function setMaterialOtherData(datas,index){
-      props.form.materials[index].unit = datas.unit;
-      props.form.materials[index].material_id = datas.id;
+      props.form.scmOpeningStockLines[index].unit = datas.unit;
+      props.form.scmOpeningStockLines[index].material_id = datas.id;
     }
 
 
@@ -38,7 +38,7 @@
     searchWarehouse(search, loading)
   }
 
-  watch(() => props.form.scm_warehouse, (value) => {
+  watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
     });
 </script>
@@ -48,16 +48,16 @@
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <input type="date" v-model="form.date" class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scm_warehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.warehouse"
+                  :required="!form.scmWarehouse"
                   v-bind="attributes"
                   v-on="events"
               />
@@ -81,13 +81,13 @@
       </thead>
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(material, index) in form.materials" :key="index">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.materials[index]" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.materials[index],index)">
+          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterials" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterials,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.materials[index]"
+                        :required="!form.scmOpeningStockLines[index].scmMaterials"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -95,21 +95,21 @@
             </v-select>
         </td>
         <td>
-          <input type="text" v-model="form.materials[index].unit" readonly class="vms-readonly-input block w-full form-input">
+          <input type="text" v-model="form.scmOpeningStockLines[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.materials[index].quantity" class="block w-full form-input">
+          <input type="text" v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.materials[index].rate" class="block w-full form-input">
+          <input type="text" v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
         </td>
         <td class="px-1 py-1 text-center">
-          <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button v-if="index!=0" type="button" @click="removeRow(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
             </svg>
           </button>
-          <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          <button v-else type="button" @click="addRow()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
