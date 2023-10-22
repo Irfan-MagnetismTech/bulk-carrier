@@ -189,4 +189,53 @@ class OpsExpenseHeadController extends Controller
         }
     }
 
+    public function getexpenseHeadByName(Request $request){
+        try {
+            $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')->whereIn('id', $request->head_id)->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->get()->toArray();
+                
+            $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')->where('is_visible_in_voyage_report', 1)
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->get()->toArray();
+
+            $output = collect(array_merge($heads, $globals));
+
+            $heads = $output->map(function($item, $key) {
+                if(($item['head_id'] == null) && (count($item['opsSubHeads']) > 0)) {
+                } else {
+                    return $item;
+                }
+            });
+        
+
+            $result = collect($heads)->map(function($item, $key) {
+                if(!empty($item)) {
+                    $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
+                    return $item;
+                }                
+            })->filter()->values();
+
+
+            return response()->success('Successfully retrieved expense head.', $result, 200);
+
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    
+    public function getSubHead($headId) {
+        try {
+            $subheads = OpsExpenseHead::where('head_id', $headId)->get();
+            return response()->json([
+                'value' => $subheads,
+                'message' => 'Expense Subheads derived successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
 }
