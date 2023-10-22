@@ -49,6 +49,7 @@ class OpsVesselParticularController extends Controller
     */
     public function store(OpsVesselParticularRequest $request): JsonResponse
     {
+        // dd($request);
         try {
             DB::beginTransaction();
             $vesselParticular = $request->except(
@@ -79,7 +80,7 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('ops_vessel');
+        $vessel_particular->load('opsVessel');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
@@ -149,7 +150,7 @@ class OpsVesselParticularController extends Controller
 
     public function getVesselParticularName(){
         try {
-            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();
+            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();
             return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
