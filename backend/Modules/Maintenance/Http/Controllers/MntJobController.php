@@ -166,7 +166,7 @@ class MntJobController extends Controller
         try {
 
             $item = MntJob::where(['mnt_item_id'=>$mntItemId, 'ops_vessel_id'=>$opsVesselId])
-                    ->first(['present_run_hour']);
+                    ->first(['present_run_hour as previous_run_hour']);
             return response()->success('Item retrieved successfully', $item, 200);
             
         }
