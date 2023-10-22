@@ -77,11 +77,15 @@ export default function useVesselParticular() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		let formData = new FormData();
+		formData.append('attachment', form.attachment);
+		formData.append('info', JSON.stringify(form));
+
 		try {
 			const { data, status } = await Api.post('/ops/vessel-particulars', form);
 			vesselParticular.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessel-particulars.index' });
+			router.push({ name: 'ops.vessel-particulars.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -116,14 +120,19 @@ export default function useVesselParticular() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		let formData = new FormData();
+		formData.append('attachment', form.attachment);
+		formData.append('info', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
 		try {
-			const { data, status } = await Api.put(
+			const { data, status } = await Api.post(
 				`/ops/vessel-particulars/${vesselParticularId}`,
-				form
+				formData
 			);
 			vesselParticular.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessel-particulars.index' });
+			router.push({ name: 'ops.vessel-particulars.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -176,6 +185,76 @@ export default function useVesselParticular() {
 		}
 	}
 
+	async function downloadGeneralParticular(vesselParticularId) {
+		axios({
+            url: '/api/v1/download-file/' + vesselParticularId,
+            data: searchParameter,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response) => {
+            let dateTime = new Date();
+
+            //stream pdf file to new tab start
+            let fileURL = URL.createObjectURL(response.data);
+            let a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.click();
+            //stream pdf file to new tab end
+        }).catch((error) => {
+            if (error.response.status === 422) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const data = JSON.parse(reader.result);
+                    const message = data.message;
+                    console.log("Response message: " + message);
+                    notification.showError(error.response.status, '', message);
+                }
+                reader.readAsText(error.response.data);
+            } else {
+                notification.showError(error.response.status, '', error.response.statusText);
+            }
+        }).finally(() => {
+            NProgress.done();
+            isLoading.value = false;
+        });
+	}
+
+	async function downloadChartererParticular(vesselParticularId) {
+		axios({
+            url: '/api/v1/download-file/' + vesselParticularId,
+            data: searchParameter,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response) => {
+            let dateTime = new Date();
+
+            //stream pdf file to new tab start
+            let fileURL = URL.createObjectURL(response.data);
+            let a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.click();
+            //stream pdf file to new tab end
+        }).catch((error) => {
+            if (error.response.status === 422) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const data = JSON.parse(reader.result);
+                    const message = data.message;
+                    console.log("Response message: " + message);
+                    notification.showError(error.response.status, '', message);
+                }
+                reader.readAsText(error.response.data);
+            } else {
+                notification.showError(error.response.status, '', error.response.statusText);
+            }
+        }).finally(() => {
+            NProgress.done();
+            isLoading.value = false;
+        });
+	}
+
 	return {
 		vesselParticulars,
 		vesselParticular,
@@ -185,6 +264,8 @@ export default function useVesselParticular() {
 		updateVesselParticular,
 		deleteVesselParticular,
 		getVesselParticularsByNameOrCode,
+		downloadGeneralParticular,
+		downloadChartererParticular,
 		isLoading,
 		errors,
 	};

@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVesselParticular from '../../../composables/operations/useVesselParticular';
-const { vesselParticulars, getVesselParticulars, deleteVesselParticular, isLoading } = useVesselParticular();
+const { vesselParticulars, getVesselParticulars, deleteVesselParticular, isLoading, downloadGeneralParticular, downloadChartererParticular } = useVesselParticular();
 
 const props = defineProps({
   page: {
@@ -38,6 +38,14 @@ function confirmDelete(id) {
         deleteVesselParticular(id);
     }
   })
+}
+
+function dlGeneralParticular(vesselParticularId) {
+  downloadGeneralParticular(vesselParticularId)
+}
+
+function dlChartererParticular(vesselParticularId) {
+  downloadChartererParticular(vesselParticularId)
 }
 
 onMounted(() => {
@@ -82,25 +90,49 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Tariff Name</th>
-            <th>Vessel</th>
-            <th>Loading Point</th>
-            <th>Unloading Point</th>
-            <th>Cargo Type</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Vessel Name</th>
+            <th>IMO</th>
+            <th>Class No</th>
+            <th>Official Number</th>
+            <th>Length (LBP)</th>
+            <th>LOA</th>
+            <th>Breadth</th>
+            <th>Depth (Moulded)</th>
+            <th>GRT</th>
+            <th>NRT</th>
+            <th>DWT</th>
+            <th>Tues Capacity</th>
+            <th class="w-80">Actions</th>
           </tr>
           </thead>
           <tbody v-if="vesselParticulars?.data?.length">
               <tr v-for="(vesselParticular, index) in vesselParticulars.data" :key="vesselParticular?.id">
                   <td>{{ vesselParticulars.from + index }}</td>
-                  <td>{{ vesselParticular?.tariff_name }}</td>
                   <td>{{ vesselParticular?.opsVessel?.name }}</td>
-                  <td>{{ vesselParticular?.loading_point }}</td>
-                  <td>{{ vesselParticular?.unloading_point }}</td>
-                  <td>{{ vesselParticular?.opsCargoType?.cargo_type }}</td>
-                  <td>{{ vesselParticular?.status }}</td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td>{{ vesselParticular?.imo }}</td>
+                  <td>{{ vesselParticular?.class_no }}</td>
+                  <td>{{ vesselParticular?.official_number }}</td>
+                  <td>{{ vesselParticular?.overall_length }}</td>
+                  <td>{{ vesselParticular?.loa }}</td>
+                  <td>{{ vesselParticular?.overall_width }}</td>
+                  <td>{{ vesselParticular?.depth_moulded }}</td>
+                  <td>{{ vesselParticular?.grt }}</td>
+                  <td>{{ vesselParticular?.nrt }}</td>
+                  <td>{{ vesselParticular?.dwt }}</td>
+                  <td>{{ vesselParticular?.tues_capacity }}</td>
+                  <td class="flex border-b-0 border-l-0 items-center justify-center space-x-2 text-gray-600 ">
+                      <button @click="dlGeneralParticular(vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                        General
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </button>
+                      <button @click="dlChartererParticular(vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                        Charterer
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </button>
                       <action-button :action="'edit'" :to="{ name: 'ops.vessel-particulars.edit', params: { vesselParticularId: vesselParticular.id } }"></action-button>
                       <action-button :action="'show'" :to="{ name: 'ops.vessel-particulars.show', params: { vesselParticularId: vesselParticular.id } }"></action-button>
                       <action-button @click="confirmDelete(vesselParticular.id)" :action="'delete'"></action-button>
