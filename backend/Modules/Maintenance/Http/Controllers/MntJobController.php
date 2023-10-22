@@ -56,16 +56,17 @@ class MntJobController extends Controller
         try {
             $jobInput['ops_vessel_id'] = $runHourInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_item_id'] = $runHourInput['mnt_item_id'] = $request->get('mnt_item_id');
+            $jobInput['present_run_hour'] = $runHourInput['present_run_hour'] = $request->get('present_run_hour') ?? '';
             $jobInput['business_unit'] = $runHourInput['business_unit'] = $request->get('business_unit');
 
             $jobLines = $request->get('mntJobLines');
             
-            $job = MntJob::create($jobInput);
-            $job->mntJobLines()->createMany($jobLines);
+            $job = MntJob::create($jobInput); // Create job
+            $job->mntJobLines()->createMany($jobLines); // create relevant job lines
 
             $mntItem = MntItem::where('id', $jobInput['mnt_item_id'])->first();
+            // Create run hour entry if the item has run hour
             if ($mntItem->has_run_hour == true) {
-                $runHourInput['present_run_hour'] = $mntItem->present_run_hour;
                 $runHourInput['updated_on'] = date('Y-m-d', strtotime($mntItem->updated_at));
                 $runHour = MntRunHour::create($runHourInput);
             }
@@ -121,6 +122,7 @@ class MntJobController extends Controller
             // var_dump($request->all());
             $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
+            $jobInput['present_run_hour'] = $request->get('present_run_hour') ?? '';
             $jobInput['business_unit'] = $request->get('business_unit');
 
             $jobLines = $request->get('mntJobLines');
@@ -151,6 +153,21 @@ class MntJobController extends Controller
             $job->delete();
             // todo: delete run hour item
             return response()->success('Job deleted successfully', $job, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getItemPresentRunHour($opsVesselId, $mntItemId)
+    {
+        try {
+
+            $item = MntJob::where(['mnt_item_id'=>$mntItemId, 'ops_vessel_id'=>$opsVesselId])
+                    ->first(['present_run_hour']);
+            return response()->success('Item retrieved successfully', $item, 200);
             
         }
         catch (\Exception $e)
