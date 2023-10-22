@@ -13,6 +13,13 @@ const { vendors, getVendors, deleteVendor, isLoading } = useVendor();
 
 const { setTitle } = Title();
 
+const props = defineProps({
+  page: {
+    type: Number,
+    default: 1,
+  },
+});
+
 setTitle('Vendors');
 
 const icons = useHeroIcon();
@@ -76,14 +83,18 @@ function confirmDelete(id) {
           <tr class="w-full">
             <th>#</th>
             <th>Name</th>
-            <th>Short Code</th>
+            <th>Origin</th>
+            <th>Contact</th>
+            <th>Email</th>
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(vendor,index) in vendors" :key="vendor.id">
+            <tr v-for="(vendor,index) in vendors.data" :key="vendor.id">
               <td>{{ index + 1 }}</td>
               <td>{{ vendor.name }}</td>
-              <td>{{ vendor.contact }}</td>
+              <td>{{ vendor.origin }}</td>
+              <td>{{ vendor.scmVendorContactPersons[0].phone }}</td>
+              <td>{{ vendor.scmVendorContactPersons[0].email }}</td>
               <td>
                 <action-button :action="'edit'" :to="{ name: 'scm.vendor.edit', params: { vendorId: vendor.id } }"></action-button>
                 <action-button @click="confirmDelete(vendor.id)" :action="'delete'"></action-button>

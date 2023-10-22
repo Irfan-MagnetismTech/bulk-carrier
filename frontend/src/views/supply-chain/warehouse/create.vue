@@ -22,7 +22,7 @@ setTitle('Create Warehouse');
         <default-button :title="'Warehouse List'" :to="{ name: 'scm.warehouse.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <form @submit.prevent="storeWarehouse(unit)">
+        <form @submit.prevent="storeWarehouse(warehouse)">
             <warehouse-form v-model:form="warehouse" :errors="errors"></warehouse-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>

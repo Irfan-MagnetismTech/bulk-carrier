@@ -2,81 +2,77 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
+    import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     
-    const { material, materials, getMaterials } = useMaterial();
+    const { material, materials, getMaterials,searchMaterial } = useMaterial();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
+      materialObject: { type: Object, required: false },
     });
 
     function addMaterial() {
-      let obj = {
-        material_id: '',
-        code: '',
-        unit: '',
-        quantity: 0.0,
-        rate: 0.0,
-      };
-      props.form.materials.push(obj);
+      props.form.materials.push(props.materialObject);
     }
 
     function removeMaterial(index){
       props.form.materials.splice(index, 1);
     }
 
-    function setMaterialOtherData(index){
-      let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-      props.form.materials[index].unit = material.unit;
-      props.form.materials[index].code = material.code;
-      props.form.materials[index].material_category_name = material.category.name;
+    function setMaterialOtherData(datas,index){
+      props.form.materials[index].unit = datas.unit;
+      props.form.materials[index].material_id = datas.id;
     }
 
-    //watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-    watch(() => props?.form?.materials, (newVal, oldVal) => {
-      let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.materials[index].amount = parseFloat((material?.unit_price * material?.quantity).toFixed(2));
-        total += props.form.materials[index].amount;
-      });
-      props.form.total_amount = parseFloat(total.toFixed(2));
-    }, { deep: true });
 
-    function handleAttachmentChange(e) {
-      let fileData = e.target.files[0];
-      props.form.attachment = fileData;
-    }
+  function fetchMaterials(search, loading) {
+    loading(true);
+    searchMaterial(search, loading)
+  }
 
-    onMounted(() => {
-      getMaterials();
+  function fetchWarehouse(search, loading) {
+    loading(true);
+    searchWarehouse(search, loading)
+  }
+
+  watch(() => props.form.scm_warehouse, (value) => {
+        props.form.scm_warehouse_id = value?.id;
     });
-
 </script>
 <template>
   <!-- Basic information -->
   <business-unit-input v-model="form.business_unit"></business-unit-input>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-1/4 mt-3 text-sm md:w-1/4">
-      <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.date" required class="block w-full form-input" />
-      <Error v-if="errors?.date" :errors="errors.date" />
-    </label>
-    <label class="block w-1/4 mt-3 text-sm md:w-1/4">
-      <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.date" required class="block w-full form-input" />
-      <Error v-if="errors?.date" :errors="errors.date" />
-    </label>
-  </div>
-
+  <div class="input-group !w-1/2">
+      <label class="label-group">
+          <span class="label-item-title">Date<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <Error v-if="errors?.date" :errors="errors.date"  />
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scm_warehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.warehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+          <Error v-if="errors?.unit" :errors="errors.unit" />
+      </label>
+  </div> 
   <!-- CS Materials -->
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Material</th>
-        <th class="px-4 py-3 align-bottom">Code</th>
+        <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
         <th class="px-4 py-3 align-bottom">Rate</th>
@@ -86,17 +82,20 @@
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(material, index) in form.materials" :key="index">
-        <td class="w-1/6">
-          <select v-model="form.materials[index].material_id" @change="setMaterialOtherData(index)" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
-            <option value="" disabled selected>Select</option>
-            <option :value="material.id" v-for="(material,index) in materials">{{ material.name }}</option>
-          </select>
+        <td>
+          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.materials[index]" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.materials[index],index)">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.materials[index]"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
         </td>
         <td>
-          <input type="text" v-model="form.materials[index].code" readonly class="vms-readonly-input block w-full form-input">
-        </td>
-        <td>
-          <input type="text" v-model="form.materials[index].unit" class="block w-full form-input">
+          <input type="text" v-model="form.materials[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
           <input type="text" v-model="form.materials[index].quantity" class="block w-full form-input">
@@ -116,13 +115,6 @@
             </svg>
           </button>
         </td>
-      </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
-        <td colspan="4" class="text-right font-bold p-2">Total Amount</td>
-        <td class="text-right">
-          <input type="text" readonly v-model="form.total_amount" class="vms-readonly-input block w-full form-input">
-        </td>
-        <td></td>
       </tr>
       </tbody>
     </table>

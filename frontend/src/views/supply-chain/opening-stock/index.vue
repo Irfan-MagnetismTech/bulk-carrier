@@ -29,9 +29,6 @@ const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
 const table = "opening_stocks";
 
-watch(searchKey, newQuery => {
-  getOpeningStocks(props.page, columns, searchKey.value, table);
-});
 const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);

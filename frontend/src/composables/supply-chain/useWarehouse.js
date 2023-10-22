@@ -17,12 +17,12 @@ export default function useWarehouse() {
         address: '',
         short_code: '',
         business_unit: '',
-        warehouse_contact_person: {
+        scmWarehouseContactPersons: [{
             name: '',
             designation: '',
-            contact_no: '',
+            phone: '',
             email: '',
-        },
+        }],
     });
 
     const indexPage = ref(null);
@@ -39,7 +39,7 @@ export default function useWarehouse() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/scm/Warehouse', {
+            const {data, status} = await Api.get('/scm/warehouses', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -69,7 +69,7 @@ export default function useWarehouse() {
             const { data, status } = await Api.post('/scm/warehouses', form);
             warehouse.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.warehouse.index" });
+            router.push({ name: "scm.warehouse.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -109,7 +109,7 @@ export default function useWarehouse() {
             );
             warehouse.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.warehouse.index" });
+            router.push({ name: "scm.warehouse.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

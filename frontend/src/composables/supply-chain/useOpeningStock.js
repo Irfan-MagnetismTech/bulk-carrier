@@ -13,7 +13,7 @@ export default function useOpeningStock() {
 
     const openingStock = ref( {
         date: '',
-        scm_warehouse_name: '',
+        scm_warehouse: '',
         scm_warehouse_id: '',
         business_unit: '',
         materials: [
@@ -27,7 +27,14 @@ export default function useOpeningStock() {
             }
         ],
     });
-
+    const materialObject = {
+        material_id: '',
+        material_name_with_code: '',
+        code: '',
+        unit: '',
+        quantity: 0.0,
+        rate: 0.0,
+      };
     
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
@@ -177,6 +184,7 @@ export default function useOpeningStock() {
         showOpeningStock,
         updateOpeningStock,
         deleteOpeningStock,
+        materialObject,
         isLoading,
         errors,
     };
