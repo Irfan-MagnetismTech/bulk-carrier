@@ -80,7 +80,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-ports', [OpsPortController::class, 'getPortByNameOrCode']);
     Route::get('search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeByName']);
     Route::get('search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffByName']);
-    Route::get('search-vessels', [OpsVesselController::class, 'getVesselByName']);
+    Route::get('search-vessels', [OpsVesselController::class, 'getVesselByNameorCode']);
     Route::get('search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationByName']);
     Route::get('search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateByReferenceNumber']);
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);

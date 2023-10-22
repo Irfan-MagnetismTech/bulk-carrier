@@ -3,6 +3,7 @@
 namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OpsVesselParticularRequest extends FormRequest
 {
