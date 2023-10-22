@@ -35,7 +35,7 @@ export default function useBalanceIncomeLine() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-ranks',{
+            const {data, status} = await Api.get('/acc/acc-balance-and-income-lines',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
@@ -58,10 +58,10 @@ export default function useBalanceIncomeLine() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-ranks', form);
+            const { data, status } = await Api.post('/acc/acc-balance-and-income-lines', form);
             balanceIncomeLine.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "acc.balance-income-lines.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -77,7 +77,7 @@ export default function useBalanceIncomeLine() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-ranks/${balanceIncomeLineId}`);
+            const { data, status } = await Api.get(`/acc/acc-balance-and-income-lines/${balanceIncomeLineId}`);
             balanceIncomeLine.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -96,12 +96,12 @@ export default function useBalanceIncomeLine() {
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-ranks/${balanceIncomeLineId}`,
+                `/acc/acc-balance-and-income-lines/${balanceIncomeLineId}`,
                 form
             );
             balanceIncomeLine.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.ranks.index" });
+            await router.push({ name: "acc.balance-income-lines.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -117,7 +117,7 @@ export default function useBalanceIncomeLine() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-ranks/${balanceIncomeLineId}`);
+            const { data, status } = await Api.delete( `/acc/acc-balance-and-income-lines/${balanceIncomeLineId}`);
             notification.showSuccess(status);
             await getBalanceIncomeLines(indexPage.value,indexBusinessUnit.value);
         } catch (error) {

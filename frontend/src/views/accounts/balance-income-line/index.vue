@@ -96,14 +96,14 @@ onMounted(() => {
           <tr v-for="(incomeLine,index) in balanceIncomeLines?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ incomeLine?.line_text }}</td>
-            <td>{{ incomeLine?.value_type }}</td>
-            <td>{{ incomeLine?.parent_id }}</td>
+            <td>{{ incomeLine?.value_type === 'D' ? 'Debit' : 'Credit' }}</td>
+            <td>{{ incomeLine?.parent_id ?? '---' }}</td>
             <td>{{ incomeLine?.line_type }}</td>
             <td>
               <span :class="incomeLine?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ incomeLine?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.ranks.edit', params: { rankId: incomeLine?.id } }"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'acc.balance-income-lines.edit', params: { balanceIncomeLineId: incomeLine?.id } }"></action-button>
               <action-button @click="confirmDelete(incomeLine?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
@@ -118,6 +118,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="balanceIncomeLines" to="crw.ranks.index" :page="page"></Paginate>
+    <Paginate :data="balanceIncomeLines" to="acc.balance-income-lines.index" :page="page"></Paginate>
   </div>
 </template>

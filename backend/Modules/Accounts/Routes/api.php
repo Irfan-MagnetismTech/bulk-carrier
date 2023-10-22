@@ -16,6 +16,7 @@ use Modules\Accounts\Http\Controllers\AccFixedAssetController;
 use Modules\Accounts\Http\Controllers\AccLoanController;
 use Modules\Accounts\Http\Controllers\AccSalaryController;
 use Modules\Accounts\Http\Controllers\AccSalaryHeadController;
+use Modules\Accounts\Http\Controllers\AccTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,20 +29,21 @@ use Modules\Accounts\Http\Controllers\AccSalaryHeadController;
 |
 */
 
-Route::middleware('auth:api')->get('/accounts', function (Request $request) {
+Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
+{
     Route::apiResource('acc-balance-and-income-lines', AccBalanceAndIncomeLineController::class);
-    Route::apiResource('acc-cost-centers', AccCostCenterController::class); 
-    Route::apiResource('acc-accounts', AccAccountController::class); 
+    Route::apiResource('acc-cost-centers', AccCostCenterController::class);
+    Route::apiResource('acc-accounts', AccAccountController::class);
     Route::apiResource('acc-account-opening-balances', AccAccountOpeningBalanceController::class);
-    Route::apiResource('acc-bank-accounts', AccBankAccountController::class); 
-    Route::apiResource('acc-cash-accounts', AccCashAccountController::class); 
-    Route::apiResource('acc-transactions', AccTransactionController::class); 
-    Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class); 
-    Route::apiResource('acc-loans', AccLoanController::class); 
-    Route::apiResource('acc-fixed-assets', AccFixedAssetController::class); 
-    Route::apiResource('acc-depreciations', AccDepreciationController::class); 
-    Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class); 
-    Route::apiResource('acc-advance-adjustments', AccAdvanceAdjustmentController::class); 
-    Route::apiResource('acc-salary-heads', AccSalaryHeadController::class); 
+    Route::apiResource('acc-bank-accounts', AccBankAccountController::class);
+    Route::apiResource('acc-cash-accounts', AccCashAccountController::class);
+    Route::apiResource('acc-transactions', AccTransactionController::class);
+    Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class);
+    Route::apiResource('acc-loans', AccLoanController::class);
+    Route::apiResource('acc-fixed-assets', AccFixedAssetController::class);
+    Route::apiResource('acc-depreciations', AccDepreciationController::class);
+    Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class);
+    Route::apiResource('acc-advance-adjustments', AccAdvanceAdjustmentController::class);
+    Route::apiResource('acc-salary-heads', AccSalaryHeadController::class);
     Route::apiResource('acc-salaries', AccSalaryController::class);
 });

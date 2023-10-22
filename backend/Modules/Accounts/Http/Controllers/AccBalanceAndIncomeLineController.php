@@ -18,8 +18,8 @@ class AccBalanceAndIncomeLineController extends Controller
     {
         try {
             $crwCrewRanks = AccBalanceAndIncomeLine::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+                $q->where('business_unit', request()->business_unit);
+            })->paginate(2);
 
             return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
         }
@@ -46,7 +46,7 @@ class AccBalanceAndIncomeLineController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -63,7 +63,7 @@ class AccBalanceAndIncomeLineController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -84,7 +84,7 @@ class AccBalanceAndIncomeLineController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -103,6 +103,6 @@ class AccBalanceAndIncomeLineController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 }
