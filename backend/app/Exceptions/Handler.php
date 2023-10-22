@@ -79,5 +79,7 @@ class Handler extends ExceptionHandler
          * Handle the error thrown by the application.
          */
         // $this->renderable(fn (Error $e, $request) => response()->error($e->getMessage(), 500));
+
+        // $this->renderable(fn (NotFoundHttpException $e)  => response()->json('Data not found!', 404));        
     }
 }

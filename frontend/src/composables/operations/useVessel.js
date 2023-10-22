@@ -13,11 +13,46 @@ export default function useVessel() {
 	const vesselName = ref([]);
 	const voyageVessels = ref([]);
 	const notification = useNotification();
-	const vessel = ref({});
+	const vessel = ref({
+		vessel_type: '',
+		name: '',
+		previous_name: '',
+		short_code: '',
+		call_sign: '',
+		owner_name: '',
+		manager: '',
+		classification: '',
+		flag: '',
+		previous_flag: '',
+		port_of_registry: '',
+		delivery_date: '',
+		nrt: '',
+		dwt: '',
+		imo: '',
+		grt: '',
+		official_number: '',
+		keel_laying_date: '',
+		launching_date: '',
+		mmsi: '',
+		overall_length: '',
+		overall_width: '',
+		year_built: '',
+		capacity: '',
+		total_cargo_hold: '',
+		live_tracking_config: '',
+		remarks: '',
+		opsVesselCertificates: [],
+		opsBunkers: []
+	});
+	const maritimeCertificateObject = {
+		ops_vessel_certificate_id: '',
+		certificate_type: '',
+		validity: ''
+	}
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getVessels(page,columns = null, searchKey = null, table = null) {
+	async function getVessels(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -26,9 +61,7 @@ export default function useVessel() {
 			const { data, status } = await Api.get('/ops/vessels', {
 				params: {
 					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
+					business_unit: businessUnit,
 				},
 			});
 			vessels.value = data.value;
@@ -47,6 +80,11 @@ export default function useVessel() {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
+
+		form.opsVesselCertificates.map((element) => {
+			element.ops_maritime_certification_id = element.id
+			element.business_unit = form.business_unit
+		})
 
 		try {
 			const { data, status } = await Api.post('/ops/vessels', form);
@@ -87,6 +125,11 @@ export default function useVessel() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		form.opsVesselCertificates.map((element) => {
+			element.ops_maritime_certification_id = element.id
+			element.business_unit = form.business_unit
+		})
+		
 		try {
 			const { data, status } = await Api.put(
 				`/ops/vessels/${vesselId}`,
@@ -181,11 +224,29 @@ export default function useVessel() {
 		}
 	}
 
+	async function getVesselsWithoutPaginate(businessUnit) {
+		NProgress.start();
+		isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-vessels?business_unit=${businessUnit}`);
+			vessels.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			NProgress.done();
+		}
+	}
+
 	return {
 		vessels,
 		vessel,
 		vesselName,
 		getVessels,
+		maritimeCertificateObject,
 		storeVessel,
 		showVessel,
 		updateVessel,
@@ -194,6 +255,7 @@ export default function useVessel() {
 		getVesselsByNameOrCode,
 		voyageVessels,
 		getVesselsByVoyage,
+		getVesselsWithoutPaginate,
 		isLoading,
 		errors,
 	};

@@ -98,11 +98,6 @@ export default function useService() {
     }
 
     async function deleteService(serviceId) {
-
-        if (!confirm('Are you sure you want to delete this service?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 

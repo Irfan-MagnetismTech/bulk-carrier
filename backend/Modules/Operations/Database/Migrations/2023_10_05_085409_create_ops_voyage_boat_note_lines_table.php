@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->dateTime('discharge_date');
             $table->text('attachment');
-             $table->timestamps();
+            $table->timestamps();
         });
     }
 

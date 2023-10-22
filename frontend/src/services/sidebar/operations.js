@@ -64,6 +64,16 @@ export default [
                 ],
             },
             {
+                route: 'ops.vessels.index',
+                label: 'Vessels',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
                 route: '',
                 label: 'Certification',
                 preIcon: '',
