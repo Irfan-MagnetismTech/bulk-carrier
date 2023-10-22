@@ -75,7 +75,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-customer-invoices', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
     Route::get('get-cash-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
     Route::get('get-bunker-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
-    Route::get('get-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadWithoutPaginate']);
+    Route::get('get-expense-heads', [OpsCommonController::class, 'getExpenseHeadWithoutPaginate']);
    //end for without pagination
 
     // start for search api route

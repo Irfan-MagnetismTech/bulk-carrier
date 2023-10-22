@@ -25,6 +25,7 @@ use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Entities\OpsCustomerInvoice;
 use Modules\Operations\Entities\OpsCashRequisition;
+use Modules\Operations\Entities\OpsExpenseHead;
 
 class OpsCommonController extends Controller
 {
@@ -300,7 +301,7 @@ class OpsCommonController extends Controller
             $cashRequisitions = OpsCashRequisition::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
-            ->latest()->get();        
+            ->latest()->get();
             return response()->success('Successfully retrieved cash requisitions.', $cashRequisitions, 200);
         }
         catch (QueryException $e)
@@ -327,7 +328,7 @@ class OpsCommonController extends Controller
     }
 
     // To get Expense Head data
-    public function getBunkerRequisitionWithoutPaginate(Request $request)
+    public function getExpenseHeadWithoutPaginate(Request $request)
     {
         try
         {
@@ -336,7 +337,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved expense head.', $bunkerRequisitions, 200);
+            return response()->success('Successfully retrieved expense heads.', $expenseHeads, 200);
         }
         catch (QueryException $e)
         {
