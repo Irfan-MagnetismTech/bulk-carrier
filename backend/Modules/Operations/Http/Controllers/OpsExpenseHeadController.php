@@ -31,7 +31,9 @@ class OpsExpenseHeadController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $expenseHeads = OpsExpenseHead::whereNull('head_id')->with('opsSubHeads')->get();
+            $expenseHeads = OpsExpenseHead::whereNull('head_id')
+            ->with('opsSubHeads')
+            ->latest()->paginate(15);
 
             return response()->success('Successfully retrieved expense heads.', $expenseHeads, 200);
         }
@@ -50,10 +52,10 @@ class OpsExpenseHeadController extends Controller
      */
      public function store(OpsExpenseHeadRequest $request): JsonResponse
      {
-         try {
-             DB::beginTransaction();
- 
-             $actualSubHeads = collect($request->opsSubHeads)->map(function ($item, $key) {
+        try {
+            DB::beginTransaction();
+
+            $actualSubHeads = collect($request->opsSubHeads)->map(function ($item, $key) {
                 if(!empty($item['name'])) {
                     return $item;
                 }
@@ -77,12 +79,12 @@ class OpsExpenseHeadController extends Controller
             }
             DB::commit();
             return response()->success('Expense head added successfully.', $expenseHead, 201);
-         }
-         catch (QueryException $e)
-         {
-             DB::rollBack();
-             return response()->error($e->getMessage(), 500);
-         }
+        }
+            catch (QueryException $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
      }
  
      /**
@@ -177,11 +179,11 @@ class OpsExpenseHeadController extends Controller
     {
         try
         {
-        $expense_head->delete();
+            $expense_head->delete();
 
-        return response()->json([
-            'message' => 'Successfully deleted expense head.',
-        ], 204);
+            return response()->json([
+                'message' => 'Successfully deleted expense head.',
+            ], 204);
         }
         catch (QueryException $e)
         {
@@ -189,13 +191,15 @@ class OpsExpenseHeadController extends Controller
         }
     }
 
-    public function getexpenseHeadByName(Request $request){
+    public function getExpenseHeadByHead(Request $request){
         try {
-            $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')->whereIn('id', $request->head_id)->when(request()->business_unit != "ALL", function($q){
+            $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+            ->where('id', $request->head_id)->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->get()->toArray();
                 
-            $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')->where('is_visible_in_voyage_report', 1)
+            $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+            ->where('is_visible_in_voyage_report', 1)
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->get()->toArray();
@@ -208,7 +212,6 @@ class OpsExpenseHeadController extends Controller
                     return $item;
                 }
             });
-        
 
             $result = collect($heads)->map(function($item, $key) {
                 if(!empty($item)) {
@@ -216,7 +219,6 @@ class OpsExpenseHeadController extends Controller
                     return $item;
                 }                
             })->filter()->values();
-
 
             return response()->success('Successfully retrieved expense head.', $result, 200);
 

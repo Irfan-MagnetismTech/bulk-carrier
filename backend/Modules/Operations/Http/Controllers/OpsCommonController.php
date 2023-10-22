@@ -308,12 +308,31 @@ class OpsCommonController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
     // To get bunker Requisition data
     public function getBunkerRequisitionWithoutPaginate(Request $request)
     {
         try
         {
             $bunkerRequisitions = OpsBunkerRequisition::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();        
+            return response()->success('Successfully retrieved bunker requisitions.', $bunkerRequisitions, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // To get Expense Head data
+    public function getBunkerRequisitionWithoutPaginate(Request $request)
+    {
+        try
+        {
+            $expenseHeads = OpsExpenseHead::whereNull('head_id')->with('opsSubHeads')
+            ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        

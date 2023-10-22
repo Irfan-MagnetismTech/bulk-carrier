@@ -53,6 +53,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'cash-requisitions' => OpsCashRequisitionController::class,
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
+        'expense-heads' => OpsExpenseHeadController::class,
     ]);
 
     //start for without pagination
@@ -74,6 +75,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-customer-invoices', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
     Route::get('get-cash-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
     Route::get('get-bunker-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
+    Route::get('get-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadWithoutPaginate']);
    //end for without pagination
 
     // start for search api route
@@ -87,6 +89,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByVoyageNo']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
+    Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
     
     // end for search api route
 

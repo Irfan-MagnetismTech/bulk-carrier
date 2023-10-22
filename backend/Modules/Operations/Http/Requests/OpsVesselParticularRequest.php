@@ -7,6 +7,14 @@ use Illuminate\Validation\Rule;
 
 class OpsVesselParticularRequest extends FormRequest
 {
+    protected function prepareForValidation(){
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        $this->replace($mergeData);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,13 +22,11 @@ class OpsVesselParticularRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this);
         return [  
             'ops_vessel_id'     => ['required', 'numeric', 'max:20'],
             'vessel_type'       => ['required', 'string', 'max:255'],
             'depth'             => ['required', 'string', 'max:255'],
             'class_no'          => ['required', 'string', 'max:255'],
-            'attachment'        => ['string'],
             'loa'               => ['required', 'numeric', 'max:255'],
             'depth'             => ['required', 'numeric', 'max:255'],
             'ecdis_type'        => ['required', 'string', 'max:255'],
@@ -30,7 +36,7 @@ class OpsVesselParticularRequest extends FormRequest
             'email'             => ['required', 'string', 'max:255'],
             'lbc'               => ['required', 'string', 'max:255'],
             'previous_name'     => ['string', 'max:255'],
-            'call_sign'         => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
+            'call_sign'         => ['required','max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'owner_name'        => ['required', 'string', 'max:255'],
             'classification'    => ['required', 'alpha', 'max:50'],
             'flag'              => ['required', 'string', 'max:50'],

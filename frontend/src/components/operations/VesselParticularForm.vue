@@ -246,14 +246,44 @@
       
     </div>
 
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <h2 class="text-gray-600 dark:text-gray-300 text-2xl font-semibold py-3 text-center">
+        Attachment (Vessel Particular For Charterer)
+      </h2>
+
+        <template v-if="form.attachment">
+           <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.attachment">{{
+            (typeof $props.form?.attachment === 'string')
+                ? '('+$props.form?.attachment.split('/').pop()+')'
+                : ''
+          }}</a>
+        </template>
+      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+    </label>
+  </div>
+
 
 </template>
 <script setup>
+<<<<<<< HEAD
 import { watch } from "vue";
+=======
+import { ref, computed, watch } from "vue";
+>>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import usePort from '../../composables/operations/usePort';
 import useVessel from '../../composables/operations/useVessel';
+<<<<<<< HEAD
+=======
+import DropZoneV2 from '../../components/DropZoneV2.vue';
+import {useStore} from "vuex";
+import env from '../../config/env';
+
+const store = useStore();
+const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+>>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
 
 const props = defineProps({
     form: {
@@ -323,6 +353,14 @@ watch(() => vessel, (value) => {
   props.form.capacity = value.value?.capacity;
 }, {deep: true})
 
+<<<<<<< HEAD
+=======
+watch(dropZoneFile, (value) => {
+  if (value !== null && value !== undefined) {
+    props.form.attachment = value;
+  }
+});
+>>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
 
 </script>
 <style lang="postcss" scoped>
