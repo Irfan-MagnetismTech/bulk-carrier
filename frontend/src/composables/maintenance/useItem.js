@@ -24,7 +24,6 @@ export default function useItem() {
         item_code: '',
         description: [{ key: '', value: '' }],
         has_run_hour: false,
-        present_run_hour: 0,
         business_unit: '',
         form_type: 'create'
     });

@@ -20,10 +20,12 @@ export default function useItemGroup() {
         mnt_item_group_name: '',
         mnt_item_name: '',
         mnt_item_id: '',
+        present_run_hour: 0,
         mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', next_due: '', remarks: '' }],
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',
+        form_type: 'create'
     });
 
     const indexPage = ref(null);

@@ -45,6 +45,8 @@
 
     job.value.mnt_items = value?.mntItem?.mntItemGroup?.mntItems;
     job.value.mnt_item_name = value?.mntItem;
+
+    job.value.form_type = 'edit';
   });
   
   onMounted(() => {

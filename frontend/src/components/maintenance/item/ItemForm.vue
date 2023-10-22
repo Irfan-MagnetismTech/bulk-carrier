@@ -118,13 +118,7 @@
         </label>        
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.has_run_hour">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour</span>
-            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :disabled="form.form_type === 'edit'" />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
-        </label>        
-    </div>
+    
 </template>
 <script setup>
 import Error from "../../Error.vue";
