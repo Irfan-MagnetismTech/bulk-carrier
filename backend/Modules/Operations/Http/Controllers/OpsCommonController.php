@@ -336,7 +336,7 @@ class OpsCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->get();        
-            return response()->success('Successfully retrieved bunker requisitions.', $bunkerRequisitions, 200);
+            return response()->success('Successfully retrieved expense head.', $bunkerRequisitions, 200);
         }
         catch (QueryException $e)
         {
