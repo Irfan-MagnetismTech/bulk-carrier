@@ -36,4 +36,6 @@ const formType = 'edit';
 onMounted(() => {
   showVesselParticular(vesselParticularId);
 });
+
+
 </script>

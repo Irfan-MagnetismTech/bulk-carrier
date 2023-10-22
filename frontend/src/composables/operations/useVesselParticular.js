@@ -82,7 +82,7 @@ export default function useVesselParticular() {
 		formData.append('info', JSON.stringify(form));
 
 		try {
-			const { data, status } = await Api.post('/ops/vessel-particulars', form);
+			const { data, status } = await Api.post('/ops/vessel-particulars', formData);
 			vesselParticular.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.vessel-particulars.index' });
