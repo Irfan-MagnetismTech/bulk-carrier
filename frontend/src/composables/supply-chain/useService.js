@@ -28,7 +28,7 @@ export default function useService() {
         indexPage.value = page;
 
         try {
-            const {data, status} = await Api.get('/scm/Service', {
+            const {data, status} = await Api.get('/scm/services', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -73,7 +73,7 @@ export default function useService() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/services/${vendorId}`);
+            const { data, status } = await Api.get(`/scm/services/${serviceId}`);
             service.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

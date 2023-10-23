@@ -1,5 +1,5 @@
 <script setup>
-import ServiceForm from '../../../components/supply-chain/supply-chain/ServiceForm.vue';
+import ServiceForm from '../../../components/supply-chain/service/ServiceForm.vue';
 import {ref} from "vue";
 import { onMounted } from '@vue/runtime-core';
 import Title from "../../../services/title";

@@ -21,7 +21,7 @@ export default function useOpeningStock() {
         business_unit: '',
         scmOpeningStockLines: [
             {
-                scmMaterials: '',
+                scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
                 quantity: 0.0,
@@ -30,7 +30,7 @@ export default function useOpeningStock() {
         ],
     });
     const materialObject = {
-        scmMaterials: '',
+        scmMaterial: '',
         scm_material_id: '',
         unit: '',
         quantity: 0.0,
@@ -118,7 +118,11 @@ export default function useOpeningStock() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', form);
+            // const { data, status } = await Api.put('/scm/opening-stocks', form);
+            const { data, status } = await Api.put(
+				`/scm/opening-stocks/${openingStockId}`,
+				form
+			);
             openingStock.value = data.value;
             notification.showSuccess(status);
             router.push({ name: "scm.opening-stock.index" });

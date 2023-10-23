@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 
-const { getOpeningStocks, openingStocks, deleteService, isLoading } = useOpeningStock();
+const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading } = useOpeningStock();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const { numberFormat } = useHelper();
@@ -60,7 +60,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteService(id);
+            deleteOpeningStock(id);
           }
         })
       }

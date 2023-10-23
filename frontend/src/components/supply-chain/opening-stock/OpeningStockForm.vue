@@ -85,11 +85,11 @@
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterials" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterials,index)">
+          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmOpeningStockLines[index].scmMaterials"
+                        :required="!form.scmOpeningStockLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
