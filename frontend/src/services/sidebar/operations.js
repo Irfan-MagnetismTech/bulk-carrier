@@ -83,6 +83,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
+            
             // {
             //     route: '',
             //     label: 'Voyages',
@@ -153,7 +154,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.index',
                         label: 'Vessel Wise Certificate',
                         preIcon: '',
                         postIcon: icons.DownArrow,
