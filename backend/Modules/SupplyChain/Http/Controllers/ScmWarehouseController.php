@@ -38,7 +38,6 @@ class ScmWarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        // return response()->json($request->all(), 422);
         try {
             DB::beginTransaction();
             $scm_warehouse = ScmWarehouse::create($request->all());
@@ -106,14 +105,19 @@ class ScmWarehouseController extends Controller
         }
     }
 
-    public function searchVendor(Request $request)
+    public function searchWarehouse(Request $request)
     {
-        $warehouse = ScmWarehouse::query()
-            ->with('scmWarehouseContactPersons')
-            ->where('name', 'like', "%{$request->searchParam}%")
-            ->orderByDesc('name')
-            ->limit(10)
-            ->get();
+        if ($request->business_unit != 'ALL') {
+            $warehouse = ScmWarehouse::query()
+                ->with('scmWarehouseContactPersons')
+                ->whereBusinessUnit($request->business_unit)
+                ->whereName('like', "%{$request->searchParam}%")
+                ->orderByDesc('name')
+                ->limit(10)
+                ->get();
+        } else {
+            $warehouse = [];
+        }
 
         return response()->success('Search result', $warehouse, 200);
     }
