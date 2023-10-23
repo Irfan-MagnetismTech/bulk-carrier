@@ -137,4 +137,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessels/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Vessel Particulars */
+	{
+		path: `/${BASE}/vessel-particulars`,
+		name: `${BASE}.vessel-particulars.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-particulars/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-particulars/create`,
+		name: `${BASE}.vessel-particulars.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-particulars/:vesselParticularId/edit`,
+		name: `${BASE}.vessel-particulars.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-particulars/:vesselParticularId/show`,
+		name: `${BASE}.vessel-particulars.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
