@@ -266,32 +266,28 @@
 
 </template>
 <script setup>
-<<<<<<< HEAD
-import { watch } from "vue";
-=======
 import { ref, computed, watch } from "vue";
->>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import usePort from '../../composables/operations/usePort';
 import useVessel from '../../composables/operations/useVessel';
-<<<<<<< HEAD
-=======
+
 import DropZoneV2 from '../../components/DropZoneV2.vue';
 import {useStore} from "vuex";
 import env from '../../config/env';
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
->>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
+
+const editInitiated = ref(false);
 
 const props = defineProps({
     form: {
         required: false,
-        default: {}
+        default: {},
     },
     errors: { type: [Object, Array], required: false },
-    maritimeCertificateObject: { type: Object, required: false }
+    formType: { type: String, required : false }
 });
 
 const { ports, searchPorts } = usePort();
@@ -314,53 +310,56 @@ watch(() => props.form, (value) => {
     vessels.value = [props?.form?.opsVessel]
 
     if(vessels.value.length > 0) {
-      editInitiated.value = true
-    }
+        console.log("Changing editInitatedValue ")
+        editInitiated.value = true
+      }
   }
 }, {deep: true});
 
 watch(() => props.form.ops_vessel_id, (value) => {
   if(value) {
-    showVessel(value)
+    if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+      console.log("showing vessel")
+      showVessel(value)
+    }
   }
 }, {deep: true})
 
 watch(() => vessel, (value) => {
-  props.form.business_unit = value.value?.business_unit;
-  props.form.vessel_type = value.value?.vessel_type;
-  props.form.owner_name = value.value?.owner_name;
-  props.form.previous_name = value.value?.previous_name;
-  props.form.short_code = value.value?.short_code;
-  props.form.call_sign = value.value?.call_sign;
-  props.form.manager = value.value?.manager;
-  props.form.classification = value.value?.classification;
-  props.form.flag = value.value?.flag;
-  props.form.previous_flag = value.value?.previous_flag;
-  props.form.delivery_date = value.value?.delivery_date;
-  props.form.grt = value.value?.grt;
-  props.form.nrt = value.value?.nrt;
-  props.form.dwt = value.value?.dwt;
-  props.form.imo = value.value?.imo;
-  props.form.official_number = value.value?.official_number;
-  props.form.keel_laying_date = value.value?.keel_laying_date;
-  props.form.launching_date = value.value?.launching_date;
-  props.form.mmsi = value.value?.mmsi;
-  props.form.overall_length = value.value?.overall_length;
-  props.form.overall_width = value.value?.overall_width;
-  props.form.year_built = value.value?.year_built;
-  props.form.port_of_registry = value.value?.port_of_registry;
-  props.form.total_cargo_hold = value.value?.total_cargo_hold;
-  props.form.capacity = value.value?.capacity;
+          props.form.business_unit = value.value?.business_unit;
+          props.form.vessel_type = value.value?.vessel_type;
+          props.form.owner_name = value.value?.owner_name;
+          props.form.previous_name = value.value?.previous_name;
+          props.form.short_code = value.value?.short_code;
+          props.form.call_sign = value.value?.call_sign;
+          props.form.manager = value.value?.manager;
+          props.form.classification = value.value?.classification;
+          props.form.flag = value.value?.flag;
+          props.form.previous_flag = value.value?.previous_flag;
+          props.form.delivery_date = value.value?.delivery_date;
+          props.form.grt = value.value?.grt;
+          props.form.nrt = value.value?.nrt;
+          props.form.dwt = value.value?.dwt;
+          props.form.imo = value.value?.imo;
+          props.form.official_number = value.value?.official_number;
+          props.form.keel_laying_date = value.value?.keel_laying_date;
+          props.form.launching_date = value.value?.launching_date;
+          props.form.mmsi = value.value?.mmsi;
+          props.form.overall_length = value.value?.overall_length;
+          props.form.overall_width = value.value?.overall_width;
+          props.form.year_built = value.value?.year_built;
+          props.form.port_of_registry = value.value?.port_of_registry;
+          props.form.total_cargo_hold = value.value?.total_cargo_hold;
+          props.form.capacity = value.value?.capacity;
+  
+
 }, {deep: true})
 
-<<<<<<< HEAD
-=======
 watch(dropZoneFile, (value) => {
   if (value !== null && value !== undefined) {
     props.form.attachment = value;
   }
 });
->>>>>>> 4318655232053902eae5682e508a59fd2eeafe96
 
 </script>
 <style lang="postcss" scoped>

@@ -18,28 +18,39 @@ export default function useVendor() {
         vendor_type: '',
         product_source_type: '',
         product_type: '',
-        warehouse_contact_persons: {
+        scmVendorContactPersons: [{
             name:'',
-            contact: '',
+            designation:'',
+            phone: '',
             email: ''
-        },
+        }],
         
     });
 
+    const indexPage = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getVendors() {
+    async function getVendors(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/Vendor');
+            const {data, status} = await Api.get('/scm/vendors', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             vendors.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
-            const { data, status } = error.response;
+            const { status } = error.response;
             notification.showError(status);
         } finally {
             loader.hide();
@@ -57,7 +68,7 @@ export default function useVendor() {
             const { data, status } = await Api.post('/scm/vendors', form);
             vendor.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.vendor.index" });
+            router.push({ name: "scm.vendor.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -67,7 +78,7 @@ export default function useVendor() {
         }
     }
 
-    async function showVendor(vendrId) {
+    async function showVendor(vendorId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
@@ -97,7 +108,7 @@ export default function useVendor() {
             );
             vendor.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.vendor.index" });
+            router.push({ name: "scm.vendor.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -108,18 +119,13 @@ export default function useVendor() {
     }
 
     async function deleteVendor(vendorId) {
-
-        if (!confirm('Are you sure you want to delete this vendor?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/scm/vendors/${vendorId}`);
             notification.showSuccess(status);
-            await getVendors();
+            await getVendors(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

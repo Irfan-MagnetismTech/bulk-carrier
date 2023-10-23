@@ -16,16 +16,26 @@ export default function useService() {
         description: ''
     });
 
+    const indexPage = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getServices() {
+    async function getServices(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/Service');
+            const {data, status} = await Api.get('/scm/services', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -47,7 +57,7 @@ export default function useService() {
             const { data, status } = await Api.post('/scm/services', form);
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.service.index" });
+            router.push({ name: "scm.service.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -63,7 +73,7 @@ export default function useService() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/services/${vendorId}`);
+            const { data, status } = await Api.get(`/scm/services/${serviceId}`);
             service.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -87,7 +97,7 @@ export default function useService() {
             );
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.service.index" });
+            router.push({ name: "scm.service.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -98,18 +108,13 @@ export default function useService() {
     }
 
     async function deleteService(serviceId) {
-
-        if (!confirm('Are you sure you want to delete this service?')) {
-            return;
-        }
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/scm/services/${serviceId}`);
             notification.showSuccess(status);
-            await getServices();
+            await getServices(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

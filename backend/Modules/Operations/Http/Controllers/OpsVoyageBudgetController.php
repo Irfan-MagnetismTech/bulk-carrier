@@ -106,7 +106,7 @@ class OpsVoyageBudgetController extends Controller
                 'opsVoyageBudgetEntries',
             );
             
-            $voyage_budget->update($voyage_budget_info);            
+            $voyage_budget->update($voyage_budget_info);  
             $voyage_budget->opsVoyageBudgetEntries()->createUpdateOrDelete($request->opsVoyageBudgetEntries);
             DB::commit();
             return response()->success('Voyage budget updated successfully.', $voyage_budget, 200);

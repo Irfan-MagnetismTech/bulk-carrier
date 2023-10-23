@@ -9,6 +9,9 @@ import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVesselParticular from '../../../composables/operations/useVesselParticular';
 const { vesselParticulars, getVesselParticulars, deleteVesselParticular, isLoading, downloadGeneralParticular, downloadChartererParticular } = useVesselParticular();
+import Store from './../../../store/index.js';
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   page: {
@@ -23,6 +26,9 @@ setTitle('Vessel Particular List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+function setBusinessUnit($el){
+  businessUnit.value = $el.target.value;
+}
 
 function confirmDelete(id) {
   Swal.fire({
@@ -50,7 +56,7 @@ function dlChartererParticular(vesselParticularId) {
 
 onMounted(() => {
   watchEffect(() => {
-    getVesselParticulars(props.page)
+    getVesselParticulars(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -75,6 +81,15 @@ onMounted(() => {
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
+    <div class="relative w-full">
+      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
+      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
+      >
+        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
+        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
+        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
+      </select>
+    </div>
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
@@ -143,10 +158,10 @@ onMounted(() => {
           
           <tfoot v-if="!vesselParticulars?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="14">Loading...</td>
           </tr>
           <tr v-else-if="!vesselParticulars?.data?.length">
-            <td colspan="6">No data found.</td>
+            <td colspan="14">No data found.</td>
           </tr>
           </tfoot>
       </table>

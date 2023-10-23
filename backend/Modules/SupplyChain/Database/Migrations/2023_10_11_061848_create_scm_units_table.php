@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -17,9 +18,28 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('short_code')->unique()->nullable();
-            $table->softDeletes();  
             $table->timestamps();
         });
+
+        // Insert seed data
+        DB::table('scm_units')->insert([
+            [
+                'name' => 'KG',
+                'short_code' => 'kg',
+            ],
+            [
+                'name' => 'TON',
+                'short_code' => 'ton',
+            ],
+            [
+                'name' => 'Meter',
+                'short_code' => 'meter',
+            ],
+            [
+                'name' => 'Liter',
+                'short_code' => 'liter',
+            ]
+        ]);
     }
 
     /**
