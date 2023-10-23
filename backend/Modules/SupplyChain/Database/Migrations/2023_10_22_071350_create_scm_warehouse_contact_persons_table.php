@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_vendor_contact_people', function (Blueprint $table) {
+        Schema::create('scm_warehouse_contact_persons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('scm_vendor_id')->constrained('scm_vendors');
+            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
             $table->string('name');
             $table->string('designation')->nullable();
             $table->string('phone')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_vendor_contact_people');
+        Schema::dropIfExists('scm_warehouse_contact_persons');
     }
 };

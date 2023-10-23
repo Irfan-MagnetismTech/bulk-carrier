@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_opening_stock_lines', function (Blueprint $table) {
+        Schema::create('scm_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('scm_opening_stock_id')->constrained('scm_opening_stocks')->nullable();
-            $table->foreignId('scm_material_id')->constrained('scm_materials')->nullable();
-            $table->decimal('rate')->nullable();
-            $table->bigInteger('quantity')->nullable();
+            
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_opening_stock_lines');
+        Schema::dropIfExists('scm_services');
     }
 };
