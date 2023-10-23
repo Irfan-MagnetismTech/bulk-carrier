@@ -4,7 +4,7 @@ namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OpsVesselCertificateRequest extends FormRequest
+class OpsVesselExpenseHeadRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,14 +14,8 @@ class OpsVesselCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id' => ['required', 'numeric', 'max:50'],
-            'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
-            'issue_date' => ['required'],
-            'expire_date' => ['required'],
-            'attachment' => ['required'],
-            'status' => ['nullable'],
-            'reference_number' => ['required'],
-            'created_by' => ['nullable'],
+            'vessel'                => ['required', 'string', 'max:255'],
+            'ops_expense_head_id'   => ['required', 'numeric', 'max:50'],
         ];
     }
 

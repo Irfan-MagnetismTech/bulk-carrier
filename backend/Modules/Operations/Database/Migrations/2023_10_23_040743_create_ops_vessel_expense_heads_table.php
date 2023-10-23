@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ops_expense_heads', function (Blueprint $table) {
+        Schema::create('ops_vessel_expense_heads', function (Blueprint $table) {
             $table->id();
-            $table->string('billing_type');
-            $table->unsignedBigInteger('head_id')->nullable();
-            $table->foreign('head_id')->references('id')->on('ops_expense_heads');
-            $table->string('name')->nullable();
-            $table->tinyInteger('is_visible_in_voyage_report?')->nullable();
+            $table->string('vessel');
+            $table->foreignId('ops_expense_head_id')->constrained('ops_expense_heads')->onDelete('cascade');
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ops_expense_heads');
+        Schema::dropIfExists('ops_vessel_expense_heads');
     }
 };
