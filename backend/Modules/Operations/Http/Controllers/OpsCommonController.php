@@ -213,7 +213,8 @@ class OpsCommonController extends Controller
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
-            ->latest()->paginate(15);
+            ->latest()->paginate(15)->groupBy('ops_vessel_id');
+            
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)

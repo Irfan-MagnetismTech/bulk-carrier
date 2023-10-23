@@ -141,21 +141,4 @@ class OpsVoyageBudgetController extends Controller
         }
     }
 
-    public function getVoyageBudgetByTitle(Request $request){
-        try {
-            $voyage_budgets = OpsVoyageBudget::query()
-            ->where(function ($query) use($request) {
-                $query->where('title', 'like', '%' . $request->title . '%');                
-            })
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->limit(10)
-            ->get();
-
-            return response()->success('Successfully retrieved voyage budget.', $voyage_budgets, 200);
-        } catch (QueryException $e){
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }
