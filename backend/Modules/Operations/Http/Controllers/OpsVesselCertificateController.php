@@ -29,7 +29,8 @@ class OpsVesselCertificateController extends Controller
     public function index()
     {
         try {
-            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
+            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')
+            ->latest()->paginate(15)->groupBy('ops_vessel_id');
             
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
