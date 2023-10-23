@@ -21,6 +21,8 @@ use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
+use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'cash-requisitions' => OpsCashRequisitionController::class,
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'expense-heads' => OpsExpenseHeadController::class,
+        'vessel-expense-heads' => OpsVesselExpenseHeadController::class,
     ]);
 
     //start for without pagination
@@ -90,6 +93,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
+    Route::get('search-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'getVesselExpenseHeadByVessel']);
     
     // end for search api route
 

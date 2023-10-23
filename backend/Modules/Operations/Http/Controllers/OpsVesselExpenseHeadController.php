@@ -161,4 +161,24 @@ class OpsVesselExpenseHeadController extends Controller
         }
     }
 
+    public function getVesselExpenseHeadByVessel(Request $request){
+        try {
+            $vessel_expense_heads = OpsVesselExpenseHead::query()
+            ->with(['opsExpenseHead' => function($query){
+                $query->select('id', 'name');
+            }])
+            ->where(function ($query) use($request) {
+                $query->where('vessel', 'like', '%' . $request->vessel . '%');
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->get()
+            ->groupBy('vessel');
+
+            return response()->success('Successfully retrieved vessel expense heads.', $vessel_expense_heads, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
