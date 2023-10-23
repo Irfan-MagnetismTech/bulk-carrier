@@ -21,6 +21,7 @@ use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
+use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
 
 /*
 |--------------------------------------------------------------------------
