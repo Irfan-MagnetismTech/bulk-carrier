@@ -6,6 +6,7 @@ use Modules\SupplyChain\Http\Controllers\ScmVendorController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
+use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     // Route::prefix('scm')->group(function () {
@@ -15,6 +16,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'materials' => ScmMaterialController::class,
         'vendors' => ScmVendorController::class,
         'warehouses' => ScmWarehouseController::class,
+        'opening-stocks' => ScmOpeningStockController::class,
     ]);
     Route::get('search-material-category', [ScmMaterialCategoryController::class, "searchMaterialCategory"])->name('searchMaterialCategory');
     Route::get('search-unit', [ScmUnitController::class, "searchUnit"])->name('searchUnit');
