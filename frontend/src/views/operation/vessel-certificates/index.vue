@@ -8,8 +8,11 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading, downloadGeneralParticular, downloadChartererParticular } = useVesselCertificate();
+const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading, downloadGeneralCertificate, downloadChartererCertificate } = useVesselCertificate();
 import Store from './../../../store/index.js';
+import moment from 'moment';
+
+
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -21,7 +24,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Vessel Particular List');
+setTitle('Vessel Certificate List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -46,12 +49,12 @@ function confirmDelete(id) {
   })
 }
 
-function dlGeneralParticular(vesselCertificateId) {
-  downloadGeneralParticular(vesselCertificateId)
+function dlGeneralCertificate(vesselCertificateId) {
+  downloadGeneralCertificate(vesselCertificateId)
 }
 
-function dlChartererParticular(vesselCertificateId) {
-  downloadChartererParticular(vesselCertificateId)
+function dlChartererCertificate(vesselCertificateId) {
+  downloadChartererCertificate(vesselCertificateId)
 }
 
 onMounted(() => {
@@ -76,8 +79,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Particular List</h2>
-    <default-button :title="'Create Vessel Particular'" :to="{ name: 'ops.vessel-certificates.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate List</h2>
+    <default-button :title="'Create Vessel Certificate'" :to="{ name: 'ops.vessel-certificates.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -106,61 +109,56 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Vessel Name</th>
-            <th>IMO</th>
-            <th>Class No</th>
-            <th>Official Number</th>
-            <th>Length (LBP)</th>
-            <th>LOA</th>
-            <th>Breadth</th>
-            <th>Depth (Moulded)</th>
-            <th>GRT</th>
-            <th>NRT</th>
-            <th>DWT</th>
-            <th>Tues Capacity</th>
-            <th class="w-80">Actions</th>
+            <th>Certificate Name</th>
+            <th>Validity Period</th>
+            <th>Issue Date</th>
+            <th>Expire Date</th>
+            <th>Left Days</th>
+            <th>Reference Number</th>
+            <th>Certificate Image</th>
+            <th>History</th>
           </tr>
           </thead>
-          <tbody v-if="vesselCertificates?.data?.length">
-              <tr v-for="(vesselCertificate, index) in vesselCertificates.data" :key="vesselCertificate?.id">
-                  <td>{{ vesselCertificates.from + index }}</td>
-                  <td>{{ vesselCertificate?.opsVessel?.name }}</td>
-                  <td>{{ vesselCertificate?.imo }}</td>
-                  <td>{{ vesselCertificate?.class_no }}</td>
-                  <td>{{ vesselCertificate?.official_number }}</td>
-                  <td>{{ vesselCertificate?.overall_length }}</td>
-                  <td>{{ vesselCertificate?.loa }}</td>
-                  <td>{{ vesselCertificate?.overall_width }}</td>
-                  <td>{{ vesselCertificate?.depth_moulded }}</td>
-                  <td>{{ vesselCertificate?.grt }}</td>
-                  <td>{{ vesselCertificate?.nrt }}</td>
-                  <td>{{ vesselCertificate?.dwt }}</td>
-                  <td>{{ vesselCertificate?.tues_capacity }}</td>
-                  <td class="flex border-b-0 border-l-0 items-center justify-center space-x-2 text-gray-600 ">
-                      <button @click="dlGeneralParticular(vesselCertificate.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                        General
-                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </button>
-                      <button @click="dlChartererParticular(vesselCertificate.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                        Charterer
-                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: vesselCertificate.id } }"></action-button>
-                      <action-button :action="'show'" :to="{ name: 'ops.vessel-certificates.show', params: { vesselCertificateId: vesselCertificate.id } }"></action-button>
-                      <action-button @click="confirmDelete(vesselCertificate.id)" :action="'delete'"></action-button>
-                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                  </td>
+          <tbody v-if="Object.keys(vesselCertificates).length">
+            
+            <template v-for="(certificates, key, index) in vesselCertificates">
+              <tr v-for="(item, itemIndex) in certificates">
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ certificates[0].opsVessel?.name }}</td>
+                <td>
+                  {{ item?.opsMaritimeCertification?.name }}
+                </td>
+                <td>
+                  {{ item?.opsMaritimeCertification?.validity }}
+                </td>
+                <td>
+                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
+                </td>
+                <td>
+                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
+                </td>
+                <td></td>
+                <td>
+                  {{ item?.reference_number }}
+                </td>
+                <td>
+                  {{ item?.attachment }}
+                </td>
+                <td>
+                  <button @click="dlGeneralCertificate(vesselCertificate.id)" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                    History
+                  </button>
+                </td>
               </tr>
+            </template>
+              
           </tbody>
           
-          <tfoot v-if="!vesselCertificates?.length">
+          <tfoot v-if="!Object.keys(vesselCertificates)?.length">
           <tr v-if="isLoading">
             <td colspan="14">Loading...</td>
           </tr>
-          <tr v-else-if="!vesselCertificates?.data?.length">
+          <tr v-else-if="!Object.keys(vesselCertificates)?.length">
             <td colspan="14">No data found.</td>
           </tr>
           </tfoot>
