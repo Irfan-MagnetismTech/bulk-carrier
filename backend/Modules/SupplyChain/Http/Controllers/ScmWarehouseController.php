@@ -111,7 +111,7 @@ class ScmWarehouseController extends Controller
             $warehouse = ScmWarehouse::query()
                 ->with('scmWarehouseContactPersons')
                 ->whereBusinessUnit($request->business_unit)
-                ->whereName('like', "%{$request->searchParam}%")
+                ->where('name', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('name')
                 ->limit(10)
                 ->get();

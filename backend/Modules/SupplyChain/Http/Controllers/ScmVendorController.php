@@ -104,7 +104,7 @@ class ScmVendorController extends Controller
     {
         $vendor = ScmVendor::query()
             ->with('scmVendorContactPersons')
-            ->where('name', 'like', "%{$request->searchParam}%")
+            ->where('name', 'like', "%$request->searchParam%")
             ->orderByDesc('name')
             ->limit(10)
             ->get();
