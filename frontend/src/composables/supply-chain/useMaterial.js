@@ -4,36 +4,48 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import useDropZone from '../../services/dropZone.js';
 
 export default function useMaterial() {
     const router = useRouter();
     const materials = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const material = ref( {
-        name: '',
-        material_code: '',
-        scm_material_category_id: '',
-        scm_material_category_name: '',
-        unit: '',
-        hs_code: '',
-        minimum_stock: 0,
-        store_category: '',
-        description: ''
-    });
+        const material = ref( {
+            name: '',
+            material_code: '',
+            scm_material_category_id: '',
+            scm_material_category_name: '',
+            unit: '',
+            hs_code: '',
+            minimum_stock: 0,
+            store_category: '',
+            description: '',
+            sample_photo: null
+        });
 
+    const indexPage = ref(null);
+    
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getMaterials() {
+    async function getMaterials(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
 
+        indexPage.value = page;
+
         try {
-            const {data, status} = await Api.get('/scm/materials');
+            const {data, status} = await Api.get('/scm/materials', {
+				params: {
+					page: page || 1,
+					columns: columns || null,
+					searchKey: searchKey || null,
+					table: table || null,
+				},
+			});
             materials.value = data.value;
-            console.log(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -50,9 +62,10 @@ export default function useMaterial() {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-
+        const formData = processFormData(form);
+        
         try {
-            const { data, status } = await Api.post('/scm/materials', form);
+            const { data, status } = await Api.post('/scm/materials', formData);
             material.value = data.value;
             notification.showSuccess(status);
             router.push({ name: "scm.material.index" });
@@ -73,7 +86,6 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.get(`/scm/materials/${materialId}`);
             material.value = data.value;
-            console.log('show', data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -85,14 +97,16 @@ export default function useMaterial() {
     }
 
     async function updateMaterial(form, materialId) {
-
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-
+        const formData = processFormData(form);
+        formData.append('_method', 'PUT');
+        
+        console.log(formData,form);
         try {
             const { data, status } = await Api.put(
                 `/scm/materials/${materialId}`,
-                form
+                formData
             );
             material.value = data.value;
             notification.showSuccess(status);
@@ -113,7 +127,7 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.delete( `/scm/materials/${materialId}`);
             notification.showSuccess(status);
-            await getMaterials();
+            await getMaterials(indexPage.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -129,7 +143,7 @@ export default function useMaterial() {
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-material`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam }});
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -142,6 +156,41 @@ export default function useMaterial() {
         }
     }
 
+    async function searchMaterialWithCategory(searchParam,materialCategoryId, loading) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam ,materialCategoryId: materialCategoryId}});
+            materials.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+    function processFormData(form){
+        let formData = new FormData();
+        formData.append('sample_photo', form.sample_photo);
+        formData.append('description', form.description);
+        formData.append('store_category', form.store_category);
+        formData.append('minimum_stock', form.minimum_stock);
+        formData.append('hs_code', form.hs_code);
+        formData.append('unit', form.unit);
+        formData.append('scm_material_category_id', form.scm_material_category_id);
+        formData.append('material_code', form.material_code);
+        formData.append('name', form.name);
+        
+            
+        return formData;
+    }
+
     return {
         materials,
         material,
@@ -151,7 +200,8 @@ export default function useMaterial() {
         showMaterial,
         updateMaterial,
         deleteMaterial,
+        searchMaterialWithCategory,
         isLoading,
-        errors,
+        errors
     };
 }

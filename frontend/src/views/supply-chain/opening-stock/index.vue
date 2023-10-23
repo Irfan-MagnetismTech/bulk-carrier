@@ -11,6 +11,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 
 const { getOpeningStocks, openingStocks, deleteService, isLoading } = useOpeningStock();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 
@@ -27,9 +29,6 @@ const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
 const table = "opening_stocks";
 
-watch(searchKey, newQuery => {
-  getOpeningStocks(props.page, columns, searchKey.value, table);
-});
 const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);
@@ -37,7 +36,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
-    getOpeningStocks(props.page)
+    getOpeningStocks(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
@@ -97,10 +96,9 @@ function confirmDelete(id) {
             <tr v-for="(openingStock,index) in (openingStocks?.data ? openingStocks?.data : openingStocks)" :key="index">
               <td>{{ openingStocks?.from + index }}</td>
               <td>{{ openingStock?.date }}</td>
-              <td>{{ openingStock?.warehouse }}</td>
+              <td>{{ openingStock?.scm_warehouse_id }}</td>
               <td>
-                <action-button :action="'show'" :to="{ name: 'scm.opening-stocks.show', params: { openingStockId: openingStock.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'scm.opening-stocks.edit', params: { openingStockId: openingStock.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.opening-stock.edit', params: { openingStockId: openingStock.id } }"></action-button>
                 <action-button @click="confirmDelete(openingStock.id)" :action="'delete'"></action-button>
               </td>
             </tr>
@@ -115,6 +113,6 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="openingStocks" to="scm.opening-stocks.index" :page="page"></Paginate>
+    <Paginate :data="openingStocks" to="scm.opening-stock.index" :page="page"></Paginate>
   </div>
 </template>

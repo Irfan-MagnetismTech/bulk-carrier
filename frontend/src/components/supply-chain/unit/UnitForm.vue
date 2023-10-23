@@ -4,7 +4,7 @@
     import useUnit from "../../../composables/supply-chain/useUnit.js";
 
     const props = defineProps({
-        unit: { type: Object, required: true },
+        form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
     });
 
@@ -15,16 +15,15 @@
 <template>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
         <legend>
-                        
             <div class="input-group">
                 <label class="label-group">
                     <span class="label-item-title">Name <span class="text-red-500">*</span></span>
-                    <input type="text" required v-model="unit.name" class="form-input" name="name" :id="'name'" />
+                    <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
                     <Error v-if="errors?.name" :errors="errors.name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="unit.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
                     <Error v-if="errors?.short_code" :errors="errors.short_code" />
                 </label>
             </div>

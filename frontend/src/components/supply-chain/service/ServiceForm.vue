@@ -4,7 +4,7 @@
     import useService from "../../../composables/supply-chain/useService.js";
     
     const props = defineProps({
-        service: { type: Object, required: true },
+        form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
     });
     
@@ -17,17 +17,17 @@
                 
                 <label class="label-group">
                     <span class="label-item-title">Service Name <span class="required-style">*</span></span>
-                    <input type="text" required v-model="service.name" class="form-input" name="name" :id="'name'" />
+                    <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
                     <Error v-if="errors?.name" :errors="errors.name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="service.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
                     <Error v-if="errors?.short_code" :errors="errors.short_code" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Description <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="service.description" class="form-input" name="description" :id="'description'" />
+                    <input type="text" v-model="form.description" class="form-input" name="description" :id="'description'" />
                     <Error v-if="errors?.description" :errors="errors.description" />
                 </label>
             </div>

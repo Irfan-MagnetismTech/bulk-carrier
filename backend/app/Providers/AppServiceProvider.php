@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
 
         Response::macro('error', function ($error, $statusCode = 400) {
             throw new HttpResponseException(response()->json([
-                'message'   => 'Validation errors',
+                'message'   => 'errors',
                 'data'      => $error,
             ], $statusCode));
         });

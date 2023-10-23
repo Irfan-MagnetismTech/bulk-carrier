@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import Store from './../../store/index.js';
 
 export default function useOpeningStock() {
     const router = useRouter();
@@ -10,31 +11,44 @@ export default function useOpeningStock() {
     const filteredOpeningStocks = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 
     const openingStock = ref( {
         date: '',
-        scm_warehouse_name: '',
+        scmWarehouse: '',
         scm_warehouse_id: '',
         business_unit: '',
-        materials: [
+        scmOpeningStockLines: [
             {
-                material_id: '',
-                material_name_with_code: '',
-                code: '',
+                scmMaterials: '',
+                scm_material_id: '',
                 unit: '',
                 quantity: 0.0,
                 rate: 0.0,
             }
         ],
     });
-
+    const materialObject = {
+        scmMaterials: '',
+        scm_material_id: '',
+        unit: '',
+        quantity: 0.0,
+        rate: 0.0,
+      };
+    
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getOpeningStocks(page, columns = null, searchKey = null, table = null) {
+    async function getOpeningStocks(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/scm/opening-stocks',{
@@ -43,6 +57,7 @@ export default function useOpeningStock() {
                     columns: columns || null,
                     searchKey: searchKey || null,
                     table: table || null,
+                    business_unit: businessUnit,
                 },
             });
             openingStocks.value = data.value;
@@ -61,10 +76,10 @@ export default function useOpeningStock() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', formData);
+            const { data, status } = await Api.post('/scm/opening-stocks', form);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stocks.index" });
+            router.push({ name: "scm.opening-stock.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -82,10 +97,11 @@ export default function useOpeningStock() {
         try {
             const { data, status } = await Api.get(`/scm/opening-stocks/${openingStockId}`);
             openingStock.value = data.value;
-            openingStock.value.materials = data.value.stockable;
-            openingStock.value.materials.forEach((material) => {
-                material.material_name_with_code = material?.name;
-            });
+            console.log(data.value);
+            // openingStock.value.materials = data.value.stockable;
+            // openingStock.value.materials.forEach((material) => {
+            //     material.material_name_with_code = material?.name;
+            // });
 
         } catch (error) {
             const { data, status } = error.response;
@@ -102,10 +118,10 @@ export default function useOpeningStock() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', formData);
+            const { data, status } = await Api.post('/scm/opening-stocks', form);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stocks.index" });
+            router.push({ name: "scm.opening-stock.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -122,7 +138,7 @@ export default function useOpeningStock() {
         try {
             const { data, status } = await Api.delete( `/scm/opening-stocks/${openingStockId}`);
             notification.showSuccess(status);
-            await getOpeningStocks();
+            await getOpeningStocks(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -146,30 +162,17 @@ export default function useOpeningStock() {
         }
     }
 
-    async function getAllPendingOpeningStocks() {
-
-        try {
-            const {data, status} = await Api.get('/common/get-all-opening-stock');
-            filteredOpeningStocks.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loading(false)
-        }
-    }
 
     return {
         openingStocks,
         openingStock,
-        filteredOpeningStocks,
         searchOpeningStock,
-        getAllPendingOpeningStocks,
         getOpeningStocks,
         storeOpeningStock,
         showOpeningStock,
         updateOpeningStock,
         deleteOpeningStock,
+        materialObject,
         isLoading,
         errors,
     };

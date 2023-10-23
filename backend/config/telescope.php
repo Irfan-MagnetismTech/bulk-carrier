@@ -92,11 +92,12 @@ return [
     */
 
     'only_paths' => [
-        // 'api/*'
+        'api/scm/*'
     ],
 
     'ignore_paths' => [
-        'nova-api*',
+        // 'api/ops/*',
+        // 'api/mnt/*',
     ],
 
     'ignore_commands' => [
