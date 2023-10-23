@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import Store from './../../store/index.js';
 
 export default function useOpeningStock() {
     const router = useRouter();
@@ -10,24 +11,31 @@ export default function useOpeningStock() {
     const filteredOpeningStocks = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 
     const openingStock = ref( {
         date: '',
-        scm_warehouse_name: '',
+        scmWarehouse: '',
         scm_warehouse_id: '',
         business_unit: '',
-        materials: [
+        scmOpeningStockLines: [
             {
+                scmMaterials: '',
                 material_id: '',
-                material_name_with_code: '',
-                code: '',
                 unit: '',
                 quantity: 0.0,
                 rate: 0.0,
             }
         ],
     });
-
+    const materialObject = {
+        scmMaterials: '',
+        material_id: '',
+        unit: '',
+        quantity: 0.0,
+        rate: 0.0,
+      };
     
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
@@ -153,30 +161,17 @@ export default function useOpeningStock() {
         }
     }
 
-    async function getAllPendingOpeningStocks() {
-
-        try {
-            const {data, status} = await Api.get('/common/get-all-opening-stock');
-            filteredOpeningStocks.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loading(false)
-        }
-    }
 
     return {
         openingStocks,
         openingStock,
-        filteredOpeningStocks,
         searchOpeningStock,
-        getAllPendingOpeningStocks,
         getOpeningStocks,
         storeOpeningStock,
         showOpeningStock,
         updateOpeningStock,
         deleteOpeningStock,
+        materialObject,
         isLoading,
         errors,
     };

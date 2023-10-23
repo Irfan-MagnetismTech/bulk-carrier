@@ -1,5 +1,5 @@
 <script setup>
-import MaterialCategoryForm from '../../../components/scm/material-category/MaterialCategoryForm.vue';
+import WarehouseForm from '../../../components/supply-chain/warehouse/WarehouseForm.vue';
 import {ref} from "vue";
 import { onMounted } from '@vue/runtime-core';
 import Title from "../../../services/title";

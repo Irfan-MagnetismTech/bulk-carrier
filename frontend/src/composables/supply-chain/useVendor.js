@@ -18,11 +18,12 @@ export default function useVendor() {
         vendor_type: '',
         product_source_type: '',
         product_type: '',
-        warehouse_contact_persons: {
+        scmVendorContactPersons: [{
             name:'',
-            contact: '',
+            designation:'',
+            phone: '',
             email: ''
-        },
+        }],
         
     });
 
@@ -38,7 +39,7 @@ export default function useVendor() {
         indexPage.value = page;
 
         try {
-            const {data, status} = await Api.get('/scm/Vendor', {
+            const {data, status} = await Api.get('/scm/vendors', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -49,7 +50,7 @@ export default function useVendor() {
             vendors.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
-            const { data, status } = error.response;
+            const { status } = error.response;
             notification.showError(status);
         } finally {
             loader.hide();
@@ -67,7 +68,7 @@ export default function useVendor() {
             const { data, status } = await Api.post('/scm/vendors', form);
             vendor.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.vendor.index" });
+            router.push({ name: "scm.vendor.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -77,7 +78,7 @@ export default function useVendor() {
         }
     }
 
-    async function showVendor(vendrId) {
+    async function showVendor(vendorId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
@@ -107,7 +108,7 @@ export default function useVendor() {
             );
             vendor.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.vendor.index" });
+            router.push({ name: "scm.vendor.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

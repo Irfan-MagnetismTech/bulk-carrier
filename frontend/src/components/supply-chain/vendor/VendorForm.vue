@@ -64,18 +64,23 @@
                 
                 <label class="label-group">
                     <span class="label-item-title">Name<span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.warehouse_contact_persons.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.form.warehouse_contact_persons.name" :errors="errors.form.warehouse_contact_persons.name" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].name" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].name" :errors="errors.form.scmVendorContactPersons[0].name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
-                    <input type="text" required v-model="form.warehouse_contact_persons.contact" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.form.warehouse_contact_persons.contact" :errors="errors.form.warehouse_contact_persons.contact" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].designation" class="form-input" name="designation" :id="'designation'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].designation" :errors="errors.form.scmVendorContactPersons[0].designation" />
+                </label>
+                <label class="label-group">
+                    <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].phone" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].phone" :errors="errors.form.scmVendorContactPersons[0].phone" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Email <span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.warehouse_contact_persons.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.warehouse_contact_persons.name" :errors="errors.warehouse_contact_persons.name" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].email" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.scmVendorContactPersons[0].email" :errors="errors.scmVendorContactPersons[0].email" />
                 </label>
             </div>
             </fieldset>

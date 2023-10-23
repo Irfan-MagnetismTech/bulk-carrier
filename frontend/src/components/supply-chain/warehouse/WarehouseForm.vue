@@ -54,22 +54,22 @@
             <div class="input-group">
                 <label class="label-group">
                     <span class="label-item-title">Name<span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.warehouse_contact_person.name" class="form-input" name="warehouse_contact_person_name" :id="'warehouse_contact_person_name'" />
+                    <input type="text" required v-model="form.scmWarehouseContactPersons[0].name" class="form-input" name="warehouse_contact_person_name" :id="'warehouse_contact_person_name'" />
                     <Error v-if="errors?.warehouse_contact_person_name" :errors="errors.warehouse_contact_person_name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Designation/Rank<span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.warehouse_contact_person.designation" class="form-input" name="warehouse_contact_person_designation" :id="'warehouse_contact_person_designation'" />
-                    <Error v-if="errors?.warehouse_contact_person_designation" :errors="errors.warehouse_contact_person_designation" />
+                    <input type="text" v-model="form.scmWarehouseContactPersons[0].designation" class="form-input" name="warehouse_contact_person_designation" :id="'warehouse_contact_person_designation'" />
+                    <Error v-if="errors?.warehouse_contact_person_designation" :errors="errors.scmWarehouseContactPersons_designation" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.warehouse_contact_person.contact_no" class="form-input" name="warehouse_contact_person_contact" :id="'warehouse_contact_person_contact'" />
+                    <input type="text" v-model="form.scmWarehouseContactPersons[0].phone" class="form-input" name="warehouse_contact_person_contact" :id="'warehouse_contact_person_contact'" />
                     <Error v-if="errors?.warehouse_contact_person_contact" :errors="errors.warehouse_contact_person_contact" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Email <span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.warehouse_contact_person.email" class="form-input" name="warehouse_contact_person_email" :id="'warehouse_contact_person_email'" />
+                    <input type="text" required v-model="form.scmWarehouseContactPersons[0].email" class="form-input" name="warehouse_contact_person_email" :id="'warehouse_contact_person_email'" />
                     <Error v-if="errors?.warehouse_contact_person_email" :errors="errors.warehouse_contact_person_email" />
                 </label>
             </div>

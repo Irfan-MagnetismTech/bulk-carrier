@@ -63,7 +63,7 @@ export default function useMaterial() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
         const formData = processFormData(form);
-
+        
         try {
             const { data, status } = await Api.post('/scm/materials', formData);
             material.value = data.value;
@@ -99,7 +99,10 @@ export default function useMaterial() {
     async function updateMaterial(form, materialId) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
         isLoading.value = true;
-        const formData = processFormData(form,true);
+        const formData = processFormData(form);
+        formData.append('_method', 'PUT');
+        
+        console.log(formData,form);
         try {
             const { data, status } = await Api.put(
                 `/scm/materials/${materialId}`,
@@ -140,7 +143,7 @@ export default function useMaterial() {
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-material`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam }});
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -153,7 +156,7 @@ export default function useMaterial() {
         }
     }
 
-    function processFormData(form,is_update = false){
+    function processFormData(form){
         let formData = new FormData();
         formData.append('sample_photo', form.sample_photo);
         formData.append('description', form.description);
@@ -164,9 +167,8 @@ export default function useMaterial() {
         formData.append('scm_material_category_id', form.scm_material_category_id);
         formData.append('material_code', form.material_code);
         formData.append('name', form.name);
-        if(is_update){
-            formData.append('_method', 'PUT');
-        }
+        
+            
         return formData;
     }
 

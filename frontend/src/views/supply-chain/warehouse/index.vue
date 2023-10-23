@@ -7,6 +7,7 @@ import Title from "../../../services/title";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
+import Swal from "sweetalert2";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
@@ -90,7 +91,8 @@ onMounted(() => {
           <tr class="w-full">
             <th class="">SL. </th>
             <th class="">Name</th>
-            <th class="">Short Code</th>
+            <th class="">Contact Person</th>
+            <th class="">Contact No</th>
             <th>Business Unit</th>
             <th class="px-4 py-3 text-center">Actions</th>
           </tr>
@@ -99,7 +101,8 @@ onMounted(() => {
           <tr v-for="(warehouse, index) in warehouses?.data" :key="warehouse.id">  
               <td class="px-4 py-3 text-sm">{{ index + 1 }}</td>
               <td class="px-4 py-3 text-sm">{{ warehouse.name }}</td>
-              <td class="px-4 py-3 text-sm">{{ warehouse.short_code }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPersons[0].name }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPersons[0].phone }}</td>
             <td>
               <span :class="warehouse?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ warehouse?.business_unit }}</span>
             </td>

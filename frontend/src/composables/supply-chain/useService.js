@@ -57,7 +57,7 @@ export default function useService() {
             const { data, status } = await Api.post('/scm/services', form);
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.service.index" });
+            router.push({ name: "scm.service.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,7 +97,7 @@ export default function useService() {
             );
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "supply-chain.service.index" });
+            router.push({ name: "scm.service.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
