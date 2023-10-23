@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
             $table->unsignedBigInteger('mnt_item_id');
             $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
-            $table->integer('previous_run_hour')->nullable();
-            $table->integer('running_hour')->nullable();
-            $table->integer('present_run_hour')->nullable();
-            $table->date('updated_on')->nullable();
+            $table->integer('previous_run_hour')->default('0');
+            $table->integer('running_hour')->default('0');
+            $table->integer('present_run_hour');
+            $table->date('updated_on');
             $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();
         });

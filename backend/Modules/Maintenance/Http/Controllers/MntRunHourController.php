@@ -30,6 +30,7 @@ class MntRunHourController extends Controller
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
+                        ->latest()
                         ->paginate(10);
 
             return response()->success('Run hours retrieved successfully', $runHours, 200);
@@ -59,7 +60,7 @@ class MntRunHourController extends Controller
     {
         try {
             $input = $request->all();
-
+            $running_hour = (int) $input['running_hour'];
             $mntJob = new MntJob();
             // determine the items require to update 
             if ($input['mnt_item_id'][0] == "all") {
@@ -72,32 +73,47 @@ class MntRunHourController extends Controller
                 });
             }
 
+            
+            DB::beginTransaction();
 
             //foreach item 
             foreach ($mntItemIds as $mntItemId) {
-                $presentRunHour = $mntItemId['present_run_hour'] + $input['running_hour'];
-                //update present run hour = previous run hour + present run hour
-                $mntJobItem = $mntJob->find($mntItemId['id']);
+                //update present run hour = previous run hour + running hour
+                $mntJobItem = $mntJob->where([
+                                        'mnt_item_id'=>$mntItemId['id'], 
+                                        'ops_vessel_id'=>$input['ops_vessel_id']]
+                                    )
+                                    ->first();
+                
+                $presentRunHour = $mntJobItem['present_run_hour'] + $running_hour;
 
                 // create run hour record
                 $runHour['ops_vessel_id'] = $input['ops_vessel_id'];
                 $runHour['mnt_item_id'] = $mntItemId['id'];
                 $runHour['previous_run_hour'] = $mntJobItem['present_run_hour'];
-                $runHour['running_hour'] = $input['running_hour'];
-                $runHour['present_run_hour'] = $input['present_run_hour'];
+                $runHour['running_hour'] = $running_hour;
+                $runHour['present_run_hour'] = $presentRunHour;
                 $runHour['updated_on'] = $input['updated_on'];
                 $runHour['business_unit'] = $input['business_unit'];
                 $mntRunHour = MntRunHour::create($runHour);
-                if ($mntRunHour)
-                    $mntJobItem->update(['present_run_hour' => $presentRunHour]);// update mnt job for this item
+
+                if(!empty($mntRunHour)) { 
+                    // If run hour entry successful, update next due for relevant jobs
+                    $mntJobLinesUpdate = $mntJobItem->mntJobLines()
+                                                    ->where('cycle_unit', 'Hours ')
+                                                    ->decrement('next_due', $running_hour);
+                    $mntJobUpdate = $mntJobItem->increment('present_run_hour', $running_hour);
+                }
 
             }
             
-            return response()->success('Run hour updated successfully', $mntItemIds, 201);
+            DB::commit();
+            return response()->success('Run hour entry done successfully', $mntItemIds, 201);
             
         }
         catch (\Exception $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -142,19 +158,40 @@ class MntRunHourController extends Controller
     {
         try {
             $input = $request->all();
+            $previousRunHour = $input['previous_run_hour'];
+            $runningHour = $input['running_hour'];
+            $presentRunHour = $previousRunHour + $runningHour;
 
-            $mntItem = new MntItem();
+            $mntJob = new MntJob();
             
-            $presentRunHour = $input['previous_run_hour'] + $input['present_run_hour'];
-            //update present run hour = previous run hour + present run hour
-            $mntItemUpdate = $mntItem->find($input['mnt_item_id'])->update(['present_run_hour' => $presentRunHour]); // mnt_items updated
-            $mntRunHour = MntRunHour::find($id)->update(['present_run_hour' => $input['present_run_hour']]); // mnt_run_hours updated
+            DB::beginTransaction();
+            $mntJobItem = $mntJob->where(
+                [
+                'mnt_item_id'=>$input['mntItem']['id'], 
+                'ops_vessel_id'=>$input['opsVessel']['id']
+                ]
+            )
+            ->first();
 
+            $presentRunHourReduced = $mntJobItem->present_run_hour - $presentRunHour;
+
+            $mntJobUpdate = $mntJobItem->update(['present_run_hour' => $presentRunHour]); // mnt_jobs updated
+            $mntJobLinesUpdate = $mntJobItem->mntJobLines()
+                                            ->where('cycle_unit', 'Hours ')
+                                            ->increment('next_due', $presentRunHourReduced);
+            $mntRunHour = MntRunHour::find($id)
+                                ->update([
+                                    'present_run_hour' => $presentRunHour,
+                                    'running_hour' => $runningHour
+                                ]); // mnt_run_hours updated
+
+            DB::commit();
             return response()->success('Run hour updated successfully', $mntRunHour, 201);
             
         }
         catch (\Exception $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
