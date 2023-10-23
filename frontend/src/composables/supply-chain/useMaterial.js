@@ -156,6 +156,25 @@ export default function useMaterial() {
         }
     }
 
+    async function searchMaterialWithCategory(searchParam,materialCategoryId, loading) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam ,materialCategoryId: materialCategoryId}});
+            materials.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
     function processFormData(form){
         let formData = new FormData();
         formData.append('sample_photo', form.sample_photo);
@@ -181,6 +200,7 @@ export default function useMaterial() {
         showMaterial,
         updateMaterial,
         deleteMaterial,
+        searchMaterialWithCategory,
         isLoading,
         errors
     };

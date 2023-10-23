@@ -9,9 +9,9 @@
         errors: { type: [Object, Array], required: false },
     });
     
-    const { warehouses, searchWarehouse } = useWarehouse();
+    const { warehouses, searchWarehouse } = useWarehouse();//  this code will be overriten by costcenter search
 
-    function fetchWarehouse(query, loading) {
+    function fetchWarehouse(query, loading) {//  this code will be overriten by costcenter search
         searchWarehouse(query, loading);
         loading(true)
     }

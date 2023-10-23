@@ -136,13 +136,13 @@ export default function useWarehouse() {
         }
     }
 
-    async function searchWarehouse(searchParam, loading) {
+    async function searchWarehouse(searchParam, loading, business_unit) {
 
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-warehouse`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`scm/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

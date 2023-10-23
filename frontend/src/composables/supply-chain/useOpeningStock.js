@@ -22,7 +22,7 @@ export default function useOpeningStock() {
         scmOpeningStockLines: [
             {
                 scmMaterials: '',
-                material_id: '',
+                scm_material_id: '',
                 unit: '',
                 quantity: 0.0,
                 rate: 0.0,
@@ -31,7 +31,7 @@ export default function useOpeningStock() {
     });
     const materialObject = {
         scmMaterials: '',
-        material_id: '',
+        scm_material_id: '',
         unit: '',
         quantity: 0.0,
         rate: 0.0,
@@ -76,10 +76,10 @@ export default function useOpeningStock() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', formData);
+            const { data, status } = await Api.post('/scm/opening-stocks', form);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stocks.index" });
+            router.push({ name: "scm.opening-stock.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -97,10 +97,11 @@ export default function useOpeningStock() {
         try {
             const { data, status } = await Api.get(`/scm/opening-stocks/${openingStockId}`);
             openingStock.value = data.value;
-            openingStock.value.materials = data.value.stockable;
-            openingStock.value.materials.forEach((material) => {
-                material.material_name_with_code = material?.name;
-            });
+            console.log(data.value);
+            // openingStock.value.materials = data.value.stockable;
+            // openingStock.value.materials.forEach((material) => {
+            //     material.material_name_with_code = material?.name;
+            // });
 
         } catch (error) {
             const { data, status } = error.response;
@@ -117,10 +118,10 @@ export default function useOpeningStock() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', formData);
+            const { data, status } = await Api.post('/scm/opening-stocks', form);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stocks.index" });
+            router.push({ name: "scm.opening-stock.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

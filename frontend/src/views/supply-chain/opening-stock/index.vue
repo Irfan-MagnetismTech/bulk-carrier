@@ -96,10 +96,9 @@ function confirmDelete(id) {
             <tr v-for="(openingStock,index) in (openingStocks?.data ? openingStocks?.data : openingStocks)" :key="index">
               <td>{{ openingStocks?.from + index }}</td>
               <td>{{ openingStock?.date }}</td>
-              <td>{{ openingStock?.warehouse }}</td>
+              <td>{{ openingStock?.scm_warehouse_id }}</td>
               <td>
-                <action-button :action="'show'" :to="{ name: 'scm.opening-stocks.show', params: { openingStockId: openingStock.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'scm.opening-stocks.edit', params: { openingStockId: openingStock.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.opening-stock.edit', params: { openingStockId: openingStock.id } }"></action-button>
                 <action-button @click="confirmDelete(openingStock.id)" :action="'delete'"></action-button>
               </td>
             </tr>
@@ -114,6 +113,6 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="openingStocks" to="scm.opening-stocks.index" :page="page"></Paginate>
+    <Paginate :data="openingStocks" to="scm.opening-stock.index" :page="page"></Paginate>
   </div>
 </template>

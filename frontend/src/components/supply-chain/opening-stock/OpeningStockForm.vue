@@ -23,8 +23,9 @@
     }
 
     function setMaterialOtherData(datas,index){
+      console.log(datas);
       props.form.scmOpeningStockLines[index].unit = datas.unit;
-      props.form.scmOpeningStockLines[index].material_id = datas.id;
+      props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
     }
 
 
@@ -35,7 +36,8 @@
 
   function fetchWarehouse(search, loading) {
     loading(true);
-    searchWarehouse(search, loading)
+    console.log(props.form.business_unit);
+    searchWarehouse(search, loading,props.form.business_unit);
   }
 
   watch(() => props.form.scmWarehouse, (value) => {
