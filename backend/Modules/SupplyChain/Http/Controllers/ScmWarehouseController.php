@@ -17,17 +17,16 @@ class ScmWarehouseController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_warehouses = ScmWarehouse::query()
+            $scmWarehouses = ScmWarehouse::query()
                 ->with('scmWarehouseContactPersons')
                 ->latest()
-                ->when(request()->business_unit != "ALL", function ($q) {
-                    $q->where('business_unit', request()->business_unit);
+                ->when(request()->business_unit != "ALL", function ($query) {
+                    $query->where('business_unit', request()->business_unit);
                 })
-                ->paginate(10);;
+                ->paginate(10);
 
-            return response()->success('Data list', $scm_warehouses, 200);
+            return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -40,11 +39,13 @@ class ScmWarehouseController extends Controller
     {
         try {
             DB::beginTransaction();
-            $scm_warehouse = ScmWarehouse::create($request->all());
-            $scm_warehouse->scmWarehouseContactPersons()->createMany($request->scmWarehouseContactPersons);
+
+            $warehouse = ScmWarehouse::create($request->all());
+            $warehouse->scmWarehouseContactPersons()->createMany($request->scmWarehouseContactPersons);
+
             DB::commit();
 
-            return response()->success('Data created succesfully', $scm_warehouse, 201);
+            return response()->success('Data created successfully', $warehouse, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -62,7 +63,6 @@ class ScmWarehouseController extends Controller
         try {
             return response()->success('data', $warehouse->load('scmWarehouseContactPersons'), 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -82,7 +82,6 @@ class ScmWarehouseController extends Controller
 
             return response()->success('Data updated sucessfully!', $warehouse, 202);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -100,7 +99,6 @@ class ScmWarehouseController extends Controller
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }

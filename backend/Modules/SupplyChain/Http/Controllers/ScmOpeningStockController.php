@@ -78,7 +78,7 @@ class ScmOpeningStockController extends Controller
         try {
             $opening_stock->update($request->all());
 
-            $opening_stock->scmOpeningStockLines()->createMany($request->scmOpeningStockLines);
+            $opening_stock->scmOpeningStockLines()->createUpdateOrDelete($request->scmOpeningStockLines);
 
             return response()->success('Data updated sucessfully!', $opening_stock, 202);
         } catch (\Exception $e) {

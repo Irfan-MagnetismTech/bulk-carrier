@@ -19,7 +19,7 @@ class ScmUnitController extends Controller
         try {
             $scm_units = ScmUnit::latest()->paginate(10);
 
-            return response()->success('Unit list', $scm_units, 200);
+            return response()->success('Data list', $scm_units, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -30,12 +30,12 @@ class ScmUnitController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmUnitRequest $request)
+    public function store(ScmUnitRequest $request): JsonResponse
     {
         try {
             $scm_unit = ScmUnit::create($request->all());
 
-            return response()->success('Unit created succesfully', $scm_unit, 201);
+            return response()->success('Data created succesfully', $scm_unit, 201);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -63,7 +63,7 @@ class ScmUnitController extends Controller
      * @param ScmUnit $unit
      * @return JsonResponse
      */
-    public function update(ScmUnitRequest $request, ScmUnit $unit)
+    public function update(ScmUnitRequest $request, ScmUnit $unit): JsonResponse
     {
         try {
             $unit->update($request->all());
@@ -92,7 +92,13 @@ class ScmUnitController extends Controller
         }
     }
 
-    public function searchUnit(Request $request)
+    /**
+     * Search for units based on the provided search parameter.
+     *
+     * @param  Request  $request
+     * @return JsonResponse
+     */
+    public function searchUnit(Request $request): JsonResponse
     {
         $materialCategory = ScmUnit::query()
             ->where('name', 'like', "%{$request->searchParam}%")

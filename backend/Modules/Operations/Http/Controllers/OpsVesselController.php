@@ -35,7 +35,8 @@ class OpsVesselController extends Controller
             $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
-            })->latest()->paginate(10);                     
+            })
+            ->latest()->paginate(10);                     
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -170,18 +171,20 @@ class OpsVesselController extends Controller
     }
 
     
-    public function getVesselByName(Request $request){
+    public function getVesselByNameorCode(Request $request){
         try {
             $vessels = OpsVessel::query()
             ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name . '%');
+                $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
             })
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })
             ->limit(10)
             ->get();
-            return response()->success('Successfully retrieved vessels name.', $vessels, 200);
+            
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

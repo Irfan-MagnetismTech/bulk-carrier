@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ScmServiceRequest extends FormRequest
@@ -14,7 +15,8 @@ class ScmServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'short_code' => Rule::unique('scm_units')->ignore($this->unit, 'short_code')
         ];
     }
 
@@ -26,7 +28,8 @@ class ScmServiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'short_code.unique' => 'Short code is already taken',
         ];
     }
 

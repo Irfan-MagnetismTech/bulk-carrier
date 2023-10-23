@@ -23,6 +23,7 @@ class OpsVessel extends Model
         'classification',
         'flag',
         'port_of_registry',
+        'delivery_date',
         'grt',
         'nrt',
         'dwt',
@@ -41,6 +42,26 @@ class OpsVessel extends Model
         'business_unit'
     ];
     
+
+        
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['code_name'];
+
+    /**
+     * Concatenate the short code and name of the port.
+     *
+     * @return string
+     */
+    public function getCodeNameAttribute()
+    {
+        return $this->short_code . ' - ' . $this->name;
+    }
+
     protected static function newFactory()
     {
         return \Modules\Operations\Database\factories\OpsVesselFactory::new();

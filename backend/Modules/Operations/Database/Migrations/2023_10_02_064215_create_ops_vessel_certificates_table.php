@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('attachment')->nullable();
             $table->string('status')->nullable();
             $table->string('reference_number')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->bigInteger('created_by')->nullable();
             
             $table->timestamps();
