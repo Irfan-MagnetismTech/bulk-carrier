@@ -46,7 +46,7 @@ export default function useVesselParticular() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getVesselParticulars(page,columns = null, searchKey = null, table = null) {
+	async function getVesselParticulars(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -55,9 +55,8 @@ export default function useVesselParticular() {
 			const { data, status } = await Api.get('/ops/vessel-particulars', {
 				params: {
 					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
+					business_unit: businessUnit,
+
 				},
 			});
 			vesselParticulars.value = data.value;
