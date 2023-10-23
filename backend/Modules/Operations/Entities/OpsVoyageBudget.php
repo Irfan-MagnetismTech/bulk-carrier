@@ -20,16 +20,17 @@ class OpsVoyageBudget extends Model
 
     public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+        return $this->belongsTo(OpsVessel::class);
     }
 
     public function opsVoyage()
     {
-        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+        return $this->belongsTo(OpsVoyage::class);
     }
+
     public function opsExpenseHead()
     {
-        return $this->belongsTo(OpsExpenseHead::class, 'ops_expense_head_id' , 'id');
+        return $this->belongsTo(OpsExpenseHead::class);
     }
 
     public function opsVoyageBudgetEntries()
