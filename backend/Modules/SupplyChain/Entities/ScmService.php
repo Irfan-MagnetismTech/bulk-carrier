@@ -9,5 +9,7 @@ class ScmService extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'name', 'short_code',
+    ];
 }

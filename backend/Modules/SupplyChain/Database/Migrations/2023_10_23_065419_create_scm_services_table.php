@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('scm_services', function (Blueprint $table) {
             $table->id();
-            
+            $table->string('name')->unique();
+            $table->string('short_code')->unique()->nullable();
             $table->timestamps();
         });
     }

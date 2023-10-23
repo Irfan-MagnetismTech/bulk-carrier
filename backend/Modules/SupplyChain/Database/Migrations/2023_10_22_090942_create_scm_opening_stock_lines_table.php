@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_opening_stock_id')->constrained('scm_opening_stocks')->nullable();
             $table->foreignId('scm_material_id')->constrained('scm_materials')->nullable();
+            $table->string('unit')->nullable();
             $table->decimal('rate')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->timestamps();
