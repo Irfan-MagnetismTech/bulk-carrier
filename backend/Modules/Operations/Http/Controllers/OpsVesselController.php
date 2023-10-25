@@ -46,7 +46,7 @@ class OpsVesselController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })
             ->latest()->paginate(10);   
-                              
+
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -266,7 +266,6 @@ class OpsVesselController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
 
