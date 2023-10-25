@@ -8,13 +8,17 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
+const { vesselCertificates, getVesselCertificateHistory, deleteVesselCertificate, isLoading } = useVesselCertificate();
 import Store from './../../../store/index.js';
 import moment from 'moment';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const vesselId = route.params.vesselId;
+const certificateId = route.params.certificateId;
 
 const props = defineProps({
   page: {
@@ -52,7 +56,7 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
-    getVesselCertificates(props.page, businessUnit.value)
+    getVesselCertificateHistory(vesselId, certificateId)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
