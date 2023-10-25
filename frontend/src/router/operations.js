@@ -195,4 +195,17 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-certificates/history-index.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/vessel-certificates/renew`,
+		name: `${BASE}.vessel-certificates.renew-list`,
+		component: () => import(`../views/${ViEWBASE}/vessel-certificates/renew-index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-certificates/renew/:vesselId/:marineCertificateId`,
+		name: `${BASE}.vessel-certificates.renew`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/renew.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

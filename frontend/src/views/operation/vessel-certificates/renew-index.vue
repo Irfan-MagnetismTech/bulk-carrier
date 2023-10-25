@@ -2,7 +2,6 @@
 import {onMounted, ref, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
-import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
@@ -24,7 +23,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Vessel Certificate List');
+setTitle('Custom Renew Schedule List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -71,8 +70,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate List</h2>
-    <default-button :title="'Create Vessel Certificate'" :to="{ name: 'ops.vessel-certificates.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Custom Renew Schedule List</h2>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -106,9 +104,7 @@ onMounted(() => {
             <th>Issue Date</th>
             <th>Expire Date</th>
             <th>Left Days</th>
-            <th>Reference Number</th>
-            <th>Certificate Image</th>
-            <th>History</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="Object.keys(vesselCertificates).length">
@@ -131,15 +127,9 @@ onMounted(() => {
                 </td>
                 <td></td>
                 <td>
-                  {{ item?.reference_number }}
-                </td>
-                <td>
-                  {{ item?.attachment }}
-                </td>
-                <td>
                   <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                    <router-link :to="{ name: 'ops.vessel-certificates.history', params: { vesselId: certificates[0].opsVessel?.id, certificateId: item.opsMaritimeCertification.id } }" >
-                    History
+                    <router-link :to="{ name: 'ops.vessel-certificates.renew', params: { vesselId: certificates[0].opsVessel?.id, marineCertificateId: item.opsMaritimeCertification.id } }" >
+                    Renew
                     </router-link>
                   </button>
                 </td>

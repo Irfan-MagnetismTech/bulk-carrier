@@ -164,7 +164,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.renew-list',
                         label: 'Renew Schedule',
                         preIcon: '',
                         postIcon: icons.DownArrow,
