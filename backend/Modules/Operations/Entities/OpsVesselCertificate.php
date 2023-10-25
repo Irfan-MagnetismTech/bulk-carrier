@@ -35,9 +35,4 @@ class OpsVesselCertificate extends Model
         return $this->belongsTo(OpsMaritimeCertification::class);
     }
 
-    public function opsVesselMeritimeCertificatesId($certificateId)
-    {
-        return $this->where('ops_maritime_certification_id', $certificateId);
-    }
-
 }
