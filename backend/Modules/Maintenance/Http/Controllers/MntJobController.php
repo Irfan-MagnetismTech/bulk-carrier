@@ -122,7 +122,6 @@ class MntJobController extends Controller
             // var_dump($request->all());
             $jobInput['ops_vessel_id'] = $request->get('ops_vessel_id');
             $jobInput['mnt_item_id'] = $request->get('mnt_item_id');
-            $jobInput['present_run_hour'] = $request->get('present_run_hour') ?? '';
             $jobInput['business_unit'] = $request->get('business_unit');
 
             $jobLines = $request->get('mntJobLines');
