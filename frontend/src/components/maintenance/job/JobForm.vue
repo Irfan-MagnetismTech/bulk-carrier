@@ -82,7 +82,7 @@
         </label>
         
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.mnt_item_name.has_run_hour">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.mnt_item_name?.has_run_hour">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour</span>
             <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :disabled="form.form_type === 'edit'" />
@@ -157,7 +157,7 @@
             <td class="px-1 py-1">
               <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="" disabled selected>Select Cycle Unit</option>
-                        <option value="Hours" v-show="form.mnt_item_name.has_run_hour">Hours</option>
+                        <option value="Hours" v-show="form.mnt_item_name?.has_run_hour">Hours</option>
                         <option value="Days">Days</option>
                         <option value="Weeks">Weeks</option>
                         <option value="Months">Months</option>
@@ -211,12 +211,12 @@ function removeJob(index) {
   props.form.mntJobLines.splice(index, 1);
 }
 
-function fetchShipDepartmentWiseItems()
-{
-  props.form.item_name = '';
-  props.form.mnt_item_id = '';
-  getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
-}
+// function fetchShipDepartmentWiseItems()
+// {
+//   props.form.item_name = '';
+//   props.form.mnt_item_id = '';
+//   getShipDepartmentWiseItems(props.form.mnt_ship_department_id);
+// }
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
@@ -228,7 +228,9 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
     props.form.mnt_item_group_name = null;
     props.form.mnt_item_group_id = null;
   }
-  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  if(props.form.mnt_ship_department_id){
+    getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  }
 });
 
 watch(() => shipDepartmentWiseItemGroups.value, (val) => {
@@ -242,7 +244,9 @@ watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
     props.form.mnt_item_name = null;
     props.form.mnt_item_id = null;
   }
-  getItemGroupWiseItems(props.form.mnt_item_group_id);
+  if(props.form.mnt_item_group_id){
+    getItemGroupWiseItems(props.form.mnt_item_group_id);
+  }
 });
 
 watch(() => itemGroupWiseItems.value, (val) => {
@@ -275,8 +279,10 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
     watchEffect(() => {
-      getShipDepartmentsWithoutPagination(businessUnit.value);
-      getVesselsWithoutPaginate(businessUnit.value);
+      if(businessUnit.value){
+        getShipDepartmentsWithoutPagination(businessUnit.value);
+        getVesselsWithoutPaginate(businessUnit.value);
+      }
     });
 });
 

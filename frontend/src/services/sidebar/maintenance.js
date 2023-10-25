@@ -5,7 +5,7 @@ export default [
     {
         route: '',
         label: 'Maintenance',
-        preIcon: icons.User,
+        preIcon: icons.wrenchScrewdriver,
         postIcon: icons.DownArrow,
         is_active: false,
         is_open: false,

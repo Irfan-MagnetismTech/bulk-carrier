@@ -155,7 +155,9 @@ watch(() => props.form.mnt_ship_department_name, (value) => {
 
   props.form.mnt_item_group_name = null;
   props.form.mnt_item_group_id = null;
-  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  if(props.form.mnt_ship_department_id){
+    getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  }
   // fetchShipDepartmentWiseItemGroups();
 });
 
@@ -165,7 +167,9 @@ watch(() => props.form.mnt_item_group_name, (value) => {
 
   props.form.mnt_item_name = [];
   props.form.mnt_item_id = [];
-  getItemGroupWiseHourlyItems(props.form.mnt_item_group_id);
+  if(props.form.mnt_item_group_id){
+    getItemGroupWiseHourlyItems(props.form.mnt_item_group_id);
+  }
   // fetchItemGroupWiseHourlyItems();
 });
 
@@ -173,7 +177,7 @@ watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
   props.form.mnt_item_name = value;
   // props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
-  if(props.form.form_type === 'create' && value?.length == 1 && value[0]?.id !== 'all'){
+  if(props.form.form_type === 'create' && value?.length == 1 && value[0]?.id !== 'all' && props.form.ops_vessel_id){
       getItemPresentRunHour(props.form.ops_vessel_id, value[0].id);
   }
   else if(props.form.form_type !== 'edit'){
@@ -202,9 +206,11 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
   watchEffect(() => {
+    if(businessUnit.value){
       getShipDepartmentsWithoutPagination(businessUnit.value);
       getVesselsWithoutPaginate(businessUnit.value);
-    });
+    }
+  });
 });
 
 </script>

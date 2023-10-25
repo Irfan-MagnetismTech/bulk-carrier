@@ -148,14 +148,16 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
     props.form.mnt_item_group_name = null;
     props.form.mnt_item_group_id = null;
   }
-  getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
+  if(props.form.mnt_ship_department_id)
+    getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
 });
 
 watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
   props.form.mnt_item_group_id = props.form.mnt_item_group_name?.id;
   
-  if(oldValue !== '' || props.form.form_type !== 'edit'){
-    fetchItemCode();
+  if((oldValue !== '' || props.form.form_type !== 'edit') && props.form.mnt_item_group_id){
+    // fetchItemCode();
+    getItemCodeByGroupId(props.form, props.form.mnt_item_group_id);
   }
 });
 
@@ -176,9 +178,7 @@ function removeRow(index) {
   props.form.description.splice(index, 1);
 }
 
-function fetchItemCode(){
-  getItemCodeByGroupId(props.form, props.form.mnt_item_group_id);
-}
+
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 
@@ -192,7 +192,9 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
   watchEffect(() => {
-    getShipDepartmentsWithoutPagination(businessUnit.value);
+    if(businessUnit.value){
+      getShipDepartmentsWithoutPagination(businessUnit.value);
+      
   });
 });
 

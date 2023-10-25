@@ -60,7 +60,9 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
   watchEffect(() => {
-    getShipDepartmentsWithoutPagination(businessUnit.value);
+    if(businessUnit.value){
+      getShipDepartmentsWithoutPagination(businessUnit.value);
+    }
   });
 });
 
