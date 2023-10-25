@@ -12,6 +12,6 @@ class AccCostCenter extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'short_name', 'business_unit'];
+    protected $fillable = ['name', 'short_name', 'business_unit', 'type'];
 
 }

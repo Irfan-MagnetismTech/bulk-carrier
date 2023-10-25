@@ -1,6 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 
@@ -9,9 +9,9 @@ const props = defineProps({
     required: false,
     default: {}
   },
-  balanceIncomeLines : {},
   errors: { type: [Object, Array], required: false },
 });
+
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
@@ -28,38 +28,24 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Line Text <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.line_text" placeholder="Line text" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.line_text" :errors="errors.line_text" />
+        <span class="text-gray-700 dark:text-gray-300">Cost Center Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.name" placeholder="Line text" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.name" :errors="errors.name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Value Type <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.value_type" autocomplete="off" required >
-          <option value="" disabled selected>Select</option>
-          <option value="D">Debit</option>
-          <option value="C">Credit</option>
-        </select>
-        <Error v-if="errors?.value_type" :errors="errors.value_type" />
+        <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.short_name" placeholder="Line text" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.short_name" :errors="errors.short_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Line Type <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.line_type" autocomplete="off" required >
+        <span class="text-gray-700 dark:text-gray-300">Type <span class="text-red-500">*</span></span>
+        <select class="form-input" v-model="form.type" autocomplete="off" required>
           <option value="" disabled selected>Select</option>
-          <option value="base_header">base_header</option>
-          <option value="balance_header">balance_header</option>
-          <option value="income_header">income_header</option>
-          <option value="balance_line">balance_line</option>
-          <option value="income_line">income_line</option>
+          <option value="Lighter Vessel">Lighter Vessel</option>
+          <option value="Bulk Carrier">Bulk Carrier</option>
+          <option value="Head Office">Head Office</option>
         </select>
-        <Error v-if="errors?.line_type" :errors="errors.line_type" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Parent Line</span>
-        <select class="form-input" v-model="form.parent_id" autocomplete="off" >
-          <option value="" disabled selected>Select</option>
-          <option v-for="balanceIncomeLine in balanceIncomeLines" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
-        </select>
-        <Error v-if="errors?.parent_id" :errors="errors.parent_id" />
+        <Error v-if="errors?.type" :errors="errors.type" />
       </label>
     </div>
 </template>

@@ -21,7 +21,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'crw.ranks.index',
+                        route: 'acc.cost-centers.index',
                         label: 'Cost Centers',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -39,7 +39,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: 'crw.ranks.index',
+                        route: 'acc.chart-of-accounts.index',
                         label: 'Chart of Accounts',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -48,7 +48,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: 'crw.ranks.index',
+                        route: 'acc.opening-balances.index',
                         label: 'Opening Balance',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -57,7 +57,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: 'crw.ranks.index',
+                        route: 'acc.bank-accounts.index',
                         label: 'Bank Accounts',
                         preIcon: '',
                         postIcon: icons.DownArrow,

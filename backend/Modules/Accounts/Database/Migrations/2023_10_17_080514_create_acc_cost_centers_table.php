@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
 			$table->string('name')->nullable();
 			$table->string('short_name')->nullable();
-			$table->enum('business_unit', ['PSML', 'TSLL']);            
+			$table->string('type')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

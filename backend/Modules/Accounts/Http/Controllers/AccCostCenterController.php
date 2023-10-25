@@ -37,7 +37,7 @@ class AccCostCenterController extends Controller
     public function store(Request $request)
     {
         try {
-            $costCenterData = $request->only('name', 'short_name', 'business_unit');
+            $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');
             $AccCostCenter     = AccCostCenter::create($costCenterData);
 
             return response()->json([
@@ -81,7 +81,7 @@ class AccCostCenterController extends Controller
     public function update(Request $request, AccCostCenter $AccCostCenter)
     {
         try {
-            $costCenterData = $request->only('name', 'short_name', 'business_unit');
+            $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');
             $AccCostCenter->update($costCenterData);
 
             return response()->json([
