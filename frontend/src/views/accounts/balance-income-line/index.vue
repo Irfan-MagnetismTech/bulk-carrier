@@ -108,7 +108,7 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td>{{ incomeLine?.line_text }}</td>
             <td>{{ incomeLine?.value_type === 'D' ? 'Debit' : 'Credit' }}</td>
-            <td>{{ incomeLine?.parent_id ?? '---' }}</td>
+            <td>{{ incomeLine?.parent?.line_text ?? '---' }}</td>
             <td>{{ incomeLine?.line_type }}</td>
             <td>
               <span :class="incomeLine?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ incomeLine?.business_unit }}</span>

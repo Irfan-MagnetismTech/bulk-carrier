@@ -3,19 +3,25 @@ import Error from "../Error.vue";
 import {onMounted, ref, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import useCrewCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+
+const { balanceIncomeLineLists, getBalanceIncomeLineLists } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
     required: false,
     default: {}
   },
-  balanceIncomeLines : {},
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getBalanceIncomeLineLists(props.form.business_unit);
+  });
 });
 
 </script>
@@ -57,7 +63,7 @@ onMounted(() => {
         <span class="text-gray-700 dark:text-gray-300">Parent Line</span>
         <select class="form-input" v-model="form.parent_id" autocomplete="off" >
           <option value="" disabled selected>Select</option>
-          <option v-for="balanceIncomeLine in balanceIncomeLines" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
+          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
         </select>
         <Error v-if="errors?.parent_id" :errors="errors.parent_id" />
       </label>

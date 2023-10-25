@@ -17,11 +17,11 @@ class AccBalanceAndIncomeLineController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewRanks = AccBalanceAndIncomeLine::when(request()->business_unit != "ALL", function($q){
+            $balanceIncomeLines = AccBalanceAndIncomeLine::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            })->with('parent')->paginate(10);
 
-            return response()->success('Retrieved Successfully', $crwCrewRanks, 200);
+            return response()->success('Retrieved Successfully te', $balanceIncomeLines, 200);
         }
         catch (QueryException $e)
         {
