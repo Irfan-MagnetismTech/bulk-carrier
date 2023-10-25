@@ -84,6 +84,7 @@ class OpsVesselController extends Controller
     public function show(OpsVessel $vessel): JsonResponse
     {
         $vessel->load('opsVesselCertificates','opsBunkers');
+        
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
@@ -91,15 +92,15 @@ class OpsVesselController extends Controller
             $certificate->id = $certificate->opsMaritimeCertification->id;
             return $certificate;
         });
+
         try
-        {            
+        {
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
     /**
