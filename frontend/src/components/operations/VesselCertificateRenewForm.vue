@@ -11,7 +11,8 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Certificate <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.certificate_type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+        <input type="text" v-model="form.certificate_name" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+        <input type="hidden" v-model="form.ops_maritime_certification_id" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
         
       </label>
 
@@ -70,6 +71,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useVessel from '../../composables/operations/useVessel';
+import useMaritimeCertificate from "../../composables/operations/useMaritimeCertificate";
 import DropZoneV2 from '../../components/DropZoneV2.vue';
 import {useStore} from "vuex";
 import env from '../../config/env';
@@ -78,8 +80,6 @@ import { useRoute } from 'vue-router';
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
-const vesselCertificates = ref([]);
-const editInitiated = ref(false);
 const route = useRoute();
 const vesselId = route.params.vesselId;
 const marineCertificateId = route.params.marineCertificateId;
@@ -94,41 +94,21 @@ const props = defineProps({
 });
 
 const { vessel, searchVessels, showVessel } = useVessel();
-
-// watch(() => props.form, (value) => {
-
-//   if(props?.formType == 'edit' && editInitiated.value != true) {
-
-//     vessels.value = [props?.form?.opsVessel]
-
-//     if(vessels.value.length > 0) {
-//         console.log("Changing editInitatedValue ")
-//         editInitiated.value = true
-//       }
-//   }
-// }, {deep: true});
-
-watch(() => props.form.ops_vessel_id, (value) => {
-  if(value) {
-    if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-      console.log("showing vessel")
-      showVessel(value)
-    }
-  }
-}, {deep: true})
+const { maritimeCertificate, showMaritimeCertificate } = useMaritimeCertificate();
 
 watch(() => vessel, (value) => {
   props.form.vessel_name = value?.value?.name;
   props.form.ops_vessel_id = value?.value?.id;
+  props.form.business_unit = value?.value?.business_unit
 }, {deep: true})
 
-// watch(() => props.form.ops_maritime_certification_id, (value) => {
-//   if(value) {
-//     const certificate = vesselCertificates.value.find(obj => obj["ops_maritime_certification_id"] === value);
-//     props.form.validity_period = certificate?.opsMaritimeCertification?.validity
-//     props.form.certificate_type = certificate?.opsMaritimeCertification?.type
-//   }
-// })
+watch(() => maritimeCertificate, (value) => {
+  props.form.ops_maritime_certification_id = value?.value?.id;
+
+  props.form.certificate_name = value?.value?.name;
+  props.form.certificate_type = value?.value?.type;
+  props.form.validity_period = value?.value?.validity;
+}, {deep: true})
 
 watch(dropZoneFile, (value) => {
   if (value !== null && value !== undefined) {
@@ -138,6 +118,7 @@ watch(dropZoneFile, (value) => {
 
 onMounted(() => {
   showVessel(vesselId);
+  showMaritimeCertificate(marineCertificateId);
   // marineCertificateId
 });
 </script>
