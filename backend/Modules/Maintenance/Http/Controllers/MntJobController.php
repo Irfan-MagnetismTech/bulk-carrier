@@ -61,6 +61,7 @@ class MntJobController extends Controller
 
             $jobLines = $request->get('mntJobLines');
             
+            DB::beginTransaction();
             $job = MntJob::create($jobInput); // Create job
             $job->mntJobLines()->createMany($jobLines); // create relevant job lines
 
@@ -71,11 +72,13 @@ class MntJobController extends Controller
                 $runHour = MntRunHour::create($runHourInput);
             }
             
+            DB::commit();
             return response()->success('Job created successfully', $job, 201);
             
         }
         catch (\Exception $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -126,15 +129,18 @@ class MntJobController extends Controller
 
             $jobLines = $request->get('mntJobLines');
             
+            DB::beginTransaction();
             $job = MntJob::findorfail($id);
             $job->update($jobInput);
             $job->mntJobLines()->createUpdateOrDelete($jobLines);
             
+            DB::commit();
             return response()->success('Job updated successfully', $job, 202);
             
         }
         catch (\Exception $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -146,16 +152,21 @@ class MntJobController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {
+            DB::beginTransaction();
             $job = MntJob::findorfail($id);
             $job->mntJobLines()->delete();
             $job->delete();
-            // todo: delete run hour item
+            
+            $runHour = MntRunHour::where(['ops_vessel_id'=>$job->ops_vessel_id, 'mnt_item_id'=>$job->mnt_item_id])->delete();
+
+            DB::commit();
             return response()->success('Job deleted successfully', $job, 204);
             
         }
         catch (\Exception $e)
         {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
