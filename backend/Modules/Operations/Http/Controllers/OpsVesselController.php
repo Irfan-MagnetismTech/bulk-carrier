@@ -84,6 +84,7 @@ class OpsVesselController extends Controller
     public function show(OpsVessel $vessel): JsonResponse
     {
         $vessel->load('opsVesselCertificates','opsBunkers');
+        
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
