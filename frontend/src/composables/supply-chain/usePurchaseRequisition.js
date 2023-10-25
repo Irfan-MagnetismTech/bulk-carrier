@@ -144,8 +144,6 @@ export default function usePurchaseRequisition() {
     }
 
     async function updatePurchaseRequisition(form, purchaseRequisitionId) {
-        console.log(form);
-
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -155,9 +153,10 @@ export default function usePurchaseRequisition() {
         }
 
         formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions`, formData);
+            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions/${purchaseRequisitionId}`, formData);
             purchaseRequisition.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.purchase-requisitions.index` });
@@ -171,10 +170,6 @@ export default function usePurchaseRequisition() {
     }
 
     async function deletePurchaseRequisition(purchaseRequisitionId) {
-
-        if (!confirm('Are you sure you want to delete this data?')) {
-            return;
-        }
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -196,7 +191,7 @@ export default function usePurchaseRequisition() {
         
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisition`,searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
             filteredPurchaseRequisitions.value = data.value;
         } catch (error) {
             const { data, status } = error.response;

@@ -23,6 +23,7 @@ const props = defineProps({
   },
 });
 
+const critical = ['No','Yes'];
 // Code for global search start
 const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
@@ -98,16 +99,23 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Date</th>
-            <th>scm_warehouse_id</th>
+            <th>PR No</th>
+            <th>Raised Date</th>
+            <th>Is Critical</th>
+            <th>Purchase Center</th>
+            <th>Warehouse</th>
             <th>Business Unit</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ purchaseRequisitions?.from + index }}</td>
-              <td>{{ purchaseRequisition?.date }}</td>
-              <td>{{ purchaseRequisition?.scm_warehouse_id }}</td>
+              <td>{{ purchaseRequisition?.pr_no }}</td>
+              <td>{{ purchaseRequisition?.raised_date }}</td>
+              <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
+              <td>{{ purchaseRequisition?.purchase_center }}</td>
+              <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>

@@ -3,10 +3,15 @@ import {ref,onMounted} from "vue";
 
 import Title from "../../../services/title";
 import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
-import PurchaseRequisitionForm from "../../../components/supply-chain/purchase-requisition/PurchaseRequisitionForm.vue";
+import PurchaseRequisitionForm from "../../../components/supply-chain/purchase-requisitions/PurchaseRequisitionForm.vue";
 import { useRoute } from 'vue-router';
 
 const { getPurchaseRequisition, showPurchaseRequisition, purchaseRequisition, updatePurchaseRequisition,materialObject, errors, isLoading } = usePurchaseRequisition();
+
+import useHeroIcon from "../../../assets/heroIcon";
+import DefaultButton from '../../../components/buttons/DefaultButton.vue';
+
+const icons = useHeroIcon();
 
 const { setTitle } = Title();
 const route = useRoute();
