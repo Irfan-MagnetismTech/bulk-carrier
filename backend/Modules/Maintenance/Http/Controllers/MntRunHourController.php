@@ -107,7 +107,7 @@ class MntRunHourController extends Controller
                     }
                 } else {
                     DB::rollBack();
-                    return response()->error('This item has no defined job', 500);
+                    return response()->json('This item has no defined job', 500);
                 }
                 
             }
@@ -165,7 +165,10 @@ class MntRunHourController extends Controller
             $input = $request->all();
             $previousRunHour = $input['previous_run_hour'];
             $runningHour = $input['running_hour'];
-            $presentRunHour = $previousRunHour + $runningHour;
+            if ($previousRunHour == 0 && $runningHour == 0) 
+                $presentRunHour = $input['present_run_hour']; // for the first entry
+            else
+                $presentRunHour = $previousRunHour + $runningHour;
 
             $mntJob = new MntJob();
             
