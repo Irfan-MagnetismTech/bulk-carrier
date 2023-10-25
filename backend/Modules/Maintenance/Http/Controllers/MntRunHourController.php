@@ -104,7 +104,13 @@ class MntRunHourController extends Controller
                     }
                 } else {
                     DB::rollBack();
-                    return response()->json('This item has no defined job', 500);
+                    $error = array(
+                        "message" => "The item has no defined job",
+                        "errors" => [
+                            "mnt_item_id"=>'This item has no defined job'
+                        ]
+                    );
+                    return response()->json($error, 500);
                 }
                 
             }
