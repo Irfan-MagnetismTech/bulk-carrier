@@ -49,7 +49,13 @@ class OpsVessel extends Model
 
     public function opsVesselCertificates()
     {
-        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id')
+        ->select('ops_vessel_certificates.*')
+        ->whereIn('ops_vessel_certificates.id', function($query) {
+            $query->select(DB::raw('MAX(id)'))
+                ->from('ops_vessel_certificates')
+                ->groupBy('ops_maritime_certification_id');
+        });
     }
 
     public function opsBunkers()
