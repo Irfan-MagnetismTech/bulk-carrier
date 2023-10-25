@@ -21,7 +21,7 @@ export default function useItemGroup() {
         mnt_item_name: '',
         mnt_item_id: '',
         present_run_hour: 0,
-        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', next_due: '', remarks: '' }],
+        mntJobLines: [{ job_description: '', cycle_unit: '', cycle: '', min_limit: '', last_done: '', remarks: '' }],
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',
