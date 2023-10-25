@@ -187,11 +187,11 @@ class MntRunHourController extends Controller
 
             $mntJobUpdate = $mntJobItem->update(['present_run_hour' => $presentRunHour]); // mnt_jobs updated
             
-            $mntRunHour = MntRunHour::find($id)
-                                ->update([
-                                    'present_run_hour' => $presentRunHour,
-                                    'running_hour' => $runningHour
-                                ]); // mnt_run_hours updated
+            $mntRunHour = MntRunHour::find($id);
+            $mntRunHour->update([
+                            'present_run_hour' => $presentRunHour,
+                            'running_hour' => $runningHour
+                        ]); // mnt_run_hours updated
 
             DB::commit();
             return response()->success('Run hour updated successfully', $mntRunHour, 201);
