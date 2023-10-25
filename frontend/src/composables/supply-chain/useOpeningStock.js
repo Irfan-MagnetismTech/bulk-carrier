@@ -6,6 +6,7 @@ import useNotification from '../useNotification.js';
 import Store from './../../store/index.js';
 
 export default function useOpeningStock() {
+    const BASE = 'scm' 
     const router = useRouter();
     const openingStocks = ref([]);
     const filteredOpeningStocks = ref([]);
@@ -41,17 +42,18 @@ export default function useOpeningStock() {
     const indexBusinessUnit = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getOpeningStocks(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         indexPage.value = page;
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/scm/opening-stocks',{
+            const {data, status} = await Api.get(`/${BASE}/opening-stocks`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
@@ -73,13 +75,13 @@ export default function useOpeningStock() {
     }
     async function storeOpeningStock(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const { data, status } = await Api.post('/scm/opening-stocks', form);
+            const { data, status } = await Api.post(`/${BASE}/opening-stocks`, form);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stock.index" });
+            router.push({ name: `${BASE}.opening-stock.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -91,11 +93,11 @@ export default function useOpeningStock() {
 
     async function showOpeningStock(openingStockId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/opening-stocks/${openingStockId}`);
+            const { data, status } = await Api.get(`/${BASE}/opening-stocks/${openingStockId}`);
             openingStock.value = data.value;
             console.log(data.value);
             // openingStock.value.materials = data.value.stockable;
@@ -115,17 +117,17 @@ export default function useOpeningStock() {
     async function updateOpeningStock(form, openingStockId) {
         console.log(form);
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            // const { data, status } = await Api.put('/scm/opening-stocks', form);
+            // const { data, status } = await Api.put('/${BASE}/opening-stocks', form);
             const { data, status } = await Api.put(
-				`/scm/opening-stocks/${openingStockId}`,
+				`/${BASE}/opening-stocks/${openingStockId}`,
 				form
 			);
             openingStock.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.opening-stock.index" });
+            router.push({ name: `${BASE}.opening-stock.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -136,11 +138,11 @@ export default function useOpeningStock() {
     }
 
     async function deleteOpeningStock(openingStockId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/opening-stocks/${openingStockId}`);
+            const { data, status } = await Api.delete( `/${BASE}/opening-stocks/${openingStockId}`);
             notification.showSuccess(status);
             await getOpeningStocks(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
@@ -152,25 +154,11 @@ export default function useOpeningStock() {
         }
     }
 
-    async function searchOpeningStock(searchParam, loading) {
-        
-
-        try {
-            const {data, status} = await Api.get('/common/search-opening-stock',searchParam);
-            filteredOpeningStocks.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            loading(false)
-        }
-    }
 
 
     return {
         openingStocks,
         openingStock,
-        searchOpeningStock,
         getOpeningStocks,
         storeOpeningStock,
         showOpeningStock,

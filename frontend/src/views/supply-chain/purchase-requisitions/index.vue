@@ -1,16 +1,20 @@
 <script setup>
-import {onMounted, watchEffect} from '@vue/runtime-core';
+import {onMounted, watchEffect,watch,ref} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
+import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
-import {watch} from "vue";
+import Swal from "sweetalert2";
+import useHeroIcon from "../../../assets/heroIcon";
 
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading } = usePurchaseRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   page: {
@@ -19,146 +23,115 @@ const props = defineProps({
   },
 });
 
-setTitle('Purchase Requisitions');
-// Code for global search starts here
+// Code for global search start
 const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
 const table = "purchase_requisitions";
 
+const icons = useHeroIcon();
+
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+setTitle('Purchase Requisitions');
+// Code for global search starts here
+
 watch(searchKey, newQuery => {
   getPurchaseRequisitions(props.page, columns, searchKey.value, table);
 });
-// Code for global search end here
+
+
 onMounted(() => {
   watchEffect(() => {
-    getPurchaseRequisitions(props.page, columns, searchKey.value, table);
-  });
+    getPurchaseRequisitions(props.page,businessUnit.value)
+    .then(() => {
+      const customDataTable = document.getElementById("customDataTable");
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching PR:", error);
+    });
 });
+
+});// Code for global search end here
+function confirmDelete(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to change delete this Unit!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deletePurchaseRequisition(id);
+          }
+        })
+      }
 </script>
 
 <template>
   <!-- Heading -->
-  <div class="flex flex-col items-center justify-between w-full my-2 sm:flex-row" v-once>
-    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Purchase Requisition</h2>
-    <router-link :to="{ name: 'scm.purchase-requisitions.create' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-      </svg>
-    </router-link>
+ 
+  <div class="flex items-center justify-between w-full my-3" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700">Opening Stock List</h2>
+    <default-button :title="'Create Purchase Requisition'" :to="{ name: 'scm.purchase-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ purchaseRequisitions?.from }}-{{ purchaseRequisitions?.to }} of {{ purchaseRequisitions?.total }}</span>
+    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ purchaseRequisitions?.from }}-{{ purchaseRequisitions?.to }} of {{ purchaseRequisitions?.total }}</span> -->
+    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
       </svg>
-      <input type="text"  v-model="searchKey" placeholder="Search..." class="search" />
+      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
     </div>
   </div>
   <!-- Table -->
-  <div class="w-full overflow-hidden">
-    <div class="w-full overflow-x-auto">
-      <table class="w-full whitespace-no-wrap">
-        <thead v-once>
-        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-          <th class="px-4 py-3">SL. </th>
-          <th class="px-4 py-3">Date</th>
-          <th class="px-4 py-3">Note</th>
-          <th class="px-4 py-3">Remarks</th>
-          <th class="px-4 py-3 text-center">Action</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-        <tr class="text-gray-700 dark:text-gray-400 text-center" v-for="(requisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
-          <td class="px-4 py-3 text-sm">{{ purchaseRequisitions?.from + index }}</td>
-          <td class="px-4 py-3 text-sm">{{ requisition?.date }}</td>
-          <td class="px-4 py-3 text-sm">{{ requisition?.note }}</td>
-          <td class="px-4 py-3 text-sm">{{ requisition?.remarks }}</td>
-          <td class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
-            <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: requisition.id } }"></action-button>
-            <action-button @click="deletePurchaseRequisition(requisition.id)" :action="'delete'"></action-button>
-          </td>
-        </tr>
-        </tbody>
-        <tfoot v-if="!(purchaseRequisitions?.data ? purchaseRequisitions?.data?.length : purchaseRequisitions?.length)" class="bg-white dark:bg-gray-800">
+  <div id="customDataTable">
+    <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+      <table class="w-full whitespace-no-wrap" >
+          <thead v-once>
+          <tr class="w-full">
+            <th>#</th>
+            <th>Date</th>
+            <th>scm_warehouse_id</th>
+            <th>Business Unit</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
+              <td>{{ purchaseRequisitions?.from + index }}</td>
+              <td>{{ purchaseRequisition?.date }}</td>
+              <td>{{ purchaseRequisition?.scm_warehouse_id }}</td>
+              <td>
+                <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
+              </td>
+              <td>
+                <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot v-if="!purchaseRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
-        <tr v-else-if="!(purchaseRequisitions?.data ? purchaseRequisitions?.data?.length : purchaseRequisitions?.length)">
-          <td colspan="7">No Purchase Requisition found.</td>
+        <tr v-else-if="!purchaseRequisitions?.data?.length">
+          <td colspan="7">No PR found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="purchaseRequisitions" to="scm.purchase-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="purchaseRequisitions" to="scm.opening-stock.index" :page="page"></Paginate>
   </div>
+  <!-- Heading -->
+  
+  
+
+  
 </template>
-<style lang="postcss" scoped>
-@tailwind components;
-
-@layer components {
-  .tab {
-    @apply p-2.5 text-xs;
-  }
-  thead tr {
-    @apply font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
-  }
-  th {
-    @apply tab text-center;
-  }
-  tbody {
-    @apply bg-white divide-y dark:divide-gray-700 dark:bg-gray-800;
-  }
-  tbody tr {
-    @apply text-gray-700 dark:text-gray-400;
-  }
-  tbody tr td {
-    @apply tab text-center;
-  }
-  tfoot td {
-    @apply tab text-center;
-  }
-}
-
-.input-group {
-  @apply flex flex-col items-center justify-center w-full md:flex-row md:gap-2;
-}
-.label-group {
-  @apply block w-full mt-3 text-sm;
-}
-.label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
-}
-.label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
-}
-.form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
-}
-table, th,td{
-  @apply border border-collapse;
-}
-.search-result {
-  @apply px-4 py-3 text-sm text-center text-gray-600 dark:text-gray-300;
-}
-.search {
-  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray dark:border-0;
-}
->>> {
-  --vs-controls-color: #374151;
-  --vs-border-color: #4b5563;
-
-  --vs-dropdown-bg: #282c34;
-  --vs-dropdown-color: #eeeeee;
-  --vs-dropdown-option-color: #eeeeee;
-
-  --vs-selected-bg: #664cc3;
-  --vs-selected-color: #374151;
-
-  --vs-search-input-color: #4b5563;
-
-  --vs-dropdown-option--active-bg: #664cc3;
-  --vs-dropdown-option--active-color: #eeeeee;
-}
-</style>

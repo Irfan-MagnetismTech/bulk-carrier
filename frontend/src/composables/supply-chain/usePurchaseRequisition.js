@@ -3,50 +3,87 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
+import Store from './../../store/index.js';
 
 export default function usePurchaseRequisition() {
+    const BASE = 'scm' 
     const router = useRouter();
     const purchaseRequisitions = ref([]);
     const filteredPurchaseRequisitions = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseRequisition = ref( {
         date: '',
-        note: '',
+        scmWarehouse: '',
+        scm_warehouse_id: '',
         remarks: '',
         attachment: null,
-        total_amount: 0.0,
-        status: 0,
-        materials: [
+        is_critical: 0.0,
+        purchase_center: '',
+        approved_date: '',
+        pr_ref: '',
+        excel: null,
+        entry_type: 0,
+        business_unit: '',
+        ScmPrLines: [
             {
-                material_id: '',
-                material_category_id: '',
-                material_category_name: '',
-                size: '',
+                scmMaterial: '',
+                scm_material_id: '',
                 unit: '',
+                brand: '',
+                model: '',
+                specification: '',
+                origin: '',
+                drawing_no: '',
+                part_no: '',
+                rob: '',
                 quantity: 0.0,
-                unit_price: 0.0,
-                amount: 0.0,
+                required_date: ''
             }
         ],
+    });
+    const materialObject = {
+        scmMaterial: '',
+        scm_material_id: '',
+        unit: '',
+        brand: '',
+        model: '',
+        specification: '',
+        origin: '',
+        drawing_no: '',
+        part_no: '',
+        rob: '',
+        quantity: 0.0,
+        required_date: ''
+    }
+    const excelExportData = ref( {
+        store_category_name: ''
     });
 
     const errors = ref('');
     const isLoading = ref(false);
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
 
-    async function getPurchaseRequisitions(page, columns = null, searchKey = null, table = null) {
+    async function getPurchaseRequisitions(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
+        
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/scm/purchase-requisitions',{
+            const {data, status} = await Api.get(`/${BASE}/purchase-requisitions`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
                     searchKey: searchKey || null,
                     table: table || null,
+                    business_unit: businessUnit,
                 },
             });
             purchaseRequisitions.value = data.value;
@@ -62,21 +99,23 @@ export default function usePurchaseRequisition() {
     }
     async function storePurchaseRequisition(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         let formData = new FormData();
         if(form.attachment){
             formData.append('attachment', form.attachment);
         }
-
+        if(form.entry_type == '1'){
+            formData.append('excel', form.excel);
+        }
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/scm/purchase-requisitions', formData);
+            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions`, formData);
             purchaseRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.purchase-requisitions.index" });
+            router.push({ name: `${BASE}.purchase-requisitions.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -88,11 +127,11 @@ export default function usePurchaseRequisition() {
 
     async function showPurchaseRequisition(purchaseRequisitionId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/purchase-requisitions/${purchaseRequisitionId}`);
+            const { data, status } = await Api.get(`/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
             purchaseRequisition.value = data.value;
             purchaseRequisition.value.purchases = data.value.stockable;
             purchaseRequisition.value.purchases.forEach((purchase) => {
@@ -111,7 +150,7 @@ export default function usePurchaseRequisition() {
     async function updatePurchaseRequisition(form, purchaseRequisitionId) {
         console.log(form);
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         let formData = new FormData();
@@ -122,10 +161,10 @@ export default function usePurchaseRequisition() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/scm/purchase-requisitions', formData);
+            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions`, formData);
             purchaseRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.purchase-requisitions.index" });
+            router.push({ name: `${BASE}.purchase-requisitions.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -141,13 +180,13 @@ export default function usePurchaseRequisition() {
             return;
         }
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/purchase-requisitions/${purchaseRequisitionId}`);
+            const { data, status } = await Api.delete( `/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
             notification.showSuccess(status);
-            await getPurchaseRequisitions();
+            await getPurchaseRequisitions(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -161,7 +200,7 @@ export default function usePurchaseRequisition() {
         
 
         try {
-            const {data, status} = await Api.get('/common/search-purchase-requisition',searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisition`,searchParam);
             filteredPurchaseRequisitions.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
@@ -171,14 +210,24 @@ export default function usePurchaseRequisition() {
         }
     }
 
-    async function getAllPendingPurchaseRequisitions() {
-
+    async function getStoreCategoryWiseExcel() {
         try {
-            const {data, status} = await Api.get('/common/get-all-purchase-requisitions');
-            filteredPurchaseRequisitions.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/store-category-wise-excel`, {
+                params: {
+                    store_category_name: excelExportData.value.store_category_name
+                }
+            });
+
+            console.log(status);
         } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
+            if (error.response) {
+                const { data, status } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                // Handle network or other errors here
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
         } finally {
             // loading(false)
         }
@@ -189,12 +238,14 @@ export default function usePurchaseRequisition() {
         purchaseRequisition,
         filteredPurchaseRequisitions,
         searchPurchaseRequisition,
-        getAllPendingPurchaseRequisitions,
         getPurchaseRequisitions,
         storePurchaseRequisition,
         showPurchaseRequisition,
         updatePurchaseRequisition,
         deletePurchaseRequisition,
+        getStoreCategoryWiseExcel,
+        materialObject,
+        excelExportData,
         isLoading,
         errors,
     };

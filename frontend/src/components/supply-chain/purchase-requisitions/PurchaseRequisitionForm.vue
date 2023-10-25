@@ -1,78 +1,127 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
-    import useVendor from '../../../composables/supply-chain/useVendor';
+    import useBusinessInfo from "../../../composables/useBusinessInfo.js";
+    import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
+    import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+    import DropZoneV2 from '../../../components/DropZoneV2.vue';
+    import {useStore} from "vuex";
+    
+    const { material, materials, getMaterials,searchMaterial } = useMaterial();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
 
-    const { vendors, getVendors } = useVendor();
-    const { material, materials, getMaterials } = useMaterial();
+    const { getAllStoreCategories } = useBusinessInfo();
+    const store_category = ref([]);
+
     
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
+      excelExportData: { type: [Object, Array], required: false },
+      downloadExcel: {type: Function },
+      formType: { type: String, required : false },
+      materialObject: { type: Object, required: false },
+      page: {
+      required: false,
+      default: {}
+    },
+
     });
 
+    const purchase_center = ['Local', 'Foreign','Plant'];
     function addMaterial() {
-      let obj = {
-        material_id: '',
-        code: '',
-        unit: '',
-        quantity: 0.0,
-        rate: 0.0,
-      };
-      props.form.materials.push(obj);
+      props.form.ScmPrLines.push(props.materialObject);
     }
 
     function removeMaterial(index){
-      props.form.materials.splice(index, 1);
+      props.form.ScmPrLines.splice(index, 1);
     }
 
-    function setMaterialOtherData(index){
-      let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-      props.form.materials[index].unit = material.unit;
-      props.form.materials[index].material_category_id = material.category.id;
-      props.form.materials[index].material_category_name = material.category.name;
-    }
+    // function setMaterialOtherData(index){
+    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
+    //   props.form.materials[index].unit = material.unit;
+    //   props.form.materials[index].material_category_id = material.category.id;
+    //   props.form.materials[index].material_category_name = material.category.name;
+    // }
 
-    //watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-    watch(() => props?.form?.materials, (newVal, oldVal) => {
-      let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.materials[index].amount = parseFloat((material?.unit_price * material?.quantity).toFixed(2));
-        total += props.form.materials[index].amount;
-      });
-      props.form.total_amount = parseFloat(total.toFixed(2));
-    }, { deep: true });
 
     watch(() => props?.form?.status, (newVal, oldVal) => {
       props?.form?.status == props?.form?.status;
     })
+
     function handleAttachmentChange(e) {
       let fileData = e.target.files[0];
       props.form.attachment = fileData;
     }
 
     onMounted(() => {
-      getMaterials();
+      fetchAllStoreCategories();
     });
 
-    
-const tableScrollWidth = ref(null);
-const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
-onMounted(() => {
-  watchEffect(() => {
-    if (props.form.materials) {
-      const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
+    function fetchAllStoreCategories() {
+      getAllStoreCategories().then(AllStoreCategories => {
+        store_category.value = Object.values(AllStoreCategories);
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
     }
-}, { deep: true });
 
-});// Code for global search end here
+    
+    const tableScrollWidth = ref(null);
+    const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+    onMounted(() => {
+      watchEffect(() => {
+        if (props.form.ScmPrLines) {
+          const customDataTable = document.getElementById("customDataTable");
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+        }
+    }, { deep: true });
+
+    });// Code for global search end here
+
+
+    const downloadExcel = () => {
+          if (typeof props.downloadExcel === 'function') {
+            props.downloadExcel();
+          }
+        };
+
+
+    function fetchWarehouse(search, loading) {
+    loading(true);
+    console.log(props.form.business_unit);
+    searchWarehouse(search, loading,props.form.business_unit);
+  }
+
+  watch(() => props.form.scmWarehouse, (value) => {
+        props.form.scm_warehouse_id = value?.id;
+    });
+
+    function setMaterialOtherData(datas,index){
+      console.log(datas);
+      props.form.ScmPrLines[index].unit = datas.unit;
+      props.form.ScmPrLines[index].scm_material_id = datas.id;
+    }
+
+    function fetchMaterials(search, loading) {
+    loading(true);
+    searchMaterial(search, loading)
+  }
+
+  const store = useStore();
+  const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+
+  watch(dropZoneFile, (value) => {
+    if (value !== null && value !== undefined) {
+      props.form.excel = value;
+    }
+  });
 </script>
 <template>
 
@@ -81,131 +130,148 @@ onMounted(() => {
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="text" readonly v-model="form.pr_ref" required class="form-input vms-readonly-input" name="pr_ref" :id="'pr_ref'" />
+          <Error v-if="errors?.pr_ref" :errors="errors.pr_ref"  />
       </label>
       <label class="label-group">
-          <span class="label-item-title">Warehouse Name <span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+          <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <option value="1">YES</option>
+              <option value="0">NO</option>
+          </select>
+          <Error v-if="errors?.is_critical" :errors="errors.is_critical"  />
       </label>
   </div> 
-  <div class="input-group">
-      <label class="label-group md:w-4/6">
-          <span class="label-item-title">Purchase Center<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
-      </label>
-      <label class="label-group md:w-4/6">
+  <div class="input-group !w-3/4">
+    <label class="label-group">
+        <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
+        <input type="file" class="form-input" @change="handleAttachmentChange" />
+        <Error v-if="errors?.attachment" :errors="errors.attachment"  />
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Purchase Center</span>
+        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+        <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" />
+    </label>
+      <label class="label-group">
           <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
-      </label>
-      <label class="label-group md:w-4/6">
-          <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <input type="file" class="form-input" @change="handleAttachmentChange" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
+          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
       </label>
   </div> 
 
-  <div class="input-group">
-    <label class="label-group md:w-4/6">
+  <div class="input-group !w-3/4">
+    <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
           <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
 
-  <div class="justify-center w-full">
+  <div class="flex items-center w-full" v-if="formType != 'edit'">
     <div class="label-group">
-          <span class="label-item-title">Status <span class="required-style">*</span></span>
-          <div class="my-3 flex">
+          <div class="my-3 flex gap-6">
                 <div class="flex items-center">
-                    <input type="radio" value="1" v-model="form.status" class="" name="status" :id="'not_active'" />
-                    <label class="ml-2" for="not_active">Active</label>
+                    <input type="radio" value="0" v-model="form.entry_type" class="" name="entry_type" :id="'material_entry'" />
+                    <label class="ml-2" for="material_entry">Material Entry</label>
                 </div>
-                <div class="flex items-center ml-8">
-                    <input type="radio" value="0" v-model="form.status" class="" name="status" :id="'active'" />
-                    <label class="ml-2" for="active">Inactive</label>
+                <div class="flex items-center">
+                    <input type="radio" value="1" v-model="form.entry_type" class="" name="entry_type" :id="'bulk_entry'" />
+                    <label class="ml-2" for="bulk_entry">Bulk Entry</label>
                 </div>
             </div>
         </div>
   </div>
 
 
-  <div id="customDataTable" v-if="form.status == '1'">
+  <div id="customDataTable" v-if="form.entry_type == '0'">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="px-4 py-3 align-bottom">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="px-4 py-3 align-bottom">Unit</th>
-            <th class="px-4 py-3 align-bottom">Brand</th>
-            <th class="px-4 py-3 align-bottom">Model</th>
-            <th class="px-4 py-3 align-bottom">Specification</th>
-            <th class="px-4 py-3 align-bottom">Origin</th>
-            <th class="px-4 py-3 align-bottom">Sample</th>
-            <th class="px-4 py-3 align-bottom">Drawing No</th>
-            <th class="px-4 py-3 align-bottom">Part No</th>
-            <th class="px-4 py-3 align-bottom">ROB</th>
-            <th class="px-4 py-3 align-bottom">Qty</th>
-            <th class="px-4 py-3 align-bottom">Unit Price</th>
-            <th class="px-4 py-3 text-center align-bottom">Action</th>
+            <th class="py-3 align-center">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+            <th class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center">Brand</th>
+            <th class="py-3 align-center">Model</th>
+            <th class="py-3 align-center">Specification</th>
+            <th class="py-3 align-center">Origin</th>
+            <th class="py-3 align-center">Sample</th>
+            <th class="py-3 align-center">Drawing No</th>
+            <th class="py-3 align-center">Part No</th>
+            <th class="py-3 align-center">ROB</th>
+            <th class="py-3 align-center">Qty</th>
+            <th class="py-3 align-center">Unit Price</th>
+            <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(material, index) in form.materials" :key="index">
-            <td class="w-1/6">
-              <!-- <select v-model="form.materials[index].material_id" @change="setMaterialOtherData(index)" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
-                <option value="" disabled selected>Select</option>
-                <option :value="material.id" v-for="(material,index) in materials">{{ material.name }}</option>
-              </select> -->
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.ScmPrLines" :key="index">
+            <td class="">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.ScmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.ScmPrLines[index].scmMaterial,index)">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.ScmPrLines[index].scmMaterial"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
             </td>
             <td>
-              <input type="text" readonly v-model="form.materials[index].unit" class="vms-readonly-input form-input">
+              <input type="text" readonly v-model="form.ScmPrLines[index].unit" class="vms-readonly-input form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].brand" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].brand" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].model" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].specification" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].specification" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].origin" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].origin" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].sample" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].sample" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].drawing_no" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].drawing_no" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].part_no" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].part_no" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].rob" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].rob" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].quantity" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].quantity" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.materials[index].required_date" class="form-input">
+              <input type="text" v-model="form.ScmPrLines[index].required_date" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -227,14 +293,25 @@ onMounted(() => {
   </div>
   
   
-  <fieldset v-else>
-    <drop-zone></drop-zone>
-    <label class="block w-full mt-3 text-sm md:w-4/6">
-      <span class="text-gray-700 dark:text-gray-300">Attachment</span>
-      <input type="file" class="block w-full form-input" @change="handleAttachmentChange" />
-      <Error v-if="errors?.attachment" :errors="errors.attachment" />
-    </label>
-  </fieldset>
+  <div v-else>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
+        <div class="input-group !w-1/2">
+                <label class="label-group">
+                    <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
+                    <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    </v-select>
+                    <Error v-if="errors?.store_category" :errors="errors.store_category" />
+                </label>
+                <label class="label-group">
+                <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
+                </label>
+            </div>    
+      </fieldset>
+      <hr class="my-4"/>
+
+      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+  </div>
 </template>
 
 

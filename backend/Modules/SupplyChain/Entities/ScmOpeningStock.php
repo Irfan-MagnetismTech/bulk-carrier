@@ -26,4 +26,9 @@ class ScmOpeningStock extends Model
     {
         return $this->belongsTo(ScmWarehouse::class)->withDefault();
     }
+
+    public function stockable()
+    {
+        return $this->morphMany(ScmStockLedger::class, 'stockable');
+    }
 }

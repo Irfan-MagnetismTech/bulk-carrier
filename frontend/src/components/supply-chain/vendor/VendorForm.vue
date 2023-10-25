@@ -12,7 +12,20 @@
 
     const product_source_type = ['Manufacturer', 'Dealer','Supplier'];
     const product_type = ['Bunker', 'Lube Oil','Spare','Provision' ,'Service'];
-    const vendor_type = ['Foreign', 'Local'];
+//     const vendor_types = ref([
+//       { value: 0, text: 'Foreign' },
+//       { value: 1, text: 'Local' }
+//     ]);
+
+
+//     // Set the selected value when editing
+// let selectedVendorType = ref(props.form.vendor_type);
+
+// // Watch for changes in the form.vendor_type and update selectedVendorType
+// watch(props.form, (newForm) => {
+//   selectedVendorType.value = newForm.vendor_type;
+// });
+const vendor_type = ['Foreign', 'Local'];
 </script>
 <template>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
@@ -38,6 +51,10 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Vendor Type</span>
+                    <!-- <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    <option value="0">Foreign</option>
+                    <option value="1">Local</option>
+                    </select> -->
                     <v-select :options="vendor_type" placeholder="--Choose an option--" v-model="form.vendor_type" label="Vendor Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
                     <Error v-if="errors?.vendor_type" :errors="errors.vendor_type" />
                 </label>

@@ -7,6 +7,7 @@
     const props = defineProps({
         form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
+        formType: { type: String, required : false },
     });
     
     const { warehouses, searchWarehouse } = useWarehouse();//  this code will be overriten by costcenter search

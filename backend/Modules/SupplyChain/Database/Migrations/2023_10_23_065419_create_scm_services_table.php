@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('short_code')->unique()->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

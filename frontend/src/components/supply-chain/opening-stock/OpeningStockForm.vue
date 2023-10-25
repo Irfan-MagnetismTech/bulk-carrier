@@ -12,14 +12,17 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
+      formType: { type: String, required : false },
     });
 
     function addRow() {
       props.form.scmOpeningStockLines.push(props.materialObject);
+      
     }
 
     function removeRow(index){
       props.form.scmOpeningStockLines.splice(index, 1);
+     
     }
 
     function setMaterialOtherData(datas,index){
@@ -43,6 +46,9 @@
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
     });
+
+
+
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;

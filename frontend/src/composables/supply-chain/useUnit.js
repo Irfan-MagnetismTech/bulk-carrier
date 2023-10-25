@@ -7,6 +7,7 @@ import useNotification from '../useNotification.js';
 import Swal from "sweetalert2";
 
 export default function useUnit() {
+    const BASE = 'scm' 
     const router = useRouter();
     const units = ref([]);
     const $loading = useLoading();
@@ -19,18 +20,19 @@ export default function useUnit() {
     const indexPage = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
       
 
     async function getUnits(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         indexPage.value = page;
 
         try {
-            const {data, status} = await Api.get('/scm/units', {
+            const {data, status} = await Api.get(`/${BASE}/units`, {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -52,14 +54,14 @@ export default function useUnit() {
 
     async function storeUnit(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/units', form);
+            const { data, status } = await Api.post(`/${BASE}/units`, form);
             unit.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.units.index" });
+            router.push({ name: `${BASE}.units.index` });
         } catch (error) { 
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -71,11 +73,11 @@ export default function useUnit() {
 
     async function showUnit(unitId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/units/${unitId}`);
+            const { data, status } = await Api.get(`/${BASE}/units/${unitId}`);
             unit.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -89,17 +91,17 @@ export default function useUnit() {
 
     async function updateUnit(form, unitId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/units/${unitId}`,
+                `/${BASE}/units/${unitId}`,
                 form
             );
             unit.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.units.index" });
+            router.push({ name: `${BASE}.units.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -110,11 +112,11 @@ export default function useUnit() {
     }
 
     async function deleteUnit(unitId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show();
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/units/${unitId}`);
+            const { data, status } = await Api.delete( `/${BASE}/units/${unitId}`);
             console.log(status);
             notification.showSuccess(status);
             await getUnits(indexPage.value);
@@ -129,10 +131,10 @@ export default function useUnit() {
 
     async function searchUnit(searchParam, loading) {
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const { data, status } = await Api.get(`scm/search-unit`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-unit`, {params: { searchParam: searchParam }});
             units.value = data.value;
             console.log('tag', data.value);
             notification.showSuccess(status);
