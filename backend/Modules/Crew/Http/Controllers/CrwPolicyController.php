@@ -28,7 +28,7 @@ class CrwPolicyController extends Controller
     {
         try {
             $crwPolicies = CrwPolicy::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwPolicies, 200);

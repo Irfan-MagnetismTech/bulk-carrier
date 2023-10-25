@@ -1,6 +1,12 @@
 <script setup>
 import Error from "../Error.vue";
+import useVessel from "../../composables/operations/useVessel";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import {onMounted,watch} from "vue";
+import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
 
+const { vessels, searchVessels } = useVessel();
+const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
 const props = defineProps({
   form: {
     required: false,
@@ -23,14 +29,39 @@ function removeItem(index){
   props.form.crwVesselRequiredCrewLines.splice(index, 1);
 }
 
+function fetchVessels(search, loading) {
+  loading(true);
+  searchVessels(search, loading)
+}
+
+watch(() => props.form, (value) => {
+  if(value){
+    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+  }
+}, {deep: true});
+
+onMounted(() => {
+  getCrewRankLists();
+});
+
 </script>
 
 <template>
+  <business-unit-input v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.effective_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
+        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.ops_vessel_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
@@ -39,8 +70,8 @@ function removeItem(index){
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.remarks" placeholder="Ex: 14" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.remarks" :errors="errors.remarks" />
+        <input type="number" v-model="form.total_crew" placeholder="Ex: 14" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.total_crew" :errors="errors.total_crew" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -51,7 +82,7 @@ function removeItem(index){
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Item List <span class="text-red-500">*</span></legend>
+    <legend class="px-2 text-gray-700 dark:text-gray-300">Item List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
@@ -68,17 +99,11 @@ function removeItem(index){
         <td class="px-1 py-1">
           <select class="form-input" v-model="form.crwVesselRequiredCrewLines[index].crw_rank_id">
             <option value="" disabled>select</option>
-            <option value="Master">Master</option>
-            <option value="Sukani">Sukani</option>
+            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
-          <!--          <v-select v-model="form.crwVesselRequiredCrewLines[index].crw_rank_id" :id="'pod' + index" name="pod" required value="id" :options="portName" label="code_name" placeholder="Enter Port Code or Name" class="mt-1 placeholder-gray-600 w-full">-->
-<!--            <template #search="{attributes, events}">-->
-<!--              <input class="vs__search" :required="!form.crwVesselRequiredCrewLines[index].crw_rank_id" v-bind="attributes" v-on="events"/>-->
-<!--            </template>-->
-<!--          </v-select>-->
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwVesselRequiredCrewLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="number" v-model="form.crwVesselRequiredCrewLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.crwVesselRequiredCrewLines[index].eligibility" placeholder="EX: COC-III" class="form-input" autocomplete="off" />

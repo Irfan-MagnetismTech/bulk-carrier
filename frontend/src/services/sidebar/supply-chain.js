@@ -1,6 +1,6 @@
 import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
-const BASE = "supply-chain";
+const BASE = "scm";
 
 export default [
         {
@@ -22,7 +22,7 @@ export default [
                     permissionKey: '',
                     subSubMenu: [
                     {
-                        route: `${BASE}.unit.create`,
+                        route: `${BASE}.units.index`,
                         label: 'Unit',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -93,6 +93,7 @@ export default [
                     },
                 ]
             },
+            
         ]
     },
 ];
