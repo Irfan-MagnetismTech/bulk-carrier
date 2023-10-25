@@ -79,6 +79,8 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     
     // end for search api route
+    Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
+    Route::get('search-vessels-ids', [OpsVesselController::class, 'getVesselsIdsWise']);
 
 });
 Route::post('vessel-search', [OpsVesselController::class, 'search']);

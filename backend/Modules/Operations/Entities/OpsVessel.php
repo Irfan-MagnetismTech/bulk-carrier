@@ -58,6 +58,11 @@ class OpsVessel extends Model
                 ->groupBy('ops_maritime_certification_id');
         });
     }
+    
+    public function opsVesselCertificatesId()
+    {
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
+    }
 
     public function opsBunkers()
     {
