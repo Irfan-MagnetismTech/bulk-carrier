@@ -97,10 +97,11 @@ onMounted(() => {
             <th>#</th>
             <th>Balance/Income Line</th>
             <th>Type</th>
-            <th>Account Name</th>
-            <th>Account Type</th>
             <th>Parent Account</th>
             <th>Account Code</th>
+            <th>Account Name</th>
+            <th>Account Type</th>
+            <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -109,6 +110,7 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td>{{ chartAccountData?.name }}</td>
             <td>{{ chartAccountData?.short_name }}</td>
+            <td>{{ chartAccountData?.type }}</td>
             <td>{{ chartAccountData?.type }}</td>
             <td>{{ chartAccountData?.type }}</td>
             <td>{{ chartAccountData?.type }}</td>

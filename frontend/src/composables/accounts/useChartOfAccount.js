@@ -10,13 +10,15 @@ export default function useChartOfAccount() {
     const $loading = useLoading();
     const notification = useNotification();
     const chartOfAccount = ref( {
-        balance_income: '',
-        account_code: '',
-        account_id: '',
+        acc_balance_and_income_line_id: '',
+        parent_account_id: '',
         account_name: '',
-        parent_account: '',
+        account_code: '',
         account_type: '',
-        group: '',
+        accountable_type: '',
+        accountable_id: '',
+        official_code: '',
+        is_archived: '',
         business_unit: '',
     });
     const indexPage = ref(null);
@@ -34,7 +36,7 @@ export default function useChartOfAccount() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/acc/acc-cost-centers',{
+            const {data, status} = await Api.get('/acc/acc-accounts',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
@@ -57,7 +59,7 @@ export default function useChartOfAccount() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/acc/acc-cost-centers', form);
+            const { data, status } = await Api.post('/acc/acc-accounts', form);
             chartOfAccount.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "acc.chart-of-accounts.index" });
@@ -76,7 +78,7 @@ export default function useChartOfAccount() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-cost-centers/${chartOfAccountId}`);
+            const { data, status } = await Api.get(`/acc/acc-accounts/${chartOfAccountId}`);
             chartOfAccount.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -95,7 +97,7 @@ export default function useChartOfAccount() {
 
         try {
             const { data, status } = await Api.put(
-                `/acc/acc-cost-centers/${chartOfAccountId}`,
+                `/acc/acc-accounts/${chartOfAccountId}`,
                 form
             );
             chartOfAccount.value = data.value;
@@ -116,7 +118,7 @@ export default function useChartOfAccount() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-cost-centers/${chartOfAccountId}`);
+            const { data, status } = await Api.delete( `/acc/acc-accounts/${chartOfAccountId}`);
             notification.showSuccess(status);
             await getChartOfAccounts(indexPage.value,indexBusinessUnit.value);
         } catch (error) {

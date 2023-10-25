@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useAccountCommonApiRequest() {
     const router = useRouter();
     const balanceIncomeLineLists = ref([]);
+    const balanceIncomeAccountLists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -34,9 +35,33 @@ export default function useAccountCommonApiRequest() {
         }
     }
 
+    async function getBalanceIncomeAccountLists(businessUnit,acc_balance_and_income_line_id) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'business_unit': businessUnit,
+            'acc_balance_and_income_line_id': acc_balance_and_income_line_id,
+        }
+
+        try {
+            const { data, status } = await Api.post('/acc/get-balance-income-accounts', form);
+            balanceIncomeAccountLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         balanceIncomeLineLists,
+        balanceIncomeAccountLists,
         getBalanceIncomeLineLists,
+        getBalanceIncomeAccountLists,
         isLoading,
         errors,
     };

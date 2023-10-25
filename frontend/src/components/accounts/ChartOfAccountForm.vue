@@ -1,8 +1,11 @@
 <script setup>
 import Error from "../Error.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+
+const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -16,6 +19,10 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getBalanceIncomeLineLists(props.form.business_unit);
+    getBalanceIncomeAccountLists(props.form.business_unit,props.form.acc_balance_and_income_line_id);
+  });
 });
 
 </script>
@@ -28,13 +35,20 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Balance/Income <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.balance_income" autocomplete="off" required>
+        <span class="text-gray-700 dark:text-gray-300">Balance/Income Line <span class="text-red-500">*</span></span>
+        <select class="form-input" v-model="form.acc_balance_and_income_line_id" autocomplete="off" required>
           <option value="" disabled selected>Select</option>
-          <option value="Balance">Balance</option>
-          <option value="Income">Income</option>
+          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
         </select>
-        <Error v-if="errors?.balance_income" :errors="errors.balance_income" />
+        <Error v-if="errors?.acc_balance_and_income_line_id" :errors="errors.acc_balance_and_income_line_id" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Parent Account </span>
+        <select class="form-input" v-model="form.parent_account_id" autocomplete="off">
+          <option value="" disabled selected>Select</option>
+          <option v-for="balanceIncomeAccountLine in balanceIncomeAccountLists" :value="balanceIncomeAccountLine.id" :key="balanceIncomeAccountLine.id">{{ balanceIncomeAccountLine.account_name }}</option>
+        </select>
+        <Error v-if="errors?.parent_account_id" :errors="errors.parent_account_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
@@ -46,16 +60,23 @@ onMounted(() => {
         <input type="text" v-model="form.account_name" placeholder="A/C name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.account_name" :errors="errors.account_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Parent Account <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.parent_account" autocomplete="off" required>
-          <option value="" disabled selected>Select</option>
-          <option value="Balance">Balance</option>
-          <option value="Income">Income</option>
-        </select>
-        <Error v-if="errors?.parent_account" :errors="errors.parent_account" />
-      </label>
     </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.account_type" autocomplete="off" required>
+        <option value="" disabled selected>Select</option>
+        <option value="1"> Assets </option>
+        <option value="2"> Liabilities </option>
+        <option value="3"> Equity </option>
+        <option value="4"> Revenues </option>
+        <option value="5"> Expenses </option>      </select>
+      <Error v-if="errors?.account_type" :errors="errors.account_type" />
+    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

@@ -6,16 +6,13 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Modules\Accounts\Entities\AccAccount;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
 
 class AccCommonController extends Controller
 {
     public function getBalanceIncomeLinesOnly()
     {
-//        $crwRanks      = CrwRank::when(request()->business_unit != "ALL", function ($q)
-//        {
-//            $q->where('business_unit', request()->business_unit);
-//        })->get();
 
         try {
             $balanceIncomeLines = AccBalanceAndIncomeLine::when(request()->business_unit != "ALL", function ($q) {
@@ -33,21 +30,23 @@ class AccCommonController extends Controller
         }
     }
 
-//    public function getBalanceIncomeAccounts(Request $request)
-//    {
-//        try {
-//            $balanceIncomeAccounts = Account::where('balance_and_income_line_id', $request->balance_and_income_line_id)->orderBy('account_name')->get(['account_name', 'id']);
-//
-//            return response()->json([
-//                'status' => 'success',
-//                'value'  => $balanceIncomeAccounts,
-//            ], 200);
-//        }
-//        catch (\Exception $e)
-//        {
-//            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-//        }
-//    }
+    public function getBalanceIncomeAccounts(Request $request)
+    {
+        try {
+            $balanceIncomeAccounts = AccAccount::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })->where('acc_balance_and_income_line_id', $request->acc_balance_and_income_line_id)->orderBy('account_name')->get(['account_name', 'id']);
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $balanceIncomeAccounts,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 //
 //    public function generateAccountCode($balanceIncomeLineId)
 //    {
