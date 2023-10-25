@@ -8,14 +8,14 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
-    
+
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
 
     const { getAllStoreCategories } = useBusinessInfo();
     const store_category = ref([]);
 
-    
+
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -32,11 +32,11 @@
 
     const purchase_center = ['Local', 'Foreign','Plant'];
     function addMaterial() {
-      props.form.ScmPrLines.push(props.materialObject);
+      props.form.scmPrLines.push(props.materialObject);
     }
 
     function removeMaterial(index){
-      props.form.ScmPrLines.splice(index, 1);
+      props.form.scmPrLines.splice(index, 1);
     }
 
     // function setMaterialOtherData(index){
@@ -69,21 +69,21 @@
         });
     }
 
-    
+
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-    onMounted(() => {
-      watchEffect(() => {
-        if (props.form.ScmPrLines) {
-          const customDataTable = document.getElementById("customDataTable");
-          if (customDataTable) {
-            tableScrollWidth.value = customDataTable.scrollWidth;
-          }
-        }
-    }, { deep: true });
+    // onMounted(() => {
+    //   watchEffect(() => {
+    //     if (props.form.scmPrLines) {
+    //       const customDataTable = document.getElementById("customDataTable");
+    //       if (customDataTable) {
+    //         tableScrollWidth.value = customDataTable.scrollWidth;
+    //       }
+    //     }
+    // }, { deep: true });
 
-    });// Code for global search end here
+    // });// Code for global search end here
 
 
     const downloadExcel = () => {
@@ -105,8 +105,8 @@
 
     function setMaterialOtherData(datas,index){
       console.log(datas);
-      props.form.ScmPrLines[index].unit = datas.unit;
-      props.form.ScmPrLines[index].scm_material_id = datas.id;
+      props.form.scmPrLines[index].unit = datas.unit;
+      props.form.scmPrLines[index].scm_material_id = datas.id;
     }
 
     function fetchMaterials(search, loading) {
@@ -149,8 +149,8 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="date" v-model="form.raised" required class="form-input" name="raised" :id="'raised'" />
+          <Error v-if="errors?.raised" :errors="errors.raised"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
@@ -160,7 +160,7 @@
           </select>
           <Error v-if="errors?.is_critical" :errors="errors.is_critical"  />
       </label>
-  </div> 
+  </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
         <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
@@ -177,7 +177,7 @@
           <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
           <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
       </label>
-  </div> 
+  </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
@@ -203,7 +203,7 @@
   </div>
 
 
-  <div id="customDataTable" v-if="form.entry_type == '0'">
+  <div id="customDataTable" v-if="form?.entry_type == '0' && formType == 'edit'">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
@@ -221,19 +221,19 @@
             <th class="py-3 align-center">Part No</th>
             <th class="py-3 align-center">ROB</th>
             <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Unit Price</th>
+            <th class="py-3 align-center">Required Date</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.ScmPrLines" :key="index">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.ScmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.ScmPrLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.ScmPrLines[index].scmMaterial"
+                        :required="!form.scmPrLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -241,37 +241,37 @@
             </v-select>
             </td>
             <td>
-              <input type="text" readonly v-model="form.ScmPrLines[index].unit" class="vms-readonly-input form-input">
+              <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].brand" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].model" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].specification" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].specification" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].origin" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].sample" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].sample" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].drawing_no" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].drawing_no" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].part_no" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].part_no" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].rob" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].rob" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].quantity" class="form-input">
+              <input type="text" v-model="form.scmPrLines[index].quantity" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.ScmPrLines[index].required_date" class="form-input">
+              <input type="date" v-model="form.scmPrLines[index].required_date" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -291,8 +291,8 @@
       </fieldset>
     </div>
   </div>
-  
-  
+
+
   <div v-else>
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
@@ -306,7 +306,7 @@
                 <label class="label-group">
                 <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
                 </label>
-            </div>    
+            </div>
       </fieldset>
       <hr class="my-4"/>
 

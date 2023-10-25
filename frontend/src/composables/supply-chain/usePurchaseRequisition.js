@@ -16,7 +16,7 @@ export default function usePurchaseRequisition() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseRequisition = ref( {
-        date: '',
+        raised_date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
         remarks: '',
@@ -28,7 +28,7 @@ export default function usePurchaseRequisition() {
         excel: null,
         entry_type: 0,
         business_unit: '',
-        ScmPrLines: [
+        scmPrLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
@@ -133,10 +133,6 @@ export default function usePurchaseRequisition() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
             purchaseRequisition.value = data.value;
-            purchaseRequisition.value.purchases = data.value.stockable;
-            purchaseRequisition.value.purchases.forEach((purchase) => {
-                purchase.purchase_category_name = purchase?.purchase_category?.name;
-            });
 
         } catch (error) {
             const { data, status } = error.response;
