@@ -88,11 +88,12 @@
             <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
           <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
         </label>
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour <span v-show="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="text" :value="form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0 ? form.present_run_hour :(parseInt(form.previous_run_hour) + parseInt(form.running_hour))|| '' " placeholder="Present Run Hour" class="form-input" :required="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+            <input type="text" v-model="computedPresentRunHour" placeholder="Present Run Hour" class="form-input" :required="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
         </label>
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Updated On <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  />
@@ -107,7 +108,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useRunHour from "../../../composables/maintenance/useRunHour";
-import {onMounted, watch, watchEffect, ref} from "vue";
+import {onMounted, watch, watchEffect, ref, computed} from "vue";
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
@@ -129,6 +130,19 @@ const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+const computedPresentRunHour = computed({
+      get: () => {
+        if (props.form.form_type === 'edit' && props.form.previous_run_hour == 0 && props.form.running_hour == 0) {
+          return props.form.present_run_hour;
+        } else {
+          return parseInt(props.form.previous_run_hour) + parseInt(props.form.running_hour) || '';
+        }
+      },
+      set: (value) => {
+        props.form.present_run_hour = value;
+      }
+    });
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
