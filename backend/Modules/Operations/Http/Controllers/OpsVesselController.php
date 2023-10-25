@@ -231,7 +231,7 @@ class OpsVesselController extends Controller
         }
 
     }
-    public function getVesselsIdsWise(Request $request): JsonResponse
+    public function getVesselCertificateHistory(Request $request): JsonResponse
     {
         // dd($request);
         $vessel= OpsVessel::with([
