@@ -93,14 +93,14 @@ class ScmMaterialCategoryController extends Controller
         }
     }
 
-    public function searchMaterialCategory(Request $request)
+    public function searchMaterialCategory()
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')
-            ->when($request->has('searchParam'), function ($query) use ($request) {
-                $query->where(function ($subquery) use ($request) {
-                    $subquery->where('name', 'like', "%{$request->searchParam}%")
-                        ->orWhere('short_code', 'like', "%{$request->searchParam}%");
+            ->when(request()->has('searchParam'), function ($query) {
+                $query->where(function ($subquery) {
+                    $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
+                        ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
                 });
             })
             ->orderByDesc('name')

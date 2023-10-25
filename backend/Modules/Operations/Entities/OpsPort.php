@@ -18,4 +18,22 @@ class OpsPort extends Model
         'name'
     ];
     
+    
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['code_name'];
+
+    /**
+     * Concatenate the code and name of the port.
+     *
+     * @return string
+     */
+    public function getCodeNameAttribute()
+    {
+        return $this->code . ' - ' . $this->name;
+    }
 }

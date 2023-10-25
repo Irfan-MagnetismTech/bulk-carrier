@@ -56,8 +56,11 @@ class OpsVesselParticularController extends Controller
                 '_token',
                 'attachment',
             );
-            $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars');
-            $vesselParticular['attachment'] = $attachment;
+
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_particulars');
+                $vesselParticular['attachment'] = $attachment;
+            }
             $vesselParticular = OpsVesselParticular::create($vesselParticular);
             DB::commit();
             return response()->success('Vessel particular added successfully.', $vesselParticular, 201);
@@ -77,7 +80,7 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('ops_vessel');
+        $vessel_particular->load('opsVessel');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
@@ -147,7 +150,7 @@ class OpsVesselParticularController extends Controller
 
     public function getVesselParticularName(){
         try {
-            $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();
+            $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();
             return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
