@@ -83,7 +83,17 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
-        $vessel->load('opsVesselCertificates','opsBunkers');
+        $vessel->load([
+            'opsVesselCertificates' => function ($query){
+                $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                    $query2->select(DB::raw('MAX(id)'))
+                        ->from('ops_vessel_certificates')
+                        ->groupBy('ops_maritime_certification_id');
+                })->latest();
+            },
+            'opsBunkers'
+        ]);
+        
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
@@ -101,6 +111,7 @@ class OpsVesselController extends Controller
         }
 
     }
+
 
     /**
      * Update the specified vessel in storage.
@@ -188,6 +199,66 @@ class OpsVesselController extends Controller
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    // filter only vessel id wise
+    public function getVesselLatest(Request $request): JsonResponse
+    {            
+        $vessel= OpsVessel::with([
+            'opsVesselCertificates' => function ($query) use ($request) {
+                $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                    $query2->select(DB::raw('MAX(id)'))
+                        ->from('ops_vessel_certificates')
+                        ->groupBy('ops_maritime_certification_id');
+                })->latest();
+            },
+            'opsBunkers'
+        ])->find($request->vessel_id);
+        
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->opsMaritimeCertification->id;
+            return $certificate;
+        });
+        try
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+    public function getVesselsIdsWise(Request $request): JsonResponse
+    {
+        // dd($request);
+        $vessel= OpsVessel::with([
+            'opsVesselCertificates' => function ($query) use ($request) {
+                $query->where('ops_maritime_certification_id', $request->certificate_id);
+            },
+            'opsBunkers'
+        ])->find($request->vessel_id);
+
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->opsMaritimeCertification->id;
+            return $certificate;
+        });
+        try
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
     }
 
 
