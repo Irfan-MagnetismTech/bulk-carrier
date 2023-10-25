@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntRunHour;
+use Modules\Maintenance\Http\Requests\MntRunHourRequest;
 
 class MntRunHourController extends Controller
 {
@@ -56,7 +57,7 @@ class MntRunHourController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntRunHourRequest $request)
     {
         try {
             $input = $request->all();
@@ -110,7 +111,7 @@ class MntRunHourController extends Controller
                             "mnt_item_id"=>'This item has no defined job'
                         ]
                     );
-                    return response()->json($error, 500);
+                    return response()->json($error, 422);
                 }
                 
             }
@@ -162,7 +163,7 @@ class MntRunHourController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntRunHourRequest $request, $id)
     {
         try {
             $input = $request->all();
