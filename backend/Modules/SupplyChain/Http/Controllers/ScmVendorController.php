@@ -31,7 +31,7 @@ class ScmVendorController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmVendorRequest $request)
+    public function store(ScmVendorRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -68,7 +68,7 @@ class ScmVendorController extends Controller
      * @param ScmVendor $vendor
      * @return JsonResponse
      */
-    public function update(ScmVendorRequest $request, ScmVendor $vendor)
+    public function update(ScmVendorRequest $request, ScmVendor $vendor): JsonResponse
     {
         try {
             $vendor->update($request->all());
@@ -100,7 +100,7 @@ class ScmVendorController extends Controller
         }
     }
 
-    public function searchVendor(Request $request)
+    public function searchVendor(Request $request): JsonResponse
     {
         $vendor = ScmVendor::query()
             ->with('scmVendorContactPersons')

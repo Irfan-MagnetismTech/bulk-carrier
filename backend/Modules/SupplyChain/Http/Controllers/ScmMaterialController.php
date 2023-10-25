@@ -42,7 +42,7 @@ class ScmMaterialController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmMaterialRequest $request)
+    public function store(ScmMaterialRequest $request): JsonResponse
     {
         $requestData = $request->all();
         try {

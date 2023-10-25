@@ -36,7 +36,7 @@ class ScmOpeningStockController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -54,7 +54,7 @@ class ScmOpeningStockController extends Controller
                     'gross_unit_price' => $scm_opening_stock_line['rate'],
                     'net_unit_price' => $scm_opening_stock_line['rate'],
                     'currency' => 'BDT',
-                    'received_date' => $scm_opening_stock->date,
+                    'received_date' => now(),
                     'business_unit' => $scm_opening_stock->business_unit,
                 ];
             });
@@ -92,7 +92,7 @@ class ScmOpeningStockController extends Controller
      * @param ScmOpeningStock $opening_stock
      * @return JsonResponse
      */
-    public function update(Request $request, ScmOpeningStock $opening_stock)
+    public function update(Request $request, ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
             $opening_stock->update($request->all());
@@ -124,7 +124,7 @@ class ScmOpeningStockController extends Controller
         }
     }
 
-    public function searchOpeningStock(Request $request)
+    public function searchOpeningStock(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $opening_stock = ScmOpeningStock::query()
