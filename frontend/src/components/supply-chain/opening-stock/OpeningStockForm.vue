@@ -47,6 +47,25 @@
         props.form.scm_warehouse_id = value?.id;
     });
 
+//     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
+//       props.form.scmOpeningStockLines.forEach((item, index) => {
+//       props.form.scmOpeningStockLines[index].unit = props.form.scmOpeningStockLines[index].scmMaterial.unit
+//     });
+// }, {deep: true});
+
+watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
+          newLines.forEach((line, index) => {
+            if (line.scmMaterial) {
+              const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+              if (selectedMaterial) {
+                props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+                props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+              }
+            }
+          });
+        },
+        { deep: true }
+    );
 
 
 

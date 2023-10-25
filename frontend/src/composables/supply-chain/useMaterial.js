@@ -105,7 +105,7 @@ export default function useMaterial() {
         
         console.log(formData,form);
         try {
-            const { data, status } = await Api.put(
+            const { data, status } = await Api.post(
                 `/${BASE}/materials/${materialId}`,
                 formData
             );
