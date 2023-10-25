@@ -49,6 +49,7 @@ function confirmDelete(id) {
   })
 }
 
+
 onMounted(() => {
   watchEffect(() => {
     getVesselCertificates(props.page, businessUnit.value)
@@ -71,8 +72,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate List</h2>
-    <default-button :title="'Create Vessel Certificate'" :to="{ name: 'ops.vessel-certificates.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate History</h2>
+    <default-button :title="'Vessel Certificate List'" :to="{ name: 'ops.vessel-certificates.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -108,44 +109,11 @@ onMounted(() => {
             <th>Left Days</th>
             <th>Reference Number</th>
             <th>Certificate Image</th>
-            <th>History</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="Object.keys(vesselCertificates).length">
             
-            <template v-for="(certificates, key, index) in vesselCertificates">
-              <tr v-for="(item, itemIndex) in certificates">
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ certificates[0].opsVessel?.name }}</td>
-                <td>
-                  {{ item?.opsMaritimeCertification?.name }}
-                </td>
-                <td>
-                  {{ item?.opsMaritimeCertification?.validity }}
-                </td>
-                <td>
-                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
-                </td>
-                <td>
-                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
-                </td>
-                <td></td>
-                <td>
-                  {{ item?.reference_number }}
-                </td>
-                <td>
-                  {{ item?.attachment }}
-                </td>
-                <td>
-                  <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                    <router-link :to="{ name: 'ops.vessel-certificates.history', params: { vesselId: certificates[0].opsVessel?.id, certificateId: item.opsMaritimeCertification.id } }" >
-                    History
-                    </router-link>
-                  </button>
-                </td>
-              </tr>
-            </template>
-              
           </tbody>
           
           <tfoot v-if="!Object.keys(vesselCertificates)?.length">

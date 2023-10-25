@@ -189,4 +189,10 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-certificates/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/vessel-certificates/history/:vesselId/:certificateId`,
+		name: `${BASE}.vessel-certificates.history`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/history-index.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

@@ -164,75 +164,6 @@ export default function useVesselCertificate() {
 		}
 	}
 
-	async function downloadGeneralParticular(vesselCertificateId) {
-		axios({
-            url: '/api/v1/download-file/' + vesselCertificateId,
-            data: searchParameter,
-            method: 'GET',
-            responseType: 'blob', // important
-        }).then((response) => {
-            let dateTime = new Date();
-
-            //stream pdf file to new tab start
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.click();
-            //stream pdf file to new tab end
-        }).catch((error) => {
-            if (error.response.status === 422) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    const data = JSON.parse(reader.result);
-                    const message = data.message;
-                    console.log("Response message: " + message);
-                    notification.showError(error.response.status, '', message);
-                }
-                reader.readAsText(error.response.data);
-            } else {
-                notification.showError(error.response.status, '', error.response.statusText);
-            }
-        }).finally(() => {
-            NProgress.done();
-            isLoading.value = false;
-        });
-	}
-
-	async function downloadChartererParticular(vesselCertificateId) {
-		axios({
-            url: '/api/v1/download-file/' + vesselCertificateId,
-            data: searchParameter,
-            method: 'GET',
-            responseType: 'blob', // important
-        }).then((response) => {
-            let dateTime = new Date();
-
-            //stream pdf file to new tab start
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.click();
-            //stream pdf file to new tab end
-        }).catch((error) => {
-            if (error.response.status === 422) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    const data = JSON.parse(reader.result);
-                    const message = data.message;
-                    console.log("Response message: " + message);
-                    notification.showError(error.response.status, '', message);
-                }
-                reader.readAsText(error.response.data);
-            } else {
-                notification.showError(error.response.status, '', error.response.statusText);
-            }
-        }).finally(() => {
-            NProgress.done();
-            isLoading.value = false;
-        });
-	}
 
 	return {
 		vesselCertificates,
@@ -243,8 +174,6 @@ export default function useVesselCertificate() {
 		updateVesselCertificate,
 		deleteVesselCertificate,
 		getVesselCertificatesByNameOrCode,
-		downloadGeneralParticular,
-		downloadChartererParticular,
 		isLoading,
 		errors,
 	};
