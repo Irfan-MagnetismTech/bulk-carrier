@@ -43,11 +43,10 @@
     const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 
     watch(dropZoneFile, (value) => {
-        console.log("dropZoneFile", value);
         if (value !== null && value !== undefined) {
             props.form.sample_photo = value;
         }
-        });
+    });
 
     function fetchUnit(query, loading) {
         searchUnit(query, loading);
