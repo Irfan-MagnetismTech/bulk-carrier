@@ -83,7 +83,16 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
-        $vessel->load('opsVesselCertificates','opsBunkers');
+        $vessel->load([
+            'opsVesselCertificates' => function ($query){
+                $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                    $query2->select(DB::raw('MAX(id)'))
+                        ->from('ops_vessel_certificates')
+                        ->groupBy('ops_maritime_certification_id');
+                })->latest();
+            },
+            'opsBunkers'
+        ]);
         
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
@@ -233,8 +242,6 @@ class OpsVesselController extends Controller
         ])->find($request->vessel_id);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
-            $certificate->issue_date = $certificate->opsMaritimeCertification->issue_date;
-            $certificate->expire_date  =$certificate->opsMaritimeCertification->expire_date;
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
