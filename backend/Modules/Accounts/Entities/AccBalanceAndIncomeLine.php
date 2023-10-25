@@ -18,7 +18,7 @@ class AccBalanceAndIncomeLine extends Model
     /**
      * @return mixed
      */
-    public function parent()
+    public function parentLine()
     {
         return $this->belongsTo(AccBalanceAndIncomeLine::class, 'parent_id', 'id')->withDefault();
     }
