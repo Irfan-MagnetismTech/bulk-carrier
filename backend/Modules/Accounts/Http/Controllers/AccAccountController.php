@@ -18,7 +18,7 @@ class AccAccountController extends Controller
     {
         try {
             $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $accounts, 200);
@@ -26,7 +26,7 @@ class AccAccountController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -41,7 +41,7 @@ class AccAccountController extends Controller
             $accAccountData = $request->only('acc_balance_and_income_line_id','parent_account_id','account_name','account_code','account_type','accountable_type','accountable_id','official_code','is_archived','business_unit');
             $accAccount     = AccAccount::create($accAccountData);
 
-            return response()->success('Created Succesfully', $accAccount, 201);
+            return response()->success('Created Successfully', $accAccount, 201);
         }
         catch (QueryException $e)
         {
@@ -63,7 +63,7 @@ class AccAccountController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -84,7 +84,7 @@ class AccAccountController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -103,6 +103,6 @@ class AccAccountController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 }
