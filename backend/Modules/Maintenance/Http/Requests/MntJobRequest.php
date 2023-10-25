@@ -21,7 +21,7 @@ class MntJobRequest extends FormRequest
             'mntJobLines.*.cycle' => 'required|integer',
             'mntJobLines.*.cycle_unit' => 'required',
             'mntJobLines.*.min_limit' => 'required|integer',
-            'mntJobLines.*.next_due' => 'required',
+            'mntJobLines.*.last_done' => 'required',
         ];
     }
 

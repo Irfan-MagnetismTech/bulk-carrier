@@ -11,7 +11,7 @@ class MntJobLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','next_due','remarks','status'];
+    protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','remarks','status'];
     
     
     public function mntJob () : BelongsTo

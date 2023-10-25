@@ -100,9 +100,6 @@ class MntRunHourController extends Controller
 
                     if(!empty($mntRunHour)) { 
                         // If run hour entry successful, update next due for relevant jobs
-                        $mntJobLinesUpdate = $mntJobItem->mntJobLines()
-                                                        ->where('cycle_unit', 'Hours ')
-                                                        ->decrement('next_due', $running_hour);
                         $mntJobUpdate = $mntJobItem->increment('present_run_hour', $running_hour);
                     }
                 } else {
@@ -181,12 +178,8 @@ class MntRunHourController extends Controller
             )
             ->first();
 
-            $presentRunHourReduced = $mntJobItem->present_run_hour - $presentRunHour;
-
             $mntJobUpdate = $mntJobItem->update(['present_run_hour' => $presentRunHour]); // mnt_jobs updated
-            $mntJobLinesUpdate = $mntJobItem->mntJobLines()
-                                            ->where('cycle_unit', 'Hours ')
-                                            ->increment('next_due', $presentRunHourReduced);
+            
             $mntRunHour = MntRunHour::find($id)
                                 ->update([
                                     'present_run_hour' => $presentRunHour,
