@@ -130,7 +130,7 @@ import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
-const { getItemCodeByGroupId, errors } = useItem();
+const { getItemCodeByGroupId } = useItem();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -194,6 +194,7 @@ onMounted(() => {
   watchEffect(() => {
     if(businessUnit.value){
       getShipDepartmentsWithoutPagination(businessUnit.value);
+    }
       
   });
 });
