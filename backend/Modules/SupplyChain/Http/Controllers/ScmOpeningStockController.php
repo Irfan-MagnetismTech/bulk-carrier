@@ -42,6 +42,25 @@ class ScmOpeningStockController extends Controller
             DB::beginTransaction();
             $scm_opening_stock = ScmOpeningStock::create($request->all());
             $scm_opening_stock->scmOpeningStockLines()->createMany($request->scmOpeningStockLines);
+
+            $stock_ledger_data = [];
+            collect($request->scmOpeningStockLines)->map(function ($scm_opening_stock_line) use ($scm_opening_stock, &$stock_ledger_data) {
+                $stock_ledger_data[] = [
+                    'scm_material_id' => $scm_opening_stock_line['scm_material_id'],
+                    'scm_warehouse_id' => $scm_opening_stock->scm_warehouse_id,
+                    'acc_cost_center_id' => null,
+                    'parent_id' => null,
+                    'quantity' => $scm_opening_stock_line['quantity'],
+                    'gross_unit_price' => $scm_opening_stock_line['rate'],
+                    'net_unit_price' => $scm_opening_stock_line['rate'],
+                    'currency' => 'BDT',
+                    'received_date' => $scm_opening_stock->date,
+                    'business_unit' => $scm_opening_stock->business_unit,
+                ];
+            });
+
+            $scm_opening_stock->stockable()->createMany($stock_ledger_data);
+
             DB::commit();
 
             return response()->success('Data created succesfully', $scm_opening_stock, 201);

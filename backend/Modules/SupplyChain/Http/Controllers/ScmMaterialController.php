@@ -123,7 +123,7 @@ class ScmMaterialController extends Controller
                 $query->whereScmMaterialCategoryId(request()->materialCategoryId);
             })
             ->where(function ($query) {
-                $query->whereName('like', "%" . request()->searchParam . "%")
+                $query->where('name', 'like', "%" . request()->searchParam . "%")
                     ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
             })
             ->orderByDesc('name')
