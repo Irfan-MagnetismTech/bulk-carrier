@@ -1,22 +1,20 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, watchEffect,watch,ref} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import useOpeningStock from "../../../composables/supply-chain/useOpeningStock";
+import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
-import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
+import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-
-const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading } = useOpeningStock();
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading } = usePurchaseRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   page: {
@@ -25,20 +23,27 @@ const props = defineProps({
   },
 });
 
-setTitle('Opening Stocks');
-// Code for global search starts here
+// Code for global search start
 const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
-const table = "opening_stocks";
+const table = "purchase_requisitions";
 
 const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+setTitle('Purchase Requisitions');
+// Code for global search starts here
+
+watch(searchKey, newQuery => {
+  getPurchaseRequisitions(props.page, columns, searchKey.value, table);
+});
+
+
 onMounted(() => {
   watchEffect(() => {
-    getOpeningStocks(props.page,businessUnit.value)
+    getPurchaseRequisitions(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
@@ -46,7 +51,7 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching opening-stock category:", error);
+      console.error("Error fetching PR:", error);
     });
 });
 
@@ -62,7 +67,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteOpeningStock(id);
+            deletePurchaseRequisition(id);
           }
         })
       }
@@ -70,56 +75,63 @@ function confirmDelete(id) {
 
 <template>
   <!-- Heading -->
+ 
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Opening Stock List</h2>
-    <default-button :title="'Create Opening Stock'" :to="{ name: 'scm.opening-stock.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Purchase Requisition'" :to="{ name: 'scm.purchase-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
+    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ purchaseRequisitions?.from }}-{{ purchaseRequisitions?.to }} of {{ purchaseRequisitions?.total }}</span> -->
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
       </svg>
-      <input type="text" placeholder="Search..." class="search" />
+      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
     </div>
   </div>
-
+  <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Name</th>
-            <th>Short Code</th>
+            <th>Date</th>
+            <th>scm_warehouse_id</th>
             <th>Business Unit</th>
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(openingStock,index) in (openingStocks?.data ? openingStocks?.data : openingStocks)" :key="index">
-              <td>{{ openingStocks?.from + index }}</td>
-              <td>{{ openingStock?.date }}</td>
-              <td>{{ openingStock?.scm_warehouse_id }}</td>
+            <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
+              <td>{{ purchaseRequisitions?.from + index }}</td>
+              <td>{{ purchaseRequisition?.date }}</td>
+              <td>{{ purchaseRequisition?.scm_warehouse_id }}</td>
               <td>
-                <span :class="openingStock?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ openingStock?.business_unit }}</span>
+                <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.opening-stock.edit', params: { openingStockId: openingStock.id } }"></action-button>
-                <action-button @click="confirmDelete(openingStock.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!openingStocks?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!purchaseRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
-        <tr v-else-if="!openingStocks?.data?.length">
-          <td colspan="7">No Material Category found.</td>
+        <tr v-else-if="!purchaseRequisitions?.data?.length">
+          <td colspan="7">No PR found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="openingStocks" to="scm.opening-stock.index" :page="page"></Paginate>
+    <Paginate :data="purchaseRequisitions" to="scm.opening-stock.index" :page="page"></Paginate>
   </div>
+  <!-- Heading -->
+  
+  
+
+  
 </template>

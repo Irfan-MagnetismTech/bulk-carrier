@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted ,watchEffect} from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
@@ -12,14 +12,17 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
+      formType: { type: String, required : false },
     });
 
     function addRow() {
       props.form.scmOpeningStockLines.push(props.materialObject);
+      
     }
 
     function removeRow(index){
       props.form.scmOpeningStockLines.splice(index, 1);
+     
     }
 
     function setMaterialOtherData(datas,index){
@@ -43,6 +46,22 @@
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
     });
+
+
+
+
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+onMounted(() => {
+  watchEffect(() => {
+    const customDataTable = document.getElementById("customDataTable");
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+  });
+});
+
 </script>
 <template>
   <!-- Basic information -->
@@ -71,7 +90,7 @@
   <!-- CS Materials -->
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-    <table class="w-full whitespace-no-wrap" id="table">
+    <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
