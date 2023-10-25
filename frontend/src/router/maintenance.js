@@ -151,7 +151,34 @@ export default [
 	},
 
 	/* Job end */
-	
 
+	/* Work Requisition start */
+	{
+		path: `/${BASE}/work-requisitions`,
+		name: `${BASE}.work-requisitions.index`,
+		component: () => import(`../views/${VIEWBASE}/work-requisition/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/work-requisitions/create`,
+		name: `${BASE}.work-requisitions.create`,
+		component: () => import(`../views/${VIEWBASE}/work-requisition/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-create' },
+	},
+	{
+		path: `/${BASE}/work-requisitions/:workRequisitionId/edit`,
+		name: `${BASE}.work-requisitions.edit`,
+		component: () => import(`../views/${VIEWBASE}/work-requisition/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-edit' },
+	},
+	{
+		path: `/${BASE}/work-requisitions/:workRequisitionId`,
+		name: `${BASE}.work-requisitions.show`,
+		component: () => import(`../views/${VIEWBASE}/work-requisition/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-show'  },
+	},
+
+	/* Work Requisition end */
 	
 ];
