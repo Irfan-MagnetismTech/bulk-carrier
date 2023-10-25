@@ -84,27 +84,32 @@ class MntRunHourController extends Controller
                                         'ops_vessel_id'=>$input['ops_vessel_id']]
                                     )
                                     ->first();
-                
-                $presentRunHour = $mntJobItem['present_run_hour'] + $running_hour;
 
-                // create run hour record
-                $runHour['ops_vessel_id'] = $input['ops_vessel_id'];
-                $runHour['mnt_item_id'] = $mntItemId['id'];
-                $runHour['previous_run_hour'] = $mntJobItem['present_run_hour'];
-                $runHour['running_hour'] = $running_hour;
-                $runHour['present_run_hour'] = $presentRunHour;
-                $runHour['updated_on'] = $input['updated_on'];
-                $runHour['business_unit'] = $input['business_unit'];
-                $mntRunHour = MntRunHour::create($runHour);
+                if(!is_null($mntJobItem)) {
+                    $presentRunHour = $mntJobItem['present_run_hour'] + $running_hour;
 
-                if(!empty($mntRunHour)) { 
-                    // If run hour entry successful, update next due for relevant jobs
-                    $mntJobLinesUpdate = $mntJobItem->mntJobLines()
-                                                    ->where('cycle_unit', 'Hours ')
-                                                    ->decrement('next_due', $running_hour);
-                    $mntJobUpdate = $mntJobItem->increment('present_run_hour', $running_hour);
+                    // create run hour record
+                    $runHour['ops_vessel_id'] = $input['ops_vessel_id'];
+                    $runHour['mnt_item_id'] = $mntItemId['id'];
+                    $runHour['previous_run_hour'] = $mntJobItem['present_run_hour'];
+                    $runHour['running_hour'] = $running_hour;
+                    $runHour['present_run_hour'] = $presentRunHour;
+                    $runHour['updated_on'] = $input['updated_on'];
+                    $runHour['business_unit'] = $input['business_unit'];
+                    $mntRunHour = MntRunHour::create($runHour);
+
+                    if(!empty($mntRunHour)) { 
+                        // If run hour entry successful, update next due for relevant jobs
+                        $mntJobLinesUpdate = $mntJobItem->mntJobLines()
+                                                        ->where('cycle_unit', 'Hours ')
+                                                        ->decrement('next_due', $running_hour);
+                        $mntJobUpdate = $mntJobItem->increment('present_run_hour', $running_hour);
+                    }
+                } else {
+                    DB::rollBack();
+                    return response()->error('This item has no defined job', 500);
                 }
-
+                
             }
             
             DB::commit();
