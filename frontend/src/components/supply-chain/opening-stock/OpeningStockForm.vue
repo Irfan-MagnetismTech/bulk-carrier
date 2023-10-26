@@ -66,8 +66,22 @@ watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
         },
         { deep: true }
     );
+// watch for scmOpeningStockLines and update the unit value and check if the previous material is same with current material
+// if not same oldLines.material_id and oldLines.material_id then update the unit value
+// if same then do nothing
+// watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
+//           newLines.forEach((line, index) => {
+//             if (line.scmMaterial.id != oldLines[index].scmMaterial.id) {
+//               props.form.scmOpeningStockLines[index].unit = oldLines[index].unit;
+//             }
+//           });
 
 
+
+
+
+
+  
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;

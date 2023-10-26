@@ -215,7 +215,7 @@ export default [
     /* Opening Stock Route end */
 
 
-    /* Opening Stock Route start */
+    /* Purchase Requisition start */
 
     {
         path: `/${BASE}/purchase-requisitions`,
@@ -243,7 +243,37 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisitions-show'  },
     },
 
-    /* Opening Stock Route end */
+    /* Purchase Requisition end */
+
+    /* Purchase Order start */
+
+    {
+        path: `/${BASE}/purchase-orders`,
+        name: `${BASE}.purchase-orders.index`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/purchase-orders/create`,
+        name: `${BASE}.purchase-orders.create`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-create' },
+    },
+    {
+        path: `/${BASE}/purchase-orders/:purchaseOrderId/edit`,
+        name: `${BASE}.purchase-orders.edit`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-edit' },
+    },
+    {
+        path: `/${BASE}/purchase-orders/:purchaseRequisitionId`,
+        name: `${BASE}.purchase-orders.show`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-show'  },
+    },
+
+    /* Purchase Requisition end */
 
     
 ];
