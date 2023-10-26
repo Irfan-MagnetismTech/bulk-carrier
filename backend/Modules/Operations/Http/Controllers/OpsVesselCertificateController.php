@@ -231,7 +231,7 @@ class OpsVesselCertificateController extends Controller
                     $expire_days = $currentDate->diffInDays($expireDate);
                     $certificate->expire_days = $expire_days;                    
                     return $certificate->expire_days <= 60;
-                });
+                })->values();
             })->filter();
             
             return response()->success('Successfully retrieved vessel certificates.', $filterCertificates, 200);
