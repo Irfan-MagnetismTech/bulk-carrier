@@ -8,9 +8,32 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Modules\Accounts\Entities\AccAccount;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
+use Modules\Accounts\Entities\AccCostCenter;
 
 class AccCommonController extends Controller
 {
+    public function getCostCenters(Request $request)
+    {
+        try {
+            $costCenters = AccCostCenter::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->name, function($q) {
+                $q->where('name', 'like', '%' . request()->name . '%');
+            })
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $costCenters,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function getBalanceIncomeLinesOnly()
     {
 
