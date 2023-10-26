@@ -130,8 +130,8 @@
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.pr_ref" required class="form-input vms-readonly-input" name="pr_ref" :id="'pr_ref'" />
-          <Error v-if="errors?.pr_ref" :errors="errors.pr_ref"  />
+          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
