@@ -30,6 +30,7 @@ class OpsVesselCertificate extends Model
     {
         return $this->belongsTo(OpsVessel::class);
     }
+    
     public function opsMaritimeCertification()
     {
         return $this->belongsTo(OpsMaritimeCertification::class);

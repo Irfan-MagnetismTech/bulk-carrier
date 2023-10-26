@@ -16,7 +16,7 @@ use Auth;
 class OpsVesselParticularController extends Controller
 {
    // use HasRoles;
-   function __construct(private FileUploadService $fileUpload,)
+   function __construct(private FileUploadService $fileUpload)
    {
     //     $this->middleware('permission:vessel-particular-create|vessel-particular-edit|vessel-particular-show|vessel-particular-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-particular-create', ['only' => ['store']]);
