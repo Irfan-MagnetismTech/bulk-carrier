@@ -25,7 +25,7 @@ const props = defineProps({
 
 const critical = ['No','Yes'];
 // Code for global search start
-const columns = ["date"];
+const columns = ["ref_no"];
 const searchKey = useDebouncedRef('', 600);
 const table = "purchase_requisitions";
 
@@ -111,7 +111,7 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ purchaseRequisitions?.from + index }}</td>
-              <td>{{ purchaseRequisition?.pr_no }}</td>
+              <td>{{ purchaseRequisition?.ref_no }}</td>
               <td>{{ purchaseRequisition?.raised_date }}</td>
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
