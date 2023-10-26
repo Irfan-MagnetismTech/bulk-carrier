@@ -194,12 +194,15 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code,present_run_hour','mntJobLines'])
+            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntJobLines'])
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
                         ->when(request()->has('ops_vessel_id'), function($q){
-                            $q->where('ops_vessel_id', request()->vessel_id);  
+                            $q->where('ops_vessel_id', request()->ops_vessel_id);  
+                        })
+                        ->when(request()->has('mnt_item_id'), function($q){
+                            $q->where('mnt_item_id', request()->mnt_item_id);  
                         })
                         ->get();
 
@@ -223,7 +226,7 @@ class MntJobController extends Controller
             $jobs = MntItem::with(['mntJobs', 'mntJobLines' => function($q){
                                 $q->where(function ($subQuery){
                                     $subQuery->whereHas('mntJob.mntItem',function($q){
-                                        $q->havingRaw('mnt_items.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                        $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
                                             ->where('mnt_job_lines.cycle_unit', 'Hours');
                                     })->orWhereHas('mntJob',function($q){
                                         $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
@@ -239,21 +242,34 @@ class MntJobController extends Controller
                                     });
                                 });
                             }])
-                            ->whereHas('mntJobs.mntJobLines',function($q){
-                                $q->havingRaw('mnt_items.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
-                                    ->where('mnt_job_lines.cycle_unit', 'Hours');
+                            ->where(function ($jobLineQuery){
+                                $jobLineQuery->whereHas('mntJobs.mntJobLines',function($q){
+                                    $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                        ->where('mnt_job_lines.cycle_unit', 'Hours');
+                                })
+                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                    $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
+                                        ->where('mnt_job_lines.cycle_unit', 'Days');
+                                })
+                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                    $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
+                                        ->where('mnt_job_lines.cycle_unit', 'Weeks');
+                                })
+                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                    $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
+                                        ->where('mnt_job_lines.cycle_unit', 'Months');
+                                });
                             })
-                            ->orWhereHas('mntJobs.mntJobLines',function($q){
-                                $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
-                                    ->where('mnt_job_lines.cycle_unit', 'Days');
+                            ->Where(function($jobQuery){
+                                $jobQuery->whereHas('mntJobs',function($q){
+                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                                        ->when(request()->has('mnt_item_id'), function($qJobs){
+                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+                                        });  
+                                });
                             })
-                            ->orWhereHas('mntJobs.mntJobLines',function($q){
-                                $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
-                                    ->where('mnt_job_lines.cycle_unit', 'Weeks');
-                            })
-                            ->orWhereHas('mntJobs.mntJobLines',function($q){
-                                $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
-                                    ->where('mnt_job_lines.cycle_unit', 'Months');
+                            ->when(request()->business_unit != "ALL", function($qItems){
+                                $qItems->where('business_unit', request()->business_unit);  
                             })
                             ->get();
             // dd(DB::getQueryLog());
