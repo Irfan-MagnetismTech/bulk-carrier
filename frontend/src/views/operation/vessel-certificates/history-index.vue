@@ -116,15 +116,42 @@ onMounted(() => {
             <th>Action</th>
           </tr>
           </thead>
-          <tbody v-if="Object.keys(vesselCertificates).length">
-            
+          <tbody v-if="vesselCertificates?.opsVesselCertificates?.length">
+            <tr v-for="(item, itemIndex) in vesselCertificates.opsVesselCertificates">
+                <td>{{ itemIndex+1 }}</td>
+                <td :rowspan="vesselCertificates.opsVesselCertificates.length" v-if="itemIndex == 0">{{ vesselCertificates?.name }}</td>
+                <td>
+                  {{ item?.opsMaritimeCertification?.name }}
+                </td>
+                <td>
+                  {{ item?.opsMaritimeCertification?.validity }}
+                </td>
+                <td>
+                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
+                </td>
+                <td>
+                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
+                </td>
+                <td></td>
+                <td>
+                  {{ item?.reference_number }}
+                </td>
+                <td>
+                  {{ item?.attachment }}
+                </td>
+                <td class="items-center justify-center space-x-2 text-gray-600">
+                    <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.opsMaritimeCertification?.id } }"></action-button>
+                    <action-button @click="confirmDelete(vessel.id)" :action="'delete'"></action-button>
+
+                </td>
+              </tr>
           </tbody>
           
-          <tfoot v-if="!Object.keys(vesselCertificates)?.length">
+          <tfoot v-if="!vesselCertificates?.opsVesselCertificates?.length">
           <tr v-if="isLoading">
             <td colspan="14">Loading...</td>
           </tr>
-          <tr v-else-if="!Object.keys(vesselCertificates)?.length">
+          <tr v-else-if="!vesselCertificates?.opsVesselCertificates?.length">
             <td colspan="14">No data found.</td>
           </tr>
           </tfoot>

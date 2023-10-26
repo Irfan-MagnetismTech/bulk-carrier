@@ -61,7 +61,7 @@ export default function useVesselCertificate() {
 		formData.append('info', JSON.stringify(form));
 
 		try {
-			const { data, status } = await Api.post('/ops/vessel-certificates', form);
+			const { data, status } = await Api.post('/ops/vessel-certificates', formData);
 			vesselCertificate.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.vessel-certificates.index' });
@@ -170,7 +170,7 @@ export default function useVesselCertificate() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/vessel-certificate-history?vessel_id${vesselId}&certificate_id=${certificateId}`);
+			const { data, status } = await Api.get(`/ops/vessel-certificate-history?vessel_id=${vesselId}&certificate_id=${certificateId}`);
 			vesselCertificates.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
