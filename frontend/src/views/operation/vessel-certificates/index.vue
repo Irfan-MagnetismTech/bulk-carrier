@@ -124,10 +124,10 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.validity }}
                 </td>
                 <td>
-                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
+                  <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
                 <td>
-                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
+                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
                 <td></td>
                 <td>

@@ -90,6 +90,7 @@ class OpsVesselCertificateController extends Controller
     public function show(OpsVesselCertificate $vessel_certificate): JsonResponse
     {
         $vessel_certificate->load('opsVessel','opsMaritimeCertification');
+        $vessel_certificate->opsMaritimeCertification->ops_maritime_certification_id = $vessel_certificate->opsMaritimeCertification->id;
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
