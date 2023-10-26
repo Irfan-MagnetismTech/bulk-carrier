@@ -64,10 +64,10 @@ class AccCommonController extends Controller
             foreach ($items as $item)
             {
                 $response[] = [
-                    'account_name'             => $item->account_name,
-                    'account_id'               => $item->id,
-                    'balance_income_line_name' => $item->balanceIncome->line_text,
-                    'balance_income_line_id'   => $item->balanceIncome->id,
+                    'acc_account_name'             => $item->account_name,
+                    'acc_account_id'               => $item->id,
+                    'acc_balance_income_line_name' => $item->balanceIncome->line_text,
+                    'acc_balance_income_line_id'   => $item->balanceIncome->id,
                 ];
             }
 

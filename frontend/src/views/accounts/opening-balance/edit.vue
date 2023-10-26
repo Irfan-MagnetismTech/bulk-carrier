@@ -19,6 +19,12 @@ const { setTitle } = Title();
 
 setTitle('Edit Opening Balance');
 
+watch(openingBalance, (value) => {
+  if(value) {
+    openingBalance.value.acc_account_name = openingBalance.value.opsVessel;
+  }
+});
+
 onMounted(() => {
   showOpeningBalance(openingBalanceId);
 });
