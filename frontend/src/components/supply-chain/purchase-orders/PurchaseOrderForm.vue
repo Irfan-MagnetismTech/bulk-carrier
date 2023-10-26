@@ -22,11 +22,11 @@
     });
 
     function addMaterial() {
-      props.form.scmPrLines.push(props.materialObject);
+      props.form.scmPoLines.push(props.materialObject);
     }
 
     function removeMaterial(index){
-      props.form.scmPrLines.splice(index, 1);
+      props.form.scmPoLines.splice(index, 1);
     }
 
     // function setMaterialOtherData(index){
@@ -52,7 +52,7 @@
 
     // onMounted(() => {
     //   watchEffect(() => {
-    //     if (props.form.scmPrLines) {
+    //     if (props.form.scmPoLines) {
     //       const customDataTable = document.getElementById("customDataTable");
     //       if (customDataTable) {
     //         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -75,8 +75,8 @@
 
     function setMaterialOtherData(datas,index){
       console.log(datas);
-      props.form.scmPrLines[index].unit = datas.unit;
-      props.form.scmPrLines[index].scm_material_id = datas.id;
+      props.form.scmPoLines[index].unit = datas.unit;
+      props.form.scmPoLines[index].scm_material_id = datas.id;
     }
 
     function fetchMaterials(search, loading) {
@@ -188,13 +188,13 @@
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmPrLines[index].scmMaterial"
+                        :required="!form.scmPoLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -202,25 +202,25 @@
             </v-select>
             </td>
             <td>
-              <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+              <input type="text" readonly v-model="form.scmPoLines[index].unit" class="vms-readonly-input form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].brand" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].drawing_no" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].part_no" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].rob" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].quantity" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

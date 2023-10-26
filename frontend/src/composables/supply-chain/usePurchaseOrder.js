@@ -16,32 +16,37 @@ export default function usePurchaseOrder() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseOrder = ref( {
-        raised_date: '',
+        ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        po_date: '',
+        pr_no: null,
+        scm_pr_id: null,
+        scmPr: null,
+        pr_date: '',
+        cs_no: '',
+        scm_cs_id: '',
+        scmCs: null,
+        scmVendor: null,
+        scm_vendor_id: null,
+        vendor_name: null,
+        scm_vendor_id: null,
+        currency: 0.0,
+        convertion_rate: '',
         remarks: '',
-        attachment: null,
-        is_critical: 0.0,
-        purchase_center: '',
-        approved_date: '',
-        pr_ref: '',
-        excel: null,
-        entry_type: 0,
+        attachment: '',
         business_unit: '',
-        scmPrLines: [
+        scmPoLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
                 brand: '',
                 model: '',
-                specification: '',
-                origin: '',
-                drawing_no: '',
-                part_no: '',
-                rob: '',
+                required_date: '',
                 quantity: 0.0,
-                required_date: ''
+                rate: 0.0,
+                total_price: 0.0,
             }
         ],
     });
@@ -51,13 +56,10 @@ export default function usePurchaseOrder() {
         unit: '',
         brand: '',
         model: '',
-        specification: '',
-        origin: '',
-        drawing_no: '',
-        part_no: '',
-        rob: '',
+        required_date: '',
         quantity: 0.0,
-        required_date: ''
+        rate: 0.0,
+        total_price: 0.0,
     }
     const excelExportData = ref( {
         store_category_name: ''
@@ -105,9 +107,6 @@ export default function usePurchaseOrder() {
         let formData = new FormData();
         if(form.attachment){
             formData.append('attachment', form.attachment);
-        }
-        if(form.entry_type == '1'){
-            formData.append('excel', form.excel);
         }
         formData.append('data', JSON.stringify(form));
 
