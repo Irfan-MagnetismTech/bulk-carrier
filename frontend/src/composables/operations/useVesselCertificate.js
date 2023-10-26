@@ -183,10 +183,36 @@ export default function useVesselCertificate() {
 		}
 	}
 
+	async function getRenewableVesselCertificates(page, businessUnit) {
+		//NProgress.start();
+		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.get('/ops/vessel-certificates-renew', {
+				params: {
+					page: page || 1,
+					business_unit: businessUnit,
+
+				},
+			});
+			vesselCertificates.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			//notification.showError(status);
+		} finally {
+			//NProgress.done();
+			loader.hide();
+			isLoading.value = false;
+		}
+	}
+
 	return {
 		vesselCertificates,
 		vesselCertificate,
 		getVesselCertificates,
+		getRenewableVesselCertificates,
 		storeVesselCertificate,
 		showVesselCertificate,
 		updateVesselCertificate,
