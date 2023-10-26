@@ -16,7 +16,7 @@ export default function usePurchaseRequisition() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseRequisition = ref( {
-        date: '',
+        raised_date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
         remarks: '',
@@ -24,11 +24,11 @@ export default function usePurchaseRequisition() {
         is_critical: 0.0,
         purchase_center: '',
         approved_date: '',
-        pr_ref: '',
+        ref_no: '',
         excel: null,
         entry_type: 0,
         business_unit: '',
-        ScmPrLines: [
+        scmPrLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
@@ -133,10 +133,6 @@ export default function usePurchaseRequisition() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
             purchaseRequisition.value = data.value;
-            purchaseRequisition.value.purchases = data.value.stockable;
-            purchaseRequisition.value.purchases.forEach((purchase) => {
-                purchase.purchase_category_name = purchase?.purchase_category?.name;
-            });
 
         } catch (error) {
             const { data, status } = error.response;
@@ -148,8 +144,6 @@ export default function usePurchaseRequisition() {
     }
 
     async function updatePurchaseRequisition(form, purchaseRequisitionId) {
-        console.log(form);
-
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -159,9 +153,10 @@ export default function usePurchaseRequisition() {
         }
 
         formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions`, formData);
+            const { data, status } = await Api.post(`/${BASE}/purchase-requisitions/${purchaseRequisitionId}`, formData);
             purchaseRequisition.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.purchase-requisitions.index` });
@@ -175,10 +170,6 @@ export default function usePurchaseRequisition() {
     }
 
     async function deletePurchaseRequisition(purchaseRequisitionId) {
-
-        if (!confirm('Are you sure you want to delete this data?')) {
-            return;
-        }
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -200,7 +191,7 @@ export default function usePurchaseRequisition() {
         
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisition`,searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
             filteredPurchaseRequisitions.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
@@ -211,26 +202,110 @@ export default function usePurchaseRequisition() {
     }
 
     async function getStoreCategoryWiseExcel() {
-        try {
-            const { data, status } = await Api.get(`/${BASE}/store-category-wise-excel`, {
-                params: {
-                    store_category_name: excelExportData.value.store_category_name
-                }
-            });
+        
+       
+        // const { data, status } = await Api.get(`/${BASE}/store-category-wise-excel`);
+        // api.get request with responseType blob
+        // axios.get('http://localhost:8000/api/scm/export-materials', {
+        //     responseType: 'blob'
+        //   })
+        //   .then(response => {
 
-            console.log(status);
-        } catch (error) {
-            if (error.response) {
-                const { data, status } = error.response;
-                console.log(data,error.response);
-                notification.showError(status);
+        //     //Create a Blob from the PDF Stream
+        //     const file = new Blob(
+        //       [response.data],
+        //       {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+        //     );
+        //     //Build a URL from the file
+        //     const fileURL = URL.createObjectURL(file);
+        //     //Open the URL on new Window
+
+        //download the file
+        //     const link = document.createElement('a');
+        //     link.href = fileURL;
+        //     link.setAttribute('download', 'file.xlsx'); //or any other extension
+        //     document.body.appendChild(link);
+        //     link.click();
+        //   })
+        //   .catch(error => {
+        
+        axios({
+            url: `/${BASE}/export-materials?store_category=${excelExportData.value.store_category_name}`,
+            method: 'GET',
+            responseType: 'blob', // important
+
+            // send excel file to backend start
+            // data: {
+            //     store_category: excelExportData.value.store_category_name
+            // },
+            // send excel file to backend end
+
+        }).then((response) => {
+            // let dateTime = new Date();
+
+            // //stream pdf file to new tab start
+            // let fileURL = URL.createObjectURL(response.data);
+            // let a = document.createElement('a');
+            // a.href = fileURL;
+            // a.target = '_blank';
+            // a.click();
+            // file name
+            //stream pdf file to new tab end
+
+            // download exel file star
+            // const url = window.URL.createObjectURL(new Blob([response.data]));
+            // const link = document.createElement('a');
+            // download file nam
+
+            let fileURL = URL.createObjectURL(response.data);
+            let a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.download = 'materials.xlsx';
+            a.click();
+            // other way to download file
+
+        }).catch((error) => {
+            if (error.response.status === 422) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const data = JSON.parse(reader.result);
+                    const message = data.message;
+                    console.log("Response message: " + message);
+                    notification.showError(error.response.status, '', message);
+                }
+                reader.readAsText(error.response.data);
             } else {
-                // Handle network or other errors here
-                notification.showError("An error occurred. Please check your internet connection.");
+                notification.showError(error.response.status, '', error.response.statusText);
             }
-        } finally {
-            // loading(false)
-        }
+        }).finally(() => {
+            // NProgress.done();
+            isLoading.value = false;
+        });
+
+
+
+
+        // try {
+        //     const { data, status } = await Api.get(`/${BASE}/export-materials`, {
+        //         params: {
+        //             store_category: excelExportData.value.store_category_name
+        //         }
+        //     });
+
+        //     console.log(status);
+        // } catch (error) {
+        //     if (error.response) {
+        //         const { data, status } = error.response;
+        //         console.log(data,error.response);
+        //         notification.showError(status);
+        //     } else {
+        //         // Handle network or other errors here
+        //         notification.showError("An error occurred. Please check your internet connection.");
+        //     }
+        // } finally {
+        //     // loading(false)
+        // }
     }
 
     return {

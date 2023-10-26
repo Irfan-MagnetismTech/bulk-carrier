@@ -166,7 +166,7 @@ onMounted(() => {
         @apply flex flex-col justify-center w-full md:flex-row md:gap-2;
     }
     .label-group {
-        @apply block w-full mt-3 text-sm font-semibold;
+        @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
         @apply text-gray-700 dark:text-gray-300 text-sm;

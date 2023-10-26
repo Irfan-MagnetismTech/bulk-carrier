@@ -3,10 +3,15 @@ import {ref,onMounted} from "vue";
 
 import Title from "../../../services/title";
 import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
-import PurchaseRequisitionForm from "../../../components/supply-chain/purchase-requisition/PurchaseRequisitionForm.vue";
+import PurchaseRequisitionForm from "../../../components/supply-chain/purchase-requisitions/PurchaseRequisitionForm.vue";
 import { useRoute } from 'vue-router';
 
 const { getPurchaseRequisition, showPurchaseRequisition, purchaseRequisition, updatePurchaseRequisition,materialObject, errors, isLoading } = usePurchaseRequisition();
+
+import useHeroIcon from "../../../assets/heroIcon";
+import DefaultButton from '../../../components/buttons/DefaultButton.vue';
+
+const icons = useHeroIcon();
 
 const { setTitle } = Title();
 const route = useRoute();
@@ -22,7 +27,7 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Purchase Requisition</h2>
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Edit Purchase Requisition</h2>
         <default-button :title="'Opening Stock List'" :to="{ name: 'scm.purchase-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">

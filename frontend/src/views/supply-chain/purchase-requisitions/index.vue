@@ -23,8 +23,9 @@ const props = defineProps({
   },
 });
 
+const critical = ['No','Yes'];
 // Code for global search start
-const columns = ["date"];
+const columns = ["ref_no"];
 const searchKey = useDebouncedRef('', 600);
 const table = "purchase_requisitions";
 
@@ -77,7 +78,7 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Opening Stock List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Purchase Requisition List</h2>
     <default-button :title="'Create Purchase Requisition'" :to="{ name: 'scm.purchase-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
@@ -98,16 +99,23 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Date</th>
-            <th>scm_warehouse_id</th>
+            <th>PR No</th>
+            <th>Raised Date</th>
+            <th>Is Critical</th>
+            <th>Purchase Center</th>
+            <th>Warehouse</th>
             <th>Business Unit</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ purchaseRequisitions?.from + index }}</td>
-              <td>{{ purchaseRequisition?.date }}</td>
-              <td>{{ purchaseRequisition?.scm_warehouse_id }}</td>
+              <td>{{ purchaseRequisition?.ref_no }}</td>
+              <td>{{ purchaseRequisition?.raised_date }}</td>
+              <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
+              <td>{{ purchaseRequisition?.purchase_center }}</td>
+              <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
