@@ -129,7 +129,9 @@ onMounted(() => {
                 <td>
                   <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
-                <td></td>
+                <td>
+                  {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}
+                </td>
                 <td>
                   {{ item?.reference_number }}
                 </td>

@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
+const { vesselCertificates, getRenewableVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
 import Store from './../../../store/index.js';
 import moment from 'moment';
 
@@ -50,7 +50,7 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
-    getVesselCertificates(props.page, businessUnit.value)
+    getRenewableVesselCertificates(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -125,7 +125,9 @@ onMounted(() => {
                 <td>
                   {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
                 </td>
-                <td></td>
+                <td>
+                  {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}
+                </td>
                 <td>
                   <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                     <router-link :to="{ name: 'ops.vessel-certificates.renew', params: { vesselId: certificates[0].opsVessel?.id, marineCertificateId: item.opsMaritimeCertification.id } }" >
