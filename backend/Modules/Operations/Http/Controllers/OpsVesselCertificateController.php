@@ -12,18 +12,20 @@ use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Carbon\Carbon;
 
 class OpsVesselCertificateController extends Controller
 {
-   // use HasRoles;
-    
-   function __construct(private FileUploadService $fileUpload)
+    // use HasRoles;
+        
+    function __construct(private FileUploadService $fileUpload)
     {
     //     $this->middleware('permission:vessel-certificate-create|vessel-certificate-edit|vessel-certificate-show|vessel-certificate-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-certificate-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-certificate-edit', ['only' => ['update']]);
     //     $this->middleware('permission:vessel-certificate-delete', ['only' => ['destroy']]);
     }
+
     /**
      * get all users with their roles.
      * @param Request $request
@@ -42,6 +44,15 @@ class OpsVesselCertificateController extends Controller
             ->paginate(15)
             ->groupBy('ops_vessel_id');
 
+            // Calculate days difference using map
+            $vesselCertificates->map(function ($certificateGroup, $vesselId) use ($currentDate) {
+                return $certificateGroup->map(function ($certificate) use ($currentDate) {                    
+                    $expireDate = Carbon::parse($certificate->expire_date);
+                    $expire_days = $currentDate->diffInDays($expireDate);
+                    $certificate->expire_days = $expire_days;                    
+                    return $certificate;
+                });
+            });
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
@@ -65,7 +76,6 @@ class OpsVesselCertificateController extends Controller
                 '_token',
                 'attachment',
             );
-
             if(isset($request->attachment)){
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates');
                 $vesselCertificate['attachment'] = $attachment;
@@ -191,6 +201,9 @@ class OpsVesselCertificateController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+
 
 
 }
