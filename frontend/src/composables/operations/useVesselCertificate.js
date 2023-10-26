@@ -183,7 +183,7 @@ export default function useVesselCertificate() {
 		}
 	}
 
-	async function getRenewableVesselCertificates(page, businessUnit) {
+	async function getRenewableVesselCertificates(page, businessUnit, filterDays = 60) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -193,7 +193,7 @@ export default function useVesselCertificate() {
 				params: {
 					page: page || 1,
 					business_unit: businessUnit,
-
+					filter_days: filterDays
 				},
 			});
 			vesselCertificates.value = data.value;
