@@ -49,8 +49,7 @@ class ScmPrController extends Controller
      */
     public function store(ScmPrRequest $request): JsonResponse
     {
-        dd($this->uniqueId(ScmPr::class, 'PR'));
-        $requestData = $request->all();
+        $requestData = $request->except('ref_no');
 
         try {
             DB::beginTransaction();
@@ -60,6 +59,7 @@ class ScmPrController extends Controller
                 $requestData['attachment'] = $attachment;
             }
             $requestData['created_by'] = auth()->user()->id;
+            $requestData['ref_no'] = $this->uniqueId(ScmPr::class, 'PR');
 
             $scm_opening_stock = ScmPr::create($requestData);
             $scm_opening_stock->scmPrLines()->createMany($request->scmPrLines);
@@ -81,8 +81,6 @@ class ScmPrController extends Controller
      */
     public function show(ScmPr $purchase_requisition): JsonResponse
     {
-        // dd($this->uniqueId->generate(ScmPr::class, 'PR'));
-
         try {
             return response()->success('data', $purchase_requisition->load('scmPrLines.scmMaterial', 'scmWarehouse'), 200);
         } catch (\Exception $e) {
@@ -99,6 +97,8 @@ class ScmPrController extends Controller
      */
     public function update(Request $request, ScmPr $purchase_requisition): JsonResponse
     {
+        $requestData = $request->except('ref_no');
+
         try {
             DB::beginTransaction();
 
@@ -106,13 +106,10 @@ class ScmPrController extends Controller
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
                 $requestData['attachment'] = $attachment;
             }
-
-            $purchase_requisition->update($request->all());
-
+            $purchase_requisition->update($requestData);
             $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
 
             DB::commit();
-
             return response()->success('Data updated sucessfully!', $purchase_requisition, 202);
         } catch (\Exception $e) {
             DB::rollBack();
