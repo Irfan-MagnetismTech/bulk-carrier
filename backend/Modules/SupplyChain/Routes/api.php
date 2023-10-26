@@ -28,4 +28,6 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
+    Route::get('export-materials', [ScmMaterialController::class, "export"])->name('exportMaterials');
+    Route::get('import-materials', [ScmMaterialController::class, "import"])->name('exportMaterials');
 });

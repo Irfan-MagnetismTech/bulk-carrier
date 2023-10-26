@@ -11,7 +11,8 @@ class ScmPrRequest extends FormRequest
         $data =  request('data');
         $dataArray = json_decode($data, true);
 
-        $mergeData = array_merge($dataArray, ['attachment' => request('attachment')]);
+        $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
+        
         $this->replace($mergeData);
     }
 

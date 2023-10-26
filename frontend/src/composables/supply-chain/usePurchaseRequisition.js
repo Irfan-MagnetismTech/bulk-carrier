@@ -4,9 +4,14 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from './../../store/index.js';
+// import useFileDownload from 'vue-composable/dist/vue-composable.esm';
+import useFileDownload from '../../services/fileDownload.js';
+import NProgress from 'nprogress';
+
 
 export default function usePurchaseRequisition() {
     const BASE = 'scm' 
+    const { downloadFile } = useFileDownload();
     const router = useRouter();
     const purchaseRequisitions = ref([]);
     const filteredPurchaseRequisitions = ref([]);
@@ -202,110 +207,28 @@ export default function usePurchaseRequisition() {
     }
 
     async function getStoreCategoryWiseExcel() {
-        
-       
-        // const { data, status } = await Api.get(`/${BASE}/store-category-wise-excel`);
-        // api.get request with responseType blob
-        // axios.get('http://localhost:8000/api/scm/export-materials', {
-        //     responseType: 'blob'
-        //   })
-        //   .then(response => {
+    
+        try {
+            const { data, status } = await Api.get(`/${BASE}/export-materials`, {
+                params: {
+                    store_category: excelExportData.value.store_category_name,
+                },
+                responseType: 'blob'
+            });
+            downloadFile(data, 'materials.xlsx');
 
-        //     //Create a Blob from the PDF Stream
-        //     const file = new Blob(
-        //       [response.data],
-        //       {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
-        //     );
-        //     //Build a URL from the file
-        //     const fileURL = URL.createObjectURL(file);
-        //     //Open the URL on new Window
-
-        //download the file
-        //     const link = document.createElement('a');
-        //     link.href = fileURL;
-        //     link.setAttribute('download', 'file.xlsx'); //or any other extension
-        //     document.body.appendChild(link);
-        //     link.click();
-        //   })
-        //   .catch(error => {
-        
-        axios({
-            url: `/${BASE}/export-materials?store_category=${excelExportData.value.store_category_name}`,
-            method: 'GET',
-            responseType: 'blob', // important
-
-            // send excel file to backend start
-            // data: {
-            //     store_category: excelExportData.value.store_category_name
-            // },
-            // send excel file to backend end
-
-        }).then((response) => {
-            // let dateTime = new Date();
-
-            // //stream pdf file to new tab start
-            // let fileURL = URL.createObjectURL(response.data);
-            // let a = document.createElement('a');
-            // a.href = fileURL;
-            // a.target = '_blank';
-            // a.click();
-            // file name
-            //stream pdf file to new tab end
-
-            // download exel file star
-            // const url = window.URL.createObjectURL(new Blob([response.data]));
-            // const link = document.createElement('a');
-            // download file nam
-
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.download = 'materials.xlsx';
-            a.click();
-            // other way to download file
-
-        }).catch((error) => {
-            if (error.response.status === 422) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    const data = JSON.parse(reader.result);
-                    const message = data.message;
-                    console.log("Response message: " + message);
-                    notification.showError(error.response.status, '', message);
-                }
-                reader.readAsText(error.response.data);
+        } catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
             } else {
-                notification.showError(error.response.status, '', error.response.statusText);
+                notification.showError("An error occurred. Please check your internet connection.");
             }
-        }).finally(() => {
-            // NProgress.done();
-            isLoading.value = false;
-        });
+        }finally {
+            // isLoading.value = false;
+        }
 
-
-
-
-        // try {
-        //     const { data, status } = await Api.get(`/${BASE}/export-materials`, {
-        //         params: {
-        //             store_category: excelExportData.value.store_category_name
-        //         }
-        //     });
-
-        //     console.log(status);
-        // } catch (error) {
-        //     if (error.response) {
-        //         const { data, status } = error.response;
-        //         console.log(data,error.response);
-        //         notification.showError(status);
-        //     } else {
-        //         // Handle network or other errors here
-        //         notification.showError("An error occurred. Please check your internet connection.");
-        //     }
-        // } finally {
-        //     // loading(false)
-        // }
     }
 
     return {
