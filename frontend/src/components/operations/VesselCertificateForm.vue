@@ -110,18 +110,22 @@ function fetchVessels(search, loading) {
       searchVessels(search, props.form.business_unit, loading);
 }
 
-// watch(() => props.form, (value) => {
+watch(() => props.form, (value) => {
 
-//   if(props?.formType == 'edit' && editInitiated.value != true) {
+  if(props?.formType == 'edit' && editInitiated.value != true) {
 
-//     vessels.value = [props?.form?.opsVessel]
+    vessels.value = [props?.form?.opsVessel];
 
-//     if(vessels.value.length > 0) {
-//         console.log("Changing editInitatedValue ")
-//         editInitiated.value = true
-//       }
-//   }
-// }, {deep: true});
+    vesselCertificates.value = [props.form?.opsMaritimeCertification];
+    props.form.validity_period = props.form?.opsMaritimeCertification?.validity
+    props.form.certificate_type = props.form?.opsMaritimeCertification?.type
+
+    if(vessels.value.length > 0) {
+        console.log("Changing editInitatedValue ")
+        editInitiated.value = true
+      }
+  }
+}, {deep: true});
 
 watch(() => props.form.ops_vessel_id, (value) => {
   if(value) {
@@ -138,11 +142,12 @@ watch(() => vessel, (value) => {
 
 watch(() => props.form.ops_maritime_certification_id, (value) => {
   if(value) {
+    
     const certificate = vesselCertificates.value.find(obj => obj["ops_maritime_certification_id"] === value);
     props.form.validity_period = certificate?.opsMaritimeCertification?.validity
     props.form.certificate_type = certificate?.opsMaritimeCertification?.type
   }
-})
+}, { deep: true })
 
 watch(dropZoneFile, (value) => {
   if (value !== null && value !== undefined) {

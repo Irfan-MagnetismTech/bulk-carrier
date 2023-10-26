@@ -127,10 +127,10 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.validity }}
                 </td>
                 <td>
-                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
+                  <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
                 <td>
-                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
+                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
                 <td></td>
                 <td>
@@ -140,7 +140,7 @@ onMounted(() => {
                   {{ item?.attachment }}
                 </td>
                 <td class="items-center justify-center space-x-2 text-gray-600">
-                    <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.opsMaritimeCertification?.id } }"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.id } }"></action-button>
                     <action-button @click="confirmDelete(vessel.id)" :action="'delete'"></action-button>
 
                 </td>

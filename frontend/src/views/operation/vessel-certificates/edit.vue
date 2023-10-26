@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import VesselCertificateForm from '../../../components/operations/VesselCertificateForm.vue';
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
@@ -37,5 +37,10 @@ onMounted(() => {
   showVesselCertificate(vesselCertificateId);
 });
 
+// watch(() => vesselCertificate, (value) => {
+//   console.log(value?.value?.opsMaritimeCertification)
+//   vesselCertificate.value.opsVesselCertificates = [value?.value?.opsMaritimeCertification]
+//   vesselCertificate.value.vessels = [value?.value?.opsVessel];
+// }, {deep: true})
 
 </script>
