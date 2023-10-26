@@ -3,6 +3,9 @@ import Error from "../Error.vue";
 import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+
+const { allAccountLists, getAccount } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -13,6 +16,14 @@ const props = defineProps({
 });
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+function fetchAccounts(search, loading) {
+  if(search.length < 3) {
+    return;
+  } else {
+    getAccount(search, loading);
+  }
+}
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
@@ -29,11 +40,16 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.acc_account_id" autocomplete="off" required>
-          <option value="" disabled selected>Select</option>
-          <option value="1">Mr. A</option>
-          <option value="2">Mr. B</option>
-        </select>
+        <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
+          <template #search="{attributes, events}">
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_account_name" v-bind="attributes" v-on="events"/>
+          </template>
+        </v-select>
+<!--        <select class="form-input" v-model="form.acc_account_id" autocomplete="off" required>-->
+<!--          <option value="" disabled selected>Select</option>-->
+<!--          <option value="1">Mr. A</option>-->
+<!--          <option value="2">Mr. B</option>-->
+<!--        </select>-->
         <Error v-if="errors?.acc_account_id" :errors="errors.acc_account_id" />
       </label>
       <label class="block w-full mt-2 text-sm">

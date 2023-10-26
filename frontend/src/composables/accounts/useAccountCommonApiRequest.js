@@ -8,6 +8,7 @@ export default function useAccountCommonApiRequest() {
     const router = useRouter();
     const balanceIncomeLineLists = ref([]);
     const balanceIncomeAccountLists = ref([]);
+    const allAccountLists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -57,11 +58,36 @@ export default function useAccountCommonApiRequest() {
         }
     }
 
+    async function getAccount(account_name, loading) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            account_name: account_name
+        };
+
+        try {
+            const { data,status } = await Api.post('/accounts/get-accounts', form);
+            allAccountLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            NProgress.done();
+        }
+
+    }
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
+        allAccountLists,
         getBalanceIncomeLineLists,
         getBalanceIncomeAccountLists,
+        getAccount,
         isLoading,
         errors,
     };

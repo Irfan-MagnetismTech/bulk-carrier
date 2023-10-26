@@ -12,6 +12,7 @@ export default function useOpeningBalance() {
     const openingBalance = ref( {
         acc_cost_center_id: '',
         acc_account_id: '',
+        acc_account_name: '',
         date: '',
         dr_amount: '',
         cr_amount: '',
