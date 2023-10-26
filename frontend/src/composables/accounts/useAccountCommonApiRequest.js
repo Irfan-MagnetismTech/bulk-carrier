@@ -58,25 +58,25 @@ export default function useAccountCommonApiRequest() {
         }
     }
 
-    async function getAccount(account_name, loading) {
+    async function getAccount(account_name=null, businessUnit, loading=null) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
-            account_name: account_name
+            account_name: account_name,
+            business_unit: businessUnit,
         };
 
         try {
-            const { data,status } = await Api.post('/accounts/get-accounts', form);
+            const { data,status } = await Api.post('/acc/get-accounts', form);
             allAccountLists.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
-            //loader.hide();
+            loader.hide();
             isLoading.value = false;
-            NProgress.done();
         }
 
     }

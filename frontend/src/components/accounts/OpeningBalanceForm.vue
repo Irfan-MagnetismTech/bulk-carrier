@@ -1,6 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
@@ -21,12 +21,15 @@ function fetchAccounts(search, loading) {
   if(search.length < 3) {
     return;
   } else {
-    getAccount(search, loading);
+    getAccount(search, props.form.business_unit, loading);
   }
 }
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getAccount(props.form.business_unit);
+  });
 });
 
 </script>

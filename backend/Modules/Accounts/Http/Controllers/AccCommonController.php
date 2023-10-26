@@ -56,9 +56,9 @@ class AccCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })
             ->when(request()->account_name, function($q) {
-                $q->where('account_name', 'like', '%' . request()->account_name . '%'); 
+                $q->where('account_name', 'like', '%' . request()->account_name . '%');
             })
-            ->limit(10)->get(['id', 'account_name', 'balance_and_income_line_id']);
+            ->limit(10)->get(['id', 'account_name', 'acc_balance_and_income_line_id']);
 
             $response = [];
             foreach ($items as $item)
