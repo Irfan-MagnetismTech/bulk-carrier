@@ -33,6 +33,7 @@ class OpsVesselCertificateController extends Controller
      */
     public function index()
     {
+        $currentDate = Carbon::now();
         try {
             $vesselCertificates= OpsVesselCertificate::with(['opsVessel', 'opsMaritimeCertification'])
             ->whereIn('id', function ($query) {
