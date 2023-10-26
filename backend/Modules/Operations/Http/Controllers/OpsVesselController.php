@@ -32,11 +32,21 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessels = OpsVessel::with('opsVesselCertificates','opsBunkers')
+            $vessels = OpsVessel::with([
+                'opsVesselCertificates' => function ($query){
+                    $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                        $query2->select(DB::raw('MAX(id)'))
+                            ->from('ops_vessel_certificates')
+                            ->groupBy('ops_maritime_certification_id');
+                    })->latest();
+                },
+                'opsBunkers'
+            ])
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
-            ->latest()->paginate(10);                     
+            ->latest()->paginate(10);   
+
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -233,7 +243,7 @@ class OpsVesselController extends Controller
         }
 
     }
-    public function getVesselsIdsWise(Request $request): JsonResponse
+    public function getVesselCertificateHistory(Request $request): JsonResponse
     {
         // dd($request);
         $vessel= OpsVessel::with([
@@ -258,7 +268,6 @@ class OpsVesselController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
 
