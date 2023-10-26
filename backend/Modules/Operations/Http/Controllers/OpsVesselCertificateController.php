@@ -110,15 +110,12 @@ class OpsVesselCertificateController extends Controller
             })->latest();
         }, 'opsMaritimeCertification']);
 
-
         $vessel_certificate->opsVessel->opsVesselCertificates->map(function($certificate) {
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->opsMaritimeCertification->id;
             return $certificate;
         });
-
-
-
+        
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
