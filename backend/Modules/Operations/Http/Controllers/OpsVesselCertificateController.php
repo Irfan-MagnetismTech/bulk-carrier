@@ -12,18 +12,20 @@ use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Carbon\Carbon;
 
 class OpsVesselCertificateController extends Controller
 {
-   // use HasRoles;
-    
-   function __construct(private FileUploadService $fileUpload)
+    // use HasRoles;
+        
+    function __construct(private FileUploadService $fileUpload)
     {
     //     $this->middleware('permission:vessel-certificate-create|vessel-certificate-edit|vessel-certificate-show|vessel-certificate-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-certificate-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-certificate-edit', ['only' => ['update']]);
     //     $this->middleware('permission:vessel-certificate-delete', ['only' => ['destroy']]);
     }
+
     /**
      * get all users with their roles.
      * @param Request $request
@@ -42,6 +44,15 @@ class OpsVesselCertificateController extends Controller
             ->paginate(15)
             ->groupBy('ops_vessel_id');
 
+            // Calculate days difference using map
+            $vesselCertificates->map(function ($certificateGroup, $vesselId) use ($currentDate) {
+                return $certificateGroup->map(function ($certificate) use ($currentDate) {                    
+                    $expireDate = Carbon::parse($certificate->expire_date);
+                    $expire_days = $currentDate->diffInDays($expireDate);
+                    $certificate->expire_days = $expire_days;                    
+                    return $certificate;
+                });
+            });
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
@@ -65,7 +76,6 @@ class OpsVesselCertificateController extends Controller
                 '_token',
                 'attachment',
             );
-
             if(isset($request->attachment)){
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates');
                 $vesselCertificate['attachment'] = $attachment;
@@ -89,8 +99,14 @@ class OpsVesselCertificateController extends Controller
      */
     public function show(OpsVesselCertificate $vessel_certificate): JsonResponse
     {
-        $vessel_certificate->load('opsVessel','opsMaritimeCertification');
-        $vessel_certificate->opsMaritimeCertification->ops_maritime_certification_id = $vessel_certificate->opsMaritimeCertification->id;
+        $vessel_certificate->load(['opsVessel.opsVesselCertificates'
+        =>function ($query) {
+            $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                $query2->select(DB::raw('MAX(id)'))
+                    ->from('ops_vessel_certificates')
+                    ->groupBy('ops_maritime_certification_id');
+            })->latest();
+        }, 'opsMaritimeCertification']);
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
@@ -186,6 +202,38 @@ class OpsVesselCertificateController extends Controller
                 ->get();
 
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function getIndexRenew()
+    {
+        $currentDate = Carbon::now();
+        try {
+            $vesselCertificates= OpsVesselCertificate::with(['opsVessel', 'opsMaritimeCertification'])
+            ->whereIn('id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('ops_vessel_certificates')
+                    ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
+            })
+            ->latest()
+            ->paginate(15)
+            ->groupBy('ops_vessel_id');
+
+            $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate) {
+                return $certificateGroup->filter(function ($certificate)  use ($currentDate) {
+                    $expireDate = Carbon::parse($certificate->expire_date);
+                    $expire_days = $currentDate->diffInDays($expireDate);
+                    $certificate->expire_days = $expire_days;                    
+                    return $certificate->expire_days <= 60;
+                });
+            })->filter();
+            
+            return response()->success('Successfully retrieved vessel certificates.', $filterCertificates, 200);
         }
         catch (QueryException $e)
         {
