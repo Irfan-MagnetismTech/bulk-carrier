@@ -37,10 +37,5 @@ onMounted(() => {
   showVesselCertificate(vesselCertificateId);
 });
 
-// watch(() => vesselCertificate, (value) => {
-//   console.log(value?.value?.opsMaritimeCertification)
-//   vesselCertificate.value.opsVesselCertificates = [value?.value?.opsMaritimeCertification]
-//   vesselCertificate.value.vessels = [value?.value?.opsVessel];
-// }, {deep: true})
 
 </script>

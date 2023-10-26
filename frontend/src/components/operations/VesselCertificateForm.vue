@@ -116,7 +116,7 @@ watch(() => props.form, (value) => {
 
     vessels.value = [props?.form?.opsVessel];
 
-    vesselCertificates.value = [props.form?.opsMaritimeCertification];
+    vesselCertificates.value = props.form?.opsVessel?.opsVesselCertificates;
     props.form.validity_period = props.form?.opsMaritimeCertification?.validity
     props.form.certificate_type = props.form?.opsMaritimeCertification?.type
 
