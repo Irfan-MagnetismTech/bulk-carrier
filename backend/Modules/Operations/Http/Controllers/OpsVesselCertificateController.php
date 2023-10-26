@@ -109,6 +109,7 @@ class OpsVesselCertificateController extends Controller
                     ->groupBy('ops_maritime_certification_id');
             })->latest();
         }, 'opsMaritimeCertification']);
+        
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
