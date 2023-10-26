@@ -18,7 +18,7 @@ class OpsVesselCertificateController extends Controller
    // use HasRoles;
     
    function __construct(private FileUploadService $fileUpload)
-    // {
+    {
     //     $this->middleware('permission:vessel-certificate-create|vessel-certificate-edit|vessel-certificate-show|vessel-certificate-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-certificate-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-certificate-edit', ['only' => ['update']]);

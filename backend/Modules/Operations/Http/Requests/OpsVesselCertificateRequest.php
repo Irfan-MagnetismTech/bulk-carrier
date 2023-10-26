@@ -8,8 +8,9 @@ class OpsVesselCertificateRequest extends FormRequest
 {
 
     protected function prepareForValidation(){
+
         $data=  request('info');
-        $dataArray = json_decode($data, true);   
+        $dataArray = json_decode($data, true);
         $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
         $this->replace($mergeData);
     }
