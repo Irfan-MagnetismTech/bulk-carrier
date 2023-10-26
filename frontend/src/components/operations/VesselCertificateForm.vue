@@ -138,6 +138,7 @@ watch(() => vessel, (value) => {
 
 watch(() => props.form.ops_maritime_certification_id, (value) => {
   if(value) {
+    
     const certificate = vesselCertificates.value.find(obj => obj["ops_maritime_certification_id"] === value);
     props.form.validity_period = certificate?.opsMaritimeCertification?.validity
     props.form.certificate_type = certificate?.opsMaritimeCertification?.type

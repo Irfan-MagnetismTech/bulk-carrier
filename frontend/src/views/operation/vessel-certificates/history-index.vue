@@ -140,7 +140,7 @@ onMounted(() => {
                   {{ item?.attachment }}
                 </td>
                 <td class="items-center justify-center space-x-2 text-gray-600">
-                    <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.opsMaritimeCertification?.id } }"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.id } }"></action-button>
                     <action-button @click="confirmDelete(vessel.id)" :action="'delete'"></action-button>
 
                 </td>
