@@ -47,6 +47,44 @@ class AccCommonController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+    public function getAccounts(Request $request)
+    {
+        try {
+
+            $account_name = $request->account_name;
+            if ($account_name == '')
+            {
+                $items = Account::limit(5)->get(['id', 'account_name', 'balance_and_income_line_id']);
+            }
+            else
+            {
+                $items = Account::with('balanceIncome:id,line_text')->where('account_name', 'like', '%' . $account_name . '%')
+                    ->limit(10)->get(['id', 'account_name', 'balance_and_income_line_id']);
+            }
+            $response = [];
+            foreach ($items as $item)
+            {
+                $response[] = [
+                    'account_name'             => $item->account_name,
+                    'account_id'               => $item->id,
+                    'balance_income_line_name' => $item->balanceIncome->line_text,
+                    'balance_income_line_id'   => $item->balanceIncome->id,
+                ];
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $response,
+            ], 200);
+
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+
 //
 //    public function generateAccountCode($balanceIncomeLineId)
 //    {
@@ -77,39 +115,5 @@ class AccCommonController extends Controller
 //        }
 //    }
 //
-//    public function getAccounts(Request $request)
-//    {
-//        try {
-//
-//            $account_name = $request->account_name;
-//            if ($account_name == '')
-//            {
-//                $items = Account::limit(5)->get(['id', 'account_name', 'balance_and_income_line_id']);
-//            }
-//            else
-//            {
-//                $items = Account::with('balanceIncome:id,line_text')->where('account_name', 'like', '%' . $account_name . '%')
-//                    ->limit(10)->get(['id', 'account_name', 'balance_and_income_line_id']);
-//            }
-//            $response = [];
-//            foreach ($items as $item)
-//            {
-//                $response[] = [
-//                    'account_name'             => $item->account_name,
-//                    'account_id'               => $item->id,
-//                    'balance_income_line_name' => $item->balanceIncome->line_text,
-//                    'balance_income_line_id'   => $item->balanceIncome->id,
-//                ];
-//            }
-//
-//            return response()->json([
-//                'status' => 'success',
-//                'value'  => $response,
-//            ], 200);
-//
-//        }
-//        catch (\Exception $e) {
-//            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-//        }
-//    }
+
 }

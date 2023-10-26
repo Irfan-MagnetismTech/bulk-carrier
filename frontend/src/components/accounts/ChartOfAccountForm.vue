@@ -66,14 +66,22 @@ onMounted(() => {
       <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
         <option value="" disabled selected>Select</option>
-        <option value="1"> Assets </option>
-        <option value="2"> Liabilities </option>
+        <option value="Assets"> Assets </option>
+        <option value="Liabilities"> Liabilities </option>
         <option value="3"> Equity </option>
         <option value="4"> Revenues </option>
         <option value="5"> Expenses </option>      </select>
       <Error v-if="errors?.account_type" :errors="errors.account_type" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Is Archived <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model="form.is_archived" autocomplete="off" required>
+        <option value="" disabled selected>Select</option>
+        <option value="0"> No </option>
+        <option value="1"> Yes </option>
+      </select>
+      <Error v-if="errors?.is_archived" :errors="errors.is_archived" />
+    </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>

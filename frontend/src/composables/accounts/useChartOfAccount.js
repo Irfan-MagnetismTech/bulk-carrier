@@ -18,7 +18,7 @@ export default function useChartOfAccount() {
         accountable_type: '',
         accountable_id: '',
         official_code: '',
-        is_archived: '',
+        is_archived: 0,
         business_unit: '',
     });
     const indexPage = ref(null);

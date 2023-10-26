@@ -96,7 +96,7 @@ onMounted(() => {
           <tr class="w-full">
             <th>#</th>
             <th>Balance/Income Line</th>
-            <th>Type</th>
+            <th>Balance/Income Line Type</th>
             <th>Parent Account</th>
             <th>Account Code</th>
             <th>Account Name</th>
@@ -108,12 +108,18 @@ onMounted(() => {
           <tbody>
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ chartAccountData?.name }}</td>
-            <td>{{ chartAccountData?.short_name }}</td>
-            <td>{{ chartAccountData?.type }}</td>
-            <td>{{ chartAccountData?.type }}</td>
-            <td>{{ chartAccountData?.type }}</td>
-            <td>{{ chartAccountData?.type }}</td>
+            <td>{{ chartAccountData?.balanceIncome?.line_text }}</td>
+            <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
+            <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
+            <td>{{ chartAccountData?.account_code }}</td>
+            <td>{{ chartAccountData?.account_name }}</td>
+            <td>
+              <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Assets</span>
+              <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Liabilities</span>
+              <span v-if="chartAccountData?.account_type===3" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-orange-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Equity</span>
+              <span v-if="chartAccountData?.account_type===4" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Revenues</span>
+              <span v-if="chartAccountData?.account_type===5" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-pink-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Expenses</span>
+            </td>
             <td>
               <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>
             </td>
