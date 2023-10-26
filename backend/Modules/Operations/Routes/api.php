@@ -80,7 +80,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     
     // end for search api route
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
-    Route::get('vessel-certificates-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
+    Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
 
 });
 Route::post('vessel-search', [OpsVesselController::class, 'search']);

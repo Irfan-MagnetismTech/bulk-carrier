@@ -230,7 +230,7 @@ class OpsVesselController extends Controller
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
-            $certificate->id = $certificate->opsMaritimeCertification->id;
+            $certificate->id = $certificate->id;
             return $certificate;
         });
         try
@@ -257,7 +257,7 @@ class OpsVesselController extends Controller
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
-            $certificate->id = $certificate->opsMaritimeCertification->id;
+            $certificate->id = $certificate->id;
             return $certificate;
         });
         try
