@@ -30,9 +30,16 @@ class OpsVesselCertificateController extends Controller
     public function index()
     {
         try {
-            $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')
-            ->latest()->paginate(15)->groupBy('ops_vessel_id');
-            
+            $vesselCertificates= OpsVesselCertificate::with(['opsVessel', 'opsMaritimeCertification'])
+            ->whereIn('id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('ops_vessel_certificates')
+                    ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
+            })
+            ->latest()
+            ->paginate(15)
+            ->groupBy('ops_vessel_id');
+
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
@@ -147,6 +154,11 @@ class OpsVesselCertificateController extends Controller
                 ->where(function ($query) use($request) {
                     $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
                 })
+                // ->whereIn('id', function ($query) {
+                //     $query->select(DB::raw('MAX(id)'))
+                //         ->from('ops_vessel_certificates')
+                //         ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
+                // })
                 ->limit(10)
                 ->get();
 
