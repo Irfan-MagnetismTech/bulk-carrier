@@ -51,17 +51,15 @@ class AccCommonController extends Controller
     public function getAccounts(Request $request)
     {
         try {
+            $items = AccAccount::with('balanceIncome:id,line_text')
+            ->when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->account_name, function($q) {
+                $q->where('account_name', 'like', '%' . request()->account_name . '%'); 
+            })
+            ->limit(10)->get(['id', 'account_name', 'balance_and_income_line_id']);
 
-            $account_name = $request->account_name;
-            if ($account_name == '')
-            {
-                $items = Account::limit(5)->get(['id', 'account_name', 'balance_and_income_line_id']);
-            }
-            else
-            {
-                $items = Account::with('balanceIncome:id,line_text')->where('account_name', 'like', '%' . $account_name . '%')
-                    ->limit(10)->get(['id', 'account_name', 'balance_and_income_line_id']);
-            }
             $response = [];
             foreach ($items as $item)
             {
