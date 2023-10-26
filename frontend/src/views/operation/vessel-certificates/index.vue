@@ -6,15 +6,16 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
 import Store from './../../../store/index.js';
 import moment from 'moment';
+import env from '../../../config/env';
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const icons = useHeroIcon();
+const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
 
 const props = defineProps({
   page: {
@@ -136,7 +137,11 @@ onMounted(() => {
                   {{ item?.reference_number }}
                 </td>
                 <td>
-                  {{ item?.attachment }}
+                  <div class="w-full text-center">
+                    <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
+                      <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
+                    </a>
+                  </div>
                 </td>
                 <td>
                   <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">

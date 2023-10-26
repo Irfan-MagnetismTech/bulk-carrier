@@ -6,17 +6,18 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getVesselCertificateHistory, deleteVesselCertificate, isLoading } = useVesselCertificate();
+import env from '../../../config/env';
 import Store from './../../../store/index.js';
 import moment from 'moment';
 import { useRoute } from 'vue-router';
-const route = useRoute();
 
-
+const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const { vesselCertificates, getVesselCertificateHistory, deleteVesselCertificate, isLoading } = useVesselCertificate();
+const route = useRoute();
+
 const vesselId = route.params.vesselId;
 const certificateId = route.params.certificateId;
 
@@ -132,12 +133,18 @@ onMounted(() => {
                 <td>
                   <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
                 </td>
-                <td></td>
+                <td>
+                  {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}
+                </td>
                 <td>
                   {{ item?.reference_number }}
                 </td>
                 <td>
-                  {{ item?.attachment }}
+                  <div class="w-full text-center">
+                    <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
+                      <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
+                    </a>
+                  </div>
                 </td>
                 <td class="items-center justify-center space-x-2 text-gray-600">
                    <nobr>
