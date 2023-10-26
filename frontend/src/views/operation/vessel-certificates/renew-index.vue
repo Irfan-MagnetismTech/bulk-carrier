@@ -13,6 +13,7 @@ import moment from 'moment';
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const filterDays = ref(60);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -61,10 +62,12 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+  });
 });
 
-});
-
+function getFilteredResult() {
+  getRenewableVesselCertificates(props.page, businessUnit.value, filterDays.value)
+}
 </script>
 
 <template>
@@ -72,7 +75,7 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Custom Renew Schedule List</h2>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
+  <div class="flex items-center justify-between mb-2 select-none ">
     <!-- Search -->
     <div class="relative w-full">
       <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
@@ -82,8 +85,19 @@ onMounted(() => {
         <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
         <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
       </select>
+
+      
+    </div>
+    <div class="relative w-full flex justify-center">
+      <label class="block text-sm mb-2 w-28">
+        <input type="number" v-model="filterDays" placeholder="Filter Days" class="form-input" autocomplete="off" />
+        <Error v-if="filterDays" :errors="filterDays" />
+      </label>
+      <button type="button" @click="getFilteredResult()" :disabled="isLoading" class="w-28 mt-1 flex items-center justify-center text-sm text-white bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple mx-3 mb-2">Filter</button>
+
     </div>
     <div class="relative w-full">
+      
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
       </svg>
