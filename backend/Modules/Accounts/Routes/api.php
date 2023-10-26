@@ -54,6 +54,7 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('get-balance-income-lines-only', [AccCommonController::class, 'getBalanceIncomeLinesOnly']);
     Route::post('get-balance-income-accounts', [AccCommonController::class, 'getBalanceIncomeAccounts']);
     Route::post('get-accounts', [AccCommonController::class, 'getAccounts']);
+    Route::post('generate-account-code', [AccCommonController::class, 'generateAccountCode']);
 
 
 //    //Common routes

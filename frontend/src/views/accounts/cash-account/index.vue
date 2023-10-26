@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useOpeningBalance from "../../../composables/accounts/useOpeningBalance";
+import useCashAccount from "../../../composables/accounts/useCashAccount";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -19,9 +19,9 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { openingBalances, getOpeningBalances, deleteOpeningBalance, isLoading } = useOpeningBalance();
+const { cashAccounts, getCashAccounts, deleteCashAccount, isLoading } = useCashAccount();
 const { setTitle } = Title();
-setTitle('Opening Balance List');
+setTitle('Cash Account List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -38,7 +38,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteOpeningBalance(id);
+      deleteCashAccount(id);
     }
   })
 }
@@ -47,14 +47,14 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "acc.opening-balances.index", query: { page: 1 } })
+        router.push({ name: "acc.cash-accounts.index", query: { page: 1 } })
       }
     }
 );
 
 onMounted(() => {
   watchEffect(() => {
-  getOpeningBalances(props.page, businessUnit.value)
+  getCashAccounts(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -74,8 +74,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Opening Balance List</h2>
-    <default-button :title="'Create Opening Balance'" :to="{ name: 'acc.opening-balances.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Cash Account List</h2>
+    <default-button :title="'Create Cash Account'" :to="{ name: 'acc.cash-accounts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -95,42 +95,34 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Date</th>
-            <th>Cost Center</th>
-            <th>Account Head</th>
-            <th>Credit Amount</th>
-            <th>Debit Amount</th>
+            <th>Cash Account Name</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(balanceData,index) in openingBalances?.data" :key="index">
+          <tr v-for="(account,index) in cashAccounts?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ balanceData?.date }}</td>
-            <td>{{ balanceData?.costCenter?.name }}</td>
-            <td>{{ balanceData?.account?.account_name }}</td>
-            <td>{{ balanceData?.cr_amount }}</td>
-            <td>{{ balanceData?.dr_amount }}</td>
+            <td>{{ account?.name }}</td>
             <td>
-              <span :class="balanceData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ balanceData?.business_unit }}</span>
+              <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'acc.opening-balances.edit', params: { openingBalanceId: balanceData?.id } }"></action-button>
-              <action-button @click="confirmDelete(balanceData?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'acc.cash-accounts.edit', params: { cashAccountId: account?.id } }"></action-button>
+              <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!openingBalances?.data?.length">
+          <tfoot v-if="!cashAccounts?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
+            <td colspan="4">Loading...</td>
           </tr>
-          <tr v-else-if="!openingBalances?.data?.data?.length">
-            <td colspan="8">No data found.</td>
+          <tr v-else-if="!cashAccounts?.data?.data?.length">
+            <td colspan="4">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="openingBalances" to="acc.opening-balances.index" :page="page"></Paginate>
+    <Paginate :data="cashAccounts" to="acc.cash-accounts.index" :page="page"></Paginate>
   </div>
 </template>

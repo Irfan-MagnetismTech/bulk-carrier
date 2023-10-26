@@ -66,7 +66,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: 'crw.ranks.index',
+                        route: '',
                         label: 'Salary Heads',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -75,7 +75,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: 'crw.ranks.index',
+                        route: 'acc.cash-accounts.index',
                         label: 'Cash Accounts',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -86,7 +86,7 @@ export default [
                 ],
             },
             {
-                route: 'crw.vesselParticulars.index',
+                route: 'acc.transactions.index',
                 label: 'Vouchers',
                 preIcon: '',
                 postIcon: icons.DownArrow,

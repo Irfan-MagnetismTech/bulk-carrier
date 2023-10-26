@@ -20,7 +20,7 @@ class AccTransactionController extends Controller
         try {
             $crwCrewRanks = AccTransaction::with('ledgerEntries.account')->withCount('ledgerEntries as total_ledger')
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
@@ -42,9 +42,9 @@ class AccTransactionController extends Controller
         try {
             $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'user_id', 'business_unit');
             $accTransaction     = AccTransaction::create($accTransactionData);
-            $accTransaction->ledgerEntries()->createMany($request->ledger_entries);
+            $accTransaction->ledgerEntries()->createMany($request->ledgerEntries);
 
-            return response()->success('Created Succesfully', $accTransaction, 201);
+            return response()->success('Created Successfully', $accTransaction, 201);
         }
         catch (QueryException $e)
         {
@@ -61,12 +61,12 @@ class AccTransactionController extends Controller
     public function show(AccTransaction $accTransaction)
     {
         try {
-            return response()->success('Retrieved succesfully', $accTransaction, 200);
+            return response()->success('Retrieved successfully', $accTransaction->load('ledgerEntries.account','costCenter'), 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -108,6 +108,6 @@ class AccTransactionController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 }

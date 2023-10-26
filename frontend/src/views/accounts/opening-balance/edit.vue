@@ -21,8 +21,8 @@ setTitle('Edit Opening Balance');
 
 watch(openingBalance, (value) => {
   if(value) {
-    openingBalance.value.acc_account_name = openingBalance.value.opsVessel;
-    openingBalance.value.acc_cost_center_name = openingBalance.value.opsVessel;
+    openingBalance.value.acc_account_name = openingBalance.value.account;
+    openingBalance.value.acc_cost_center_name = openingBalance.value.costCenter;
   }
 });
 

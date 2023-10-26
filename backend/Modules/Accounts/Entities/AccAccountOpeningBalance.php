@@ -22,4 +22,9 @@ class AccAccountOpeningBalance extends Model
     {
         return $this->hasOne(AccAccount::class, 'id', 'acc_account_id');
     }
+
+    public function costCenter()
+    {
+        return $this->hasOne(AccCostCenter::class, 'id', 'acc_cost_center_id');
+    }
 }

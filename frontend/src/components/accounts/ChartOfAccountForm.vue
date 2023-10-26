@@ -1,11 +1,11 @@
 <script setup>
 import Error from "../Error.vue";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 
-const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists } = useAccountCommonApiRequest();
+const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists, generatedAccountCode, getGeneratedAccountCode } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -16,6 +16,17 @@ const props = defineProps({
 });
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+function getCode(el, loading){
+  loading = true
+  getGeneratedAccountCode(el.target.value);
+}
+
+watch(generatedAccountCode, (value) => {
+  if(value) {
+    props.form.account_code = value;
+  }
+});
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
@@ -36,7 +47,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Balance/Income Line <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.acc_balance_and_income_line_id" autocomplete="off" required>
+        <select class="form-input" v-model="form.acc_balance_and_income_line_id" @change="getCode($event)" autocomplete="off" required>
           <option value="" disabled selected>Select</option>
           <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
         </select>
@@ -52,7 +63,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_code" placeholder="A/C code" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
         <Error v-if="errors?.account_code" :errors="errors.account_code" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -66,8 +77,8 @@ onMounted(() => {
       <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
         <option value="" disabled selected>Select</option>
-        <option value="Assets"> Assets </option>
-        <option value="Liabilities"> Liabilities </option>
+        <option value="1"> Assets </option>
+        <option value="2"> Liabilities </option>
         <option value="3"> Equity </option>
         <option value="4"> Revenues </option>
         <option value="5"> Expenses </option>      </select>

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('acc_cost_center_id');
 			$table->string('voucher_type');
-			$table->string('transactionable_type');
-			$table->unsignedBigInteger('transactionable_id');
+			$table->string('transactionable_type')->nullable();
+			$table->unsignedBigInteger('transactionable_id')->nullable();
 			$table->date('transaction_date');
 			$table->string('bill_no')->nullable();
 			$table->string('mr_no')->nullable();
