@@ -1,6 +1,6 @@
 <template>
     <business-unit-input v-model="form.business_unit"></business-unit-input>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
@@ -61,6 +61,85 @@
             <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
+
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  />
+          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+        </label>
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  />
+          <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
+          <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
+            <select v-model="form.maintenance_type" class="form-input">
+              <option value="" disabled selected>Select Maintenance Type</option>
+              <option value="Schedule" > Schedule</option>
+              <option value="Breakdown" > Breakdown</option>
+              <option value="Dry Dock" > Dry Dock</option>
+            </select>
+          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+        </label>
+
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" readonly />
+          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Assign To <span class="text-red-500">*</span></span>
+            <select v-model="form.assigned_to" class="form-input">
+              <option value="" disabled selected>Select</option>
+              <option value="Team" > Team</option>
+              <option value="Vendor" > Vendor</option>
+            </select>
+          <Error v-if="errors?.assigned_to" :errors="errors.assigned_to" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">Resposible Person <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Resposible Person" :options="form.crw_responsible_persons" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.responsible_person_name"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+            <input type="hidden" v-model="form.responsible_person">
+          <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+        </label>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     </div>
     

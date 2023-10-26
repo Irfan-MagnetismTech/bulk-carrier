@@ -34,6 +34,8 @@ export default function useWorkRequisition() {
         act_start_date: '',
         act_completion_date: '',
         status: '',
+        mnt_item_groups: [],
+        mnt_items: [],
         business_unit: '',
         form_type: 'create'
     });
