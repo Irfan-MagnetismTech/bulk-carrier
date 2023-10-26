@@ -2,17 +2,18 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Http\JsonResponse;
-use Modules\Operations\Entities\OpsVesselCertificate;
-use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
-use App\Services\FileUploadService;
-use Illuminate\Support\Facades\DB;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Entities\OpsVesselCertificate;
+use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
 
 class OpsVesselCertificateController extends Controller
 {
@@ -211,8 +212,9 @@ class OpsVesselCertificateController extends Controller
     }
 
 
-    public function getIndexRenew()
+    public function getIndexRenew(Request $request)
     {
+        $days=$request->filter_days;
         $currentDate = Carbon::now();
         try {
             $vesselCertificates= OpsVesselCertificate::with(['opsVessel', 'opsMaritimeCertification'])
@@ -225,12 +227,12 @@ class OpsVesselCertificateController extends Controller
             ->paginate(15)
             ->groupBy('ops_vessel_id');
 
-            $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate) {
-                return $certificateGroup->filter(function ($certificate)  use ($currentDate) {
+            $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate,$days) {
+                return $certificateGroup->filter(function ($certificate)  use ($currentDate,$days) {
                     $expireDate = Carbon::parse($certificate->expire_date);
                     $expire_days = $currentDate->diffInDays($expireDate);
                     $certificate->expire_days = $expire_days;                    
-                    return $certificate->expire_days <= 60;
+                    return $certificate->expire_days <= $days;
                 })->values();
             })->filter();
             

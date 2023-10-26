@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
-use Modules\Operations\Entities\OpsVessel;
-use Modules\Operations\Http\Requests\OpsVesselRequest;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVessel;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Http\Requests\OpsVesselRequest;
 
 class OpsVesselController extends Controller
 {
