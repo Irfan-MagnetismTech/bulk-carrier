@@ -9,19 +9,21 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Http\Requests\OpsVesselCertificateRequest;
+use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class OpsVesselCertificateController extends Controller
 {
    // use HasRoles;
     
-    // function __construct()
+   function __construct(private FileUploadService $fileUpload)
     // {
     //     $this->middleware('permission:vessel-certificate-create|vessel-certificate-edit|vessel-certificate-show|vessel-certificate-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:vessel-certificate-create', ['only' => ['store']]);
     //     $this->middleware('permission:vessel-certificate-edit', ['only' => ['update']]);
     //     $this->middleware('permission:vessel-certificate-delete', ['only' => ['destroy']]);
-    // }
+    }
     /**
      * get all users with their roles.
      * @param Request $request
@@ -59,7 +61,16 @@ class OpsVesselCertificateController extends Controller
         // dd($request);
         try {
             DB::beginTransaction();
-            $vesselCertificate = OpsVesselCertificate::create($request->all());
+            $vesselCertificate = $request->except(
+                '_token',
+                'attachment',
+            );
+
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates');
+                $vesselCertificate['attachment'] = $attachment;
+            }
+            $vesselCertificate = OpsVesselCertificate::create($vesselCertificate);
             DB::commit();
             return response()->success('Vessel certificate added successfully.', $vesselCertificate, 201);
         }
@@ -102,7 +113,17 @@ class OpsVesselCertificateController extends Controller
         // dd($request);
         try {
             DB::beginTransaction();
-            $vessel_certificate->update($request->all());
+            $vesselCertificate = $request->except(
+                '_token',
+                'attachment',
+            );
+            if(isset($request->attachment)){
+                $this->fileUpload->deleteFile($vessel_certificate->attachment);
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates', $vessel_certificate->attachment);
+                $vesselCertificate['attachment'] = $attachment;
+            }
+            
+            $vessel_certificate->update($vesselCertificate);
             DB::commit();
             return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 200);
         }
@@ -123,6 +144,7 @@ class OpsVesselCertificateController extends Controller
     {
         try
         {
+            $this->fileUpload->deleteFile($vessel_certificate->attachment);
             $vessel_certificate->delete();
 
             return response()->json([
