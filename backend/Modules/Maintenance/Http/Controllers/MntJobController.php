@@ -194,19 +194,21 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['opsVessel:id,name','mntItem:id,name,item_code','mntJobLines'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->when(request()->has('ops_vessel_id'), function($q){
-                            $q->where('ops_vessel_id', request()->ops_vessel_id);  
-                        })
-                        ->when(request()->has('mnt_item_id'), function($q){
-                            $q->where('mnt_item_id', request()->mnt_item_id);  
-                        })
-                        ->get();
+            $jobs = MntItem::with(['mntJobs', 'mntJobLines'])
+                            ->Where(function($jobQuery){
+                                $jobQuery->whereHas('mntJobs',function($q){
+                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                                        ->when(request()->has('mnt_item_id'), function($qJobs){
+                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+                                        })
+                                        ->when(request()->business_unit != "ALL", function($q){
+                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
+                                        }); 
+                                });
+                            })
+                            ->get();
 
-            return response()->success('Jobs retrieved successfully', $jobs, 200);
+            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
             
         }
         catch (\Exception $e)
@@ -273,7 +275,7 @@ class MntJobController extends Controller
                             })
                             ->get();
             // dd(DB::getQueryLog());
-            return response()->success('Jobs retrieved successfully', $jobs, 200);
+            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
             
         }
         catch (\Exception $e)
