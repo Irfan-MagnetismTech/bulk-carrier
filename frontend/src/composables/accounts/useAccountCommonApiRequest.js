@@ -9,6 +9,7 @@ export default function useAccountCommonApiRequest() {
     const balanceIncomeLineLists = ref([]);
     const balanceIncomeAccountLists = ref([]);
     const allAccountLists = ref([]);
+    const allCostCenterLists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -81,13 +82,38 @@ export default function useAccountCommonApiRequest() {
 
     }
 
+    async function getCostCenter(account_name=null, businessUnit, loading=null) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            account_name: account_name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-accounts', form);
+            allAccountLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+
+    }
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
         allAccountLists,
+        allCostCenterLists,
         getBalanceIncomeLineLists,
         getBalanceIncomeAccountLists,
         getAccount,
+        getCostCenter,
         isLoading,
         errors,
     };

@@ -5,7 +5,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 
-const { allAccountLists, getAccount } = useAccountCommonApiRequest();
+const { allAccountLists, getAccount, allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -25,16 +25,25 @@ function fetchAccounts(search, loading) {
   }
 }
 
+function fetchCostCenters(search, loading) {
+  if(search.length < 3) {
+    return;
+  } else {
+    getCostCenter(search, props.form.business_unit, loading);
+  }
+}
+
 watch(() => props.form, (value) => {
   if(value){
     props.form.acc_account_id = props.form?.acc_account_name?.acc_account_id ?? '';
+    props.form.acc_cost_center_id = props.form?.acc_cost_center_name?.acc_cost_center_id ?? '';
   }
 }, {deep: true});
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    getAccount(props.form.business_unit);
+    getCostCenter(props.form.business_unit);
   });
 });
 
@@ -48,18 +57,22 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchCostCenters" v-model="form.acc_cost_center_name" label="acc_account_name"  class="block w-full rounded form-input">
+          <template #search="{attributes, events}">
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
+          </template>
+        </v-select>
+        <Error v-if="errors?.acc_cost_center_name" :errors="errors.acc_cost_center_name" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account <span class="text-red-500">*</span></span>
         <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.acc_account_name" label="acc_account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_account_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
-<!--        <select class="form-input" v-model="form.acc_account_id" autocomplete="off" required>-->
-<!--          <option value="" disabled selected>Select</option>-->
-<!--          <option value="1">Mr. A</option>-->
-<!--          <option value="2">Mr. B</option>-->
-<!--        </select>-->
-        <Error v-if="errors?.acc_account_id" :errors="errors.acc_account_id" />
+        <Error v-if="errors?.acc_account_name" :errors="errors.acc_account_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>
@@ -71,12 +84,17 @@ onMounted(() => {
         <input type="number" step=".01" v-model="form.dr_amount" placeholder="Debit Amount" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.dr_amount" :errors="errors.dr_amount" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Credit Amount <span class="text-red-500">*</span></span>
-        <input type="number" step=".01" v-model="form.cr_amount" placeholder="Credit Amount" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.cr_amount" :errors="errors.cr_amount" />
-      </label>
     </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Credit Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model="form.cr_amount" placeholder="Credit Amount" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.cr_amount" :errors="errors.cr_amount" />
+    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
