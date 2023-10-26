@@ -67,13 +67,7 @@
         Attachment (Image of Certificate)
       </h2>
 
-        <template v-if="form.attachment">
-           <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.attachment">{{
-            (typeof $props.form?.attachment === 'string')
-                ? '('+$props.form?.attachment.split('/').pop()+')'
-                : ''
-          }}</a>
-        </template>
+        
       <DropZoneV2 :form="form" :page="page"></DropZoneV2>
     </label>
   </div>
