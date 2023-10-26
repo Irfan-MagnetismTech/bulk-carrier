@@ -99,7 +99,14 @@ class OpsVesselCertificateController extends Controller
      */
     public function show(OpsVesselCertificate $vessel_certificate): JsonResponse
     {
-        $vessel_certificate->load('opsVessel','opsMaritimeCertification');
+        $vessel_certificate->load(['opsVessel.opsVesselCertificates'
+        =>function ($query) {
+            $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                $query2->select(DB::raw('MAX(id)'))
+                    ->from('ops_vessel_certificates')
+                    ->groupBy('ops_maritime_certification_id');
+            })->latest();
+        }, 'opsMaritimeCertification']);
         try
         {
             return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
