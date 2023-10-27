@@ -4,7 +4,7 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
-    
+    import cloneDeep from 'lodash/cloneDeep';
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -16,8 +16,8 @@
     });
 
     function addRow() {
-      props.form.scmOpeningStockLines.push(props.materialObject);
-      
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmOpeningStockLines.push(clonedObj);
     }
 
     function removeRow(index){
@@ -53,20 +53,30 @@
 //     });
 // }, {deep: true});
 
-watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
-          newLines.forEach((line, index) => {
-            if (line.scmMaterial) {
-              const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-              if (selectedMaterial) {
-                props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
-                props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
-              }
-            }
-          });
-        },
-        { deep: true }
-    );
+const previousLines = ref(cloneDeep(props.form.scmOpeningStockLines));
 
+watch(() => props.form.scmOpeningStockLines, (newLines) => {
+  newLines.forEach((line, index) => {
+    const previousLine = previousLines.value[index];
+
+    if (line.scmMaterial) {
+      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+      if (selectedMaterial) {
+        console.log(index, line.scmMaterial, previousLine.scmMaterial, selectedMaterial);
+        if ( line.scm_material_id !== selectedMaterial.id
+        ) {
+          console.log(index, line.scmMaterial, previousLine.scmMaterial);
+          props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+          props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+        }
+      }
+    }
+
+  });
+
+  // Update the previous state for the entire array
+  previousLines.value = cloneDeep(newLines);
+}, { deep: true });
 
 
 const tableScrollWidth = ref(null);
