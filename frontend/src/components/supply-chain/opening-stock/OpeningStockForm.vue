@@ -53,19 +53,19 @@
 //     });
 // }, {deep: true});
 
-watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
-          newLines.forEach((line, index) => {
-            if (line.scmMaterial) {
-              const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-              if (selectedMaterial) {
-                props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
-                props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
-              }
-            }
-          });
-        },
-        { deep: true }
-    );
+// watch(() => props.form.scmOpeningStockLines, (newLines, oldLines) => {
+//           newLines.forEach((line, index) => {
+//             if (line.scmMaterial) {
+//               const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//               if (selectedMaterial) {
+//                 props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+//                 props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+//               }
+//             }
+//           });
+//         },
+//         { deep: true }
+//     );
 // watch for scmOpeningStockLines and update the unit value and check if the previous material is same with current material
 // if not same oldLines.material_id and oldLines.material_id then update the unit value
 // if same then do nothing
