@@ -4,16 +4,22 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+    import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
+    import useVendor from '../../../composables/supply-chain/useVendor';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
+    const { vendors,searchVendor } = useVendor();
 
+    const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       materialObject: { type: Object, required: false },
+      termsObject: { type: Object, required: false },
+      csVendors: { type: Object, required: false },
       page: {
       required: false,
       default: {}
@@ -27,6 +33,14 @@
 
     function removeMaterial(index){
       props.form.scmPoLines.splice(index, 1);
+}
+
+    function addTerms() {
+          props.form.scmPoTerms.push(props.termsObject);
+        }
+
+    function removeTerms(index){
+      props.form.scmPoTerms.splice(index, 1);
     }
 
     // function setMaterialOtherData(index){
@@ -40,11 +54,6 @@
     watch(() => props?.form?.status, (newVal, oldVal) => {
       props?.form?.status == props?.form?.status;
     })
-
-    function handleAttachmentChange(e) {
-      let fileData = e.target.files[0];
-      props.form.attachment = fileData;
-    }
 
 
     const tableScrollWidth = ref(null);
@@ -73,6 +82,15 @@
         props.form.scm_warehouse_id = value?.id;
     });
 
+    function fetchPurchaseRequisition(search, loading) {
+    loading(true);
+    searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
+    }
+
+    watch(() => props.form.scmPurchaseRequisition, (value) => {
+          props.form.scm_pr_id = value?.id;
+      });
+
     function setMaterialOtherData(datas,index){
       console.log(datas);
       props.form.scmPoLines[index].unit = datas.unit;
@@ -87,23 +105,95 @@
 </script>
 <template>
 
+  
+<!-- const purchaseOrder = ref( {
+        ref_no: '',
+        scmWarehouse: '',
+        scm_warehouse_name: '',
+        scm_warehouse_id: '',
+        po_date: '',
+        pr_no: null,
+        scm_pr_id: null,
+        scmPr: null,
+        pr_date: '',
+        cs_no: '',
+        scm_cs_id: '',
+        scmCs: null,
+        scmVendor: null,
+        scm_vendor_id: null,
+        vendor_name: null,
+        currency: 0.0,
+        convertion_rate: '',
+        remarks: '',
+        sub_total: 0.0,
+        discount: 0.0,
+        total_amount: 0.0,
+        vat: 0.0,
+        net_amount: 0.0,
+        attachment: '',
+        business_unit: '',
+        scmPoLines: [
+                        {
+                            scmMaterial: '',
+                            scm_material_id: '',
+                            unit: '',
+                            brand: '',
+                            model: '',
+                            required_date: '',
+                            quantity: 0.0,
+                            rate: 0.0,
+                            total_price: 0.0,
+                        }
+                    ],
+        scmPoTerms: [
+                        {
+                            details: ''
+                        }
+                    ],  
+        });
+    const materialObject = {
+        scmMaterial: '',
+        scm_material_id: '',
+        unit: '',
+        brand: '',
+        model: '',
+        required_date: '',
+        quantity: 0.0,
+        rate: 0.0,
+        total_price: 0.0,
+    }
+
+    const termsObject =  {
+        details: ''
+    } -->
+
   <!-- Basic information -->
   <business-unit-input v-model="form.business_unit"></business-unit-input>
   <div class="input-group !w-1/4">
       <label class="label-group">
           <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.pr_ref" required class="form-input vms-readonly-input" name="pr_ref" :id="'pr_ref'" />
-          <Error v-if="errors?.pr_ref" :errors="errors.pr_ref"  />
+          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
     </div>
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+        <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
+        <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" />
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.po_date" required class="form-input" name="po_date" :id="'po_date'" />
+          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
+          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPurchaseRequisition" label="ref_no" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.scmWarehouse"
+                  :required="!form.scmPurchaseRequisition"
                   v-bind="attributes"
                   v-on="events"
               />
@@ -112,51 +202,51 @@
           <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
       <label class="label-group">
-          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.raised" :errors="errors.raised"  />
-      </label>
-      <label class="label-group">
-          <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
-          <select v-model="form.is_critical" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
-              <option value="1">YES</option>
-              <option value="0">NO</option>
-          </select>
-          <Error v-if="errors?.is_critical" :errors="errors.is_critical"  />
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">PR Date</span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-        <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" />
+          <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.pr_date" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
+          <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
       </label>
       
   </div>
-  <div class="input-group">
-    <!-- <label class="label-group">
-        <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
-        <input type="file" class="form-input" @change="handleAttachmentChange" />
-        <Error v-if="errors?.attachment" :errors="errors.attachment"  />
-    </label> -->
-    
+  <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">CS No</span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-        <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" />
+       <!-- <input type="text" v-model="form.scmCs.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
+        <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
+        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
     </label>
-      <label class="label-group">
+    <label class="label-group" v-if="form.cs_no != ''">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
+          <select class="form-input" v-model="form.scm_vendor_id">
+            <option value="" disabled>select</option>
+            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
+          </select>
+          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+      </label>
+      <label class="label-group" v-else>
+          <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
+          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="ref_no" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmVendor"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
           <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
       </label>
+      
       <label class="label-group">
         <span class="label-item-title">Currency</span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-        <Error v-if="errors?.purchase_center" :errors="errors.purchase_center"/>
+        <input type="text" v-model="form.currency" required class="form-input" name="currency" :id="'currency'" />
+        <Error v-if="errors?.currency" :errors="errors.currency"/>
     </label>
       <label class="label-group">
-          <span class="label-item-title">Convertion Rate<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
-          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
+          <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.convertion_rate" required class="form-input" name="approved_date" :id="'convertion_rate'" />
+          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
       </label>
   </div>
 
@@ -169,13 +259,13 @@
   </div>
 
   <div id="customDataTable">
-    <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+    <div  class="table-responsive">
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="py-3 align-center">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+          <tr class="table_head_tr">
+            <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Brand</th>
             <th class="py-3 align-center">Model</th>
@@ -187,10 +277,10 @@
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPoLines" :key="index">
+          <tbody class="table_body">
+          <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -223,12 +313,12 @@
               <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
               </button>
-              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <button v-else type="button" @click="addMaterial()" class="add_button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
@@ -273,6 +363,37 @@
     </div>
   </div>
 
+  <div id="customDataTable">
+    <div  class="table-responsive max-w-screen">
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Terms And Conditions <span class="text-red-500">*</span></legend>
+        <table class="w-full whitespace-no-wrap" id="table">
+         <tbody class="table_body">
+          <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
+            <td>
+              <input type="text" v-model="form.scmPoTerms[index].details" class="form-input">
+            </td>
+           
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!=0" type="button" @click="removeTerms(index)" class="remove_button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addTerms()" class="add_button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+  </div>
+
 </template>
 
 
@@ -299,6 +420,12 @@
     .form-input {
         @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
     }
+    .form-fieldset {
+      @apply px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400;
+    }
+    .form-legend {
+      @apply px-2 text-gray-700 dark:text-gray-300;
+    }
     .vs__selected{
     display: none !important;
     }
@@ -309,5 +436,19 @@
     table tr,td,th {
         @apply border border-gray-300
     }
-
+    .table_tr {
+      @apply text-gray-700 dark:text-gray-400;
+    }
+    .table_head_tr {
+      @apply text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+    }
+    .table_body {
+      @apply bg-white divide-y dark:divide-gray-700 dark:bg-gray-800;
+    }
+    .remove_button {
+      @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
+    }
+    .add_button {
+      @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
+    }
 </style>

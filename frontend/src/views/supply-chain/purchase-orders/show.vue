@@ -1,23 +1,22 @@
 <script setup>
-import {ref} from "vue";
-import { onMounted } from '@vue/runtime-core';
+import {ref,onMounted} from "vue";
 import env from '../../../config/env';
 import Title from "../../../services/title";
-import useMaterialRequisition from "../../../composables/scm/useMaterialRequisition.js";
+import usePurchaseOrder from "../../../composables/scm/usePurchaseOrder.js";
 import useHelper from "../../../composables/useHelper.js";
-import MaterialRequisitionForm from "../../../components/scm/material-requisition/MaterialRequisitionForm.vue";
+import PurchaseOrderForm from "../../../components/scm/material-requisition/PurchaseOrderForm.vue";
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 
-const { materialRequisition, showMaterialRequisition  } = useMaterialRequisition();
+const { purchaseOrder, showPurchaseOrder  } = usePurchaseOrder();
 const { getAllUnit, numberFormat } = useHelper();
 const { setTitle } = Title();
 const route = useRoute();
-const materialRequisitionId = route.params.materialRequisitionId;
+const purchaseOrderId = route.params.purchaseOrderId;
 setTitle('Material Requisition Details');
 
 onMounted(() => {
-    showMaterialRequisition(materialRequisitionId);
+    showPurchaseOrder(purchaseOrderId);
 });
 </script>
 <template>
@@ -36,20 +35,20 @@ onMounted(() => {
         <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
         <tr>
           <td class="px-2 w-2">Date</td>
-          <td class="px-2">{{ materialRequisition.date ? moment(materialRequisition.date).format('DD-MM-YYYY') : null }}</td>
+          <td class="px-2">{{ purchaseOrder.date ? moment(purchaseOrder.date).format('DD-MM-YYYY') : null }}</td>
         </tr>
         <tr>
           <td class="px-2">Note</td>
-          <td class="px-2">{{ materialRequisition?.note }}</td>
+          <td class="px-2">{{ purchaseOrder?.note }}</td>
         </tr>
         <tr>
           <td class="px-2">Remarks</td>
-          <td class="px-2">{{ materialRequisition?.remarks }}</td>
+          <td class="px-2">{{ purchaseOrder?.remarks }}</td>
         </tr>
         <tr>
           <td class="px-2">Attachment</td>
           <td class="px-2">
-            <a style="color: #4e4ed2" target="_blank" :href="env.BASE_API_URL+'storage/'+materialRequisition?.attachment">{{ materialRequisition?.attachment?.split('/').pop() }}</a>
+            <a style="color: #4e4ed2" target="_blank" :href="env.BASE_API_URL+'storage/'+purchaseOrder?.attachment">{{ purchaseOrder?.attachment?.split('/').pop() }}</a>
           </td>
         </tr>
         </tbody>
@@ -67,7 +66,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
-          <tr v-for="(stockData,index) in materialRequisition?.stockable" :key="index">
+          <tr v-for="(stockData,index) in purchaseOrder?.stockable" :key="index">
             <td class="px-2">{{ stockData?.material?.name }}</td>
             <td class="px-2">{{ stockData?.material_category?.name }}</td>
             <td class="px-2">{{ stockData?.size }}</td>

@@ -9,6 +9,7 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
+import { useRouter } from 'vue-router';
 
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading } = usePurchaseRequisition();
@@ -16,6 +17,7 @@ const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+const router = useRouter();
 const props = defineProps({
   page: {
     type: Number,
@@ -56,7 +58,23 @@ onMounted(() => {
     });
 });
 
-});// Code for global search end here
+});
+// Code for global search end here
+
+const navigateToPOCreate = (purchaseRequisitionId) => {
+  const pr_id = purchaseRequisitionId; 
+  const cs_id = null;
+  const routeOptions = {
+    name: 'scm.purchase-orders.create',
+    query: {
+      pr_id: pr_id,
+      cs_id: cs_id
+    }
+  };
+  router.push(routeOptions);
+};  
+
+
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -104,6 +122,7 @@ function confirmDelete(id) {
             <th>Is Critical</th>
             <th>Purchase Center</th>
             <th>Warehouse</th>
+            <th>Create</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -116,6 +135,10 @@ function confirmDelete(id) {
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
+              <td>
+                <!-- <action-button :action="'delete'" :to="{ name: 'scm.purchase-orders.create', query: { pr_id: purchaseRequisition.id, cs_id: 20 } }"></action-button> -->
+                <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+              </td>
               <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>

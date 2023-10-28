@@ -4,6 +4,8 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
+import { merge } from 'lodash';
+
 
 export default function usePurchaseOrder() {
     const BASE = 'scm' 
@@ -13,7 +15,8 @@ export default function usePurchaseOrder() {
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
+    // use lodash
 
     const purchaseOrder = ref( {
         ref_no: '',
@@ -30,26 +33,34 @@ export default function usePurchaseOrder() {
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        scm_vendor_id: null,
         currency: 0.0,
         convertion_rate: '',
         remarks: '',
-        attachment: '',
+        sub_total: 0.0,
+        discount: 0.0,
+        total_amount: 0.0,
+        vat: 0.0,
+        net_amount: 0.0,
         business_unit: '',
         scmPoLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                brand: '',
-                model: '',
-                required_date: '',
-                quantity: 0.0,
-                rate: 0.0,
-                total_price: 0.0,
-            }
-        ],
-    });
+                        {
+                            scmMaterial: '',
+                            scm_material_id: '',
+                            unit: '',
+                            brand: '',
+                            model: '',
+                            required_date: '',
+                            quantity: 0.0,
+                            rate: 0.0,
+                            total_price: 0.0,
+                        }
+                    ],
+        scmPoTerms: [
+                        {
+                            details: ''
+                        }
+                    ],  
+        });
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
@@ -61,10 +72,10 @@ export default function usePurchaseOrder() {
         rate: 0.0,
         total_price: 0.0,
     }
-    const excelExportData = ref( {
-        store_category_name: ''
-    });
 
+    const termsObject =  {
+        details: ''
+    }
     const errors = ref('');
     const isLoading = ref(false);
     const indexPage = ref(null);
@@ -105,9 +116,6 @@ export default function usePurchaseOrder() {
         isLoading.value = true;
 
         let formData = new FormData();
-        if(form.attachment){
-            formData.append('attachment', form.attachment);
-        }
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -147,10 +155,6 @@ export default function usePurchaseOrder() {
         isLoading.value = true;
 
         let formData = new FormData();
-        if(form.attachment){
-            formData.append('attachment', form.attachment);
-        }
-
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
@@ -199,6 +203,30 @@ export default function usePurchaseOrder() {
             loading(false)
         }
     }
+    //getPrAndCsWisePurchaseOrder data     
+    async function getPrAndCsWisePurchaseOrder(prId, csId) {
+        //NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-pr-cs-wise-purchase-order`,{
+                params: {
+                    pr_id: prId,
+                    cs_id: csId,
+                },
+            });
+            purchaseOrders.value = merge(purchaseOrders.value, data.value);;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
 
 
 
@@ -212,7 +240,9 @@ export default function usePurchaseOrder() {
         showPurchaseOrder,
         updatePurchaseOrder,
         deletePurchaseOrder,
+        getPrAndCsWisePurchaseOrder,
         materialObject,
+        termsObject,
         isLoading,
         errors,
     };

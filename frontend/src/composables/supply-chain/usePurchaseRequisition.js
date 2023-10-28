@@ -206,6 +206,20 @@ export default function usePurchaseRequisition() {
         }
     }
 
+    async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
+        
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,scm_warehouse_id,searchParam);
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loading(false)
+        }
+    }
+
     async function getStoreCategoryWiseExcel() {
     
         try {
@@ -242,6 +256,7 @@ export default function usePurchaseRequisition() {
         updatePurchaseRequisition,
         deletePurchaseRequisition,
         getStoreCategoryWiseExcel,
+        searchWarehouseWisePurchaseRequisition,
         materialObject,
         excelExportData,
         isLoading,

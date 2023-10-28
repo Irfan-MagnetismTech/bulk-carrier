@@ -254,11 +254,25 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-index' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
+    // {
+    //     path: `/${BASE}/purchase-orders/create`,
+    //     name: `${BASE}.purchase-orders.create`,
+    //     component: () => import(`../views/${PATH_BASE}/purchase-orders/create.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-create' },
+    //     props: route => ({
+    //         pr_id: route.query.pr_id,
+    //         cs_id: route.query.cs_id || null // Set to null if cs_id is not provided
+    //     })
+    // },
     {
         path: `/${BASE}/purchase-orders/create`,
         name: `${BASE}.purchase-orders.create`,
         component: () => import(`../views/${PATH_BASE}/purchase-orders/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-create' },
+        props: (route) => ({
+            pr_id: route.query.pr_id,
+            cs_id: route.query.cs_id || null // Set to null if cs_id is not provided
+        })
     },
     {
         path: `/${BASE}/purchase-orders/:purchaseOrderId/edit`,
