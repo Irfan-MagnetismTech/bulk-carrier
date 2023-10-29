@@ -29,7 +29,8 @@ class ScmMaterialsImport implements ToCollection, WithValidation, WithHeadingRow
     public function collection(Collection $rows)
     {
         $uniqueRow = [];
-        foreach ($rows as $row) {
+        foreach ($rows as $key => $row) {
+            // return response()->json($key, 422);
 
             if (array_key_exists($row['material_name'], $uniqueRow)) {
                 $errors = array("0" => "Material Name should be unique");
@@ -39,7 +40,7 @@ class ScmMaterialsImport implements ToCollection, WithValidation, WithHeadingRow
 
             $material = ScmMaterial::where('name', $row['material_name'])->first();
             if (!$material) {
-                $errors = array("0" => "Material not found");
+                $errors = array("0" => "Material missing in $key no column.");
                 array_push($this->invalid, $errors);
                 return;
             }
