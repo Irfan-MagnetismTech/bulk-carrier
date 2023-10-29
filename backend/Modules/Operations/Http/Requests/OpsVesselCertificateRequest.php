@@ -3,6 +3,7 @@
 namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OpsVesselCertificateRequest extends FormRequest
 {
@@ -22,12 +23,15 @@ class OpsVesselCertificateRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd($this->opsMaritimeCertification['type'] != 'Permanent');
         return [
             'ops_vessel_id' => ['required', 'numeric', 'max:50'],
             'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
             'issue_date' => ['required'],
-            'expire_date' => ['required'],
-            'attachment' => ['required'],
+            'expire_date' => Rule::requiredIf(function () {
+                return $this->opsMaritimeCertification['type'] != 'Permanent';
+            }),
+            'attachment' => ['nullable'],
             'status' => ['nullable'],
             'reference_number' => ['required'],
             'created_by' => ['nullable'],

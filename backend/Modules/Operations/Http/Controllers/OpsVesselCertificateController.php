@@ -144,6 +144,13 @@ class OpsVesselCertificateController extends Controller
                 '_token',
                 'attachment',
             );
+
+            if($request->opsMaritimeCertification['type'] != 'Permanent'){
+                $vesselCertificate = $request->except(
+                    'expire_date',
+                );
+            }
+
             if(isset($request->attachment)){
                 $this->fileUpload->deleteFile($vessel_certificate->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates', $vessel_certificate->attachment);
