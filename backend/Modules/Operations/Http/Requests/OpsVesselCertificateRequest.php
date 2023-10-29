@@ -8,12 +8,11 @@ use Illuminate\Validation\Rule;
 class OpsVesselCertificateRequest extends FormRequest
 {
 
-    protected function prepareForValidation(){
-
+    protected function prepareForValidation()
+    {
         $data=  request('info');
         $dataArray = json_decode($data, true);
         $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
-        // dd($mergeData);
         $this->replace($mergeData);
     }
     /**
@@ -23,7 +22,6 @@ class OpsVesselCertificateRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this->opsMaritimeCertification['type'] != 'Permanent');
         return [
             'ops_vessel_id' => ['required', 'numeric', 'max:50'],
             'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],

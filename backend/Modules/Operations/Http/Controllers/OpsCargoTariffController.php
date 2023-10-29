@@ -2,14 +2,16 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsCargoTariff;
 use Modules\Operations\Http\Requests\OpsCargoTariffRequest;
-use Illuminate\Support\Facades\DB;
+use Modules\Operations\Http\Requests\OpsCargoTariffLineRequest;
 
 class OpsCargoTariffController extends Controller
 {

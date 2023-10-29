@@ -45,7 +45,7 @@ class OpsVesselCertificateController extends Controller
             ->latest()
             ->paginate(15)
             ->groupBy('ops_vessel_id');
-
+            
             // Calculate days difference using map
             $vesselCertificates->map(function ($certificateGroup, $vesselId) use ($currentDate) {
                 return $certificateGroup->map(function ($certificate) use ($currentDate) {                    
@@ -56,6 +56,8 @@ class OpsVesselCertificateController extends Controller
                     return $certificate;
                 });
             });
+
+            // dd($vesselCertificates);
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
