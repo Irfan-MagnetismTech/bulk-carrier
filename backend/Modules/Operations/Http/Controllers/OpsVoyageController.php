@@ -173,6 +173,7 @@ class OpsVoyageController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
 
 
 }
