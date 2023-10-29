@@ -95,7 +95,6 @@
 
     function fetchWarehouse(search, loading) {
     loading(true);
-    console.log(props.form.business_unit);
     searchWarehouse(search, loading,props.form.business_unit);
   }
 
@@ -104,7 +103,6 @@
     });
 
     function setMaterialOtherData(datas,index){
-      console.log(datas);
       props.form.scmPrLines[index].unit = datas.unit;
       props.form.scmPrLines[index].scm_material_id = datas.id;
     }
@@ -115,18 +113,27 @@
   }
 
   const store = useStore();
-  const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 
   watch(dropZoneFile, (value) => {
     if (value !== null && value !== undefined) {
       props.form.excel = value;
     }
   });
+  watch(() => props.form.business_unit, (newValue, oldValue) => {
+   if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_warehouse_id = '';
+    props.form.scmWarehouse = null;
+  }
+});
+
 </script>
 <template>
 
   <!-- Basic information -->
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+  </div>
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>

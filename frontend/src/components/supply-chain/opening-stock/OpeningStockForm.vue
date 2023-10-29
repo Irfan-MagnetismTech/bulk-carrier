@@ -5,6 +5,7 @@
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import cloneDeep from 'lodash/cloneDeep';
+    import Store from "../../../store";
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -13,7 +14,10 @@
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
       formType: { type: String, required : false },
+      page: {required: false,default: {}}
     });
+
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
     function addRow() {
       const clonedObj = cloneDeep(props.materialObject);
@@ -39,7 +43,6 @@
 
   function fetchWarehouse(search, loading) {
     loading(true);
-    console.log(props.form.business_unit);
     searchWarehouse(search, loading,props.form.business_unit);
   }
 
@@ -62,19 +65,14 @@ watch(() => props.form.scmOpeningStockLines, (newLines) => {
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
-        console.log(index, line.scmMaterial, previousLine.scmMaterial, selectedMaterial);
         if ( line.scm_material_id !== selectedMaterial.id
         ) {
-          console.log(index, line.scmMaterial, previousLine.scmMaterial);
           props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
           props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
         }
       }
     }
-
   });
-
-  // Update the previous state for the entire array
   previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
@@ -91,10 +89,20 @@ onMounted(() => {
   });
 });
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_warehouse_id = '';
+    props.form.scmWarehouse = null;
+  }
+});
+
 </script>
 <template>
   <!-- Basic information -->
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+  </div>
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
