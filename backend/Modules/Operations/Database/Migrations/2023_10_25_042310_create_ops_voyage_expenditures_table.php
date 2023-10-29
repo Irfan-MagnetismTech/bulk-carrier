@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_expenditures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('voyage_id')->constrained('ops_voyages', 'id')->nullable();
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages', 'id')->nullable();
             $table->string('port');
             $table->bigInteger('total_usd')->nullable();
             $table->bigInteger('total_bdt')->nullable();
             $table->longText('expense_json')->nullable();
             $table->date('date')->nullable();
-            $table->string('type')->nullable();    
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);         
+            $table->string('type')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);  
             $table->timestamps();
         });
     }

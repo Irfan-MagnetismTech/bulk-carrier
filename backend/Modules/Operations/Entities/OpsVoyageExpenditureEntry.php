@@ -9,5 +9,16 @@ class OpsVoyageExpenditureEntry extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'ops_voyage_expenditure_id',
+        'particular_id',
+        'type',
+        'invoice_id',
+        'currency',
+        'rate',
+        'amount',
+        'amount_bdt',
+        'attachment',
+        'remarks',
+    ];
 }

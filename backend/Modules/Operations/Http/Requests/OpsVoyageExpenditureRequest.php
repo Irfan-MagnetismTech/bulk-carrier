@@ -14,7 +14,14 @@ class OpsVoyageExpenditureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'voyage_id'         => ['required', 'numeric', 'max:20'],
+            'port'              => ['required', 'string', 'max:255'],
+            'total_usd'         => ['required', 'numeric'],
+            'total_bdt'         => ['required', 'numeric'],
+            'expense_json'      => ['required', 'string'],
+            'date'              => ['required', 'string', 'max:255'],
+            'type'              => ['required', 'string', 'max:255'],
+            'business_unit'     => ['required', 'string', 'max:255'],
         ];
     }
 
