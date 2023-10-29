@@ -83,7 +83,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-            
+            {
+                route: 'ops.voyages.index',
+                label: 'Voyages',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
             // {
             //     route: '',
             //     label: 'Voyages',
