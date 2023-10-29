@@ -11,6 +11,7 @@ export default function useOpeningBalance() {
     const notification = useNotification();
     const openingBalance = ref( {
         acc_cost_center_id: '',
+        acc_cost_center_name: '',
         acc_account_id: '',
         acc_account_name: '',
         date: '',

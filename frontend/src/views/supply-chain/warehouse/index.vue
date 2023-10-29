@@ -6,6 +6,9 @@ import useWarehouse from "../../../composables/supply-chain/useWarehouse";
 import Title from "../../../services/title";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import useHeroIcon from "../../../assets/heroIcon";
+import Store from './../../../store/index.js';
+import Swal from "sweetalert2";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
   page: {
@@ -16,6 +19,7 @@ const props = defineProps({
 
 const icons = useHeroIcon();
 const { warehouses, getWarehouses, deleteWarehouse, isLoading } = useWarehouse();
+
 const { setTitle } = Title();
 setTitle('Warehouses');
 
@@ -23,11 +27,7 @@ setTitle('Warehouses');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-onMounted(() => {
-  getWarehouses();
-});
 
 
 function confirmDelete(id) {
@@ -44,10 +44,6 @@ function confirmDelete(id) {
       deleteWarehouse(id);
     }
   })
-}
-
-function setBusinessUnit($el){
-  businessUnit.value = $el.target.value;
 }
 
 onMounted(() => {
@@ -77,15 +73,7 @@ onMounted(() => {
     <default-button :title="'Create Warehouse'" :to="{ name: 'scm.warehouse.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <div class="relative w-full">
-      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
-      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
-      >
-        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
-        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
-        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
-      </select>
-    </div>
+    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
@@ -103,7 +91,8 @@ onMounted(() => {
           <tr class="w-full">
             <th class="">SL. </th>
             <th class="">Name</th>
-            <th class="">Short Code</th>
+            <th class="">Contact Person</th>
+            <th class="">Contact No</th>
             <th>Business Unit</th>
             <th class="px-4 py-3 text-center">Actions</th>
           </tr>
@@ -112,7 +101,8 @@ onMounted(() => {
           <tr v-for="(warehouse, index) in warehouses?.data" :key="warehouse.id">  
               <td class="px-4 py-3 text-sm">{{ index + 1 }}</td>
               <td class="px-4 py-3 text-sm">{{ warehouse.name }}</td>
-              <td class="px-4 py-3 text-sm">{{ warehouse.short_code }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPersons[0].name }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPersons[0].phone }}</td>
             <td>
               <span :class="warehouse?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ warehouse?.business_unit }}</span>
             </td>

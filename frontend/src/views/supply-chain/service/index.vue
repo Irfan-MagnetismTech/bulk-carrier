@@ -85,12 +85,12 @@ function confirmDelete(id) {
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(service,index) in services" :key="service.id">
+            <tr v-for="(service,index) in services.data" :key="service.id">
               <td>{{ index + 1 }}</td>
               <td>{{ service.name }}</td>
               <td>{{ service.short_code }}</td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'supply-chain.service.edit', params: { serviceId: service.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.service.edit', params: { serviceId: service.id } }"></action-button>
                 <action-button @click="confirmDelete(service.id)" :action="'delete'"></action-button>
               </td>
             </tr>

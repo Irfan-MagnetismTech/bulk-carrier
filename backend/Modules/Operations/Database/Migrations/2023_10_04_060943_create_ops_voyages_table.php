@@ -26,7 +26,7 @@ return new class extends Migration
             $table->dateTime('sail_date');
             $table->dateTime('transit_date');
             $table->text('remarks');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

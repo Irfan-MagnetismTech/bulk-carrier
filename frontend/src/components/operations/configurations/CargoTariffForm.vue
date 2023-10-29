@@ -201,7 +201,7 @@ const editInitiated = ref(false);
 
 function fetchVessels(search, loading) {
       loading(true);
-      searchVessels(search, loading)
+      searchVessels(search, props.form.business_unit, loading);
 }
 
 function fetchPorts(search, loading) {

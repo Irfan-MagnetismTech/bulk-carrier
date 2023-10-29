@@ -137,4 +137,75 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessels/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Vessel Particulars */
+	{
+		path: `/${BASE}/vessel-particulars`,
+		name: `${BASE}.vessel-particulars.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-particulars/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-particulars/create`,
+		name: `${BASE}.vessel-particulars.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-particulars/:vesselParticularId/edit`,
+		name: `${BASE}.vessel-particulars.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-particulars/:vesselParticularId/show`,
+		name: `${BASE}.vessel-particulars.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-particulars/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Vessel Wise Certificates */
+	{
+		path: `/${BASE}/vessel-certificates`,
+		name: `${BASE}.vessel-certificates.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-certificates/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-certificates/create`,
+		name: `${BASE}.vessel-certificates.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-certificates/:vesselCertificateId/edit`,
+		name: `${BASE}.vessel-certificates.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-certificates/:vesselCertificateId/show`,
+		name: `${BASE}.vessel-certificates.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-certificates/history/:vesselId/:certificateId`,
+		name: `${BASE}.vessel-certificates.history`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/history-index.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-certificates/renew`,
+		name: `${BASE}.vessel-certificates.renew-list`,
+		component: () => import(`../views/${ViEWBASE}/vessel-certificates/renew-index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-certificates/renew/:vesselId/:marineCertificateId`,
+		name: `${BASE}.vessel-certificates.renew`,
+		component: () => import (`../views/${ViEWBASE}/vessel-certificates/renew.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

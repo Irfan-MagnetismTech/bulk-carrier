@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class OpsVessel extends Model
 {
@@ -42,6 +43,26 @@ class OpsVessel extends Model
         'business_unit'
     ];
     
+
+        
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['code_name'];
+
+    /**
+     * Concatenate the short code and name of the port.
+     *
+     * @return string
+     */
+    public function getCodeNameAttribute()
+    {
+        return $this->short_code . ' - ' . $this->name;
+    }
+
     protected static function newFactory()
     {
         return \Modules\Operations\Database\factories\OpsVesselFactory::new();

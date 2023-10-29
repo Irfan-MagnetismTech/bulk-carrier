@@ -30,4 +30,9 @@ class AccTransaction extends Model
         return $this->hasOne(AccBankReconciliation::class, 'acc_transaction_id', 'id');
     }
 
+    public function costCenter()
+    {
+        return $this->hasOne(AccCostCenter::class, 'id', 'acc_cost_center_id');
+    }
+
 }

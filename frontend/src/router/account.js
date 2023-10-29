@@ -109,4 +109,83 @@ export default [
         component: () => import(`../views/${VIEW_BASE}/bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
+    /* Cash Accounts Routes */
+    {
+        path: `/${BASE}/cash-accounts`,
+        name: `${BASE}.cash-accounts.index`,
+        component: () => import(`../views/${VIEW_BASE}/cash-account/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/cash-accounts/create`,
+        name: `${BASE}.cash-accounts.create`,
+        component: () => import(`../views/${VIEW_BASE}/cash-account/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/cash-accounts/:cashAccountId/edit`,
+        name: `${BASE}.cash-accounts.edit`,
+        component: () => import(`../views/${VIEW_BASE}/cash-account/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
+    /* Transaction Routes */
+    {
+        path: `/${BASE}/transactions`,
+        name: `${BASE}.transactions.index`,
+        component: () => import(`../views/${VIEW_BASE}/transaction/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/transactions/create`,
+        name: `${BASE}.transactions.create`,
+        component: () => import(`../views/${VIEW_BASE}/transaction/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/transactions/:transactionId/edit`,
+        name: `${BASE}.transactions.edit`,
+        component: () => import(`../views/${VIEW_BASE}/transaction/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
+    /* AIS Report Routes */
+    {
+        path: `/${BASE}/ais-reports/balance-sheet`,
+        name: `${BASE}.ais-reports.balance-sheet`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/balance-sheet.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/income-statement`,
+        name: `${BASE}.ais-reports.income-statement`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/income-statement.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/ledger`,
+        name: `${BASE}.ais-reports.ledger`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/ledger.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/trial-balance`,
+        name: `${BASE}.ais-reports.trial-balance`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/trial-balance.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/day-book`,
+        name: `${BASE}.ais-reports.day-book`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/day-book.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
 ];

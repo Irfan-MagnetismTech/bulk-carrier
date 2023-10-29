@@ -9,6 +9,8 @@ export default function useAccountCommonApiRequest() {
     const balanceIncomeLineLists = ref([]);
     const balanceIncomeAccountLists = ref([]);
     const allAccountLists = ref([]);
+    const allCostCenterLists = ref([]);
+    const generatedAccountCode = ref('');
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -81,13 +83,62 @@ export default function useAccountCommonApiRequest() {
 
     }
 
+    async function getCostCenter(name=null, businessUnit, loading=null) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-cost-centers', form);
+            allCostCenterLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+
+    }
+
+    async function getGeneratedAccountCode(balanceIncomeLineId, loading=null) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            balance_and_income_line_id: balanceIncomeLineId,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/generate-account-code', form);
+            generatedAccountCode.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+
+    }
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
         allAccountLists,
+        allCostCenterLists,
+        generatedAccountCode,
         getBalanceIncomeLineLists,
         getBalanceIncomeAccountLists,
         getAccount,
+        getCostCenter,
+        getGeneratedAccountCode,
         isLoading,
         errors,
     };

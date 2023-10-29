@@ -8,6 +8,8 @@ const icons = useHeroIcon();
 const { costCenter, storeCostCenter, isLoading, errors } = useCostCenter();
 const { setTitle } = Title();
 
+const page = 'create';
+
 setTitle('Create Cost Center');
 </script>
 <template>
@@ -19,7 +21,7 @@ setTitle('Create Cost Center');
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeCostCenter(costCenter)">
             <!-- Booking Form -->
-            <cost-center-form v-model:form="costCenter" :errors="errors"></cost-center-form>
+            <cost-center-form :page="page" v-model:form="costCenter" :errors="errors"></cost-center-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

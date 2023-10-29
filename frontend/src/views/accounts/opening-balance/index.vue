@@ -108,8 +108,8 @@ onMounted(() => {
           <tr v-for="(balanceData,index) in openingBalances?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ balanceData?.date }}</td>
-            <td>Will be cost center</td>
-            <td>Will be account head</td>
+            <td>{{ balanceData?.costCenter?.name }}</td>
+            <td>{{ balanceData?.account?.account_name }}</td>
             <td>{{ balanceData?.cr_amount }}</td>
             <td>{{ balanceData?.dr_amount }}</td>
             <td>

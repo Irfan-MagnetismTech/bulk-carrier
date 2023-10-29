@@ -18,6 +18,7 @@ use Modules\Accounts\Http\Controllers\AccSalaryController;
 use Modules\Accounts\Http\Controllers\AccSalaryHeadController;
 use Modules\Accounts\Http\Controllers\AccTransactionController;
 use Modules\Accounts\Http\Controllers\AccCommonController;
+use Modules\Accounts\Http\Controllers\AisReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('get-balance-income-lines-only', [AccCommonController::class, 'getBalanceIncomeLinesOnly']);
     Route::post('get-balance-income-accounts', [AccCommonController::class, 'getBalanceIncomeAccounts']);
     Route::post('get-accounts', [AccCommonController::class, 'getAccounts']);
+    Route::post('generate-account-code', [AccCommonController::class, 'generateAccountCode']);
 
 
 //    //Common routes
@@ -64,8 +66,8 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
 //
 //    //AIS Reports
 //    Route::post('day-book', [AisReportController::class, 'dayBook']);
-//    Route::post('ledgers', [AisReportController::class, 'ledger']);
+    Route::post('ledgers', [AisReportController::class, 'ledger']);
 //    Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
-//    Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
-//    Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
+    Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
+    Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
 });

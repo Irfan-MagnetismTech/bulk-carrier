@@ -49,6 +49,19 @@ export default function useVessel() {
 		certificate_type: '',
 		validity: ''
 	}
+
+	const bunkerObject = {
+		name: '',
+        material_code: '',
+        scm_material_category_id: '',
+        scm_material_category_name: '',
+        unit: '',
+        hs_code: '',
+        minimum_stock: 0,
+        store_category: '',
+        description: '',
+        sample_photo: null
+	}
 	const errors = ref(null);
 	const isLoading = ref(false);
 
@@ -84,6 +97,10 @@ export default function useVessel() {
 		form.opsVesselCertificates.map((element) => {
 			element.ops_maritime_certification_id = element.id
 			element.business_unit = form.business_unit
+		})
+
+		form.opsBunkers.map((element) => {
+			element.scm_material_id = element.id
 		})
 
 		try {
@@ -128,6 +145,10 @@ export default function useVessel() {
 		form.opsVesselCertificates.map((element) => {
 			element.ops_maritime_certification_id = element.id
 			element.business_unit = form.business_unit
+		})
+
+		form.opsBunkers.map((element) => {
+			element.scm_material_id = element.id
 		})
 		
 		try {
@@ -208,11 +229,11 @@ export default function useVessel() {
 		}
 	}
 
-	async function searchVessels(searchParam, loading) {
+	async function searchVessels(searchParam, businessUnit, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-vessels?name=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-vessels?name=${searchParam}&business_unit=${businessUnit}`);
 			vessels.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -247,6 +268,7 @@ export default function useVessel() {
 		vesselName,
 		getVessels,
 		maritimeCertificateObject,
+		bunkerObject,
 		storeVessel,
 		showVessel,
 		updateVessel,

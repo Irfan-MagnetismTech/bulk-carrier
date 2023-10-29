@@ -88,9 +88,12 @@ class AccCommonController extends Controller
             {
                 $response[] = [
                     'acc_account_name'             => $item->account_name,
+                    'account_name'                 => $item->account_name,
                     'acc_account_id'               => $item->id,
+                    'id'                           => $item->id,
                     'acc_balance_income_line_name' => $item->balanceIncome->line_text,
                     'acc_balance_income_line_id'   => $item->balanceIncome->id,
+                    'acc_balance_and_income_line_id'   => $item->balanceIncome->id,
                 ];
             }
 
@@ -106,35 +109,33 @@ class AccCommonController extends Controller
     }
 
 
-//
-//    public function generateAccountCode($balanceIncomeLineId)
-//    {
-//
-//        try {
-//            $currentAccountCode = null;
-//            $balanceid          = BalanceAndIncomeLine::where('id', $balanceIncomeLineId)->firstOrFail()->ancestors->pluck('id')->implode('-');
-//            $lastAccount        = Account::where('account_code', 'LIKE', "$balanceid-$balanceIncomeLineId-%")->latest()->first();
-//
-//            if (!empty($lastAccount))
-//            {
-//                list(, , , $lastAccountSeq) = explode('-', $lastAccount->account_code);
-//                $currentAccountCode         = $lastAccountSeq + 1;
-//            }
-//            else
-//            {
-//                $currentAccountCode = 1;
-//            }
-//
-//            return response()->json([
-//                'status' => 'success',
-//                'value'  => "$balanceid-$balanceIncomeLineId-$currentAccountCode",
-//            ], 200);
-//        }
-//        catch (\Exception $e)
-//        {
-//            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-//        }
-//    }
-//
+    public function generateAccountCode(Request $request)
+    {
+
+        try {
+            $currentAccountCode = null;
+            $balanceid          = AccBalanceAndIncomeLine::where('id', request()->balance_and_income_line_id)->firstOrFail()->ancestors->pluck('id')->implode('-');
+            $lastAccount        = AccAccount::where('account_code', 'LIKE', "$balanceid-".request()->balance_and_income_line_id."-%")->latest()->first();
+
+            if (!empty($lastAccount))
+            {
+                list(, , , $lastAccountSeq) = explode('-', $lastAccount->account_code);
+                $currentAccountCode         = $lastAccountSeq + 1;
+            }
+            else
+            {
+                $currentAccountCode = 1;
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => "$balanceid-".request()->balance_and_income_line_id."-$currentAccountCode",
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 
 }

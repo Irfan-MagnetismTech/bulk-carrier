@@ -19,9 +19,9 @@ class AccAccountOpeningBalanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account')
+            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account','costCenter')
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $accAccountOpeningBalances, 200);
@@ -29,7 +29,7 @@ class AccAccountOpeningBalanceController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -49,7 +49,7 @@ class AccAccountOpeningBalanceController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -60,12 +60,12 @@ class AccAccountOpeningBalanceController extends Controller
     public function show(AccAccountOpeningBalance $accAccountOpeningBalance)
     {
         try {
-            return response()->success('Retrieved succesfully', $accAccountOpeningBalance, 200);
+            return response()->success('Retrieved successfully', $accAccountOpeningBalance->load('account','costCenter'), 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -105,6 +105,6 @@ class AccAccountOpeningBalanceController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 }

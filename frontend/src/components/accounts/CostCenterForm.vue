@@ -9,6 +9,10 @@ const props = defineProps({
     required: false,
     default: {}
   },
+  page: {
+    required: false,
+    default: {}
+  },
   errors: { type: [Object, Array], required: false },
 });
 
@@ -21,8 +25,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
-    <label class="block w-full mt-2 text-sm"></label>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
