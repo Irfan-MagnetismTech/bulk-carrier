@@ -16,6 +16,8 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 
+const page = 'edit';
+
 setTitle('Edit Cost Center');
 
 onMounted(() => {
@@ -30,7 +32,7 @@ onMounted(() => {
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <form @submit.prevent="updateCostCenter(costCenter, costCenterId)">
             <!-- Booking Form -->
-          <cost-center-form v-model:form="costCenter" :errors="errors"></cost-center-form>
+          <cost-center-form :page="page" v-model:form="costCenter" :errors="errors"></cost-center-form>
             <!-- Submit button -->
             <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>

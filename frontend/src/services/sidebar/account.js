@@ -207,7 +207,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.ais-reports.balance-sheet',
                         label: 'Balance Sheet',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -217,7 +217,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.ais-reports.income-statement',
                         label: 'Income Statement',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -227,7 +227,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.ais-reports.ledger',
                         label: 'Ledger',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -237,7 +237,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.ais-reports.trial-balance',
                         label: 'Trial Balance',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -247,7 +247,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.ais-reports.day-book',
                         label: 'Day Book',
                         preIcon: '',
                         postIcon: icons.DownArrow,

@@ -151,4 +151,41 @@ export default [
         component: () => import(`../views/${VIEW_BASE}/transaction/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
+    /* AIS Report Routes */
+    {
+        path: `/${BASE}/ais-reports/balance-sheet`,
+        name: `${BASE}.ais-reports.balance-sheet`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/balance-sheet.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/income-statement`,
+        name: `${BASE}.ais-reports.income-statement`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/income-statement.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/ledger`,
+        name: `${BASE}.ais-reports.ledger`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/ledger.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/trial-balance`,
+        name: `${BASE}.ais-reports.trial-balance`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/trial-balance.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/day-book`,
+        name: `${BASE}.ais-reports.day-book`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/day-book.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
 ];

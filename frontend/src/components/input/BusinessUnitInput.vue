@@ -6,7 +6,10 @@ import Store from "../../store";
 export default {
   props: {
     modelValue: String,
-    page: String,
+    page: {
+      type: String,
+      default: 'create'
+    }
   },
   setup(props, context) {
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
