@@ -3,16 +3,21 @@ import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
 import { ref } from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
+import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
+import Store from "../../../store";
 
 const { ledgers, getLedgers, isLoading} = useAisReport();
-const { bgColor, allAccount, getAccount } = useTransaction();
+const { bgColor } = useTransaction();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+const { allAccountLists, getAccount } = useAccountCommonApiRequest();
 
 const { setTitle } = Title();
 
 setTitle('AIS Report - Ledger');
 
 const searchParams = ref({
-  account_id: null,
+  acc_account_id: null,
   from_date: '',
   till_date: '',
 });
@@ -22,7 +27,7 @@ function fetchAccounts(search, loading) {
   if(search.length < 3) {
     return;
   } else {
-    getAccount(search, loading);
+    getAccount(search, businessUnit.value, loading);
   }
 }
 </script>
@@ -36,9 +41,9 @@ function fetchAccounts(search, loading) {
         <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Search Ledger</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account <span class="text-red-500">*</span></label>
-          <v-select :options="allAccount" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.account_id" label="account_name" :reduce="allAccount=> allAccount.account_id" class="block w-full rounded form-input">
+          <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
-              <input class="vs__search" :required="!searchParams.account_id" v-bind="attributes" v-on="events"/>
+              <input class="vs__search" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
             </template>
           </v-select>
         </div>

@@ -151,6 +151,12 @@ export default [
         component: () => import(`../views/${VIEW_BASE}/transaction/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/transactions/:transactionId`,
+        name: `${BASE}.transactions.show`,
+        component: () => import(`../views/${BASE}/transactions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 
     /* AIS Report Routes */
     {
