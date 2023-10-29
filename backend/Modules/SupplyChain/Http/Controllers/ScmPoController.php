@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPrLine;
 
 class ScmPoController extends Controller
 {
@@ -122,4 +124,72 @@ class ScmPoController extends Controller
 
         return response()->success('Search result', $scmPo, 200);
     }
+
+    //get getPoOrPoCsWisePrData
+    public function getPoOrPoCsWisePrData(Request $request): JsonResponse
+    {
+
+        // {
+        //     scmWarehouse: '',
+        //     scm_warehouse_id: '',
+        //     pr_no: null,
+        //     scm_pr_id: null,
+        //     scmPr: null,
+        //     pr_date: '',
+        //     cs_no: '',//if cs
+        //     scm_cs_id: '',//if cs
+        //     scmCs: null,//if cs
+        //     scmPoLines: [
+        //                     {
+        //                         scmMaterial: '',
+        //                         scm_material_id: '',
+        //                         unit: '',
+        //                         brand: '',
+        //                         model: '',
+        //                         quantity: 0.0,
+        //                         rate: 0.0,//if cs
+        //                         total_price: 0.0,//if cs
+        //                     }
+        //                 ], 
+        //     }
+        try {
+            if ($request->cs_id != '' && $request->cs_id != null) {
+                $scmPr = ScmPr::query()
+                ->with([
+                    'scmWarehouse',
+                    'scmPrLine' => function ($query) {
+                        $query->select([
+                            'scm_material_id',
+                            'unit',
+                            'brand',
+                            'model',
+                            'quantity',
+                        ])->with('scmMaterial');
+                    }
+                ])
+                ->where('id', $request->pr_id)
+                ->get();
+                $data = [
+                    'scmWarehouse' => $scmPr[0]->scmWarehouse,
+                    'scm_warehouse_id' => $scmPr[0]->scm_warehouse_id,
+                    'pr_no' => $scmPr[0]->ref_no,
+                    'scm_pr_id' => $scmPr[0]->id,
+                    'scmPr' => $scmPr[0],
+                    'pr_date' => $scmPr[0]->pr_date,
+                    'scmPoLines' => $scmPr[0]->scmPrLine,
+                ];
+            } else {
+                // $scmCs = ScmCs::query()
+                // ->with('scmWarehouse', 'scmPr')
+                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
+                // ->get();
+            }
+            
+
+            return response()->success('Search result', $scmPr, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+   
 }

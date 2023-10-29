@@ -79,7 +79,7 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Purchase Order List</h2>
-    <default-button :title="'Create Purchase Order'" :to="{ name: 'scm.purchase-orders.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create Purchase Order'" :to="{ name: 'scm.purchase-orders.create' }" :icon="icons.AddIcon"></default-button> -->
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ purchaseOrders?.from }}-{{ purchaseOrders?.to }} of {{ purchaseOrders?.total }}</span> -->

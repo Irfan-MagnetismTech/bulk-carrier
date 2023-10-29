@@ -57,7 +57,7 @@ export default function usePurchaseOrder() {
                     ],
         scmPoTerms: [
                         {
-                            details: ''
+                            description: ''
                         }
                     ],  
         });
@@ -74,7 +74,7 @@ export default function usePurchaseOrder() {
     }
 
     const termsObject =  {
-        details: ''
+        description: ''
     }
     const errors = ref('');
     const isLoading = ref(false);
@@ -210,7 +210,7 @@ export default function usePurchaseOrder() {
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/get-pr-cs-wise-purchase-order`,{
+            const {data, status} = await Api.get(`/${BASE}/get-pr-cs-wise-po-data`,{
                 params: {
                     pr_id: prId,
                     cs_id: csId,
