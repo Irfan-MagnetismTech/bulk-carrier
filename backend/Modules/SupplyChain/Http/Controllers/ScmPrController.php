@@ -2,16 +2,17 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
-use Exception;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Services\GenerateUniqueId;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 
