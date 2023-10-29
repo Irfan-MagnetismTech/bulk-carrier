@@ -15,6 +15,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Services\GenerateUniqueId;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class ScmPrController extends Controller
 {
@@ -52,70 +53,51 @@ class ScmPrController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmPrRequest $request)
     {
         $requestData = $request->except('ref_no');
 
+
+
+        if (isset($request->attachment)) {
+            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
+            $requestData['attachment'] = $attachment;
+        }
+        $requestData['created_by'] = auth()->user()->id;
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
+
         try {
-
             // DB::beginTransaction();
-
-            if (isset($request->attachment)) {
-                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
-                $requestData['attachment'] = $attachment;
-            }
-            $requestData['created_by'] = auth()->user()->id;
-            $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
-
-            // return response()->json($requestData, 422);
-            // $purchase_requisition = ScmPr::create($requestData);
+            $purchase_requisition = ScmPr::create($requestData);
             if (request('enrty_type') == '0') {
-
-
-                // $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+                $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
             } else {
-                // try {
+                $import = new ScmMaterialsImport();
+                Excel::import($import, $request->file('excel'));
+                ob_end_clean();
 
-                    $import = new ScmMaterialsImport();
-                    Excel::import($import, $request->file('excel'));
-                    ob_end_clean();
-                    // return response()->json('Please select entry type else', 422);
-
-                    if ($import->invalid) {
-                    return response()->error($import->invalid, 422);
-                    } else {
-                        //loop trough the $import->uniqueRows and check if it exists in scm_materials table
-                        foreach ($import->uniqueRows as $item) {
-                            $material = ScmMaterial::where('name', $item['material_name'])->first();
-                            $item['scm_material_id'] = $material->id;
-                            $item['unit'] = $material->unit;
-                            $item['brand'] = $material->brand;
-                            $item['model'] = $material->model;
-                            $item['specification'] = $material->specification;
-                            $item['origin'] = $material->origin;
-                            $item['drawing_no'] = $material->drawing_no;
-                            $item['quantity'] = $material->quantity;
-                            $item['required_date'] = $material->required_date;
-                        }
-                        $purchase_requisition = ScmPr::create($requestData);
-                        $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);                       
-                    }
-
-                    // $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);
-                // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-
-                //     $failures = $e->failures();
-
-                //     foreach ($failures as $failure) {
-                //         $failure->row(); // row that went wrong
-                //         $failure->attribute(); // either heading key (if using heading row concern) or column index
-                //         $failure->errors(); // Actual error messages from Laravel validator
-                //         $failure->values(); // The values of the row that has failed.
-                //     }
-
-                //     throw new Exception($failure->errors(), 422);
-                // }
+                if ($import->invalid) {
+                    return response()->json($import->invalid, 422);
+                } else {
+                    $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);
+                }
             }
+        } catch (ValidationException $e) {
+
+            $failures = $e->failures();
+
+            foreach ($failures as $failure) {
+                $failure->row();
+                $failure->attribute();
+                $failure->errors();
+                $failure->values();
+            }
+
+            // throw new Exception($failure->errors(), 422);
+            return response()->json($e->failures(), 422);
+
+
+
             // DB::commit();
 
             // return response()->success('Data created succesfully', $purchase_requisition, 201);
