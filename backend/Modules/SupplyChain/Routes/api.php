@@ -7,6 +7,7 @@ use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
+use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
 
@@ -21,6 +22,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'opening-stocks' => ScmOpeningStockController::class,
         'services' => ScmServiceController::class,
         'purchase-requisitions' => ScmPrController::class,
+        'purchase-orders' => ScmPoController::class,
     ]);
     Route::get('search-material-category', [ScmMaterialCategoryController::class, "searchMaterialCategory"])->name('searchMaterialCategory');
     Route::get('search-unit', [ScmUnitController::class, "searchUnit"])->name('searchUnit');
