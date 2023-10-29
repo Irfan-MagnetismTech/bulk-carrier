@@ -7,6 +7,7 @@
     import DropZone from "../../DropZone.vue";
     import DropZoneV2 from '../../DropZoneV2.vue';
     import { useStore } from 'vuex';
+    import env from '../../../config/env';
 
     
     const { materialCategories, searchMaterialCategory } = useMaterialCategory();
@@ -129,13 +130,13 @@
                 <label class="label-group">
                 <span class="label-item-title">
                     Sample Photo
-                    <!-- <template v-if="form.sample_photo">
+                    <template v-if="form.sample_photo">
                     <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.sample_photo">{{
                         (typeof $props.form?.sample_photo === 'string')
                             ? '('+$props.form?.sample_photo.split('/').pop()+')'
                             : ''
                     }}</a>
-                    </template> -->
+                    </template>
                 </span>
                 <DropZoneV2 :form="form" :page="page"></DropZoneV2>
                 </label>
