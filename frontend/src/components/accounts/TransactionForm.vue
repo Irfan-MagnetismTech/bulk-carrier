@@ -7,10 +7,10 @@ import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useTransaction from "../../composables/accounts/useTransaction";
 const { vessels, searchVessels } = useVessel();
-const { emit } = getCurrentInstance();
 
 const { allAccountLists, getAccount, allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
 
+const { emit } = getCurrentInstance();
 const { bgColor } = useTransaction();
 
 const props = defineProps({
@@ -51,6 +51,10 @@ function fetchVessels(search, loading) {
 watch(
     () => props.form,
     (newEntries, oldEntries) => {
+
+      if(newEntries) {
+        changeBgColor();
+      }
 
       props.form.acc_cost_center_id = props.form?.acc_cost_center_name?.id ?? '';
 
@@ -169,7 +173,7 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="label-group">
-      <span class="label-item-title"> Cheque Number <span class="required-style">*</span></span>
+      <span class="label-item-title"> Cheque Number <span class="text-red-500">*</span></span>
       <input type="text" class="label-item-input" placeholder="Cheque no." v-model="form.instrument_no" required />
     </label>
     <label class="block w-full mt-2 text-sm">
@@ -177,8 +181,14 @@ onMounted(() => {
       <input type="date" v-model="form.instrument_date" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
+    <label class="label-group">
+      <span class="label-item-title"> Bill No. <span class="text-red-500">*</span></span>
+      <input type="text" class="label-item-input" placeholder="Bill no." v-model="form.bill_no" required />
+    </label>
+    <label class="label-group">
+      <span class="label-item-title"> Narration <span class="text-red-500">*</span></span>
+      <input type="text" class="label-item-input" placeholder="Narration" v-model="form.narration" required />
+    </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Ledger Entries <span class="text-red-500">*</span></legend>

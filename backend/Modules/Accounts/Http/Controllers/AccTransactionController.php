@@ -82,9 +82,9 @@ class AccTransactionController extends Controller
             $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'user_id', 'business_unit');
             $accTransaction->update($accTransactionData);
             $accTransaction->ledgerEntries()->delete();
-            $accTransaction->ledgerEntries()->createMany($request->ledger_entries);
+            $accTransaction->ledgerEntries()->createMany($request->ledgerEntries);
 
-            return response()->success('Updated succesfully', $accTransaction, 202);
+            return response()->success('Updated successfully', $accTransaction, 202);
         }
         catch (QueryException $e)
         {

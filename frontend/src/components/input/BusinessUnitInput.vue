@@ -10,6 +10,8 @@ export default {
   setup(props, context) {
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+    const page = true;
+
     onMounted(() => {
       if(businessUnit.value !== 'ALL')
       context.emit("update:modelValue", businessUnit.value);
@@ -17,12 +19,11 @@ export default {
 
     return {
       businessUnit,
+      page,
     };
   },
 };
 </script>
-
-
 
 
 <template>
