@@ -186,7 +186,7 @@ class ScmPoController extends Controller
             }
             
 
-            return response()->success('Search result', $scmPr, 200);
+            return response()->success('Search result', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
