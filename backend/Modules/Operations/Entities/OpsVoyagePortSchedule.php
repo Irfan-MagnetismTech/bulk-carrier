@@ -17,7 +17,7 @@ class OpsVoyagePortSchedule extends Model
         'etb',
         'etd',
         'load_commence',
-        'load_complete'
+        'load_complete',
         'unload_commence',
         'unload_complete',
         'operation_type',

@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
-use Modules\Operations\Entities\OpsVoyage;
-use Modules\Operations\Http\Requests\OpsVoyageRequest;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVoyage;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Http\Requests\OpsVoyageRequest;
 
 class OpsVoyageController extends Controller
 {
@@ -59,7 +60,7 @@ class OpsVoyageController extends Controller
                 'opsBunker',
             );
 
-            $voyage = OpsCargoTariff::create($voyageInfo);
+            $voyage = OpsVoyage::create($voyageInfo);
             $voyage->opsVoyageSectors()->createMany($request->opsVoyageSector);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedule);
             $voyage->opsBunkers()->createMany($request->opsBunker);
@@ -112,16 +113,16 @@ class OpsVoyageController extends Controller
                 'opsBunker',
             );
 
-            $voyageUpdate->update($voyageInfo);  
+            $voyage->update($voyageInfo);  
 
-            $voyageUpdate->opsVoyageSectors()->delete();
-            $voyageUpdate->opsVoyageSectors()->createMany($request->opsVoyageSector);
+            $voyage->opsVoyageSectors()->delete();
+            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSector);
 
-            $voyageUpdate->opsVoyagePortSchedules()->delete();
-            $voyageUpdate->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedule);
+            $voyage->opsVoyagePortSchedules()->delete();
+            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedule);
 
-            $voyageUpdate->opsBunkers()->delete();
-            $voyageUpdate->opsBunkers()->createMany($request->opsBunker);
+            $voyage->opsBunkers()->delete();
+            $voyage->opsBunkers()->createMany($request->opsBunker);
 
             DB::commit();
             return response()->success('Voyage updated successfully.', $voyage, 200);

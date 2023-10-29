@@ -2,14 +2,16 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsCargoTariff;
 use Modules\Operations\Http\Requests\OpsCargoTariffRequest;
-use Illuminate\Support\Facades\DB;
+use Modules\Operations\Http\Requests\OpsCargoTariffLineRequest;
 
 class OpsCargoTariffController extends Controller
 {
@@ -27,7 +29,7 @@ class OpsCargoTariffController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-   public function index()
+   public function index(Request $request): JsonResponse
    {
        try {
            $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->paginate(15);
@@ -54,11 +56,11 @@ class OpsCargoTariffController extends Controller
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
 
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+            $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
         }
@@ -94,7 +96,7 @@ class OpsCargoTariffController extends Controller
      * Update the specified resource in storage.
      *
      * @param OpsCargoTariffRequest $request
-     * @param  OpsCargoTariff  $vessel_particular
+     * @param  OpsCargoTariff  $cargo_tariff
      * @return JsonResponse
      */
     public function update(OpsCargoTariffRequest $request, OpsCargoTariff $cargo_tariff): JsonResponse
@@ -103,12 +105,11 @@ class OpsCargoTariffController extends Controller
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
                 '_token',
-                'cargoTariffLine',
+                'opsCargoTariffLines',
             );
-           
-            $cargoTariff->update($cargoTariffInfo);            
-            $cargoTariff->opsCargoTariffLines()->delete();
-            $cargoTariff->opsCargoTariffLines()->createMany($request->cargoTariffLine);
+                       
+            $cargo_tariff->update($cargoTariffInfo);            
+            $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
         }
@@ -141,24 +142,22 @@ class OpsCargoTariffController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
 
-    public function getCargoTariffName(){
+    public function getCargoTariffByName(Request $request){
         try {
-            $cargo_tariffs = OpsCargoTariff::all();
-            return response()->success('Successfully retrieved cargo tariffs name.', collect($cargo_tariffs->pluck('tariff_name'))->unique()->values()->all(), 200);
-        } catch (QueryException $e){
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+            $cargoTariffs = OpsCargoTariff::query()
+            ->where(function ($query) use($request) {
+                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->limit(10)
+            ->get();
 
-    public function getCargoTariffWithoutPaginate(){
-        try
-        {
-            $cargo_tariffs = OpsCargoTariff::all();            
-            return response()->success('Successfully retrieved cargotariffs for without paginate.', $cargo_tariffs, 200);
-        }
-        catch (QueryException $e)
-        {
+            return response()->success('Successfully retrieved cargo tariffs name.', $cargoTariffs, 200);
+        } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
