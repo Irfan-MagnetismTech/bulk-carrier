@@ -96,5 +96,8 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'getVesselExpenseHeadByVessel']);
     
     // end for search api route
+    Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
+    Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
+    Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
 
 });

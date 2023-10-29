@@ -3,9 +3,18 @@
 namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OpsVesselCertificateRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        $this->replace($mergeData);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,8 +26,10 @@ class OpsVesselCertificateRequest extends FormRequest
             'ops_vessel_id' => ['required', 'numeric', 'max:50'],
             'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
             'issue_date' => ['required'],
-            'expire_date' => ['required'],
-            'attachment' => ['required'],
+            'expire_date' => Rule::requiredIf(function () {
+                return $this->opsMaritimeCertification['type'] != 'Permanent';
+            }),
+            'attachment' => ['nullable'],
             'status' => ['nullable'],
             'reference_number' => ['required'],
             'created_by' => ['nullable'],
