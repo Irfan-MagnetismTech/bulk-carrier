@@ -8,7 +8,8 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
-
+    import env from '../../../config/env';
+    
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
 
@@ -263,7 +264,10 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
               <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].sample" class="form-input">
+              <!-- <input type="text" v-model="form.scmPrLines[index].sample" class="form-input"> -->
+              <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
+                      <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
+               </a>
             </td>
             <td>
               <input type="text" v-model="form.scmPrLines[index].drawing_no" class="form-input">
