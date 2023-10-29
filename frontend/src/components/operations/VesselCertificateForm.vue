@@ -62,14 +62,12 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
       <h2 class="text-gray-600 dark:text-gray-300 text-2xl font-semibold py-3 text-center">
         Attachment (Image of Certificate)
       </h2>
-
-        
-      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
-    </label>
+      <label class="block w-full mt-2 text-sm">
+        <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+      </label>
   </div>
 
 
