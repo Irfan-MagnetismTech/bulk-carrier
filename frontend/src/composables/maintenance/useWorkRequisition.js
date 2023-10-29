@@ -26,7 +26,7 @@ export default function useWorkRequisition() {
         scm_vendor_id: '',
         scm_vendor_name: '',
         maintenance_type: '',
-        reference: '',
+        reference_no: '',
         requisition_date: '',
         priority: '',
         est_start_date: '',

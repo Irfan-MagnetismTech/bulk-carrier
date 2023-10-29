@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 export default function useItemGroup() {
     const router = useRouter();
     const jobs = ref([]);
+    const itemWiseJobs = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const job = ref( {
@@ -140,17 +141,74 @@ export default function useItemGroup() {
         }
     }
 
+    async function getItemWiseAllJobs(businessUnit, opsVesselId, mntItemId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-all-jobs`,{
+                params: {
+                    business_unit: businessUnit,
+                    mnt_item_id: mntItemId,
+                    ops_vessel_id: opsVesselId,
+                }
+            });
+            itemWiseJobs.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    
+    async function getItemWiseUpcomingJobs(businessUnit, opsVesselId, mntItemId){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-upcoming-jobs`,{
+                params: {
+                    business_unit: businessUnit,
+                    mnt_item_id: mntItemId,
+                    ops_vessel_id: opsVesselId,
+                }
+            });
+            itemWiseJobs.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
+
+
     
 
     
     return {
         jobs,
         job,
+        itemWiseJobs,
         getJobs,
         storeJob,
         showJob,
         updateJob,
         deleteJob,
+        getItemWiseAllJobs,
+        getItemWiseUpcomingJobs,
         isLoading,
         errors,
     };

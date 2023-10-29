@@ -1,7 +1,29 @@
 <template>
     <business-unit-input v-model="form.business_unit"></business-unit-input>
-    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
+    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
       <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  />
+          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Reference No </span>
+            <input type="text" v-model="form.reference_no" placeholder="Reference No" class="form-input"  />
+          <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
+            <select v-model="form.maintenance_type" class="form-input">
+              <option value="" disabled selected>Select Maintenance Type</option>
+              <option value="Schedule" > Schedule</option>
+              <option value="Breakdown" > Breakdown</option>
+              <option value="Dry Dock" > Dry Dock</option>
+            </select>
+          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
@@ -61,12 +83,14 @@
             <input type="hidden" v-model="form.mnt_item_id">
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
-
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  />
-          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" readonly />
+          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
+
+
+        
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
@@ -82,22 +106,7 @@
         </label>
 
         
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
-            <select v-model="form.maintenance_type" class="form-input">
-              <option value="" disabled selected>Select Maintenance Type</option>
-              <option value="Schedule" > Schedule</option>
-              <option value="Breakdown" > Breakdown</option>
-              <option value="Dry Dock" > Dry Dock</option>
-            </select>
-          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
-        </label>
-
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" readonly />
-          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
-        </label>
+        
 
         
         <label class="block w-full mt-2 text-sm">
@@ -112,8 +121,8 @@
 
         
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Resposible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Resposible Person" :options="form.crw_responsible_persons" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <span class="text-gray-700 dark:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Responsible Person" :options="form.crw_responsible_persons" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -127,20 +136,118 @@
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
 
+        <!-- <div class="container mx-auto">
+          <ul class="flex justify-center space-x-2 text-white ">
+            <li>
+              <button type="button"
+                @click="currentTab(1)" 
+                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none " :class="{'bg-red-500' : tab === 1 }"
+              >
+                Tab 1
+              </button>
+            </li>
+            <li>
+              <button type="button"
+                @click="currentTab(2)"
+                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none" 
+              >
+                Tab 2
+              </button>
+            </li>
+            <li>
+              <button type="button"
+                @click="currentTab(3)"
+                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none"
+              >
+                Tab 3
+              </button>
+            </li>
+          </ul>
+          <div class="p-3 mt-6 text-center bg-white">
+            <div v-if="tab === 1">
+              Tab 1 Content show Lorem ipsum dolor sit amet consectetur adipisicing
+              elit. Quas sunt ducimus numquam! Quam, perspiciatis!
+            </div>
+            <div v-if="tab === 2">
+              Tab 2 Content show Lorem ipsum dolor sit amet consectetur, adipisicing
+              elit. aliquam rem. Exercitationem corporis eius voluptatibus.
+            </div>
+            <div v-if="tab === 3">
+              Tab 3 Content show Lorem ipsum dolor sit amet consectetur adipisicing
+              elit.
+            </div>
+          </div>
+        </div> -->
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
+    <div class="mt-3">
+      <ul class="flex flex-wrap gap-1 text-gray-700 dark:text-gray-300">
+        <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 1 }" @click="currentTab(1)">All Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 2 }" @click="currentTab(2)">Overdue Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 3 }" @click="currentTab(3)">Upcoming Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 4 }" @click="currentTab(4)">Added Jobs</button></li>
+      </ul>
+      <div class="mt-1">
+        <div v-if="itemWiseJobs?.length">
+          <table class="w-full whitespace-no-wrap" id="table">
+            <thead>
+              <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                <th class="w-1/12 px-4 py-3 align-bottom">Item Code</th>
+                <th class="w-2/12 px-4 py-3 align-bottom">Item</th>
+                <th class="w-3/12 px-4 py-3 align-bottom">Job Description</th>
+                <th class="w-1/12 px-4 py-3 align-bottom">Cycle</th>
+                <th class="w-1/12 px-4 py-3 align-bottom">Last Done</th>
+                <th class="w-2/12 px-4 py-3 align-bottom">Prev. Run Hrs.</th>
+                <th class="w-1/12 px-4 py-3 align-bottom">Next Due</th>
+                <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+              <template v-for="(job, index) in itemWiseJobs" :key="index">
+                <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
+                  <td>{{ job.item_code }}</td>
+                  <td>{{ job.name }}</td>
+                  <td>{{ jobLine.job_description }}</td>
+                  <td>{{ jobLine.cycle +" "+ jobLine.cycle_unit }}</td>
+                  <td>{{ jobLine.last_done }}</td>
+                  <td>{{ jobLine.previous_run_hour }}</td>
+                  <td>{{ jobLine.next_due }}</td>
+                  <td>{{ jobLine.next_due }}</td>
+                </tr>
+              </template>
+              <!-- <tr class="text-gray-700 dark:text-gray-400" v-for="(job, index) in itemWiseJobs" :key="index"> -->
+                <!-- <td>{{ job.item_code }}</td> -->
+                <!-- <td>{{ job.name }}</td> -->
+                <!-- <td>{{ job }}</td> -->
+                <!-- <td v-for="(jobLine, jobLineIndex) in job.mntJobLines">{{ jobLine.job_description }}</td> -->
+                <!-- <td class="px-1 py-1"><input type="text" class="form-input" required  v-model="job_line.job_description" placeholder="Job Description" /></td>
+                <td class="px-1 py-1">
+                  <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" disabled selected>Select Cycle Unit</option>
+                            <option value="Hours" v-show="form.mnt_item_name?.has_run_hour">Hours</option>
+                            <option value="Days">Days</option>
+                            <option value="Weeks">Weeks</option>
+                            <option value="Months">Months</option>
+                        </select>
+                </td>
+                <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.cycle" placeholder="Cycle" /></td>
+                <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
+                <td class="px-1 py-1"><input type="date" required class="form-input"  v-model="job_line.last_done"/></td>
+                
+                <td class="px-1 py-1"><input type="text" class="form-input"  v-model="job_line.remarks" placeholder="Remarks" /></td>
+                <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addJob"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index != 0" @click="removeJob(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg></button></td> -->
+              <!-- </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="py-10 bg-purple-100 text-center rounded-md">
+          <p class="text-md font-bold">No job found</p>
+        </div>
+      </div>
     </div>
     
 </template>
@@ -155,12 +262,26 @@ import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
 import useItem from "../../../composables/maintenance/useItem";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
+import useJob from "../../../composables/maintenance/useJob";
+import useRunHour from "../../../composables/maintenance/useRunHour";
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseItems, getItemGroupWiseItems } = useItem();
+const { itemWiseJobs, getItemWiseAllJobs, getItemWiseUpcomingJobs } = useJob();
+const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const tab = ref(1);
+const currentTab = (tabNumber) => {
+  tab.value = tabNumber;
+  if(businessUnit && props.form.ops_vessel_id && props.form.mnt_item_id){
+    if(tabNumber === 1)
+      getItemWiseAllJobs(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
+    else if(tabNumber === 2)
+      getItemWiseUpcomingJobs(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
+  }
+};
 
 const props = defineProps({
   form: {
@@ -173,6 +294,13 @@ const props = defineProps({
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
+  if(props.form.ops_vessel_id && props.form.mnt_item_id){
+    getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
+  }
+});
+
+watch(() => presentRunHour.value, (value) => {
+  props.form.previous_run_hour = value?.previous_run_hour;
 });
 
 watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
@@ -208,6 +336,9 @@ watch(() => itemGroupWiseItems.value, (val) => {
 
 watch(() => props.form.mnt_item_name, (value) => {
   props.form.mnt_item_id = value?.id;
+  if(props.form.ops_vessel_id && props.form.mnt_item_id){
+    getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
+  }
 });
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
