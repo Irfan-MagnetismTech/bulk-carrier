@@ -41,17 +41,17 @@ class OpsVoyage extends Model
 
     public function opsCargoType()
     {
-        return $this->belongsTo(OpsCargoType::class, 'ops_voyage_id' , 'id');
+        return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
     }
 
     public function opsVoyageSectors()
     {
-        return $this->hasMany(OpsVoyageSector::class, 'ops_cargo_tariff_id', 'id');
+        return $this->hasMany(OpsVoyageSector::class);
     }
 
     public function opsVoyagePortSchedules()
     {
-        return $this->hasMany(OpsVoyagePortSchedule::class, 'ops_cargo_tariff_id', 'id');
+        return $this->hasMany(OpsVoyagePortSchedule::class);
     }
 
     public function opsBunkers()
