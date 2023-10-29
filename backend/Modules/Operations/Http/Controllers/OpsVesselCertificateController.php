@@ -49,8 +49,8 @@ class OpsVesselCertificateController extends Controller
             // Calculate days difference using map
             $vesselCertificates->map(function ($certificateGroup, $vesselId) use ($currentDate) {
                 return $certificateGroup->map(function ($certificate) use ($currentDate) {                    
-                    $expireDate = Carbon::parse($certificate->expire_date);
-                    $expire_days = $currentDate->diffInDays($expireDate);
+                    $expireDate = Carbon::parse($certificate->expire_date);                    
+                    $expire_days = $currentDate->diffInDays($expireDate, false); 
                     $certificate->expire_days = $expire_days;                    
                     return $certificate;
                 });
