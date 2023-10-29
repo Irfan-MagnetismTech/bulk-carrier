@@ -14,6 +14,7 @@
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
       formType: { type: String, required : false },
+      page: {required: false,default: {}}
     });
 
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -100,7 +101,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
   <div class="input-group !w-1/2">
       <label class="label-group">
