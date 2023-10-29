@@ -5,13 +5,13 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
-import useFileDownload from '../../services/fileDownload.js';
 import NProgress from 'nprogress';
+import useHelper from '../useHelper';
 
 
 export default function usePurchaseRequisition() {
     const BASE = 'scm' 
-    const { downloadFile } = useFileDownload();
+    const { downloadFile } = useHelper();
     const router = useRouter();
     const purchaseRequisitions = ref([]);
     const filteredPurchaseRequisitions = ref([]);
