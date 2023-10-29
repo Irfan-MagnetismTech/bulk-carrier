@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
-use Modules\Operations\Entities\OpsVessel;
-use Modules\Operations\Http\Requests\OpsVesselRequest;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVessel;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Http\Requests\OpsVesselRequest;
 
 class OpsVesselController extends Controller
 {
@@ -32,7 +33,21 @@ class OpsVesselController extends Controller
     {
         try
         {
-            $vessels = OpsVessel::orderBy('id','DESC')->Paginate();                       
+            $vessels = OpsVessel::with([
+                'opsVesselCertificates' => function ($query){
+                    $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                        $query2->select(DB::raw('MAX(id)'))
+                            ->from('ops_vessel_certificates')
+                            ->groupBy('ops_maritime_certification_id');
+                    })->latest();
+                },
+                'opsBunkers'
+            ])
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->paginate(10);   
+
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
         catch (QueryException $e)
@@ -52,7 +67,14 @@ class OpsVesselController extends Controller
         try
         {
             DB::beginTransaction();
-            $vessel = OpsVessel::create($request->all());
+            $vesselInfo = $request->except(
+                '_token',
+                'opsVesselCertificates',
+                'opsBunkers',
+            );
+            $vessel = OpsVessel::create($vesselInfo);
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->createMany($request->opsVesselCertificates);
             DB::commit();
                  
             return response()->success('Successfully created vessel.', $vessel, 201);
@@ -72,6 +94,30 @@ class OpsVesselController extends Controller
      */
     public function show(OpsVessel $vessel): JsonResponse
     {
+        $vessel->load([
+            'opsVesselCertificates' => function ($query){
+                $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                    $query2->select(DB::raw('MAX(id)'))
+                        ->from('ops_vessel_certificates')
+                        ->groupBy('ops_maritime_certification_id');
+                })->latest();
+            },
+            'opsBunkers'
+        ]);
+        
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->opsMaritimeCertification->id;
+            return $certificate;
+        });
+
+        $vessel->opsBunkers->map(function($bunker) {
+            $bunker->name = $bunker->scmMaterial->name;
+            return $bunker;
+        });
+
         try
         {            
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
@@ -83,6 +129,7 @@ class OpsVesselController extends Controller
 
     }
 
+
     /**
      * Update the specified vessel in storage.
      *
@@ -92,10 +139,21 @@ class OpsVesselController extends Controller
      */
     public function update(OpsVesselRequest $request, OpsVessel $vessel): JsonResponse
     {
+        // dd($request);
         try
         {
             DB::beginTransaction();
-            $vessel->update($request->all());
+            $vesselInfo = $request->except(
+                '_token',
+                'opsVesselCertificates',
+                // 'opsBunkers',
+            );
+            // dd($request);
+            $vessel->update($vesselInfo);
+            $vessel->opsVesselCertificates()->delete();
+            $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->delete();
+            $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Successfully updated vessel.', $vessel, 202);
         }
@@ -116,6 +174,8 @@ class OpsVesselController extends Controller
     {
         try
         {
+            $vessel->opsVesselCertificates()->delete();
+            $vessel->opsBunkers()->delete();
             $vessel->delete();
             return response()->json([
                 'message' => 'Successfully deleted vessel.',
@@ -139,24 +199,83 @@ class OpsVesselController extends Controller
     }
 
     
-    public function getVesselName(){
+    public function getVesselByNameorCode(Request $request){
         try {
-            $vessels = OpsVessel::all();
-            return response()->success('Successfully retrieved vessels name.', collect($vessels->pluck('name'))->unique()->values()->all(), 200);
+            $vessels = OpsVessel::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->limit(10)
+            ->get();
+            
+            return response()->success('Successfully retrieved vessels.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
 
-    public function getVesselWithoutPaginate(){
+
+    // filter only vessel id wise
+    public function getVesselLatest(Request $request): JsonResponse
+    {            
+        $vessel= OpsVessel::with([
+            'opsVesselCertificates' => function ($query) use ($request) {
+                $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                    $query2->select(DB::raw('MAX(id)'))
+                        ->from('ops_vessel_certificates')
+                        ->groupBy('ops_maritime_certification_id');
+                })->latest();
+            },
+            'opsBunkers'
+        ])->find($request->vessel_id);
+        
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->id;
+            return $certificate;
+        });
         try
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+        }
+        catch (QueryException $e)
         {
-            $vessels = OpsVessel::all();            
-            return response()->success('Successfully retrieved vessels for without paginate.', $vessels, 200);
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+    public function getVesselCertificateHistory(Request $request): JsonResponse
+    {
+        // dd($request);
+        $vessel= OpsVessel::with([
+            'opsVesselCertificates' => function ($query) use ($request) {
+                $query->where('ops_maritime_certification_id', $request->certificate_id);
+            },
+            'opsBunkers'
+        ])->find($request->vessel_id);
+
+        $vessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->type = $certificate->opsMaritimeCertification->type;
+            $certificate->validity  =$certificate->opsMaritimeCertification->validity;
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->id;
+            return $certificate;
+        });
+        try
+        {            
+            return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
 }

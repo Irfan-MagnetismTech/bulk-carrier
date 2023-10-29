@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsVoyage extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'ops_customer_id',
         'ops_vessel_id',

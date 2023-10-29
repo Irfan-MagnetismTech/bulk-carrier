@@ -4,9 +4,11 @@ namespace Modules\Administration\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Administration\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -14,10 +16,6 @@ class RoleController extends Controller
 {
     use HasRoles;
 
-    /**
-     * get all users with their roles.
-     * @return JsonResponse
-     */
     public function index() : JsonResponse
     {
         try {
@@ -36,72 +34,69 @@ class RoleController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function store(RoleRequest $request) : JsonResponse
     {
-        return view('administration::create');
+        try {
+
+            $role = Role::create(['name'=>$request->name]);
+            $role->syncPermissions([$request->current_permissions]);
+            return response()->json([
+                'value'   => $role,
+                'message' => 'Role added Successfully.',
+            ], 201);
+        }
+        catch (\Exception$e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+    public function show(Role $role) : JsonResponse
     {
-        //
+
+        try {
+            $role['current_permissions'] = $role->permissions->pluck('id');
+
+            return response()->json([
+                'value' => $role,
+                'message' => 'Successfully retrieved role and permission.'
+            ], 200);
+        } catch (\Exception $e){
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
+    public function update(Request $request, Role $role) : JsonResponse
     {
-        return view('administration::show');
+        try {
+
+            $role->update(['name'=>$request->name]);
+            $role->syncPermissions($request->current_permissions);
+
+            return response()->json([
+                'value'   => $role,
+                'message' => 'Role updated Successfully.',
+            ], 201);
+        }
+        catch (\Exception$e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
+    public function destroy(Role $role): JsonResponse
     {
-        return view('administration::edit');
-    }
+        try {
+            $role->delete();
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function getCurrentUser(Request $request){
-        $user = $request->user();
-        $user['role'] = $request->user()->roles()->pluck('name')->first();
-        $user['permissions'] = $request->user()->getPermissionsViaRoles()->pluck('name')->toArray();
-        $user['permissions'] = array_merge($user['permissions'], ['dashboard']);
-        $user['port'] = $request->user()->port;
-        return $user;
+            return response()->json([
+                'value'   => '',
+                'message' => 'Role deleted Successfully.',
+            ], 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 }

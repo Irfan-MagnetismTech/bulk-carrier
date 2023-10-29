@@ -27,12 +27,15 @@ class OpsMaritimeCertificationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request);
         try {
-            $maritimeCertifications = OpsMaritimeCertification::latest()->paginate(15);
+            $maritimeCertifications = OpsMaritimeCertification::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+                })->latest()->paginate(10);
             
-            return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertification, 200);
+            return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertifications, 200);
         }
         catch (QueryException $e)
         {
@@ -128,24 +131,18 @@ class OpsMaritimeCertificationController extends Controller
     }
 
     
-    public function getMaritimeCertificationName(){
+    public function getMaritimeCertificationByName(Request $request){
         try {
-            $maritime_certifications = OpsMaritimeCertification::all();
-            return response()->success('Successfully retrieved maritime certifications name.', collect($maritime_certifications->pluck('name'))->unique()->values()->all(), 200);
+            $maritime_certifications = OpsMaritimeCertification::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->limit(10)
+            ->get();
+            return response()->success('Successfully retrieved maritime certifications name.', $maritime_certifications, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
 
-    public function getMaritimeCertificationWithoutPaginate(){
-        try
-        {
-            $maritime_certifications = OpsMaritimeCertification::all();            
-            return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

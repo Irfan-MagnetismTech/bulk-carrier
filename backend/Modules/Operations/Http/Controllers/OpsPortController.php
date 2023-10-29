@@ -30,6 +30,7 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
+        // dd('dfdf');
         try {
             $ports = OpsPort::latest()->paginate(15);
             // if($request->searchKey != null) {
@@ -137,23 +138,19 @@ class OpsPortController extends Controller
         }
     }
 
-    public function getPortName(){
-        try {
-            $ports = OpsPort::all();
-            return response()->success('Successfully retrieved ports name.', collect($ports->pluck('name'))->unique()->values()->all(), 200);
-        } catch (QueryException $e){
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 
-    public function getPortWithoutPaginate(){
-        try
-        {
-            $ports = OpsPort::all();            
-            return response()->success('Successfully retrieved ports for without paginate.', $ports, 200);
-        }
-        catch (QueryException $e)
-        {
+    public function getPortByNameOrCode(Request $request){
+        try {
+            $ports = OpsPort::query()
+                ->where(function ($query) use($request) {
+                    $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                    $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+                })
+                ->limit(10)
+                ->get();
+
+            return response()->success('Successfully retrieved port code and name.', $ports, 200);
+        } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }

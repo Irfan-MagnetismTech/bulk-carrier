@@ -8,7 +8,6 @@ use Illuminate\Validation\Rule;
 class OpsVesselRequest extends FormRequest
 {
 
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,6 +17,7 @@ class OpsVesselRequest extends FormRequest
     {
         return true;
     }
+    
 
         /**
      * Get the validation rules that apply to the request.
@@ -26,12 +26,11 @@ class OpsVesselRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this);
         return [
-            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
+            'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'vessel_type'     => ['required', 'string', 'max:255'],
-            'short_code'      => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
-            'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->ops_vessel)],
+            'short_code'      => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
+            'call_sign'       => ['required', 'alpha_num', 'max:50', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'owner_name'      => ['required', 'string', 'max:255'],
             'manager'         => ['required', 'string', 'max:255'],
             'classification'  => ['required', 'alpha', 'max:50'],

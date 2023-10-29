@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OpsVesselParticular extends Model
 {
     use HasFactory;
+    // public static $snakeAttributes = false;
 
     protected $fillable = [
         'ops_vessel_id',
-        'attachment',
+        'vessel_type',
+        'depth',
         'class_no',
+        'attachment',
         'loa',
         'depth',
         'ecdis_type',
@@ -21,11 +24,31 @@ class OpsVesselParticular extends Model
         'engine_type',
         'bhp',
         'email',
-        'lbc'
+        'lbc',
+        'previous_name',
+        'call_sign',
+        'owner_name',
+        'classification',
+        'flag',
+        'previous_flag',
+        'port_of_registry',
+        'nrt',
+        'dwt',
+        'imo',
+        'grt',
+        'official_number',
+        'keel_laying_date',
+        'mmsi',
+        'year_built',
+        'tues_capacity',
+        'overall_length',
+        'overall_width',
+        'depth_moulded',
+        'business_unit',
     ];
 
     public function opsVessel()
     {
-        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id', 'id');
     }
 }

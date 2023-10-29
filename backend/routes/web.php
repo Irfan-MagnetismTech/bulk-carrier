@@ -14,3 +14,4 @@ use Modules\Administration\Http\Controllers\UserController;
 |
 */
 // Route::get('login', [UserController::class, 'index']);
+// Route::get('/test', fn()=> 'hi');

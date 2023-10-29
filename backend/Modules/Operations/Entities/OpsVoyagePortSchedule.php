@@ -4,7 +4,6 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OpsVoyagePortSchedule extends Model
 {
@@ -23,4 +22,9 @@ class OpsVoyagePortSchedule extends Model
         'operation_type',
         'business_unit'
     ];
+    
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
 }

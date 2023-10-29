@@ -3,12 +3,13 @@
 namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\SupplyChain\Entities\ScmMaterial;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunker extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'bunkerable_type',
@@ -34,10 +35,10 @@ class OpsBunker extends Model
     // {
     //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
     // }
-    // public function scmMaterial()
-    // {
-    //     return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
-    // }
+    public function scmMaterial()
+    {
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
+    }
     
     public function bunkerable()
     {

@@ -55,9 +55,9 @@ class OpsVoyageController extends Controller
             DB::beginTransaction();
             $voyageInfo = $request->except(
                 '_token',
-                'opsVoyageSector',
-                'opsVoyagePortSchedule',
-                'opsBunker',
+                'opsVoyageSectors',
+                'opsVoyagePortSchedules',
+                'opsBunkers',
             );
 
             $voyage = OpsVoyage::create($voyageInfo);
@@ -108,9 +108,9 @@ class OpsVoyageController extends Controller
             DB::beginTransaction();
             $voyageInfo = $request->except(
                 '_token',
-                'opsVoyageSector',
-                'opsVoyagePortSchedule',
-                'opsBunker',
+                'opsVoyageSectors',
+                'opsVoyagePortSchedules',
+                'opsBunkers',
             );
 
             $voyage->update($voyageInfo);  
@@ -159,24 +159,20 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageName(){
+    public function getVoyageByVoyageNo(Request $request){
         try {
-            $voyages = OpsVoyage::all();
-            return response()->success('Successfully retrieved voyages name.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
+            $voyages = OpsVoyage::query()
+            ->where(function ($query) use($request) {
+                $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved voyage no.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
 
-    public function getVoyageWithoutPaginate(){
-        try
-        {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        
-            return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+
 }

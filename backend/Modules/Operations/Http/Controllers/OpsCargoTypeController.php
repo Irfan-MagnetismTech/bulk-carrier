@@ -31,7 +31,9 @@ class OpsCargoTypeController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $cargo_types = OpsCargoType::latest()->paginate(15);
+            $cargo_types = OpsCargoType::when(request()->business_unit != "ALL", function($q){
+                    $q->where('business_unit', request()->business_unit);  
+                })->latest()->paginate(10);
             return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
         }
         catch (QueryException $e)
@@ -41,8 +43,6 @@ class OpsCargoTypeController extends Controller
 
     }
 
-
-    
     /**
      * Store a newly created resource in storage.
      * @param OpsCargoTypeRequest $request
@@ -125,15 +125,19 @@ class OpsCargoTypeController extends Controller
         }
     }
 
-    public function getCargoTypeWithoutPaginate(){
-        try
-        {
-            $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types for without paginate.', $cargo_types, 200);
-        }
-        catch (QueryException $e)
-        {
+    public function getCargoTypeByName(Request $request){
+        try {
+            $cargo_types = OpsCargoType::query()
+            ->where(function ($query) use($request) {
+                $query->where('cargo_type', 'like', '%' . $request->cargo_type . '%');
+            })
+            ->limit(10)
+            ->get();
+
+            return response()->success('Successfully retrieved cargo types name.', $cargo_types, 200);
+        } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
+
 }

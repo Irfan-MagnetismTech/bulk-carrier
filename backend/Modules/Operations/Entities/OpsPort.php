@@ -8,16 +8,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OpsPort extends Model
 {
     use HasFactory;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['code', 'name'];
+    protected $fillable = [
+        'code',
+        'name'
+    ];
     
-    protected static function newFactory()
+    
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['code_name'];
+
+    /**
+     * Concatenate the code and name of the port.
+     *
+     * @return string
+     */
+    public function getCodeNameAttribute()
     {
-        return \Modules\Operations\Database\factories\OpsPortFactory::new();
+        return $this->code . ' - ' . $this->name;
     }
 }

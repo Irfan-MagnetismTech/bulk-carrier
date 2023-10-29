@@ -26,14 +26,14 @@ return new class extends Migration
             $table->string('flag');
             $table->string('previous_flag')->nullable();
             $table->string('port_of_registry');
-            $table->dateTime('delivery_date')->nullable();
+            $table->date('delivery_date')->nullable();
             $table->string('nrt');
             $table->string('dwt');
             $table->string('imo');
             $table->string('grt');
             $table->string('official_number');
-            $table->dateTime('keel_laying_date');
-            $table->dateTime('launching_date');
+            $table->date('keel_laying_date');
+            $table->date('launching_date');
             $table->string('mmsi');
             $table->float('overall_length');
             $table->float('overall_width');
@@ -41,9 +41,8 @@ return new class extends Migration
             $table->float('capacity');
             $table->string('total_cargo_hold');
             $table->string('live_tracking_config')->nullable();
-            $table->text('remarks')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL']);
-            
+            $table->text('remarks')->nullable();  
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();           
             $table->timestamps();
         });
     }

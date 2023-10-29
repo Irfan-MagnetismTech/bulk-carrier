@@ -6,6 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsVesselCertificateRequest extends FormRequest
 {
+
+    protected function prepareForValidation(){
+
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        // dd($mergeData);
+        $this->replace($mergeData);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,8 +23,8 @@ class OpsVesselCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id' => ['required'],
-            'ops_maritime_certificate_id' => ['required'],
+            'ops_vessel_id' => ['required', 'numeric', 'max:50'],
+            'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
             'issue_date' => ['required'],
             'expire_date' => ['required'],
             'attachment' => ['required'],

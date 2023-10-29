@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('email_general')->nullable();
             $table->string('email_agreement')->nullable();
             $table->string('email_invoice')->nullable();
-            $table->string('business_unit')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_sectors', function (Blueprint $table) {
             $table->id();       
-            $table->foreignId('ops_voyage_id')->constrained();
-            $table->foreignId('ops_cargo_tariff_id')->constrained();
+            $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
+            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs')->onDelete('cascade');
             $table->string('loading_point');
             $table->string('unloading_point');
             $table->string('rate');
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->float('final_survey_qty');
             $table->float('final_received_qty');
             $table->float('boat_note_qty');
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

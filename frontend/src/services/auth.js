@@ -9,6 +9,7 @@ export default function useAuth() {
     const username = computed(() => store.getters.getCurrentUser ? store.getters.getCurrentUser.name : '');
     const userPort = computed(() => store.getters.getCurrentUser ? store.getters.getCurrentUser.port : '');
     const userRole = computed(() => store.getters.getCurrentUser ? store.getters.getCurrentUser.role : '');
+    const userBusinessUnit = computed(() => store.getters.getCurrentUser ? store.getters.getCurrentUser.business_unit : '');
     const isLoading = ref(false);
     const errors = ref(null);
 
@@ -49,6 +50,7 @@ export default function useAuth() {
         username,
         userRole,
         userPort,
+        userBusinessUnit,
         login,
         logout,
         isLoading,

@@ -1,5 +1,5 @@
 <template>
-    <div @dragenter.prevent="toggleActive()" @dragleave.prevent="toggleActive()" style="max-height: 100px" @dragover.prevent @drop.prevent="drop" :class="{ 'bg-green-100 border-green-300 dark:bg-green-700': dragActive }" class="flex items-center justify-center w-full px-4 py-6 border-4 border-dashed rounded dark:border-2">
+    <div @dragenter.prevent="toggleActive()" @dragleave.prevent="toggleActive()" style="height: auto" @dragover.prevent @drop.prevent="drop" :class="{ 'bg-green-100 border-green-300 dark:bg-green-700': dragActive }" class="flex items-center justify-center w-full px-4 py-6 border-4 border-dashed rounded dark:border-2">
         <div class="flex custom-dropzone flex-col items-center justify-center gap-2 text-gray-500 dark:text-gray-100">
             <p class="text-sm font-semibold">Drag a file here</p>
             <!-- File input -->
@@ -13,7 +13,7 @@
                     <svg class="w-6 h-6 iconify iconify--mdi-light" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                         <path d="M14 11a3 3 0 0 1-3-3V4H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-8h-4zm-2-3a2 2 0 0 0 2 2h3.586L12 4.414V8zM7 3h5l7 7v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" fill="currentColor" />
                     </svg>
-                    <span class>{{ droppedFile.name }}</span>
+                    <span class>{{ droppedFile?.name }}</span>
                     <button @click="clearDropped()" class="inline-flex items-center justify-center ml-2">
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -22,7 +22,7 @@
                         </span>
                     </button>
                 </div>
-                <span class="text-xs text-gray-500 dark:text-gray-300">{{ bytes(droppedFile.size) }}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-300">{{ bytes(droppedFile?.size) }}</span>
             </div>
         </div>
     </div>
