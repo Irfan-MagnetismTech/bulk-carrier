@@ -4,7 +4,7 @@
     import useVendor from "../../../composables/supply-chain/useVendor.js";
     
     const props = defineProps({
-        vendor: { type: Object, required: true },
+        form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
     });
     
@@ -22,33 +22,23 @@
                 
                 <label class="label-group">
                     <span class="label-item-title">Vendor Name <span class="required-style">*</span></span>
-                    <input type="text" required v-model="vendor.name" class="form-input" name="name" :id="'name'" />
+                    <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
                     <Error v-if="errors?.name" :errors="errors.name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Address <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="vendor.address" class="form-input" name="address" :id="'address'" />
+                    <input type="text" v-model="form.address" class="form-input" name="address" :id="'address'" />
                     <Error v-if="errors?.address" :errors="errors.address" />
                 </label>
-                <!-- <label class="label-group">
-                    <span class="label-item-title">Origin <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="vendor.short_code" class="form-input" name="short_code" :id="'short_code'" />
-                    <Error v-if="errors?.short_code" :errors="errors.short_code" />
-                </label> -->
                 <label class="label-group">
                     <span class="label-item-title">Origin</span>
-                    <v-select :options="[]" placeholder="--Choose an option--" v-model="vendor.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-                    <input type="hidden" v-model="vendor.country_id" class="label-item-input" name="country_id" :id="'country_id'" />
+                    <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" />
                     <Error v-if="errors?.country_id" :errors="errors.country_id" />
                 </label>
-                <!-- <label class="label-group">
-                    <span class="label-item-title">Vendor Type <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="vendor.short_code" class="form-input" name="short_code" :id="'short_code'" />
-                    <Error v-if="errors?.short_code" :errors="errors.short_code" />
-                </label> -->
                 <label class="label-group">
                     <span class="label-item-title">Vendor Type</span>
-                    <v-select :options="vendor_type" placeholder="--Choose an option--" v-model="vendor.vendor_type" label="Vendor Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <v-select :options="vendor_type" placeholder="--Choose an option--" v-model="form.vendor_type" label="Vendor Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
                     <Error v-if="errors?.vendor_type" :errors="errors.vendor_type" />
                 </label>
             </div>
@@ -56,12 +46,12 @@
             <div class="input-group !w-1/2">
                 <label class="label-group">
                     <span class="label-item-title">Product Source Type</span>
-                    <v-select :options="product_source_type" placeholder="--Choose an option--" v-model="vendor.product_source_type" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <v-select :options="product_source_type" placeholder="--Choose an option--" v-model="form.product_source_type" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
                     <Error v-if="errors?.product_source_type" :errors="errors.product_source_type" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Product Type <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="vendor.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
                     <Error v-if="errors?.short_code" :errors="errors.short_code" />
                 </label>
             </div>
@@ -74,18 +64,23 @@
                 
                 <label class="label-group">
                     <span class="label-item-title">Name<span class="required-style">*</span></span>
-                    <input type="text" required v-model="vendor.warehouse_contact_persons.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.vendor.warehouse_contact_persons.name" :errors="errors.vendor.warehouse_contact_persons.name" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].name" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].name" :errors="errors.form.scmVendorContactPersons[0].name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
-                    <input type="text" required v-model="vendor.warehouse_contact_persons.contact" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.vendor.warehouse_contact_persons.contact" :errors="errors.vendor.warehouse_contact_persons.contact" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].designation" class="form-input" name="designation" :id="'designation'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].designation" :errors="errors.form.scmVendorContactPersons[0].designation" />
+                </label>
+                <label class="label-group">
+                    <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].phone" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.form.scmVendorContactPersons[0].phone" :errors="errors.form.scmVendorContactPersons[0].phone" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Email <span class="required-style">*</span></span>
-                    <input type="text" required v-model="vendor.warehouse_contact_persons.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.warehouse_contact_persons.name" :errors="errors.warehouse_contact_persons.name" />
+                    <input type="text" required v-model="form.scmVendorContactPersons[0].email" class="form-input" name="name" :id="'name'" />
+                    <Error v-if="errors?.scmVendorContactPersons[0].email" :errors="errors.scmVendorContactPersons[0].email" />
                 </label>
             </div>
             </fieldset>

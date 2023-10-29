@@ -221,8 +221,8 @@ Project Repository
 
 -   Validation should be done in Request files rather than Controller files.
 -   Field names should be synchronized in the Database, Frontend forms, and Backend variables. In ambiguous cases, field names could be differentiated using entity names as prefixes.
--   Before executing DELETE operations there should be double confirmation to ensure relational data safety. We can keep a Soft-Delete flag so that users can restore the data as necessary.
--   In Models, field names should be in Fillable properties.
+-   There should be double confirmation before executing DELETE operations to ensure relational data safety. We can keep a Soft-Delete flag so that users can restore the data as necessary.
+-   In Models, field names should be in Fillable Properties.
 -   For the git commit message, please follow the convension as MODULE-SHORT-FORM/feature-name/task-name - short message with status. For example, "SCM/product-requisition/create-form - skeleton design DONE **OR** validation WIP **OR** data population error FIXED"
 -   Short forms for modules are as below:
     -   ADM - Administration
@@ -231,7 +231,7 @@ Project Repository
     -   MNT - Maintenance
     -   OPS - Operations
     -   SCM - Supply Chain
--   All types of issues will be fixed in the Module Branch via a new Branch.
+-   All issues will be fixed in the Module Branch via a new Branch.
 -   If any table is using short form then add a table description in a comment. i.e.: Comparative Statement as cs
 
     ```php
@@ -255,9 +255,12 @@ Project Repository
     -   401 => 'Unauthorized, request is not valid.'
     -   500 => 'Internal server error.'
 
--   For PDF, used Laravel Mpdf package.
+-   For PDF, use the Laravel Mpdf package.
     
     [Laravel Mpdf: Generate PDF](https://github.com/mccarlosen/laravel-mpdf)
+
+-  Business Unit in edit mode will be visible but in Read-only Mode.
+-  If you intend to change the business unit, it's necessary to delete the existing input data and replace it with a new entry.
 
 ## Authors
 

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -20,6 +21,14 @@ return new class extends Migration
             $table->bigInteger('parent_id')->nullable();
             $table->timestamps();
         });
+
+        // Insert seed data
+        DB::table('scm_material_categories')->insert([
+            [
+                'name' => 'Bunker',
+                'short_code' => 'bunker',                
+            ],
+        ]);
     }
 
     /**
@@ -28,7 +37,7 @@ return new class extends Migration
      * @return void
      */
     public function down()
-    {
+    {        
         Schema::dropIfExists('scm_material_categories');
     }
 };
