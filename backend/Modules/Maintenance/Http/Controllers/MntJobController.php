@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntJob;
+use Modules\Maintenance\Entities\MntJobLine;
 use Modules\Maintenance\Entities\MntRunHour;
 use Modules\Maintenance\Http\Requests\MntJobRequest;
 
@@ -186,6 +187,39 @@ class MntJobController extends Controller
         }
     }
 
+    public function vesselWiseJobs()
+    {
+        try {
+            $jobs = MntJob::with(['mntItem'])              
+                            ->Where(function($jobQuery){
+                                $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                                        ->when(request()->has('mnt_item_id'), function($qJobs){
+                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+                                        })             
+                                        ->when(request()->has('mnt_item_group_id'), function($qJobs){
+                                            $qJobs->whereHas('mntItem.mntItemGroup', function($q){
+                                                $q->where('mnt_item_group_id', request()->mnt_item_group_id); 
+                                            });
+                                        })         
+                                        ->when(request()->has('mnt_ship_department_id'), function($qJobs){
+                                            $qJobs->whereHas('mntItem.mntItemGroup.mntShipDepartment', function($q){
+                                                $q->where('mnt_ship_department_id', request()->mnt_ship_department_id); 
+                                            });
+                                        });  
+                                })
+                            ->when(request()->business_unit != "ALL", function($qItems){
+                                $qItems->where('business_unit', request()->business_unit);  
+                            })
+                            ->get();
+
+            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
+            
+        } catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
     /**
      * Display a list of items with all jobs
      * @return Renderable
@@ -276,6 +310,47 @@ class MntJobController extends Controller
                             ->get();
             // dd(DB::getQueryLog());
             return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display a list of items with all jobs
+     * @return Renderable
+     */
+    public function overDueJobs()
+    {
+        try {
+
+            // $jobs = MntJobLine::where('mnt_job_id', request()->id)->get();
+
+            $jobs = MntJob::with(['mntItem', 'mntJobLines'])
+                            ->Where(function($jobQuery){
+                                // $jobQuery->whereHas('mntJobs',function($q){
+                                    $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                                        ->when(request()->has('mnt_item_id'), function($qJobs){
+                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+                                        })
+                                        ->when(request()->business_unit != "ALL", function($q){
+                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
+                                        }); 
+                                // });
+                            })
+                            ->get();
+
+            // $jobsCollection = collect($jobs);
+            // $overDueJobs =  $jobsCollection->filter(function ($value) {
+            //     return $value->over_due;
+            // });
+           
+            $jobs = $jobs->pluck('mntJobLines');
+            
+
+            return response()->success('Item wise jobs retrieved successfully', $jobs->all(), 200);
             
         }
         catch (\Exception $e)

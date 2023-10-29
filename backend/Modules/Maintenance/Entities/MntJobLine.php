@@ -11,11 +11,43 @@ class MntJobLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','remarks','status'];
+    protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','previous_run_hour','remarks','status'];
+    protected $appends = ['next_due','over_due','present_run_hour'];
     
     
     public function mntJob () : BelongsTo
     {
         return $this->belongsTo(MntJob::class);
+    }
+
+    public function getNextDueAttribute()
+    {
+        if ($this->cycle_unit != 'Hours') {
+            $nextDue = date('Y-m-d', strtotime($this->last_done. ' + '.$this->cycle.' '.$this->cycle_unit));
+            
+        } else {
+            $nextDue = ($this->present_run_hour > $this->cycle) 
+                            ? $this->present_run_hour % $this->cycle
+                            : $this->cycle - $this->present_run_hour;
+        }
+
+        return $nextDue;
+        
+    }
+
+    public function getOverDueAttribute()
+    {
+        if ($this->cycle_unit != 'Hours') {
+            return strtotime(date('Y-m-d')) > strtotime($this->next_due);
+        } else {
+            return $this->present_run_hour > $this->cycle + $this->previous_run_hour;
+            
+        }
+        
+    }
+
+    public function getPresentRunHourAttribute () 
+    {
+        return $this->mntJob->present_run_hour;
     }
 }
