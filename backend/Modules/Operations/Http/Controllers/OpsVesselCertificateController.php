@@ -237,8 +237,8 @@ class OpsVesselCertificateController extends Controller
             $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate,$days) {
                 return $certificateGroup->filter(function ($certificate)  use ($currentDate,$days) {
                     $expireDate = Carbon::parse($certificate->expire_date);
-                    $expire_days = $currentDate->diffInDays($expireDate);
-                    $certificate->expire_days = $expire_days;                    
+                    $expire_days = $currentDate->diffInDays($expireDate, false);                   
+                    $certificate->expire_days = $expire_days;                  
                     return $certificate->expire_days <= $days;
                 })->values();
             })->filter();
