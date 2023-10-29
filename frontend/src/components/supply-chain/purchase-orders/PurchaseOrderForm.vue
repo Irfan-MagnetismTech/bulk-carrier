@@ -107,6 +107,36 @@
       props.form.scmWarehouse = null;
     }
   });
+
+//watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
+//watch props.form.materials find total_amount from unit_price and quantity with parseFloat and toFixed 2
+//watch props.form.materials find sub_total from total_amount with parseFloat and toFixed 2
+//watch props.form.materials find discount from sub_total with parseFloat and toFixed 2
+//watch props.form.materials find total_amount from sub_total and discount with parseFloat and toFixed 2
+//watch props.form.materials find vat from total_amount with parseFloat and toFixed 2
+//watch props.form.materials find net_amount from total_amount and vat with parseFloat and toFixed 2
+watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
+      let total = 0.0;
+      newVal?.forEach((material, index) => {
+        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
+        total += parseFloat(props.form.scmPoLines[index].total_amount);
+      });
+  props.form.sub_total = parseFloat(total.toFixed(2));
+      calculateNetAmount();
+}, { deep: true });
+    
+  function calculateNetAmount(){
+    props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
+    props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
+}
+ 
+  watch(() => props?.form?.discount, (newVal, oldVal) => {
+    calculateNetAmount();
+  });
+  watch(() => props?.form?.vat, (newVal, oldVal) => {
+    calculateNetAmount();
+  });
+
 </script>
 <template>
 
@@ -335,33 +365,33 @@
           <tr>
             <td colspan="7" class="text-right">Sub Total</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
             </td>
           </tr>
           <tr>
             <td colspan="7" class="text-right">Less: Discount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input">
+              <input type="text" class="form-input" v-model="form.discount">
             </td>
           </tr>
           
           <tr>
             <td colspan="7" class="text-right">Total Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
             </td>
           </tr>
           <tr>
             <td colspan="7" class="text-right">Add: VAT</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input">
+              <input type="text" class="form-input" v-model="form.vat">
             </td>
           </tr>
           
           <tr>
             <td colspan="7" class="text-right">Net Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
             </td>
           </tr>
           </tbody>
