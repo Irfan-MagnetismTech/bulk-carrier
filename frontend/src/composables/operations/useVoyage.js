@@ -6,48 +6,43 @@ import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
 
-export default function useVessel() {
+export default function useVoyage() {
 	const router = useRouter();
-	const vessels = ref([]);
+	const voyages = ref([]);
 	const $loading = useLoading();
-	const vesselName = ref([]);
-	const voyageVessels = ref([]);
+	const voyageName = ref([]);
+	const voyageVoyages = ref([]);
 	const notification = useNotification();
-	const vessel = ref({
-		vessel_type: '',
-		name: '',
-		previous_name: '',
-		short_code: '',
-		call_sign: '',
-		owner_name: '',
-		manager: '',
-		classification: '',
-		flag: '',
-		previous_flag: '',
-		port_of_registry: '',
-		delivery_date: '',
-		nrt: '',
-		dwt: '',
-		imo: '',
-		grt: '',
-		official_number: '',
-		keel_laying_date: '',
-		launching_date: '',
-		mmsi: '',
-		overall_length: '',
-		overall_width: '',
-		year_built: '',
-		capacity: '',
-		total_cargo_hold: '',
-		live_tracking_config: '',
+	const voyage = ref({
+		ops_customer_id: '',
+		ops_vessel_id: '',
+		mother_vessel_id: '',
+		ops_cargo_type_id: '',
+		voyage_no: '',
+		route: '',
+		load_port_distance: '',
+		sail_date: '',
+		transit_date: '',
 		remarks: '',
-		opsVesselCertificates: [],
-		opsBunkers: []
+		opsBunkers: [],
+		opsVoyageSectors: [],
+		opsVoyagePortSchedules: []
 	});
-	const maritimeCertificateObject = {
-		ops_vessel_certificate_id: '',
-		certificate_type: '',
-		validity: ''
+	const voyageSectorObject = {
+		ops_voyage_id: '',
+        ops_cargo_tariff_id: '',
+        loading_point: '',
+        unloading_point: '',
+        rate: '',
+        initial_survey_qty: '',
+        approx_amount: '',
+        discount: '',
+        discount_amount: '',
+        approx_amount_after_disscount: '',
+        final_survey_qty: '',
+        final_received_qty: '',
+        boat_note_qty: '',
+        business_unit: ''
 	}
 
 	const bunkerObject = {
@@ -60,24 +55,38 @@ export default function useVessel() {
         minimum_stock: 0,
         store_category: '',
         description: '',
-        sample_photo: null
+        sample_photo: null,
+		quantity: null
+	}
+
+	const portScheduleObject = {
+		ops_voyage_id: '',
+        port_code: '',
+        eta: '',
+        etb: '',
+        etd: '',
+        load_commence: '',
+        load_complete: '',
+        unload_commence: '',
+        unload_complete: '',
+        operation_type: ''
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getVessels(page, businessUnit) {
+	async function getVoyages(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/vessels', {
+			const { data, status } = await Api.get('/ops/voyages', {
 				params: {
 					page: page || 1,
 					business_unit: businessUnit,
 				},
 			});
-			vessels.value = data.value;
+			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -89,12 +98,12 @@ export default function useVessel() {
 		}
 	}
 
-	async function storeVessel(form) {
+	async function storeVoyage(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVesselCertificates.map((element) => {
+		form.opsVoyageCertificates.map((element) => {
 			element.ops_maritime_certification_id = element.id
 			element.business_unit = form.business_unit
 		})
@@ -104,10 +113,10 @@ export default function useVessel() {
 		})
 
 		try {
-			const { data, status } = await Api.post('/ops/vessels', form);
-			vessel.value = data.value;
+			const { data, status } = await Api.post('/ops/voyages', form);
+			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.configurations.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -118,14 +127,14 @@ export default function useVessel() {
 		}
 	}
 
-	async function showVessel(vesselId) {
+	async function showVoyage(voyageId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/vessels/${vesselId}`);
-			vessel.value = data.value;
+			const { data, status } = await Api.get(`/ops/voyages/${voyageId}`);
+			voyage.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -137,12 +146,12 @@ export default function useVessel() {
 		}
 	}
 
-	async function updateVessel(form, vesselId) {
+	async function updateVoyage(form, voyageId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVesselCertificates.map((element) => {
+		form.opsVoyageCertificates.map((element) => {
 			element.ops_maritime_certification_id = element.id
 			element.business_unit = form.business_unit
 		})
@@ -153,12 +162,12 @@ export default function useVessel() {
 		
 		try {
 			const { data, status } = await Api.put(
-				`/ops/vessels/${vesselId}`,
+				`/ops/voyages/${voyageId}`,
 				form
 			);
-			vessel.value = data.value;
+			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.configurations.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -169,16 +178,16 @@ export default function useVessel() {
 		}
 	}
 
-	async function deleteVessel(vesselId) {
+	async function deleteVoyage(voyageId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/vessels/${vesselId}`);
+			const { data, status } = await Api.delete( `/ops/voyages/${voyageId}`);
 			notification.showSuccess(status);
-			await getVessels();
+			await getVoyages();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -189,19 +198,19 @@ export default function useVessel() {
 		}
 	}
 
-	// Get vessels by name or code
-	async function getVesselsByNameOrCode(name_or_code, service = null) {
+	// Get voyages by name or code
+	async function getVoyagesByNameOrCode(name_or_code, service = null) {
 		NProgress.start();
 		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data } = await Api.post(
-				'dataencoding/vessels/get-vessels-by-name-or-code',
+				'dataencoding/voyages/get-voyages-by-name-or-code',
 				{ name_or_code , service }
 			);
-			vessels.value = data.value;
-			vesselName.value = data.value;
+			voyages.value = data.value;
+			voyageName.value = data.value;
 		} catch (error) {
 			error.value = Error.showError(error);
 		} finally {
@@ -211,14 +220,14 @@ export default function useVessel() {
 		}
 	}
 
-	async function getVesselsByVoyage(voyage_id) {
+	async function getVoyagesByVoyage(voyage_id) {
 		NProgress.start();
 		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/common/voyage-vessels/${voyage_id}`);
-			voyageVessels.value = data;
+			const { data, status } = await Api.get(`/common/voyage-voyages/${voyage_id}`);
+			voyageVoyages.value = data;
 			notification.showSuccess(status);
 		} catch (error) {
 			error.value = Error.showError(error);
@@ -229,12 +238,12 @@ export default function useVessel() {
 		}
 	}
 
-	async function searchVessels(searchParam, businessUnit, loading) {
+	async function searchVoyages(searchParam, businessUnit, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-vessels?name=${searchParam}&business_unit=${businessUnit}`);
-			vessels.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-voyages?name=${searchParam}&business_unit=${businessUnit}`);
+			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -245,13 +254,13 @@ export default function useVessel() {
 		}
 	}
 
-	async function getVesselsWithoutPaginate(businessUnit) {
+	async function getVoyagesWithoutPaginate(businessUnit) {
 		NProgress.start();
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/get-vessels?business_unit=${businessUnit}`);
-			vessels.value = data.value;
+			const { data, status } = await Api.get(`/ops/get-voyages?business_unit=${businessUnit}`);
+			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -263,21 +272,22 @@ export default function useVessel() {
 	}
 
 	return {
-		vessels,
-		vessel,
-		vesselName,
-		getVessels,
-		maritimeCertificateObject,
+		voyages,
+		voyage,
+		voyageName,
+		getVoyages,
+		portScheduleObject,
+		voyageSectorObject,
 		bunkerObject,
-		storeVessel,
-		showVessel,
-		updateVessel,
-		deleteVessel,
-		searchVessels,
-		getVesselsByNameOrCode,
-		voyageVessels,
-		getVesselsByVoyage,
-		getVesselsWithoutPaginate,
+		storeVoyage,
+		showVoyage,
+		updateVoyage,
+		deleteVoyage,
+		searchVoyages,
+		getVoyagesByNameOrCode,
+		voyageVoyages,
+		getVoyagesByVoyage,
+		getVoyagesWithoutPaginate,
 		isLoading,
 		errors,
 	};

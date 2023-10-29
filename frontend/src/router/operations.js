@@ -208,4 +208,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-certificates/renew.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Voyages */
+	{
+		path: `/${BASE}/voyages`,
+		name: `${BASE}.voyages.index`,
+		component: () => import(`../views/${ViEWBASE}/voyages/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/voyages/create`,
+		name: `${BASE}.voyages.create`,
+		component: () => import (`../views/${ViEWBASE}/voyages/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyages/:voyageId/edit`,
+		name: `${BASE}.voyages.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyages/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyages/:voyageId/show`,
+		name: `${BASE}.voyages.show`,
+		component: () => import (`../views/${ViEWBASE}/voyages/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

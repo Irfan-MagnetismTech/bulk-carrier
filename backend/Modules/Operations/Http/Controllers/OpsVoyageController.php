@@ -61,9 +61,9 @@ class OpsVoyageController extends Controller
             );
 
             $voyage = OpsVoyage::create($voyageInfo);
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
-            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
-            $voyage->opsBunkers()->createMany($request->opsBunkers);
+            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSector);
+            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedule);
+            $voyage->opsBunkers()->createMany($request->opsBunker);
             DB::commit();
             return response()->success('Voyage added successfully.', $voyage, 201);
         }
@@ -116,13 +116,13 @@ class OpsVoyageController extends Controller
             $voyage->update($voyageInfo);  
 
             $voyage->opsVoyageSectors()->delete();
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSector);
 
             $voyage->opsVoyagePortSchedules()->delete();
-            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
+            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedule);
 
             $voyage->opsBunkers()->delete();
-            $voyage->opsBunkers()->createMany($request->opsBunkers);
+            $voyage->opsBunkers()->createMany($request->opsBunker);
 
             DB::commit();
             return response()->success('Voyage updated successfully.', $voyage, 200);

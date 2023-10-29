@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Vessel Details</h2>
-    <default-button :title="'Vessel List'" :to="{ name: 'ops.vessels.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Voyage Details</h2>
+    <default-button :title="'Voyage List'" :to="{ name: 'ops.voyages.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div class="flex md:gap-4">
@@ -10,96 +10,96 @@
           <table class="w-full">
             <tbody>
               <tr>
-                <th class="w-32">Vessel Type</th>
-                <td>{{ vessel?.vessel_type }}</td>
+                <th class="w-32">Voyage Type</th>
+                <td>{{ voyage?.voyage_type }}</td>
               </tr>
               <tr>
                 <th class="w-32">Name</th>
-                <td>{{ vessel?.name }}</td>
+                <td>{{ voyage?.name }}</td>
               </tr>
               <tr>
                 <th class="w-32">Short Code</th>
-                <td>{{ vessel?.short_code }}</td>
+                <td>{{ voyage?.short_code }}</td>
               </tr>
               <tr>
                 <th class="w-32">Call Sign</th>
-                <td>{{ vessel?.call_sign }}</td>
+                <td>{{ voyage?.call_sign }}</td>
               </tr>
               <tr>
                 <th class="w-32">Owner Name</th>
-                <td>{{ vessel?.owner_name }}</td>
+                <td>{{ voyage?.owner_name }}</td>
               </tr>
               <tr>
                 <th class="w-32">Manager/Director</th>
-                <td>{{ vessel?.manager }}</td>
+                <td>{{ voyage?.manager }}</td>
               </tr>
               <tr>
                 <th class="w-32">Classification</th>
-                <td>{{ vessel?.classification }}</td>
+                <td>{{ voyage?.classification }}</td>
               </tr>
               <tr>
                 <th class="w-32">Flag</th>
-                <td>{{ vessel?.flag }}</td>
+                <td>{{ voyage?.flag }}</td>
               </tr>
               <tr>
                 <th class="w-32">Port of Registry</th>
-                <td>{{ vessel?.port_of_registry }}</td>
+                <td>{{ voyage?.port_of_registry }}</td>
               </tr>
               <tr>
                 <th class="w-32">GRT</th>
-                <td>{{ vessel?.grt }}</td>
+                <td>{{ voyage?.grt }}</td>
               </tr>
               <tr>
                 <th class="w-32">NRT</th>
-                <td>{{ vessel?.nrt }}</td>
+                <td>{{ voyage?.nrt }}</td>
               </tr>
               <tr>
                 <th class="w-32">DWT</th>
-                <td>{{ vessel?.dwt }}</td>
+                <td>{{ voyage?.dwt }}</td>
               </tr>
               <tr>
                 <th class="w-32">IMO Number</th>
-                <td>{{ vessel?.imo }}</td>
+                <td>{{ voyage?.imo }}</td>
               </tr>
               <tr>
                 <th class="w-32">MMSI</th>
-                <td>{{ vessel?.mmsi }}</td>
+                <td>{{ voyage?.mmsi }}</td>
               </tr>
               <tr>
                 <th class="w-32">Official Number</th>
-                <td>{{ vessel?.official_number }}</td>
+                <td>{{ voyage?.official_number }}</td>
               </tr>
               <tr>
                 <th class="w-32">Keel Laying Date</th>
-                <td>{{ vessel?.keel_laying_date }}</td>
+                <td>{{ voyage?.keel_laying_date }}</td>
               </tr>
               <tr>
                 <th class="w-32">Launching Date</th>
-                <td>{{ vessel?.launching_date }}</td>
+                <td>{{ voyage?.launching_date }}</td>
               </tr>
               <tr>
                 <th class="w-32">Delivery Date</th>
-                <td>{{ vessel?.delivery_date }}</td>
+                <td>{{ voyage?.delivery_date }}</td>
               </tr>
               <tr>
                 <th class="w-32">Length Overall</th>
-                <td>{{ vessel?.overall_length }}</td>
+                <td>{{ voyage?.overall_length }}</td>
               </tr>
               <tr>
                 <th class="w-32">Width Overall</th>
-                <td>{{ vessel?.overall_width }}</td>
+                <td>{{ voyage?.overall_width }}</td>
               </tr>
               <tr>
                 <th class="w-32">Yearl Built</th>
-                <td>{{ vessel?.year_built }}</td>
+                <td>{{ voyage?.year_built }}</td>
               </tr>
               <tr>
                 <th class="w-32">Cargo Hold</th>
-                <td>{{ vessel?.total_cargo_hold }}</td>
+                <td>{{ voyage?.total_cargo_hold }}</td>
               </tr>
               <tr>
                 <th class="w-32">Remarks</th>
-                <td>{{ vessel?.remarks }}</td>
+                <td>{{ voyage?.remarks }}</td>
               </tr>
             </tbody>
           </table>
@@ -165,7 +165,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import useVessel from '../../../composables/operations/useVessel';
+import useVoyage from '../../../composables/operations/useVoyage';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -173,15 +173,15 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 const icons = useHeroIcon();
 
 const route = useRoute();
-const vesselId = route.params.vesselId;
-const { vessel, showVessel, errors } = useVessel();
+const voyageId = route.params.voyageId;
+const { voyage, showVoyage, errors } = useVoyage();
 
 const { setTitle } = Title();
 
-setTitle('Vessel Details');
+setTitle('Voyage Details');
 
 onMounted(() => {
-  showVessel(vesselId);
+  showVoyage(voyageId);
 });
 </script>
 <style lang="postcss" scoped>
