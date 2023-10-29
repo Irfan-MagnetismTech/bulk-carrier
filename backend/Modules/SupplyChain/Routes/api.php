@@ -32,4 +32,5 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('export-materials', [ScmMaterialController::class, "export"])->name('exportMaterials');
     Route::get('import-materials', [ScmMaterialController::class, "import"])->name('exportMaterials');
+    Route::get('get-pr-cs-wise-po-data', [ScmPoController::class, "getPoOrPoCsWisePrData"]);
 });

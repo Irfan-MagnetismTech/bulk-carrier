@@ -216,7 +216,8 @@ export default function usePurchaseOrder() {
                     cs_id: csId,
                 },
             });
-            purchaseOrders.value = merge(purchaseOrders.value, data.value);;
+            purchaseOrders.value = merge(purchaseOrders.value, data.value);
+            console.log('data', data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

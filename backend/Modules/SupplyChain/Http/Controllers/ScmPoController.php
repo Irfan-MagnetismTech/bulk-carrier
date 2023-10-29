@@ -153,11 +153,11 @@ class ScmPoController extends Controller
         //                 ], 
         //     }
         try {
-            if ($request->cs_id != '' && $request->cs_id != null) {
+            if ($request->pr_id != null) {
                 $scmPr = ScmPr::query()
                 ->with([
                     'scmWarehouse',
-                    'scmPrLine' => function ($query) {
+                    'scmPrLines' => function ($query) {
                         $query->select([
                             'scm_material_id',
                             'unit',
@@ -172,7 +172,7 @@ class ScmPoController extends Controller
                 $data = [
                     'scmWarehouse' => $scmPr[0]->scmWarehouse,
                     'scm_warehouse_id' => $scmPr[0]->scm_warehouse_id,
-                    'pr_no' => $scmPr[0]->ref_no,
+                    'pr_no' => $scmPr[0]->id,
                     'scm_pr_id' => $scmPr[0]->id,
                     'scmPr' => $scmPr[0],
                     'pr_date' => $scmPr[0]->pr_date,
@@ -186,7 +186,7 @@ class ScmPoController extends Controller
             }
             
 
-            return response()->success('Search result', $data, 200);
+            return response()->success('data',$data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
