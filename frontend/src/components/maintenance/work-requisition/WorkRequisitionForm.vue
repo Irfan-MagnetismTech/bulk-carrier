@@ -180,13 +180,8 @@
                   <td>{{ jobLine.previous_run_hour  }}</td>
                   <td>{{ jobLine.next_due  }}</td>
                   <td>
-<<<<<<< HEAD
-                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addJobLine(jobLine)">Add</button>
-                    <!-- <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeJobLine(jobLine)" >Remove</button> -->
-=======
                     <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) > -1" @click="removeJobLine(jobLine)" >Remove</button>
->>>>>>> f5a4a5322a2e7320880fd96f65bd077ca5815778
                   </td>
               </tr>
               
