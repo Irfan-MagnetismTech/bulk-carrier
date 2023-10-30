@@ -48,6 +48,7 @@
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
+        props.form.scm_cost_center_id = value?.scm_cost_center_id;
     });
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
@@ -93,6 +94,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
     props.form.scm_warehouse_id = '';
+    props.form.scm_cost_center_id = '';
     props.form.scmWarehouse = null;
   }
 });

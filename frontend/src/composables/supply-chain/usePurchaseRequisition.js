@@ -24,6 +24,7 @@ export default function usePurchaseRequisition() {
         raised_date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        acc_cost_center_id: '',
         remarks: '',
         attachment: null,
         is_critical: 0.0,
