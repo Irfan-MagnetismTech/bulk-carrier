@@ -321,8 +321,15 @@ class MntJobController extends Controller
                                 $qItems->where('business_unit', request()->business_unit);  
                             })
                             ->get();
+            
+            // To get the return value dynamically
+            $returnField = request()->return_field ?? '';
+            if ($returnField == "mntItem" || $returnField == "mntJobLines") {
+                $jobs = $jobs->pluck($returnField)->flatten();
+            }
+
             // dd(DB::getQueryLog());
-            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
+            return response()->success('Item wise upcoming jobs retrieved successfully', $jobs, 200);
             
         }
         catch (\Exception $e)
@@ -355,15 +362,20 @@ class MntJobController extends Controller
                             })
                             ->get();
 
-            // $jobsCollection = collect($jobs);
-            // $overDueJobs =  $jobsCollection->filter(function ($value) {
-            //     return $value->over_due;
-            // });
-           
-            $jobs = $jobs->pluck('mntJobLines');
             
+            // To get the return value dynamically
+            $returnField = request()->return_field ?? '';
+            if ($returnField == "mntJobLines") {
+                $jobs = $jobs->pluck($returnField)->flatten();
+                // $jobsCollection = collect($jobs);
+                $jobs =  $jobs->filter(function ($value) {
+                    return $value->over_due;
+                });
+            
+            }
 
-            return response()->success('Item wise jobs retrieved successfully', $jobs->all(), 200);
+
+            return response()->success('Item wise over due jobs retrieved successfully', $jobs->all(), 200);
             
         }
         catch (\Exception $e)
