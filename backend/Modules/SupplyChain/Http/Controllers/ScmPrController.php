@@ -113,10 +113,17 @@ class ScmPrController extends Controller
      * @param ScmPr $purchase_requisition
      * @return JsonResponse
      */
-    public function show(ScmPr $purchase_requisition): JsonResponse
+    public function show($id): JsonResponse
     {
+        $purchase_requisition = ScmPr::query()
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
+            ->with('scmPrLines', function ($item) {
+                $item->withSum('scmStockLedgers as rob', 'quantity');
+            })
+            ->find($id);
+
         try {
-            return response()->success('data', $purchase_requisition->load('scmPrLines.scmMaterial', 'scmWarehouse'), 200);
+            return response()->success('data', $purchase_requisition, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
