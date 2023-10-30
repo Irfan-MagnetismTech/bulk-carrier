@@ -13,7 +13,7 @@ const icons = useHeroIcon();
 const route = useRoute();
 
 const { getPurchaseOrder, purchaseOrder, storePurchaseOrder,getPrAndCsWisePurchaseOrder,materialObject,termsObject, errors, isLoading } = usePurchaseOrder();
-const page = ref('create');
+const page = ref('edit');
 const { setTitle } = Title();
 
 const props = defineProps({

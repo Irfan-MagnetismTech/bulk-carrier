@@ -75,6 +75,7 @@
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+
     // onMounted(() => {
     //   watchEffect(() => {
     //     if (props.form.scmPrLines) {
@@ -83,7 +84,8 @@
     //         tableScrollWidth.value = customDataTable.scrollWidth;
     //       }
     //     }
-    // }, { deep: true });
+// }, { deep: true });
+
 
     // });// Code for global search end here
 
@@ -158,13 +160,14 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 
 function tableWidth() {
   setTimeout(function() {
-      const customDataTable = document.getElementById("customDataTable");
+    const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
+    if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
+      
       }
       
-    }, 1000);
+    }, 10000);
 }
 //after mount
 onMounted(() => {
@@ -251,34 +254,34 @@ onMounted(() => {
             </div>
         </div>
   </div>
-
-
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
-    <div class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+
+    <div id="customDataTable">
+    <div class="table-responsive min-w-screen overflow-x-auto" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap">
+        <table class="!w-[100rem] whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="!w-60 py-3 align-center">Material Name </th>
-            <th class="!w-60 py-3 align-center">Unit</th>
-            <th class="!w-60 py-3 align-center">Brand</th>
-            <th class="!w-60 py-3 align-center">Model</th>
-            <th class="!w-60 py-3 align-center">Specification</th>
-            <th class="!w-60 py-3 align-center">Origin</th>
-            <th class="!w-60 py-3 align-center">Sample</th>
-            <th class="!w-60 py-3 align-center">Drawing No</th>
-            <th class="!w-60 py-3 align-center">Part No</th>
-            <th class="!w-60 py-3 align-center">ROB</th>
-            <th class="!w-60 py-3 align-center">Qty</th>
-            <th class="!w-60 py-3 align-center">Required Date</th>
-            <th class="!w-60 py-3 text-center align-center">Action</th>
+            <th class="!w-72 py-3 align-center">Material Name </th>
+            <th class="!w-20 py-3 align-center">Unit</th>
+            <th class="!w-20 py-3 align-center">Brand</th>
+            <th class="!w-20 py-3 align-center">Model</th>
+            <th class="!w-30 py-3 align-center">Specification</th>
+            <th class="!w-20 py-3 align-center">Origin</th>
+            <th class="!w-40 py-3 align-center">Sample</th>
+            <th class="!w-20 py-3 align-center">Drawing No</th>
+            <th class="!w-20 py-3 align-center">Part No</th>
+            <th class="!w-25 py-3 align-center">ROB</th>
+            <th class="!w-25 py-3 align-center">Qty</th>
+            <th class="!w-30 py-3 align-center">Required Date</th>
+            <th class="!w-30 py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
-            <td class="">
+            <td class="!w-72">
               <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
@@ -367,6 +370,7 @@ onMounted(() => {
           </tbody>
         </table>
       </fieldset>
+    </div>
     </div>
   </div>
 

@@ -80,8 +80,12 @@
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
-    });
-
+  });
+    
+    function fetchVendor(search, loading) {
+    loading(true);
+    searchVendor(search, loading);
+  }
     function fetchPurchaseRequisition(search, loading) {
     loading(true);
     searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
@@ -262,7 +266,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       </label>
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="ref_no" class="block form-input">
+          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
