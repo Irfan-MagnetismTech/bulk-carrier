@@ -192,9 +192,14 @@ class MntJobController extends Controller
      * required params: ops_vessel_id, business_unit
      * optional params: mnt_item_id, mnt_item_group_id, mnt_ship_department_id
      */
-    public function vesselWiseJobs()
+    public function vesselWiseJobs(Request $request)
     {
         try {
+            $validated = $request->validate( [
+                'ops_vessel_id' => ['required', 'numeric'],
+                'business_unit' => ['required']
+            ]);
+
             $jobs = MntJob::with(['mntItem','mntJobLines'])              
                             ->Where(function($jobQuery){
                                 $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
