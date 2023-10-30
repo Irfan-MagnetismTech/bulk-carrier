@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+// use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,7 +36,7 @@ class OpsBunker extends Model
     {
         return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
     }
-    
+
     public function scmMaterial()
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
