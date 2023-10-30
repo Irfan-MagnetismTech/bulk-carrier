@@ -37,7 +37,8 @@ export default function useWorkRequisition() {
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',
-        form_type: 'create'
+        form_type: 'create',
+        added_job_lines: [],
     });
 
     const indexPage = ref(null);
