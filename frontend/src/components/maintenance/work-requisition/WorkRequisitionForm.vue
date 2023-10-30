@@ -85,7 +85,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input" readonly />
+            <input type="text" v-model="form.previous_run_hour" placeholder="Present Run Hour" class="form-input" readonly />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
 
@@ -188,22 +188,33 @@
         <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 4 }" @click="currentTab(4)">Added Jobs</button></li>
       </ul>
       <div class="mt-1">
-        <div v-if="itemWiseJobs?.length">
+        <div v-if="itemWiseJobLines?.length">
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
               <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                <th class="w-1/12 px-4 py-3 align-bottom">Item Code</th>
-                <th class="w-2/12 px-4 py-3 align-bottom">Item</th>
+                <!-- <th class="w-1/12 px-4 py-3 align-bottom">Item Code</th>
+                <th class="w-2/12 px-4 py-3 align-bottom">Item</th> -->
                 <th class="w-3/12 px-4 py-3 align-bottom">Job Description</th>
-                <th class="w-1/12 px-4 py-3 align-bottom">Cycle</th>
-                <th class="w-1/12 px-4 py-3 align-bottom">Last Done</th>
+                <th class="w-2/12 px-4 py-3 align-bottom">Cycle</th>
+                <th class="w-2/12 px-4 py-3 align-bottom">Last Done</th>
                 <th class="w-2/12 px-4 py-3 align-bottom">Prev. Run Hrs.</th>
                 <th class="w-1/12 px-4 py-3 align-bottom">Next Due</th>
-                <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+                <th class="w-2/12 px-4 py-3 align-bottom text-center">Action</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-              <template v-for="(job, index) in itemWiseJobs" :key="index">
+              <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, index) in itemWiseJobLines" :key="index">
+                  <td>{{ jobLine.job_description }}</td>
+                  <td>{{ jobLine.cycle + ' ' + jobLine.cycle_unit  }}</td>
+                  <td>{{ jobLine.last_done  }}</td>
+                  <td>{{ jobLine.previous_run_hour  }}</td>
+                  <td>{{ jobLine.next_due  }}</td>
+                  <td>
+                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addJob">Add</button>
+                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeJob(index)" >Remove</button>
+                  </td>
+              </tr>
+              <!-- <template v-for="(job, index) in itemWiseJobLines" :key="index">
                 <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
                   <td>{{ job.item_code }}</td>
                   <td>{{ job.name }}</td>
@@ -214,7 +225,7 @@
                   <td>{{ jobLine.next_due }}</td>
                   <td>{{ jobLine.next_due }}</td>
                 </tr>
-              </template>
+              </template> -->
               <!-- <tr class="text-gray-700 dark:text-gray-400" v-for="(job, index) in itemWiseJobs" :key="index"> -->
                 <!-- <td>{{ job.item_code }}</td> -->
                 <!-- <td>{{ job.name }}</td> -->
@@ -269,7 +280,7 @@ const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
-const { itemWiseJobs, getItemWiseAllJobs, getItemWiseUpcomingJobs } = useJob();
+const { itemWiseJobLines, getItemWiseAllJobLines, getItemWiseUpcomingJobLines } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref(1);
@@ -277,9 +288,9 @@ const currentTab = (tabNumber) => {
   tab.value = tabNumber;
   if(businessUnit && props.form.ops_vessel_id && props.form.mnt_item_id){
     if(tabNumber === 1)
-      getItemWiseAllJobs(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
+      getItemWiseAllJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
     else if(tabNumber === 2)
-      getItemWiseUpcomingJobs(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
+      getItemWiseUpcomingJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
   }
 };
 
@@ -299,8 +310,8 @@ watch(() => props.form.ops_vessel_name, (value) => {
   }
   else{
     vesselWiseJobItems.value = [];
-    props.form.mnt_item_name = ''; //for vessel change
   }
+  props.form.mnt_item_name = ''; //vessel change
 
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
@@ -348,11 +359,15 @@ watch(() => vesselWiseJobItems.value, (val) => {
 
 watch(() => props.form.mnt_item_name, (value) => {
   props.form.mnt_item_id = value?.id;
+  tab.value = 1; //vessel or item change
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
+    //vessel or item change
+    getItemWiseAllJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
   }
   else{
     props.form.previous_run_hour = null;
+    itemWiseJobLines.value = [];
   }
 });
 

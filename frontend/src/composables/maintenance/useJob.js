@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
 export default function useItemGroup() {
     const router = useRouter();
     const jobs = ref([]);
-    const itemWiseJobs = ref([]);
+    const itemWiseJobLines = ref([]);
+    const itemWiseAddedJobLines = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const job = ref( {
@@ -141,20 +142,21 @@ export default function useItemGroup() {
         }
     }
 
-    async function getItemWiseAllJobs(businessUnit, opsVesselId, mntItemId){
+    async function getItemWiseAllJobLines(businessUnit, opsVesselId, mntItemId){
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/get-all-jobs`,{
+            const { data, status } = await Api.get(`/mnt/get-vessel-wise-jobs`,{
                 params: {
                     business_unit: businessUnit,
-                    mnt_item_id: mntItemId,
                     ops_vessel_id: opsVesselId,
+                    mnt_item_id: mntItemId,
+                    return_field: 'mntJobLines',
                 }
             });
-            itemWiseJobs.value = data.value;
+            itemWiseJobLines.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -167,7 +169,7 @@ export default function useItemGroup() {
     }
 
     
-    async function getItemWiseUpcomingJobs(businessUnit, opsVesselId, mntItemId){
+    async function getItemWiseUpcomingJobLines(businessUnit, opsVesselId, mntItemId){
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -180,7 +182,7 @@ export default function useItemGroup() {
                     ops_vessel_id: opsVesselId,
                 }
             });
-            itemWiseJobs.value = data.value;
+            itemWiseJobLines.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -201,14 +203,14 @@ export default function useItemGroup() {
     return {
         jobs,
         job,
-        itemWiseJobs,
+        itemWiseJobLines,
         getJobs,
         storeJob,
         showJob,
         updateJob,
         deleteJob,
-        getItemWiseAllJobs,
-        getItemWiseUpcomingJobs,
+        getItemWiseAllJobLines,
+        getItemWiseUpcomingJobLines,
         isLoading,
         errors,
     };
