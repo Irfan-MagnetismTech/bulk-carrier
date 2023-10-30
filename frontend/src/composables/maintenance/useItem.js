@@ -11,7 +11,8 @@ export default function useItem() {
     const items = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const shipDepartmentWiseItems = ref([]);    
+    const shipDepartmentWiseItems = ref([]);
+    const vesselWiseJobItems = ref([]);    
     const itemGroupWiseHourlyItems = ref([]);
     const itemGroupWiseItems = ref([]);
     const item = ref( {
@@ -214,6 +215,32 @@ export default function useItem() {
     }
 
     
+    async function getVesselWiseJobItems(businessUnit, opsVesselId, mntShipDepartmentId = null, mntItemGroupId = null ){
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/mnt/get-vessel-wise-jobs`, {
+                params: {
+                    business_unit: businessUnit,
+                    ops_vessel_id: opsVesselId,
+                    mnt_ship_department_id: mntShipDepartmentId,
+                    mnt_item_group_id: mntItemGroupId,
+                    return_field: 'mntItem'
+                },
+            });
+            vesselWiseJobItems.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }    
     
 
     return {
@@ -222,6 +249,7 @@ export default function useItem() {
         shipDepartmentWiseItems,
         itemGroupWiseHourlyItems,
         itemGroupWiseItems,
+        vesselWiseJobItems,
         getItems,
         storeItem,
         showItem,
@@ -231,6 +259,7 @@ export default function useItem() {
         getShipDepartmentWiseItems,
         getItemGroupWiseHourlyItems,
         getItemGroupWiseItems,
+        getVesselWiseJobItems,
         isLoading,
         errors,
     };
