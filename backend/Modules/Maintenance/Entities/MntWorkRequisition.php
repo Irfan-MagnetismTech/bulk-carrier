@@ -1,0 +1,45 @@
+<?php
+
+namespace Modules\Maintenance\Entities;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Modules\Operations\Entities\OpsVessel;
+
+class MntWorkRequisition extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'reference',
+        'ops_vessel_id',
+        'assigned_to',
+        'responsible_person',
+        'scm_vendor_id',
+        'maintenance_type',
+        'requisition_date',
+        'est_start_date',
+        'est_completion_date',
+        'act_start_date',
+        'act_completion_date',
+        'status',
+        'business_unit'
+    ];
+    
+    public function opsVessel () : BelongsTo
+    {
+        return $this->belongsTo(OpsVessel::class);
+    }
+
+    public function mntWorkRequisitionItem() : HasOneOrMany {
+        return $this->hasOne(MntWorkRequisitionItem::class);
+    }
+
+    public function mntWorkRequisitionLines() : HasManyThrough {
+        return $this->hasManyThrough(MntWorkRequisitionLine::class, MntWorkRequisitionItem::class);
+    }
+}

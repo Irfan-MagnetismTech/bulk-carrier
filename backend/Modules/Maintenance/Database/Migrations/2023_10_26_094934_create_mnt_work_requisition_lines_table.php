@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('mnt_work_requisition_item_id');
             $table->foreign('mnt_work_requisition_item_id')->references('id')->on('mnt_work_requisitions');
-            $table->unsignedBigInteger('mnt_job_id');
-            $table->foreign('mnt_job_id')->references('id')->on('mnt_jobs');
+            $table->unsignedBigInteger('mnt_job_line_id');
+            $table->foreign('mnt_job_line_id')->references('id')->on('mnt_job_lines');
             $table->date('last_done')->nullable();
             $table->integer('running_hour')->nullable();
             $table->integer('status')->default('0')->comment('0=Pending, 1=WIP, 2=Done');
