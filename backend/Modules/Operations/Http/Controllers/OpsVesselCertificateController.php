@@ -78,13 +78,13 @@ class OpsVesselCertificateController extends Controller
             DB::beginTransaction();
             $vesselCertificate = $request->except(
                 '_token',
-                'attachment',
+                'attachment',                
+                'type'
             );
 
             if($request->type == 'Permanent'){
                 $vesselCertificate = $request->except(
                     'expire_date',
-                    'type'
                 );
             }
 
@@ -151,13 +151,13 @@ class OpsVesselCertificateController extends Controller
             DB::beginTransaction();
             $vesselCertificate = $request->except(
                 '_token',
-                'attachment',
+                'attachment',                
+                'type'
             );
 
             if($request->type == 'Permanent'){
                 $vesselCertificate = $request->except(
                     'expire_date',
-                    'type'
                 );
             }
 
