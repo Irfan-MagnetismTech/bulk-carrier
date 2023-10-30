@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_customer_id')->constrained('ops_customers')->onDelete('cascade');
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->bigInteger('mother_vessel_id')->nullable();
+            $table->string('mother_vessel')->nullable();
             $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
             $table->string('voyage_no')->nullable();
             $table->string('route')->nullable();

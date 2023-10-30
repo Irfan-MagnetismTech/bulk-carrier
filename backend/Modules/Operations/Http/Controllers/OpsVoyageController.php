@@ -51,6 +51,7 @@ class OpsVoyageController extends Controller
      */
      public function store(OpsVoyageRequest $request): JsonResponse
      {
+        // dd($request);
         try {
             DB::beginTransaction();
             $voyageInfo = $request->except(
