@@ -154,6 +154,20 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
   }
 });
 
+function tableWidth() {
+  setTimeout(function() {
+      const customDataTable = document.getElementById("customDataTable");
+
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+      portScheduleInitialize.value = true;
+    }, 1000);
+}
+//after mount
+onMounted(() => {
+  tableWidth();
+});
 </script>
 <template>
 
@@ -237,26 +251,26 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
   </div>
 
 
-  <div id="customDataTable" v-if="form?.entry_type == '0' || formType == 'edit'">
-    <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+  <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
+    <div class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap" id="table">
+        <table class="w-full whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="py-3 align-center">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Brand</th>
-            <th class="py-3 align-center">Model</th>
-            <th class="py-3 align-center">Specification</th>
-            <th class="py-3 align-center">Origin</th>
-            <th class="py-3 align-center">Sample</th>
-            <th class="py-3 align-center">Drawing No</th>
-            <th class="py-3 align-center">Part No</th>
-            <th class="py-3 align-center">ROB</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 text-center align-center">Action</th>
+            <th class="!w-60 py-3 align-center">Material Name </th>
+            <th class="!w-60 py-3 align-center">Unit</th>
+            <th class="!w-60 py-3 align-center">Brand</th>
+            <th class="!w-60 py-3 align-center">Model</th>
+            <th class="!w-60 py-3 align-center">Specification</th>
+            <th class="!w-60 py-3 align-center">Origin</th>
+            <th class="!w-60 py-3 align-center">Sample</th>
+            <th class="!w-60 py-3 align-center">Drawing No</th>
+            <th class="!w-60 py-3 align-center">Part No</th>
+            <th class="!w-60 py-3 align-center">ROB</th>
+            <th class="!w-60 py-3 align-center">Qty</th>
+            <th class="!w-60 py-3 align-center">Required Date</th>
+            <th class="!w-60 py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
@@ -275,40 +289,65 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
             </v-select>
             </td>
             <td>
-              <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+               </label>
+              
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+               </label>
+              
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+               </label>
+              
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].specification" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].specification" class="form-input">
+               </label>
+              
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
+               </label>
+              
             </td>
             <td>
-              <!-- <input type="text" v-model="form.scmPrLines[index].sample" class="form-input"> -->
+              <!--     <input type="text" v-model="form.scmPrLines[index].sample" class="form-input"> -->
               <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
                </a>
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].drawing_no" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].drawing_no" class="form-input">
+              </label>
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].part_no" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].part_no" class="form-input">
+              </label>
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].rob" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].rob" class="form-input">
+              </label>
             </td>
             <td>
-              <input type="text" v-model="form.scmPrLines[index].quantity" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmPrLines[index].quantity" class="form-input">
+              </label>
             </td>
             <td>
-              <input type="date" v-model="form.scmPrLines[index].required_date" class="form-input">
+              <label class="block w-full mt-2 text-sm">
+                 <input type="date" v-model="form.scmPrLines[index].required_date" class="form-input">
+              </label>
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -382,8 +421,6 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
         @apply text-red-400 font-semibold
     }
 
-    table tr,td,th {
-        @apply border border-gray-300
-    }
+ 
 
 </style>
