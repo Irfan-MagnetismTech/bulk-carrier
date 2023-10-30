@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('mnt_work_requisitions', function (Blueprint $table) {
             $table->id();
-            $table->string('reference', 255)->nullable();
+            $table->string('reference_no', 255)->nullable();
             $table->unsignedBigInteger('ops_vessel_id');
             $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
             $table->string('assigned_to', 255)->nullable();
