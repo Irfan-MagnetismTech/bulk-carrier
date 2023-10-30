@@ -112,15 +112,20 @@ class OpsVesselController extends Controller
             $certificate->id = $certificate->opsMaritimeCertification->id;
             return $certificate;
         });
+
+        $vessel->opsBunkers->map(function($bunker) {
+            $bunker->name = $bunker->scmMaterial->name;
+            return $bunker;
+        });
+
         try
-        {            
+        {
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
 

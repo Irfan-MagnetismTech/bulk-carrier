@@ -74,13 +74,20 @@ class OpsVesselCertificateController extends Controller
     */
     public function store(OpsVesselCertificateRequest $request): JsonResponse
     {
-        // dd($request);
         try {
             DB::beginTransaction();
             $vesselCertificate = $request->except(
                 '_token',
                 'attachment',
             );
+
+            if($request->type == 'Permanent'){
+                $vesselCertificate = $request->except(
+                    'expire_date',
+                    'type'
+                );
+            }
+
             if(isset($request->attachment)){
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates');
                 $vesselCertificate['attachment'] = $attachment;
@@ -147,9 +154,10 @@ class OpsVesselCertificateController extends Controller
                 'attachment',
             );
 
-            if($request->opsMaritimeCertification['type'] != 'Permanent'){
+            if($request->type == 'Permanent'){
                 $vesselCertificate = $request->except(
                     'expire_date',
+                    'type'
                 );
             }
 

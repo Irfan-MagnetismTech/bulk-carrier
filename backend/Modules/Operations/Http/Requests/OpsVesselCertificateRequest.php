@@ -27,7 +27,7 @@ class OpsVesselCertificateRequest extends FormRequest
             'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
             'issue_date' => ['required'],
             'expire_date' => Rule::requiredIf(function () {
-                return $this->opsMaritimeCertification['type'] != 'Permanent';
+                return $this->type != 'Permanent';
             }),
             'attachment' => ['nullable'],
             'status' => ['nullable'],
