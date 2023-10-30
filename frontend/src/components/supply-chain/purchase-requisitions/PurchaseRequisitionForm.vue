@@ -102,6 +102,7 @@
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
+        props.form.acc_cost_center_id = value?.acc_cost_center_id;
     });
 
     function setMaterialOtherData(datas,index){
@@ -150,6 +151,7 @@ const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
     props.form.scm_warehouse_id = '';
+    props.form.acc_cost_center_id = '';
     props.form.scmWarehouse = null;
   }
 });

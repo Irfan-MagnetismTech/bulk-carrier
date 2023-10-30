@@ -19,6 +19,7 @@ export default function useOpeningStock() {
         date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        scm_cost_center_id: '',
         business_unit: '',
         scmOpeningStockLines: [
             {
