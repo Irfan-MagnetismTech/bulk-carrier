@@ -5,6 +5,7 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useBusinessInfo from "../../../composables/useBusinessInfo.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
+    import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
@@ -12,7 +13,7 @@
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-
+    const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
     const { getAllStoreCategories } = useBusinessInfo();
     const store_category = ref([]);
 
@@ -106,7 +107,32 @@
     function setMaterialOtherData(datas,index){
       props.form.scmPrLines[index].unit = datas.unit;
       props.form.scmPrLines[index].scm_material_id = datas.id;
+      getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id);
+      props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+}
+
+// const previousLines = ref(cloneDeep(props.form.scmPrLines));
+
+watch(() => props.form.scmPrLines, (newLines) => {
+  newLines.forEach((line, index) => {
+    // const previousLine = previousLines.value[index];
+
+    if (line.scmMaterial) {
+      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+      if (selectedMaterial) {
+        if ( line.scm_material_id !== selectedMaterial.id
+        ) {
+          props.form.scmPrLines[index].unit = selectedMaterial.unit;
+          props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
+          getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id);
+          props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+        }
+      }
     }
+  });
+  // previousLines.value = cloneDeep(newLines);
+}, { deep: true });
+
 
     function fetchMaterials(search, loading) {
     loading(true);
