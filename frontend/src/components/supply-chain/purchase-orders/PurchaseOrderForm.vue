@@ -226,11 +226,11 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPurchaseRequisition" label="ref_no" class="block form-input">
+          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPr" label="ref_no" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.scmPurchaseRequisition"
+                  :required="!form.scmPr"
                   v-bind="attributes"
                   v-on="events"
               />
