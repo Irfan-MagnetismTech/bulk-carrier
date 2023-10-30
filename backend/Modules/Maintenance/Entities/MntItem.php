@@ -17,7 +17,7 @@ class MntItem extends Model
     protected $casts = [
         'has_run_hour' => 'boolean',
     ];
-    
+    protected $appends = ['item_code_name'];
 
     
     public function mntItemGroup () : BelongsTo
@@ -33,5 +33,11 @@ class MntItem extends Model
     public function mntJobLines () : HasManyThrough
     {
         return $this->hasManyThrough(MntJobLine::class, MntJob::class);
+    }
+
+    
+    public function getItemCodeNameAttribute () 
+    {
+        return '('.$this->item_code.') '.$this->name;
     }
 }
