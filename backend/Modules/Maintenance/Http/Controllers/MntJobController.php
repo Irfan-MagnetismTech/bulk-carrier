@@ -245,16 +245,20 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntJob::with(['mntJobLines'])
-                            ->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
-                            ->when(request()->has('mnt_item_id'), function($qJobs){
-                                $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+            $jobs = MntItem::with(['mntJobs', 'mntJobLines'])
+                            ->Where(function($jobQuery){
+                                $jobQuery->whereHas('mntJobs',function($q){
+                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                                        ->when(request()->has('mnt_item_id'), function($qJobs){
+                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
+                                        })
+                                        ->when(request()->business_unit != "ALL", function($q){
+                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
+                                        }); 
+                                });
                             })
-                            ->when(request()->business_unit != "ALL", function($q){
-                                $q->where('mnt_jobs.business_unit', request()->business_unit);  
-                            })
-                            ->get()->pluck('mntJobLines')->flatten();
-
+                            ->get();
+                            
             return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
             
         }
