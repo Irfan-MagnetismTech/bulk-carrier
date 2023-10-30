@@ -3,8 +3,10 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class ScmStockLedgerController extends Controller
 {
@@ -75,5 +77,24 @@ class ScmStockLedgerController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Retrieves the current stock quantity for a specific material.
+     *
+     * @param int $scm_material_id
+     * @param int $scm_warehouse_id
+     * @return JsonResponse
+     */
+    public function currentStock(): JsonResponse
+    {
+        $totalQuantity = ScmStockLedger::query()
+            ->where([
+                'scm_material_id' => request()->scm_material_id,
+                'scm_warehouse_id' => request()->scm_warehouse_id
+            ])
+            ->sum('quantity');
+
+        return response()->success('Total Quantity', $totalQuantity, 200);
     }
 }

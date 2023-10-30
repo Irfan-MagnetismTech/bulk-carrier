@@ -5,6 +5,8 @@ namespace Modules\SupplyChain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmStockLedger;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,5 +26,10 @@ class ScmPrLine extends Model
     public function scmMaterial(): BelongsTo
     {
         return $this->belongsTo(ScmMaterial::class);
+    }
+
+    public function scmStockLedgers(): HasMany
+    {
+        return $this->hasMany(ScmStockLedger::class, 'scm_material_id', 'scm_material_id');
     }
 }
