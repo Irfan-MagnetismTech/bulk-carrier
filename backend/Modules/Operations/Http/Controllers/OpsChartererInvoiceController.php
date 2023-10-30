@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsChartererInvoice;
 use Modules\Operations\Http\Requests\OpsChartererInvoiceRequest;
-use Illuminate\Support\Facades\DB;
 
 class OpsChartererInvoiceController extends Controller
 {

@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsChartererProfile;
 use Modules\Operations\Http\Requests\OpsChartererProfileRequest;
-use Illuminate\Support\Facades\DB;
 
 class OpsChartererProfileController extends Controller
 {
@@ -57,7 +58,7 @@ class OpsChartererProfileController extends Controller
                  'opsChartererBankAccounts',
              );
  
-             $charterer_profile = OpsCargoTariff::create($charterer_profile_info);
+             $charterer_profile = OpsChartererProfile::create($charterer_profile_info);
              $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
              return response()->success('Charterer profile added successfully.', $charterer_profile, 201);
@@ -72,7 +73,7 @@ class OpsChartererProfileController extends Controller
      /**
       * Display the specified maritime certification.
       *
-      * @param  OpsChartererProfile $cargo_tariff
+      * @param  OpsChartererProfile $charterer_profile
       * @return JsonResponse
       */
      public function show(OpsChartererProfile $charterer_profile): JsonResponse
@@ -110,7 +111,7 @@ class OpsChartererProfileController extends Controller
              $charterer_profile->opsChartererBankAccounts()->delete();
              $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
-             return response()->success('Charterer profile updated successfully.', $cargo_tariff, 200);
+             return response()->success('Charterer profile updated successfully.', $charterer_profile, 200);
          }
          catch (QueryException $e)
          {            
@@ -122,7 +123,7 @@ class OpsChartererProfileController extends Controller
      /**
       * Remove the specified vessel from storage.
       *
-      * @param  OpsChartererProfile  $cargo_tariff
+      * @param  OpsChartererProfile  $charterer_profile
       * @return \Illuminate\Http\JsonResponse
       */
      public function destroy(OpsChartererProfile $charterer_profile): JsonResponse

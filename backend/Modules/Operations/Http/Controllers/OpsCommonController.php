@@ -2,30 +2,33 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsPort;
+use Modules\Operations\Entities\OpsVessel;
+use Modules\Operations\Entities\OpsVoyage;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Entities\OpsCustomer;
 use Modules\Operations\Entities\OpsCargoType;
 use Modules\Operations\Entities\OpsCargoTariff;
-use Modules\Operations\Entities\OpsChartererContract;
+use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsChartererInvoice;
 use Modules\Operations\Entities\OpsChartererProfile;
-use Modules\Operations\Entities\OpsCustomer;
 use Modules\Operations\Entities\OpsHandoverTakeover;
-use Modules\Operations\Entities\OpsMaritimeCertification;
-use Modules\Operations\Entities\OpsVessel;
-use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Entities\OpsVesselParticular;
-use Modules\Operations\Entities\OpsVoyage;
-use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Http\Requests\OpsPortRequest;
+use Modules\Operations\Entities\OpsChartererContract;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Entities\OpsCustomerInvoice;
 use Modules\Operations\Entities\OpsCashRequisition;
 use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Operations\Entities\OpsVesselCertificate;
+use Modules\Operations\Entities\OpsMaritimeCertification;
+use Modules\Operations\Entities\OpsBunkerRequisition;
 
 class OpsCommonController extends Controller
 {
