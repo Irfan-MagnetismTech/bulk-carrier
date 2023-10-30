@@ -44,7 +44,7 @@ export default function usePurchaseRequisition() {
                 origin: '',
                 drawing_no: '',
                 part_no: '',
-                rob: '',
+                rob: 0,
                 quantity: 0.0,
                 required_date: ''
             }
