@@ -130,12 +130,12 @@ class ScmPoController extends Controller
     {
 
         // {
-        //     scmWarehouse: '',
-        //     scm_warehouse_id: '',
-        //     pr_no: null,
-        //     scm_pr_id: null,
-        //     scmPr: null,
-        //     pr_date: '',
+        //     scmWarehouse: '', //ok
+        //     scm_warehouse_id: '', //ok
+        //     pr_no: null,  //ok
+        //     scm_pr_id: null, //ok
+        //     scmPr: null, //ok
+        //     pr_date: '', //ok
         //     cs_no: '',//if cs
         //     scm_cs_id: '',//if cs
         //     scmCs: null,//if cs
@@ -155,28 +155,21 @@ class ScmPoController extends Controller
         try {
             if ($request->pr_id != null) {
                 $scmPr = ScmPr::query()
-                ->with([
-                    'scmWarehouse',
-                    'scmPrLines' => function ($query) {
-                        $query->select([
-                            'scm_material_id',
-                            'unit',
-                            'brand',
-                            'model',
-                            'quantity',
-                        ])->with('scmMaterial');
-                    }
-                ])
-                ->where('id', $request->pr_id)
-                ->get();
+                    ->with([
+                        'scmWarehouse',
+                        'scmPrLines.scmMaterial',
+                    ])
+                    ->where('id', $request->pr_id)
+                    ->first();
+
                 $data = [
-                    'scmWarehouse' => $scmPr[0]->scmWarehouse,
-                    'scm_warehouse_id' => $scmPr[0]->scm_warehouse_id,
-                    'pr_no' => $scmPr[0]->id,
-                    'scm_pr_id' => $scmPr[0]->id,
-                    'scmPr' => $scmPr[0],
-                    'pr_date' => $scmPr[0]->raised_date,
-                    'scmPoLines' => $scmPr[0]->scmPrLine,
+                    'scmWarehouse' => $scmPr->scmWarehouse,
+                    'scm_warehouse_id' => $scmPr->scm_warehouse_id,
+                    'pr_no' => $scmPr->ref_no,
+                    'scm_pr_id' => $scmPr->id,
+                    'scmPr' => $scmPr,
+                    'pr_date' => $scmPr->raised_date,
+                    'scmPoLines' => $scmPr->scmPrLines,
                 ];
             } else {
                 // $scmCs = ScmCs::query()
@@ -184,12 +177,11 @@ class ScmPoController extends Controller
                 // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
                 // ->get();
             }
-            
 
-            return response()->success('data',$data, 200);
+
+            return response()->success('data', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
-   
 }
