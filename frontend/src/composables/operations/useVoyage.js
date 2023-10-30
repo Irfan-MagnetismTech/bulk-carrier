@@ -13,37 +13,6 @@ export default function useVoyage() {
 	const voyageName = ref([]);
 	const voyageVoyages = ref([]);
 	const notification = useNotification();
-	const voyage = ref({
-		ops_customer_id: '',
-		ops_vessel_id: '',
-		mother_vessel_id: '',
-		ops_cargo_type_id: '',
-		voyage_no: '',
-		route: '',
-		load_port_distance: '',
-		sail_date: '',
-		transit_date: '',
-		remarks: '',
-		opsBunkers: [],
-		opsVoyageSectors: [],
-		opsVoyagePortSchedules: []
-	});
-	const voyageSectorObject = {
-		ops_voyage_id: '',
-        ops_cargo_tariff_id: '',
-        loading_point: '',
-        unloading_point: '',
-        rate: '',
-        initial_survey_qty: '',
-        approx_amount: '',
-        discount: '',
-        discount_amount: '',
-        approx_amount_after_disscount: '',
-        final_survey_qty: '',
-        final_received_qty: '',
-        boat_note_qty: '',
-        business_unit: ''
-	}
 
 	const bunkerObject = {
 		name: '',
@@ -71,6 +40,40 @@ export default function useVoyage() {
         unload_complete: '',
         operation_type: ''
 	}
+
+	const voyageSectorObject = {
+		ops_voyage_id: '',
+        ops_cargo_tariff_id: '',
+        loading_point: '',
+        unloading_point: '',
+        rate: '',
+        initial_survey_qty: '',
+        approx_amount: '',
+        discount: '',
+        discount_amount: '',
+        approx_amount_after_disscount: '',
+        final_survey_qty: '',
+        final_received_qty: '',
+        boat_note_qty: '',
+        business_unit: ''
+	}
+
+	const voyage = ref({
+		ops_customer_id: '',
+		ops_vessel_id: '',
+		mother_vessel_id: '',
+		ops_cargo_type_id: '',
+		voyage_no: '',
+		route: '',
+		load_port_distance: '',
+		sail_date: '',
+		transit_date: '',
+		remarks: '',
+		opsBunkers: [{...bunkerObject}],
+		opsVoyageSectors: [{...voyageSectorObject}],
+		opsVoyagePortSchedules: [{...portScheduleObject}]
+	});
+	
 	const errors = ref(null);
 	const isLoading = ref(false);
 
