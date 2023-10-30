@@ -22,6 +22,7 @@ export default function usePurchaseOrder() {
         ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        acc_cost_center_id: '',
         po_date: '',
         pr_no: null,
         scm_pr_id: null,
@@ -216,8 +217,9 @@ export default function usePurchaseOrder() {
                     cs_id: csId,
                 },
             });
-            purchaseOrders.value = merge(purchaseOrders.value, data.value);
+            purchaseOrder.value = merge(purchaseOrder.value, data.value);
             console.log('data', data.value);
+            console.log('po', purchaseOrders.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

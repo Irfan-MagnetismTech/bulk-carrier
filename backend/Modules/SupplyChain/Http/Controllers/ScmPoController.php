@@ -175,7 +175,7 @@ class ScmPoController extends Controller
                     'pr_no' => $scmPr[0]->id,
                     'scm_pr_id' => $scmPr[0]->id,
                     'scmPr' => $scmPr[0],
-                    'pr_date' => $scmPr[0]->pr_date,
+                    'pr_date' => $scmPr[0]->raised_date,
                     'scmPoLines' => $scmPr[0]->scmPrLine,
                 ];
             } else {

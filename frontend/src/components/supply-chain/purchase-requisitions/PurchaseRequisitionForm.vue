@@ -163,7 +163,7 @@ function tableWidth() {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      portScheduleInitialize.value = true;
+      
     }, 1000);
 }
 //after mount
