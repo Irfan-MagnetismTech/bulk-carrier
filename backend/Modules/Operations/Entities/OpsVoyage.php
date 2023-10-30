@@ -34,10 +34,10 @@ class OpsVoyage extends Model
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsMotherVessel()
-    {
-        return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
-    }
+    // public function opsMotherVessel()
+    // {
+    //     return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
+    // }
 
     public function opsCargoType()
     {
