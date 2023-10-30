@@ -23,7 +23,7 @@ class OpsVoyageRequest extends FormRequest
             'load_port_distance'    => ['required', 'string', 'max:255'],
             'sail_date'             => 'required|date',
             'transit_date'          => 'required|date',
-            'remarks'               => ['required', 'string', 'max:255'],
+            'remarks'               => ['nullable', 'string'],
             'business_unit'         => ['required', 'string', 'max:255'],
         ];
     }
