@@ -268,7 +268,7 @@ import useRunHour from "../../../composables/maintenance/useRunHour";
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
-const { itemGroupWiseItems, getItemGroupWiseItems } = useItem();
+const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
 const { itemWiseJobs, getItemWiseAllJobs, getItemWiseUpcomingJobs } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -294,6 +294,14 @@ const props = defineProps({
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
+  if(props.form.ops_vessel_id){
+    getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
+  }
+  else{
+    vesselWiseJobItems.value = [];
+    props.form.mnt_item_name = ''; //for vessel change
+  }
+
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
   }
@@ -312,6 +320,9 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
   if(props.form.mnt_ship_department_id){
     getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
   }
+  if(props.form.ops_vessel_id && props.form.mnt_ship_department_id){
+    getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
+  }
 });
 
 watch(() => shipDepartmentWiseItemGroups.value, (val) => {
@@ -325,12 +336,13 @@ watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
     props.form.mnt_item_name = null;
     props.form.mnt_item_id = null;
   }
-  if(props.form.mnt_item_group_id){
-    getItemGroupWiseItems(props.form.mnt_item_group_id);
+  if(props.form.ops_vessel_id && props.form.mnt_item_group_id){
+    // getItemGroupWiseItems(props.form.mnt_item_group_id);
+    getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
   }
 });
 
-watch(() => itemGroupWiseItems.value, (val) => {
+watch(() => vesselWiseJobItems.value, (val) => {
   props.form.mnt_items = val;
 });
 
@@ -338,6 +350,9 @@ watch(() => props.form.mnt_item_name, (value) => {
   props.form.mnt_item_id = value?.id;
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
+  }
+  else{
+    props.form.previous_run_hour = null;
   }
 });
 

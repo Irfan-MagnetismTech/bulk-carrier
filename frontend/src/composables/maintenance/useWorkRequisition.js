@@ -12,11 +12,11 @@ export default function useWorkRequisition() {
     const $loading = useLoading();
     const notification = useNotification();
     const workRequisition = ref( {
-        ops_vessel_id: '',
+        ops_vessel_id: null,
         ops_vessel_name: '',
-        mnt_ship_department_id: '',
+        mnt_ship_department_id: null,
         mnt_ship_department_name: '',
-        mnt_item_group_id: '',
+        mnt_item_group_id: null,
         mnt_item_group_name: '',
         mnt_item_id: '',
         mnt_item_name: '',
