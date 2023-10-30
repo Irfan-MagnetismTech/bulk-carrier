@@ -106,14 +106,14 @@ export default function useVoyage() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVoyageCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
-			element.business_unit = form.business_unit
-		})
+		// form.opsVoyageCertificates.map((element) => {
+		// 	element.ops_maritime_certification_id = element.id
+		// 	element.business_unit = form.business_unit
+		// })
 
-		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
-		})
+		// form.opsBunkers.map((element) => {
+		// 	element.scm_material_id = element.id
+		// })
 
 		try {
 			const { data, status } = await Api.post('/ops/voyages', form);
@@ -154,14 +154,14 @@ export default function useVoyage() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVoyageCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
-			element.business_unit = form.business_unit
-		})
+		// form.opsVoyageCertificates.map((element) => {
+		// 	element.ops_maritime_certification_id = element.id
+		// 	element.business_unit = form.business_unit
+		// })
 
-		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
-		})
+		// form.opsBunkers.map((element) => {
+		// 	element.scm_material_id = element.id
+		// })
 		
 		try {
 			const { data, status } = await Api.put(

@@ -30,7 +30,7 @@
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           
-          <business-unit-input v-model="form.business_unit"></business-unit-input>
+          <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
             <v-select :options="customers" placeholder="--Choose an option--" @search="fetchCustomers"  v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="port=>port.code">
@@ -121,8 +121,8 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Remarks <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" required autocomplete="off" />
+            <span class="text-gray-700 dark:text-gray-300">Remarks </span>
+            <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
             <Error v-if="errors?.remarks" :errors="errors.remarks" />
           </label>
         </div>
