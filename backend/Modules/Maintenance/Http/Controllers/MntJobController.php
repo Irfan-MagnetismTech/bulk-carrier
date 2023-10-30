@@ -187,10 +187,15 @@ class MntJobController extends Controller
         }
     }
 
+    /**
+     * Function to fetch jobs
+     * required params: ops_vessel_id, business_unit
+     * optional params: mnt_item_id, mnt_item_group_id, mnt_ship_department_id
+     */
     public function vesselWiseJobs()
     {
         try {
-            $jobs = MntJob::with(['mntItem'])              
+            $jobs = MntJob::with(['mntItem','mntJobLines'])              
                             ->Where(function($jobQuery){
                                 $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
                                         ->when(request()->has('mnt_item_id'), function($qJobs){
@@ -212,7 +217,14 @@ class MntJobController extends Controller
                             })
                             ->get();
 
-            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
+            // To get the return value dynamically
+            $returnField = request()->return_field;
+            if ($returnField == "mntItem" || $returnField == "mntJobLines") {
+                $jobs = $jobs->pluck($returnField)->flatten();
+            }
+
+
+            return response()->success('Vessel wise jobs retrieved successfully', $jobs, 200);
             
         } catch (\Exception $e)
         {
@@ -228,19 +240,15 @@ class MntJobController extends Controller
     {
         try {
 
-            $jobs = MntItem::with(['mntJobs', 'mntJobLines'])
-                            ->Where(function($jobQuery){
-                                $jobQuery->whereHas('mntJobs',function($q){
-                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
-                                        ->when(request()->has('mnt_item_id'), function($qJobs){
-                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
-                                        })
-                                        ->when(request()->business_unit != "ALL", function($q){
-                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
-                                        }); 
-                                });
+            $jobs = MntJob::with(['mntJobLines'])
+                            ->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
+                            ->when(request()->has('mnt_item_id'), function($qJobs){
+                                $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
                             })
-                            ->get();
+                            ->when(request()->business_unit != "ALL", function($q){
+                                $q->where('mnt_jobs.business_unit', request()->business_unit);  
+                            })
+                            ->get()->pluck('mntJobLines')->flatten();
 
             return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
             
