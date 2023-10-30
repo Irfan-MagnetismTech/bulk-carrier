@@ -57,9 +57,7 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no');
 
-
-
-        if (isset($request->attachment)) {
+        if (!empty($request->attachment)) {
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
             $requestData['attachment'] = $attachment;
         }
@@ -67,9 +65,9 @@ class ScmPrController extends Controller
         $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
 
         try {
-            // DB::beginTransaction();
+            DB::beginTransaction();
             $purchase_requisition = ScmPr::create($requestData);
-            if (request('enrty_type') == '0') {
+            if (request('enrty_type') == 0) {
                 $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
             } else {
                 $import = new ScmMaterialsImport();
@@ -82,7 +80,11 @@ class ScmPrController extends Controller
                     $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);
                 }
             }
+            DB::commit();
+
+            return response()->success('Data created succesfully', $purchase_requisition, 201);
         } catch (ValidationException $e) {
+            DB::rollBack();
 
             $failures = $e->failures();
 
@@ -93,14 +95,7 @@ class ScmPrController extends Controller
                 $failure->values();
             }
 
-            // throw new Exception($failure->errors(), 422);
             return response()->json($e->failures(), 422);
-
-
-
-            // DB::commit();
-
-            // return response()->success('Data created succesfully', $purchase_requisition, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -115,15 +110,50 @@ class ScmPrController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $purchase_requisition = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
-            ->with('scmPrLines', function ($item) {
-                $item->withSum('scmStockLedgers as rob', 'quantity');
-            })
+        $purchaseRequisition = ScmPr::query()
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers')
             ->find($id);
 
+        $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
+
+            $currentStock = $scmPrLine->scmStockLedgers->where('scm_warehouse_id', $purchaseRequisition->scm_warehouse_id)->sum('quantity');
+
+            $lines = [
+                'scm_material_id' => $scmPrLine->scmMaterial->id,
+                'scmMaterial' => $scmPrLine->scmMaterial,
+                'unit' => $scmPrLine->unit,
+                'brand' => $scmPrLine->brand,
+                'model' => $scmPrLine->model,
+                'specification' => $scmPrLine->specification,
+                'origin' => $scmPrLine?->country?->name,
+                'drawing_no' => $scmPrLine->drawing_no,
+                'part_no' => $scmPrLine->part_no,
+                'rob' => $currentStock,
+                'quantity' => $scmPrLine->quantity,
+                'required_date' => $scmPrLine->required_date
+            ];
+            return $lines;
+        });
+
+        $purchaseRequisition = [
+            'pr_no' => $purchaseRequisition->ref_no,
+            'ref_no' => $purchaseRequisition->ref_no,
+            'business_unit' => $purchaseRequisition->business_unit,
+            'scmWarehouse' => $purchaseRequisition->scmWarehouse->id,
+            'scm_warehouse_id' => $purchaseRequisition->scm_warehouse_id,
+            'raised_date' => $purchaseRequisition->raised_date,
+            'is_critical' => $purchaseRequisition->is_critical,
+            'attachment' => $purchaseRequisition->attachment,
+            'remarks' => $purchaseRequisition->remarks,
+            'purchase_center' => $purchaseRequisition->purchase_center,
+            'approved_date' => $purchaseRequisition->approved_date,
+            'remarks' => $purchaseRequisition->remarks,
+            'scmPrLines' => $prLines,
+        ];
+
+
         try {
-            return response()->success('data', $purchase_requisition, 200);
+            return response()->success('Data updated sucessfully!', $purchaseRequisition, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
