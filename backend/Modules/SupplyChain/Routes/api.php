@@ -30,6 +30,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-unit', [ScmUnitController::class, "searchUnit"])->name('searchUnit');
     Route::get('search-materials', [ScmMaterialController::class, "searchMaterial"])->name('searchMaterial');
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
+    Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
 
     //Business Info Apis
