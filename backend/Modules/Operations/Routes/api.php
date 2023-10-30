@@ -23,6 +23,7 @@ use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'expense-heads' => OpsExpenseHeadController::class,
         'vessel-expense-heads' => OpsVesselExpenseHeadController::class,
+        'voyage-expenditures' => OpsVoyageExpenditureController::class,
     ]);
 
     //start for without pagination
@@ -94,8 +96,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
     Route::get('search-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'getVesselExpenseHeadByVessel']);
+    Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     
     // end for search api route
+    
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);

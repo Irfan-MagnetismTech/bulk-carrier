@@ -49,24 +49,24 @@ class OpsVoyageExpenditureController extends Controller
     */
     public function store(OpsVoyageExpenditureRequest $request): JsonResponse
     {
-    // dd($request);
-    try {
-        DB::beginTransaction();
-        $voyage_expenditure_info = $request->except(
-            '_token',
-            'opsVoyageExpenditureEntries',
-        );
+        // dd($request);
+        try {
+            DB::beginTransaction();
+            $voyage_expenditure_info = $request->except(
+                '_token',
+                'opsVoyageExpenditureEntries',
+            );
 
-        $voyage_expenditure = OpsVoyageExpenditure::create($voyage_expenditure_info);
-        $voyage_expenditure->opsVoyageExpenditureEntries()->createMany($request->opsVoyageExpenditureEntries);
-        DB::commit();
-        return response()->success('Voyage expenditure added successfully.', $voyage_expenditure, 201);
-    }
-    catch (QueryException $e)
-    {
-        DB::rollBack();
-        return response()->error($e->getMessage(), 500);
-    }
+            $voyage_expenditure = OpsVoyageExpenditure::create($voyage_expenditure_info);
+            $voyage_expenditure->opsVoyageExpenditureEntries()->createMany($request->opsVoyageExpenditureEntries);
+            DB::commit();
+            return response()->success('Voyage expenditure added successfully.', $voyage_expenditure, 201);
+        }
+        catch (QueryException $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
  
     /**
@@ -77,15 +77,15 @@ class OpsVoyageExpenditureController extends Controller
     */
     public function show(OpsVoyageExpenditure $voyage_expenditure): JsonResponse
     {
-    $voyage_expenditure->load(['opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries']);
-    try
-    {
-        return response()->success('Successfully retrieved voyage expenditure.', $voyage_expenditure, 200);
-    }
-    catch (QueryException $e)
-    {
-        return response()->error($e->getMessage(), 500);
-    }
+        $voyage_expenditure->load(['opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries']);
+        try
+        {
+            return response()->success('Successfully retrieved voyage expenditure.', $voyage_expenditure, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
 
     }
  
@@ -99,22 +99,22 @@ class OpsVoyageExpenditureController extends Controller
     */
     public function update(OpsVoyageExpenditureRequest $request, OpsVoyageExpenditure $voyage_expenditure): JsonResponse
     {
-    try {
-        DB::beginTransaction();
-        $voyage_expenditure_info = $request->except(
-            '_token',
-            'opsVoyageExpenditureEntries',
-        );
-        
-        $voyage_expenditure->update($voyage_expenditure_info);$voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($request->opsVoyageExpenditureEntries);
-        DB::commit();
-        return response()->success('Voyage expenditure updated successfully.', $voyage_expenditure, 200);
-    }
-    catch (QueryException $e)
-    {            
-        DB::rollBack();
-        return response()->error($e->getMessage(), 500);
-    }
+        try {
+            DB::beginTransaction();
+            $voyage_expenditure_info = $request->except(
+                '_token',
+                'opsVoyageExpenditureEntries',
+            );
+            
+            $voyage_expenditure->update($voyage_expenditure_info);$voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($request->opsVoyageExpenditureEntries);
+            DB::commit();
+            return response()->success('Voyage expenditure updated successfully.', $voyage_expenditure, 200);
+        }
+        catch (QueryException $e)
+        {            
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
  
     /**
@@ -138,16 +138,16 @@ class OpsVoyageExpenditureController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
-    } 
+    }
 
-    public function getCargoTariffByVoyageWise(Request $request){
+    public function getVoyageExpenditureByVoyageWise(Request $request){
         try {
             $voyage_expenditures = OpsVoyageExpenditure::query()
             ->where(function ($query) use($request) {
-                $query->where('ops_voyage_id',$request->ops_voyage_id);                
+                $query->where('ops_voyage_id',$request->ops_voyage_id);
             })
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })
             ->limit(10)
             ->get();
