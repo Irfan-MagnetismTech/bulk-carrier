@@ -61,7 +61,7 @@ export default function useVoyage() {
 	const voyage = ref({
 		ops_customer_id: '',
 		ops_vessel_id: '',
-		mother_vessel_id: '',
+		mother_vessel: '',
 		ops_cargo_type_id: '',
 		voyage_no: '',
 		route: '',

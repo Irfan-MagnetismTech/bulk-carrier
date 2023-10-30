@@ -47,8 +47,8 @@
           </label>
           <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Mother Vessel Name <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.name" placeholder="Voyage Name" class="form-input" required autocomplete="off" />
-                <Error v-if="errors?.name" :errors="errors.name" />
+                <input type="text" v-model="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
+                <Error v-if="errors?.mother_vessel" :errors="errors.mother_vessel" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
@@ -155,7 +155,7 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input">
+                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -167,7 +167,7 @@
               </v-select>
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input">
+                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -259,7 +259,7 @@
 
                       <span class="text-gray-700 dark:text-gray-300">Port Code <span class="text-red-500">*</span></span>
 
-                      <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input">
+                      <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
                         <template #search="{attributes, events}">
                             <input
                                 class="vs__search"
