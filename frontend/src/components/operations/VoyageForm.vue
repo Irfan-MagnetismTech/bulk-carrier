@@ -33,7 +33,7 @@
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
-            <v-select :options="customers" placeholder="--Choose an option--" @search="fetchCustomers"  v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="customers" placeholder="--Choose an option--" @search="fetchCustomers"  v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="customer=>customer.id">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

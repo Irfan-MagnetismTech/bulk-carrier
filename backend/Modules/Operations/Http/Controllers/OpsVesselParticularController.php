@@ -2,16 +2,17 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
-use App\Services\FileUploadService;
-use Illuminate\Support\Facades\DB;
-use Auth;
 
 class OpsVesselParticularController extends Controller
 {
