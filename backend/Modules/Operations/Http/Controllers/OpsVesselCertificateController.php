@@ -45,16 +45,19 @@ class OpsVesselCertificateController extends Controller
             ->latest()
             ->paginate(15)
             ->groupBy('ops_vessel_id');
-
+            
             // Calculate days difference using map
             $vesselCertificates->map(function ($certificateGroup, $vesselId) use ($currentDate) {
                 return $certificateGroup->map(function ($certificate) use ($currentDate) {                    
                     $expireDate = Carbon::parse($certificate->expire_date);
-                    $expire_days = $currentDate->diffInDays($expireDate);
-                    $certificate->expire_days = $expire_days;                    
+                    $expire_days = $currentDate->diffInDays($expireDate, false);
+                    $certificate->expire_days = $expire_days;
+
                     return $certificate;
                 });
             });
+
+            // dd($vesselCertificates);
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
@@ -71,13 +74,20 @@ class OpsVesselCertificateController extends Controller
     */
     public function store(OpsVesselCertificateRequest $request): JsonResponse
     {
-        // dd($request);
         try {
             DB::beginTransaction();
             $vesselCertificate = $request->except(
                 '_token',
-                'attachment',
+                'attachment',                
+                'type'
             );
+
+            if($request->type == 'Permanent'){
+                $vesselCertificate = $request->except(
+                    'expire_date',
+                );
+            }
+
             if(isset($request->attachment)){
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates');
                 $vesselCertificate['attachment'] = $attachment;
@@ -141,8 +151,16 @@ class OpsVesselCertificateController extends Controller
             DB::beginTransaction();
             $vesselCertificate = $request->except(
                 '_token',
-                'attachment',
+                'attachment',                
+                'type'
             );
+
+            if($request->type == 'Permanent'){
+                $vesselCertificate = $request->except(
+                    'expire_date',
+                );
+            }
+
             if(isset($request->attachment)){
                 $this->fileUpload->deleteFile($vessel_certificate->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/vessel_certificates', $vessel_certificate->attachment);
@@ -234,12 +252,15 @@ class OpsVesselCertificateController extends Controller
             ->paginate(15)
             ->groupBy('ops_vessel_id');
 
+            // dd($vesselCertificates);
+
             $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate,$days) {
                 return $certificateGroup->filter(function ($certificate)  use ($currentDate,$days) {
                     $expireDate = Carbon::parse($certificate->expire_date);
-                    $expire_days = $currentDate->diffInDays($expireDate);
-                    $certificate->expire_days = $expire_days;                    
-                    return $certificate->expire_days <= $days;
+                    $expire_days = $currentDate->diffInDays($expireDate, false);                   
+                    $certificate->expire_days = $expire_days;
+
+                    return $certificate->expire_days <= $days && $certificate->opsMaritimeCertification->type != 'Permanent';
                 })->values();
             })->filter();
             
