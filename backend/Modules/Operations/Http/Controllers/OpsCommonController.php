@@ -98,7 +98,7 @@ class OpsCommonController extends Controller
         {
             $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
             ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->latest()->get();
 
             return response()->success('Successfully retrieved cargo tariffs.', $charterer_invoices, 200);
