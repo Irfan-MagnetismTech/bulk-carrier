@@ -120,7 +120,7 @@
         </label>
 
         
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Responsible Person" :options="form.crw_responsible_persons" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
@@ -134,50 +134,20 @@
             </v-select>
             <input type="hidden" v-model="form.responsible_person">
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+        </label> -->
+
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
+            <select v-model="form.responsible_person" class="form-input">
+              <option value="" disabled selected>Select</option>
+              <option value="Rahim" > Rahim</option>
+              <option value="Karim" > Karim</option>
+            </select>
+          <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
 
-        <!-- <div class="container mx-auto">
-          <ul class="flex justify-center space-x-2 text-white ">
-            <li>
-              <button type="button"
-                @click="currentTab(1)" 
-                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none " :class="{'bg-red-500' : tab === 1 }"
-              >
-                Tab 1
-              </button>
-            </li>
-            <li>
-              <button type="button"
-                @click="currentTab(2)"
-                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none" 
-              >
-                Tab 2
-              </button>
-            </li>
-            <li>
-              <button type="button"
-                @click="currentTab(3)"
-                class="inline-block px-4 py-2 bg-blue-500 focus:outline-none"
-              >
-                Tab 3
-              </button>
-            </li>
-          </ul>
-          <div class="p-3 mt-6 text-center bg-white">
-            <div v-if="tab === 1">
-              Tab 1 Content show Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Quas sunt ducimus numquam! Quam, perspiciatis!
-            </div>
-            <div v-if="tab === 2">
-              Tab 2 Content show Lorem ipsum dolor sit amet consectetur, adipisicing
-              elit. aliquam rem. Exercitationem corporis eius voluptatibus.
-            </div>
-            <div v-if="tab === 3">
-              Tab 3 Content show Lorem ipsum dolor sit amet consectetur adipisicing
-              elit.
-            </div>
-          </div>
-        </div> -->
+
+        
     </div>
 
     <div class="mt-3">
@@ -210,8 +180,8 @@
                   <td>{{ jobLine.previous_run_hour  }}</td>
                   <td>{{ jobLine.next_due  }}</td>
                   <td>
-                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addJob">Add</button>
-                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeJob(index)" >Remove</button>
+                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) == -1"  @click="addJobLine(jobLine)">Add</button>
+                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
               </tr>
               <!-- <template v-for="(job, index) in itemWiseJobLines" :key="index">
@@ -378,6 +348,19 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     props.form.mnt_ship_department_name = null;
   }
 });
+
+function addJobLine(jobLine){
+  props.form.added_job_lines.push(jobLine);
+}
+
+function removeJobLine(jobLine){
+  const index = props.form.added_job_lines.indexOf(jobLine);
+  if (index > -1) { 
+    props.form.added_job_lines.splice(index, 1);
+  }
+}
+
+
 
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
