@@ -87,7 +87,7 @@ class OpsVoyageController extends Controller
 
         try
         {
-            return response()->success('Successfully retrieved voyage.', $voyage, 204);
+            return response()->success('Successfully retrieved voyage.', $voyage, 200);
         }
         catch (QueryException $e)
         {
@@ -127,7 +127,7 @@ class OpsVoyageController extends Controller
             $voyage->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
-            return response()->success('Voyage updated successfully.', $voyage, 200);
+            return response()->success('Voyage updated successfully.', $voyage, 202);
         }
         catch (QueryException $e)
         {            
