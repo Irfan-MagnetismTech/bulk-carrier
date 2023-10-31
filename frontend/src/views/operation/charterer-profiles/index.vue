@@ -104,6 +104,7 @@ onMounted(() => {
                   <td>{{ chartererProfile?.email }}</td>
                   <td>{{ chartererProfile?.contact_no }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
+                      <action-button :action="'show'" :to="{ name: 'ops.charterer-profiles.show', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-profiles.edit', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererProfile.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
