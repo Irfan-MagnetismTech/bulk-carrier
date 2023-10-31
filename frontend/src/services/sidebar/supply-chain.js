@@ -32,7 +32,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: `${BASE}.material-category.create`,
+                        route: `${BASE}.material-category.index`,
                         label: 'Material Category',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
@@ -42,7 +42,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                    route: `${BASE}.material.create`,
+                    route: `${BASE}.material.index`,
                     label: 'Material',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
@@ -52,7 +52,7 @@ export default [
                     subSubMenu: [],
                     },
                     {
-                    route: `${BASE}.warehouse.create`,
+                    route: `${BASE}.warehouse.index`,
                     label: 'Warehouse',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
@@ -62,7 +62,7 @@ export default [
                     subSubMenu:[],
                     },
                     {
-                    route: `${BASE}.service.create`,
+                    route: `${BASE}.service.index`,
                     label: 'Service',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
@@ -72,7 +72,7 @@ export default [
                     subSubMenu:[],
                     },
                     {
-                    route: `${BASE}.vendor.create`,
+                    route: `${BASE}.vendor.index`,
                     label: 'Vendor',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
@@ -82,7 +82,7 @@ export default [
                     subSubMenu:[],
                     },
                     {
-                    route: `${BASE}.opening-stock.create`,
+                    route: `${BASE}.opening-stock.index`,
                     label: 'Opening Stock',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,

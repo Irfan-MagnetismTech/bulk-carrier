@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('vessel_draft');
             $table->string('water_density');
-            $table->enum('business_unit', ['PSML', 'TSLL','BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

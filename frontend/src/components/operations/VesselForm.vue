@@ -223,8 +223,8 @@
             <th>Bunker Name</th>
             <th>Unit</th>
             <th>Opening Balance</th>
-            <th class="w-16">
-              <button type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            <th class="w-16" :class="formType=='edit' ? 'hidden' : '' ">
+              <button type="button" @click="addBunker()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
@@ -233,9 +233,37 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(certificate, index) in form.opsBunkers">
             <td>
-
+              {{ index+1 }}
+            </td>
+            <td class="w-72">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.opsBunkers[index]"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
+            </td>
+            <td>
+              <span class="show-block text-center" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="text" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                <Error v-if="errors?.opsBunkers[index]?.opening_balance" :errors="errors.opsBunkers[index]?.opening_balance" />
+              </label>
+            </td>
+            <td :class="formType=='edit' ? 'hidden' : '' ">
+              <button type="button" @click="removeBunker(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button> 
             </td>
           </tr>
         </tbody>
@@ -247,6 +275,7 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
 import usePort from '../../composables/operations/usePort';
+import useMaterial from '../../composables/supply-chain/useMaterial';
 
 const props = defineProps({
     form: {
@@ -254,25 +283,41 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
-    maritimeCertificateObject: { type: Object, required: false }
+    maritimeCertificateObject: { type: Object, required: false },
+    bunkerObject: { type: Object, required: false },
+    formType: { type: Object, required: false }
 });
 
 const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
 const { ports, searchPorts } = usePort();
-
+const { materials, searchMaterialWithCategory } = useMaterial();
 function addVesselCertificate() {
-  console.log(props.maritimeCertificateObject, "dfdf")
+  // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
+}
+
+function addBunker() {
+  props.form.opsBunkers.push({... props.bunkerObject });
 }
 
 function removeVesselCertificate(index){
   props.form.opsVesselCertificates.splice(index, 1);
 }
 
+function removeBunker(index){
+  props.form.opsBunkers.splice(index, 1);
+}
+
 function fetchMaritimeCertificates(search, loading) {
   loading(true);
   searchMaritimeCertificates(search, loading)
 }
+
+function fetchBunker(search, loading) {
+  loading(true);
+  searchMaterialWithCategory(search, 1, loading)
+}
+
 
 function fetchPorts(search, loading) {
       loading(true);

@@ -74,6 +74,67 @@ export default [
                 subSubMenu: []
             },
             {
+                route: 'ops.vessel-particulars.index',
+                label: 'Vessel Particulars',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            
+            // {
+            //     route: '',
+            //     label: 'Voyages',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: '',
+            //     label: 'Voyage Boat Note and Survey',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: '',
+            //     label: 'Charterer Profiles',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: '',
+            //     label: 'Charterer Contracts',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: '',
+            //     label: 'Charterer Invoices',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            {
                 route: '',
                 label: 'Certification',
                 preIcon: '',
@@ -93,7 +154,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.index',
                         label: 'Vessel Wise Certificate',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -103,7 +164,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.renew-list',
                         label: 'Renew Schedule',
                         preIcon: '',
                         postIcon: icons.DownArrow,

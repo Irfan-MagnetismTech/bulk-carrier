@@ -179,6 +179,6 @@ table, th,td{
     }
 
     .show-block {
-      @apply flex items-center w-full mt-1 text-sm rounded dark:text-gray-300 border border-gray-600 dark:bg-gray-700 bg-white p-2
+      @apply flex items-center w-full mt-1 text-sm rounded dark:text-gray-300 border border-gray-600 dark:bg-gray-700 bg-white p-2 min-h-[2.4rem]
     }
 </style>
