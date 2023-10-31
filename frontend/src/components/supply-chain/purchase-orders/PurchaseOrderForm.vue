@@ -11,7 +11,7 @@
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors,  searchVendor } = useVendor();
+    const { vendors, searchVendor } = useVendor();
     const { currencies, getCurrencies } = useBusinessInfo();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
@@ -81,34 +81,10 @@
       props.form.scmPoLines[index].scm_material_id = datas.id;
     }
 
-
-      
-  function fetchVendor(search, loading) {
-    loading(true);
-    searchVendor(search, loading);
-  }
-    
-
-  function setMaterialOtherData(datas,index){
-    props.form.scmPoLines[index].unit = datas.unit;
-    props.form.scmPoLines[index].scm_material_id = datas.id;
-  }
-
-  function fetchMaterials(search, loading) {
+    function fetchMaterials(search, loading) {
     loading(true);
     searchMaterial(search, loading)
   }
-  
-
-  watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-        let total = 0.0;
-        newVal?.forEach((material, index) => {
-          props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-          total += parseFloat(props.form.scmPoLines[index].total_amount);
-        });
-    props.form.sub_total = parseFloat(total.toFixed(2));
-        calculateNetAmount();
-  }, { deep: true });
 
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
@@ -144,18 +120,6 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
     props.form.scm_vendor_id = newVal.id;
   }
 });
-//fetch currency on mount from usines info composable
-  onMounted(async () => {
-    const adasd = await getCurrencies();
-    //get data from promise getcurrencies
-    console.log(adasd);
-    
-  });
-
-  
-
-
-
 </script>
 <template>
 
@@ -223,7 +187,6 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
     <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div>
   <div class="input-group !w-1/4">
