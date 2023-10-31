@@ -67,7 +67,7 @@ class MntWorkRequisitionController extends Controller
 
             $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()->create(["mnt_item_id"=>$input['mnt_item_id']]);
 
-            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($input['mntJobLines']);
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($input['added_job_lines']);
             
             DB::commit();
             return response()->success('Work requisition created successfully', $workRequisitionLines, 201);
