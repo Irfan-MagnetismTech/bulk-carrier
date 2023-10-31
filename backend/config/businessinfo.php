@@ -17,6 +17,11 @@ return [
         'Engine Store',
     ],
 
+    'currencies' => [
+        'BDT',
+        'USD',
+    ],
+    
     'lc_cost_heads' => [
         'Bank Commision and Charges (BDT)(a)',
         'VAT (BDT)(b)',

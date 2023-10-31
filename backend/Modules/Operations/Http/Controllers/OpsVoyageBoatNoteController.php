@@ -2,15 +2,16 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
-use App\Services\FileUploadService;
-use Illuminate\Support\Facades\DB;
 
 class OpsVoyageBoatNoteController extends Controller
 {
@@ -59,7 +60,7 @@ class OpsVoyageBoatNoteController extends Controller
             );
 
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload->handleMultipleFile($request->opsVoyageBoatNoteLines,'ops/voyage/boat_note_line');
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
             $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
@@ -99,7 +100,7 @@ class OpsVoyageBoatNoteController extends Controller
      * @param  OpsVoyageBoatNote  $voyage_boat_note
      * @return JsonResponse
      */
-    public function update(OpsVoyageBoatNoteRequest $request, OpsVesselParticular $voyage_boat_note): JsonResponse
+    public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -109,10 +110,10 @@ class OpsVoyageBoatNoteController extends Controller
             );
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
-            $voyageBoatNote->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload->handleMultipleFile($request->opsVoyageBoatNoteLines,'ops/voyage/boat_note_line',$voyage_boat_note->opsVoyageBoatNoteLines);
-            $voyageBoatNote->opsVoyageBoatNoteLines()->delete();
-            $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
+            $voyage_boat_note->update($voyageBoatNoteInfo);           
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$voyage_boat_note->opsVoyageBoatNoteLines);
+            $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
+            $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Vessel particular updated successfully.', $voyage_boat_note, 200);
         }
