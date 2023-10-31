@@ -6,40 +6,27 @@ import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
 
-export default function useCustomer() {
+export default function useMaritimeCertificate() {
 	const router = useRouter();
-	const customers = ref([]);
+	const maritimeCertificates = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
-	const customer = ref({
-		code: '',
-		legal_name: '',
+	const maritimeCertificate = ref({
 		name: '',
-		postal_address: '',
-		city: '',
-		post_code: '',
-		country: '',
-		tax_id: '',
-		business_license_no: '',
-		bin_gst_sst_type: '',
-		bin_gst_sst_no: '',
-		phone: '',
-		company_reg_no: '',
-		email_general: '',
-		email_agreement: '',
-		email_invoice: '',
-		business_unit: ''
+		type: '',
+		validity: '',
+		authority: '',
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCustomers(page,columns = null, searchKey = null, table = null) {
+	async function getMaritimeCertificates(page,columns = null, searchKey = null, table = null) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/customers', {
+			const { data, status } = await Api.get('/ops/maritime-certifications', {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -47,7 +34,7 @@ export default function useCustomer() {
 					table: table || null,
 				},
 			});
-			customers.value = data.value;
+			maritimeCertificates.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -59,16 +46,16 @@ export default function useCustomer() {
 		}
 	}
 
-	async function storeCustomer(form) {
+	async function storeMaritimeCertificate(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.post('/ops/customers', form);
-			customer.value = data.value;
+			const { data, status } = await Api.post('/ops/maritime-certifications', form);
+			maritimeCertificate.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.customers.index' });
+			router.push({ name: 'ops.maritime-certifications.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -79,14 +66,14 @@ export default function useCustomer() {
 		}
 	}
 
-	async function showCustomer(customerId) {
+	async function showMaritimeCertificate(maritimeCertificateId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/customers/${customerId}`);
-			customer.value = data.value;
+			const { data, status } = await Api.get(`/ops/maritime-certifications/${maritimeCertificateId}`);
+			maritimeCertificate.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -98,19 +85,19 @@ export default function useCustomer() {
 		}
 	}
 
-	async function updateCustomer(form, customerId) {
+	async function updateMaritimeCertificate(form, maritimeCertificateId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.put(
-				`/ops/customers/${customerId}`,
+				`/ops/maritime-certifications/${maritimeCertificateId}`,
 				form
 			);
-			customer.value = data.value;
+			maritimeCertificate.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.customers.index' });
+			router.push({ name: 'ops.maritime-certifications.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -121,16 +108,16 @@ export default function useCustomer() {
 		}
 	}
 
-	async function deleteCustomer(customerId) {
+	async function deleteMaritimeCertificate(maritimeCertificateId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/customers/${customerId}`);
+			const { data, status } = await Api.delete( `/ops/maritime-certifications/${maritimeCertificateId}`);
 			notification.showSuccess(status);
-			await getCustomers();
+			await getMaritimeCertificates();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -141,13 +128,12 @@ export default function useCustomer() {
 		}
 	}
 
-	// Get ports by name or code
-	async function getCustomersByNameOrCode(searchParam, businessUnit, loading) {
+	async function searchMaritimeCertificates(searchParam, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-customers?name_or_code=${searchParam}&business_unit=${businessUnit}`);
-			customers.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-maritime-certifications?name=${searchParam}`);
+			maritimeCertificates.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -159,14 +145,14 @@ export default function useCustomer() {
 	}
 
 	return {
-		customers,
-		customer,
-		getCustomers,
-		storeCustomer,
-		showCustomer,
-		updateCustomer,
-		deleteCustomer,
-		getCustomersByNameOrCode,
+		maritimeCertificates,
+		maritimeCertificate,
+		getMaritimeCertificates,
+		storeMaritimeCertificate,
+		showMaritimeCertificate,
+		updateMaritimeCertificate,
+		deleteMaritimeCertificate,
+		searchMaritimeCertificates,
 		isLoading,
 		errors,
 	};
