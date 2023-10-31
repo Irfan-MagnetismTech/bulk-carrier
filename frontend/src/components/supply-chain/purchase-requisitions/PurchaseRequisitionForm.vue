@@ -10,6 +10,7 @@
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
+    import cloneDeep from 'lodash/cloneDeep';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
@@ -32,9 +33,10 @@
 
     });
 
-    const purchase_center = ['Local', 'Foreign','Plant'];
+    const purchase_center = ['Local', 'Foreign', 'Plant'];
     function addMaterial() {
-      props.form.scmPrLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPrLines.push(clonedObj);
     }
 
     function removeMaterial(index){
@@ -257,7 +259,7 @@ onMounted(() => {
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
     <div id="customDataTable">
-    <div class="table-responsive min-w-screen overflow-x-auto" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+    <div class="table-responsive min-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="!w-[100rem] whitespace-no-wrap">

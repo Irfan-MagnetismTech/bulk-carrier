@@ -22,20 +22,21 @@ export default function usePurchaseOrder() {
         ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
-        acc_cost_center_id: '',
-        po_date: '',
+        acc_cost_center_id: null,
+        date: '',
         pr_no: null,
         scm_pr_id: null,
         scmPr: null,
-        pr_date: '',
+        date: '',
         cs_no: '',
-        scm_cs_id: '',
+        scm_cs_id: null,
         scmCs: null,
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
+        currency: '',
+        foreign_to_bdt: 0,
+        foreign_to_usd: 0,
         remarks: '',
         sub_total: 0.0,
         discount: 0.0,
@@ -44,18 +45,19 @@ export default function usePurchaseOrder() {
         net_amount: 0.0,
         business_unit: '',
         scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
+            {
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: '',
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+            }
+        ],
         scmPoTerms: [
                         {
                             description: ''
@@ -218,8 +220,6 @@ export default function usePurchaseOrder() {
                 },
             });
             purchaseOrder.value = merge(purchaseOrder.value, data.value);
-            console.log('data', data.value);
-            console.log('po', purchaseOrders.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

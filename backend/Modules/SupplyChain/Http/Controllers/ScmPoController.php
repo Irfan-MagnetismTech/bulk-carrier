@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmPo;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
@@ -38,7 +39,7 @@ class ScmPoController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ScmPoRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -77,7 +78,7 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function update(Request $request, ScmPo $purchaseOrder): JsonResponse
+    public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
     {
         try {
             $purchaseOrder->update($request->all());
@@ -169,6 +170,7 @@ class ScmPoController extends Controller
                     'scm_pr_id' => $scmPr->id,
                     'scmPr' => $scmPr,
                     'pr_date' => $scmPr->raised_date,
+                    'business_unit' => $scmPr->business_unit,
                     'scmPoLines' => $scmPr->scmPrLines->map(function ($item) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
@@ -177,6 +179,7 @@ class ScmPoController extends Controller
                             'brand' => $item->scmMaterial->brand,
                             'model' => $item->scmMaterial->model,
                             'quantity' => $item->quantity,
+                            'pr_composite_key' => $item->pr_composite_key,
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];

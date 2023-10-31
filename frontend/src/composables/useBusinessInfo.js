@@ -1,8 +1,16 @@
 
 import Api from '../apis/Api';
-
+import { useLoading } from 'vue-loading-overlay';
+import useNotification from '../composables/useNotification';
+import {ref} from 'vue';
 export default function useBusinessInfo() {
 
+  const $loading = useLoading();
+  const notification = useNotification();
+  const currencies = ref([]);
+
+
+  
   const getAllStoreCategories = async () => {
     try {
       const { data } = await Api.get(`/scm/store-categories`);
@@ -27,8 +35,19 @@ export default function useBusinessInfo() {
     }
   };
 
+  const getCurrencies = async () => {
+    try {
+      const { data } = await Api.get(`/currencies`);
+      currencies.value = data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     getAllStoreCategories,
-    getAllProductTypes
+    getAllProductTypes,
+    getCurrencies,
+    currencies,
   };
 }

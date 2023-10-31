@@ -32,7 +32,7 @@ class OpsVoyageController extends Controller
     {
         // dd('voyage');
         try {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }
@@ -51,6 +51,7 @@ class OpsVoyageController extends Controller
      */
      public function store(OpsVoyageRequest $request): JsonResponse
      {
+        // dd($request);
         try {
             DB::beginTransaction();
             $voyageInfo = $request->except(
@@ -77,12 +78,13 @@ class OpsVoyageController extends Controller
      /**
       * Display the specified maritime certification.
       *
-      * @param  OpsCargoTariff  $cargo_tariff
+      * @param  OpsVoyage  $voyage
       * @return JsonResponse
       */
-     public function show(OpsVoyageRequest $voyage): JsonResponse
+     public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+
         try
         {
             return response()->success('Successfully retrieved voyage.', $voyage, 200);
@@ -125,7 +127,7 @@ class OpsVoyageController extends Controller
             $voyage->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
-            return response()->success('Voyage updated successfully.', $voyage, 200);
+            return response()->success('Voyage updated successfully.', $voyage, 202);
         }
         catch (QueryException $e)
         {            

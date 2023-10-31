@@ -32,7 +32,7 @@ export default function usePurchaseRequisition() {
         approved_date: '',
         ref_no: '',
         excel: null,
-        entry_type: 0,
+        entry_type: "0",
         business_unit: '',
         scmPrLines: [
             {
