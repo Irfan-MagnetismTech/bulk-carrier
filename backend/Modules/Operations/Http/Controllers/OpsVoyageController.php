@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
-use Modules\Operations\Entities\OpsVoyage;
-use Modules\Operations\Http\Requests\OpsVoyageRequest;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVoyage;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Http\Requests\OpsVoyageRequest;
 
 class OpsVoyageController extends Controller
 {
@@ -31,7 +32,7 @@ class OpsVoyageController extends Controller
     {
         // dd('voyage');
         try {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }
@@ -50,6 +51,7 @@ class OpsVoyageController extends Controller
      */
      public function store(OpsVoyageRequest $request): JsonResponse
      {
+        // dd($request);
         try {
             DB::beginTransaction();
             $voyageInfo = $request->except(
@@ -59,7 +61,7 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
-            $voyage = OpsCargoTariff::create($voyageInfo);
+            $voyage = OpsVoyage::create($voyageInfo);
             $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
             $voyage->opsBunkers()->createMany($request->opsBunkers);
@@ -76,12 +78,13 @@ class OpsVoyageController extends Controller
      /**
       * Display the specified maritime certification.
       *
-      * @param  OpsCargoTariff  $cargo_tariff
+      * @param  OpsVoyage  $voyage
       * @return JsonResponse
       */
-     public function show(OpsVoyageRequest $voyage): JsonResponse
+     public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsMotherVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+
         try
         {
             return response()->success('Successfully retrieved voyage.', $voyage, 200);
@@ -112,19 +115,19 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
-            $voyageUpdate->update($voyageInfo);  
+            $voyage->update($voyageInfo);  
 
-            $voyageUpdate->opsVoyageSectors()->delete();
-            $voyageUpdate->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->delete();
+            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
 
-            $voyageUpdate->opsVoyagePortSchedules()->delete();
-            $voyageUpdate->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
+            $voyage->opsVoyagePortSchedules()->delete();
+            $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
 
-            $voyageUpdate->opsBunkers()->delete();
-            $voyageUpdate->opsBunkers()->createMany($request->opsBunkers);
+            $voyage->opsBunkers()->delete();
+            $voyage->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
-            return response()->success('Voyage updated successfully.', $voyage, 200);
+            return response()->success('Voyage updated successfully.', $voyage, 202);
         }
         catch (QueryException $e)
         {            

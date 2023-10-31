@@ -13,6 +13,7 @@ const icons = useHeroIcon();
 
 const { getOpeningStocks, materialObject, openingStock, storeOpeningStock, errors, isLoading } = useOpeningStock();
 const { setTitle } = Title();
+const page = 'create';
 
 setTitle('Create Opening Stock');
 </script>
@@ -24,7 +25,7 @@ setTitle('Create Opening Stock');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <form @submit.prevent="storeOpeningStock(openingStock)">
-          <opening-stock-form v-model:form="openingStock" v-model:materialObject="materialObject" :errors="errors"></opening-stock-form>
+          <opening-stock-form :page="page" v-model:form="openingStock" :materialObject="materialObject" :errors="errors"></opening-stock-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

@@ -31,7 +31,7 @@ class ScmMaterialCategoryController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmMaterialCategoryRequest $request)
+    public function store(ScmMaterialCategoryRequest $request): JsonResponse
     {
         try {
             $material_category = ScmMaterialCategory::create($request->all());
@@ -64,7 +64,7 @@ class ScmMaterialCategoryController extends Controller
      * @param ScmMaterialCategory $material_category
      * @return JsonResponse
      */
-    public function update(ScmMaterialCategoryRequest $request, ScmMaterialCategory $material_category)
+    public function update(ScmMaterialCategoryRequest $request, ScmMaterialCategory $material_category): JsonResponse
     {
         try {
             $material_category->update($request->all());
@@ -93,7 +93,7 @@ class ScmMaterialCategoryController extends Controller
         }
     }
 
-    public function searchMaterialCategory()
+    public function searchMaterialCategory(): JsonResponse
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')

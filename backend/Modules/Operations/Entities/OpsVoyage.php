@@ -13,7 +13,7 @@ class OpsVoyage extends Model
     protected $fillable = [
         'ops_customer_id',
         'ops_vessel_id',
-        'mother_vessel_id',
+        'mother_vessel',
         'ops_cargo_type_id',
         'voyage_no',
         'route',
@@ -34,24 +34,24 @@ class OpsVoyage extends Model
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsMotherVessel()
-    {
-        return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
-    }
+    // public function opsMotherVessel()
+    // {
+    //     return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
+    // }
 
     public function opsCargoType()
     {
-        return $this->belongsTo(OpsCargoType::class, 'ops_voyage_id' , 'id');
+        return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
     }
 
     public function opsVoyageSectors()
     {
-        return $this->hasMany(OpsVoyageSector::class, 'ops_cargo_tariff_id', 'id');
+        return $this->hasMany(OpsVoyageSector::class);
     }
 
     public function opsVoyagePortSchedules()
     {
-        return $this->hasMany(OpsVoyagePortSchedule::class, 'ops_cargo_tariff_id', 'id');
+        return $this->hasMany(OpsVoyagePortSchedule::class);
     }
 
     public function opsBunkers()
