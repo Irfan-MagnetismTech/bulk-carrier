@@ -9,5 +9,13 @@ class OpsBulkNoonReportPort extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'ops_bulk_noon_report_id',
+        'last_port',
+        'next_port',
+        'eta',
+        'distance_run',
+        'dtg',
+        'remarks',
+    ];
 }

@@ -9,5 +9,13 @@ class OpsBulkNoonReportCargoTank extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'ops_bulk_noon_report_id',
+        'cargo_tanks',
+        'liq_level',
+        'pressure',
+        'vapor_temp',
+        'liq_temp',
+        'quantity_mt',
+    ];
 }
