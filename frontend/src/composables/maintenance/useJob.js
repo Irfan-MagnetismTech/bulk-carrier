@@ -142,44 +142,17 @@ export default function useItemGroup() {
         }
     }
 
-    async function getItemWiseAllJobLines(businessUnit, opsVesselId, mntItemId){
+    async function getJobsForRequisition(businessUnit, opsVesselId, mntItemId){
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/get-vessel-wise-jobs`,{
+            const { data, status } = await Api.get(`/mnt/get-jobs-for-requisition`,{
                 params: {
                     business_unit: businessUnit,
                     ops_vessel_id: opsVesselId,
                     mnt_item_id: mntItemId,
-                    return_field: 'mntJobLines',
-                }
-            });
-            itemWiseJobLines.value = data.value;
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
-        }
-    }
-
-    
-    async function getItemWiseUpcomingJobLines(businessUnit, opsVesselId, mntItemId){
-        //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        try {
-            const { data, status } = await Api.get(`/mnt/get-upcoming-jobs`,{
-                params: {
-                    business_unit: businessUnit,
-                    mnt_item_id: mntItemId,
-                    ops_vessel_id: opsVesselId,
                     return_field: 'mntJobLines',
                 }
             });
@@ -210,8 +183,7 @@ export default function useItemGroup() {
         showJob,
         updateJob,
         deleteJob,
-        getItemWiseAllJobLines,
-        getItemWiseUpcomingJobLines,
+        getJobsForRequisition,
         isLoading,
         errors,
     };

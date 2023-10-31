@@ -152,18 +152,16 @@
 
     <div class="mt-3">
       <ul class="flex flex-wrap gap-1 text-gray-700 dark:text-gray-300">
-        <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 1 }" @click="currentTab(1)">All Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 2 }" @click="currentTab(2)">Overdue Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 3 }" @click="currentTab(3)">Upcoming Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 4 }" @click="currentTab(4)">Added Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'all_jobs' }" @click="currentTab('all_jobs')">All Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'overdue_jobs' }" @click="currentTab('overdue_jobs')">Overdue Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'upcoming_jobs' }" @click="currentTab('upcoming_jobs')">Upcoming Jobs</button></li>
+        <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'added_jobs' }" @click="currentTab('added_jobs')">Added Jobs</button></li>
       </ul>
       <div class="mt-1">
-        <div v-if="itemWiseJobLines?.length">
+        <div v-if="itemWiseJobLines[tab]?.length || (tab === 'added_jobs' && form.added_job_lines?.length)">
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
               <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                <!-- <th class="w-1/12 px-4 py-3 align-bottom">Item Code</th>
-                <th class="w-2/12 px-4 py-3 align-bottom">Item</th> -->
                 <th class="w-3/12 px-4 py-3 align-bottom">Job Description</th>
                 <th class="w-2/12 px-4 py-3 align-bottom">Cycle</th>
                 <th class="w-2/12 px-4 py-3 align-bottom">Last Done</th>
@@ -173,7 +171,7 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-              <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, index) in itemWiseJobLines" :key="index">
+              <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
                   <td>{{ jobLine.job_description }}</td>
                   <td>{{ jobLine.cycle + ' ' + jobLine.cycle_unit  }}</td>
                   <td>{{ jobLine.last_done  }}</td>
@@ -184,13 +182,14 @@
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
               </tr>
-              
+                
             </tbody>
           </table>
         </div>
         <div v-else class="py-10 bg-purple-100 text-center rounded-md">
           <p class="text-md font-bold">No job found</p>
         </div>
+        
       </div>
     </div>
     
@@ -213,19 +212,12 @@ const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
 const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
-const { itemWiseJobLines, getItemWiseAllJobLines, getItemWiseUpcomingJobLines } = useJob();
+const { itemWiseJobLines, getJobsForRequisition } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const tab = ref(1);
-const currentTab = (tabNumber) => {
-  tab.value = tabNumber;
-  if(businessUnit && props.form.ops_vessel_id && props.form.mnt_item_id){
-    if(tabNumber === 1)
-      getItemWiseAllJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
-    
-    else if(tabNumber === 3)
-      getItemWiseUpcomingJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
-  }
+const tab = ref('all_jobs');
+const currentTab = (tabValue) => {
+  tab.value = tabValue;
 };
 
 const props = defineProps({
@@ -293,11 +285,11 @@ watch(() => vesselWiseJobItems.value, (val) => {
 
 watch(() => props.form.mnt_item_name, (value) => {
   props.form.mnt_item_id = value?.id;
-  tab.value = 1; //vessel or item change
+  tab.value = 'all_jobs'; //vessel or item change
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
     //vessel or item change
-    getItemWiseAllJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
+    getJobsForRequisition(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
   }
   else{
     props.form.previous_run_hour = null;
@@ -307,7 +299,8 @@ watch(() => props.form.mnt_item_name, (value) => {
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
-  if(newValue !== oldValue && oldValue != ''){
+  // console.log(newValue, oldValue, newValue !== oldValue , oldValue != '');
+  if(newValue !== oldValue){
     props.form.ops_vessel_name = null;
     props.form.mnt_ship_department_name = null;
   }
