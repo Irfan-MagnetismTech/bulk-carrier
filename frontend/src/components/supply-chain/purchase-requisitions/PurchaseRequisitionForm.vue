@@ -259,7 +259,7 @@ onMounted(() => {
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
     <div id="customDataTable">
-    <div class="table-responsive min-w-screen overflow-x-auto" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+    <div class="table-responsive min-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="!w-[100rem] whitespace-no-wrap">
