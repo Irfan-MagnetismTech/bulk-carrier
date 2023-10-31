@@ -18,8 +18,8 @@
 
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Certificate Type </span>
-          <input type="text" v-model="form.certificate_type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
-          <Error v-if="errors?.certificate_type" :errors="errors.certificate_type" />
+          <input type="text" v-model="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+          <Error v-if="errors?.type" :errors="errors.type" />
         </label>
     </div>
 
@@ -106,7 +106,7 @@ watch(() => maritimeCertificate, (value) => {
   props.form.ops_maritime_certification_id = value?.value?.id;
 
   props.form.certificate_name = value?.value?.name;
-  props.form.certificate_type = value?.value?.type;
+  props.form.type = value?.value?.type;
   props.form.validity_period = value?.value?.validity;
 }, {deep: true})
 
