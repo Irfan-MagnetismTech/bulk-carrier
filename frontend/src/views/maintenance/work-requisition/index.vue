@@ -96,33 +96,39 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
-            <th class="w-2/12">#</th>
-            <th class="w-4/12">Name</th>
-            <th class="w-2/12">Short Code</th>
-            <th class="w-2/12">Business Unit</th>
-            <th class="w-2/12">Action</th>
+            <th class="w-1/12">#</th>
+            <th class="w-2/12">Reference No</th>
+            <th class="w-2/12">Vessel</th>
+            <th class="w-2/12">Maintenance Type</th>
+            <th class="w-2/12">Requisition Date</th>
+            <th class="w-1/12">Status</th>
+            <th class="w-1/12">Business Unit</th>
+            <th class="w-1/12">Action</th>
           </tr>
           </thead>
           <tbody>
             
-          <!-- <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
+          <tr v-for="(workRequisition,index) in workRequisitions?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ shipDepartment?.name }}</td>
-            <td>{{ shipDepartment?.short_code }}</td>
-            <td><span :class="shipDepartment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ shipDepartment?.business_unit }}</span></td>
+            <td>{{ workRequisition?.reference_no }}</td>
+            <td>{{ workRequisition?.opsVessel?.name }}</td>
+            <td>{{ workRequisition?.maintenance_type }}</td>
+            <td>{{ workRequisition?.requisition_date }}</td>
+            <td>{{ workRequisition?.status }}</td>
+            <td><span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span></td>
             
             <td>
-                <action-button :action="'edit'" :to="{ name: 'mnt.ship-departments.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
-                <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
+                <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
             </td>
-          </tr> -->
+          </tr>
           </tbody>
           <tfoot v-if="!workRequisitions?.data?.length">
             <tr v-if="isLoading">
-              <td colspan="5">Loading...</td>
+              <td colspan="7">Loading...</td>
             </tr>
             <tr v-else-if="!workRequisitions?.data?.length">
-              <td colspan="5">No work requisition found.</td>
+              <td colspan="7">No work requisition found.</td>
             </tr>
           </tfoot>
       </table>
