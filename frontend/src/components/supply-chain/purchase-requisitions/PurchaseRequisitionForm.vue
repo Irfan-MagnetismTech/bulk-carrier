@@ -10,6 +10,7 @@
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
+    import cloneDeep from 'lodash/cloneDeep';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
@@ -32,9 +33,10 @@
 
     });
 
-    const purchase_center = ['Local', 'Foreign','Plant'];
+    const purchase_center = ['Local', 'Foreign', 'Plant'];
     function addMaterial() {
-      props.form.scmPrLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPrLines.push(clonedObj);
     }
 
     function removeMaterial(index){
