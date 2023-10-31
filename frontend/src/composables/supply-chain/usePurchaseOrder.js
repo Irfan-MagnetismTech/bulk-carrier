@@ -218,8 +218,6 @@ export default function usePurchaseOrder() {
                 },
             });
             purchaseOrder.value = merge(purchaseOrder.value, data.value);
-            console.log('data', data.value);
-            console.log('po', purchaseOrders.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

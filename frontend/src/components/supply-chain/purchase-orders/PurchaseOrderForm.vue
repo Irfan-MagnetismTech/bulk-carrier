@@ -6,10 +6,12 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
+import useBusinessInfo from '../../../composables/useBusinessInfo';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors,searchVendor } = useVendor();
+    const { vendors, searchVendor } = useVendor();
+    const { getCurrencies } = useBusinessInfo();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -50,12 +52,6 @@
     //   props.form.materials[index].material_category_name = material.category.name;
     // }
 
-
-    watch(() => props?.form?.status, (newVal, oldVal) => {
-      props?.form?.status == props?.form?.status;
-    })
-
-
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
@@ -72,67 +68,38 @@
     // });// Code for global search end here
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    console.log(props.form.business_unit);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
-
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-  });
-    
-    function fetchVendor(search, loading) {
+      
+  function fetchVendor(search, loading) {
     loading(true);
     searchVendor(search, loading);
   }
-    function fetchPurchaseRequisition(search, loading) {
-    loading(true);
-    searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
-    }
+    
 
-    watch(() => props.form.scmPurchaseRequisition, (value) => {
-          props.form.scm_pr_id = value?.id;
-      });
+  function setMaterialOtherData(datas,index){
+    props.form.scmPoLines[index].unit = datas.unit;
+    props.form.scmPoLines[index].scm_material_id = datas.id;
+  }
 
-    function setMaterialOtherData(datas,index){
-      console.log(datas);
-      props.form.scmPoLines[index].unit = datas.unit;
-      props.form.scmPoLines[index].scm_material_id = datas.id;
-    }
-
-    function fetchMaterials(search, loading) {
+  function fetchMaterials(search, loading) {
     loading(true);
     searchMaterial(search, loading)
   }
-  watch(() => props.form.business_unit, (newValue, oldValue) => {
-    if(newValue !== oldValue && oldValue != ''){
-      props.form.scm_warehouse_id = '';
-      props.form.scmWarehouse = null;
-    }
-  });
+  
 
-//watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find sub_total from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find discount from sub_total with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from sub_total and discount with parseFloat and toFixed 2
-//watch props.form.materials find vat from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find net_amount from total_amount and vat with parseFloat and toFixed 2
-watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_amount);
-      });
-  props.form.sub_total = parseFloat(total.toFixed(2));
-      calculateNetAmount();
-}, { deep: true });
+  watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
+        let total = 0.0;
+        newVal?.forEach((material, index) => {
+          props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].total_amount);
+        });
+    props.form.sub_total = parseFloat(total.toFixed(2));
+        calculateNetAmount();
+  }, { deep: true });
     
   function calculateNetAmount(){
     props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
     props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
-}
+  }
  
   watch(() => props?.form?.discount, (newVal, oldVal) => {
     calculateNetAmount();
@@ -140,6 +107,18 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
   watch(() => props?.form?.vat, (newVal, oldVal) => {
     calculateNetAmount();
   });
+
+//fetch currency on mount from usines info composable
+  onMounted(async () => {
+    const adasd = await getCurrencies();
+    //get data from promise getcurrencies
+    console.log(adasd);
+    
+  });
+
+  
+
+
 
 </script>
 <template>
@@ -208,7 +187,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
