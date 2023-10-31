@@ -7,7 +7,7 @@ export default function useBusinessInfo() {
 
   const $loading = useLoading();
   const notification = useNotification();
-  
+  const currencies = ref([]);
 
 
   
@@ -38,7 +38,7 @@ export default function useBusinessInfo() {
   const getCurrencies = async () => {
     try {
       const { data } = await Api.get(`/currencies`);
-      return data;
+      currencies.value = data.value;
     } catch (error) {
       throw error;
     }
@@ -46,6 +46,8 @@ export default function useBusinessInfo() {
 
   return {
     getAllStoreCategories,
-    getAllProductTypes
+    getAllProductTypes,
+    getCurrencies,
+    currencies,
   };
 }
