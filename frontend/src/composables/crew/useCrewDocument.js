@@ -13,16 +13,18 @@ export default function useCrewDocument() {
         business_unit: '',
         crw_crew_id: '',
         crw_crew_name: '',
-        name: '',
-        reference_no: '',
-        issuing_authority: '',
-        validity_period: '',
-        validity_period_in_month: '',
-        CrwCrewDocumentRenewal: [
+        crw_crew_rank: '',
+        crw_crew_contact: '',
+        crw_crew_email: '',
+        crwDocuments: [
             {
+                crw_crew_id: '',
+                name: '',
+                issuing_authority: '',
+                validity_period: '',
                 issue_date: '',
-                expire_date: '',
                 reference_no: '',
+                validity_period_in_month: '',
                 attachment: '',
             }
         ]
