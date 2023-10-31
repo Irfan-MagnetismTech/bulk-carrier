@@ -33,59 +33,56 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
+        <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.ops_vessel_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Page Title <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.page_title" placeholder="Page Title" class="form-input" autocomplete="off" required />
+        <span class="text-gray-700 dark:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
+        <input type="datetime-local" v-model="form.page_title" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.page_title" :errors="errors.page_title" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.subject" placeholder="Subject" class="form-input" autocomplete="off" required />
+        <span class="text-gray-700 dark:text-gray-300">Incident Type <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.subject" placeholder="Ex: Collision, Robbery" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.subject" :errors="errors.subject" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.total_approved" :errors="errors.total_approved" />
+        <span class="text-gray-700 dark:text-gray-300">Incident Location <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.subject" placeholder="Ex: Deck, Engine room" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.subject" :errors="errors.subject" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agreed To Join <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_agreed_to_join" placeholder="Ex: 5" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_agreed_to_join" :errors="errors.crew_agreed_to_join" />
-    </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Selected <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
+      <span class="text-gray-700 dark:text-gray-300">Reported Person<span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.crew_selected" :errors="errors.crew_selected" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Panel <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_panel" :errors="errors.crew_panel" />
+      <span class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Attachment </span>
+      <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+      <Error v-if="errors?.attachment" :errors="errors.attachment" />
     </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Rest <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_rest" :errors="errors.crew_rest" />
-    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Body <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
       <textarea v-model="form.body" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
       <Error v-if="errors?.body" :errors="errors.body" />
     </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-      <textarea type="text" v-model="form.remarks" placeholder="Type here...." class="form-input" autocomplete="off"></textarea>
-      <Error v-if="errors?.remarks" :errors="errors.remarks" />
-    </label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Candidate List</legend>
