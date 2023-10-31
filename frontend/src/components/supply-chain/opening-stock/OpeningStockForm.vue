@@ -1,10 +1,11 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted ,watchEffect} from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
-    
+    import cloneDeep from 'lodash/cloneDeep';
+    import Store from "../../../store";
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -12,14 +13,20 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
+      formType: { type: String, required : false },
+      page: {required: false,default: {}}
     });
 
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
     function addRow() {
-      props.form.scmOpeningStockLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmOpeningStockLines.push(clonedObj);
     }
 
     function removeRow(index){
       props.form.scmOpeningStockLines.splice(index, 1);
+     
     }
 
     function setMaterialOtherData(datas,index){
@@ -36,17 +43,68 @@
 
   function fetchWarehouse(search, loading) {
     loading(true);
-    console.log(props.form.business_unit);
     searchWarehouse(search, loading,props.form.business_unit);
   }
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
+        props.form.scm_cost_center_id = value?.scm_cost_center_id;
     });
+
+//     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
+//       props.form.scmOpeningStockLines.forEach((item, index) => {
+//       props.form.scmOpeningStockLines[index].unit = props.form.scmOpeningStockLines[index].scmMaterial.unit
+//     });
+// }, {deep: true});
+
+const previousLines = ref(cloneDeep(props.form.scmOpeningStockLines));
+
+watch(() => props.form.scmOpeningStockLines, (newLines) => {
+  newLines.forEach((line, index) => {
+    const previousLine = previousLines.value[index];
+
+    if (line.scmMaterial) {
+      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+      if (selectedMaterial) {
+        if ( line.scm_material_id !== selectedMaterial.id
+        ) {
+          props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+          props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+        }
+      }
+    }
+  });
+  previousLines.value = cloneDeep(newLines);
+}, { deep: true });
+
+
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+onMounted(() => {
+  watchEffect(() => {
+    const customDataTable = document.getElementById("customDataTable");
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+  });
+});
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_warehouse_id = '';
+    props.form.scm_cost_center_id = '';
+    props.form.scmWarehouse = null;
+  }
+});
+
 </script>
 <template>
   <!-- Basic information -->
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+  </div>
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
@@ -71,7 +129,7 @@
   <!-- CS Materials -->
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-    <table class="w-full whitespace-no-wrap" id="table">
+    <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
@@ -128,7 +186,7 @@
         @apply flex flex-col justify-center w-full md:flex-row md:gap-2;
     }
     .label-group {
-        @apply block w-full mt-3 text-sm font-semibold;
+        @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
         @apply text-gray-700 dark:text-gray-300 text-sm;

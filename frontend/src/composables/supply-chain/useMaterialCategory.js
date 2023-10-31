@@ -6,6 +6,7 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 
 export default function useMaterialCategory() {
+    const BASE = 'scm' 
     const router = useRouter();
     const materialCategories = ref([]);
     const $loading = useLoading();
@@ -18,19 +19,19 @@ export default function useMaterialCategory() {
     });
 
     const indexPage = ref(null);
-    const path = 'scm'
     const errors = ref('');
     const isLoading = ref(false);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getMaterialCategories(page,columns = null, searchKey = null, table = null) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         indexPage.value = page;
 
         try {
-            const {data, status} = await Api.get('/scm/material-categories', {
+            const {data, status} = await Api.get(`/${BASE}/material-categories`, {
 				params: {
 					page: page || 1,
 					columns: columns || null,
@@ -52,14 +53,14 @@ export default function useMaterialCategory() {
 
     async function storeMaterialCategory(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/material-categories', form);
+            const { data, status } = await Api.post(`/${BASE}/material-categories`, form);
             materialCategory.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${path}.material-category.index` });
+            router.push({ name: `${BASE}.material-category.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -71,11 +72,11 @@ export default function useMaterialCategory() {
 
     async function showMaterialCategory(materialCategoryId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/material-categories/${materialCategoryId}`);
+            const { data, status } = await Api.get(`/${BASE}/material-categories/${materialCategoryId}`);
             materialCategory.value = data.value;
             console.log(data.value);
             notification.showSuccess(status);
@@ -90,17 +91,17 @@ export default function useMaterialCategory() {
 
     async function updateMaterialCategory(form, materialCategoryId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/material-categories/${materialCategoryId}`,
+                `/${BASE}/material-categories/${materialCategoryId}`,
                 form
             );
             materialCategory.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${path}.material-category.index` });
+            router.push({ name: `${BASE}.material-category.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -111,10 +112,10 @@ export default function useMaterialCategory() {
     }
 
     async function deleteMaterialCategory(materialCategoryId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const { data, status } = await Api.delete( `/scm/material-categories/${materialCategoryId}`);
+            const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);
             await getMaterialCategories(indexPage.value);
         } catch (error) {
@@ -129,7 +130,7 @@ export default function useMaterialCategory() {
     async function searchMaterialCategory(searchParam, loading) {
 
         try {
-            const { data, status } = await Api.get(`scm/search-material-category`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-material-category`, {params: { searchParam: searchParam }});
             materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
