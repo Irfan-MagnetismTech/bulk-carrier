@@ -18,7 +18,7 @@ class OpsCargoTariff extends Model
         'ops_cargo_type_id',
         'currency',
         'status',
-        'business_unit'
+        'business_unit',
     ];
     
     public function opsCargoType()

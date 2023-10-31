@@ -119,14 +119,13 @@ class OpsVesselController extends Controller
         });
 
         try
-        {            
+        {
             return response()->success('Successfully retrieved vessel.', $vessel, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
 
