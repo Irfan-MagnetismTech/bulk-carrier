@@ -95,7 +95,11 @@
       </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Currency</span>
-            <input type="text" v-model="form.opsChartererBankAccounts[0].currency" placeholder="Currency" class="form-input" autocomplete="off" />
+              <select v-model="form.opsChartererBankAccounts[0].currency" class="form-input">
+                <option value="">Select Currency</option>
+                <option v-for="currency in currencies">{{ currency }}</option>
+              </select>
+              <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
     </div>
@@ -105,13 +109,12 @@
 import { ref, watch, onMounted } from "vue";
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import useVessel from '../../composables/operations/useVessel';
 import {useStore} from "vuex";
-import { getCurrencies } from "../../composables/useBusinessInfo"
+import useBusinessInfo from "../../composables/useBusinessInfo"
 
 const store = useStore();
-const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 const editInitiated = ref(false);
+const { getCurrencies, currencies } = useBusinessInfo();
 
 const props = defineProps({
     form: {
@@ -122,70 +125,23 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
-
-const currencies = ref([]);
 
 watch(() => props.form, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
 
-    vessels.value = [props?.form?.opsVessel]
+  //   vessels.value = [props?.form?.opsVessel]
 
-    if(vessels.value.length > 0) {
-        console.log("Changing editInitatedValue ")
-        editInitiated.value = true
-      }
+  //   if(vessels.value.length > 0) {
+  //       console.log("Changing editInitatedValue ")
+  //       editInitiated.value = true
+  //     }
   }
 }, {deep: true});
 
-watch(() => props.form.ops_vessel_id, (value) => {
-  if(value) {
-    if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-      console.log("showing vessel")
-      showVessel(value)
-    }
-  }
-}, {deep: true})
-
-watch(() => vessel, (value) => {
-          props.form.business_unit = value.value?.business_unit;
-          props.form.vessel_type = value.value?.vessel_type;
-          props.form.owner_name = value.value?.owner_name;
-          props.form.previous_name = value.value?.previous_name;
-          props.form.short_code = value.value?.short_code;
-          props.form.call_sign = value.value?.call_sign;
-          props.form.manager = value.value?.manager;
-          props.form.classification = value.value?.classification;
-          props.form.flag = value.value?.flag;
-          props.form.previous_flag = value.value?.previous_flag;
-          props.form.delivery_date = value.value?.delivery_date;
-          props.form.grt = value.value?.grt;
-          props.form.nrt = value.value?.nrt;
-          props.form.dwt = value.value?.dwt;
-          props.form.imo = value.value?.imo;
-          props.form.official_number = value.value?.official_number;
-          props.form.keel_laying_date = value.value?.keel_laying_date;
-          props.form.launching_date = value.value?.launching_date;
-          props.form.mmsi = value.value?.mmsi;
-          props.form.overall_length = value.value?.overall_length;
-          props.form.overall_width = value.value?.overall_width;
-          props.form.year_built = value.value?.year_built;
-          props.form.port_of_registry = value.value?.port_of_registry;
-          props.form.total_cargo_hold = value.value?.total_cargo_hold;
-          props.form.capacity = value.value?.capacity;
-  
-
-}, {deep: true})
-
-watch(dropZoneFile, (value) => {
-  if (value !== null && value !== undefined) {
-    props.form.attachment = value;
-  }
-});
 
 onMounted(() => {
-  
+  getCurrencies();
 })
 
 </script>

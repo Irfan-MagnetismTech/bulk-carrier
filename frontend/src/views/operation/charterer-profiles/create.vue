@@ -15,6 +15,7 @@
   </div>
 </template>
 <script setup>
+import { onMounted } from 'vue';
 import ChartererProfileForm from '../../../components/operations/ChartererProfileForm.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -23,10 +24,10 @@ import useChartererProfile from '../../../composables/operations/useChartererPro
 const icons = useHeroIcon();
 
 const { chartererProfile, storeChartererProfile, isLoading, errors } = useChartererProfile();
-
 const { setTitle } = Title();
 
 setTitle('Create Charterer Profiles');
 
 const formType = 'create';
+
 </script>

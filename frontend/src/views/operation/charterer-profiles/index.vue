@@ -87,20 +87,22 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Certificate Authority</th>
-            <th>Certificate Name</th>
-            <th>Certificate Type</th>
-            <th>Validity Period</th>
+            <th>Charterer Name</th>
+            <th>Charterer Short Code</th>
+            <th>Country</th>
+            <th>Email</th>
+            <th>Contact</th>
             <th>Actions</th>
           </tr>
           </thead>
           <tbody v-if="chartererProfiles?.data?.length">
               <tr v-for="(chartererProfile, index) in chartererProfiles.data" :key="chartererProfile?.id">
                   <td>{{ chartererProfiles.from + index }}</td>
-                  <td>{{ chartererProfile?.authority }}</td>
                   <td>{{ chartererProfile?.name }}</td>
-                  <td>{{ chartererProfile?.type }}</td>
-                  <td>{{ chartererProfile?.validity }}</td>
+                  <td>{{ chartererProfile?.owner_code }}</td>
+                  <td>{{ chartererProfile?.country }}</td>
+                  <td>{{ chartererProfile?.email }}</td>
+                  <td>{{ chartererProfile?.contact_no }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-profiles.edit', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererProfile.id)" :action="'delete'"></action-button>
