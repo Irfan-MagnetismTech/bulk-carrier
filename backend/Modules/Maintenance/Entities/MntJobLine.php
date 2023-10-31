@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MntJobLine extends Model
@@ -18,6 +19,12 @@ class MntJobLine extends Model
     public function mntJob () : BelongsTo
     {
         return $this->belongsTo(MntJob::class);
+    }
+    
+
+    public function mntWorkRequisitionItem () : BelongsToMany
+    {
+        return $this->belongsToMany(MntWorkRequisitionItem::class, MntWorkRequisitionLine::class);
     }
 
     public function getNextDueAttribute()
