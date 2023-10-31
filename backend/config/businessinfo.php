@@ -17,5 +17,8 @@ return [
         'Engine Store',
     ],
 
-
+    'currencies' => [
+        'BDT',
+        'USD',
+    ]
 ];
