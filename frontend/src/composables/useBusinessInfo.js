@@ -1,7 +1,7 @@
 
 import Api from '../apis/Api';
 import { useLoading } from 'vue-loading-overlay';
-import useNotification from 'useNotification.js';
+import useNotification from '../composables/useNotification';
 
 export default function useBusinessInfo() {
 
