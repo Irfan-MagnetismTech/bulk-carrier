@@ -14,7 +14,26 @@ class OpsBulkNoonReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
+            'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
+            'ship_master'       => ['required', 'string'],
+            'chief_engineer'    => ['required', 'string'],
+            'wind_condition'    => ['required', 'string'],
+            'type'              => ['required', 'string'],
+            'date_time'         => ['required', 'string'],
+            'gtm_time'          => ['required', 'string'],
+            'location'          => ['required', 'string'],
+            'latitude'          => ['required', 'string'],
+            'longitude'         => ['required', 'string'],
+            'fuel_figures_from'     => ['required', 'string'],
+            'fw_last_day_noon_rob'  => ['required', 'string'],
+            'fw_production'         => ['required', 'string'],
+            'fw_consumption'        => ['required', 'string'],
+            'fw_today_noon_rob'     => ['required', 'string'],
+            'remarks'               => ['nullable', 'string'],
+            'status'                => ['nullable', 'string'],
+            'sea_condition'         => ['required', 'string'],
+            'business_unit'         => ['required', 'string'],
         ];
     }
 
