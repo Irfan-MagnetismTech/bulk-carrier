@@ -180,8 +180,8 @@
                   <td>{{ jobLine.previous_run_hour  }}</td>
                   <td>{{ jobLine.next_due  }}</td>
                   <td>
-                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) == -1"  @click="addJobLine(jobLine)">Add</button>
-                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(jobLine) > -1" @click="removeJobLine(jobLine)" >Remove</button>
+                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) == -1"  @click="addJobLine(jobLine)">Add</button>
+                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
               </tr>
               
@@ -222,7 +222,8 @@ const currentTab = (tabNumber) => {
   if(businessUnit && props.form.ops_vessel_id && props.form.mnt_item_id){
     if(tabNumber === 1)
       getItemWiseAllJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
-    else if(tabNumber === 2)
+    
+    else if(tabNumber === 3)
       getItemWiseUpcomingJobLines(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
   }
 };
@@ -232,7 +233,7 @@ const props = defineProps({
     required: false,
     default: {}
   },
-  errors: { type: [Object, Array], required: false },
+    errors: { type: [Object, Array], required: false },
 });
 
 
@@ -317,14 +318,15 @@ function addJobLine(jobLine){
 }
 
 function removeJobLine(jobLine){
-  const index = props.form.added_job_lines.indexOf(jobLine);
+  const index = props.form.added_job_lines.indexOf(findJobLine(jobLine.id));
   if (index > -1) { 
     props.form.added_job_lines.splice(index, 1);
   }
 }
 
-
-
+function findJobLine(jobLineId){
+  return props.form.added_job_lines.find((addedJobLine) => addedJobLine.id === jobLineId);
+}
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 

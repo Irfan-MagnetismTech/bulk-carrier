@@ -180,6 +180,7 @@ export default function useItemGroup() {
                     business_unit: businessUnit,
                     mnt_item_id: mntItemId,
                     ops_vessel_id: opsVesselId,
+                    return_field: 'mntJobLines',
                 }
             });
             itemWiseJobLines.value = data.value;
