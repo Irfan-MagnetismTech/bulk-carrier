@@ -15,7 +15,7 @@ class MntWorkRequisition extends Model
     use HasFactory;
 
     protected $fillable = [
-        'reference',
+        'reference_no',
         'ops_vessel_id',
         'assigned_to',
         'responsible_person',
@@ -35,7 +35,7 @@ class MntWorkRequisition extends Model
         return $this->belongsTo(OpsVessel::class);
     }
 
-    public function mntWorkRequisitionItem() : HasOneOrMany {
+    public function mntWorkRequisitionItem() : HasOne {
         return $this->hasOne(MntWorkRequisitionItem::class);
     }
 

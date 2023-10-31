@@ -7,6 +7,7 @@ use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
 use Modules\Maintenance\Http\Controllers\MntRunHourController;
 use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
+use Modules\Maintenance\Http\Controllers\MntWorkRequisitionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'items' => MntItemController::class,
         'jobs' => MntJobController::class,
         'run-hours' => MntRunHourController::class,
+        'work-requisitions' => MntWorkRequisitionController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);

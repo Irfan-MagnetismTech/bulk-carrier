@@ -15,9 +15,9 @@ return new class extends Migration
 
         Schema::create('mnt_work_requisition_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mnt_work_requisition_id')->nullable();
+            $table->unsignedBigInteger('mnt_work_requisition_id');
             $table->foreign('mnt_work_requisition_id')->references('id')->on('mnt_work_requisitions');
-            $table->unsignedBigInteger('mnt_item_id')->nullable();
+            $table->unsignedBigInteger('mnt_item_id');
             $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
             $table->timestamps();
         });

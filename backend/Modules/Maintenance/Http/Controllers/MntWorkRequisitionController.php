@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntWorkRequisition;
 
 class MntWorkRequisitionController extends Controller
@@ -48,7 +49,35 @@ class MntWorkRequisitionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $wr['reference_no'] = $input['reference_no'];
+            $wr['ops_vessel_id'] = $input['ops_vessel_id'];
+            $wr['assigned_to'] = $input['assigned_to'];
+            $wr['responsible_person'] = $input['responsible_person'];
+            $wr['maintenance_type'] = $input['maintenance_type'];
+            $wr['requisition_date'] = $input['requisition_date'];
+            $wr['est_start_date'] = $input['est_start_date'];
+            $wr['est_completion_date'] = $input['est_completion_date'];
+            $wr['business_unit'] = $input['business_unit'];
+
+            DB::beginTransaction();
+            $workRequisition = MntWorkRequisition::create($wr);
+
+            $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()->create(["mnt_item_id"=>$input['mnt_item_id']]);
+
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($input['mntJobLines']);
+            
+            DB::commit();
+            return response()->success('Work requisition created successfully', $workRequisitionLines, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
