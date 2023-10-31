@@ -169,7 +169,18 @@ class ScmPoController extends Controller
                     'scm_pr_id' => $scmPr->id,
                     'scmPr' => $scmPr,
                     'pr_date' => $scmPr->raised_date,
-                    'scmPoLines' => $scmPr->scmPrLines,
+                    'scmPoLines' => $scmPr->scmPrLines->map(function ($item) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'brand' => $item->scmMaterial->brand,
+                            'model' => $item->scmMaterial->model,
+                            'quantity' => $item->quantity,
+                            // 'rate' => $item->rate,
+                            // 'total_price' => $item->total_price
+                        ];
+                    })
                 ];
             } else {
                 // $scmCs = ScmCs::query()
