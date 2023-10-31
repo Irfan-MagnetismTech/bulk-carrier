@@ -18,7 +18,7 @@ class OpsVoyageRequest extends FormRequest
             'ops_vessel_id'         => ['required'],
             'mother_vessel'         => ['nullable'],
             'ops_cargo_type_id'     => ['required'],
-            'voyage_sequence'       => ['required', 'string', 'max:255'],
+            'voyage_sequence'       => ['required', 'string'],
             'voyage_no' 	        => ['required'],
             'route'                 => ['required', 'string', 'max:255'],
             'load_port_distance'    => ['required', 'string', 'max:255'],
