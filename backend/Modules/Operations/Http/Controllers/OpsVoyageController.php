@@ -84,9 +84,10 @@ class OpsVoyageController extends Controller
      public function show(OpsVoyage $voyage): JsonResponse
      {
         $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+
         try
         {
-            return response()->success('Successfully retrieved voyage.', $voyage, 200);
+            return response()->success('Successfully retrieved voyage.', $voyage, 204);
         }
         catch (QueryException $e)
         {

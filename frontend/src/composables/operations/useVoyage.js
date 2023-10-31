@@ -119,7 +119,7 @@ export default function useVoyage() {
 			const { data, status } = await Api.post('/ops/voyages', form);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.voyages.index' });
+			router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -170,7 +170,7 @@ export default function useVoyage() {
 			);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.voyages.index' });
+			router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);

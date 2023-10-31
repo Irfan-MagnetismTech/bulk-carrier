@@ -107,12 +107,12 @@
             </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Sail Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" />
+            <input type="datetime-local" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" />
             <Error v-if="errors?.sail_date" :errors="errors.sail_date" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Transit Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.transit_date" placeholder="Transit Date" class="form-input" required autocomplete="off" />
+            <input type="datetime-local" v-model="form.transit_date" placeholder="Transit Date" class="form-input" required autocomplete="off" />
             <Error v-if="errors?.transit_date" :errors="errors.transit_date" />
           </label>
           
@@ -253,7 +253,17 @@
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
-        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-10/12 mx-auto p-2 border rounded-mdborder-gray-400 mb-5 bg-gray-100 shadow-md">
+        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 bg-gray-100 shadow-md">
+          <label class="block w-1/4 mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Operation Type </span>
+
+            <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input">
+              <option value="">Select Type</option>
+              <option value="Loading">Loading</option>
+              <option value="Discharge">Discharge</option>
+            </select>
+            <Error v-if="errors?.form.opsVoyagePortSchedules[index]?.operation_type" :errors="errors?.form.opsVoyagePortSchedules[index]?.operation_type" />
+          </label>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
                     <label class="block w-full mt-2 text-sm">
 
@@ -270,34 +280,25 @@
                         </template>
                       </v-select>
                     </label>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="text-gray-700 dark:text-gray-300">Operation Type </span>
-
-                      <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input">
-                        <option value="">Select Type</option>
-                        <option value="Loading">Loading</option>
-                        <option value="Discharge">Discharge</option>
-                      </select>
-                      <Error v-if="errors?.form.opsVoyagePortSchedules[index]?.operation_type" :errors="errors?.form.opsVoyagePortSchedules[index]?.operation_type" />
-                    </label>
+                    
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">ATA </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.ata" :errors="errors.opsVoyagePortSchedules[index]?.ata" />
                     </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">ATB</span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].atb" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].atb" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.atb" :errors="errors.opsVoyagePortSchedules[index]?.atb" />
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">ATD </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].atd" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].atd" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.atd" :errors="errors.opsVoyagePortSchedules[index]?.atd" />
                     </label>
           </div>
@@ -306,25 +307,25 @@
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">Load Commence </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].load_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].load_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.load_commence" :errors="errors.opsVoyagePortSchedules[index]?.load_commence" />
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">Load Completed </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].load_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].load_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.load_complete" :errors="errors.opsVoyagePortSchedules[index]?.load_complete" />
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">Unload Commence </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].unload_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].unload_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.unload_commence" :errors="errors.opsVoyagePortSchedules[index]?.unload_commence" />
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">Unload Completed </span>
 
-                      <input type="date" v-model="form.opsVoyagePortSchedules[index].unload_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].unload_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.unload_complete" :errors="errors.opsVoyagePortSchedules[index]?.unload_complete" />
                     </label>
                     
@@ -396,6 +397,7 @@ const openTab = ref(1);
 const toggleTabs = (tabNumber) => {
   openTab.value = tabNumber;
 }
+const editInitiated = ref(false);
 
 const fetchCustomers = (search, loading) => {
   loading(true);
@@ -438,6 +440,30 @@ watch(() => vessel, (value) => {
       props.form.opsBunkers = vessel?.value?.opsBunkers
   }
 }, { deep: true })
+
+watch(() => props.form, (value) => {
+
+if(props?.formType == 'edit' && editInitiated.value != true) {
+
+  customers.value = [props?.form?.opsCustomer]
+  vessels.value = [props?.form?.opsVessel]
+  cargoTypes.value = [props?.form?.opsCargoType]
+
+  if(vessels.value.length > 0) {
+      console.log("Changing editInitatedValue ")
+      editInitiated.value = true
+    }
+}
+});
+
+// watch(() => props.form.ops_vessel_id, (value) => {
+// if(value) {
+//   if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+//     console.log("showing vessel")
+//     showVessel(value)
+//   }
+// }
+// }, {deep: true})
 // OLD Functions
 function addVoyageSector() {
   props.form.opsVoyageSectors.push({... props.voyageSectorObject });
