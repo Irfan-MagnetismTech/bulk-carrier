@@ -12,14 +12,15 @@ use App\Services\FileUploadService;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmMaterial;
-use Modules\SupplyChain\Services\GenerateUniqueId;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
 
 class ScmPrController extends Controller
 {
-    function __construct(private FileUploadService $fileUpload, private GenerateUniqueId $uniqueId)
+    function __construct(private FileUploadService $fileUpload, private UniqueId $uniqueId, private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -66,9 +67,12 @@ class ScmPrController extends Controller
 
         try {
             DB::beginTransaction();
+
             $purchase_requisition = ScmPr::create($requestData);
-            if (request('enrty_type') == 0) {
-                $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+
+            if ($request->entry_type === '0') {
+                $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+                $purchase_requisition->scmPrLines()->createMany($linesData);
             } else {
                 $import = new ScmMaterialsImport();
                 Excel::import($import, $request->file('excel'));
@@ -77,7 +81,8 @@ class ScmPrController extends Controller
                 if ($import->invalid) {
                     return response()->json($import->invalid, 422);
                 } else {
-                    $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);
+                    $linesData = $this->compositeKey->generateArrayWithCompositeKey($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
+                    $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
                 }
             }
             DB::commit();
