@@ -106,7 +106,7 @@ class OpsVoyageController extends Controller
       */
      public function update(OpsVoyageRequest $request, OpsVoyage $voyage): JsonResponse
      {
-        try {
+        try {            
             DB::beginTransaction();
             $voyageInfo = $request->except(
                 '_token',
