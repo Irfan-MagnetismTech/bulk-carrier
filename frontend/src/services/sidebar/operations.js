@@ -74,6 +74,16 @@ export default [
                 subSubMenu: []
             },
             {
+                route: 'ops.charterer-profiles.index',
+                label: 'Charterer Profiles',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
                 route: 'ops.vessel-particulars.index',
                 label: 'Vessel Particulars',
                 preIcon: '',

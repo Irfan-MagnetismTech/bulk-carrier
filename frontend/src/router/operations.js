@@ -234,4 +234,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyages/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Charterer Profiles */
+	{
+		path: `/${BASE}/charterer-profiles`,
+		name: `${BASE}.charterer-profiles.index`,
+		component: () => import(`../views/${ViEWBASE}/charterer-profiles/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/charterer-profiles/create`,
+		name: `${BASE}.charterer-profiles.create`,
+		component: () => import (`../views/${ViEWBASE}/charterer-profiles/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-profiles/:chartererProfileId/edit`,
+		name: `${BASE}.charterer-profiles.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-profiles/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-profiles/:chartererProfileId/show`,
+		name: `${BASE}.charterer-profiles.show`,
+		component: () => import (`../views/${ViEWBASE}/charterer-profiles/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
