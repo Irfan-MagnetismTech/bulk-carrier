@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect, watch} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useIncidentRecord from "../../../composables/crew/useIncidentRecord";
+import useCrewDocument from "../../../composables/crew/useCrewDocument";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -21,9 +21,9 @@ const props = defineProps({
   },
 });
 
-const { incidentRecords, getIncidentRecords, deleteIncidentRecord, isLoading } = useIncidentRecord();
+const { crewDocuments, getCrewDocuments, deleteCrewDocument, isLoading } = useCrewDocument();
 const { setTitle } = Title();
-setTitle('Incident Records');
+setTitle('Crew Documents');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -41,7 +41,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteIncidentRecord(id);
+      deleteCrewDocument(id);
     }
   })
 }
@@ -50,14 +50,14 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "crw.incidentRecords.index", query: { page: 1 } })
+        router.push({ name: "crw.documents.index", query: { page: 1 } })
       }
     }
 );
 
 onMounted(() => {
   watchEffect(() => {
-  getIncidentRecords(props.page,businessUnit.value)
+  getCrewDocuments(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -77,8 +77,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Incident Record List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.incidentRecords.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Crew Document List</h2>
+    <default-button :title="'Create Item'" :to="{ name: 'crw.documents.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -98,50 +98,40 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Incident Date & Time</th>
-            <th>Vessel Name</th>
-            <th>Incident Type</th>
-            <th>Location</th>
-            <th>Reporting Person</th>
-            <th>Attachment</th>
+            <th>Crew Name</th>
+            <th>Rank</th>
+            <th>Contact</th>
+            <th>Email</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
+          <tr v-for="(crwDocument,index) in crewDocuments?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>{{ crwIncidentRecord?.opsVessel?.name }}</td>
-            <td>{{ crwIncidentRecord?.type }}</td>
-            <td>{{ crwIncidentRecord?.location }}</td>
-            <td>{{ crwIncidentRecord?.reported_by }}</td>
+            <td>Crew name</td>
+            <td>Rank</td>
+            <td>contact</td>
+            <td>email</td>
             <td>
-              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">{{
-                  (typeof crwIncidentRecord?.attachment === 'string')
-                      ? '('+crwIncidentRecord?.attachment.split('/').pop()+')'
-                      : '----'
-                }}</a>
+              <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>
             </td>
             <td>
-              <span :class="crwIncidentRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwIncidentRecord?.business_unit }}</span>
-            </td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.incidentRecords.edit', params: { incidentRecordId: crwIncidentRecord?.id } }"></action-button>
-              <action-button @click="confirmDelete(crwIncidentRecord?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'crw.documents.edit', params: { documentId: crwDocument?.id } }"></action-button>
+              <action-button @click="confirmDelete(crwDocument?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!incidentRecords?.data?.length">
+          <tfoot v-if="!crewDocuments?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
-          <tr v-else-if="!incidentRecords?.data?.length">
-            <td colspan="8">No data found.</td>
+          <tr v-else-if="!crewDocuments?.data?.length">
+            <td colspan="7">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="incidentRecords" to="crw.incidentRecords.index" :page="page"></Paginate>
+    <Paginate :data="crewDocuments" to="crw.documents.index" :page="page"></Paginate>
   </div>
 </template>

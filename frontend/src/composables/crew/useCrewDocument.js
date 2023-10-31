@@ -4,28 +4,26 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useIncidentRecord() {
+export default function useCrewDocument() {
     const router = useRouter();
-    const incidentRecords = ref([]);
+    const crewDocuments = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const incidentRecord = ref( {
+    const crewDocument = ref( {
         business_unit: '',
-        ops_vessel_id: '',
-        ops_vessel_name: '',
-        date_time: '',
-        type: '',
-        location: '',
-        reported_by: '',
-        attachment: '',
-        description: '',
-        crwIncidentParticipants: [
+        crw_crew_id: '',
+        crw_crew_name: '',
+        name: '',
+        reference_no: '',
+        issuing_authority: '',
+        validity_period: '',
+        validity_period_in_month: '',
+        CrwCrewDocumentRenewal: [
             {
-                crw_crew_id: '',
-                crw_crew_name: '',
-                crw_crew_rank: '',
-                injury_status: '',
-                notes: '',
+                issue_date: '',
+                expire_date: '',
+                reference_no: '',
+                attachment: '',
             }
         ]
     });
@@ -36,7 +34,7 @@ export default function useIncidentRecord() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getIncidentRecords(page,businessUnit) {
+    async function getCrewDocuments(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -45,13 +43,13 @@ export default function useIncidentRecord() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-incidents',{
+            const {data, status} = await Api.get('/crw/crw-crew-documents',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            incidentRecords.value = data.value;
+            crewDocuments.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -62,7 +60,7 @@ export default function useIncidentRecord() {
         }
     }
 
-    async function storeIncidentRecord(form) {
+    async function storeCrewDocument(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -72,10 +70,10 @@ export default function useIncidentRecord() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/crw/crw-incidents', formData);
-            incidentRecord.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
+            crewDocuments.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
+            await router.push({ name: "crw.documents.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -85,14 +83,14 @@ export default function useIncidentRecord() {
         }
     }
 
-    async function showIncidentRecord(incidentRecordId) {
+    async function showCrewDocument(documentId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-incidents/${incidentRecordId}`);
-            incidentRecord.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-crew-documents/${documentId}`);
+            crewDocument.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -103,7 +101,7 @@ export default function useIncidentRecord() {
         }
     }
 
-    async function updateIncidentRecord(form, incidentRecordId) {
+    async function updateCrewDocument(form, documentId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -115,12 +113,12 @@ export default function useIncidentRecord() {
 
         try {
             const { data, status } = await Api.post(
-                `/crw/crw-incidents/${incidentRecordId}`,
+                `/crw/crw-crew-documents/${documentId}`,
                 formData
             );
-            incidentRecord.value = data.value;
+            crewDocument.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
+            await router.push({ name: "crw.documents.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -130,15 +128,15 @@ export default function useIncidentRecord() {
         }
     }
 
-    async function deleteIncidentRecord(incidentRecordId) {
+    async function deleteCrewDocument(documentId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-incidents/${incidentRecordId}`);
+            const { data, status } = await Api.delete( `/crw/crw-crew-documents/${documentId}`);
             notification.showSuccess(status);
-            await getIncidentRecords(indexPage.value, indexBusinessUnit.value);
+            await getCrewDocuments(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -149,13 +147,13 @@ export default function useIncidentRecord() {
     }
 
     return {
-        incidentRecords,
-        incidentRecord,
-        getIncidentRecords,
-        storeIncidentRecord,
-        showIncidentRecord,
-        updateIncidentRecord,
-        deleteIncidentRecord,
+        crewDocuments,
+        crewDocument,
+        getCrewDocuments,
+        storeCrewDocument,
+        showCrewDocument,
+        updateCrewDocument,
+        deleteCrewDocument,
         isLoading,
         errors,
     };

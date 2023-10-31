@@ -18,6 +18,15 @@ const { setTitle } = Title();
 
 setTitle('Edit Incident Record');
 
+watch(incidentRecord, (value) => {
+  if(value) {
+    incidentRecord.value.ops_vessel_name = value?.opsVessel;
+    value?.crwIncidentParticipants?.forEach((line, index) => {
+      incidentRecord.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
+    });
+  }
+});
+
 onMounted(() => {
   showIncidentRecord(incidentRecordId);
 });

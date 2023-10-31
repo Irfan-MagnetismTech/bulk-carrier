@@ -75,7 +75,7 @@ class CrwCommonController extends Controller
             $crwAgencies      = CrwCrew::when(request()->business_unit != "ALL", function ($q)
             {
                 $q->where('business_unit', request()->business_unit);
-            })->get();
+            })->with('crwRank:id,name')->get();
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);
         }

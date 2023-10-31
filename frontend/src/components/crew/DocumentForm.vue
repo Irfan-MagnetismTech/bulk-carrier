@@ -4,8 +4,6 @@ import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequ
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
-import useVessel from "../../composables/operations/useVessel";
-const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { crews, getCrews } = useCrewCommonApiRequest();
 
 const props = defineProps({
@@ -23,38 +21,27 @@ const selectedFile = (event) => {
 
 watch(() => props.form, (value) => {
   if(value){
-    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
-    value?.crwIncidentParticipants?.forEach((line, index) => {
-      props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
-      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwRank?.name ?? '';
-
-      // const selectedCrew = crews.value.find(crew => crew.id === line.scmMaterial.id);
-      // if (selectedMaterial) {
-      //   props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
-      // }
-    });
+    props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
   }
 }, {deep: true});
 
 function addItem() {
   let obj = {
-    crw_crew_id: '',
-    crw_crew_name: '',
-    crw_crew_rank: '',
-    injury_status: '',
-    notes: '',
+    issue_date: '',
+    expire_date: '',
+    reference_no: '',
+    attachment: '',
   };
-  props.form.crwIncidentParticipants.push(obj);
+  props.form.CrwCrewDocumentRenewal.push(obj);
 }
 
 function removeItem(index){
-  props.form.crwIncidentParticipants.splice(index, 1);
+  props.form.CrwCrewDocumentRenewal.splice(index, 1);
 }
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    getVesselsWithoutPaginate(props.form.business_unit);
     getCrews(props.form.business_unit);
   });
 });

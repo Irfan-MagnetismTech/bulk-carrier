@@ -154,7 +154,7 @@ export default [
                 ],
             },
             {
-                route: 'administration.users.index',
+                route: '',
                 label: 'Crew Documents',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -163,7 +163,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.documents.index',
                         label: 'Document List',
                         preIcon: '',
                         postIcon: icons.DownArrow,
