@@ -12,7 +12,7 @@ class MntJobLine extends Model
     use HasFactory;
 
     protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','previous_run_hour','remarks','status'];
-    protected $appends = ['next_due','over_due','present_run_hour'];
+    protected $appends = ['mnt_job_line_id','next_due','over_due','present_run_hour'];
     
     
     public function mntJob () : BelongsTo
@@ -49,5 +49,10 @@ class MntJobLine extends Model
     public function getPresentRunHourAttribute () 
     {
         return $this->mntJob->present_run_hour;
+    }
+    
+    public function getMntJobLineIdAttribute () 
+    {
+        return $this->id;
     }
 }

@@ -237,6 +237,30 @@ class MntJobController extends Controller
         }
     }
 
+    public function getJobsForRequisition(Request $request)
+    {
+        try {
+            
+            $validated = $request->validate( [
+                'ops_vessel_id' => ['required', 'numeric'],
+                'mnt_item_id' => ['required', 'numeric'],
+                'business_unit' => ['required']
+            ]);
+
+            $jobs["all_jobs"] = $this->allJobs();
+            $jobs["upcoming_jobs"] = $this->upcomingJobs();
+            $jobs["overdue_jobs"] = $this->overDueJobs();
+            
+            return response()->success('Jobs for requisition retrieved successfully', $jobs, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+        
+    }
+
     /**
      * Display a list of items with all jobs
      * @return Renderable
@@ -244,22 +268,24 @@ class MntJobController extends Controller
     public function allJobs()
     {
         try {
-
-            $jobs = MntItem::with(['mntJobs', 'mntJobLines'])
-                            ->Where(function($jobQuery){
-                                $jobQuery->whereHas('mntJobs',function($q){
-                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
-                                        ->when(request()->has('mnt_item_id'), function($qJobs){
-                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
-                                        })
-                                        ->when(request()->business_unit != "ALL", function($q){
-                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
-                                        }); 
-                                });
+            $jobs = MntJob::with(['mntItem','mntJobLines'])
+                            ->where('ops_vessel_id', request()->ops_vessel_id)          
+                            ->when(request()->has('mnt_item_id'), function($qJobs){
+                                $qJobs->where('mnt_item_id', request()->mnt_item_id);  
+                            })
+                            ->when(request()->business_unit != "ALL", function($qJobs){
+                                $qJobs->where('business_unit', request()->business_unit);  
                             })
                             ->get();
                             
-            return response()->success('Item wise jobs retrieved successfully', $jobs, 200);
+            
+            // To get the return value dynamically
+            $returnField = request()->return_field ?? '';
+            if ($returnField == "mntItem" || $returnField == "mntJobLines") {
+                $jobs = $jobs->pluck($returnField)->flatten();
+            }
+            
+            return $jobs;
             
         }
         catch (\Exception $e)
@@ -276,9 +302,9 @@ class MntJobController extends Controller
     {
         try {
             // DB::enableQueryLog(); 
-            $jobs = MntItem::with(['mntJobs', 'mntJobLines' => function($q){
+            $jobs = MntJob::with(['mntItem', 'mntJobLines' => function($q){
                                 $q->where(function ($subQuery){
-                                    $subQuery->whereHas('mntJob.mntItem',function($q){
+                                    $subQuery->whereHas('mntJob',function($q){
                                         $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
                                             ->where('mnt_job_lines.cycle_unit', 'Hours');
                                     })->orWhereHas('mntJob',function($q){
@@ -296,30 +322,26 @@ class MntJobController extends Controller
                                 });
                             }])
                             ->where(function ($jobLineQuery){
-                                $jobLineQuery->whereHas('mntJobs.mntJobLines',function($q){
+                                $jobLineQuery->whereHas('mntJobLines',function($q){
                                     $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
                                         ->where('mnt_job_lines.cycle_unit', 'Hours');
                                 })
-                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                ->orWhereHas('mntJobLines',function($q){
                                     $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
                                         ->where('mnt_job_lines.cycle_unit', 'Days');
                                 })
-                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                ->orWhereHas('mntJobLines',function($q){
                                     $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
                                         ->where('mnt_job_lines.cycle_unit', 'Weeks');
                                 })
-                                ->orWhereHas('mntJobs.mntJobLines',function($q){
+                                ->orWhereHas('mntJobLines',function($q){
                                     $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
                                         ->where('mnt_job_lines.cycle_unit', 'Months');
                                 });
                             })
-                            ->Where(function($jobQuery){
-                                $jobQuery->whereHas('mntJobs',function($q){
-                                    $q->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
-                                        ->when(request()->has('mnt_item_id'), function($qJobs){
-                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
-                                        });  
-                                });
+                            ->where('ops_vessel_id', request()->ops_vessel_id)          
+                            ->when(request()->has('mnt_item_id'), function($qJobs){
+                                $qJobs->where('mnt_item_id', request()->mnt_item_id);  
                             })
                             ->when(request()->business_unit != "ALL", function($qItems){
                                 $qItems->where('business_unit', request()->business_unit);  
@@ -333,7 +355,7 @@ class MntJobController extends Controller
             }
 
             // dd(DB::getQueryLog());
-            return response()->success('Item wise upcoming jobs retrieved successfully', $jobs, 200);
+            return $jobs;
             
         }
         catch (\Exception $e)
@@ -349,12 +371,8 @@ class MntJobController extends Controller
     public function overDueJobs()
     {
         try {
-
-            // $jobs = MntJobLine::where('mnt_job_id', request()->id)->get();
-
             $jobs = MntJob::with(['mntItem', 'mntJobLines'])
                             ->Where(function($jobQuery){
-                                // $jobQuery->whereHas('mntJobs',function($q){
                                     $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
                                         ->when(request()->has('mnt_item_id'), function($qJobs){
                                             $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
@@ -362,7 +380,6 @@ class MntJobController extends Controller
                                         ->when(request()->business_unit != "ALL", function($q){
                                             $q->where('mnt_jobs.business_unit', request()->business_unit);  
                                         }); 
-                                // });
                             })
                             ->get();
 
@@ -378,8 +395,7 @@ class MntJobController extends Controller
             
             }
 
-
-            return response()->success('Item wise over due jobs retrieved successfully', $jobs->all(), 200);
+            return $jobs;
             
         }
         catch (\Exception $e)

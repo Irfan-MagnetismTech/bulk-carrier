@@ -54,6 +54,9 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-overdue-jobs', [MntJobController::class, 'overDueJobs']);
     //vesselWiseJobs
     Route::get('get-vessel-wise-jobs', [MntJobController::class, 'vesselWiseJobs']);
+    // getJobsForRequisition
+    Route::get('get-jobs-for-requisition', [MntJobController::class, 'getJobsForRequisition']);
+
 
 
 });
