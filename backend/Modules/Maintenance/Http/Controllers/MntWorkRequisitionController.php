@@ -89,7 +89,12 @@ class MntWorkRequisitionController extends Controller
     {
         try {
             
-            $wr = MntWorkRequisition::with(['mntWorkRequisitionItem','mntWorkRequisitionLines','mntWorkRequisitionLines.mntJobLine'])->find($id);
+            $wr = MntWorkRequisition::with([
+                'opsVessel',
+                'mntWorkRequisitionItem',
+                'mntWorkRequisitionItem.MntItem.MntItemGroup.MntShipDepartment.MntItemGroups.MntItems',
+                'mntWorkRequisitionItem.mntJobLines'
+                ])->find($id);
             
             return response()->success('Work requisition found successfully', $wr, 200);
             
