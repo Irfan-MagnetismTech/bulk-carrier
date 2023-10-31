@@ -17,5 +17,11 @@ return [
         'Engine Store',
     ],
 
+    'lc_cost_heads' => [
+        'Bank Commision and Charges (BDT)(a)',
+        'VAT (BDT)(b)',
+        'Others (BDT)(c)',
+        'Insurance Premium Amount (BDT)(d)',
+    ]
 
 ];
