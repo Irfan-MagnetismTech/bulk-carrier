@@ -32,8 +32,8 @@ return new class extends Migration
 			$table->string('passport_no')->nullable();
 			$table->date('passport_issue_date')->nullable();
 			$table->string('blood_group')->nullable();
-			$table->float('height')->nullable();
-			$table->float('weight')->nullable();
+			$table->string('height')->nullable();
+			$table->string('weight')->nullable();
 			$table->string('pre_address');
 			$table->string('pre_city');
 			$table->string('pre_mobile_no');
