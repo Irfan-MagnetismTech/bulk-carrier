@@ -2,14 +2,15 @@
 
 namespace Modules\SupplyChain\Services;
 
-class GenerateUniqueId
+class UniqueId
 {
     /**
+     * this function is used to generate unique id for any model
+     * 
      * @param model $model
      * @param string $prefix
      * @return string - unique id
      * 
-     * this function is used to generate unique id for any model
      */
     public function generate($model, $prefix): string
     {

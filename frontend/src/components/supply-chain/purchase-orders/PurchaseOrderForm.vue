@@ -6,12 +6,13 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
-import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import cloneDeep from 'lodash/cloneDeep';
+    import useBusinessInfo from '../../../composables/useBusinessInfo';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors, searchVendor } = useVendor();
-    const { getCurrencies } = useBusinessInfo();
+    const { vendors,  searchVendor } = useVendor();
+    const { currencies, getCurrencies } = useBusinessInfo();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -30,16 +31,18 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
     });
 
     function addMaterial() {
-      props.form.scmPoLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPoLines.push(clonedObj);
     }
 
     function removeMaterial(index){
-      props.form.scmPoLines.splice(index, 1);
-}
+          props.form.scmPoLines.splice(index, 1);
+    }
 
     function addTerms() {
-          props.form.scmPoTerms.push(props.termsObject);
-        }
+          const clonedTermObj = cloneDeep(props.termsObject);
+          props.form.scmPoTerms.push(clonedTermObj);
+      }
 
     function removeTerms(index){
       props.form.scmPoTerms.splice(index, 1);
@@ -66,6 +69,17 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
     // }, { deep: true });
 
     // });// Code for global search end here
+    
+    function fetchVendor(search, loading) {
+      loading(true);
+      searchVendor(search, loading);
+    }
+   
+    function setMaterialOtherData(datas,index){
+      console.log(datas);
+      props.form.scmPoLines[index].unit = datas.unit;
+      props.form.scmPoLines[index].scm_material_id = datas.id;
+    }
 
 
       
@@ -95,6 +109,18 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
     props.form.sub_total = parseFloat(total.toFixed(2));
         calculateNetAmount();
   }, { deep: true });
+
+watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
+      let total = 0.0;
+      newVal?.forEach((material, index) => {
+        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
+        total += parseFloat(props.form.scmPoLines[index].total_amount);
+      });
+
+      
+  props.form.sub_total = parseFloat(total.toFixed(2));
+      calculateNetAmount();
+}, { deep: true });
     
   function calculateNetAmount(){
     props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
@@ -107,7 +133,17 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
   watch(() => props?.form?.vat, (newVal, oldVal) => {
     calculateNetAmount();
   });
+  onMounted(() => {
+    getCurrencies();
+    console.log(currencies);
+  }); 
 
+//watch scmVendor to change scm_vendor_id
+watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
+  if(newVal){
+    props.form.scm_vendor_id = newVal.id;
+  }
+});
 //fetch currency on mount from usines info composable
   onMounted(async () => {
     const adasd = await getCurrencies();
@@ -188,6 +224,7 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
+    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
@@ -204,8 +241,8 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
       </label>
       <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.po_date" required class="form-input" name="po_date" :id="'po_date'" />
-          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
@@ -260,14 +297,23 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
       
       <label class="label-group">
         <span class="label-item-title">Currency</span>
-        <input type="text" v-model="form.currency" required class="form-input" name="currency" :id="'currency'" />
+        <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.currency"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
         <Error v-if="errors?.currency" :errors="errors.currency"/>
     </label>
-      <label class="label-group">
-          <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.convertion_rate" required class="form-input" name="approved_date" :id="'convertion_rate'" />
-          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
-      </label>
+    <label class="label-group" v-if="form.currency == 'USD'">
+        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+        <Error v-if="errors?.foreign_to_usd" :errors="errors.convertion_rate"  />
+    </label>
   </div>
 
   <div class="input-group !w-3/4">
@@ -330,7 +376,7 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
               <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].total_price" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
@@ -391,7 +437,7 @@ import useBusinessInfo from '../../../composables/useBusinessInfo';
          <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
             <td>
-              <input type="text" v-model="form.scmPoTerms[index].details" class="form-input">
+              <input type="text" v-model="form.scmPoTerms[index].description" class="form-input">
             </td>
            
             <td class="px-1 py-1 text-center">
