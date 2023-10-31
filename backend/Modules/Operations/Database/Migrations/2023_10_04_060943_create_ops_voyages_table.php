@@ -20,12 +20,14 @@ return new class extends Migration
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
             $table->string('mother_vessel')->nullable();
             $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
+            $table->string('voyage_sequence');
             $table->string('voyage_no')->nullable();
             $table->string('route')->nullable();
             $table->string('load_port_distance')->nullable();
             $table->dateTime('sail_date')->nullable();
             $table->dateTime('transit_date')->nullable();
             $table->text('remarks')->nullable();
+            $table->text('status')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
