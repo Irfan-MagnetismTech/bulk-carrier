@@ -13,14 +13,16 @@ class OpsVoyage extends Model
     protected $fillable = [
         'ops_customer_id',
         'ops_vessel_id',
-        'mother_vessel_id',
+        'mother_vessel',
         'ops_cargo_type_id',
+        'voyage_sequence',
         'voyage_no',
         'route',
         'load_port_distance',
         'sail_date',
         'transit_date',
         'remarks',
+        'status',
         'business_unit'
     ];
 
@@ -34,10 +36,10 @@ class OpsVoyage extends Model
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsMotherVessel()
-    {
-        return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
-    }
+    // public function opsMotherVessel()
+    // {
+    //     return $this->belongsTo(OpsVessel::class, 'mother_vessel_id' , 'id');
+    // }
 
     public function opsCargoType()
     {

@@ -99,26 +99,32 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Voyage Name</th>
-            <th>Code</th>
-            <th>Voyage Type</th>
-            <th>IMO/Lloyd Number</th>
-            <th>Capacity (MT)</th>
-            <th>Current Status</th>
-            <th>Dry Docking Left (Days)</th>
+            <th>Mother Vessel</th>
+            <th>Vessel</th>
+            <th>Voyage No</th>
+            <th>Cargo Type</th>
+            <th>POL</th>
+            <th>FPOD</th>
+            <!-- <th>Initial Load</th>
+            <th>Actual Load</th> -->
+            <!-- Its Hidden cause when there will be multiple sectors, it won't be useful anymore as there will be multiple initial and actual loads -->
+            <th>Voyage Status</th>
             <th>Actions</th>
           </tr>
           </thead>
           <tbody v-if="voyages?.data?.length">
               <tr v-for="(voyage, index) in voyages.data" :key="voyage?.id">
                   <td>{{ voyages.from + index }}</td>
-                  <td>{{ voyage?.name }}</td>
-                  <td>{{ voyage?.short_code }}</td>
-                  <td>{{ voyage?.voyage_type }}</td>
-                  <td>{{ voyage?.imo }}</td>
-                  <td>{{ voyage?.capacity }}</td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ voyage?.mother_vessel }}</td>
+                  <td>{{ voyage?.opsVessel?.name }}</td>
+                  <td>{{ voyage?.voyage_no }}</td>
+                  <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
+                  <td>{{ voyage?.opsVoyageSectors[0].loading_point }}</td>
+                  <td>{{ voyage?.opsVoyageSectors[voyage?.opsVoyageSectors.length - 1].unloading_point }}</td>
+                  <!-- <td></td>
+                  <td></td> -->
+                  <td>{{ voyage?.status }}</td>
+
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
@@ -130,10 +136,10 @@ onMounted(() => {
           
           <tfoot v-if="!voyages?.length">
           <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
+            <td colspan="11">Loading...</td>
           </tr>
           <tr v-else-if="!voyages?.data?.length">
-            <td colspan="9">No data found.</td>
+            <td colspan="11">No data found.</td>
           </tr>
           </tfoot>
       </table>

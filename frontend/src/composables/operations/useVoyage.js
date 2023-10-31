@@ -13,37 +13,6 @@ export default function useVoyage() {
 	const voyageName = ref([]);
 	const voyageVoyages = ref([]);
 	const notification = useNotification();
-	const voyage = ref({
-		ops_customer_id: '',
-		ops_vessel_id: '',
-		mother_vessel_id: '',
-		ops_cargo_type_id: '',
-		voyage_no: '',
-		route: '',
-		load_port_distance: '',
-		sail_date: '',
-		transit_date: '',
-		remarks: '',
-		opsBunkers: [],
-		opsVoyageSectors: [],
-		opsVoyagePortSchedules: []
-	});
-	const voyageSectorObject = {
-		ops_voyage_id: '',
-        ops_cargo_tariff_id: '',
-        loading_point: '',
-        unloading_point: '',
-        rate: '',
-        initial_survey_qty: '',
-        approx_amount: '',
-        discount: '',
-        discount_amount: '',
-        approx_amount_after_disscount: '',
-        final_survey_qty: '',
-        final_received_qty: '',
-        boat_note_qty: '',
-        business_unit: ''
-	}
 
 	const bunkerObject = {
 		name: '',
@@ -71,6 +40,40 @@ export default function useVoyage() {
         unload_complete: '',
         operation_type: ''
 	}
+
+	const voyageSectorObject = {
+		ops_voyage_id: '',
+        ops_cargo_tariff_id: '',
+        loading_point: '',
+        unloading_point: '',
+        rate: '',
+        initial_survey_qty: '',
+        approx_amount: '',
+        discount: '',
+        discount_amount: '',
+        approx_amount_after_disscount: '',
+        final_survey_qty: '',
+        final_received_qty: '',
+        boat_note_qty: '',
+        business_unit: ''
+	}
+
+	const voyage = ref({
+		ops_customer_id: '',
+		ops_vessel_id: '',
+		mother_vessel: '',
+		ops_cargo_type_id: '',
+		voyage_no: '',
+		route: '',
+		load_port_distance: '',
+		sail_date: '',
+		transit_date: '',
+		remarks: '',
+		opsBunkers: [{...bunkerObject}],
+		opsVoyageSectors: [{...voyageSectorObject}],
+		opsVoyagePortSchedules: [{...portScheduleObject}]
+	});
+	
 	const errors = ref(null);
 	const isLoading = ref(false);
 
@@ -103,20 +106,20 @@ export default function useVoyage() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVoyageCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
-			element.business_unit = form.business_unit
-		})
+		// form.opsVoyageCertificates.map((element) => {
+		// 	element.ops_maritime_certification_id = element.id
+		// 	element.business_unit = form.business_unit
+		// })
 
-		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
-		})
+		// form.opsBunkers.map((element) => {
+		// 	element.scm_material_id = element.id
+		// })
 
 		try {
 			const { data, status } = await Api.post('/ops/voyages', form);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.voyages.index' });
+			router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -151,14 +154,14 @@ export default function useVoyage() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		form.opsVoyageCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
-			element.business_unit = form.business_unit
-		})
+		// form.opsVoyageCertificates.map((element) => {
+		// 	element.ops_maritime_certification_id = element.id
+		// 	element.business_unit = form.business_unit
+		// })
 
-		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
-		})
+		// form.opsBunkers.map((element) => {
+		// 	element.scm_material_id = element.id
+		// })
 		
 		try {
 			const { data, status } = await Api.put(
@@ -167,7 +170,7 @@ export default function useVoyage() {
 			);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.voyages.index' });
+			router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);

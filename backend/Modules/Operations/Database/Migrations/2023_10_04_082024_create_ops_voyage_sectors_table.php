@@ -16,19 +16,18 @@ return new class extends Migration
         Schema::create('ops_voyage_sectors', function (Blueprint $table) {
             $table->id();       
             $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
-            $table->foreignId('ops_cargo_tariff_id')->constrained('ops_cargo_tariffs')->onDelete('cascade');
-            $table->string('loading_point');
-            $table->string('unloading_point');
-            $table->string('rate');
-            $table->float('initial_survey_qty');
-            $table->float('approx_amount');
-            $table->float('discount');
-            $table->float('discount_amount');
-            $table->float('approx_amount_after_disscount');
-            $table->float('final_survey_qty');
-            $table->float('final_received_qty');
-            $table->float('boat_note_qty');
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
+            $table->string('loading_point')->nullable(); 
+            $table->string('unloading_point')->nullable(); 
+            $table->string('rate')->nullable(); 
+            $table->float('initial_survey_qty')->nullable(); 
+            $table->float('approx_amount')->nullable(); 
+            $table->float('discount')->nullable(); 
+            $table->float('discount_amount')->nullable(); 
+            $table->float('approx_amount_after_disscount')->nullable(); 
+            $table->float('final_survey_qty')->nullable(); 
+            $table->float('final_received_qty')->nullable(); 
+            $table->float('boat_note_qty')->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

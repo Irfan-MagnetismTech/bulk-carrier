@@ -4,10 +4,7 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-<<<<<<< HEAD
-=======
 // use Modules\SupplyChain\Entities\ScmVendor;
->>>>>>> 158e6f40d907675af293440a6a580592cfc56d2c
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,18 +32,10 @@ class OpsBunker extends Model
         'status',
     ];
 
-<<<<<<< HEAD
     // public function scmVendor()
     // {
     //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
     // }
-=======
-    public function scmVendor()
-    {
-        return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
-    }
-
->>>>>>> 158e6f40d907675af293440a6a580592cfc56d2c
     public function scmMaterial()
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
