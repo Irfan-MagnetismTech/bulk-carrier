@@ -24,4 +24,9 @@ class OpsBulkNoonReportConsumption extends Model
         'ge_sys_oil',
         'rob',
     ];
+
+    public function opsBulkNoonReport()
+    {
+        return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
+    }
 }

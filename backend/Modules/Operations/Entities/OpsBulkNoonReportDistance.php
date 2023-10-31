@@ -30,4 +30,9 @@ class OpsBulkNoonReportDistance extends Model
         'status',
         'business_unit',
     ];
+
+    public function opsBulkNoonReport()
+    {
+        return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
+    }
 }

@@ -18,4 +18,9 @@ class OpsBulkNoonReportPort extends Model
         'dtg',
         'remarks',
     ];
+
+    public function opsBulkNoonReport()
+    {
+        return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
+    }
 }

@@ -32,4 +32,44 @@ class OpsBulkNoonReport extends Model
         'business_unit',
 
     ];
+
+
+    public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+    }
+
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
+
+    public function opsBunkers()
+    {
+        return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
+
+    public function opsBulkNoonReportPorts()
+    {
+        return $this->hasMany(OpsBulkNoonReportPort::class, 'ops_bulk_noon_report_id', 'id');
+    }
+    public function opsBulkNoonReportCargoTanks()
+    {
+        return $this->hasMany(OpsBulkNoonReportCargoTank::class, 'ops_bulk_noon_report_id', 'id');
+    }
+
+    public function opsBulkNoonReportConsumptions()
+    {
+        return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_bulk_noon_report_id', 'id');
+    }
+
+    public function opsBulkNoonReportDistances()
+    {
+        return $this->hasMany(OpsBulkNoonReportDistance::class, 'ops_bulk_noon_report_id', 'id');
+    }
+
+    public function opsBulkNoonReportEngineInputs()
+    {
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
+    }
 }

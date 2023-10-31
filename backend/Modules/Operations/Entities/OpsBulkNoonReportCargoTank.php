@@ -18,4 +18,9 @@ class OpsBulkNoonReportCargoTank extends Model
         'liq_temp',
         'quantity_mt',
     ];
+
+    public function opsBulkNoonReport()
+    {
+        return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
+    }
 }
