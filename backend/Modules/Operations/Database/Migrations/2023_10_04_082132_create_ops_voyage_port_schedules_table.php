@@ -17,9 +17,12 @@ return new class extends Migration
             $table->id();            
             $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
             $table->string('port_code');
-            $table->dateTime('eta');
-            $table->dateTime('etb');
-            $table->dateTime('etd');
+            $table->dateTime('eta')->nullable();
+            $table->dateTime('etb')->nullable();
+            $table->dateTime('etd')->nullable();
+            $table->dateTime('ata')->nullable();
+            $table->dateTime('atb')->nullable();
+            $table->dateTime('atd')->nullable();
             $table->string('load_commence')->nullable();
             $table->dateTime('load_complete')->nullable();
             $table->string('unload_commence')->nullable();
