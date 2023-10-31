@@ -74,8 +74,8 @@
             </label>
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.voyage_squence" readonly class="form-input bg-gray-100" required autocomplete="off" />
-              <Error v-if="errors?.voyage_squence" :errors="errors.voyage_squence" />
+                <input type="text" v-model="form.voyage_sequence" readonly class="form-input bg-gray-100" required autocomplete="off" />
+              <Error v-if="errors?.voyage_sequence" :errors="errors.voyage_sequence" />
             </label>
             <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Route <span class="text-red-500">*</span></span>
@@ -416,9 +416,9 @@ function fetchCargoTypes(search, loading) {
 
 watch(() => props.form.voyage_no, (value) => {
   if(props.form.business_unit == 'TSLL') {
-    props.form.voyage_squence = value+'L'
+    props.form.voyage_sequence = value+'L'
   } else {
-    props.form.voyage_squence = value+'B'
+    props.form.voyage_sequence = value+'B'
   }
 }, { deep: true })
 
