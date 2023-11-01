@@ -83,4 +83,16 @@ class OpsVessel extends Model
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
+
+    public function opsVoyage()
+    {
+        return $this->hasMany(OpsVoyage::class);
+    }
+    public function opsMonthWiseExpenseReport()
+    {
+        return $this->hasMany(OpsMonthWiseExpenseReport::class);
+    }
+
+    
+
 }

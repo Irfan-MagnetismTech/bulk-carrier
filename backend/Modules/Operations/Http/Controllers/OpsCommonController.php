@@ -15,20 +15,22 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsCustomer;
 use Modules\Operations\Entities\OpsCargoType;
 use Modules\Operations\Entities\OpsCargoTariff;
+use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Operations\Entities\OpsBulkNoonReport;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Entities\OpsCashRequisition;
+use Modules\Operations\Entities\OpsCustomerInvoice;
 use Modules\Operations\Entities\OpsChartererInvoice;
 use Modules\Operations\Entities\OpsChartererProfile;
 use Modules\Operations\Entities\OpsHandoverTakeover;
 use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsPortRequest;
+use Modules\Operations\Entities\OpsBunkerRequisition;
 use Modules\Operations\Entities\OpsChartererContract;
 use Modules\Operations\Entities\OpsLighterNoonReport;
-use Modules\Operations\Entities\OpsCustomerInvoice;
-use Modules\Operations\Entities\OpsCashRequisition;
-use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Entities\OpsMaritimeCertification;
-use Modules\Operations\Entities\OpsBunkerRequisition;
+use Modules\Operations\Entities\OpsMonthWiseExpenseReport;
 
 class OpsCommonController extends Controller
 {
@@ -347,5 +349,24 @@ class OpsCommonController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    // To get Month Wise Expense Report data
+    public function getMonthWiseExpenseReportWithoutPaginate(Request $request) : JsonResponse
+    {
+        try {
+            $month_wise_expense_reports = OpsMonthWiseExpenseReport::with(['opsVessel.opsVoyage.opsVoyageSectors'])
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
+
+            return response()->success('Successfully retrieved month wise expense reports.', $month_wise_expense_reports, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
     }
 }

@@ -32,7 +32,8 @@ class OpsMonthWiseExpenseReportController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $month_wise_expense_reports = OpsMonthWiseExpenseReport::latest()->paginate(15);
+            $month_wise_expense_reports = OpsMonthWiseExpenseReport::with(['opsVessel.opsVoyage','opsVessel.opsVoyage.opsVoyageSectors'])
+            ->latest()->paginate(15);
 
             return response()->success('Successfully retrieved month wise expense reports.', $month_wise_expense_reports, 200);
         }
@@ -74,6 +75,7 @@ class OpsMonthWiseExpenseReportController extends Controller
      */
     public function show(OpsMonthWiseExpenseReport $month_wise_expense_report): JsonResponse
     {
+        $month_wise_expense_report->load(['opsVessel.opsVoyage.opsVoyageSectors']);
         try {            
             return response()->success('Successfully retrieved month wise expense report.', $month_wise_expense_report, 200);
         } catch (QueryException $e){

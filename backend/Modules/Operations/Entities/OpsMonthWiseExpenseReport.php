@@ -18,4 +18,9 @@ class OpsMonthWiseExpenseReport extends Model
         'remarks',
         'business_unit',
     ];
+
+    public function opsVessel()
+    {
+        return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+    }
 }
