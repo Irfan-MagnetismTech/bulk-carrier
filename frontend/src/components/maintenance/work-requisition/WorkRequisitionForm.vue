@@ -146,6 +146,20 @@
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
 
+        
+        <label class="block w-full mt-2 text-sm" v-show="form.form_type == 'edit'">
+            <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
+            <select v-model="form.status" class="form-input" required>
+              <option value="" disabled selected>Select</option>
+              <option value="0" > Pending</option>
+              <option value="1" > WIP</option>
+              <option value="2" > Done</option>
+            </select>
+          <Error v-if="errors?.status" :errors="errors.status" />
+        </label>
+
+
+
 
         
     </div>
@@ -330,6 +344,8 @@ onMounted(() => {
       if(businessUnit.value){
         getShipDepartmentsWithoutPagination(businessUnit.value);
         getVesselsWithoutPaginate(businessUnit.value);
+        if(props.form.ops_vessel_id)
+          getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
       }
     });
 });
