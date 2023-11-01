@@ -7,13 +7,23 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
+    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    {
+        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
+        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    }
+    
     /**
      * Display a listing of the resource.
      * @return JsonResponse
@@ -22,7 +32,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
                 ->latest()
                 ->when(request()->business_unit != "ALL", function ($query) {
                     $query->where('business_unit', request()->business_unit);
@@ -44,8 +54,16 @@ class ScmPoController extends Controller
         try {
             DB::beginTransaction();
 
+            $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
+            
+            
             $scmPo = ScmPo::create($request->all());
-            $scmPo->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
+
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            
+            // return response()->json($linesData, 422);    
+
+            $scmPo->scmPoLines()->createUpdateOrDelete($linesData);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
 
             DB::commit();
@@ -66,7 +84,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            return response()->success('data', $purchaseOrder->load('scmPoLines', 'scmPoTerms'), 200);
+            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms','scmVendor', 'scmWarehouse', 'scmPr'), 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -79,14 +97,17 @@ class ScmPoController extends Controller
      * @return JsonResponse
      */
     public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
-    {
+    { 
+        $requestData = $request->except('ref_no', 'pr_composite_key', 'po_composite_key');     
         try {
+            DB::beginTransaction();
             $purchaseOrder->update($request->all());
-            $purchaseOrder->scmPoLines()->createMany($request->scmPoLines);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
-            return response()->success('Data updated sucessfully!', $purchaseOrder, 202);
+            DB::commit();
+            return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -176,8 +197,8 @@ class ScmPoController extends Controller
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
-                            'brand' => $item->scmMaterial->brand,
-                            'model' => $item->scmMaterial->model,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
                             'quantity' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
                             // 'rate' => $item->rate,

@@ -28,7 +28,7 @@ export default function usePurchaseOrder() {
         scm_pr_id: null,
         scmPr: null,
         date: '',
-        cs_no: '',
+        cs_no: null,
         scm_cs_id: null,
         scmCs: null,
         scmVendor: null,
@@ -51,7 +51,7 @@ export default function usePurchaseOrder() {
                 unit: '',
                 brand: '',
                 model: '',
-                required_date: '',
+                required_date: null,
                 quantity: 0.0,
                 rate: 0.0,
                 total_price: 0.0,
@@ -143,6 +143,7 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-orders/${purchaseOrderId}`);
             purchaseOrder.value = data.value;
+            console.log('podata', purchaseOrder.value);
 
         } catch (error) {
             const { data, status } = error.response;

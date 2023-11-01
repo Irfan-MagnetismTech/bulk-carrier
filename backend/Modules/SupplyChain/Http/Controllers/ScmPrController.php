@@ -36,7 +36,7 @@ class ScmPrController extends Controller
     {
         try {
             $scm_prs = ScmPr::query()
-                ->with('scmPrLines')
+                ->with('scmPrLines', 'scmWarehouse')
                 ->latest()
                 ->when(request()->business_unit != "ALL", function ($q) {
                     $q->where('business_unit', request()->business_unit);
@@ -171,9 +171,9 @@ class ScmPrController extends Controller
      * @param ScmPr $purchase_requisition
      * @return JsonResponse
      */
-    public function update(Request $request, ScmPr $purchase_requisition): JsonResponse
+    public function update(ScmPrRequest $request, ScmPr $purchase_requisition): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
         try {
             DB::beginTransaction();

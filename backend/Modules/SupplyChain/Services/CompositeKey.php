@@ -22,17 +22,19 @@ class CompositeKey
      *
      * @param array $lines
      * @param int $parentModelId
-     * @param int $columnId
+     * @param string $columnName
      * @param string $infix
      * @return array
      */
-    public function generateArrayWithCompositeKey(array $lines, int $parentModelId, int $columnId, string $infix): array
+    public function generateArrayWithCompositeKey(array $lines, int $parentModelId, string $columnName, string $infix)
     {
+        // return response()->json($lines, 422);
+
         foreach ($lines as &$line) {
-            if (isset($line[$columnId])) {
+            if (isset($line[$columnName])) {
                 $parentModelId = $parentModelId;
                 $infix = $infix;
-                $compositeKey = $this->generate($parentModelId, $infix, $line[$columnId]);
+                $compositeKey = $this->generate($parentModelId, $infix, $line[$columnName]);
                 $line[$infix . '_composite_key'] = $compositeKey;
             }
         }
