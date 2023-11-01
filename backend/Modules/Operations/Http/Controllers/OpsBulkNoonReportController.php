@@ -180,5 +180,21 @@ class OpsBulkNoonReportController extends Controller
         }
     }
 
+    public function getBulkNoonReportByType(Request $request){
+        try {
+            $bulk_noon_reports = OpsBulkNoonReport::query()
+            ->where(function ($query) use($request) {
+                $query->where('type', 'like', '%' . $request->type . '%');                
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->limit(10)
+            ->get();
 
+            return response()->success('Successfully retrieved cargo tariffs name.', $bulk_noon_reports, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
