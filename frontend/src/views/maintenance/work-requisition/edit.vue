@@ -43,10 +43,9 @@ import WorkRequisitionForm from '../../../components/maintenance/work-requisitio
     workRequisition.value.mnt_items = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.mntItems;
     workRequisition.value.mnt_item_name = value?.mntWorkRequisitionItem?.MntItem;
 
-    workRequisition.value.added_job_lines = value?.mntWorkRequisitionItem?.mntJobLines;
+    workRequisition.value.added_job_lines = value?.mntWorkRequisitionLines;
 
     workRequisition.value.form_type = 'edit';
-    console.log(workRequisition.value.mnt_ship_department_name);
   });
   
   onMounted(() => {
