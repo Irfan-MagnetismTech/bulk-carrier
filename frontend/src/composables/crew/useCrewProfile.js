@@ -15,6 +15,7 @@ export default function useCrewProfile() {
         hired_by: '',
         agency_id: '',
         agency_name: '',
+        rank_id: '',
         department_id: '',
         first_name: '',
         last_name: '',

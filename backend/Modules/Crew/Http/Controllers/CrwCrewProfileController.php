@@ -23,13 +23,13 @@ class CrwCrewProfileController extends Controller
     public function index()
     {
         try {
-            $profiles = CrwCrewProfile::with('educations')->get(); 
+            $profiles = CrwCrewProfile::with('educations')->get();
 
             dd($profiles);
 
 
             $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
 
@@ -52,7 +52,7 @@ class CrwCrewProfileController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'rank_id', 'department_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
                 $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile');
                 $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile');
 
@@ -103,11 +103,11 @@ class CrwCrewProfileController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewProfile)
             {
-                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id','rank_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
 
                 $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile', $crwCrewProfile->attachment);
-                $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile', $crwCrewProfile->picture); 
-                
+                $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile', $crwCrewProfile->picture);
+
                 $crwCrewProfile->update($crwCrewProfileData);
 
                 $crwCrewProfile->educations()->delete();
