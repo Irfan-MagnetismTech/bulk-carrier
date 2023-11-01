@@ -149,7 +149,7 @@
         
         <label class="block w-full mt-2 text-sm" v-show="form.form_type == 'edit'">
             <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
-            <select v-model="form.status" class="form-input" required>
+            <select v-model="form.status" class="form-input" required :disabled="form.form_type != 'edit'">
               <option value="" disabled selected>Select</option>
               <option value="0" > Pending</option>
               <option value="1" > WIP</option>
