@@ -29,6 +29,7 @@ export default function useWorkRequisition() {
         reference_no: '',
         requisition_date: '',
         priority: '',
+        present_run_hour:'',
         est_start_date: '',
         est_completion_date: '',
         act_start_date: '',
