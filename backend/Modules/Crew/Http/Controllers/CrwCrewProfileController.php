@@ -53,17 +53,16 @@ class CrwCrewProfileController extends Controller
             DB::transaction(function () use ($request)
             {
                 $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
-                // $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile');
-                // $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile');
-                // dd(collect($request->educations));
+                $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile');
+                $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile');
 
                 $crwCrewProfile = CrwCrewProfile::create($crwCrewProfileData);
-                $crwCrewProfile->educations()->createMany(collect($request->educations));
+                $crwCrewProfile->educations()->createMany($request->educations);
                 $crwCrewProfile->trainings()->createMany($request->trainings);
-                // $crwCrewProfile->experiences()->createMany($request->experiences);
-                // $crwCrewProfile->languages()->createMany($request->languages);
-                // $crwCrewProfile->references()->createMany($request->references);
-                // $crwCrewProfile->nominees()->createMany($request->nominees);
+                $crwCrewProfile->experiences()->createMany($request->experiences);
+                $crwCrewProfile->languages()->createMany($request->languages);
+                $crwCrewProfile->references()->createMany($request->references);
+                $crwCrewProfile->nominees()->createMany($request->nominees);
 
                 return response()->success('Created Succesfully', $crwCrewProfile, 201);
             });
@@ -82,6 +81,7 @@ class CrwCrewProfileController extends Controller
      */
     public function show(CrwCrewProfile $crwCrewProfile)
     {
+        dd($crwCrewProfile);
         try {
             return response()->success('Retrieved succesfully', $crwCrewProfile->load('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
         }
