@@ -32,7 +32,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
                 ->latest()
                 ->when(request()->business_unit != "ALL", function ($query) {
                     $query->where('business_unit', request()->business_unit);
@@ -84,7 +84,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            return response()->success('data', $purchaseOrder->load('scmPoLines', 'scmPoTerms'), 200);
+            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms','scmVendor', 'scmWarehouse', 'scmPr'), 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -194,8 +194,8 @@ class ScmPoController extends Controller
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
-                            'brand' => $item->scmMaterial->brand,
-                            'model' => $item->scmMaterial->model,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
                             'quantity' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
                             // 'rate' => $item->rate,

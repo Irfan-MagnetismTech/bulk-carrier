@@ -36,7 +36,7 @@ class ScmPrController extends Controller
     {
         try {
             $scm_prs = ScmPr::query()
-                ->with('scmPrLines')
+                ->with('scmPrLines', 'scmWarehouse')
                 ->latest()
                 ->when(request()->business_unit != "ALL", function ($q) {
                     $q->where('business_unit', request()->business_unit);

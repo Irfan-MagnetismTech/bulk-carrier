@@ -224,7 +224,7 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
         <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
         <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
     </label>
-    <label class="label-group" v-if="form.cs_no != ''">
+    <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
           <select class="form-input" v-model="form.scm_vendor_id">
             <option value="" disabled>select</option>
