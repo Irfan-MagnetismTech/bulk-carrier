@@ -98,9 +98,11 @@ class ScmPoController extends Controller
      */
     public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
     {
+        $requestData = $request->except('ref_no', 'pr_composite_key', 'po_composite_key');
+
         try {
             $purchaseOrder->update($request->all());
-            $purchaseOrder->scmPoLines()->createMany($request->scmPoLines);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($requestData);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
 
             return response()->success('Data updated sucessfully!', $purchaseOrder, 202);
