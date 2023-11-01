@@ -23,7 +23,6 @@ const props = defineProps({
   },
 });
 
-const critical = ['No','Yes'];
 // Code for global search start
 const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
@@ -99,11 +98,12 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
+            <th>PO No</th>
+            <th>PO Date</th>
+            <th>Warehouse Name</th>
+            <th>Vendor Name</th>
             <th>PR No</th>
-            <th>Raised Date</th>
-            <th>Is Critical</th>
-            <th>Purchase Center</th>
-            <th>Warehouse</th>
+            <th>CS No</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -111,11 +111,12 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(purchaseOrder,index) in (purchaseOrders?.data ? purchaseOrders?.data : purchaseOrders)" :key="index">
               <td>{{ purchaseOrders?.from + index }}</td>
-              <td>{{ purchaseOrder?.pr_no }}</td>
-              <td>{{ purchaseOrder?.raised_date }}</td>
-              <td>{{ critical[purchaseOrder?.is_critical] }}</td>
-              <td>{{ purchaseOrder?.purchase_center }}</td>
-              <td>{{ purchaseOrder?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ purchaseOrder?.ref_no }}</td>
+              <td>{{ purchaseOrder?.date }}</td>
+              <td>{{ purchaseOrder?.scmWarehouse?.name }}</td>
+              <td>{{ purchaseOrder?.scmVendor?.name }}</td>
+              <td>{{ purchaseOrder?.scmPr?.ref_no }}</td>
+              <td>{{ purchaseOrder?.scmCs?.ref_no ?? 'N/A' }}</td>
               <td>
                 <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
               </td>

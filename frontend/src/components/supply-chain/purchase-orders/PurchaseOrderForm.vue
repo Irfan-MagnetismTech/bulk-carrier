@@ -89,12 +89,10 @@
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
       newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_amount);
+        props.form.scmPoLines[index].total_price = parseFloat((material?.rate * material?.quantity).toFixed(2));
+        total += parseFloat(props.form.scmPoLines[index].total_price);
       });
-
-      
-  props.form.sub_total = parseFloat(total.toFixed(2));
+      props.form.sub_total = parseFloat(total.toFixed(2));
       calculateNetAmount();
 }, { deep: true });
     
@@ -209,21 +207,12 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPr" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmPr"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
+          <Error v-if="errors?.pr_no" :errors="errors.pr_no"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.pr_date" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
+          <input type="date" v-model="form.pr_date" required readonly class="form-input vms-readonly-input" name="pr_date" :id="'pr_date'" />
           <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
       </label>
       
@@ -330,7 +319,7 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
               <input type="text" v-model="form.scmPoLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].required_date" class="form-input">
+              <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
               <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
