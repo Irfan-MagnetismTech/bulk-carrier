@@ -250,7 +250,7 @@
             </v-select>
             </td>
             <td>
-              <span class="show-block text-center" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
+              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
