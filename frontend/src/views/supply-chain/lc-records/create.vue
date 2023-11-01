@@ -16,20 +16,6 @@ const { getLcRecord, lcRecord, storeLcRecord,materialObject,termsObject, errors,
 const page = ref('edit');
 const { setTitle } = Title();
 
-const props = defineProps({
-  cs_id: {
-    type: Number,
-    default: 1,
-    },
-    pr_id: {
-    type: Number,
-    default: 1,
-  },
-});
-
-// console pr_id and cs_id after on mount
-
-
 
 
 setTitle('Create LC Record');
@@ -37,15 +23,15 @@ setTitle('Create LC Record');
 <template>
     <!-- Heading -->
     
-    <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create LC Records</h2>
+    <div class="flex items-center justify-between w-full my-3" v-once>
+        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Create LC Records</h2>
         <default-button :title="'PO List'" :to="{ name: 'scm.lc-records.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeLcRecord(lcRecord)">
           <lc-record-form v-model:form="lcRecord" :errors="errors" :materialObject="materialObject" :termsObject="termsObject" :page="page"></lc-record-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>
         
     </div>

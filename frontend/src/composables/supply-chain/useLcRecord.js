@@ -18,65 +18,46 @@ export default function useLcRecord() {
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
 
-    const lcRecord = ref( {
-        ref_no: '',
-        scmWarehouse: '',
-        scm_warehouse_id: '',
-        acc_cost_center_id: '',
-        po_date: '',
-        pr_no: null,
-        scm_pr_id: null,
-        scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
-        scmCs: null,
-        scmVendor: null,
+    const lcRecord = ref({
+        lc_no: null,
+        lc_date: null,
+        expire_date: null,
+        weight: null,
+        no_of_packet: 0,
+        scm_po_id: null,
+        scmPo: null,
+        invoice_value: 0,
+        assessment_value: 0,
+        issue_bank_id: null,
+        issueBank: null,
+        advising_bank_id: null,
+        advisingBank: null,
+        discounting_bank_id: null,
+        discountingBank: null,
+        beneficiary_bank_id: null,
+        beneficiaryBank: null,
+        type: null,
+        acc_bank_id: null,
+        accBank: null,
+        cfr_value: 0.0,
+        lc_margin: 0.0,
+        insurance_payment: 0.0,
+        total_cost: 0.0,
+        cfr_margin: 0.0,
+        exchange_rate: 0.0,
+        market_rate: 0.0,
+        business_unit: null,
+        attachment: null,
+        created_by: null,
         scm_vendor_id: null,
-        vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
-        remarks: '',
-        sub_total: 0.0,
-        discount: 0.0,
-        total_amount: 0.0,
-        vat: 0.0,
-        net_amount: 0.0,
-        business_unit: '',
-        scmPoLines: [
+        scmVendor: null,
+        scmLcRecordLines: [
                         {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
+                            particular: '',
+                            amount: 0,
                         }
-                    ],
-        scmPoTerms: [
-                        {
-                            description: ''
-                        }
-                    ],  
+                    ], 
         });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
-    }
-
-    const termsObject =  {
-        description: ''
-    }
     const errors = ref('');
     const isLoading = ref(false);
     const indexPage = ref(null);
@@ -218,8 +199,6 @@ export default function useLcRecord() {
         showLcRecord,
         updateLcRecord,
         deleteLcRecord,
-        materialObject,
-        termsObject,
         isLoading,
         errors,
     };

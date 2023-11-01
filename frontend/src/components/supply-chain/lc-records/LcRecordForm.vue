@@ -147,33 +147,26 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.lc_no"></business-unit-input>
   </div>
-  <div class="input-group !w-1/4">
-      <label class="label-group">
-          <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
-      </label>
-    </div>
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
+        <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
+        <input type="text" readonly v-model="form.lc_no" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
         <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" />
       </label>
       <label class="label-group">
-          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.po_date" required class="form-input" name="po_date" :id="'po_date'" />
+          <span class="label-item-title">LC Date<span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.lc_no" required class="form-input" name="po_date" :id="'po_date'" />
           <Error v-if="errors?.po_date" :errors="errors.po_date"  />
       </label>
       <label class="label-group">
-        <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPr" label="ref_no" class="block form-input">
+        <span class="label-item-title">LC Expire Date<span class="text-red-500">*</span></span>
+          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.lc_no" label="ref_no" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.scmPr"
+                  :required="!form.lc_no"
                   v-bind="attributes"
                   v-on="events"
               />
@@ -182,67 +175,92 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
           <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
       <label class="label-group">
-          <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.pr_date" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
+          <span class="label-item-title">Weight<span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.lc_no" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
           <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
       </label>
       
   </div>
   <div class="input-group">    
     <label class="label-group">
-        <span class="label-item-title">CS No</span>
-       <!-- <input type="text" v-model="form.scmCs.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
-        <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
+        <span class="label-item-title">No. Of Packet</span>
+       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
+        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
         <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
     </label>
-    <label class="label-group" v-if="form.cs_no != ''">
-          <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <select class="form-input" v-model="form.scm_vendor_id">
+    <label class="label-group">
+          <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
+          <select class="form-input" v-model="form.lc_no">
             <option value="" disabled>select</option>
             <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
           </select>
           <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
       </label>
-      <label class="label-group" v-else>
-          <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmVendor"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
-      </label>
       
       <label class="label-group">
-        <span class="label-item-title">Currency</span>
-        <input type="text" v-model="form.currency" required class="form-input" name="currency" :id="'currency'" />
+        <span class="label-item-title">Assessment Value</span>
+        <input type="text" v-model="form.lc_no" required class="form-input" name="currency" :id="'currency'" />
         <Error v-if="errors?.currency" :errors="errors.currency"/>
     </label>
       <label class="label-group">
-          <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.convertion_rate" required class="form-input" name="approved_date" :id="'convertion_rate'" />
+          <span class="label-item-title">Issuing Bank<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.lc_no" required class="form-input" name="approved_date" :id="'convertion_rate'" />
           <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
       </label>
   </div>
-
-  <div class="input-group !w-3/4">
+  <div class="input-group">    
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+        <span class="label-item-title">Issuing Bank</span>
+       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
+        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
+        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
     </label>
+    <label class="label-group">
+          <span class="label-item-title">Advising Bank<span class="text-red-500">*</span></span>
+          <select class="form-input" v-model="form.lc_no">
+            <option value="" disabled>select</option>
+            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
+          </select>
+          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+      </label>
+      
+      <label class="label-group">
+        <span class="label-item-title">Beneficiary Bank</span>
+        <input type="text" v-model="form.lc_no" required class="form-input" name="currency" :id="'currency'" />
+        <Error v-if="errors?.currency" :errors="errors.currency"/>
+    </label>
+      <label class="label-group">
+          <span class="label-item-title">Issuing Bank<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.lc_no" required class="form-input" name="approved_date" :id="'convertion_rate'" />
+          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
+      </label>
   </div>
+  <div class="input-group !w-1/2">    
+    <label class="label-group">
+        <span class="label-item-title">Party Name</span>
+       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
+        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
+        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+    </label>
+    <label class="label-group">
+          <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
+          <select class="form-input" v-model="form.lc_no">
+            <option value="" disabled>select</option>
+            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
+          </select>
+          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+      </label>
+  </div>
+
 
   <div id="customDataTable">
     <div  class="table-responsive">
-      <fieldset class="form-fieldset">
-        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
+      <!-- <fieldset class="form-fieldset">
+        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend> -->
+        
         <table class="w-full whitespace-no-wrap" id="table">
+          //table caption with border and text center
+          <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Materials</caption>
           <thead>
           <tr class="table_head_tr">
             <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
@@ -258,13 +276,13 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
           </thead>
 
           <tbody class="table_body">
-          <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
+          <tr class="table_tr" v-for="(scmPoLine, index) in form.scmLcRecordLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmLcRecordLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmLcRecordLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmPoLines[index].scmMaterial"
+                        :required="!form.scmLcRecordLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -272,25 +290,25 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
             </v-select>
             </td>
             <td>
-              <input type="text" readonly v-model="form.scmPoLines[index].unit" class="vms-readonly-input form-input">
+              <input type="text" readonly v-model="form.scmLcRecordLines[index].unit" class="vms-readonly-input form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].brand" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].brand" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].model" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].required_date" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].quantity" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
+              <input type="text" v-model="form.scmLcRecordLines[index].total_amount" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
@@ -308,38 +326,38 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
           <tr>
             <td colspan="7" class="text-right">Sub Total</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
             </td>
           </tr>
           <tr>
             <td colspan="7" class="text-right">Less: Discount</td>
             <td class="text-right">
-              <input type="text" class="form-input" v-model="form.discount">
+              <input type="text" class="form-input" v-model="form.lc_no">
             </td>
           </tr>
           
           <tr>
             <td colspan="7" class="text-right">Total Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
             </td>
           </tr>
           <tr>
             <td colspan="7" class="text-right">Add: VAT</td>
             <td class="text-right">
-              <input type="text" class="form-input" v-model="form.vat">
+              <input type="text" class="form-input" v-model="form.lc_no">
             </td>
           </tr>
           
           <tr>
             <td colspan="7" class="text-right">Net Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
+              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
             </td>
           </tr>
           </tbody>
         </table>
-      </fieldset>
+      <!-- </fieldset> -->
     </div>
   </div>
 
