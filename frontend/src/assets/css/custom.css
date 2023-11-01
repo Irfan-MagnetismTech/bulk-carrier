@@ -278,6 +278,10 @@ input.custom_date::-webkit-calendar-picker-indicator{
     @apply w-5 h-5 transition duration-150 ease-in-out hover:translate-y-1 hover:transform;
 }
 
+.active-tab{
+    font-weight: bold;
+}
+
 .v-select {
     --vs-controls-color: #374151;
     --vs-border-color: #4b5563;

@@ -198,6 +198,27 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    /* Crew Profile Routes */
+    {
+        path: `/${BASE}/profiles`,
+        name: `${BASE}.profiles.index`,
+        component: () => import(`../views/crew/profile/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/profiles/create`,
+        name: `${BASE}.profiles.create`,
+        component: () => import(`../views/crew/profile/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/profiles/:profileId/edit`,
+        name: `${BASE}.profiles.edit`,
+        component: () => import(`../views/crew/profile/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* Crew documents Routes */
     {
         path: `/${BASE}/documents`,
