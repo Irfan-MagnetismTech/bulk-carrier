@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('scm_pos', function (Blueprint $table) {
             $table->comment('po => Purchase order');
             $table->id();
+            $table->string('ref_no')->nullable();
             $table->foreignId('scm_pr_id')->constrained('scm_prs');
             $table->unsignedBigInteger('scm_cs_id')->nullable();
             $table->date('date')->nullable();

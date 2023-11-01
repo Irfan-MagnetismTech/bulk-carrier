@@ -28,14 +28,11 @@ class CompositeKey
      */
     public function generateArrayWithCompositeKey(array $lines, int $parentModelId, string $columnName, string $infix)
     {
-        // return response()->json($lines, 422);
-
         foreach ($lines as &$line) {
             if (isset($line[$columnName])) {
                 $parentModelId = $parentModelId;
                 $infix = $infix;
-                $compositeKey = $this->generate($parentModelId, $infix, $line[$columnName]);
-                $line[$infix . '_composite_key'] = $compositeKey;
+                $line[$infix . '_composite_key'] = $parentModelId . '-' . strtoupper($infix) . '-' . $line[$columnName];
             }
         }
 

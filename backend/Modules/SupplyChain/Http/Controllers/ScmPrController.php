@@ -54,7 +54,7 @@ class ScmPrController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmPrRequest $request)
+    public function store(ScmPrRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
 
@@ -69,7 +69,6 @@ class ScmPrController extends Controller
             DB::beginTransaction();
 
             $purchase_requisition = ScmPr::create($requestData);
-
             if ($request->entry_type === '0') {
                 $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
                 $purchase_requisition->scmPrLines()->createMany($linesData);
@@ -85,14 +84,13 @@ class ScmPrController extends Controller
                     $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
                 }
             }
-            DB::commit();
 
+            DB::commit();
             return response()->success('Data created succesfully', $purchase_requisition, 201);
         } catch (ValidationException $e) {
             DB::rollBack();
 
             $failures = $e->failures();
-
             foreach ($failures as $failure) {
                 $failure->row();
                 $failure->attribute();
@@ -103,7 +101,6 @@ class ScmPrController extends Controller
             return response()->json($e->failures(), 422);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 501);
         }
     }
@@ -156,11 +153,9 @@ class ScmPrController extends Controller
             'scmPrLines' => $prLines,
         ];
 
-
         try {
             return response()->success('Data updated sucessfully!', $purchaseRequisition, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -189,7 +184,6 @@ class ScmPrController extends Controller
             return response()->success('Data updated sucessfully!', $purchase_requisition, 202);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -207,7 +201,6 @@ class ScmPrController extends Controller
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -231,7 +224,7 @@ class ScmPrController extends Controller
         } else {
             $purchase_requisition = [];
         }
-
+        
         return response()->success('Search result', $purchase_requisition, 200);
     }
 }
