@@ -85,8 +85,8 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Present Run Hour" class="form-input" readonly />
-          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
+            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" readonly />
+          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
 
@@ -261,7 +261,7 @@ watch(() => props.form.ops_vessel_name, (newValue, oldValue) => {
 });
 
 watch(() => presentRunHour.value, (value) => {
-  props.form.previous_run_hour = value?.previous_run_hour;
+  props.form.present_run_hour = value?.previous_run_hour;
 });
 
 watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
@@ -308,7 +308,7 @@ watch(() => props.form.mnt_item_name, (value) => {
     getJobsForRequisition(businessUnit.value, props.form.ops_vessel_id, props.form.mnt_item_id);
   }
   else{
-    props.form.previous_run_hour = null;
+    props.form.present_run_hour = null;
     itemWiseJobLines.value = [];
   }
 });
