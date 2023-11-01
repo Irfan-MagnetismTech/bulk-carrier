@@ -154,11 +154,45 @@ onMounted(() => {
         <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Personal Info</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Hired By <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.hired_by">
               <option value="" disabled selected>Select</option>
               <option value="Agency">Agency</option>
               <option value="Company">Company</option>
+            </select>
+            <Error v-if="errors?.hired_by" :errors="errors.hired_by" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
+            <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.agency_name" label="name" class="block form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.agency_name"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+            <Error v-if="errors?.agency_name" :errors="errors.agency_name" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.department_id">
+              <option value="" disabled selected>Select</option>
+              <option value="1">Deck</option>
+              <option value="2">Engine</option>
+              <option value="3">Steward</option>
+              <option value="4">Technical</option>
+              <option value="5">Medical</option>
+            </select>
+            <Error v-if="errors?.department_id" :errors="errors.department_id" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form." required>
+              <option value="" disabled>select</option>
+              <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
             </select>
             <Error v-if="errors?.hired_by" :errors="errors.hired_by" />
           </label>
