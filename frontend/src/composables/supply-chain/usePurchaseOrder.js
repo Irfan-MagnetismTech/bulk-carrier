@@ -143,6 +143,7 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-orders/${purchaseOrderId}`);
             purchaseOrder.value = data.value;
+            console.log('podata', purchaseOrder.value);
 
         } catch (error) {
             const { data, status } = error.response;

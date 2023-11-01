@@ -97,16 +97,17 @@ class ScmPoController extends Controller
      * @return JsonResponse
      */
     public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
-    {
-        $requestData = $request->except('ref_no', 'pr_composite_key', 'po_composite_key');
-
+    { 
+        $requestData = $request->except('ref_no', 'pr_composite_key', 'po_composite_key');     
         try {
+            DB::beginTransaction();
             $purchaseOrder->update($request->all());
-            $purchaseOrder->scmPoLines()->createUpdateOrDelete($requestData);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
-            return response()->success('Data updated sucessfully!', $purchaseOrder, 202);
+            DB::commit();
+            return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
