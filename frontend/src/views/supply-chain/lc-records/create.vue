@@ -13,7 +13,7 @@ const icons = useHeroIcon();
 const route = useRoute();
 
 const { getLcRecord, lcRecord, storeLcRecord,materialObject,termsObject, errors, isLoading } = useLcRecord();
-const page = ref('edit');
+const page = ref('create');
 const { setTitle } = Title();
 
 
@@ -29,7 +29,7 @@ setTitle('Create LC Record');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeLcRecord(lcRecord)">
-          <lc-record-form v-model:form="lcRecord" :errors="errors" :materialObject="materialObject" :termsObject="termsObject" :page="page"></lc-record-form>
+          <lc-record-form v-model:form="lcRecord" :errors="errors" :page="page"></lc-record-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

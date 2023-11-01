@@ -6,10 +6,12 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
+    import useBusinessInfo from '../../../composables/useBusinessInfo';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors,searchVendor } = useVendor();
+    const { vendors, searchVendor } = useVendor();
+    const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -17,8 +19,6 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
-      materialObject: { type: Object, required: false },
-      termsObject: { type: Object, required: false },
       csVendors: { type: Object, required: false },
       page: {
       required: false,
@@ -26,35 +26,6 @@
     },
 
     });
-
-    function addMaterial() {
-      props.form.scmPoLines.push(props.materialObject);
-    }
-
-    function removeMaterial(index){
-      props.form.scmPoLines.splice(index, 1);
-}
-
-    function addTerms() {
-          props.form.scmPoTerms.push(props.termsObject);
-        }
-
-    function removeTerms(index){
-      props.form.scmPoTerms.splice(index, 1);
-    }
-
-    // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
-    // }
-
-
-    watch(() => props?.form?.status, (newVal, oldVal) => {
-      props?.form?.status == props?.form?.status;
-    })
-
 
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -69,78 +40,45 @@
     //     }
     // }, { deep: true });
 
-    // });// Code for global search end here
+// });// Code for global search end here
 
-
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    console.log(props.form.business_unit);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
-
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-  });
-    
-    function fetchVendor(search, loading) {
-    loading(true);
-    searchVendor(search, loading);
-  }
-    function fetchPurchaseRequisition(search, loading) {
-    loading(true);
-    searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
-    }
-
-    watch(() => props.form.scmPurchaseRequisition, (value) => {
-          props.form.scm_pr_id = value?.id;
-      });
-
-    function setMaterialOtherData(datas,index){
-      console.log(datas);
-      props.form.scmPoLines[index].unit = datas.unit;
-      props.form.scmPoLines[index].scm_material_id = datas.id;
-    }
-
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     if(newValue !== oldValue && oldValue != ''){
       props.form.scm_warehouse_id = '';
-      props.form.scmWarehouse = null;
     }
   });
 
-//watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find sub_total from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find discount from sub_total with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from sub_total and discount with parseFloat and toFixed 2
-//watch props.form.materials find vat from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find net_amount from total_amount and vat with parseFloat and toFixed 2
-watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_amount);
-      });
-  props.form.sub_total = parseFloat(total.toFixed(2));
-      calculateNetAmount();
-}, { deep: true });
-    
-  function calculateNetAmount(){
-    props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
-    props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
-}
- 
-  watch(() => props?.form?.discount, (newVal, oldVal) => {
-    calculateNetAmount();
-  });
-  watch(() => props?.form?.vat, (newVal, oldVal) => {
-    calculateNetAmount();
-  });
 
+onMounted(() => {
+  getLcCostHeads();
+});
+watch(lc_cost_heads, (newVal, oldVal) => {
+  console.log(newVal);
+  newVal.forEach((lc_cost_head, index) => {
+    console.log(lc_cost_head,index);
+    props.form.scmLcRecordLines.push({
+      particular: lc_cost_head,
+      amount: 0.0,
+    });
+  });
+});
+
+//watch form.scmLcRecordLines
+watch(() => props?.form?.scmLcRecordLines, (newVal, oldVal) => {
+  let total = 0.0;
+  newVal?.forEach((lc_cost_head, index) => {
+    props.form.scmLcRecordLines[index].amount = parseFloat(lc_cost_head?.amount);
+    total += parseFloat(props.form.scmLcRecordLines[index].amount);
+  });
+  props.form.total_cost = parseFloat(total.toFixed(2));
+}, { deep: true });
+
+
+function handleAttachmentChange(e) {
+      let fileData = e.target.files[0];
+      props.form.attachment = fileData;
+}
+    
 </script>
 <template>
 
@@ -152,103 +90,91 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
-        <input type="text" readonly v-model="form.lc_no" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
-        <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" />
+        <input type="text" readonly v-model="form.lc_no" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'lc_no'" />
+        <Error v-if="errors?.lc_no" :errors="errors.lc_no" />
       </label>
       <label class="label-group">
           <span class="label-item-title">LC Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.lc_no" required class="form-input" name="po_date" :id="'po_date'" />
-          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+          <input type="date" v-model="form.lc_date" required class="form-input" name="lc_date" :id="'lc_date'" />
+          <Error v-if="errors?.lc_date" :errors="errors.lc_date"  />
       </label>
       <label class="label-group">
         <span class="label-item-title">LC Expire Date<span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.lc_no" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.lc_no"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+           <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" />
+          <Error v-if="errors?.expire_date" :errors="errors.expire_date"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Weight<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.lc_no" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
-          <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
+          <input type="date" v-model="form.weight" required readonly class="form-input" name="weight" :id="'weight'" />
+          <Error v-if="errors?.weight" :errors="errors.weight"  />
       </label>
       
   </div>
   <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">No. Of Packet</span>
-       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
-        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
-        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+        <input type="text" v-model="form.no_of_packet" readonly required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
+        <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" />
     </label>
     <label class="label-group">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
-          <select class="form-input" v-model="form.lc_no">
-            <option value="" disabled>select</option>
-            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
-          </select>
-          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+          <v-select :options="pos" placeholder="--Choose an option--" @search="fetchPos" v-model="form.scmPo" label="ref_no" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.scmPo"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
+          <Error v-if="errors?.scm_po_id" :errors="errors.scm_po_id"  />
       </label>
       
       <label class="label-group">
-        <span class="label-item-title">Assessment Value</span>
-        <input type="text" v-model="form.lc_no" required class="form-input" name="currency" :id="'currency'" />
-        <Error v-if="errors?.currency" :errors="errors.currency"/>
+        <span class="label-item-title">Invoice Value</span>
+        <input type="text" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
+        <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/>
     </label>
       <label class="label-group">
-          <span class="label-item-title">Issuing Bank<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.lc_no" required class="form-input" name="approved_date" :id="'convertion_rate'" />
-          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
+          <span class="label-item-title">Assessment Value<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
+          <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  />
       </label>
   </div>
   <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">Issuing Bank</span>
-       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
-        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
-        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+        <input type="text" v-model="form.issue_bank_id" readonly required class="form-input" name="issue_bank_id" :id="'issue_bank_id'" /> 
+        <Error v-if="errors?.issue_bank_id" :errors="errors.issue_bank_id" />
     </label>
     <label class="label-group">
           <span class="label-item-title">Advising Bank<span class="text-red-500">*</span></span>
-          <select class="form-input" v-model="form.lc_no">
-            <option value="" disabled>select</option>
-            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
-          </select>
-          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+          <input type="text" v-model="form.advising_bank_id" required class="form-input" name="advising_bank_id" :id="'advising_bank_id'" />
+          <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_id"  />
       </label>
       
       <label class="label-group">
         <span class="label-item-title">Beneficiary Bank</span>
-        <input type="text" v-model="form.lc_no" required class="form-input" name="currency" :id="'currency'" />
-        <Error v-if="errors?.currency" :errors="errors.currency"/>
+        <input type="text" v-model="form.advising_bank_id" required class="form-input" name="beneficiary_bank_id" :id="'beneficiary_bank_id'" />
+        <Error v-if="errors?.beneficiary_bank_id" :errors="errors.beneficiary_bank_id"/>
     </label>
       <label class="label-group">
           <span class="label-item-title">Issuing Bank<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.lc_no" required class="form-input" name="approved_date" :id="'convertion_rate'" />
-          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
+          <input type="text" v-model="form.issue_bank_id" required class="form-input" name="issue_bank_id" :id="'issue_bank_id'" />
+          <Error v-if="errors?.issue_bank_id" :errors="errors.issue_bank_id"  />
       </label>
   </div>
   <div class="input-group !w-1/2">    
     <label class="label-group">
         <span class="label-item-title">Party Name</span>
-       <!-- <input type="text" v-model="form.lc_no.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
-        <input type="text" v-model="form.lc_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
-        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+        <input type="text" v-model="form.scmVendor" readonly required class="form-input" name="scmVendor" :id="'scmVendor'" /> 
+        <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" />
     </label>
     <label class="label-group">
           <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
-          <select class="form-input" v-model="form.lc_no">
-            <option value="" disabled>select</option>
-            <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
-          </select>
-          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+          <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
+          <Error v-if="errors?.attachment" :errors="errors.attachment"  />
       </label>
   </div>
 
@@ -259,139 +185,75 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend> -->
         
         <table class="w-full whitespace-no-wrap" id="table">
-          //table caption with border and text center
-          <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Materials</caption>
-          <thead>
-          <tr class="table_head_tr">
-            <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Brand</th>
-            <th class="py-3 align-center">Model</th>
-            <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Rate</th>
-            <th class="py-3 align-center">Total Price</th>
-            <th class="py-3 text-center align-center">Action</th>
-          </tr>
-          </thead>
+          <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
+          <tbody>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type</td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" readonly v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank</td>
+              <td class="align-center !w-1/4">
+                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">CFR Value (BDT)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
 
-          <tbody class="table_body">
-          <tr class="table_tr" v-for="(scmPoLine, index) in form.scmLcRecordLines" :key="index">
-            <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmLcRecordLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmLcRecordLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmLcRecordLines[index].scmMaterial"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
-            </td>
-            <td>
-              <input type="text" readonly v-model="form.scmLcRecordLines[index].unit" class="vms-readonly-input form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].brand" class="form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].model" class="form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].required_date" class="form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].quantity" class="form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].rate" class="form-input">
-            </td>
-            <td>
-              <input type="text" v-model="form.scmLcRecordLines[index].total_amount" class="form-input">
-            </td>
-            <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-              <button v-else type="button" @click="addMaterial()" class="add_button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="7" class="text-right">Sub Total</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="7" class="text-right">Less: Discount</td>
-            <td class="text-right">
-              <input type="text" class="form-input" v-model="form.lc_no">
-            </td>
-          </tr>
-          
-          <tr>
-            <td colspan="7" class="text-right">Total Amount</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="7" class="text-right">Add: VAT</td>
-            <td class="text-right">
-              <input type="text" class="form-input" v-model="form.lc_no">
-            </td>
-          </tr>
-          
-          <tr>
-            <td colspan="7" class="text-right">Net Amount</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.lc_no">
-            </td>
-          </tr>
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">LC Margin (BDT)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
+
+              </td>
+            </tr>
+            <tr class="text-center" v-for="(scmLcRecordLine,index) in form.scmLcRecordLines" :key="index">
+                <td class="align-center font-bold bg-gray-100">{{scmLcRecordLine.particular}}</td>
+                <td class="align-center">
+                  <input type="text" v-model="form.scmLcRecordLines[index].amount" required class="form-input text-center" name="po_date" :id="'po_date'" />
+                </td>
+              </tr>
+            <tr class="text-right">
+              <td class="align-right font-bold bg-gray-100">Total Costs Relating To LC ( a + b + c + d)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Documents Value (CFR - Margin) (BDT)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.document_value" required class="form-input text-center" name="document_value" :id="'document_value'" />
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD)</td>
+              <td class="align-center">
+                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+
+              </td>
+            </tr>
           </tbody>
+
+        
         </table>
       <!-- </fieldset> -->
     </div>
   </div>
-
-  <div id="customDataTable">
-    <div  class="table-responsive max-w-screen">
-      <fieldset class="form-fieldset">
-        <legend class="form-legend">Terms And Conditions <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap" id="table">
-         <tbody class="table_body">
-          <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
-            <td>
-              <input type="text" v-model="form.scmPoTerms[index].details" class="form-input">
-            </td>
-           
-            <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeTerms(index)" class="remove_button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-              <button v-else type="button" @click="addTerms()" class="add_button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-        
-          </tbody>
-        </table>
-      </fieldset>
-    </div>
-  </div>
-
 </template>
 
 

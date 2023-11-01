@@ -36,26 +36,21 @@ export default function useLcRecord() {
         discountingBank: null,
         beneficiary_bank_id: null,
         beneficiaryBank: null,
+        scm_vendor_id: null,
+        scmVendor: null,
+        attachment: null,
         type: null,
         acc_bank_id: null,
         accBank: null,
         cfr_value: 0.0,
         lc_margin: 0.0,
-        insurance_payment: 0.0,
         total_cost: 0.0,
-        cfr_margin: 0.0,
+        document_value: 0.0,
         exchange_rate: 0.0,
         market_rate: 0.0,
         business_unit: null,
-        attachment: null,
         created_by: null,
-        scm_vendor_id: null,
-        scmVendor: null,
         scmLcRecordLines: [
-                        {
-                            particular: '',
-                            amount: 0,
-                        }
                     ], 
         });
     const errors = ref('');
@@ -72,7 +67,7 @@ export default function useLcRecord() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/purchase-orders`,{
+            const {data, status} = await Api.get(`/${BASE}/lc-records`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
@@ -101,10 +96,10 @@ export default function useLcRecord() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/purchase-orders`, formData);
+            const { data, status } = await Api.post(`/${BASE}/lc-records`, formData);
             lcRecord.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.purchase-orders.index` });
+            router.push({ name: `${BASE}.lc-records.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -120,7 +115,7 @@ export default function useLcRecord() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/purchase-orders/${lcRecordId}`);
+            const { data, status } = await Api.get(`/${BASE}/lc-records/${lcRecordId}`);
             lcRecord.value = data.value;
 
         } catch (error) {
@@ -141,10 +136,10 @@ export default function useLcRecord() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/purchase-orders/${lcRecordId}`, formData);
+            const { data, status } = await Api.post(`/${BASE}/lc-records/${lcRecordId}`, formData);
             lcRecord.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.purchase-orders.index` });
+            router.push({ name: `${BASE}.lc-records.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -160,7 +155,7 @@ export default function useLcRecord() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/purchase-orders/${lcRecordId}`);
+            const { data, status } = await Api.delete( `/${BASE}/lc-records/${lcRecordId}`);
             notification.showSuccess(status);
             await getLcRecords(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
@@ -176,7 +171,7 @@ export default function useLcRecord() {
         
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-orders`,searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-lc-records`,searchParam);
             filteredLcRecords.value = data.value;
         } catch (error) {
             const { data, status } = error.response;

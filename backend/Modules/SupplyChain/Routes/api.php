@@ -36,7 +36,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('product-types', fn () => config('businessinfo.product_type'));
-    Route::get('lc-cos-heads', fn () => config('businessinfo.lc_cost_heads'));
+    Route::get('lc-cost-heads', fn () => config('businessinfo.lc_cost_heads'));
 
     //Laravel Excel Apis
     Route::get('export-materials', [ScmMaterialController::class, "export"])->name('exportMaterials');
