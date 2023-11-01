@@ -24,9 +24,9 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->decimal('rate')->nullable();
             $table->decimal('total_price')->nullable();
-            $table->double('net_rate')->nullable()->comment('This cost is for net cost, i.e; unit_price + other_cost_per_unit')->nullable();
+            $table->decimal('net_rate')->nullable()->comment('This cost is for net cost, i.e; unit_price + other_cost_per_unit')->nullable();
             $table->string('po_composite_key')->nullable();
-            $table->bigInteger('pr_composite_key')->nullable();
+            $table->string('pr_composite_key')->nullable();
             $table->timestamps();
         });
     }

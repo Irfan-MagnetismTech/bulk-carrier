@@ -7,13 +7,23 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
+    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    {
+        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
+        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    }
+    
     /**
      * Display a listing of the resource.
      * @return JsonResponse
@@ -44,8 +54,16 @@ class ScmPoController extends Controller
         try {
             DB::beginTransaction();
 
+            $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
+            
+            
             $scmPo = ScmPo::create($request->all());
-            $scmPo->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
+
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            
+            // return response()->json($linesData, 422);    
+
+            $scmPo->scmPoLines()->createUpdateOrDelete($linesData);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
 
             DB::commit();
