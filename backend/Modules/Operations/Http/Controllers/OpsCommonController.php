@@ -351,22 +351,20 @@ class OpsCommonController extends Controller
         }
     }
 
-
-    // To get Month Wise Expense Report data
-    public function getMonthWiseExpenseReportWithoutPaginate(Request $request) : JsonResponse
+    // To get bulk noot report data
+    public function getBulkNoonReportWithoutPaginate(Request $request): JsonResponse
     {
         try {
-            $month_wise_expense_reports = OpsMonthWiseExpenseReport::with(['opsVessel.opsVoyage.opsVoyageSectors'])
+            $bulk_noon_reports = OpsBulkNoonReport::with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions','opsBulkNoonReportDistances','opsBulkNoonReportEngineInputs'])
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();
-
-            return response()->success('Successfully retrieved month wise expense reports.', $month_wise_expense_reports, 200);
+            
+            return response()->success('Successfully retrieved bulk noon reports.', $bulk_noon_reports, 200);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 }
