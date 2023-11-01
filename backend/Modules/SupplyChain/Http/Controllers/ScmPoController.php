@@ -54,12 +54,11 @@ class ScmPoController extends Controller
 
         try {
             DB::beginTransaction();
-
             $scmPo = ScmPo::create($requestData);
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            $scmPo->scmPoLines()->createUpdateOrDelete($linesData);
-            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
+            // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$scmPo->id);
+            $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
+            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);       
             DB::commit();
             return response()->success('Data created successfully', $scmPo, 201);
         } catch (\Exception $e) {
@@ -94,11 +93,10 @@ class ScmPoController extends Controller
 
         try {
             DB::beginTransaction();
-
             $purchaseOrder->update($requestData);
-            $purchaseOrder->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$purchaseOrder->id);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
             DB::commit();
             return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
@@ -140,6 +138,21 @@ class ScmPoController extends Controller
         }
 
         return response()->success('Search result', $scmPo, 200);
+    }
+
+
+    //function to loop reqest data and add a value named net_rate to each ite
+    public function addNetRateToRequestData($request,$po_id)
+    {
+        $net_amount = $request['net_amount'];
+        $sub_total = $request['sub_total'];
+        $scmPoLines = $request['scmPoLines'];
+        foreach ($scmPoLines as $key => $value) {
+            $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
+            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
+        }
+        $request['scmPoLines'] = $scmPoLines;
+        return $request;
     }
     
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
