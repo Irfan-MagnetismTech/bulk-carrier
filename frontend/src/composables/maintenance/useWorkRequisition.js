@@ -119,7 +119,7 @@ export default function useWorkRequisition() {
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/work-requisitions/${itemId}`,
+                `/mnt/work-requisitions/${workRequisitionId}`,
                 form
             );
             workRequisition.value = data.value;

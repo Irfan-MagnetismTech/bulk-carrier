@@ -172,11 +172,11 @@
             </thead>
             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
               <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
-                  <td>{{ jobLine.job_description }}</td>
-                  <td>{{ jobLine.cycle + ' ' + jobLine.cycle_unit  }}</td>
-                  <td>{{ jobLine.last_done  }}</td>
-                  <td>{{ jobLine.previous_run_hour  }}</td>
-                  <td>{{ jobLine.next_due  }}</td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.job_description" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.cycle + ' ' + jobLine.cycle_unit" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.last_done" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.previous_run_hour" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.next_due" readonly /></td>
                   <td>
                     <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
@@ -229,15 +229,16 @@ const props = defineProps({
 });
 
 
-watch(() => props.form.ops_vessel_name, (value) => {
-  props.form.ops_vessel_id = value?.id;
+watch(() => props.form.ops_vessel_name, (newValue, oldValue) => {
+  props.form.ops_vessel_id = newValue?.id;
   if(props.form.ops_vessel_id){
     getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
   }
   else{
     vesselWiseJobItems.value = [];
   }
-  props.form.mnt_item_name = ''; //vessel change
+  if(oldValue !== '')
+    props.form.mnt_item_name = ''; //vessel change
 
   if(props.form.ops_vessel_id && props.form.mnt_item_id){
     getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
@@ -300,7 +301,7 @@ watch(() => props.form.mnt_item_name, (value) => {
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   // console.log(newValue, oldValue, newValue !== oldValue , oldValue != '');
-  if(newValue !== oldValue){
+  if(newValue !== oldValue && oldValue != ''){
     props.form.ops_vessel_name = null;
     props.form.mnt_ship_department_name = null;
   }

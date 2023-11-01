@@ -31,6 +31,23 @@ import WorkRequisitionForm from '../../../components/maintenance/work-requisitio
   const { setTitle } = Title();
   
   setTitle('Edit Work Requisition');
+
+  watch(workRequisition, (value) => {
+    workRequisition.value.ops_vessel_name = value?.opsVessel;
+
+    workRequisition.value.mnt_ship_department_name = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment;
+
+    workRequisition.value.mnt_item_groups = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.mntShipDepartment?.mntItemGroups;
+    workRequisition.value.mnt_item_group_name = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup;
+
+    workRequisition.value.mnt_items = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.mntItems;
+    workRequisition.value.mnt_item_name = value?.mntWorkRequisitionItem?.MntItem;
+
+    workRequisition.value.added_job_lines = value?.mntWorkRequisitionItem?.mntJobLines;
+
+    workRequisition.value.form_type = 'edit';
+    console.log(workRequisition.value.mnt_ship_department_name);
+  });
   
   onMounted(() => {
       showWorkRequisition(workRequisitionId);
