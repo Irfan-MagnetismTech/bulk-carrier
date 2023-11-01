@@ -12,7 +12,7 @@ class ScmPoLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_po_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'item_cost', 'po_composite_key', 'pr_composite_key',
+        'scm_po_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'net_rate', 'po_composite_key', 'pr_composite_key',
     ];
 
     public function scmMaterial(): BelongsTo

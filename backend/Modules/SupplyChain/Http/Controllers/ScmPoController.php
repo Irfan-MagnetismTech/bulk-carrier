@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Services\UniqueId;
-use Modules\SupplyChain\Entities\ScmPrLine;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
@@ -23,7 +21,7 @@ class ScmPoController extends Controller
         //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
         //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
     }
-    
+
     /**
      * Display a listing of the resource.
      * @return JsonResponse
@@ -51,27 +49,20 @@ class ScmPoController extends Controller
      */
     public function store(ScmPoRequest $request): JsonResponse
     {
+        $requestData = $request->except('ref_no');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
+
         try {
             DB::beginTransaction();
-
-            $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
-            
-            
-            $scmPo = ScmPo::create($request->all());
-
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            
-            // return response()->json($linesData, 422);    
-
-            $scmPo->scmPoLines()->createUpdateOrDelete($linesData);
-            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
+            $scmPo = ScmPo::create($requestData);
+            // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$scmPo->id);
+            $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
+            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);       
             DB::commit();
-
             return response()->success('Data created successfully', $scmPo, 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -84,7 +75,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms','scmVendor', 'scmWarehouse', 'scmPr'), 200);
+            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr'), 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -97,12 +88,14 @@ class ScmPoController extends Controller
      * @return JsonResponse
      */
     public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
-    { 
-        $requestData = $request->except('ref_no', 'pr_composite_key', 'po_composite_key');     
+    {
+        $requestData = $request->except('ref_no');
+
         try {
             DB::beginTransaction();
-            $purchaseOrder->update($request->all());
-            $purchaseOrder->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
+            $purchaseOrder->update($requestData);
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$purchaseOrder->id);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
             DB::commit();
             return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
@@ -147,7 +140,21 @@ class ScmPoController extends Controller
         return response()->success('Search result', $scmPo, 200);
     }
 
-    //get getPoOrPoCsWisePrData
+
+    //function to loop reqest data and add a value named net_rate to each ite
+    public function addNetRateToRequestData($request,$po_id)
+    {
+        $net_amount = $request['net_amount'];
+        $sub_total = $request['sub_total'];
+        $scmPoLines = $request['scmPoLines'];
+        foreach ($scmPoLines as $key => $value) {
+            $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
+            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
+        }
+        $request['scmPoLines'] = $scmPoLines;
+        return $request;
+    }
+    
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
 
@@ -212,7 +219,6 @@ class ScmPoController extends Controller
                 // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
                 // ->get();
             }
-
 
             return response()->success('data', $data, 200);
         } catch (\Exception $e) {

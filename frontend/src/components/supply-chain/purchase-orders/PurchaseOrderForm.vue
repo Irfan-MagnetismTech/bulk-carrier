@@ -207,7 +207,7 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
+          <input type="text" v-model="form.scmPr.ref_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
           <Error v-if="errors?.pr_no" :errors="errors.pr_no"  />
       </label>
       <label class="label-group">
