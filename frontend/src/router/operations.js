@@ -260,4 +260,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/charterer-profiles/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Charterer Contracts */
+	{
+		path: `/${BASE}/charterer-contracts`,
+		name: `${BASE}.charterer-contracts.index`,
+		component: () => import(`../views/${ViEWBASE}/charterer-contracts/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/charterer-contracts/create`,
+		name: `${BASE}.charterer-contracts.create`,
+		component: () => import (`../views/${ViEWBASE}/charterer-contracts/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-contracts/:chartererContractId/edit`,
+		name: `${BASE}.charterer-contracts.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-contracts/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-contracts/:chartererContractId/show`,
+		name: `${BASE}.charterer-contracts.show`,
+		component: () => import (`../views/${ViEWBASE}/charterer-contracts/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
