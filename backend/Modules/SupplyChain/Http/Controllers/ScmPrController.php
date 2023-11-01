@@ -171,9 +171,9 @@ class ScmPrController extends Controller
      * @param ScmPr $purchase_requisition
      * @return JsonResponse
      */
-    public function update(Request $request, ScmPr $purchase_requisition): JsonResponse
+    public function update(ScmPrRequest $request, ScmPr $purchase_requisition): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
         try {
             DB::beginTransaction();
