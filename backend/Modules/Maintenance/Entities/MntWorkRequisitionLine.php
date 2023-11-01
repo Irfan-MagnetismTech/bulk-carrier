@@ -13,8 +13,13 @@ class MntWorkRequisitionLine extends Model
     protected $fillable = [
         'mnt_work_requisition_item_id',
         'mnt_job_line_id',
+        'job_description',
+        'cycle',
+        'cycle_unit',
+        'min_limit',
         'last_done',
-        'running_hour',
+        'previous_run_hour',
+        'present_run_hour',
         'status',
         'start_date',
         'completion_date'

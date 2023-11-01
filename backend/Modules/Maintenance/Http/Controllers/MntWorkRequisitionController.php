@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntWorkRequisition;
+use Modules\Maintenance\Entities\MntWorkRequisitionItem;
 
 class MntWorkRequisitionController extends Controller
 {
@@ -66,8 +67,14 @@ class MntWorkRequisitionController extends Controller
             $workRequisition = MntWorkRequisition::create($wr);
 
             $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()->create(["mnt_item_id"=>$input['mnt_item_id']]);
+            $added_job_lines = array();
+            foreach ($input['added_job_lines'] as $added_job_line) {
+                var_dump($added_job_line);
+                $added_job_line['present_run_hour'] = $input['previous_run_hour'];
+                $added_job_lines[] = $added_job_line;
+            }
 
-            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($input['added_job_lines']);
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($added_job_lines);
             
             DB::commit();
             return response()->success('Work requisition created successfully', $workRequisitionLines, 201);
@@ -93,9 +100,13 @@ class MntWorkRequisitionController extends Controller
                 'opsVessel',
                 'mntWorkRequisitionItem',
                 'mntWorkRequisitionItem.MntItem.MntItemGroup.MntShipDepartment.MntItemGroups.MntItems',
-                'mntWorkRequisitionItem.mntJobLines'
+                'mntWorkRequisitionLines'
                 ])->find($id);
             
+                        
+            $results = [];
+            array_walk_recursive($wr->mntWorkRequisitionLines, function ($item, $key) use (&$results){$results[$key] = $item;});
+            // var_dump($results);
             return response()->success('Work requisition found successfully', $wr, 200);
             
         }
@@ -123,7 +134,39 @@ class MntWorkRequisitionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $wr['reference_no'] = $input['reference_no'];
+            $wr['ops_vessel_id'] = $input['ops_vessel_id'];
+            $wr['assigned_to'] = $input['assigned_to'];
+            $wr['responsible_person'] = $input['responsible_person'];
+            $wr['maintenance_type'] = $input['maintenance_type'];
+            $wr['requisition_date'] = $input['requisition_date'];
+            $wr['est_start_date'] = $input['est_start_date'];
+            $wr['est_completion_date'] = $input['est_completion_date'];
+            $wr['business_unit'] = $input['business_unit'];
+            $wr['status'] = $input['status'];
+
+            DB::beginTransaction();
+
+            $workRequisition = MntWorkRequisition::findorfail($id);
+            $workRequisition->update($wr);
+
+            $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
+            $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
+            
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
+            
+            DB::commit();
+            return response()->success('Work requisition updated successfully', $workRequisitionLines, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
