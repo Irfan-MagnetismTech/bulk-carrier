@@ -114,7 +114,10 @@ onMounted(() => {
             <td>{{ workRequisition?.opsVessel?.name }}</td>
             <td>{{ workRequisition?.maintenance_type }}</td>
             <td>{{ workRequisition?.requisition_date }}</td>
-            <td>{{ workRequisition?.status }}</td>
+            <!-- <td>{{ workRequisition?.status }}</td> -->
+            <td>
+              <span :class="workRequisition?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status === 0 ? 'Pending' : (workRequisition?.status === 1 ? 'WIP' : 'Done') }}</span>
+            </td>
             <td><span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span></td>
             
             <td>

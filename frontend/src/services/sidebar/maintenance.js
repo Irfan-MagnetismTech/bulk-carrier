@@ -83,6 +83,18 @@ export default [
                 subSubMenu: [],
             },
             
+            {
+                route: 'mnt.work-requisitions.index',
+                label: 'Work Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
+            
             
             
         ]
