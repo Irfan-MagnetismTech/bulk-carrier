@@ -188,9 +188,9 @@
               <tr class="text-gray-700 dark:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
                   <td><input type="text"  class="form-input"  :value="jobLine.job_description" readonly /></td>
                   <td><input type="text"  class="form-input"  :value="jobLine.cycle + ' ' + jobLine.cycle_unit" readonly /></td>
-                  <td><input type="text"  class="form-input"  :value="jobLine.last_done" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('MM/DD/YYYY') : null" readonly /></td>
                   <td><input type="text"  class="form-input"  :value="jobLine.previous_run_hour" readonly /></td>
-                  <td><input type="text"  class="form-input"  :value="jobLine.next_due" readonly /></td>
+                  <td><input type="text"  class="form-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
@@ -221,6 +221,7 @@ import useItem from "../../../composables/maintenance/useItem";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useJob from "../../../composables/maintenance/useJob";
 import useRunHour from "../../../composables/maintenance/useRunHour";
+import moment from 'moment';
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
