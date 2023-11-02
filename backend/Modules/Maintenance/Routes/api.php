@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Maintenance\Entities\MntWorkRequisition;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
@@ -56,6 +57,8 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-vessel-wise-jobs', [MntJobController::class, 'vesselWiseJobs']);
     // getJobsForRequisition
     Route::get('get-jobs-for-requisition', [MntJobController::class, 'getJobsForRequisition']);
+    // indexWip
+    Route::get('get-work-requisitions_wip', [MntWorkRequisitionController::class, 'indexWip']);
 
 
 
