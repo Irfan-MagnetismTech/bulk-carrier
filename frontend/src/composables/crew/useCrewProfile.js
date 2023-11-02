@@ -26,7 +26,7 @@ export default function useCrewProfile() {
         gender: '',
         religion: '',
         marital_status: '',
-        nationality: '',
+        nationality: 'Bangladeshi',
         nid_no: '',
         passport_no: '',
         passport_issue_date: '',
@@ -144,8 +144,13 @@ export default function useCrewProfile() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('picture', form.picture);
+        formData.append('data', JSON.stringify(form));
+
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-profiles', form);
+            const { data, status } = await Api.post('/crw/crw-crew-profiles', formData);
             crewProfile.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.profiles.index" });
@@ -181,10 +186,16 @@ export default function useCrewProfile() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('picture', form.picture);
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
         try {
             const { data, status } = await Api.post(
                 `/crw/crw-crew-profiles/${profileId}`,
-                form
+                formData
             );
             crewProfile.value = data.value;
             notification.showSuccess(status);

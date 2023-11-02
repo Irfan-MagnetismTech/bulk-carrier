@@ -17,16 +17,16 @@ const props = defineProps({
     required: false,
     default: {}
   },
-  isLoading: {
-    required: false,
-    default: {}
-  },
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
+};
+
+const profilePicture = (event) => {
+  props.form.picture = event.target.files[0];
 };
 
 watch(() => props.form, (value) => {
@@ -139,51 +139,6 @@ const toggleTabs = (tabNumber, buttonType = null) => {
   if(buttonType === 'back') {
     openTab.value = tabNumber;
   } else {
-    // check required fields is empty or not
-    if (openTab.value === 1) {
-      if (props.form.customer_code === "" || props.form.customer_name === "" || props.form.company_name === "" || props.form.country === "" || props.form.similar_codes === "") {
-
-        // form validation start for customer code start
-        if(props.form.customer_code === ""){
-          document.getElementById('customer_code').classList.add('vms-required-input-border');
-        }else{
-          document.getElementById('customer_code').classList.remove('vms-required-input-border');
-        }
-
-        if(props.form.company_name === ""){
-          document.getElementById('company_name').classList.add('vms-required-input-border');
-        }else{
-          document.getElementById('company_name').classList.remove('vms-required-input-border');
-        }
-
-        if(props.form.country === ""){
-          document.getElementById('country').classList.add('vms-required-input-border');
-        }else{
-          document.getElementById('country').classList.remove('vms-required-input-border');
-        }
-        // form validation start for customer code end
-
-        if(buttonType === 'next') {
-          notification.showError(422,'','Please fill all required fields');
-        }
-        return;
-      }
-    }
-    if(openTab.value === 2) {
-      if (props.form.customer_general_email === "") {
-
-        if(props.form.customer_general_email === ""){
-          document.getElementById('customer_general_email').classList.add('vms-required-input-border');
-        }else{
-          document.getElementById('customer_general_email').classList.remove('vms-required-input-border');
-        }
-        // return with a message
-        if(buttonType === 'next') {
-          notification.showError(422,'','Please fill all required fields');
-        }
-        return;
-      }
-    }
     openTab.value = tabNumber;
   }
 }
@@ -264,7 +219,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Hired By <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.hired_by">
+            <select class="form-input" v-model="form.hired_by" required>
               <option value="" disabled selected>Select</option>
               <option value="Agency">Agency</option>
               <option value="Company">Company</option>
@@ -286,7 +241,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.department_id">
+            <select class="form-input" v-model="form.department_id" required>
               <option value="" disabled selected>Select</option>
               <option value="1">Deck</option>
               <option value="2">Engine</option>
@@ -367,17 +322,17 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Passport No</span>
-            <input type="text" v-model="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" required />
+            <input type="text" v-model="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Pass Issue Date</span>
-            <input type="date" v-model="form.passport_issue_date" class="form-input" autocomplete="off" required />
+            <span class="text-gray-700 dark:text-gray-300">Passport Issue Date</span>
+            <input type="date" v-model="form.passport_issue_date" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Blood Group</span>
-            <select class="form-input" v-model="form.blood_group" required>
+            <select class="form-input" v-model="form.blood_group">
               <option value="" disabled>select</option>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
@@ -391,12 +346,24 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Height (Meters)</span>
-            <input type="text" v-model="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" required />
+            <input type="text" v-model="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Weight (KG)</span>
             <input type="text" v-model="form.weight" placeholder="65" class="form-input" autocomplete="off" required />
           </label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Profile Picture</span>
+            <input @change="profilePicture" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Attachment</span>
+            <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+          </label>
+          <label class="block w-full mt-2 text-sm"></label>
+          <label class="block w-full mt-2 text-sm"></label>
         </div>
       </fieldset>
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -480,7 +447,7 @@ onMounted(() => {
               <input type="text" v-model="form.educations[index].duration" placeholder="Ex: 4 years" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].achievement" placeholder="Achievement" class="form-input" autocomplete="off" required />
+              <input type="text" v-model="form.educations[index].achievement" placeholder="Achievement" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeEducationItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -622,7 +589,7 @@ onMounted(() => {
               <input type="text" v-model="form.languages[index].language_name" placeholder="Ex: Bangla" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].writing" class="form-input">
+              <select v-model="form.languages[index].writing" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -630,7 +597,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].reading" class="form-input">
+              <select v-model="form.languages[index].reading" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -638,7 +605,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].speaking" class="form-input">
+              <select v-model="form.languages[index].speaking" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -646,7 +613,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].listening" class="form-input">
+              <select v-model="form.languages[index].listening" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -705,7 +672,7 @@ onMounted(() => {
               <input type="text" v-model="form.references[index].contact_personal" placeholder="Contact no" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="email" v-model="form.references[index].email" placeholder="Email" class="form-input" autocomplete="off" required />
+              <input type="email" v-model="form.references[index].email" placeholder="Email" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1">
               <input type="text" v-model="form.references[index].relation" placeholder="Relation" class="form-input" autocomplete="off" required />
@@ -762,10 +729,10 @@ onMounted(() => {
               <input type="text" v-model="form.nominees[index].contact_no" placeholder="Contact no." class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="email" v-model="form.nominees[index].email" placeholder="Email" class="form-input" autocomplete="off" required />
+              <input type="email" v-model="form.nominees[index].email" placeholder="Email" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.nominees[index].is_relative" class="form-input">
+              <select v-model="form.nominees[index].is_relative" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="0">No</option>
                 <option value="1">Yes</option>
