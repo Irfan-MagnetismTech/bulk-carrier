@@ -140,9 +140,14 @@ class ScmPoController extends Controller
         return response()->success('Search result', $scmPo, 200);
     }
 
-
-    //function to loop reqest data and add a value named net_rate to each ite
-    public function addNetRateToRequestData($request, $po_id)
+    /**
+     * Adds the net rate to the request data and generates the po composite key
+     *
+     * @param mixed $request
+     * @param int $po_id
+     * @return mixed
+     */
+    public function addNetRateToRequestData($request, $po_id): mixed
     {
         $net_amount = $request['net_amount'];
         $sub_total = $request['sub_total'];
@@ -152,6 +157,7 @@ class ScmPoController extends Controller
             $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
         }
         $request['scmPoLines'] = $scmPoLines;
+
         return $request;
     }
 
@@ -226,6 +232,12 @@ class ScmPoController extends Controller
         }
     }
 
+    /**
+     * Search for a PO based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function searchPo(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
