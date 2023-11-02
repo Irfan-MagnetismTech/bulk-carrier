@@ -122,7 +122,7 @@
         
         <!-- <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Responsible Person" :options="form.crw_responsible_persons" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Responsible Person" :options="crews" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -153,7 +153,7 @@
               <option value="" disabled selected>Select</option>
               <option value="0" > Pending</option>
               <option value="1" > WIP</option>
-              <option value="2" > Done</option>
+              <!-- <option value="2" > Done</option> -->
             </select>
           <Error v-if="errors?.status" :errors="errors.status" />
         </label>
@@ -221,6 +221,7 @@ import useItem from "../../../composables/maintenance/useItem";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useJob from "../../../composables/maintenance/useJob";
 import useRunHour from "../../../composables/maintenance/useRunHour";
+import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import moment from 'moment';
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
@@ -229,6 +230,7 @@ const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useIte
 const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
 const { itemWiseJobLines, getJobsForRequisition } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
+const { crews, getCrews } = useCrewCommonApiRequest();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
@@ -317,6 +319,10 @@ watch(() => props.form.mnt_item_name, (value) => {
   }
 });
 
+// watch(() => props.form.responsible_person_name, (value) => {
+//   props.form.responsible_person = value?.name;
+// });
+
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   // console.log(newValue, oldValue, newValue !== oldValue , oldValue != '');
@@ -349,7 +355,7 @@ onMounted(() => {
       if(businessUnit.value){
         getShipDepartmentsWithoutPagination(businessUnit.value);
         getVesselsWithoutPaginate(businessUnit.value);
-        if(props.form.ops_vessel_id)
+                if(props.form.ops_vessel_id)
           getVesselWiseJobItems( businessUnit.value, props.form.ops_vessel_id, props.form.mnt_ship_department_id, props.form.mnt_item_group_id );
       }
     });
