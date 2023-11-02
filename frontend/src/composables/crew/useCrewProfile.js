@@ -12,6 +12,7 @@ export default function useCrewProfile() {
     const crewProfile = ref( {
         business_unit: '',
         crw_recruitment_approval_id: '',
+        crw_recruitment_approval_name: '',
         hired_by: '',
         agency_id: '',
         agency_name: '',
@@ -143,12 +144,8 @@ export default function useCrewProfile() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
-
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-profiles', formData);
+            const { data, status } = await Api.post('/crw/crw-crew-profiles', form);
             crewProfile.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.profiles.index" });
@@ -184,15 +181,10 @@ export default function useCrewProfile() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
-        formData.append('_method', 'PUT');
-
         try {
             const { data, status } = await Api.post(
                 `/crw/crw-crew-profiles/${profileId}`,
-                formData
+                form
             );
             crewProfile.value = data.value;
             notification.showSuccess(status);
