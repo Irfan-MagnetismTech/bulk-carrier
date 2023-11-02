@@ -1,0 +1,827 @@
+<script setup>
+import Error from "../Error.vue";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
+import Store from "../../store";
+import useVessel from "../../composables/operations/useVessel";
+const { vessels, getVesselsWithoutPaginate } = useVessel();
+const { crews, getCrews, crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
+
+const props = defineProps({
+  form: {
+    required: false,
+    default: {}
+  },
+  page: {
+    required: false,
+    default: {}
+  },
+  isLoading: {
+    required: false,
+    default: {}
+  },
+  errors: { type: [Object, Array], required: false },
+});
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+const selectedFile = (event) => {
+  props.form.attachment = event.target.files[0];
+};
+
+watch(() => props.form, (value) => {
+  if(value){
+    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+    value?.crwIncidentParticipants?.forEach((line, index) => {
+      props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
+      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwRank?.name ?? '';
+    });
+  }
+}, {deep: true});
+
+function addEducationItem() {
+  let obj = {
+    exam_title: '',
+    major: '',
+    institute: '',
+    result: '',
+    passing_year: '',
+    duration: '',
+    achievement: '',
+  };
+  props.form.educations.push(obj);
+}
+
+function removeEducationItem(index){
+  props.form.educations.splice(index, 1);
+}
+
+function addTrainingItem() {
+  let obj = {
+    training_title: '',
+    covered_topic: '',
+    year: '',
+    institute: '',
+    duration: '',
+    location: '',
+  };
+  props.form.trainings.push(obj);
+}
+
+function removeTrainingItem(index){
+  props.form.trainings.splice(index, 1);
+}
+
+function addExperienceItem() {
+  let obj = {
+    employer_name: '',
+    from_date: '',
+    till_date: '',
+    last_designation: '',
+    reason_for_leave: '',
+  };
+  props.form.experiences.push(obj);
+}
+
+function removeExperienceItem(index){
+  props.form.experiences.splice(index, 1);
+}
+
+function addLanguageItem() {
+  let obj = {
+    language_name: '',
+    writing: '',
+    reading: '',
+    speaking: '',
+    listening: '',
+  };
+  props.form.languages.push(obj);
+}
+
+function removeLanguageItem(index){
+  props.form.languages.splice(index, 1);
+}
+
+function addReferenceItem() {
+  let obj = {
+    name: '',
+    organization: '',
+    designation: '',
+    address: '',
+    contact_office: '',
+    contact_personal: '',
+    email: '',
+    relation: '',
+  };
+  props.form.references.push(obj);
+}
+
+function removeReferenceItem(index){
+  props.form.references.splice(index, 1);
+}
+
+function addNomineeItem() {
+  let obj = {
+    name: '',
+    profession: '',
+    address: '',
+    relationship: '',
+    contact_no: '',
+    email: '',
+    is_relative: '',
+  };
+  props.form.nominees.push(obj);
+}
+
+function removeNomineeItem(index){
+  props.form.nominees.splice(index, 1);
+}
+
+const openTab = ref(1);
+const toggleTabs = (tabNumber, buttonType = null) => {
+  if(buttonType === 'back') {
+    openTab.value = tabNumber;
+  } else {
+    // check required fields is empty or not
+    if (openTab.value === 1) {
+      if (props.form.customer_code === "" || props.form.customer_name === "" || props.form.company_name === "" || props.form.country === "" || props.form.similar_codes === "") {
+
+        // form validation start for customer code start
+        if(props.form.customer_code === ""){
+          document.getElementById('customer_code').classList.add('vms-required-input-border');
+        }else{
+          document.getElementById('customer_code').classList.remove('vms-required-input-border');
+        }
+
+        if(props.form.company_name === ""){
+          document.getElementById('company_name').classList.add('vms-required-input-border');
+        }else{
+          document.getElementById('company_name').classList.remove('vms-required-input-border');
+        }
+
+        if(props.form.country === ""){
+          document.getElementById('country').classList.add('vms-required-input-border');
+        }else{
+          document.getElementById('country').classList.remove('vms-required-input-border');
+        }
+        // form validation start for customer code end
+
+        if(buttonType === 'next') {
+          notification.showError(422,'','Please fill all required fields');
+        }
+        return;
+      }
+    }
+    if(openTab.value === 2) {
+      if (props.form.customer_general_email === "") {
+
+        if(props.form.customer_general_email === ""){
+          document.getElementById('customer_general_email').classList.add('vms-required-input-border');
+        }else{
+          document.getElementById('customer_general_email').classList.remove('vms-required-input-border');
+        }
+        // return with a message
+        if(buttonType === 'next') {
+          notification.showError(422,'','Please fill all required fields');
+        }
+        return;
+      }
+    }
+    openTab.value = tabNumber;
+  }
+}
+
+onMounted(() => {
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrewRankLists(props.form.business_unit);
+  });
+});
+
+</script>
+
+<template>
+  <div class="dark:border-gray-700">
+    <ul class="flex flex-wrap -mb-px border-b">
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(1)" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Personal
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(2)" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Education
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(3)" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Training
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(4)" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Experience
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(5)" v-bind:class="{'text-purple-600 bg-white': openTab !== 5, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 5}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Others
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(6)" v-bind:class="{'text-purple-600 bg-white': openTab !== 6, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 6}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>References
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(7)" v-bind:class="{'text-purple-600 bg-white': openTab !== 7, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 7}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Nominees
+        </a>
+      </li>
+    </ul>
+    <div v-on:click="toggleTabs(1)" v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Personal Info</legend>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <business-unit-input v-model="form.business_unit"></business-unit-input>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Hired By <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.hired_by">
+              <option value="" disabled selected>Select</option>
+              <option value="Agency">Agency</option>
+              <option value="Company">Company</option>
+            </select>
+            <Error v-if="errors?.hired_by" :errors="errors.hired_by" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
+            <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.agency_name" label="name" class="block form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.agency_name"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+            <Error v-if="errors?.agency_name" :errors="errors.agency_name" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.department_id">
+              <option value="" disabled selected>Select</option>
+              <option value="1">Deck</option>
+              <option value="2">Engine</option>
+              <option value="3">Steward</option>
+              <option value="4">Technical</option>
+              <option value="5">Medical</option>
+            </select>
+            <Error v-if="errors?.department_id" :errors="errors.department_id" />
+          </label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.rank_id" required>
+              <option value="" disabled>select</option>
+              <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
+            </select>
+            <Error v-if="errors?.rank_id" :errors="errors.rank_id" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">First Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.first_name" placeholder="First name" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Last Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.last_name" placeholder="Last name" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Father's Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.father_name" placeholder="Father name" class="form-input" autocomplete="off" required />
+          </label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Mother's Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.mother_name" placeholder="Mother name" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Date of Birth <span class="text-red-500">*</span></span>
+            <input type="date" v-model="form.date_of_birth" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Gender <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.gender" required>
+              <option value="" disabled>select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Religion <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.religion" required>
+              <option value="" disabled>select</option>
+              <option value="Islam">Islam</option>
+              <option value="Hinduism">Hinduism</option>
+              <option value="Buddhism">Buddhism</option>
+              <option value="Christianity">Christianity</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Marital Status <span class="text-red-500">*</span></span>
+            <select class="form-input" v-model="form.marital_status" required>
+              <option value="" disabled>select</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+            </select>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Nationality <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.nationality" placeholder="Ex: Bangladeshi" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">National ID <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.nid_no" placeholder="Ex: 0001552005" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Passport No</span>
+            <input type="text" v-model="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" required />
+          </label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Pass Issue Date</span>
+            <input type="date" v-model="form.passport_issue_date" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Blood Group</span>
+            <select class="form-input" v-model="form.blood_group" required>
+              <option value="" disabled>select</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Height (Meters)</span>
+            <input type="text" v-model="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Weight (KG)</span>
+            <input type="text" v-model="form.weight" placeholder="65" class="form-input" autocomplete="off" required />
+          </label>
+        </div>
+      </fieldset>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Present Address</legend>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.pre_address" placeholder="Present address" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">City <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.pre_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.pre_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Email</span>
+            <input type="text" v-model="form.pre_email" placeholder="Email" class="form-input" autocomplete="off" />
+          </label>
+        </div>
+      </fieldset>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Permanent Address</legend>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.per_address" placeholder="Present address" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">City <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.per_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.per_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Email</span>
+            <input type="text" v-model="form.per_email" placeholder="Email" class="form-input" autocomplete="off" />
+          </label>
+        </div>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(2)" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Educational Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Name of Degree <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Major <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Institute/University <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Result <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Passing Year <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Duration <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Achievement</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewEducation, index) in form.educations" :key="crewEducation.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].exam_title" placeholder="Ex: HSC/B.Sc" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].major" placeholder="Ex: Science" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].result" placeholder="Ex: 3.50" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].passing_year" placeholder="Ex: 2013" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].duration" placeholder="Ex: 4 years" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.educations[index].achievement" placeholder="Achievement" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeEducationItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addEducationItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(3)" v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Training Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Training Title <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Covered Topics <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Training Year <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Institute <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Address <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Duration <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewTraining, index) in form.trainings" :key="crewTraining.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].training_title" placeholder="Title" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].covered_topic" placeholder="Covered topic" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].year" placeholder="Ex: 2018" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].location" placeholder="Institute address" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.trainings[index].duration" placeholder="Ex: 2 month" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeTrainingItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addTrainingItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(4)" v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Experience Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Employer Name <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>From <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>To <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Last Designation <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Reason For Leave </nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewExperience, index) in form.experiences" :key="crewExperience.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.experiences[index].employer_name" placeholder="Employer name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="date" v-model="form.experiences[index].from_date" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="date" v-model="form.experiences[index].till_date" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.experiences[index].last_designation" placeholder="Ex: Master" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.experiences[index].reason_for_leave" placeholder="Leave reason" class="form-input" autocomplete="off" />
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeExperienceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addExperienceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(5)" v-bind:class="{'hidden': openTab !== 5, 'block': openTab === 5}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Language Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Language <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Writing <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Reading <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Speaking <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Listening </nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewLanguage, index) in form.languages" :key="crewLanguage.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.languages[index].language_name" placeholder="Ex: Bangla" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <select v-model="form.languages[index].writing" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="Average">Average</option>
+                <option value="Good">Good</option>
+                <option value="Excellent">Excellent</option>
+              </select>
+            </td>
+            <td class="px-1 py-1">
+              <select v-model="form.languages[index].reading" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="Average">Average</option>
+                <option value="Good">Good</option>
+                <option value="Excellent">Excellent</option>
+              </select>
+            </td>
+            <td class="px-1 py-1">
+              <select v-model="form.languages[index].speaking" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="Average">Average</option>
+                <option value="Good">Good</option>
+                <option value="Excellent">Excellent</option>
+              </select>
+            </td>
+            <td class="px-1 py-1">
+              <select v-model="form.languages[index].listening" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="Average">Average</option>
+                <option value="Good">Good</option>
+                <option value="Excellent">Excellent</option>
+              </select>
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeLanguageItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addLanguageItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(6)" v-bind:class="{'hidden': openTab !== 6, 'block': openTab === 6}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Reference Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Name <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Organization <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Designation <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Address <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Contact No. <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Email </nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Relation </nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewReference, index) in form.references" :key="crewReference.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].organization" placeholder="Organization Name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].designation" placeholder="Ex: Sukani" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].address" placeholder="Address" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].contact_personal" placeholder="Contact no" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].email" placeholder="Email" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.references[index].relation" placeholder="Relation" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeReferenceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addReferenceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div v-on:click="toggleTabs(7)" v-bind:class="{'hidden': openTab !== 7, 'block': openTab === 7}">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <legend class="px-2 text-gray-700 dark:text-gray-300">Nominee Info</legend>
+        <table class="w-full mt-2 whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"><nobr>Name <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Profession <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Address <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Relationship <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Contact No. <span class="text-red-500">*</span></nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Email </nobr></th>
+            <th class="px-4 py-3 align-bottom"><nobr>Is Relative </nobr></th>
+            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewNominee, index) in form.nominees" :key="crewNominee.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.nominees[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.nominees[index].profession" placeholder="profession" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.nominees[index].address" placeholder="address" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.nominees[index].relationship" placeholder="relationship" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model="form.nominees[index].contact_no" placeholder="Contact no." class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="email" v-model="form.nominees[index].email" placeholder="Email" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <select v-model="form.nominees[index].is_relative" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removeNomineeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addNomineeItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
+  </div>
+  <button v-if="openTab===7" type="submit" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <span v-if="page==='create'">Create</span>
+    <span v-else>Update</span>
+  </button>
+  <button type="button" v-else v-on:click="toggleTabs(openTab + 1,'next')" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Next
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+      <path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+    </svg>
+  </button>
+  <button type="button" v-if="openTab!==1" v-on:click="toggleTabs(openTab - 1, 'back')" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+    </svg>
+    Back
+  </button>
+</template>
+<style lang="postcss" scoped>
+#table, #table th, #table td{
+  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+}
+
+.input-group {
+  @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
+}
+
+.label-group {
+  @apply block w-full mt-2 text-sm;
+}
+.label-item-title {
+  @apply text-gray-700 dark:text-gray-300;
+}
+.label-item-input {
+  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+}
+
+>>> {
+  --vs-controls-color: #374151;
+  --vs-border-color: #4b5563;
+
+  --vs-dropdown-bg: #282c34;
+  --vs-dropdown-color: #eeeeee;
+  --vs-dropdown-option-color: #eeeeee;
+
+  --vs-selected-bg: #664cc3;
+  --vs-selected-color: #374151;
+
+  --vs-search-input-color: #4b5563;
+
+  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-color: #eeeeee;
+}
+</style>

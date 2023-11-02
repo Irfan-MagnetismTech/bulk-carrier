@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('crw_crew_experiences', function (Blueprint $table) {
             $table->id();            
+			$table->foreignId('crw_crew_profile_id')->constrained('crw_crew_profiles', 'id')->cascadeOnDelete();
             $table->string('employer_name'); // organization name 
             $table->date('from_date');
             $table->date('till_date');

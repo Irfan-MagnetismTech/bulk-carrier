@@ -5,6 +5,8 @@ namespace Modules\Crew\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Operations\Entities\OpsPort;
+use Modules\Operations\Entities\OpsVessel;
 
 class CrwCrewAssignment extends Model
 {
@@ -20,5 +22,10 @@ class CrwCrewAssignment extends Model
     public function crwCrew()
     {
         return $this->belongsTo(CrwCrew::class);
-    }    
+    }
+
+    public function port()
+    {
+        return $this->hasOne(OpsPort::class,'code','port_of_joining');
+    }
 }
