@@ -37,6 +37,17 @@ class OpsChartererContract extends Model
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
+
+    public function opsChartererContractsFinancialTerms()
+    {
+        return $this->hasMany(OpsChartererContractsFinancialTerm::class, 'ops_charterer_contract_id', 'id');
+    }
+
+    public function opsChartererContractsLocalAgents()
+    {
+        return $this->hasMany(OpsChartererContractsLocalAgent::class, 'ops_charterer_contract_id', 'id');
+    }
+
     public function opsChartererProfile()
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');
