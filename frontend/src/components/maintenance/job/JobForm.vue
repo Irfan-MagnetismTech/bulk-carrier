@@ -1,5 +1,5 @@
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
@@ -85,7 +85,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-show="form.mnt_item_name?.has_run_hour">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour</span>
-            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :disabled="form.form_type === 'edit'" />
+            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :disabled="page === 'edit'" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>        
     </div>
@@ -198,6 +198,10 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   form: {
+    required: false,
+    default: {}
+  },
+  page: {
     required: false,
     default: {}
   },

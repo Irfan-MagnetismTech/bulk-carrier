@@ -9,7 +9,7 @@
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
           <form @submit.prevent="updateJob(job, jobId)">
               <!-- Booking Form -->
-            <job-form v-model:form="job" :errors="errors"></job-form>
+            <job-form :page="page" v-model:form="job" :errors="errors"></job-form>
               <!-- Submit button -->
               <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update Job</button>
           </form>
@@ -32,6 +32,7 @@
   const icons = useHeroIcon();
   
   const { setTitle } = Title();
+  const page = 'edit';
   
   setTitle('Edit Job');
 
@@ -46,7 +47,7 @@
     job.value.mnt_items = value?.mntItem?.mntItemGroup?.mntItems;
     job.value.mnt_item_name = value?.mntItem;
 
-    job.value.form_type = 'edit';
+    // job.value.form_type = 'edit';
   });
   
   onMounted(() => {
