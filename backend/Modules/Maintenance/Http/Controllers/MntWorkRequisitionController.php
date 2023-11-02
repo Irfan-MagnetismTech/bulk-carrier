@@ -69,8 +69,7 @@ class MntWorkRequisitionController extends Controller
             $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()->create(["mnt_item_id"=>$input['mnt_item_id']]);
             $added_job_lines = array();
             foreach ($input['added_job_lines'] as $added_job_line) {
-                var_dump($added_job_line);
-                $added_job_line['present_run_hour'] = $input['previous_run_hour'];
+                $added_job_line['present_run_hour'] = $input['present_run_hour'];
                 $added_job_lines[] = $added_job_line;
             }
 
