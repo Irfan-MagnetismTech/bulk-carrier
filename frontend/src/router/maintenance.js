@@ -180,5 +180,37 @@ export default [
 	},
 
 	/* Work Requisition end */
+
+	
+	/* Work Requisition WIP start */
+	{
+		path: `/${BASE}/wip-work-requisitions`,
+		name: `${BASE}.wip-work-requisitions.index`,
+		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'wip-work-requisition-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/wip-work-requisitions/create`,
+		name: `${BASE}.wip-work-requisitions.create`,
+		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'wip-work-requisition-create' },
+	},
+	{
+		path: `/${BASE}/wip-work-requisitions/:wipWorkRequisitionId/edit`,
+		name: `${BASE}.wip-work-requisitions.edit`,
+		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'wip-work-requisition-edit' },
+	},
+	{
+		path: `/${BASE}/wip-work-requisitions/:wipWorkRequisitionId`,
+		name: `${BASE}.wip-work-requisitions.show`,
+		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'wip-work-requisition-show'  },
+	},
+
+	/* Work Requisition wip end */
+
+
 	
 ];

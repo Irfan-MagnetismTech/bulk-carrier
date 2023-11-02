@@ -93,6 +93,18 @@ export default [
                 permissionKey: '',
                 subSubMenu: [],
             },
+            
+            {
+                route: 'mnt.wip-work-requisitions.index',
+                label: 'WIP Work Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
 
             
             
