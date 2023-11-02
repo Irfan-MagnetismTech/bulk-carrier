@@ -1,5 +1,5 @@
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
@@ -113,7 +113,7 @@
     <div class="flex flex-col justify-center  w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> </span>
-            <input type="checkbox" v-model="form.has_run_hour" :disabled="form.form_type === 'edit'" /> Enable Regular Run Hour Entry
+            <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit'" /> Enable Regular Run Hour Entry
           <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
         </label>        
     </div>
@@ -139,6 +139,10 @@ const props = defineProps({
     required: false,
     default: {}
   },
+  page: {
+    required: false,
+    default: {}
+  },
   errors: { type: [Object, Array], required: false },
 });
 
@@ -155,7 +159,7 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
 watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
   props.form.mnt_item_group_id = props.form.mnt_item_group_name?.id;
   
-  if((oldValue !== '' || props.form.form_type !== 'edit') && props.form.mnt_item_group_id){
+  if((oldValue !== '' || props.page !== 'edit') && props.form.mnt_item_group_id){
     // fetchItemCode();
     getItemCodeByGroupId(props.form, props.form.mnt_item_group_id);
   }
