@@ -142,24 +142,19 @@ export default function useCustomer() {
 	}
 
 	// Get ports by name or code
-	async function getCustomersByNameOrCode(name_or_code, service = null) {
-		NProgress.start();
-		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+	async function getCustomersByNameOrCode(searchParam, businessUnit, loading) {
+		//NProgress.start();
 
 		try {
-			const { data } = await Api.post(
-				'dataencoding/ports/get-ports-by-name-or-code',
-				{ name_or_code , service }
-			);
+			const { data, status } = await Api.get(`/ops/search-customers?name_or_code=${searchParam}&business_unit=${businessUnit}`);
 			customers.value = data.value;
-			customer.value = data.value;
+			notification.showSuccess(status);
 		} catch (error) {
-			error.value = Error.showError(error);
+			const { data, status } = error.response;
+			notification.showError(status);
 		} finally {
-			//loader.hide();
-			isLoading.value = false;
-			NProgress.done();
+			loading(false)
+			//NProgress.done();
 		}
 	}
 

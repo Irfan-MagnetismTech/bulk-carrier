@@ -5,7 +5,10 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use App\Exports\ScmMaterialsExport;
+use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Http\Requests\ScmMaterialRequest;
@@ -42,7 +45,7 @@ class ScmMaterialController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmMaterialRequest $request)
+    public function store(ScmMaterialRequest $request): JsonResponse
     {
         $requestData = $request->all();
         try {
@@ -123,7 +126,7 @@ class ScmMaterialController extends Controller
                 $query->whereScmMaterialCategoryId(request()->materialCategoryId);
             })
             ->where(function ($query) {
-                $query->whereName('like', "%" . request()->searchParam . "%")
+                $query->where('name', 'like', "%" . request()->searchParam . "%")
                     ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
             })
             ->orderByDesc('name')
@@ -131,5 +134,41 @@ class ScmMaterialController extends Controller
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);
+    }
+
+    public function excelImport(Request $request)
+    {
+        try {
+
+            $import = new ScmMaterialsImport();
+            Excel::import($import, $request->file);
+            ob_end_clean();
+
+            if ($import->invalid) {
+                return redirect()->back()->withInput()->withErrors($import->invalid);
+            }
+            $notification = array(
+                'messege' => 'product Uploaded Successfully',
+                'alert-type' => 'success',
+            );
+            return redirect()->route('products.index')->with($notification);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+            $failures = $e->failures();
+
+            foreach ($failures as $failure) {
+                $failure->row(); // row that went wrong
+                $failure->attribute(); // either heading key (if using heading row concern) or column index
+                $failure->errors(); // Actual error messages from Laravel validator
+                $failure->values(); // The values of the row that has failed.
+            }
+
+            return redirect()->back()->withInput()->withErrors($failure);
+        }
+    }
+
+    public function export()
+    {
+        return Excel::download(new ScmMaterialsExport, 'materials.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

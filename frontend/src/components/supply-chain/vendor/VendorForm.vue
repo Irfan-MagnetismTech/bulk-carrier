@@ -2,6 +2,7 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useVendor from "../../../composables/supply-chain/useVendor.js";
+    import useBusinessInfo from "../../../composables/useBusinessInfo.js";
     
     const props = defineProps({
         form: { type: Object, required: true },
@@ -11,8 +12,43 @@
 
 
     const product_source_type = ['Manufacturer', 'Dealer','Supplier'];
-    const product_type = ['Bunker', 'Lube Oil','Spare','Provision' ,'Service'];
-    const vendor_type = ['Foreign', 'Local'];
+    const product_types = ref([]);
+    const { getAllProductTypes } = useBusinessInfo();
+//     const vendor_types = ref([
+//       { value: 0, text: 'Foreign' },
+//       { value: 1, text: 'Local' }
+//     ]);
+
+
+//     // Set the selected value when editing
+// let selectedVendorType = ref(props.form.vendor_type);
+
+// // Watch for changes in the form.vendor_type and update selectedVendorType
+// watch(props.form, (newForm) => {
+//   selectedVendorType.value = newForm.vendor_type;
+// });
+
+// function fetchAllProductTypes() {
+//     getAllProductTypes().then(AllStoreCategories => {
+//         product_types.value = Object.values(AllStoreCategories);
+//         })
+//         .catch(error => {
+//             console.error('An error occurred:', error);
+//         });
+//     }
+//gete all product types it is array
+function fetchAllProductTypes() {
+    getAllProductTypes().then(AllProductTypes => {
+        product_types.value = AllProductTypes;
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+    }
+    onMounted(() => {
+        fetchAllProductTypes();
+    });
+const vendor_type = ['Foreign', 'Local'];
 </script>
 <template>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
@@ -38,7 +74,12 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Vendor Type</span>
+                    <!-- <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    <option value="0">Foreign</option>
+                    <option value="1">Local</option>
+                    </select> -->
                     <v-select :options="vendor_type" placeholder="--Choose an option--" v-model="form.vendor_type" label="Vendor Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    
                     <Error v-if="errors?.vendor_type" :errors="errors.vendor_type" />
                 </label>
             </div>
@@ -51,8 +92,9 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Product Type <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
-                    <Error v-if="errors?.short_code" :errors="errors.short_code" />
+                    <v-select name="user" v-model="form.product_type" placeholder="--Choose an option--" label="Product Type" :options="product_types" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    </v-select>
+                    <Error v-if="errors?.product_type" :errors="errors.product_type" />
                 </label>
             </div>
 
