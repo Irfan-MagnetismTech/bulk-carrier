@@ -12,6 +12,13 @@ export default function useChartererContract() {
 	const $loading = useLoading();
 	const notification = useNotification();
 
+	const opsChartererLocalAgentObject = {
+		port_code: '',
+		agent_name: '',
+		agent_billing_name: '',
+		agent_billing_email: '',
+	}
+
 	const chartererContract = ref({
 		contract_type: 'Voyage Wise',
 		business_unit: '',
@@ -36,7 +43,7 @@ export default function useChartererContract() {
 		agent_billing_name: '',
 		agent_billing_email: '',
 		status: '',
-		chartererContractsFinancialTerms: {
+		opsChartererContractsFinancialTerms: {
 			credit_days: '',
 			billing_cycle: '',
 			valid_from: '',
@@ -53,12 +60,9 @@ export default function useChartererContract() {
 			final_unloading_point: '',
 			approximate_load_amount: '',
 		},
-		chartererContractsAgents: {
-			port_code: '',
-			agent_name: '',
-			agent_billing_name: '',
-			agent_billing_email: '',
-		}
+		opsChartererContractsLocalAgents: [{
+			...opsChartererLocalAgentObject
+		}]
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -208,6 +212,7 @@ export default function useChartererContract() {
 	return {
 		chartererContracts,
 		chartererContract,
+		opsChartererLocalAgentObject,
 		getChartererContracts,
 		storeChartererContract,
 		showChartererContract,

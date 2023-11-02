@@ -152,6 +152,7 @@ class OpsChartererProfileController extends Controller
              })
              ->limit(10)
              ->get();
+             $charterer_profiles->load('opsChartererBankAccounts');
              return response()->success('Successfully retrieved charterer profile name.', $charterer_profiles, 200);
          } catch (QueryException $e){
              return response()->error($e->getMessage(), 500);

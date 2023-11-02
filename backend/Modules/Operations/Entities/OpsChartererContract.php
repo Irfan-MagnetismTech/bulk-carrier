@@ -40,7 +40,7 @@ class OpsChartererContract extends Model
 
     public function opsChartererContractsFinancialTerms()
     {
-        return $this->hasMany(OpsChartererContractsFinancialTerm::class, 'ops_charterer_contract_id', 'id');
+        return $this->hasOne(OpsChartererContractsFinancialTerm::class, 'ops_charterer_contract_id', 'id');
     }
 
     public function opsChartererContractsLocalAgents()

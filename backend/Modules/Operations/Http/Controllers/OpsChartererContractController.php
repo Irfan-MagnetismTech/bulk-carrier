@@ -67,7 +67,7 @@ class OpsChartererContractController extends Controller
            }
            $charterer_contract = OpsChartererContract::create($charterer_contract);
 
-           $charterer_contract->opsChartererContractsFinancialTerms()->createMany($request->opsChartererContractsFinancialTerms);
+           $charterer_contract->opsChartererContractsFinancialTerms()->create($request->opsChartererContractsFinancialTerms);
            $charterer_contract->opsChartererContractsLocalAgents()->createMany($request->opsChartererContractsLocalAgents);
            DB::commit();
            return response()->success('Charterer contract added successfully.', $charterer_contract, 201);
