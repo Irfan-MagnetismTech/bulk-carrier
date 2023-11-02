@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
 use Modules\SupplyChain\Http\Controllers\ScmUnitController;
 use Modules\SupplyChain\Http\Controllers\ScmVendorController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
@@ -23,6 +24,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'services' => ScmServiceController::class,
         'purchase-requisitions' => ScmPrController::class,
         'purchase-orders' => ScmPoController::class,
+        'lc-records' => ScmLcRecordController::class,
     ]);
 
     //Search Apis
@@ -32,6 +34,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-po', [ScmPoController::class, "searchPo"])->name('searchPo');
+    Route::get('search-lc-record', [ScmLcRecordController::class, "searchLcRecord"])->name('searchLcRecord');
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
 
     //Business Info Apis
