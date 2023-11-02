@@ -9,6 +9,7 @@ import {onMounted, ref, watch} from 'vue';
 const icons = useHeroIcon();
 const { runHour, storeRunHour, isLoading, errors } = useRunHour();
 const { setTitle } = Title();
+const page = 'create';
 
 setTitle('Create Run Hour');
 
@@ -29,7 +30,7 @@ onMounted(() => {
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <form @submit.prevent="storeRunHour(runHour)">
             <!-- Booking Form -->
-            <run-hour-form v-model:form="runHour" :errors="errors"></run-hour-form>
+            <run-hour-form :page="page"  v-model:form="runHour" :errors="errors"></run-hour-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create Run Hour</button>
         </form>
