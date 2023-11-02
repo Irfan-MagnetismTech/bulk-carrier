@@ -6,35 +6,54 @@ import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
 
-export default function useMaritimeCertificate() {
+export default function useChartererProfile() {
 	const router = useRouter();
-	const maritimeCertificates = ref([]);
+	const chartererProfiles = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
-	const maritimeCertificate = ref({
+
+	const chartererBankAccountObject = {
+		bank_name: '',
+		bank_branch_name: '',
+		account_name: '',
+		account_no: '',
+		swift_code: '',
+		routing_no: '',
+		currency: '',
+		country: '',
+		state_division: '',
+		city: '',
+	}
+
+	const chartererProfile = ref({
+		company_legal_name: '',
 		name: '',
-		type: '',
-		validity: '',
-		authority: '',
+		owner_code: '',
+		country: '',
+		contact_no: '',
+		address: '',
+		billing_address: '',
+		billing_email: '',
+		email: '',
+		website: '',
+		opsChartererBankAccounts: [{...chartererBankAccountObject}]
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getMaritimeCertificates(page,columns = null, searchKey = null, table = null) {
+	async function getChartererProfiles(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/maritime-certifications', {
+			const { data, status } = await Api.get('/ops/charterer-profiles', {
 				params: {
 					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
+					business_unit: businessUnit
+				}
 			});
-			maritimeCertificates.value = data.value;
+			chartererProfiles.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -46,16 +65,16 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
-	async function storeMaritimeCertificate(form) {
+	async function storeChartererProfile(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.post('/ops/maritime-certifications', form);
-			maritimeCertificate.value = data.value;
+			const { data, status } = await Api.post('/ops/charterer-profiles', form);
+			chartererProfile.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.maritime-certifications.index' });
+			router.push({ name: 'ops.charterer-profiles.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -66,14 +85,14 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
-	async function showMaritimeCertificate(maritimeCertificateId) {
+	async function showChartererProfile(chartererProfileId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/maritime-certifications/${maritimeCertificateId}`);
-			maritimeCertificate.value = data.value;
+			const { data, status } = await Api.get(`/ops/charterer-profiles/${chartererProfileId}`);
+			chartererProfile.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -85,19 +104,19 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
-	async function updateMaritimeCertificate(form, maritimeCertificateId) {
+	async function updateChartererProfile(form, chartererProfileId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.put(
-				`/ops/maritime-certifications/${maritimeCertificateId}`,
+				`/ops/charterer-profiles/${chartererProfileId}`,
 				form
 			);
-			maritimeCertificate.value = data.value;
+			chartererProfile.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.maritime-certifications.index' });
+			router.push({ name: 'ops.charterer-profiles.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -108,16 +127,16 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
-	async function deleteMaritimeCertificate(maritimeCertificateId) {
+	async function deleteChartererProfile(chartererProfileId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/maritime-certifications/${maritimeCertificateId}`);
+			const { data, status } = await Api.delete( `/ops/charterer-profiles/${chartererProfileId}`);
 			notification.showSuccess(status);
-			await getMaritimeCertificates();
+			await getChartererProfiles();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -128,12 +147,12 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
-	async function searchMaritimeCertificates(searchParam, loading) {
+	async function searchChartererProfiles(searchParam, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-maritime-certifications?name=${searchParam}`);
-			maritimeCertificates.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-charterer-profiles?name=${searchParam}`);
+			chartererProfiles.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -145,14 +164,15 @@ export default function useMaritimeCertificate() {
 	}
 
 	return {
-		maritimeCertificates,
-		maritimeCertificate,
-		getMaritimeCertificates,
-		storeMaritimeCertificate,
-		showMaritimeCertificate,
-		updateMaritimeCertificate,
-		deleteMaritimeCertificate,
-		searchMaritimeCertificates,
+		chartererProfiles,
+		chartererProfile,
+		chartererBankAccountObject,
+		getChartererProfiles,
+		storeChartererProfile,
+		showChartererProfile,
+		updateChartererProfile,
+		deleteChartererProfile,
+		searchChartererProfiles,
 		isLoading,
 		errors,
 	};

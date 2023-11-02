@@ -32,8 +32,8 @@
 
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Certificate Type </span>
-          <input type="text" v-model="form.certificate_type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
-          <Error v-if="errors?.certificate_type" :errors="errors.certificate_type" />
+          <input type="text" v-model="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
+          <Error v-if="errors?.type" :errors="errors.type" />
         </label>
     </div>
 
@@ -110,7 +110,7 @@ watch(() => props.form, (value) => {
 
     vesselCertificates.value = props.form?.opsVessel?.opsVesselCertificates;
     props.form.validity_period = props.form?.opsMaritimeCertification?.validity
-    props.form.certificate_type = props.form?.opsMaritimeCertification?.type
+    props.form.type = props.form?.opsMaritimeCertification?.type
 
     if(vessels.value.length > 0) {
         console.log("Changing editInitatedValue ")
@@ -137,7 +137,7 @@ watch(() => props.form.ops_maritime_certification_id, (value) => {
     
     const certificate = vesselCertificates.value.find(obj => obj["ops_maritime_certification_id"] === value);
     props.form.validity_period = certificate?.opsMaritimeCertification?.validity
-    props.form.certificate_type = certificate?.opsMaritimeCertification?.type
+    props.form.type = certificate?.opsMaritimeCertification?.type
   }
 }, { deep: true })
 
