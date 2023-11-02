@@ -20,9 +20,11 @@ class OpsChartererContract extends Model
         'email',
         'billing_email',
         'contact_no',
-        'bank_branche_id',
+        'bank_branch_id',
+        'bank_branch_name',
         'attachment',
         'bank_id',
+        'bank_name',
         'bank_account_name',
         'bank_account_no',
         'swift_code',
@@ -31,7 +33,7 @@ class OpsChartererContract extends Model
         'status',
         'port_code',
         'agent_name',
-        'billing_name',
+        'agent_billing_name',
         'business_unit',
     ];
 

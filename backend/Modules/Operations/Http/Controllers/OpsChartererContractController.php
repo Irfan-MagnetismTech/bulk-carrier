@@ -51,7 +51,7 @@ class OpsChartererContractController extends Controller
    */
    public function store(OpsChartererContractRequest $request): JsonResponse
    {
-       // dd($request);
+       dd($request);
        try {
            DB::beginTransaction();
            $charterer_contract = $request->except(
