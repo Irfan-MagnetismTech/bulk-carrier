@@ -29,18 +29,25 @@ export default function useLcRecord() {
         invoice_value: 0,
         assessment_value: 0,
         issue_bank_id: null,
+        issue_bank_name: null,
         issueBank: null,
-        advising_bank_id: null,
+        advising_bank_id: null, 
+        advising_bank_name: null, 
         advisingBank: null,
         discounting_bank_id: null,
+        discounting_bank_name: null,
         discountingBank: null,
         beneficiary_bank_id: null,
+        beneficiary_bank_name: null,
         beneficiaryBank: null,
         scm_vendor_id: null,
         scmVendor: null,
+        scmWarehouse: null,
+        scm_warehouse_id: null,
         attachment: null,
         type: null,
         acc_bank_id: null,
+        bank_name: null,
         accBank: null,
         cfr_value: 0.0,
         lc_margin: 0.0,
@@ -117,7 +124,7 @@ export default function useLcRecord() {
         try {
             const { data, status } = await Api.get(`/${BASE}/lc-records/${lcRecordId}`);
             lcRecord.value = data.value;
-
+            console.log('lcdata', lcRecord.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

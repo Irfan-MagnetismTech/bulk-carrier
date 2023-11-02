@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
@@ -230,10 +231,10 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms')
+                ->with('scmPoLines', 'scmPoTerms','scmVendor')
                 ->whereBusinessUnit($request->business_unit)
                 ->where('ref_no', 'LIKE', "%$request->searchParam%")
-                ->orderByDesc('name')
+                ->orderByDesc('ref_no')
                 ->limit(10)
                 ->get();
         } else {

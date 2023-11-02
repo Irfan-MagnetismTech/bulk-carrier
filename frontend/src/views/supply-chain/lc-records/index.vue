@@ -27,7 +27,7 @@ const critical = ['No','Yes'];
 // Code for global search start
 const columns = ["date"];
 const searchKey = useDebouncedRef('', 600);
-const table = "purchase_orders";
+const table = "scm_lc_records";
 
 const icons = useHeroIcon();
 
@@ -60,7 +60,7 @@ onMounted(() => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to change delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -82,7 +82,6 @@ function confirmDelete(id) {
     <default-button :title="'Create LC Records'" :to="{ name: 'scm.lc-records.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ purchaseOrders?.from }}-{{ purchaseOrders?.to }} of {{ purchaseOrders?.total }}</span> -->
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
@@ -99,43 +98,45 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>PR No</th>
-            <th>Raised Date</th>
-            <th>Is Critical</th>
-            <th>Purchase Center</th>
-            <th>Warehouse</th>
+            <th>LC No</th>
+            <th>LC Date</th>
+            <th>Expire Date</th>
+            <th>Weight</th>
+            <th>Invoice Value</th>
+            <th>Assessment Value</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(purchaseOrder,index) in (purchaseOrders?.data ? purchaseOrders?.data : purchaseOrders)" :key="index">
-              <td>{{ purchaseOrders?.from + index }}</td>
-              <td>{{ purchaseOrder?.pr_no }}</td>
-              <td>{{ purchaseOrder?.raised_date }}</td>
-              <td>{{ critical[purchaseOrder?.is_critical] }}</td>
-              <td>{{ purchaseOrder?.purchase_center }}</td>
-              <td>{{ purchaseOrder?.scmWarehouse?.name?? '' }}</td>
+            <tr v-for="(lcRecord,index) in (lcRecords?.data ? lcRecords?.data : lcRecords)" :key="index">
+              <td>{{ lcRecords?.from + index }}</td>
+              <td>{{ lcRecord?.lc_no }}</td>
+              <td>{{ lcRecord?.lc_date }}</td>
+              <td>{{ lcRecord?.expire_date }}</td>
+              <td>{{ lcRecord?.weight }}</td>
+              <td>{{ lcRecord?.invoice_value }}</td>
+              <td>{{ lcRecord?.assessment_value }}</td>
               <td>
-                <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
+                <span :class="lcRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lcRecord?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
-                <action-button @click="confirmDelete(purchaseOrder.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
+                <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!purchaseOrders?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
-        <tr v-else-if="!purchaseOrders?.data?.length">
-          <td colspan="7">No PR found.</td>
+        <tr v-else-if="!lcRecords?.data?.length">
+          <td colspan="7">No LC Record found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="purchaseOrders" to="scm.opening-stock.index" :page="page"></Paginate>
+    <Paginate :data="lcRecord" to="scm.opening-stock.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

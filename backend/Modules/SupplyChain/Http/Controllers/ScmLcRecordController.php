@@ -9,9 +9,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Http\Requests\ScmLcRecordRequest;
+use App\Services\FileUploadService;
 
 class ScmLcRecordController extends Controller
 {
+    function __construct(private FileUploadService $fileUpload)
+    {
+        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
+        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse
@@ -19,11 +27,16 @@ class ScmLcRecordController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scmLcRecords = ScmLcRecord::with('scmLcRecordLines')->latest()->paginate(10);
+            $scmLcRecords = ScmLcRecord::query()
+                ->with('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo')
+                ->latest()
+                ->when(request()->business_unit != "ALL", function ($query) {
+                    $query->where('business_unit', request()->business_unit);
+                })
+                ->paginate(10);
 
             return response()->success('Data list', $scmLcRecords, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -34,9 +47,14 @@ class ScmLcRecordController extends Controller
      */
     public function store(ScmLcRecordRequest $request): JsonResponse
     {
+        $requestData = $request->all();
         try {
             DB::beginTransaction();
-            $scmLcRecord = ScmLcRecord::create($request->all());
+            if (!empty($request->attachment)) {
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/lcRecords');
+                $requestData['attachment'] = $attachment;
+            }
+            $scmLcRecord = ScmLcRecord::create($requestData);
             $scmLcRecord->scmLcRecordLines()->createUpdateOrDelete($request->scmLcRecordLines);
             DB::commit();
 
@@ -56,7 +74,7 @@ class ScmLcRecordController extends Controller
     public function show(ScmLcRecord $lcRecord): JsonResponse
     {
         try {
-            return response()->success('data', $lcRecord->load('scmLcRecordLines'), 200);
+            return response()->success('data', $lcRecord->load('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -71,8 +89,13 @@ class ScmLcRecordController extends Controller
      */
     public function update(ScmLcRecordRequest $request, ScmLcRecord $lcRecord): JsonResponse
     {
+            $requestData = $request->all();
         try {
-            $lcRecord->update($request->all());
+            if (!empty($request->attachment)) {
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/lcRecords', $lcRecord->attachment);
+                $requestData['attachment'] = $attachment;
+            }
+            $lcRecord->update($requestData);
 
             $lcRecord->scmLcRecordLines()->createUpdateOrDelete($request->scmLcRecordLines);
 
@@ -106,7 +129,7 @@ class ScmLcRecordController extends Controller
         $lcRecord = ScmLcRecord::query()
             ->with('scmLcRecordLines')
             ->where('lc_no', 'like', "%$request->searchParam%")
-            ->orderByDesc('name')
+            ->orderByDesc('lc_no')
             ->limit(10)
             ->get();
 

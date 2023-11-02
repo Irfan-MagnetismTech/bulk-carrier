@@ -9,5 +9,5 @@ class ScmLcRecordLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['amount','particular'];
 }

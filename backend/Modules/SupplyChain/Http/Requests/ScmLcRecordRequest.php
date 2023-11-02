@@ -11,7 +11,9 @@ class ScmLcRecordRequest extends FormRequest
         $data =  request('data');
         $dataArray = json_decode($data, true);
         
-        $this->replace($dataArray);
+        $mergeData = array_merge($dataArray, ['attachment' => request('attachment')]);
+        
+        $this->replace($mergeData);
     }
 
     /**

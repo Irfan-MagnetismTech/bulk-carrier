@@ -4,16 +4,14 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
-    import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
 
-    const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { vendors, searchVendor } = useVendor();
     const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
 
-    const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
+    const { filteredPurchaseOrders, searchPurchaseOrder } = usePurchaseOrder();
 
     const props = defineProps({
       form: { type: Object, required: true },
@@ -43,8 +41,8 @@
 // });// Code for global search end here
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
-    if(newValue !== oldValue && oldValue != ''){
-      props.form.scm_warehouse_id = '';
+    if (newValue !== oldValue && oldValue != '') {
+      
     }
   });
 
@@ -79,18 +77,41 @@ function handleAttachmentChange(e) {
       props.form.attachment = fileData;
 }
     
+
+//fetchPo by using searchPurchaseOrder()
+function fetchPo(search, loading) {
+  loading(true);
+  searchPurchaseOrder(search, loading,props.form.business_unit);
+}
+
+//watch scmPo
+watch(() => props.form.scmPo, (newVal, oldVal) => {
+  if (newVal) {
+    props.form.scm_po_id = newVal.id;
+    if (newVal.scmVendor) {
+      props.form.scmVendor = newVal.scmVendor;
+      props.form.scm_vendor_id = newVal.scm_vendor_id;
+      }
+    if (newVal.scmWarehouse) {
+      props.form.scmWarehouse = newVal.scmWarehouse;
+      props.form.scm_warehouse_id = newVal.scm_warehouse_id;
+    }
+  }
+ });
+
+
 </script>
 <template>
 
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.lc_no"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
-        <input type="text" readonly v-model="form.lc_no" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'lc_no'" />
+        <input type="text" v-model="form.lc_no" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
         <Error v-if="errors?.lc_no" :errors="errors.lc_no" />
       </label>
       <label class="label-group">
@@ -105,7 +126,7 @@ function handleAttachmentChange(e) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Weight<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.weight" required readonly class="form-input" name="weight" :id="'weight'" />
+          <input type="text" placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
           <Error v-if="errors?.weight" :errors="errors.weight"  />
       </label>
       
@@ -113,24 +134,23 @@ function handleAttachmentChange(e) {
   <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">No. Of Packet</span>
-        <input type="text" v-model="form.no_of_packet" readonly required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
+        <input type="text" v-model="form.no_of_packet" required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
         <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" />
     </label>
     <label class="label-group">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
-          <v-select :options="pos" placeholder="--Choose an option--" @search="fetchPos" v-model="form.scmPo" label="ref_no" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmPo"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
+            <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input">
+              <template #search="{attributes,events}">
+                <input
+                  class="vs__search"
+                  :required="!form.scmPo"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
             </v-select>
           <Error v-if="errors?.scm_po_id" :errors="errors.scm_po_id"  />
       </label>
-      
       <label class="label-group">
         <span class="label-item-title">Invoice Value</span>
         <input type="text" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
@@ -145,30 +165,30 @@ function handleAttachmentChange(e) {
   <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">Issuing Bank</span>
-        <input type="text" v-model="form.issue_bank_id" readonly required class="form-input" name="issue_bank_id" :id="'issue_bank_id'" /> 
-        <Error v-if="errors?.issue_bank_id" :errors="errors.issue_bank_id" />
+        <input type="text" v-model="form.issue_bank_name" required class="form-input" name="issue_bank_name" :id="'issue_bank_name'" /> 
+        <Error v-if="errors?.issue_bank_name" :errors="errors.issue_bank_name" />
     </label>
     <label class="label-group">
           <span class="label-item-title">Advising Bank<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.advising_bank_id" required class="form-input" name="advising_bank_id" :id="'advising_bank_id'" />
-          <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_id"  />
+          <input type="text" v-model="form.advising_bank_name" required class="form-input" name="advising_bank_name" :id="'advising_bank_name'" />
+          <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_name"  />
       </label>
       
       <label class="label-group">
         <span class="label-item-title">Beneficiary Bank</span>
-        <input type="text" v-model="form.advising_bank_id" required class="form-input" name="beneficiary_bank_id" :id="'beneficiary_bank_id'" />
-        <Error v-if="errors?.beneficiary_bank_id" :errors="errors.beneficiary_bank_id"/>
+        <input type="text" v-model="form.beneficiary_bank_name" required class="form-input" name="beneficiary_bank_name" :id="'beneficiary_bank_name'" />
+        <Error v-if="errors?.beneficiary_bank_name" :errors="errors.beneficiary_bank_name"/>
     </label>
       <label class="label-group">
-          <span class="label-item-title">Issuing Bank<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.issue_bank_id" required class="form-input" name="issue_bank_id" :id="'issue_bank_id'" />
-          <Error v-if="errors?.issue_bank_id" :errors="errors.issue_bank_id"  />
+          <span class="label-item-title">Discounting Bank<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.discounting_bank_name" required class="form-input" name="discounting_bank_name" :id="'discounting_bank_name'" />
+          <Error v-if="errors?.discounting_bank_name" :errors="errors.discounting_bank_name"  />
       </label>
   </div>
   <div class="input-group !w-1/2">    
     <label class="label-group">
         <span class="label-item-title">Party Name</span>
-        <input type="text" v-model="form.scmVendor" readonly required class="form-input" name="scmVendor" :id="'scmVendor'" /> 
+        <input type="text" readonly :value="form.scmVendor?.name" required class="form-input vms-readonly-input" name="scmVendor"/> 
         <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" />
     </label>
     <label class="label-group">
@@ -181,75 +201,70 @@ function handleAttachmentChange(e) {
 
   <div id="customDataTable">
     <div  class="table-responsive">
-      <!-- <fieldset class="form-fieldset">
-        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend> -->
-        
         <table class="w-full whitespace-no-wrap" id="table">
           <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
           <tbody>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type</td>
               <td class="align-center text-center !w-1/4">
-                <input type="text" readonly v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank</td>
               <td class="align-center !w-1/4">
-                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+                <input type="text" v-model="form.bank_name" required class="form-input text-center" name="bank_name" :id="'bank_name'" />
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">CFR Value (BDT)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
+                <input type="text" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">LC Margin (BDT)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
+                <input type="text" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
 
               </td>
             </tr>
             <tr class="text-center" v-for="(scmLcRecordLine,index) in form.scmLcRecordLines" :key="index">
                 <td class="align-center font-bold bg-gray-100">{{scmLcRecordLine.particular}}</td>
                 <td class="align-center">
-                  <input type="text" v-model="form.scmLcRecordLines[index].amount" required class="form-input text-center" name="po_date" :id="'po_date'" />
+                  <input type="number" v-model="form.scmLcRecordLines[index].amount" required class="form-input text-center" :name="`lines`[index]"/>
                 </td>
               </tr>
             <tr class="text-right">
               <td class="align-right font-bold bg-gray-100">Total Costs Relating To LC ( a + b + c + d)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+                <input type="text" v-model="form.total_cost" required readonly class="form-input text-center vms-readonly-input" name="total_cost" :id="'total_cost'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Documents Value (CFR - Margin) (BDT)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.document_value" required class="form-input text-center" name="document_value" :id="'document_value'" />
+                <input type="text" v-model="form.document_value" required class="form-input text-center" name="document_value" :id="'document_value'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
+                <input type="text" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD)</td>
               <td class="align-center">
-                <input type="text" readonly v-model="form.total_cost" required class="form-input text-center" name="po_date" :id="'po_date'" />
+                <input type="text" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'" />
 
               </td>
             </tr>
           </tbody>
-
-        
         </table>
       <!-- </fieldset> -->
     </div>

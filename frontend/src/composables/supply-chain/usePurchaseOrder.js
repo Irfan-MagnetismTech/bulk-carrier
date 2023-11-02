@@ -194,11 +194,10 @@ export default function usePurchaseOrder() {
         }
     }
 
-    async function searchPurchaseOrder(searchParam, loading) {
-        
+    async function searchPurchaseOrder(searchParam, loading, business_unit) {
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-orders`,searchParam);
+        const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
             filteredPurchaseOrders.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
@@ -207,7 +206,7 @@ export default function usePurchaseOrder() {
             loading(false)
         }
     }
-    //getPrAndCsWisePurchaseOrder data     
+
     async function getPrAndCsWisePurchaseOrder(prId, csId) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
