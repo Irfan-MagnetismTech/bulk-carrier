@@ -9,6 +9,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 const icons = useHeroIcon();
 const { item, storeItem, isLoading, errors } = useItem();
 const { setTitle } = Title();
+const page = 'create';
 
 setTitle('Create Item');
 </script>
@@ -24,7 +25,7 @@ setTitle('Create Item');
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <form @submit.prevent="storeItem(item)">
             <!-- Booking Form -->
-            <item-form v-model:form="item" :errors="errors"></item-form>
+            <item-form :page="page" v-model:form="item" :errors="errors"></item-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create Item</button>
         </form>
