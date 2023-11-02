@@ -36,6 +36,30 @@ class MntWorkRequisitionController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function indexWip()
+    {
+        try {
+            $runHours = MntWorkRequisition::with(['opsVessel:id,name','mntWorkRequisitionItem.mntItem'])
+                        ->when(request()->business_unit != "ALL", function($q){
+                            $q->where('business_unit', request()->business_unit);  
+                        })
+                        ->where('status', 1)
+                        ->latest()
+                        ->paginate(10);
+
+            return response()->success('Work requisitions retrieved successfully', $runHours, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
