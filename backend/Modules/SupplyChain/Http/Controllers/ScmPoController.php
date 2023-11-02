@@ -56,9 +56,9 @@ class ScmPoController extends Controller
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
             // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$scmPo->id);
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $scmPo->id);
             $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
-            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);       
+            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
             DB::commit();
             return response()->success('Data created successfully', $scmPo, 201);
         } catch (\Exception $e) {
@@ -94,7 +94,7 @@ class ScmPoController extends Controller
         try {
             DB::beginTransaction();
             $purchaseOrder->update($requestData);
-            $addNetRateToRequestData = $this->addNetRateToRequestData($request,$purchaseOrder->id);
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $purchaseOrder->id);
             $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
             DB::commit();
@@ -142,7 +142,7 @@ class ScmPoController extends Controller
 
 
     //function to loop reqest data and add a value named net_rate to each ite
-    public function addNetRateToRequestData($request,$po_id)
+    public function addNetRateToRequestData($request, $po_id)
     {
         $net_amount = $request['net_amount'];
         $sub_total = $request['sub_total'];
@@ -154,7 +154,7 @@ class ScmPoController extends Controller
         $request['scmPoLines'] = $scmPoLines;
         return $request;
     }
-    
+
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
 
@@ -224,5 +224,22 @@ class ScmPoController extends Controller
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function searchPo(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmPo = ScmPo::query()
+                ->with('scmPoLines', 'scmPoTerms')
+                ->whereBusinessUnit($request->business_unit)
+                ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('name')
+                ->limit(10)
+                ->get();
+        } else {
+            $scmPo = [];
+        }
+
+        return response()->success('Search result', $scmPo, 200);
     }
 }
