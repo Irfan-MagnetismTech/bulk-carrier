@@ -158,7 +158,7 @@ class MntWorkRequisitionController extends Controller
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
             
             DB::commit();
-            return response()->success('Work requisition updated successfully', $workRequisitionLines, 201);
+            return response()->success('Work requisition updated successfully', $workRequisition, 201);
             
         }
         catch (\Exception $e)
@@ -175,6 +175,27 @@ class MntWorkRequisitionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $wr = MntWorkRequisition::findorfail($id);
+            $wr->mntWorkRequisitionLines()->delete();
+            $wr->mntWorkRequisitionItem()->delete();
+            
+            // $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
+            // $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
+            
+            // $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
+            
+            $wr->delete();
+            
+            DB::commit();
+            return response()->success('Job deleted successfully', $wr, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
