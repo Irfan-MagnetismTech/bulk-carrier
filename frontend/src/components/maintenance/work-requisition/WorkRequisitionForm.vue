@@ -192,8 +192,8 @@
                   <td><input type="text"  class="form-input"  :value="jobLine.previous_run_hour" readonly /></td>
                   <td><input type="text"  class="form-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
                   <td>
-                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) == -1"  @click="addJobLine(jobLine)">Add</button>
-                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findJobLine(jobLine.id)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
+                    <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
+                    <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
               </tr>
                 
@@ -327,14 +327,14 @@ function addJobLine(jobLine){
 }
 
 function removeJobLine(jobLine){
-  const index = props.form.added_job_lines.indexOf(findJobLine(jobLine.id));
+  const index = props.form.added_job_lines.indexOf(findAddedJobLine(jobLine));
   if (index > -1) { 
     props.form.added_job_lines.splice(index, 1);
   }
 }
 
-function findJobLine(jobLineId){
-  return props.form.added_job_lines.find((addedJobLine) => addedJobLine.id === jobLineId);
+function findAddedJobLine(jobLine){
+  return props.form.added_job_lines.find((addedJobLine) => addedJobLine.mnt_job_line_id === jobLine.mnt_job_line_id);
 }
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
