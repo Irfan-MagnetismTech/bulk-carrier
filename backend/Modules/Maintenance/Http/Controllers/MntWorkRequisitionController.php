@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntWorkRequisition;
 use Modules\Maintenance\Entities\MntWorkRequisitionItem;
+use Modules\Maintenance\Http\Requests\MntWorkRequisitionRequest;
 
 class MntWorkRequisitionController extends Controller
 {
@@ -48,7 +49,7 @@ class MntWorkRequisitionController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntWorkRequisitionRequest $request)
     {
         try {
             $input = $request->all();
@@ -131,7 +132,7 @@ class MntWorkRequisitionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntWorkRequisitionRequest $request, $id)
     {
         try {
             $input = $request->all();
@@ -177,19 +178,23 @@ class MntWorkRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
-            $wr = MntWorkRequisition::findorfail($id);
-            $wr->mntWorkRequisitionLines()->delete();
-            $wr->mntWorkRequisitionItem()->delete();
-            
-            // $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
-            // $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
-            
-            // $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
-            
-            $wr->delete();
-            
-            DB::commit();
-            return response()->success('Job deleted successfully', $wr, 204);
+            $wr = MntWorkRequisition::where(['id'=>$id, 'status'=>'0'])->first();
+            if (empty($wr)) {
+                $error = array(
+                    "message" => "The requisition could not be deleted",
+                    "errors" => [
+                        
+                    ]
+                );
+                return response()->json($error, 422);
+            } else {
+                $wr->mntWorkRequisitionLines()->delete();
+                $wr->mntWorkRequisitionItem()->delete();
+                $wr->delete();
+                
+                DB::commit();
+                return response()->success('Job deleted successfully', $wr, 204);
+            }
             
         }
         catch (\Exception $e)

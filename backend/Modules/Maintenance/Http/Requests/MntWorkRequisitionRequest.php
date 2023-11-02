@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntWorkRequisitionRequest extends FormRequest
 {
@@ -14,7 +15,14 @@ class MntWorkRequisitionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+        'ops_vessel_id' => 'required',
+        'reference_no' => ['required', Rule::unique('mnt_work_requisitions')->ignore($this->id)],
+        'est_start_date' => 'required',
+        'responsible_person' => 'required',
+        'assigned_to' => 'required',
+        'mnt_item_id' => 'required',
+        'requisition_date' => ['required'],
+        "added_job_lines"    => "required|array|min:1",
         ];
     }
 
