@@ -1,13 +1,10 @@
 <template>
-    <business-unit-input v-if="form.form_type === 'create'" v-model="form.business_unit"></business-unit-input>
-    <div v-else-if="defaultBusinessUnit === 'ALL'">
-      <input  type="text" :value="form.business_unit" placeholder="Business Unit" class="form-input" readonly />
-    </div>
-
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-            <div v-if="form.form_type === 'create'">
+            <div v-if="page === 'create'">
               <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
@@ -26,7 +23,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-            <div v-if="form.form_type === 'create'">
+            <div v-if="page === 'create'">
               <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
@@ -44,7 +41,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-            <div v-if="form.form_type === 'create'">
+            <div v-if="page === 'create'">
               <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
@@ -62,7 +59,7 @@
         </label>
         <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
-            <div v-if="form.form_type === 'create'">
+            <div v-if="page === 'create'">
               <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
@@ -84,14 +81,14 @@
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span v-show="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
+            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span v-show="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <input type="text" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
           <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour <span v-show="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="text" v-model="computedPresentRunHour" placeholder="Present Run Hour" class="form-input" :required="(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="!(form.form_type === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
+            <span class="text-gray-700 dark:text-gray-300">Present Run Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <input type="text" v-model="computedPresentRunHour" placeholder="Present Run Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
@@ -120,6 +117,10 @@ const props = defineProps({
     required: false,
     default: {}
   },
+  page: {
+    required: false,
+    default: {}
+  },
   errors: { type: [Object, Array], required: false },
 });
 
@@ -133,7 +134,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const computedPresentRunHour = computed({
       get: () => {
-        if (props.form.form_type === 'edit' && props.form.previous_run_hour == 0 && props.form.running_hour == 0) {
+        if (props.page === 'edit' && props.form.previous_run_hour == 0 && props.form.running_hour == 0) {
           return props.form.present_run_hour;
         } else {
           return parseInt(props.form.previous_run_hour) + parseInt(props.form.running_hour) || '';
@@ -177,10 +178,10 @@ watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
   props.form.mnt_item_name = value;
   // props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
-  if(props.form.form_type === 'create' && value?.length == 1 && value[0]?.id !== 'all' && props.form.ops_vessel_id){
+  if(props.page === 'create' && value?.length == 1 && value[0]?.id !== 'all' && props.form.ops_vessel_id){
       getItemPresentRunHour(props.form.ops_vessel_id, value[0].id);
   }
-  else if(props.form.form_type !== 'edit'){
+  else if(props.page !== 'edit'){
     props.form.previous_run_hour = '';
     presentRunHour.value = '';
   }
