@@ -1,5 +1,5 @@
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
@@ -147,9 +147,9 @@
         </label>
 
         
-        <label class="block w-full mt-2 text-sm" v-show="form.form_type == 'edit'">
+        <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
             <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
-            <select v-model="form.status" class="form-input" required :disabled="form.form_type != 'edit'">
+            <select v-model="form.status" class="form-input" required :disabled="page != 'edit'">
               <option value="" disabled selected>Select</option>
               <option value="0" > Pending</option>
               <option value="1" > WIP</option>
@@ -237,6 +237,10 @@ const currentTab = (tabValue) => {
 
 const props = defineProps({
   form: {
+    required: false,
+    default: {}
+  },
+  page: {
     required: false,
     default: {}
   },
