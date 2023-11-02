@@ -6,10 +6,13 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
-import useMaritimeCertificate from '../../../composables/operations/useMaritimeCertificate';
-const { maritimeCertificates, getMaritimeCertificates, deleteMaritimeCertificate, isLoading } = useMaritimeCertificate();
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import useChartererProfile from '../../../composables/operations/useChartererProfile';
+import Store from "../../../store";
 
+
+const { chartererProfiles, getChartererProfiles, deleteChartererProfile, isLoading } = useChartererProfile();
+const icons = useHeroIcon();
 const props = defineProps({
   page: {
     type: Number,
@@ -18,10 +21,11 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Maritime Certificate List');
+setTitle('Charterer Profile List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
 function confirmDelete(id) {
@@ -35,14 +39,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteMaritimeCertificate(id);
+        deleteChartererProfile(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-    getMaritimeCertificates(props.page)
+    getChartererProfiles(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -62,11 +66,12 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Maritime Certificate List</h2>
-    <default-button :title="'Create Maritime Certificate'" :to="{ name: 'ops.maritime-certifications.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Charterer Profile List</h2>
+    <default-button :title="'Create Charterer Profile'" :to="{ name: 'ops.charterer-profiles.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
+    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
+
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
@@ -82,38 +87,41 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Certificate Authority</th>
-            <th>Certificate Name</th>
-            <th>Certificate Type</th>
-            <th>Validity Period</th>
+            <th>Charterer Name</th>
+            <th>Charterer Short Code</th>
+            <th>Country</th>
+            <th>Email</th>
+            <th>Contact</th>
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody v-if="maritimeCertificates?.data?.length">
-              <tr v-for="(maritimeCertificate, index) in maritimeCertificates.data" :key="maritimeCertificate?.id">
-                  <td>{{ maritimeCertificates.from + index }}</td>
-                  <td>{{ maritimeCertificate?.authority }}</td>
-                  <td>{{ maritimeCertificate?.name }}</td>
-                  <td>{{ maritimeCertificate?.type }}</td>
-                  <td>{{ maritimeCertificate?.validity }}</td>
+          <tbody v-if="chartererProfiles?.data?.length">
+              <tr v-for="(chartererProfile, index) in chartererProfiles.data" :key="chartererProfile?.id">
+                  <td>{{ chartererProfiles.from + index }}</td>
+                  <td>{{ chartererProfile?.name }}</td>
+                  <td>{{ chartererProfile?.owner_code }}</td>
+                  <td>{{ chartererProfile?.country }}</td>
+                  <td>{{ chartererProfile?.email }}</td>
+                  <td>{{ chartererProfile?.contact_no }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'ops.maritime-certifications.edit', params: { maritimeCertificateId: maritimeCertificate.id } }"></action-button>
-                      <action-button @click="confirmDelete(maritimeCertificate.id)" :action="'delete'"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.charterer-profiles.show', params: { chartererProfileId: chartererProfile.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.charterer-profiles.edit', params: { chartererProfileId: chartererProfile.id } }"></action-button>
+                      <action-button @click="confirmDelete(chartererProfile.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
           </tbody>
           
-          <tfoot v-if="!maritimeCertificates?.length">
+          <tfoot v-if="!chartererProfiles?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
-          <tr v-else-if="!maritimeCertificates?.data?.length">
+          <tr v-else-if="!chartererProfiles?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="maritimeCertificates" to="ops.configurations.maritime-certificates.index" :page="page"></Paginate>
+    <Paginate :data="chartererProfiles" to="ops.charterer-profiles.index" :page="page"></Paginate>
   </div>
 </template>

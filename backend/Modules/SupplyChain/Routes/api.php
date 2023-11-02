@@ -33,6 +33,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-materials', [ScmMaterialController::class, "searchMaterial"])->name('searchMaterial');
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
+    Route::get('search-pr-wise-material', [ScmPoController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
     Route::get('search-po', [ScmPoController::class, "searchPo"])->name('searchPo');
     Route::get('search-lc-record', [ScmLcRecordController::class, "searchLcRecord"])->name('searchLcRecord');
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
