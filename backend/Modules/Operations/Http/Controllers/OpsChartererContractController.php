@@ -32,7 +32,9 @@ class OpsChartererContractController extends Controller
    public function index()
    {
        try {
-           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->paginate(15);
+           $charterer_contracts = OpsChartererContract::with('opsVessel',
+           'opsChartererProfile',               'opsChartererContractsFinancialTerms',
+           'opsChartererContractsLocalAgents')->latest()->paginate(15);
            
            return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
        }
@@ -51,18 +53,22 @@ class OpsChartererContractController extends Controller
    */
    public function store(OpsChartererContractRequest $request): JsonResponse
    {
-       dd($request);
        try {
            DB::beginTransaction();
            $charterer_contract = $request->except(
                '_token',
                'attachment',
+               'opsChartererContractsFinancialTerms',
+               'opsChartererContractsLocalAgents'
            );
            if(isset($request->attachment)){
                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/charterer_contracts');
                $charterer_contract['attachment'] = $attachment;
            }
            $charterer_contract = OpsChartererContract::create($charterer_contract);
+
+           $charterer_contract->opsChartererContractsFinancialTerms()->createMany($request->opsChartererContractsFinancialTerms);
+           $charterer_contract->opsChartererContractsLocalAgents()->createMany($request->opsChartererContractsLocalAgents);
            DB::commit();
            return response()->success('Charterer contract added successfully.', $charterer_contract, 201);
        }
@@ -81,7 +87,8 @@ class OpsChartererContractController extends Controller
     */
    public function show(OpsChartererContract $charterer_contract): JsonResponse
    {
-       $charterer_contract->load('opsVessel','opsChartererProfile');
+       $charterer_contract->load('opsVessel','opsChartererProfile',               'opsChartererContractsFinancialTerms',
+       'opsChartererContractsLocalAgents');
        try
        {
            return response()->success('Successfully retrieved charterer contract.', $charterer_contract, 200);
@@ -107,6 +114,8 @@ class OpsChartererContractController extends Controller
            $charterer_contract_info = $request->except(
                '_token',
                'attachment',
+               'opsChartererContractsFinancialTerms',
+               'opsChartererContractsLocalAgents'
            );
 
            if(isset($request->attachment)){
@@ -116,6 +125,8 @@ class OpsChartererContractController extends Controller
            }
            
            $charterer_contract->update($charterer_contract_info);
+           $charterer_contract->opsChartererContractsFinancialTerms()->createUpdateOrDelete($request->opsChartererContractsFinancialTerms);
+           $charterer_contract->opsChartererContractsLocalAgents()->createUpdateOrDelete($request->opsChartererContractsLocalAgents);
            DB::commit();
            return response()->success('Charterer contract updated successfully.', $charterer_contract, 200);
        }
@@ -134,8 +145,11 @@ class OpsChartererContractController extends Controller
     */
    public function destroy(OpsChartererContract $charterer_contract): JsonResponse
    {
+    
        try
        {
+           $charterer_contract->opsChartererContractsFinancialTerms()->delete();
+           $charterer_contract->opsChartererContractsLocalAgents()->delete();
            $this->fileUpload->deleteFile($charterer_contract->attachment);
            $charterer_contract->delete();
 

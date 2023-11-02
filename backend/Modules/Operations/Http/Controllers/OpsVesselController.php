@@ -205,9 +205,9 @@ class OpsVesselController extends Controller
                 $query->where('name', 'like', '%' . $request->name_or_code . '%');
                 $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
             })
-            // ->when(request()->business_unit != "ALL", function($q){
-            //     $q->where('business_unit', request()->business_unit);
-            // })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
             ->limit(10)
             ->get();
             
