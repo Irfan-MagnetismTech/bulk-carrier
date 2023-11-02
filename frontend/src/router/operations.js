@@ -286,4 +286,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/charterer-contracts/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Delivery and Re-delivery Note */
+	{
+		path: `/${BASE}/delivery-redelivery`,
+		name: `${BASE}.delivery-redelivery.index`,
+		component: () => import(`../views/${ViEWBASE}/delivery-redelivery/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/delivery-redelivery/create`,
+		name: `${BASE}.delivery-redelivery.create`,
+		component: () => import (`../views/${ViEWBASE}/delivery-redelivery/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/delivery-redelivery/:deliveryRedeliveryId/edit`,
+		name: `${BASE}.delivery-redelivery.edit`,
+		component: () => import (`../views/${ViEWBASE}/delivery-redelivery/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/delivery-redelivery/:deliveryRedeliveryId/show`,
+		name: `${BASE}.delivery-redelivery.show`,
+		component: () => import (`../views/${ViEWBASE}/delivery-redelivery/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

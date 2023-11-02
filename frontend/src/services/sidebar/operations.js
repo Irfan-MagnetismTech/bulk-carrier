@@ -94,6 +94,16 @@ export default [
                 subSubMenu: []
             },
             {
+                route: 'ops.delivery-redelivery.index',
+                label: 'Delivery & Re-delivery',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
                 route: 'ops.vessel-particulars.index',
                 label: 'Vessel Particulars',
                 preIcon: '',
