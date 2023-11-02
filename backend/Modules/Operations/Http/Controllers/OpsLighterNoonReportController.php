@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Http\Requests\OpsLighterNoonReportRequest;
-use Illuminate\Support\Facades\DB;
 
 class OpsLighterNoonReportController extends Controller
 {
@@ -57,10 +58,10 @@ class OpsLighterNoonReportController extends Controller
                  'opsBunkers',
              );
  
-             $lighterNoonReport = OpsLighterNoonReport::create($lighterNoonReportInfo);
-             $lighterNoonReport->opsBunkers()->createMany($request->opsBunkers);
+             $lighter_noon_report = OpsLighterNoonReport::create($lighterNoonReportInfo);
+             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
              DB::commit();
-             return response()->success('Lighter noon report added successfully.', $lighterNoonReport, 201);
+             return response()->success('Lighter noon report added successfully.', $lighter_noon_report, 201);
          }
          catch (QueryException $e)
          {
@@ -106,9 +107,9 @@ class OpsLighterNoonReportController extends Controller
                  'opsBunkers',
              );
             
-             $lighterNoonReport->update($lighterNoonReportInfo);            
-             $lighterNoonReport->opsBunkers()->delete();
-             $lighterNoonReport->opsBunkers()->createMany($request->opsBunkers);
+             $lighter_noon_report->update($lighterNoonReportInfo);            
+             $lighter_noon_report->opsBunkers()->delete();
+             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
              DB::commit();
              return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 200);
          }

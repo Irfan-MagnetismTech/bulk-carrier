@@ -3,6 +3,7 @@
 namespace Modules\Operations\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OpsCargoTariffRequest extends FormRequest
 {
@@ -13,6 +14,7 @@ class OpsCargoTariffRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd(count($this->opsCargoTariffLines));
         return [
             'tariff_name'       => ['required', 'string', 'max:255'],
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],

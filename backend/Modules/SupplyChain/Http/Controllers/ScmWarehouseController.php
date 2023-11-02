@@ -35,7 +35,7 @@ class ScmWarehouseController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -73,7 +73,7 @@ class ScmWarehouseController extends Controller
      * @param ScmWarehouse $warehouse
      * @return JsonResponse
      */
-    public function update(Request $request, ScmWarehouse $warehouse)
+    public function update(Request $request, ScmWarehouse $warehouse): JsonResponse
     {
         try {
             $warehouse->update($request->all());
@@ -103,7 +103,7 @@ class ScmWarehouseController extends Controller
         }
     }
 
-    public function searchWarehouse(Request $request)
+    public function searchWarehouse(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $warehouse = ScmWarehouse::query()

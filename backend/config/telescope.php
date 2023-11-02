@@ -92,7 +92,7 @@ return [
     */
 
     'only_paths' => [
-        'api/scm/*'
+        // 'api/scm/*'
     ],
 
     'ignore_paths' => [

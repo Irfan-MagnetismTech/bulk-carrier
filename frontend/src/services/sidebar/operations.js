@@ -74,8 +74,28 @@ export default [
                 subSubMenu: []
             },
             {
+                route: 'ops.charterer-profiles.index',
+                label: 'Charterer Profiles',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
                 route: 'ops.vessel-particulars.index',
                 label: 'Vessel Particulars',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: 'ops.voyages.index',
+                label: 'Voyages',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -153,7 +173,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.index',
                         label: 'Vessel Wise Certificate',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -163,7 +183,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: '',
+                        route: 'ops.vessel-certificates.renew-list',
                         label: 'Renew Schedule',
                         preIcon: '',
                         postIcon: icons.DownArrow,

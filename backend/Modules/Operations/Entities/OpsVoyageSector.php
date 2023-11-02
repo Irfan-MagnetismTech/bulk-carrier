@@ -12,7 +12,6 @@ class OpsVoyageSector extends Model
 
     protected $fillable = [
         'ops_voyage_id',
-        'ops_cargo_tariff_id',
         'loading_point',
         'unloading_point',
         'rate',
