@@ -9,5 +9,14 @@ class OpsChartererContractsLocalAgent extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'ops_charterer_contract_id',
+        'ops_port_id',
+        'port_code',
+        'agent_name',
+        'agent_billing_name',
+        'agent_billing_email',
+        'ops_charterer_contract_id',
+        'ops_charterer_contract_id',
+    ];
 }
