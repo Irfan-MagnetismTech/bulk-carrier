@@ -235,8 +235,8 @@ watch(() => props.form.ops_charterer_profile, (value) => {
 
 watch(() => props.form.currency, (value) => {
   if(value) {
-    for(bunker of props.form.opsBunkers) {
-      props.form.opsBunkers[bunker].rate = 0;
+    for(const bunker of props.form.opsBunkers) {
+      bunker.rate = 0;
     }
   }
 }, { deep: true})

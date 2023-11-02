@@ -32,7 +32,7 @@ export default function useDeliveryRedelivery() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/delivery-redelivery', {
+			const { data, status } = await Api.get('/ops/handover-takeovers', {
 				params: {
 					page: page || 1,
 					business_unit: businessUnit
@@ -56,21 +56,8 @@ export default function useDeliveryRedelivery() {
 		isLoading.value = true;
 
 		try {
-			let formData = new FormData();
 
-			// form.opsVoyageCertificates.map((element) => {
-			// 	element.ops_maritime_certification_id = element.id
-			// 	element.business_unit = form.business_unit
-			// })
-
-			// form.opsBunkers.map((element) => {
-			// 	element.scm_material_id = element.id
-			// })
-
-			formData.append('attachment', form.attachment);
-			formData.append('info', JSON.stringify(form));
-
-			const { data, status } = await Api.post('/ops/delivery-redelivery', formData);
+			const { data, status } = await Api.post('/ops/handover-takeovers', form);
 			deliveryRedelivery.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.delivery-redelivery.index' });
@@ -90,7 +77,7 @@ export default function useDeliveryRedelivery() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/delivery-redelivery/${deliveryRedeliveryId}`);
+			const { data, status } = await Api.get(`/ops/handover-takeovers/${deliveryRedeliveryId}`);
 			deliveryRedelivery.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -110,13 +97,10 @@ export default function useDeliveryRedelivery() {
 
 		try {
 
-			let formData = new FormData();
-			formData.append('attachment', form.attachment);
-			formData.append('info', JSON.stringify(form));
-			formData.append('_method', 'PUT');
+	
 
-			const { data, status } = await Api.post(
-				`/ops/delivery-redelivery/${deliveryRedeliveryId}`,
+			const { data, status } = await Api.put(
+				`/ops/handover-takeovers/${deliveryRedeliveryId}`,
 				formData
 			);
 			deliveryRedelivery.value = data.value;
@@ -139,7 +123,7 @@ export default function useDeliveryRedelivery() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/delivery-redelivery/${deliveryRedeliveryId}`);
+			const { data, status } = await Api.delete( `/ops/handover-takeovers/${deliveryRedeliveryId}`);
 			notification.showSuccess(status);
 			await getDeliveryRedeliverys();
 		} catch (error) {
@@ -152,21 +136,6 @@ export default function useDeliveryRedelivery() {
 		}
 	}
 
-	async function searchDeliveryRedeliverys(searchParam, loading) {
-		//NProgress.start();
-
-		try {
-			const { data, status } = await Api.get(`/ops/search-delivery-redelivery?name=${searchParam}`);
-			deliveryRedeliveries.value = data.value;
-			notification.showSuccess(status);
-		} catch (error) {
-			const { data, status } = error.response;
-			notification.showError(status);
-		} finally {
-			loading(false)
-			//NProgress.done();
-		}
-	}
 
 	return {
 		deliveryRedeliveries,
@@ -176,7 +145,6 @@ export default function useDeliveryRedelivery() {
 		showDeliveryRedelivery,
 		updateDeliveryRedelivery,
 		deleteDeliveryRedelivery,
-		searchDeliveryRedeliverys,
 		isLoading,
 		errors,
 	};
