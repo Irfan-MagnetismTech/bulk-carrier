@@ -1,5 +1,5 @@
 <script setup>
-import {ref,onMounted} from "vue";
+import {ref,onMounted, onBeforeMount} from "vue";
 
 import Title from "../../../services/title";
 import usePurchaseOrder from "../../../composables/supply-chain/usePurchaseOrder";
@@ -27,7 +27,7 @@ const props = defineProps({
   },
 });
 
-// console pr_id and cs_id after on mount
+
 onMounted(() => {
     getPrAndCsWisePurchaseOrder(props.pr_id, props.cs_id);
 }); 

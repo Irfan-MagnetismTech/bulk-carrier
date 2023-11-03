@@ -29,6 +29,7 @@ export default function usePurchaseOrder() {
         scmPr: null,
         date: '',
         cs_no: null,
+        purchase_center: null,
         scm_cs_id: null,
         scmCs: null,
         scmVendor: null,
@@ -63,7 +64,9 @@ export default function usePurchaseOrder() {
                             description: ''
                         }
                     ],  
-        });
+    });
+    
+    const prMaterialList = ref([]);
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
@@ -79,6 +82,7 @@ export default function usePurchaseOrder() {
     const termsObject =  {
         description: ''
     }
+
     const errors = ref('');
     const isLoading = ref(false);
     const indexPage = ref(null);
@@ -231,7 +235,23 @@ export default function usePurchaseOrder() {
         }
     }
 
+    
+    async function getMaterialList(prId) {
 
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+                params: {
+                    pr_id: prId,
+                },
+            });
+            prMaterialList.value = data.value;
+            console.log('prMaterialList', prMaterialList.value);    
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+        }
+    }
 
     return {
         purchaseOrders,
@@ -244,6 +264,8 @@ export default function usePurchaseOrder() {
         updatePurchaseOrder,
         deletePurchaseOrder,
         getPrAndCsWisePurchaseOrder,
+        getMaterialList,
+        prMaterialList,
         materialObject,
         termsObject,
         isLoading,

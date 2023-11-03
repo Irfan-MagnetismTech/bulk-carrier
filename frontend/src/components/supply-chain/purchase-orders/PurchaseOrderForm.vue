@@ -8,11 +8,13 @@
     import useVendor from '../../../composables/supply-chain/useVendor';
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { vendors, searchVendor } = useVendor();
     const { currencies, getCurrencies } = useBusinessInfo();
+    const { getMaterialList, prMaterialList } = usePurchaseOrder();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -74,26 +76,33 @@
       loading(true);
       searchVendor(search, loading);
     }
-   
-    function setMaterialOtherData(datas,index){
-      console.log(datas);
-      props.form.scmPoLines[index].unit = datas.unit;
-      props.form.scmPoLines[index].scm_material_id = datas.id;
-    }
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
+function setMaterialOtherData(line, index) {
+  const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
+              props.form.scmPoLines[index].unit = selectedMaterial.unit;
+              props.form.scmPoLines[index].brand = selectedMaterial.brand;
+              props.form.scmPoLines[index].model = selectedMaterial.model;;
+            }
+          }
+    }
 
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_price = parseFloat((material?.rate * material?.quantity).toFixed(2));
+      newVal?.forEach((line, index) => {
+        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
         total += parseFloat(props.form.scmPoLines[index].total_price);
+        if (line.scmMaterial) {
+          setMaterialOtherData(line, index);
+        }
       });
       props.form.sub_total = parseFloat(total.toFixed(2));
       calculateNetAmount();
+
+  
 }, { deep: true });
     
   function calculateNetAmount(){
@@ -108,8 +117,10 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
     calculateNetAmount();
   });
   onMounted(() => {
-    getCurrencies();
-    console.log(currencies);
+    getCurrencies()
+    watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+      getMaterialList(props.form.scm_pr_id);
+    });
   }); 
 
 //watch scmVendor to change scm_vendor_id
@@ -118,70 +129,13 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
     props.form.scm_vendor_id = newVal.id;
   }
 });
+watch(() => props?.form?.scmPr, (newVal, oldVal) => {
+  if(newVal){
+    props.form.pr_no = newVal.ref_no;
+  }
+});
 </script>
 <template>
-
-  
-<!-- const purchaseOrder = ref( {
-        ref_no: '',
-        scmWarehouse: '',
-        scm_warehouse_name: '',
-        scm_warehouse_id: '',
-        po_date: '',
-        pr_no: null,
-        scm_pr_id: null,
-        scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
-        scmCs: null,
-        scmVendor: null,
-        scm_vendor_id: null,
-        vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
-        remarks: '',
-        sub_total: 0.0,
-        discount: 0.0,
-        total_amount: 0.0,
-        vat: 0.0,
-        net_amount: 0.0,
-        attachment: '',
-        business_unit: '',
-        scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
-        scmPoTerms: [
-                        {
-                            details: ''
-                        }
-                    ],  
-        });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
-    }
-
-    const termsObject =  {
-        details: ''
-    } -->
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
@@ -207,7 +161,7 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scmPr.ref_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
+          <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
           <Error v-if="errors?.pr_no" :errors="errors.pr_no"  />
       </label>
       <label class="label-group">
@@ -298,7 +252,7 @@ watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
           <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

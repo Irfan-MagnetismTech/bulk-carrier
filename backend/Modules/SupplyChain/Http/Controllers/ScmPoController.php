@@ -207,6 +207,7 @@ class ScmPoController extends Controller
                     'scmPr' => $scmPr,
                     'pr_date' => $scmPr->raised_date,
                     'business_unit' => $scmPr->business_unit,
+                    'purchase_center' => $scmPr->purchase_center,
                     'scmPoLines' => $scmPr->scmPrLines->map(function ($item) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
@@ -244,8 +245,13 @@ class ScmPoController extends Controller
         $prMaterials = ScmPrLine::query()
             ->with('scmMaterial')
             ->where('scm_pr_id', request()->pr_id)
-            ->get();
-
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['brand'] = $item->brand;
+                $data['model'] = $item->model;
+                return $data;
+        });
         return response()->success('data list', $prMaterials, 200);
     }
 

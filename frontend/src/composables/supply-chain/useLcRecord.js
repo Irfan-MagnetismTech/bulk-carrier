@@ -101,6 +101,7 @@ export default function useLcRecord() {
 
         let formData = new FormData();
         formData.append('data', JSON.stringify(form));
+        formData.append('data', form.attachment);
 
         try {
             const { data, status } = await Api.post(`/${BASE}/lc-records`, formData);
@@ -140,6 +141,7 @@ export default function useLcRecord() {
 
         let formData = new FormData();
         formData.append('data', JSON.stringify(form));
+        formData.append('data', form.attachment);
         formData.append('_method', 'PUT');
 
         try {
