@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import administration from "./administration";
+import maintenance from "./maintenance";
 import operations from "./operations";
 import supplyChain from "./supply-chain";
 import crew from "./crew";
@@ -28,6 +29,7 @@ const router = createRouter({
                     meta: { requiresAuth: true, role: "all", permission: "dashboard" },
                 },
                 ...administration,
+                ...maintenance,
                 ...operations,
                 ...supplyChain,
                 ...crew,
