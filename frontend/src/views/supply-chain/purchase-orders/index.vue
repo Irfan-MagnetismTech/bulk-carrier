@@ -9,6 +9,7 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
+import { useRouter } from 'vue-router';
 
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading } = usePurchaseOrder();
@@ -22,6 +23,9 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const router = useRouter();
+
 
 // Code for global search start
 const columns = ["date"];
@@ -70,7 +74,21 @@ function confirmDelete(id) {
             deletePurchaseOrder(id);
           }
         })
-      }
+}
+
+          
+const navigateToMRRCreate = (purchaseOrderId) => {
+        const pr_id = null; 
+        const po_id = purchaseOrderId;
+        const routeOptions = {
+          name: 'scm.material-receipt-reports.create',
+          query: {
+            pr_id: pr_id,
+            po_id: po_id
+          }
+        };
+        router.push(routeOptions);
+      };
 </script>
 
 <template>
@@ -121,8 +139,11 @@ function confirmDelete(id) {
                 <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.purchase-orders.edit', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
-                <action-button @click="confirmDelete(purchaseOrder.id)" :action="'delete'"></action-button>
+                <div class="grid grid-flow-col-dense gap-x-2">
+                  <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.purchase-orders.edit', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
+                  <action-button @click="confirmDelete(purchaseOrder.id)" :action="'delete'"></action-button>
+                </div>
               </td>
             </tr>
           </tbody>
