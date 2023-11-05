@@ -45,6 +45,15 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
     wipWorkRequisition.value.mnt_item_name = value?.mntWorkRequisitionItem?.MntItem;
 
     wipWorkRequisition.value.added_job_lines = value?.mntWorkRequisitionLines;
+    wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
+            {
+                material_name: '',
+                specification: '',
+                unit: '',
+                quantity: 0,
+                remarks: '',
+            }
+        ];
 
     // workRequisition.value.form_type = 'edit';
   });
