@@ -134,6 +134,13 @@
 
 }
 
+.custom_link{
+    color: #0038c7;
+}
+.custom_link:hover{
+    text-decoration: underline;
+}
+
 /* Qc Trading */
 
 .main_menu {

@@ -7,6 +7,8 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewDocument() {
     const router = useRouter();
     const crewDocuments = ref([]);
+    const isCrewDocumentAddModalOpen = ref(0);
+    const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
     const crewDocument = ref( {
@@ -151,6 +153,8 @@ export default function useCrewDocument() {
     return {
         crewDocuments,
         crewDocument,
+        isCrewDocumentAddModalOpen,
+        isCrewDocumentRenewModalOpen,
         getCrewDocuments,
         storeCrewDocument,
         showCrewDocument,
