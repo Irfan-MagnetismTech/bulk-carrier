@@ -45,7 +45,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
 
     //Laravel Excel Apis
     Route::get('export-materials', [ScmMaterialController::class, "export"])->name('exportMaterials');
-    Route::get('import-materials', [ScmMaterialController::class, "import"])->name('exportMaterials');
+    Route::get('import-materials', [ScmMaterialController::class, "import"])->name('importMaterials');
 
     //Current Stock Apis
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
