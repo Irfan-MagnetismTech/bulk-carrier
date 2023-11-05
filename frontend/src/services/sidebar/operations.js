@@ -73,36 +73,36 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-            {
-                route: 'ops.charterer-profiles.index',
-                label: 'Charterer Profiles',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.vessel-particulars.index',
-                label: 'Vessel Particulars',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.voyages.index',
-                label: 'Voyages',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
+            // {
+            //     route: 'ops.charterer-profiles.index',
+            //     label: 'Charterer Profiles',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.vessel-particulars.index',
+            //     label: 'Vessel Particulars',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.voyages.index',
+            //     label: 'Voyages',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
             // {
             //     route: '',
             //     label: 'Voyages',
@@ -153,47 +153,47 @@ export default [
             //     permissionKey: '',
             //     subSubMenu: []
             // },
-            {
-                route: '',
-                label: 'Certification',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [
-                    {
-                        route: 'ops.maritime-certifications.index',
-                        label: 'All Certificates',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.vessel-certificates.index',
-                        label: 'Vessel Wise Certificate',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.vessel-certificates.renew-list',
-                        label: 'Renew Schedule',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                ]
-            },
+            // {
+            //     route: '',
+            //     label: 'Certification',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: [
+            //         {
+            //             route: 'ops.maritime-certifications.index',
+            //             label: 'All Certificates',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //         {
+            //             route: 'ops.vessel-certificates.index',
+            //             label: 'Vessel Wise Certificate',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //         {
+            //             route: 'ops.vessel-certificates.renew-list',
+            //             label: 'Renew Schedule',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //     ]
+            // },
                     // {
                     //     route: 'ops.configurations.cargo-types.index',
                     //     label: 'Cargo Types',

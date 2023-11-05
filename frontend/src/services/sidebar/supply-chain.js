@@ -93,36 +93,36 @@ export default [
                     },
                 ]
             },
-            {
-                route: `${BASE}.purchase-requisitions.index`,
-                label: 'Purchase Requisition',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: `${BASE}.purchase-orders.index`,
-                label: 'Purchase Order',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: `${BASE}.lc-records.index`,
-                label: 'Lc Records',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            }
+            // {
+            //     route: `${BASE}.purchase-requisitions.index`,
+            //     label: 'Purchase Requisition',
+            //     preIcon: icons.User,
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: `${BASE}.purchase-orders.index`,
+            //     label: 'Purchase Order',
+            //     preIcon: icons.User,
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: `${BASE}.lc-records.index`,
+            //     label: 'Lc Records',
+            //     preIcon: icons.User,
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // }
             
         ]
     },
