@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Operations\Http\Controllers\OpsVesselParticularController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('operations')->group(function() {
     // Route::get('/', 'OperationsController@index');
-
+    Route::get('vessel-particular-report', [OpsVesselParticularController::class, 'vesselParticularReport']);
 
 });
 // Route::resources([

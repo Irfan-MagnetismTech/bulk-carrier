@@ -82,6 +82,11 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-
+    
+    
+    
+    // report routes
+    
 });
+// Route::get('vessel-particular-report', [OpsVesselParticularController::class, 'vesselParticularReport']);
 Route::post('vessel-search', [OpsVesselController::class, 'search']);
