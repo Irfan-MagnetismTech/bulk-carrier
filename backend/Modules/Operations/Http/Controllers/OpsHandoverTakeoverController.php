@@ -33,7 +33,6 @@ class OpsHandoverTakeoverController extends Controller
     {
         try {
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->paginate(15);
-            
             return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
