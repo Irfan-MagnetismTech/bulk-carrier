@@ -26,7 +26,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'purchase-requisitions' => ScmPrController::class,
         'purchase-orders' => ScmPoController::class,
         'lc-records' => ScmLcRecordController::class,
-        'mrrs' => ScmMrrController::class,
+        'material-receipt-reports' => ScmMrrController::class,
     ]);
 
     //Search Apis

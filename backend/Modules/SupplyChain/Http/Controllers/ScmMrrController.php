@@ -65,13 +65,13 @@ class ScmMrrController extends Controller
 
     /**
      * Show the specified resource.
-     * @param ScmMrr $mrr
+     * @param ScmMrr $materialReceiptReport
      * @return JsonResponse
      */
-    public function show(ScmMrr $mrr): JsonResponse
+    public function show(ScmMrr $materialReceiptReport): JsonResponse
     {
         try {
-            return response()->success('data', $mrr->load('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy'), 200);
+            return response()->success('data', $materialReceiptReport->load('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -81,19 +81,19 @@ class ScmMrrController extends Controller
     /**
      * Update the specified resource in storage.
      * @param ScmMrrRequest $request
-     * @param ScmMrr $mrr
+     * @param ScmMrr $materialReceiptReport
      * @return JsonResponse
      */
-    public function update(ScmMrrRequest $request, ScmMrr $mrr): JsonResponse
+    public function update(ScmMrrRequest $request, ScmMrr $materialReceiptReport): JsonResponse
     {
         try {
             DB::beginTransaction();
 
-            $mrr->update($request->all());
-            $mrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
+            $materialReceiptReport->update($request->all());
+            $materialReceiptReport->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
             DB::commit();
 
-            return response()->success('Data updated sucessfully!', $mrr, 202);
+            return response()->success('Data updated sucessfully!', $materialReceiptReport, 202);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -103,14 +103,14 @@ class ScmMrrController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param ScmMrr $mrr
+     * @param ScmMrr $materialReceiptReport
      * @return JsonResponse
      */
-    public function destroy(ScmMrr $mrr): JsonResponse
+    public function destroy(ScmMrr $materialReceiptReport): JsonResponse
     {
         try {
-            $mrr->scmMrrLines()->delete();
-            $mrr->delete();
+            $materialReceiptReport->scmMrrLines()->delete();
+            $materialReceiptReport->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
@@ -121,14 +121,14 @@ class ScmMrrController extends Controller
 
     public function searchMrr(Request $request): JsonResponse
     {
-        $mrr = ScmMrr::query()
+        $materialReceiptReport = ScmMrr::query()
             ->with('scmMrrLines')
             ->where('lc_no', 'like', "%$request->searchParam%")
             ->orderByDesc('lc_no')
             ->limit(10)
             ->get();
 
-        return response()->success('Search result', $mrr, 200);
+        return response()->success('Search result', $materialReceiptReport, 200);
     }
 
     /**
