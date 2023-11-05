@@ -167,6 +167,12 @@ class OpsVoyageController extends Controller
             ->where(function ($query) use($request) {
                 $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
             })
+            ->when(request()->vessel_id != null, function($q){
+                $q->where('ops_vessel_id', request()->vessel_id);
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
             ->limit(10)
             ->get();
 
