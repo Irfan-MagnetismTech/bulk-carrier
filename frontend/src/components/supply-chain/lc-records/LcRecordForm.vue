@@ -40,9 +40,17 @@
 
 // });// Code for global search end here
 
-  watch(() => props.form.business_unit, (newValue, oldValue) => {
+watch(() => props.form.business_unit, (newValue, oldValue) => {
     if (newValue !== oldValue && oldValue != '') {
-      
+      filteredPurchaseOrders.value = [];
+      props.form.scm_po_id = null;
+      props.form.scmPo = null;
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      props.form.scmWarehouse = null;
+      props.form.scm_warehouse_id = null;
+      props.form.acc_cost_center_id = null;
+
     }
   });
 
