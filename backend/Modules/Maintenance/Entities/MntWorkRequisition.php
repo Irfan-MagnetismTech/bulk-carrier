@@ -44,7 +44,7 @@ class MntWorkRequisition extends Model
         return $this->hasManyThrough(MntWorkRequisitionLine::class, MntWorkRequisitionItem::class);
     }
 
-    public function mntWorkRequisitionIMaterials() : HasMany {
+    public function mntWorkRequisitionMaterials() : HasMany {
         return $this->hasMany(MntWorkRequisitionMaterial::class);
     }
 }
