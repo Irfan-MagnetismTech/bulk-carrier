@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vessel Particular @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</title>
+    <title>PRINCIPAL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</title>
 </head>
 <style>
     .title{
@@ -22,7 +22,7 @@
         <tr rowspan="3">
             <th colspan="11" style="text-align: center; 
             font-size:20px; 
-            padding:10px;"><h2>VESSEL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</h2></th>
+            padding:10px;"><h2>PRINCIPAL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</h2></th>
         </tr>
         @if(isset($vesselParticular))
             <tr>
