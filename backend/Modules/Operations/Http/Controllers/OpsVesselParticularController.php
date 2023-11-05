@@ -162,7 +162,7 @@ class OpsVesselParticularController extends Controller
     }
 
 
-    public function vesselParticularReport(Request $request)
+    public function exportVesselParticularReport(Request $request)
     {
         $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
         ->when(request()->business_unit != "ALL", function($q){
