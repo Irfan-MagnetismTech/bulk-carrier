@@ -24,17 +24,7 @@ class VesselParticularExport implements FromCollection, WithHeadings, ShouldAuto
             'OFFICIAL NUMBER',
             'KEEL LAYING/LAUNCHING/DELIVERY',
             'LENGTH OVERALL',
-            'LENGTH BETWEEN PERPENDICULARS',
             'BREADTH MOULDED',
-            Depth Moulded
-            Sumer LOad Draft, Extreme
-            TPC
-            Deck Crane
-            Grabs
-            MAX. HT. KEEL TO UPPER MAST
-            MAIN ENGINE
-            MAX. CONTINOUS OUTPUT, BHP
-            NORMAL OUTPUT,(85% OF MCO) BHP
         ];
     }
 

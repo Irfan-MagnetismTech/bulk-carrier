@@ -12,6 +12,7 @@ class OpsChartererContract extends Model
 
     protected $fillable = [
         'contract_type',
+        'contract_name',
         'ops_vessel_id',
         'ops_charterer_profile_id',
         'country',
