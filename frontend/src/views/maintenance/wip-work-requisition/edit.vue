@@ -5,9 +5,9 @@
       <default-button :title="'Work Requisition List'" :to="{ name: 'mnt.work-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-          <form @submit.prevent="updateWorkRequisition(workRequisition, workRequisitionId)">
+          <form @submit.prevent="updateWorkRequisition(wipWorkRequisition, wipWorkRequisitionId)">
               <!-- Booking Form -->
-            <!-- <work-requisition-form :page="page" v-model:form="workRequisition" :errors="errors"></work-requisition-form> -->
+            <wip-work-requisition-form :page="page" v-model:form="workRequisition" :errors="errors"></wip-work-requisition-form>
               <!-- Submit button -->
               <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update Work Requisition</button>
           </form>
@@ -21,10 +21,10 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useWorkRequisition from '../../../composables/maintenance/useWorkRequisition';
-import WorkRequisitionForm from '../../../components/maintenance/work-requisition/WorkRequisitionForm.vue';
+import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-requisition/WipWorkRequisitionForm.vue';
   
   const route = useRoute();
-  const workRequisitionId = route.params.workRequisitionId;
+  const wipWorkRequisitionId = route.params.wipWorkRequisitionId;
   const { workRequisition, showWorkRequisition, updateWorkRequisition, errors } = useWorkRequisition();
   const icons = useHeroIcon();
   
@@ -50,6 +50,6 @@ import WorkRequisitionForm from '../../../components/maintenance/work-requisitio
   });
   
   onMounted(() => {
-      showWorkRequisition(workRequisitionId);
+      showWorkRequisition(wipWorkRequisitionId);
   });
   </script>

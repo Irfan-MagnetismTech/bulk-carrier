@@ -101,7 +101,7 @@ export default function useWipWorkRequisition() {
 
         try {
             const { data, status } = await Api.get(`/mnt/work-requisitions/${wipWorkRequisitionId}`);
-            workRequisition.value = data.value;
+            wipWorkRequisition.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
