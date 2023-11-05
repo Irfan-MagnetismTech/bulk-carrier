@@ -125,7 +125,7 @@ class MntWorkRequisitionController extends Controller
                 'mntWorkRequisitionItem',
                 'mntWorkRequisitionItem.MntItem.MntItemGroup.MntShipDepartment.MntItemGroups.MntItems',
                 'mntWorkRequisitionLines',
-                'mntWorkRequisitionIMaterials'
+                'mntWorkRequisitionMaterials'
                 ])->find($id);
             
                         
