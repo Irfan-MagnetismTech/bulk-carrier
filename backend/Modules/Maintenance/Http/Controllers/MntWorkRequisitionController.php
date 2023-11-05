@@ -195,6 +195,42 @@ class MntWorkRequisitionController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function updateWip(Request $request, $id)
+    {
+        try {
+            $input = $request->all();
+
+            $wr['act_start_date'] = $input['act_start_date'];
+            $wr['act_completion_date'] = $input['act_completion_date'];
+            $wr['status'] = ($input['act_completion_date'] == '') ? 3: 2;
+
+            DB::beginTransaction();
+
+            $workRequisition = MntWorkRequisition::findorfail($id);
+            $workRequisition->update($wr);
+
+            $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
+            $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
+            
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
+            
+            DB::commit();
+            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      * @param int $id
      * @return Renderable
