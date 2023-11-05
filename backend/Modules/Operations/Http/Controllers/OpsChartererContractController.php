@@ -33,7 +33,7 @@ class OpsChartererContractController extends Controller
    {
        try {
            $charterer_contracts = OpsChartererContract::with('opsVessel',
-           'opsChartererProfile',               'opsChartererContractsFinancialTerms',
+           'opsChartererProfile',               'opsChartererContractsFinancialTerms.opsVoyage','opsChartererContractsFinancialTerms.opsCargoType',
            'opsChartererContractsLocalAgents')->latest()->paginate(15);
            
            return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
@@ -87,7 +87,7 @@ class OpsChartererContractController extends Controller
     */
    public function show(OpsChartererContract $charterer_contract): JsonResponse
    {
-       $charterer_contract->load('opsVessel','opsChartererProfile',               'opsChartererContractsFinancialTerms',
+       $charterer_contract->load('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsVoyage','opsChartererContractsFinancialTerms.opsCargoType',
        'opsChartererContractsLocalAgents');
        try
        {
@@ -165,7 +165,9 @@ class OpsChartererContractController extends Controller
 
    public function getChartererContractWithoutPaginate(){
        try {
-           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();
+           $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsVoyage','opsChartererContractsFinancialTerms.opsCargoType',
+           'opsChartererContractsLocalAgents')->latest()->get();
+           
            return response()->success('Successfully retrieved charterer contracts contract type.', collect($charterer_contracts->pluck('contract_type'))->unique()->values()->all(), 200);
        } catch (QueryException $e){
            return response()->error($e->getMessage(), 500);
