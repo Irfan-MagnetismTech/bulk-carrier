@@ -20,6 +20,7 @@ export default function useChartererContract() {
 	}
 
 	const chartererContract = ref({
+		contract_name: '',
 		contract_type: 'Voyage Wise',
 		business_unit: '',
 		ops_vessel_id: null,

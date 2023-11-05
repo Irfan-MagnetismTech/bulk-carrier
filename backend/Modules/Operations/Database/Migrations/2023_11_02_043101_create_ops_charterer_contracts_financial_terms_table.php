@@ -21,8 +21,8 @@ return new class extends Migration
             $table->bigInteger('ops_cargo_type_id')->nullable();
             $table->string('credit_days')->nullable();
             $table->string('billing_cycle')->nullable();
-            $table->dateTime('valid_from')->nullable();
-            $table->dateTime('valid_till')->nullable();
+            $table->date('valid_from')->nullable();
+            $table->date('valid_till')->nullable();
             $table->string('status')->nullable();
             $table->float('approximate_load_amount')->nullable();
             $table->float('per_mt_charge')->nullable();

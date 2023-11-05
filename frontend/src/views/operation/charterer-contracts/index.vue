@@ -87,6 +87,7 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
+            <th>Contract Type</th>
             <th>Charterer Name</th>
             <th>Charterer Short Code</th>
             <th>Country</th>
@@ -98,8 +99,9 @@ onMounted(() => {
           <tbody v-if="chartererContracts?.data?.length">
               <tr v-for="(chartererContract, index) in chartererContracts.data" :key="chartererContract?.id">
                   <td>{{ chartererContracts.from + index }}</td>
-                  <td>{{ chartererContract?.name }}</td>
-                  <td>{{ chartererContract?.owner_code }}</td>
+                  <td>{{ chartererContract?.contract_type }}</td>
+                  <td>{{ chartererContract?.opsChartererProfile?.name }}</td>
+                  <td>{{ chartererContract?.opsChartererProfile?.owner_code }}</td>
                   <td>{{ chartererContract?.country }}</td>
                   <td>{{ chartererContract?.email }}</td>
                   <td>{{ chartererContract?.contact_no }}</td>
