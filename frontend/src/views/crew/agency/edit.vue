@@ -18,6 +18,12 @@ const { setTitle } = Title();
 
 setTitle('Edit Agency');
 
+watch(agency, (value) => {
+  if(value) {
+    agency.value.prev_logo = agency.value.logo;
+  }
+});
+
 onMounted(() => {
   showAgency(agencyId);
 });

@@ -1,14 +1,3 @@
-<!--<script setup>-->
-<!--import Error from "../Error.vue";-->
-<!--import Store from './../../store/index.js';-->
-<!--import { ref, onMounted } from "vue";-->
-
-<!--const businessUnit = ref(Store.getters.getCurrentUser.business_unit);-->
-
-<!--onMounted(() => {-->
-<!--  emit('update:modelValue', businessUnit.value);-->
-<!--});-->
-<!--</script>-->
 
 <script>
 import { ref, onMounted, defineProps, defineEmits } from "vue";
@@ -17,7 +6,10 @@ import Store from "../../store";
 export default {
   props: {
     modelValue: String,
-    page: String,
+    page: {
+      type: String,
+      default: 'create'
+    }
   },
   setup(props, context) {
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -39,7 +31,7 @@ export default {
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
       <select v-if="page === 'create'" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-input" required>
-        <option value="" selected disabled>Select</option>
+        <option value="ALL" disabled>Select</option>
         <option value="PSML">PSML</option>
         <option value="TSLL">TSLL</option>
       </select>

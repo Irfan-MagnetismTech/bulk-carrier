@@ -17,8 +17,9 @@ class CrwCrewAssignmentController extends Controller
     public function index()
     {
         try {
-            $crwCrewAssignments = CrwCrewAssignment::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,name')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);
@@ -58,7 +59,7 @@ class CrwCrewAssignmentController extends Controller
     public function show(CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewAssignment, 200);
+            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrew','port'), 200);
         }
         catch (QueryException $e)
         {
