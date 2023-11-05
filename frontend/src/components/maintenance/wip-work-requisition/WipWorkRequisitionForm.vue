@@ -230,6 +230,56 @@
       </div>
     </div> -->
 
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts Consumed {{ form.mnt_work_requisition_materials }} </legend>
+      <table class="w-full whitespace-no-wrap" id="table">
+        <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Unit <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
+            <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
+            <td class="px-1 py-1">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name" label="material_name_and_code" class="block form-input" @change="">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!mntWorkRequisitionMaterial.material_name"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
+            </td>
+            <!-- <td class="px-1 py-1">
+              <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="" disabled selected>Select Cycle Unit</option>
+                        <option value="Hours" v-show="form.mnt_item_name?.has_run_hour">Hours</option>
+                        <option value="Days">Days</option>
+                        <option value="Weeks">Weeks</option>
+                        <option value="Months">Months</option>
+                    </select>
+            </td>
+            <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.cycle" placeholder="Cycle" /></td>
+            <td class="px-1 py-1"><input type="text" required class="form-input"  v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
+            <td class="px-1 py-1"><input type="date" required class="form-input"  v-model="job_line.last_done"/></td>
+            
+            <td class="px-1 py-1"><input type="text" class="form-input"  v-model="job_line.remarks" placeholder="Remarks" /></td>
+            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addJob"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index != 0" @click="removeJob(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg></button></td> -->
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
     
     
 </template>
@@ -247,6 +297,7 @@ import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useJob from "../../../composables/maintenance/useJob";
 import useRunHour from "../../../composables/maintenance/useRunHour";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
+import useMaterial from "../../../composables/supply-chain/useMaterial";
 import moment from 'moment';
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
@@ -256,6 +307,7 @@ const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVessel
 const { itemWiseJobLines, getJobsForRequisition } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const { crews, getCrews } = useCrewCommonApiRequest();
+const { material, materials, getMaterials,searchMaterial } = useMaterial();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
@@ -356,6 +408,11 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     props.form.mnt_ship_department_name = null;
   }
 });
+
+function fetchMaterials(search, loading) {
+    loading(true);
+    searchMaterial(search, loading)
+  }
 
 function addJobLine(jobLine){
   props.form.added_job_lines.push(jobLine);

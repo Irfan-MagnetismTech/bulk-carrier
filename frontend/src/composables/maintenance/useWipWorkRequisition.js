@@ -40,6 +40,16 @@ export default function useWipWorkRequisition() {
         business_unit: '',
         form_type: 'create',
         added_job_lines: [],
+        // workRequisition
+        mntWorkRequisitionMaterials: [
+            {
+                material_name: '',
+                specification: '',
+                unit: '',
+                quantity: 0,
+                remarks: '',
+            }
+        ]
     });
 
     const indexPage = ref(null);
