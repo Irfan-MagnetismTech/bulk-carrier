@@ -35,15 +35,15 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>BUILT YEAR</strong>
+                    BUILT YEAR
                 </td>
                 <td colspan="7" style="text-align: left;">
-                    <strong>{{$vesselParticular->year_built}}</strong>
+                    {{$vesselParticular->year_built}}
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>OWNER</strong>
+                    OWNER
                 </td>
                 <td colspan="7">
                     {{$vesselParticular->owner_name}}
@@ -51,7 +51,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>MANAGER/OPERATOR</strong>
+                    MANAGER/OPERATOR
                 </td>
                 <td colspan="7">
                     {{$vesselParticular->opsVessel->manager}}
@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>CLASSIFICATION</strong>
+                    CLASSIFICATION
                 </td>
                 <td colspan="7">
                     {{$vesselParticular->classification}}
@@ -94,28 +94,28 @@
                     <strong>IMO NUMBER</strong>
                 </td>
                 <td colspan="7" style="text-align: left;">
-                    {{$vesselParticular->imo}}
+                    <strong>{{$vesselParticular->imo}}</strong>                    
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>MMSI</strong>
+                    MMSI
                 </td>
                 <td colspan="7">
-                    <strong>{{$vesselParticular->mmsi}}</strong>
+                    {{$vesselParticular->mmsi}}
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>OFFICIAL NUNMBER</strong>
+                    OFFICIAL NUNMBER
                 </td>
                 <td colspan="7" style="text-align: left;">
-                    <strong>{{$vesselParticular->official_number}}</strong>
+                    {{$vesselParticular->official_number}}
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>KEEL LAYING//LAUNCHING</strong>
+                    KEEL LAYING//LAUNCHING
                 </td>
                 <td colspan="7">
                     {{date("d-m-Y", strtotime($vesselParticular->keel_laying_date))}}//{{date("d-m-Y", strtotime($vesselParticular->opsVessel->launching_date))}}
@@ -131,7 +131,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>BREADTH MOULDED</strong>
+                    BREADTH MOULDED
                 </td>
                 <td colspan="7" style="text-align: left;">
                     {{$vesselParticular->overall_width}}
@@ -139,7 +139,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>DEPTH MOULDED</strong>
+                    DEPTH MOULDED
                 </td>
                 <td colspan="7" style="text-align: left;">
                     {{$vesselParticular->depth_moulded}}
@@ -147,7 +147,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>MAIN ENGINE</strong>
+                    MAIN ENGINE
                 </td>
                 <td colspan="7">
                     {{$vesselParticular->engine_type}}
@@ -155,7 +155,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>MAX. CONTINOUS OUTPUT, BHP</strong>
+                    MAX. CONTINOUS OUTPUT, BHP
                 </td>
                 <td colspan="7" style="text-align: left;">
                     {{$vesselParticular->bhp}}
@@ -163,7 +163,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <strong>TUES CAPACITY</strong>
+                    TUES CAPACITY
                 </td>
                 <td colspan="7" style="text-align: left;">
                     {{$vesselParticular->tues_capacity}}
@@ -177,7 +177,7 @@
                     
                 </td>
                 <td colspan="2">
-                    <strong>E-MAIL: </strong>
+                    E-MAIL:
                 </td>
                 <td colspan="3" style="text-align: left;">
                     {{$vesselParticular->email}}
@@ -191,10 +191,10 @@
                     
                 </td>
                 <td colspan="2">
-                    <strong>SAT TEL: </strong>
+                    SAT TEL:
                 </td>
                 <td colspan="3" style="text-align: left;">
-                    <strong></strong>
+                    
                 </td>
             </tr>            
         @else

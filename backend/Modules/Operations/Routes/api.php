@@ -83,8 +83,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
     
-    
-    
+        
     // report routes
     Route::get('vessel-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     
