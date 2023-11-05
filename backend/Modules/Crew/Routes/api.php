@@ -60,5 +60,8 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
 
     //helper apis
     Route::post('get-crew-ranks', [CrwCommonController::class, 'getCrewRanks']);
+    Route::post('get-crew-agencies', [CrwCommonController::class, 'getCrewAgencies']);
+    Route::post('get-crew-agency-contracts', [CrwCommonController::class, 'getCrewAgencyContracts']);
+    Route::post('get-crews', [CrwCommonController::class, 'getCrews']);
 
 });

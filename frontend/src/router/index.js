@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import administration from "./administration";
+import maintenance from "./maintenance";
 import operations from "./operations";
 import supplyChain from "./supply-chain";
-import crew from "./crew"; 
+import crew from "./crew";
+import account from "./account";
 
 const router = createRouter({
 
@@ -27,9 +29,11 @@ const router = createRouter({
                     meta: { requiresAuth: true, role: "all", permission: "dashboard" },
                 },
                 ...administration,
+                ...maintenance,
                 ...operations,
                 ...supplyChain,
                 ...crew,
+                ...account,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },
