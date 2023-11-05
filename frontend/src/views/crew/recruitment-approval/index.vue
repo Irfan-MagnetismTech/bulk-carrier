@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRecruitmentApproval from "../../../composables/crew/useRecruitmentApproval";
 import Title from "../../../services/title";
@@ -7,7 +7,11 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
+import Store from "../../../store";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
 const icons = useHeroIcon();
+const router = useRouter();
 
 const props = defineProps({
   page: {
@@ -22,6 +26,7 @@ setTitle('Recruitment Approval');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
 function confirmDelete(id) {
@@ -40,9 +45,18 @@ function confirmDelete(id) {
   })
 }
 
+watch(
+    () => businessUnit.value,
+    (newBusinessUnit, oldBusinessUnit) => {
+      if (newBusinessUnit !== oldBusinessUnit) {
+        router.push({ name: "crw.recruitmentApprovals.index", query: { page: 1 } })
+      }
+    }
+);
+
 onMounted(() => {
   watchEffect(() => {
-  getRecruitmentApprovals(props.page)
+  getRecruitmentApprovals(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -66,6 +80,7 @@ onMounted(() => {
     <default-button :title="'Create Item'" :to="{ name: 'crw.recruitmentApprovals.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
+    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
@@ -85,6 +100,7 @@ onMounted(() => {
             <th>Applied Date</th>
             <th>Page Title</th>
             <th>Subject</th>
+            <th>Business Unit</th>
             <th>Approved</th>
             <th>Agreed to Join</th>
             <th>Selected</th>
@@ -94,11 +110,14 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(rcrApproval,index) in recruitmentApprovals" :key="index">
+          <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ rcrApproval?.applied_date }}</td>
             <td>{{ rcrApproval?.page_title }}</td>
             <td>{{ rcrApproval?.subject }}</td>
+            <td>
+              <span :class="rcrApproval?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rcrApproval?.business_unit }}</span>
+            </td>
             <td>{{ rcrApproval?.total_approved }}</td>
             <td>{{ rcrApproval?.crew_agreed_to_join }}</td>
             <td>{{ rcrApproval?.crew_selected }}</td>
@@ -110,16 +129,16 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!recruitmentApprovals?.length">
+          <tfoot v-if="!recruitmentApprovals?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="10">Loading...</td>
+            <td colspan="11">Loading...</td>
           </tr>
           <tr v-else-if="!recruitmentApprovals?.data?.length">
-            <td colspan="10">No data found.</td>
+            <td colspan="11">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="recruitmentApprovals" to="crw.crewRequisitions.index" :page="page"></Paginate>
+    <Paginate :data="recruitmentApprovals" to="crw.recruitmentApprovals.index" :page="page"></Paginate>
   </div>
 </template>

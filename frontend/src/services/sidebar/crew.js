@@ -101,7 +101,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.agencyContracts.index',
                         label: 'Contract List',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -111,7 +111,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.agencyBills.index',
                         label: 'Agency Bills',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -185,7 +185,7 @@ export default [
                 ],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.crewAssigns.index',
                 label: 'Crew Assignment',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -205,7 +205,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'administration.users.index',
+                route: 'crw.incidentRecords.index',
                 label: 'Incidents Records',
                 preIcon: '',
                 postIcon: icons.DownArrow,

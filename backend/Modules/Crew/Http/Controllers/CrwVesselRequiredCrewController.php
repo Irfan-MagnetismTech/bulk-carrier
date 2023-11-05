@@ -18,7 +18,8 @@ class CrwVesselRequiredCrewController extends Controller
     public function index()
     {
         try {
-            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')->when(request()->business_unit != "ALL", function($q){
+            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')
+                ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
