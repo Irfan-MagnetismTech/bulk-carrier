@@ -141,7 +141,7 @@ class ScmPrController extends Controller
             'pr_no' => $purchaseRequisition->ref_no,
             'ref_no' => $purchaseRequisition->ref_no,
             'business_unit' => $purchaseRequisition->business_unit,
-            'scmWarehouse' => $purchaseRequisition->scmWarehouse->id,
+            'scmWarehouse' => $purchaseRequisition->scmWarehouse,
             'scm_warehouse_id' => $purchaseRequisition->scm_warehouse_id,
             'raised_date' => $purchaseRequisition->raised_date,
             'is_critical' => $purchaseRequisition->is_critical,
