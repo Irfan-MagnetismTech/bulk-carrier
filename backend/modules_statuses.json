@@ -2,5 +2,6 @@
     "Administration": true,
     "Crew": true,
     "Operations": true,
-    "SupplyChain": true
+    "SupplyChain": true,
+    "Accounts": true
 }
