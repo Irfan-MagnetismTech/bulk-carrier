@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_charterer_contracts', function (Blueprint $table) {
             $table->id();
+            $table->string('contract_name')->nullable();
             $table->enum('contract_type', ['Voyage Wise', 'Day Wise']);
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
             $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');

@@ -24,6 +24,7 @@ class OpsChartererContractRequest extends FormRequest
     {
         return [
             'contract_type'                 => ['required', 'string', 'max:255'],
+            'contract_name'                 => ['required', 'string', 'max:255'],
             'ops_vessel_id'                 => ['required', 'numeric', 'max:10'],
             'ops_charterer_profile_id'      => ['nullable', 'numeric', 'max:10'],
             'country'                       => ['required', 'string', 'max:255'],

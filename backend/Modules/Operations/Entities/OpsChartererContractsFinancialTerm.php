@@ -27,4 +27,14 @@ class OpsChartererContractsFinancialTerm extends Model
         'per_ton_charge',
         'bunker_provider',
     ];
+
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
+
+    public function opsCargoType()
+    {
+        return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
+    }
 }
