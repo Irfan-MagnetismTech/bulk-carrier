@@ -20,6 +20,7 @@ export default function useRecruitmentApproval() {
         crew_rest: '',
         body: '',
         remarks: '',
+        business_unit: '',
         crwRecruitmentApprovalLines: [
             {
                 crw_rank_id: '',
@@ -31,18 +32,25 @@ export default function useRecruitmentApproval() {
         ]
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRecruitmentApprovals(page) {
+    async function getRecruitmentApprovals(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             recruitmentApprovals.value = data.value;
@@ -123,7 +131,7 @@ export default function useRecruitmentApproval() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
             notification.showSuccess(status);
-            await getRecruitmentApprovals();
+            await getRecruitmentApprovals(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
