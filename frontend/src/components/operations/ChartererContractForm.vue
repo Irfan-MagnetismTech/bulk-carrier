@@ -191,7 +191,7 @@
       <div v-if="form.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Voyage</span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.ops_voyage_id" placeholder="Credit Days" class="form-input" autocomplete="off" />
+              <input type="text" v-model="form.opsChartererContractsFinancialTerms.ops_voyage_id" placeholder="" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Cargo Type </span>
@@ -345,6 +345,12 @@ function attachFile(e) {
     let fileData = e.target.files[0];
     props.form.attachment = fileData;
 }
+
+watch(() => props.form.business_unit, (value) => {
+  console.log("Business Unit Changing : ", value);
+  props.form.ops_vessel_id = null;
+  vessels.value = []
+}, { deep : true })
 
 watch(() => props.form, (value) => {
 

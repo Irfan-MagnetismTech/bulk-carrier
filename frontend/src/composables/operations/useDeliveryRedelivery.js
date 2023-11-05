@@ -97,8 +97,6 @@ export default function useDeliveryRedelivery() {
 
 		try {
 
-	
-
 			const { data, status } = await Api.put(
 				`/ops/handover-takeovers/${deliveryRedeliveryId}`,
 				formData
