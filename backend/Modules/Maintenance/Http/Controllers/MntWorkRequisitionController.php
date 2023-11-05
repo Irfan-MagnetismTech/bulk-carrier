@@ -125,7 +125,7 @@ class MntWorkRequisitionController extends Controller
                 'mntWorkRequisitionItem',
                 'mntWorkRequisitionItem.MntItem.MntItemGroup.MntShipDepartment.MntItemGroups.MntItems',
                 'mntWorkRequisitionLines',
-                'mntWorkRequisitionIMaterials'
+                'mntWorkRequisitionMaterials'
                 ])->find($id);
             
                         
@@ -172,6 +172,42 @@ class MntWorkRequisitionController extends Controller
             $wr['est_completion_date'] = $input['est_completion_date'];
             $wr['business_unit'] = $input['business_unit'];
             $wr['status'] = $input['status'];
+
+            DB::beginTransaction();
+
+            $workRequisition = MntWorkRequisition::findorfail($id);
+            $workRequisition->update($wr);
+
+            $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
+            $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
+            
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
+            
+            DB::commit();
+            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function updateWip(Request $request, $id)
+    {
+        try {
+            $input = $request->all();
+
+            $wr['act_start_date'] = $input['act_start_date'];
+            $wr['act_completion_date'] = $input['act_completion_date'];
+            $wr['status'] = ($input['act_completion_date'] == '') ? 3: 2;
 
             DB::beginTransaction();
 
