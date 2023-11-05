@@ -17,15 +17,15 @@ class VesselParticularExport implements FromView
     */
     use Exportable;
 
-    public $vesselParticulars;
-    public function __construct($vesselParticulars) {
+    public $vesselParticular;
+    public function __construct($vesselParticular) {
         // dd($vesselParticulars);
-        $this->vesselParticulars = $vesselParticulars;
+        $this->vesselParticular = $vesselParticular;
     }
 
     public function view(): View {
-        return view('vessel-particulars.vessel_particulars')->with([
-            'vesselParticulars' => $this->vesselParticulars,
+        return view('vessel-particulars.vessel_particular')->with([
+            'vesselParticular' => $this->vesselParticular,
         ]);
     }
 
