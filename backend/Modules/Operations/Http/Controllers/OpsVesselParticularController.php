@@ -38,7 +38,7 @@ class OpsVesselParticularController extends Controller
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })->latest()->paginate(15);
-            
+
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }
         catch (QueryException $e)
@@ -171,6 +171,25 @@ class OpsVesselParticularController extends Controller
         $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
         ->first();
         return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
+        
+    }
+    public function vesselParticularAttachmentDownload(Request $request)
+    {
+        $particular= OpsVesselParticular::find($request->id);
+        $filePath=null;
+        $fileName=null;
+        if(isset($particular->attachment)){  
+            $filePath= public_path($particular->attachment);
+            $fileName = basename($filePath);
+        }
+        if (file_exists($filePath)) {
+            return response()->download($filePath, $fileName, [
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment',
+            ]);
+        } else {
+            return response()->error(['message' => 'File not found.'], 404);
+        }
         
     }
 
