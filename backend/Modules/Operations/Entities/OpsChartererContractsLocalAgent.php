@@ -17,4 +17,9 @@ class OpsChartererContractsLocalAgent extends Model
         'agent_billing_email',
         'ops_charterer_contract_id',
     ];
+
+    public function opsPort()
+    {
+        return $this->belongsTo(OpsPort::class, 'port_code' , 'code');
+    }
 }
