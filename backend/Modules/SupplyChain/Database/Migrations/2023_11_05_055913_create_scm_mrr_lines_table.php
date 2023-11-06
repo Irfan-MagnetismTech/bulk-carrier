@@ -19,11 +19,11 @@ return new class extends Migration
             $table->foreignId('scm_material_id')->constrained('scm_materials')->nullable();
             $table->string('unit')->nullable();
             $table->string('brand')->nullable();
-            $table->bigInteger('model')->nullable();
+            $table->string('model')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->bigInteger('rate')->nullable();
             $table->string('po_composite_key')->nullable();
-            $table->bigInteger('pr_composite_key')->nullable();
+            $table->string('pr_composite_key')->nullable();
             $table->decimal('net_rate', 10, 2)->nullable();
             $table->timestamps();
         });

@@ -182,6 +182,7 @@ class ScmMrrController extends Controller
             ->with([
                 'scmWarehouse',
                 'scmPoLines.scmMaterial',
+                'scmPoLines.scmPrLine',
             ])
             ->where('id', $request->po_id)
             ->first();
@@ -194,10 +195,13 @@ class ScmMrrController extends Controller
                 'scm_po_no' => $scmPo->ref_no,
                 'scm_po_id' => $scmPo->id,
                 'scmPo' => $scmPo,
+                'scmPr' => $scmPo->scmPr,
+                'scm_pr_no' => $scmPo->scmPr->ref_no,
+                'scm_pr_id' => $scmPo->scmPr->id,
                 // 'scmCs' => $scmPo?->scmCs ?? null,
                 // 'scm_cs_id' => $scmPo?->scm_cs_id ?? '',
                 // 'scm_cs_no' => $scmPo?->scmCs?->ref_no ?? '',
-                'po_date' => $scmPo->raised_date,
+                'po_date' => $scmPo->date,
                 'business_unit' => $scmPo->business_unit,
                 'purchase_center' => $scmPo->purchase_center,
                 'scmMrrLines' => $scmPo->scmPoLines->map(function ($item) {

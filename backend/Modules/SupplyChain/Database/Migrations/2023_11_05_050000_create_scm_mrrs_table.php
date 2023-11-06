@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('scm_pr_id')->constrained('scm_prs')->nullable();
             $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses')->nullable();
             $table->foreignId('scm_lc_record_id')->constrained('scm_lc_records')->nullable();
-            $table->bigInteger('scm_cs_id');
+            $table->bigInteger('scm_cs_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->text('remarks')->nullable();
             $table->string('challan_no')->nullable();
