@@ -124,7 +124,7 @@ class OpsVesselParticularController extends Controller
             
             $vessel_particular->update($vesselParticular);
             DB::commit();
-            return response()->success('Vessel particular updated successfully.', $vessel_particular, 200);
+            return response()->success('Vessel particular updated successfully.', $vessel_particular, 202);
         }
         catch (QueryException $e)
         {
@@ -174,7 +174,7 @@ class OpsVesselParticularController extends Controller
         
     }
 
-    
+
     public function vesselParticularAttachmentDownload(Request $request)
     {
         $particular= OpsVesselParticular::find($request->id);

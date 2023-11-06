@@ -100,7 +100,7 @@ class OpsMaritimeCertificationController extends Controller
             DB::beginTransaction();
             $maritime_certification->update($request->all());
             DB::commit();
-            return response()->success('Maritime certification updated successfully.', $maritime_certification, 200);
+            return response()->success('Maritime certification updated successfully.', $maritime_certification, 202);
         }
         catch (QueryException $e)
         {
