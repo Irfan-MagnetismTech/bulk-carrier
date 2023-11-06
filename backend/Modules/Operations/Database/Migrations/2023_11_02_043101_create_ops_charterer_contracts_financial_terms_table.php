@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ops_charterer_contract_id');
             // $table->foreign('ops_charterer_contract_id')->references('id')->on('ops_charterer_contracts');
             $table->bigInteger('ops_voyage_id')->nullable();
-            $table->bigInteger('ops_cargo_type_id')->nullable();
+            $table->bigInteger('ops_cargo_tariff_id')->nullable();
             $table->string('credit_days')->nullable();
             $table->string('billing_cycle')->nullable();
             $table->date('valid_from')->nullable();
