@@ -12,7 +12,7 @@ class ScmVendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'address', 'country_id', 'vendor_type', 'account_ref_no', 'product_source_type', 'product_type',
+        'name', 'address', 'country_id','country_name', 'vendor_type', 'account_ref_no', 'product_source_type', 'product_type',
     ];
 
     public function scmVendorContactPersons(): HasMany

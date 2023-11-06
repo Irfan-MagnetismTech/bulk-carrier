@@ -10,15 +10,16 @@
         formType: { type: String, required : false },
     });
     
-    const { warehouses, searchWarehouse } = useWarehouse();//  this code will be overriten by costcenter search
+    const { costCenters, getCostCenters } = useWarehouse();
 
-    function fetchWarehouse(query, loading) {//  this code will be overriten by costcenter search
-        searchWarehouse(query, loading);
+    function fetchCostCenter(query, loading) {//  this code will be overriten by costcenter search
+        getCostCenters(props.form.business_unit,query, loading);
         loading(true)
     }
 
-    watch(() => props.form.cost_center_no, (value) => {
-        props.form.cost_center_id = value?.id;
+    watch(() => props.form.accCostCenter, (value) => {
+        props.form.acc_cost_center_id = value?.id;
+        props.form.cost_center_name = value?.name;
     });
     
     const store_category = ['Warehouse', 'Tank']
@@ -37,8 +38,8 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Cost Center</span>
-                    <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.cost_center_no" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-                    <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" />
+                    <v-select :options="costCenters" placeholder="--Choose an option--" @search="fetchCostCenter" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <!-- <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" /> -->
                     <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" />
                 </label>
                 <label class="label-group">
