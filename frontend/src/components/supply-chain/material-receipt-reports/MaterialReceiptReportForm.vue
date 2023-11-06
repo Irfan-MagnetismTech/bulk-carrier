@@ -8,9 +8,10 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+    import useLcRecord from '../../../composables/supply-chain/useLcRecord';
     
-    const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
+    const { material, materials, getMaterials, searchMaterial } = useMaterial();
+    const {searchLcRecord, filteredLcRecords} = useLcRecord();
     const store_category = ref([]);
     const firstInitiated = ref(false);
 
@@ -60,6 +61,37 @@
       }
     });
   };
+
+  watch(() => props?.form?.scmPo, (newVal, oldVal) => {
+    if(newVal){
+      props.form.scm_po_no = newVal.ref_no;
+    }
+  });
+  watch(() => props?.form?.scmPr, (newVal, oldVal) => {
+    if(newVal){
+      props.form.scm_pr_no = newVal.ref_no;
+    }
+  });
+  watch(() => props?.form?.scmCs, (newVal, oldVal) => {
+    if(newVal){
+      props.form.scm_cs_no = newVal.ref_no;
+    }
+  });
+
+
+// watch lcERecord
+watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
+  if (newVal) {
+    props.form.scmLcRecord = newVal;
+    props.form.scm_lc_record_id = newVal.id;
+  }
+});
+
+
+  function fetchLc(search, loading) {
+    loading(true);
+    searchLcRecord(search, loading, props.form.business_unit,props.form.scmPo.id);
+  }
 </script>
 <template>
 
@@ -82,7 +114,17 @@
       </label>
       <label class="label-group" v-if="form.type == 'FOREIGN'">
           <span class="label-item-title">LC Record No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scmLcRecord" required class="form-input" name="scmLcRecord" :id="'scmLcRecord'" />
+          <!-- <input type="text" v-model="form.scmLcRecord" required class="form-input" name="scmLcRecord" :id="'scmLcRecord'" /> -->
+          <v-select :options="filteredLcRecords" placeholder="--Choose an option--" @search="fetchLc" v-model="form.scmLcRecord" label="lc_no" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.scmLcRecord"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+          </v-select>
           <Error v-if="errors?.scmLcRecord" :errors="errors.scmLcRecord"  />
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
@@ -176,7 +218,7 @@
                         v-on="events"
                         />
                 </template>
-            </v-select>
+              </v-select>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">

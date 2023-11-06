@@ -28,6 +28,7 @@ export default function useOpeningStock() {
                 unit: '',
                 quantity: 0.0,
                 rate: 0.0,
+                currency: 'BDT',
             }
         ],
     });
@@ -37,6 +38,7 @@ export default function useOpeningStock() {
         unit: '',
         quantity: 0.0,
         rate: 0.0,
+        currency: 'BDT'
       };
     
     const indexPage = ref(null);

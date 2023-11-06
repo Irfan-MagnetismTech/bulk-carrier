@@ -14,7 +14,6 @@ export default function useLcRecord() {
     const filteredLcRecords = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
 
@@ -176,11 +175,9 @@ export default function useLcRecord() {
         }
     }
 
-    async function searchLcRecord(searchParam, loading) {
-        
-
+    async function searchLcRecord(searchParam, loading, business_unit, scm_po_id) {
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-lc-records`,searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-lc-record`,{params: {searchParam: searchParam, business_unit: business_unit, scm_po_id: scm_po_id}});
             filteredLcRecords.value = data.value;
         } catch (error) {
             const { data, status } = error.response;

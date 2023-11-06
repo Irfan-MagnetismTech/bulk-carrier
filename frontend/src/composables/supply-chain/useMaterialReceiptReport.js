@@ -25,22 +25,22 @@ export default function useMaterialReceiptReport() {
         date: null,        
         scm_po_id: null,        
         scmPo: null,
+        scm_po_no: null,
         scm_po_date: null,
-        scm_pr_id: null,
         scmPr: null,
+        scm_pr_id: null,
+        scm_pr_no: null,
         scm_cs_id: null,
         scmCs: null,
+        scm_cs_no: null,
         scm_lc_record_id: null,
         scmLcRecord: null,        
         scm_warehouse_id: null,
-        acc_iou_id: null,
-        accIou: null,
         scmWarehouse: null,
-        acc_cost_center_id: null,
-        scm_po_no: null,
-        scm_cs_no: null,
-        scm_pr_no: null,
+        accIou: null,
+        acc_iou_id: null,
         scm_iou_no: null,
+        acc_cost_center_id: null,
         remarks: null,
         challan_no: null,
         qc_remarks: null,
@@ -153,7 +153,7 @@ export default function useMaterialReceiptReport() {
         }
     }
 
-    async function updateMaterialReceiptReport(materialReceiptReportId, form) {
+    async function updateMaterialReceiptReport(form, materialReceiptReportId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
