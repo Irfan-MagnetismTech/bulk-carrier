@@ -105,8 +105,8 @@
 
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Act. Completion Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input" required  />
+            <span class="text-gray-700 dark:text-gray-300">Act. Completion Date </span>
+            <input type="date" v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input"   />
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
