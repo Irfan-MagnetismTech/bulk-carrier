@@ -77,16 +77,15 @@ class OpsHandoverTakeoverController extends Controller
     */
     public function show(OpsHandoverTakeover $handover_takeover): JsonResponse
     {
-    $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers');
-    try
-    {
-        return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
-    }
-    catch (QueryException $e)
-    {
-        return response()->error($e->getMessage(), 500);
-    }
-
+        $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers');
+        try
+        {
+            return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
  
  
