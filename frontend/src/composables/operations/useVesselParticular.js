@@ -186,7 +186,7 @@ export default function useVesselParticular() {
 
 	async function downloadGeneralParticular(vesselName, vesselParticularId) {
 		axios({
-            url: '/ops/export-particular-report?id=' + vesselParticularId,
+            url: 'ops/export-particular-report?id=' + vesselParticularId,
             method: 'GET',
             responseType: 'blob', // important
         }).then((response) => {
@@ -220,19 +220,19 @@ export default function useVesselParticular() {
 
 	async function downloadChartererParticular(vesselName, vesselParticularId) {
 		axios({
-            url: '/api/v1/download-file/' + vesselParticularId,
-            data: searchParameter,
+            url: 'ops/particular-charterer-download?id=' + vesselParticularId,
             method: 'GET',
             responseType: 'blob', // important
         }).then((response) => {
             let dateTime = new Date();
 
             //stream pdf file to new tab start
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.click();
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', vesselName + " - Charterer Particulars" + ".xlsx");
+            document.body.appendChild(link);
+            link.click();
             //stream pdf file to new tab end
         }).catch((error) => {
             if (error.response.status === 422) {
