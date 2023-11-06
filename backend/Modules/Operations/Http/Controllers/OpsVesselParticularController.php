@@ -165,9 +165,6 @@ class OpsVesselParticularController extends Controller
     public function exportVesselParticularReport(Request $request)
     {
         $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
-        ->when(request()->business_unit != "ALL", function($q){
-            $q->where('business_unit', request()->business_unit);
-        })
         ->first();
         return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
         
