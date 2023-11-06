@@ -130,12 +130,12 @@ export default function useWipWorkRequisition() {
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/update-work-requisition_wip/${wipWorkRequisitionId}`,
+                `/mnt/update-work-requisition-wip/${wipWorkRequisitionId}`,
                 form
             );
             wipWorkRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.work-requisitions.index" });
+            router.push({ name: "mnt.wip-work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
