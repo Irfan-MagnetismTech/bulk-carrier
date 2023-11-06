@@ -6,8 +6,10 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Maintenance\Entities\MntJobLine;
 use Modules\Maintenance\Entities\MntWorkRequisition;
 use Modules\Maintenance\Entities\MntWorkRequisitionItem;
+use Modules\Maintenance\Entities\MntWorkRequisitionLine;
 use Modules\Maintenance\Http\Requests\MntWorkRequisitionRequest;
 
 class MntWorkRequisitionController extends Controller
@@ -207,17 +209,14 @@ class MntWorkRequisitionController extends Controller
 
             $wr['act_start_date'] = $input['act_start_date'];
             $wr['act_completion_date'] = $input['act_completion_date'];
-            $wr['status'] = ($input['act_completion_date'] == '') ? 3: 2;
+            $wr['status'] = ($input['act_completion_date'] == '') ? 1: 2;
 
             DB::beginTransaction();
 
             $workRequisition = MntWorkRequisition::findorfail($id);
             $workRequisition->update($wr);
-
-            $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
-            $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
             
-            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
+            $workRequisitionLines = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
             
             DB::commit();
             return response()->success('Work requisition updated successfully', $workRequisition, 201);
@@ -229,6 +228,43 @@ class MntWorkRequisitionController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function updateWipLine(Request $request, $id)
+    {
+        try {
+            $input = $request->all();
+
+            $wr['start_date'] = $input['start_date'];
+            $wr['completion_date'] = $job['last_done'] = $input['completion_date'];
+            $job['previous_run_hour'] = $input['present_run_hour'];
+            $wr['remarks'] = $input['remarks'];
+            $wr['status'] = ($input['completion_date'] == '') ? 1: 2;
+
+            DB::beginTransaction();
+
+            $workRequisition = MntWorkRequisitionLine::findorfail($id);
+            $workRequisition->update($wr);
+
+            $jobLine = MntJobLine::findorfail($input['mnt_job_line_id']);
+            $jobLine->update($job);
+            
+            DB::commit();
+            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.
