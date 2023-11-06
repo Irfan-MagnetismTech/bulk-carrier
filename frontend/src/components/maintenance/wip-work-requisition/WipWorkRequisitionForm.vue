@@ -80,7 +80,43 @@
     </div>
 
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts Consumed {{ form.mnt_work_requisition_materials }} </legend>
+      <legend class="px-2 text-gray-700 dark:text-gray-300">Assigned Job</legend>
+      <table class="w-full whitespace-no-wrap" id="table">
+        <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="w-3/12 px-4 py-3 align-bottom">Description <span class="text-red-500">*</span></th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
+            <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Replace</th>
+            <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Cleaning</th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Status</th>
+            <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
+            <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" required /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" required /> </td>
+            <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
+            <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
+            <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" /> </td>
+            <td class="px-1 py-1" > <input type="text" class="form-input"  v-model="mntWorkRequisitionLine.remarks" placeholder="Remarks"  /> </td>
+            <td class="px-1 py-1"> 
+              <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span>
+            </td>
+            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="updateWipWorkRequisitionLine(mntWorkRequisitionLine, mntWorkRequisitionLine.id)">Submit</button> 
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
+
+    
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts Consumed </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
@@ -120,6 +156,8 @@
         </tbody>
       </table>
     </fieldset>
+
+
     
     
 </template>
@@ -133,6 +171,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
 import useItem from "../../../composables/maintenance/useItem";
+import useWipWorkRequisition from "../../../composables/maintenance/useWipWorkRequisition";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useJob from "../../../composables/maintenance/useJob";
 import useRunHour from "../../../composables/maintenance/useRunHour";
@@ -140,6 +179,7 @@ import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiR
 import useMaterial from "../../../composables/supply-chain/useMaterial";
 import moment from 'moment';
 
+const { updateWipWorkRequisitionLine } = useWipWorkRequisition();
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();

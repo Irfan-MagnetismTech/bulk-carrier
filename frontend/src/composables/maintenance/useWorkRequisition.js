@@ -34,7 +34,7 @@ export default function useWorkRequisition() {
         est_completion_date: '',
         act_start_date: '',
         act_completion_date: '',
-        status: '',
+        status: 0,
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',

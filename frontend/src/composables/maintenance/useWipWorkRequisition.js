@@ -34,12 +34,13 @@ export default function useWipWorkRequisition() {
         est_completion_date: '',
         act_start_date: '',
         act_completion_date: '',
-        status: '',
+        status: 0,
         mnt_item_groups: [],
         mnt_items: [],
         business_unit: '',
         form_type: 'create',
         added_job_lines: [],
+        mntWorkRequisitionLines: [],
         // workRequisition
         mntWorkRequisitionMaterials: [
             {
@@ -146,6 +147,32 @@ export default function useWipWorkRequisition() {
         }
     }
 
+    
+    async function updateWipWorkRequisitionLine(workRequisitionLine, workRequisitionLineId) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.put(
+                `/mnt/update-work-requisition-line-wip/${workRequisitionLineId}`,
+                workRequisitionLine
+            );
+            workRequisitionLine.status = data?.value?.status ?? 0;
+            notification.showSuccess(status);
+            // router.push({ name: "mnt.wip-work-requisitions.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
+
     async function deleteWipWorkRequisition(wipWorkRequisitionId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
@@ -172,6 +199,7 @@ export default function useWipWorkRequisition() {
         storeWipWorkRequisition,
         showWipWorkRequisition,
         updateWipWorkRequisition,
+        updateWipWorkRequisitionLine,
         deleteWipWorkRequisition,
         isLoading,
         errors,

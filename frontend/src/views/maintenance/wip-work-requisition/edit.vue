@@ -25,7 +25,7 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
   
   const route = useRoute();
   const wipWorkRequisitionId = route.params.wipWorkRequisitionId;
-  const { wipWorkRequisition, showWipWorkRequisition, updateWipWorkRequisition, errors } = useWipWorkRequisition();
+  const { wipWorkRequisition, showWipWorkRequisition, updateWipWorkRequisition, updateWipWorkRequisitionLine, errors } = useWipWorkRequisition();
   const icons = useHeroIcon();
   
   const { setTitle } = Title();
@@ -34,6 +34,7 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
   setTitle('Edit WIP Work Requisition');
 
   watch(wipWorkRequisition, (value) => {
+    console.log(wipWorkRequisition.value);
     wipWorkRequisition.value.ops_vessel_name = value?.opsVessel;
 
     wipWorkRequisition.value.mnt_ship_department_name = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment;
@@ -44,7 +45,7 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
     wipWorkRequisition.value.mnt_items = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.mntItems;
     wipWorkRequisition.value.mnt_item_name = value?.mntWorkRequisitionItem?.MntItem;
 
-    wipWorkRequisition.value.added_job_lines = value?.mntWorkRequisitionLines;
+    wipWorkRequisition.value.mntWorkRequisitionLines = value?.mntWorkRequisitionLines;
     wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
             {
                 material_name_and_code: '',
