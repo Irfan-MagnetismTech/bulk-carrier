@@ -186,7 +186,7 @@
       <div v-if="form.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Credit Days</span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
+              <input type="number" v-model="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Billing Cycle </span>
@@ -228,7 +228,7 @@
           </label>
           <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Approximate Load Amount</span>
-            <input type="text" v-model="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
+            <input type="number" v-model="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
           </label>
           <label v-else class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
@@ -240,15 +240,15 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Per Day Charge</span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
         </label>
         <label v-if="form.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Per MT Charge</span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Cleaning Fee </span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.cleaning_fee" placeholder="Cleaning Fee" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.cleaning_fee" placeholder="Cleaning Fee" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Cancellation Fee <small>(%)</small></span>
@@ -256,7 +256,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Others Fee</span>
-            <input type="text" v-model="form.opsChartererContractsFinancialTerms.others_fee" placeholder="Others Fee" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.others_fee" placeholder="Others Fee" class="form-input" autocomplete="off" />
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
