@@ -34,7 +34,7 @@ class OpsChartererContractRequest extends FormRequest
             'contact_no'                    => ['required', 'string', 'max:255'],
             'bank_branch_id'               => ['nullable', 'numeric', 'max:10'],
             'bank_branch_name'               => ['nullable', 'string'],
-            'attachment'                    => 'nullable|mimes:png,jpeg,jpg,pdf,xlsx,docx,doc|max:2048',
+            // 'attachment'                    => ['nullable', 'mimes:png,jpeg,jpg,pdf,xlsx,docx,doc|max:2048'],
             'bank_id'                       => ['nullable', 'numeric', 'max:10'],
             'bank_name'                       => ['nullable', 'string'],
             'bank_account_name'             => ['nullable', 'string', 'max:255'],
