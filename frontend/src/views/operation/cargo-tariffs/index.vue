@@ -6,9 +6,9 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import Store from "../../../store";
 import useCargoTariff from '../../../composables/operations/useCargoTariff';
-const { cargoTariffs, getCargoTariffs, deleteCargoTariff, isLoading } = useCargoTariff();
 
 const props = defineProps({
   page: {
@@ -17,11 +17,15 @@ const props = defineProps({
   },
 });
 
+const icons = useHeroIcon();
+const { cargoTariffs, getCargoTariffs, deleteCargoTariff, isLoading } = useCargoTariff();
+
 const { setTitle } = Title();
 setTitle('Cargo Tariff List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
 function confirmDelete(id) {
@@ -42,21 +46,19 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
-    getCargoTariffs(props.page)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+    getCargoTariffs(props.page, businessUnit.value)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching data.", error);
-    });
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data.", error);
+      });
+  });
 });
-
-});
-
 </script>
 
 <template>
@@ -67,6 +69,8 @@ onMounted(() => {
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
+    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
+
     <div class="relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />

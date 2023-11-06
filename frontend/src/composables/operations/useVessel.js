@@ -233,7 +233,7 @@ export default function useVessel() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-vessels?name=${searchParam}&business_unit=${businessUnit}`);
+			const { data, status } = await Api.get(`/ops/search-vessels?name_or_code=${searchParam}&business_unit=${businessUnit}`);
 			vessels.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {

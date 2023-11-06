@@ -109,7 +109,7 @@ class OpsChartererInvoiceController extends Controller
              $charterer_invoice->update($charterer_invoice_info);      
              $charterer_invoice->opsChartererInvoiceLines()->createUpdateOrDelete($request->opsChartererInvoiceLines); 
              DB::commit();
-             return response()->success('Charterer invoice updated successfully.', $charterer_invoice, 200);
+             return response()->success('Charterer invoice updated successfully.', $charterer_invoice, 202);
          }
          catch (QueryException $e)
          {            

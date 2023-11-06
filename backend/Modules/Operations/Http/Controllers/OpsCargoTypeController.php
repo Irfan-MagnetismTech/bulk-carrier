@@ -96,7 +96,7 @@ class OpsCargoTypeController extends Controller
             DB::beginTransaction();
             $cargo_type->update($request->all());
             DB::commit();
-            return response()->success('Cargo type updated Successfully.', $cargo_type, 200);
+            return response()->success('Cargo type updated Successfully.', $cargo_type, 202);
         }
         catch (QueryException $e)
         {

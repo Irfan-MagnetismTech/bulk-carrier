@@ -63,11 +63,6 @@ class OpsVessel extends Model
         return $this->short_code . ' - ' . $this->name;
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Operations\Database\factories\OpsVesselFactory::new();
-    }
-
     public function opsVesselCertificates()
     {
         return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id')

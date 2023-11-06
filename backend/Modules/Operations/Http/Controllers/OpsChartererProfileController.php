@@ -111,7 +111,7 @@ class OpsChartererProfileController extends Controller
              $charterer_profile->opsChartererBankAccounts()->delete();
              $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
-             return response()->success('Charterer profile updated successfully.', $charterer_profile, 200);
+             return response()->success('Charterer profile updated successfully.', $charterer_profile, 202);
          }
          catch (QueryException $e)
          {            
@@ -152,6 +152,7 @@ class OpsChartererProfileController extends Controller
              })
              ->limit(10)
              ->get();
+             $charterer_profiles->load('opsChartererBankAccounts');
              return response()->success('Successfully retrieved charterer profile name.', $charterer_profiles, 200);
          } catch (QueryException $e){
              return response()->error($e->getMessage(), 500);

@@ -7,6 +7,7 @@
     const props = defineProps({
         form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
+        formType: { type: String, required : false },
     });
     
     const { warehouses, searchWarehouse } = useWarehouse();//  this code will be overriten by costcenter search
@@ -23,7 +24,9 @@
     const store_category = ['Warehouse', 'Tank']
 </script>
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+        <business-unit-input v-model="form.business_unit"></business-unit-input>
+    </div>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
         <legend>
             <div class="input-group">

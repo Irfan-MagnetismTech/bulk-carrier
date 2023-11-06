@@ -115,7 +115,7 @@ class OpsVoyageBoatNoteController extends Controller
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
-            return response()->success('Vessel particular updated successfully.', $voyage_boat_note, 200);
+            return response()->success('Vessel particular updated successfully.', $voyage_boat_note, 202);
         }
         catch (QueryException $e)
         {

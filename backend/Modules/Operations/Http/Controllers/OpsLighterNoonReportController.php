@@ -111,7 +111,7 @@ class OpsLighterNoonReportController extends Controller
              $lighter_noon_report->opsBunkers()->delete();
              $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
              DB::commit();
-             return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 200);
+             return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 202);
          }
          catch (QueryException $e)
          {            
