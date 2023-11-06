@@ -60,6 +60,12 @@ export default function useChartererContract() {
 			loading_point: '',
 			final_unloading_point: '',
 			approximate_load_amount: null,
+			opsCargoType: {
+				id: null
+			},
+			opsVoyage: {
+				id: null
+			}
 		},
 		opsChartererContractsLocalAgents: [{
 			...opsChartererLocalAgentObject
@@ -161,7 +167,7 @@ export default function useChartererContract() {
 				`/ops/charterer-contracts/${chartererContractId}`,
 				formData
 			);
-			chartererContract.value = data.value;
+			// chartererContract.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.charterer-contracts.index' });
 		} catch (error) {

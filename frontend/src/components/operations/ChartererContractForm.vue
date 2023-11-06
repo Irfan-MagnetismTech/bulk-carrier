@@ -153,7 +153,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].port_code" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].port_code" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -231,7 +231,7 @@
         
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Loading Point <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.loading_point" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.loading_point" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -244,7 +244,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.final_unloading_point" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.final_unloading_point" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -353,7 +353,7 @@ function fetchVessels(search, loading) {
 function fetchVoyages(search, loading) {
   if(props.form.ops_vessel_id) {
     loading(true);
-    searchVoyages(search, props.form.business_unit, loading)
+    searchVoyages(search, props.form.business_unit, loading, props.form.ops_vessel_id)
   }
 }
 
@@ -407,6 +407,12 @@ watch(() => props.form, (value) => {
   if(props?.formType == 'edit' && editInitiated.value != true) {
 
     vessels.value = [{...props?.form?.opsVessel}];
+    ports = [
+      {...props?.form.opsChartererContractsLocalAgents[0].port_code},
+      {...props?.form.opsChartererContractsFinancialTerms.loading_point},
+      {...props?.form.opsChartererContractsFinancialTerms.final_unloading_point}
+
+    ]
 
     if(vessels.value.length > 0) {
         editInitiated.value = true
@@ -446,15 +452,19 @@ watch(() => props.form.opsChartererProfile, (value) => {
     props.form.charterer_code = value?.owner_code
     
     if(props?.formType == 'edit' && editInitiated.value == true) {
-      replaceThings()
-    } else if(props?.formType == 'create') {
-      replaceThings()
+      replaceThings(value)
+    }
+    
+    if(props?.formType == 'create') {
+      replaceThings(value)
     }
 
   }
 }, { deep: true})
 
-function replaceThings() {
+function replaceThings(value) {
+
+  console.log(value, "DDDD")
     props.form.charterer_code = value?.owner_code
     props.form.country = value?.country
     props.form.address = value?.address
