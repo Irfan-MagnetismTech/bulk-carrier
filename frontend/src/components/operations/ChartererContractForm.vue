@@ -153,7 +153,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].port_code" label="name" class="block form-input">
+              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].port_code" label="code_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -200,78 +200,36 @@
         </label>
       </div>
       <div v-if="form.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage</span>
-              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsChartererContractsFinancialTerms.opsVoyage" label="cargo_type" class="block form-input">
+              <span class="text-gray-700 dark:text-gray-300">Cargo Tariff </span>
+              <v-select :options="cargoTariffs" placeholder="--Choose an option--" @search="fetchCargoTariffs"  v-model="form.opsChartererContractsFinancialTerms.opsCargoTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsChartererContractsFinancialTerms.opsVoyage"
+                          :required="!form.opsChartererContractsFinancialTerms.opsCargoTariff"
                           v-bind="attributes"
                           v-on="events"
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.opsChartererContractsFinancialTerms.ops_voyage_id" />
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cargo Type </span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.opsChartererContractsFinancialTerms.opsCargoType" label="cargo_type" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsChartererContractsFinancialTerms.opsCargoType"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-              <input type="hidden" v-model="form.opsChartererContractsFinancialTerms.ops_cargo_type_id" />
+              <input type="hidden" v-model="form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id" />
           </label>
         
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Loading Point <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.loading_point" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsChartererContractsFinancialTerms.loading_point"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsFinancialTerms.final_unloading_point" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsChartererContractsFinancialTerms.final_unloading_point"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-          </label>
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300"> Status</span>
                 <select v-model="form.status" class="form-input">
                   <option value="">Select Status</option>
 				          <option>Active</option>
 				          <option>Inactive</option>
 				        </select>
-        </label>
-        <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Approximate Load Amount</span>
-          <input type="text" v-model="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
-        </label>
-        <label v-else class="block w-full mt-2 text-sm"></label>
-        <label class="block w-full mt-2 text-sm"></label>
-        <label class="block w-full mt-2 text-sm"></label>
+          </label>
+          <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark:text-gray-300">Approximate Load Amount</span>
+            <input type="text" v-model="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
+          </label>
+          <label v-else class="block w-full mt-2 text-sm"></label>
+          <label class="block w-full mt-2 text-sm"></label>
       </div>
     </div>
 
@@ -319,22 +277,18 @@
 import { ref, watch, onMounted } from "vue";
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {useStore} from "vuex";
 import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
 import usePort from "../../composables/operations/usePort";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
-import useCargoType from "../../composables/operations/useCargoType";
-import useVoyage from "../../composables/operations/useVoyage";
+import useCargoTariff from "../../composables/operations/useCargoTariff";
 
-const store = useStore();
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
 const { vessel, vessels, searchVessels, showVessel } = useVessel();
 const { ports, searchPorts } = usePort();
 const { searchChartererProfiles, chartererProfiles } = useChartererProfile();
-const { cargoTypes, searchCargoTypes } = useCargoType();
-const { voyages, searchVoyages } = useVoyage();
+const { cargoTariffs, searchCargoTariffs } = useCargoTariff();
 
 const props = defineProps({
     form: {
@@ -350,11 +304,9 @@ function fetchVessels(search, loading) {
       searchVessels(search, props.form.business_unit, loading);
 }
 
-function fetchVoyages(search, loading) {
-  if(props.form.ops_vessel_id) {
+function fetchCargoTariffs(search, loading) {
     loading(true);
-    searchVoyages(search, props.form.business_unit, loading, props.form.ops_vessel_id)
-  }
+    searchCargoTariffs(search, props.form.business_unit, loading)
 }
 
 function fetchPorts(search, loading) {
@@ -407,10 +359,10 @@ watch(() => props.form, (value) => {
   if(props?.formType == 'edit' && editInitiated.value != true) {
 
     vessels.value = [{...props?.form?.opsVessel}];
-    ports = [
-      {...props?.form.opsChartererContractsLocalAgents[0].port_code},
-      {...props?.form.opsChartererContractsFinancialTerms.loading_point},
-      {...props?.form.opsChartererContractsFinancialTerms.final_unloading_point}
+    ports.value = [
+      {
+        code_name :props?.form.opsChartererContractsLocalAgents[0].port_code
+      },
 
     ]
 
@@ -430,19 +382,12 @@ watch(() => props.form.opsVessel, (value) => {
   }
 }, { deep: true})
 
-watch(() => props.form.opsChartererContractsFinancialTerms.opsCargoType, (value) => {
-  if(value) {
-    props.form.opsChartererContractsFinancialTerms.ops_cargo_type_id = value?.id
-  } else {
-    props.form.opsChartererContractsFinancialTerms.ops_cargo_type_id = null
-  }
-}, { deep: true })
 
-watch(() => props.form.opsChartererContractsFinancialTerms.opsVoyage, (value) => {
+watch(() => props.form.opsChartererContractsFinancialTerms.opsCargoTariff, (value) => {
   if(value) {
-    props.form.opsChartererContractsFinancialTerms.ops_voyage_id = value?.id
+    props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = value?.id
   } else {
-    props.form.opsChartererContractsFinancialTerms.ops_voyage_id = null
+    props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null
   }
 }, { deep: true })
 
