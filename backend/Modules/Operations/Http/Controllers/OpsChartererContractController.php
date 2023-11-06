@@ -129,7 +129,7 @@ class OpsChartererContractController extends Controller
             $charterer_contract->opsChartererContractsFinancialTerms()->create($request->opsChartererContractsFinancialTerms);
             $charterer_contract->opsChartererContractsLocalAgents()->createUpdateOrDelete($request->opsChartererContractsLocalAgents);
             DB::commit();
-            return response()->success('Charterer contract updated successfully.', $charterer_contract, 204);
+            return response()->success('Charterer contract updated successfully.', $charterer_contract, 202);
         }
         catch (QueryException $e)
         {

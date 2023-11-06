@@ -111,7 +111,7 @@ class OpsHandoverTakeoverController extends Controller
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
 
         DB::commit();
-        return response()->success('Handover takeover updated successfully.', $handover_takeover, 200);
+        return response()->success('Handover takeover updated successfully.', $handover_takeover, 202);
     }
     catch (QueryException $e)
     {
