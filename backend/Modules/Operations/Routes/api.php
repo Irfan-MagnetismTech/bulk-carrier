@@ -85,7 +85,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     
         
     // report routes
-    Route::get('vessel-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
+    Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     
 });
 Route::post('vessel-search', [OpsVesselController::class, 'search']);
