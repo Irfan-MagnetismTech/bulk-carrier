@@ -237,6 +237,7 @@ function fetchMaterials(search, loading) {
 function setMaterialUnit(mntWorkRequisitionMaterial) {
   let material = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code);
   mntWorkRequisitionMaterial.unit = material?.unit;
+  materials.value = [];
 }
 
 function addConsumedSparePart() {
