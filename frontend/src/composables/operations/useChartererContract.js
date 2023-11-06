@@ -60,10 +60,7 @@ export default function useChartererContract() {
 			loading_point: '',
 			final_unloading_point: '',
 			approximate_load_amount: null,
-			opsCargoType: {
-				id: null
-			},
-			opsVoyage: {
+			opsCargoTariff: {
 				id: null
 			}
 		},
