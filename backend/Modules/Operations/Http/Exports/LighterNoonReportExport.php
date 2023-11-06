@@ -17,14 +17,14 @@ class LighterNoonReportExport implements FromView
     */
     use Exportable;
 
-    public $lighter_noon_report;
-    public function __construct($lighter_noon_report) {
-        $this->lighter_noon_report = $lighter_noon_report;
+    public $lighter_noon_reports;
+    public function __construct($lighter_noon_reports) {
+        $this->lighter_noon_reports = $lighter_noon_reports;
     }
 
     public function view(): View {
         return view('lighter-noon-reports.lighter_noon_report')->with([
-            'lighter_noon_report' => $this->lighter_noon_report,
+            'lighter_noon_reports' => $this->lighter_noon_reports,
         ]);
     }
 

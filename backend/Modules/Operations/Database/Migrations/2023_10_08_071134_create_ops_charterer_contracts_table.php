@@ -33,17 +33,9 @@ return new class extends Migration
             $table->string('swift_code')->nullable();
             $table->string('routing_no')->nullable();
             $table->string('currency')->nullable();
-<<<<<<< HEAD
-            $table->tinyInteger('status')->nullable();
-            $table->string('port_code')->nullable();
-            $table->string('agent_name')->nullable();
-            $table->string('billing_name')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
-=======
             $table->string('attachment')->nullable();
             $table->string('status');
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
->>>>>>> 99182c0ceb9e4fb93107e2a0e221ae17aabf861b
             $table->timestamps();
         });
     }

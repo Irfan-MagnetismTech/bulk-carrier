@@ -12,21 +12,63 @@
         font-size:20px; 
         padding:10px;
     }
-    .float-left{
-        float: left !important;
-    }
+    /* th{
+        background-color: blue; 
+        color:white; 
+        white-space: normal; 
+        text-align: center;
+    } */
 </style>
 <body>    
     <table>
         <tr rowspan="3">
-            <th colspan="11" style="text-align: center; 
+            <th colspan="13" style="text-align: center; 
             font-size:20px; 
-            padding:10px;"><h2>Lighter Noon Report</h2></th>
+            padding:10px;"><h2>LIGHTER NOON REPORT</h2></th>
         </tr>
+        {{-- <tr rowspan="2">
+            <td colspan="13">TOGGI SHIPPING & LOGISTIC</td>
+        </tr> --}}
 
         <tr>
-            <td colspan="11" style="text-align: center;">No data found...</td>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">DATE</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">SHIP NAME</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">TIME</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">CARGO TYPE</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">LOADING PLACE</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">UNLOADING PLACE</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">NOON POSITION</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">STATUS</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">FUEL BUNKERING</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">ENGINE RUNNING HOURS</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">FUEL-CON/24H</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">FUEL-STOCK/L</th>
+            <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">REMARKS</th>
         </tr>
+        @if(isset($lighter_noon_reports))
+            @foreach ($lighter_noon_reports as $lighter_noon_report)
+                <tr>
+                    <td>{{date("d-M-Y", strtotime($lighter_noon_report?->date))}}</td>
+                    <td>{{ $lighter_noon_report?->opsVessel?->name}} </td>
+                    <td>{{date("g:i A", strtotime($lighter_noon_report?->date))}}</td>
+                    <td>{{ $lighter_noon_report?->opsVoyage?->opsCargoType?->cargo_type}} </td>
+                    <td>{{ $lighter_noon_report?->last_port}} </td>
+                    <td>{{ $lighter_noon_report?->next_port}} </td>
+                    <td>{{ $lighter_noon_report?->noon_position}} </td>
+                    <td>{{ $lighter_noon_report?->status}} </td>
+                    <td> </td>
+                    <td>{{ $lighter_noon_report?->engine_running_hours}} </td>
+                    <td>{{ $lighter_noon_report?->opsBunkers?->fuel_con_24h}} </td>
+                    <td></td>
+                    <td>{{ $lighter_noon_report?->remarks}} </td>
+                    
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="13" style="text-align: center;">No data found...</td>
+            </tr>
+        @endif
     </table>
 </body>
 </html>
