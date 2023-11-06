@@ -64,5 +64,6 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::post('get-crew-agency-contracts', [CrwCommonController::class, 'getCrewAgencyContracts']);
     Route::post('get-crew-recruitment-approvals', [CrwCommonController::class, 'getCrewRecruitmentApprovals']);
     Route::post('get-crews', [CrwCommonController::class, 'getCrews']);
+    Route::post('get-crew-documents', [CrwCommonController::class, 'getCrewDocuments']);
 
 });

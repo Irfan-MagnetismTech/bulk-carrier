@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwCrew;
+use Modules\Crew\Entities\CrwCrewDocument;
 use Modules\Crew\Entities\CrwRank;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
 
@@ -95,6 +96,25 @@ class CrwCommonController extends Controller
             {
                 $q->where('business_unit', request()->business_unit);
             })->with('crwRank:id,name')->get();
+
+            return response()->success('Retrieved Successfully', $crwAgencies, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCrewDocuments(Request $request)
+    {
+        try {
+            $crwAgencies      = CrwCrewDocument::with('crwCrewDocumentRenewals')
+            ->where('crw_crew_id', $request->crw_crew_id)
+            ->when(request()->business_unit != "ALL", function ($q)
+            {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->get();
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);
         }

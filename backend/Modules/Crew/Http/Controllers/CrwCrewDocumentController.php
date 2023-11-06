@@ -37,20 +37,16 @@ class CrwCrewDocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
+    {
         try {
-            DB::transaction(function ()
-            {
-                foreach (request()->crew_documents as $documentData) {
-                    CrwCrewDocument::create($documentData);
-                }
-                return response()->success('Updated succesfully', [], 202);
-            });
+            CrwCrewDocument::create(request()->crew_documents);
+            
+            return response()->success('Updated succesfully', [], 202);
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
