@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
+use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
 {
-    function __construct()
+    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -29,7 +31,7 @@ class ScmMrrController extends Controller
     {
         try {
             $scmLcRecords = ScmMrr::query()
-                ->with('scmMrrLines', 'scmVendor', 'scmWarehouse', 'scmPo')
+                ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
                 ->latest()
                 ->when(request()->business_unit != "ALL", function ($query) {
                     $query->where('business_unit', request()->business_unit);
@@ -48,10 +50,13 @@ class ScmMrrController extends Controller
      */
     public function store(ScmMrrRequest $request): JsonResponse
     {
+        $requestData = $request->except('ref_no');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmMrr::class, 'MRR');
+
         try {
             DB::beginTransaction();
 
-            $scmMrr = ScmMrr::create($request->all());
+            $scmMrr = ScmMrr::create($requestData);
             $scmMrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
             DB::commit();
 
@@ -71,7 +76,7 @@ class ScmMrrController extends Controller
     public function show(ScmMrr $materialReceiptReport): JsonResponse
     {
         try {
-            return response()->success('data', $materialReceiptReport->load('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy'), 200);
+            return response()->success('data', $materialReceiptReport->load('scmMrrLines.scmMaterial', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

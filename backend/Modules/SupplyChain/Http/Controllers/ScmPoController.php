@@ -58,8 +58,8 @@ class ScmPoController extends Controller
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
             // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $scmPo->id);
-            $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
+            $data = $this->addNetRateToRequestData($request, $scmPo->id);
+            $scmPo->scmPoLines()->createUpdateOrDelete($data->scmPoLines);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
             DB::commit();
             return response()->success('Data created successfully', $scmPo, 201);
@@ -95,14 +95,17 @@ class ScmPoController extends Controller
 
         try {
             DB::beginTransaction();
+
             $purchaseOrder->update($requestData);
             $addNetRateToRequestData = $this->addNetRateToRequestData($request, $purchaseOrder->id);
             $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
+
             DB::commit();
             return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -251,7 +254,7 @@ class ScmPoController extends Controller
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
                 return $data;
-        });
+            });
         return response()->success('data list', $prMaterials, 200);
     }
 
@@ -265,7 +268,7 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms','scmVendor')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
                 ->whereBusinessUnit($request->business_unit)
                 ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')

@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('scm_mrrs', function (Blueprint $table) {
             $table->id();
+            $table->string('ref_no')->nullable();
             $table->string('type')->comment('cash,local,foreign')->nullable();
             $table->date('date')->nullable();
-            $table->foreignId('scm_po_id')->constrained('scm_pos')->nullable();
-            $table->foreignId('scm_pr_id')->constrained('scm_prs')->nullable();
-            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses')->nullable();
-            $table->foreignId('scm_lc_record_id')->constrained('scm_lc_records')->nullable();
+            $table->bigInteger('scm_po_id')->nullable();
+            $table->bigInteger('scm_pr_id')->nullable();
+            $table->bigInteger('scm_warehouse_id')->nullable();
+            $table->bigInteger('scm_lc_record_id')->nullable();
             $table->bigInteger('scm_cs_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->text('remarks')->nullable();
@@ -31,7 +32,7 @@ return new class extends Migration
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->tinyInteger('is_completed')->comment('0, 1')->nullable();
             $table->bigInteger('iou_id')->nullable();
-            $table->bigInteger('purchase_center')->nullable();
+            $table->string('purchase_center')->nullable();
             $table->string('iou_no')->nullable();
             $table->timestamps();
         });

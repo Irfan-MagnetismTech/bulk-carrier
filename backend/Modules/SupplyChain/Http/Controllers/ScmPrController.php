@@ -9,11 +9,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
-use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Services\UniqueId;
-use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
@@ -56,7 +54,7 @@ class ScmPrController extends Controller
      */
     public function store(ScmPrRequest $request): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
         if (!empty($request->attachment)) {
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
@@ -170,6 +168,8 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
 
+        $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+
         try {
             DB::beginTransaction();
 
@@ -178,7 +178,7 @@ class ScmPrController extends Controller
                 $requestData['attachment'] = $attachment;
             }
             $purchase_requisition->update($requestData);
-            $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+            $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 
             DB::commit();
             return response()->success('Data updated sucessfully!', $purchase_requisition, 202);
