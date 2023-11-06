@@ -8,10 +8,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVesselParticular;
+use Modules\Operations\Http\Exports\VesselParticularExport;
 use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 
 class OpsVesselParticularController extends Controller
@@ -81,7 +83,8 @@ class OpsVesselParticularController extends Controller
      */
     public function show(OpsVesselParticular $vessel_particular): JsonResponse
     {
-        $vessel_particular->load('opsVessel');
+        // dd('dddd');
+        $vessel_particular->load('opsVessel.opsBunkers');
         try
         {
             return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
@@ -156,6 +159,18 @@ class OpsVesselParticularController extends Controller
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    public function exportVesselParticularReport(Request $request)
+    {
+        $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
+        ->when(request()->business_unit != "ALL", function($q){
+            $q->where('business_unit', request()->business_unit);
+        })
+        ->first();
+        return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
+        
     }
 
 
