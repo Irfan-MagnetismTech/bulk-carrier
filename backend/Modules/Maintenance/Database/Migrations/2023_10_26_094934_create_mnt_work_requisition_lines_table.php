@@ -27,6 +27,9 @@ return new class extends Migration
             $table->integer('previous_run_hour')->nullable()->default('0');
             $table->integer('present_run_hour')->nullable();
             $table->integer('status')->nullable()->default('0')->comment('0=Pending, 1=WIP, 2=Done');
+            $table->integer('checking')->nullable()->default('0')->comment('0=No, 1=Yes');
+            $table->integer('replace')->nullable()->default('0')->comment('0=No, 1=Yes');
+            $table->integer('cleaning')->nullable()->default('0')->comment('0=No, 1=Yes');
             $table->text('remarks')->nullable();
             $table->date('start_date')->nullable();
             $table->date('completion_date')->nullable();
