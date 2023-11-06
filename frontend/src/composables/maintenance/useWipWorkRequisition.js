@@ -43,7 +43,7 @@ export default function useWipWorkRequisition() {
         // workRequisition
         mntWorkRequisitionMaterials: [
             {
-                material_name: '',
+                material_name_and_code: '',
                 specification: '',
                 unit: '',
                 quantity: 0,
@@ -67,7 +67,7 @@ export default function useWipWorkRequisition() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/mnt/get-work-requisitions_wip',{
+            const {data, status} = await Api.get('/mnt/get-work-requisitions-wip',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
@@ -130,10 +130,10 @@ export default function useWipWorkRequisition() {
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/work-requisitions/${wipWorkRequisitionId}`,
+                `/mnt/update-work-requisition_wip/${wipWorkRequisitionId}`,
                 form
             );
-            workRequisition.value = data.value;
+            wipWorkRequisition.value = data.value;
             notification.showSuccess(status);
             router.push({ name: "mnt.work-requisitions.index" });
         } catch (error) {
