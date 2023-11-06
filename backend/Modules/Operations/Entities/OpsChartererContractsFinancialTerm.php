@@ -33,8 +33,8 @@ class OpsChartererContractsFinancialTerm extends Model
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
 
-    public function opsCargoType()
+    public function opsCargoTariff()
     {
-        return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
+        return $this->belongsTo(OpsCargoTariff::class, 'ops_cargo_tariff_id' , 'id');
     }
 }
