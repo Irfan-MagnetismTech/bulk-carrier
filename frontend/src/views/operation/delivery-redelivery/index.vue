@@ -9,9 +9,9 @@ import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDeliveryRedelivery from '../../../composables/operations/useDeliveryRedelivery';
 import Store from "../../../store";
+import moment from 'moment';
 
-
-const { deliveryRedeliverys, getDeliveryRedeliverys, deleteDeliveryRedelivery, isLoading } = useDeliveryRedelivery();
+const { deliveryRedeliveries, getDeliveryRedeliverys, deleteDeliveryRedelivery, isLoading } = useDeliveryRedelivery();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -87,22 +87,30 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Charterer Name</th>
-            <th>Charterer Short Code</th>
-            <th>Country</th>
-            <th>Email</th>
-            <th>Contact</th>
+            <th>Charterer</th>
+            <th>Vessel</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Total Amount <small>(USD)</small></th>
+            <th>Total Amount <small>(BDT)</small></th>
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody v-if="deliveryRedeliverys?.data?.length">
-              <tr v-for="(deliveryRedelivery, index) in deliveryRedeliverys.data" :key="deliveryRedelivery?.id">
-                  <td>{{ deliveryRedeliverys.from + index }}</td>
-                  <td>{{ deliveryRedelivery?.name }}</td>
-                  <td>{{ deliveryRedelivery?.owner_code }}</td>
-                  <td>{{ deliveryRedelivery?.country }}</td>
-                  <td>{{ deliveryRedelivery?.email }}</td>
-                  <td>{{ deliveryRedelivery?.contact_no }}</td>
+          <tbody v-if="deliveryRedeliveries?.data?.length">
+              <tr v-for="(deliveryRedelivery, index) in deliveryRedeliveries.data" :key="deliveryRedelivery?.id">
+                  <td>{{ deliveryRedeliveries.from + index }}</td>
+                  <td>{{ deliveryRedelivery?.opsChartererProfile?.name }}</td>
+                  <td>{{ deliveryRedelivery?.opsVessel?.name }}</td>
+                  <td>
+                    <nobr>{{ deliveryRedelivery?.effective_date ? moment(deliveryRedelivery?.effective_date).format('DD-MM-YYYY') : null }}</nobr>
+                  </td>
+                  <td>{{ deliveryRedelivery?.note_type }}</td>
+                  <td>
+
+                  </td>
+                  <td>
+                    
+                  </td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.delivery-redelivery.edit', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
@@ -112,16 +120,16 @@ onMounted(() => {
               </tr>
           </tbody>
           
-          <tfoot v-if="!deliveryRedeliverys?.length">
+          <tfoot v-if="!deliveryRedeliveries?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="9">Loading...</td>
           </tr>
-          <tr v-else-if="!deliveryRedeliverys?.data?.length">
-            <td colspan="6">No data found.</td>
+          <tr v-else-if="!deliveryRedeliveries?.data?.length">
+            <td colspan="9">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="deliveryRedeliverys" to="ops.delivery-redelivery.index" :page="page"></Paginate>
+    <Paginate :data="deliveryRedeliveries" to="ops.delivery-redelivery.index" :page="page"></Paginate>
   </div>
 </template>

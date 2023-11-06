@@ -46,11 +46,11 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.ops_vessel"
+                          :required="!form.opsVessel"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -78,11 +78,11 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" @search="fetchCharterers"  v-model="form.ops_charterer_profile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" @search="fetchCharterers"  v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.ops_charterer_profile"
+                          :required="!form.opsChartererProfile"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -143,7 +143,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsBunkers[index]?.rate" :errors="errors.opsBunkers[index]?.rate"/>
                 </label>
               </td>
@@ -205,7 +205,7 @@ function fetchCharterers(search, loading) {
       searchChartererProfiles(search, loading)
 }
 
-watch(() => props.form.ops_vessel, (value) => {
+watch(() => props.form.opsVessel, (value) => {
   if(value) {
     props.form.ops_vessel_id = value?.id
     props.form.short_code = value?.short_code
@@ -223,7 +223,7 @@ watch(() => vessel, (value) => {
 }, { deep : true})
 
 
-watch(() => props.form.ops_charterer_profile, (value) => {
+watch(() => props.form.opsChartererProfile, (value) => {
   if(value) {
     props.form.ops_charterer_profile_id = value?.id
 

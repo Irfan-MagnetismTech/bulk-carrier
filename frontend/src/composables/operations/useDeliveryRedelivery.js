@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
+import { fromPairs } from 'lodash';
 
 export default function useDeliveryRedelivery() {
 	const router = useRouter();
@@ -58,7 +59,6 @@ export default function useDeliveryRedelivery() {
 		try {
 
 			const { data, status } = await Api.post('/ops/handover-takeovers', form);
-			deliveryRedelivery.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.delivery-redelivery.index' });
 		} catch (error) {
@@ -99,9 +99,8 @@ export default function useDeliveryRedelivery() {
 
 			const { data, status } = await Api.put(
 				`/ops/handover-takeovers/${deliveryRedeliveryId}`,
-				formData
+				form
 			);
-			deliveryRedelivery.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.delivery-redelivery.index' });
 		} catch (error) {
