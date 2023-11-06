@@ -149,10 +149,10 @@ const navigateToMRRCreate = (purchaseOrderId) => {
           </tbody>
           <tfoot v-if="!purchaseOrders?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="9">Loading...</td>
         </tr>
         <tr v-else-if="!purchaseOrders?.data?.length">
-          <td colspan="7">No PR found.</td>
+          <td colspan="9">No PR found.</td>
         </tr>
         </tfoot>
       </table>

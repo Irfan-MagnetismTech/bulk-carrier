@@ -103,10 +103,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!vendors?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="5">Loading...</td>
         </tr>
         <tr v-else-if="!vendors?.data?.length">
-          <td colspan="7">No Vendor found.</td>
+          <td colspan="5">No Vendor found.</td>
         </tr>
         </tfoot>
       </table>

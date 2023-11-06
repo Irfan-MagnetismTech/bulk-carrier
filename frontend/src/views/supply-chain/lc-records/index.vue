@@ -128,10 +128,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="9">Loading...</td>
         </tr>
         <tr v-else-if="!lcRecords?.data?.length">
-          <td colspan="7">No LC Record found.</td>
+          <td colspan="9">No LC Record found.</td>
         </tr>
         </tfoot>
       </table>

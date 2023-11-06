@@ -115,7 +115,7 @@ export default [
             },
             {
                 route: `${BASE}.lc-records.index`,
-                label: 'Lc Records',
+                label: 'LC Records',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,

@@ -131,10 +131,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!materialReceiptReports?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="9">Loading...</td>
         </tr>
         <tr v-else-if="!materialReceiptReports?.data?.length">
-          <td colspan="7">No MRR found.</td>
+          <td colspan="9">No MRR found.</td>
         </tr>
         </tfoot>
       </table>
