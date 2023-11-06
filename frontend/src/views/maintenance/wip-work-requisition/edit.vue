@@ -5,7 +5,7 @@
       <default-button :title="'Work Requisition List'" :to="{ name: 'mnt.wip-work-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-          <form @submit.prevent="updateWorkRequisition(wipWorkRequisition, wipWorkRequisitionId)">
+          <form @submit.prevent="updateWipWorkRequisition(wipWorkRequisition, wipWorkRequisitionId)">
               <!-- Booking Form -->
             <wip-work-requisition-form :page="page" v-model:form="wipWorkRequisition" :errors="errors"></wip-work-requisition-form>
               <!-- Submit button -->
@@ -47,7 +47,7 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
     wipWorkRequisition.value.added_job_lines = value?.mntWorkRequisitionLines;
     wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
             {
-                material_name: '',
+                material_name_and_code: '',
                 specification: '',
                 unit: '',
                 quantity: 0,

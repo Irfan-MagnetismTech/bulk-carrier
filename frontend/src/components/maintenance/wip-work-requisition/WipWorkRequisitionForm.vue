@@ -237,7 +237,7 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Unit <span class="text-red-500">*</span></th>
+            <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
             <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
@@ -246,16 +246,26 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
             <td class="px-1 py-1">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="">
+              <v-select :options="materials" placeholder="Enter Material Name" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!mntWorkRequisitionMaterial.material_name"
+                        :required="!mntWorkRequisitionMaterial.material_name_and_code"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
+            </td>
+            <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.specification" placeholder="Specification" /></td>
+            <td class="px-1 py-1"><input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionMaterial.unit" placeholder="Unit" readonly /></td>
+            <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" placeholder="Quantity" required /></td>
+            <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.remarks" placeholder="Remarks" /></td>
+            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addConsumedSparePart"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index != 0" @click="removeConsumedSparePart(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg></button>
             </td>
             <!-- <td class="px-1 py-1">
               <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -409,9 +419,23 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   }
 });
 
+watch(() => props.form.mntWorkRequisitionMaterials, (value) => {
+  value.forEach(val => {
+    if (!val.material_name_and_code) {
+      val.specification = '';
+      val.unit = '';
+      val.quantity = 0;
+      val.remarks = '';
+    }
+    
+  });
+}, { deep: true });
+
 function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
+    if (search?.length > 1) {
+      loading(true);
+      searchMaterial(search, loading)
+    }
   }
 
 function addJobLine(jobLine){
@@ -428,7 +452,25 @@ function removeJobLine(jobLine){
 function findAddedJobLine(jobLine){
   return props.form.added_job_lines.find((addedJobLine) => addedJobLine.mnt_job_line_id === jobLine.mnt_job_line_id);
 }
+function setMaterialUnit(mntWorkRequisitionMaterial) {
+  let material = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code);
+  mntWorkRequisitionMaterial.unit = material?.unit;
+  materials.value = [];
+  console.log("materials", materials);
+}
 
+function addConsumedSparePart() {
+  props.form.mntWorkRequisitionMaterials.push({
+                material_name_and_code: '',
+                specification: '',
+                unit: '',
+                quantity: 0,
+                remarks: '',
+            });
+}
+function removeConsumedSparePart(index) {
+  props.form.mntWorkRequisitionMaterials.splice(index, 1);
+}
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
 
