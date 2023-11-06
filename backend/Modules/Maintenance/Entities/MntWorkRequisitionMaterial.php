@@ -11,7 +11,7 @@ class MntWorkRequisitionMaterial extends Model
 
     protected $fillable = [
         'mnt_work_requisition_id',
-        'material_name',
+        'material_name_and_code',
         'specification',
         'unit',
         'quantity',

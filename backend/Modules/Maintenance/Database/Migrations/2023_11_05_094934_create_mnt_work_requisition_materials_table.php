@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('mnt_work_requisition_id');
             $table->foreign('mnt_work_requisition_id')->references('id')->on('mnt_work_requisitions');
-            $table->string('material_name');
+            $table->string('material_name_and_code');
             $table->text('specification')->nullable();
             $table->string('unit', 255)->nullable();
             $table->integer('quantity');
