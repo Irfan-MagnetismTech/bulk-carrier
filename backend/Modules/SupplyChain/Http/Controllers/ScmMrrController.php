@@ -11,6 +11,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
@@ -76,10 +77,39 @@ class ScmMrrController extends Controller
      * @param ScmMrr $materialReceiptReport
      * @return JsonResponse
      */
-    public function show(ScmMrr $materialReceiptReport): JsonResponse
+    public function show($id): JsonResponse
     {
+        $scmMrr = ScmMrr::query()
+            ->with('scmMrrLines.scmMaterial', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+            ->find($id);
+
+        $mrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
+            $lines = [
+                'scm_material_id' => $scmMrrLine->scm_material_id,
+                'scmMaterial' => $scmMrrLine->scmMaterial,
+                'unit' => $scmMrrLine->unit,
+                'brand' => $scmMrrLine->brand,
+                'model' => $scmMrrLine->model,
+                'quantity' => $scmMrrLine->quantity,
+                'rate' => $scmMrrLine->rate,
+                'net_rate' => $scmMrrLine->net_rate,
+                'po_qty' => $scmMrrLine?->scmPoLine?->quantity ?? 0,
+                'pr_qty' => $scmMrrLine?->scmPrLine?->quantity ?? 0,
+                'current_stock' => (new CurrentStock)->count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
+                'po_composite_key' => $scmMrrLine->po_composite_key ?? null,
+                'pr_composite_key' => $scmMrrLine->pr_composite_key ?? null,
+            ];
+
+            return $lines;
+        });
+
+        $scmMrr = [
+            'pr_no' => $scmMrr->ref_no,
+            'scmPrLines' => $mrrLines,
+        ];
+
         try {
-            return response()->success('data', $materialReceiptReport->load('scmMrrLines.scmMaterial', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy'), 200);
+            return response()->success('data', $scmMrr, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -173,9 +203,10 @@ class ScmMrrController extends Controller
                     'pr_date' => $scmPr->raised_date,
                     'business_unit' => $scmPr->business_unit,
                     'purchase_center' => $scmPr->purchase_center,
-                    'scmMrrLines' => $scmPr->scmPrLines->map(function ($item) {
+                    'scmMrrLines' => $scmPr->scmPrLines->map(function ($item) use ($scmPr) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
+                            'current_stock' => (new CurrentStock)->count($item->scmMaterial->id, $scmPr->scm_warehouse_id),
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
                             'brand' => $item->brand,
@@ -213,10 +244,11 @@ class ScmMrrController extends Controller
                     'po_date' => $scmPo->date,
                     'business_unit' => $scmPo->business_unit,
                     'purchase_center' => $scmPo->purchase_center,
-                    'scmMrrLines' => $scmPo->scmPoLines->map(function ($item) {
+                    'scmMrrLines' => $scmPo->scmPoLines->map(function ($item) use ($scmPo) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
+                            'current_stock' => (new CurrentStock)->count($item->scmMaterial->id, $scmPo->scm_warehouse_id),
                             'unit' => $item->scmMaterial->unit,
                             'brand' => $item->brand,
                             'model' => $item->model,
