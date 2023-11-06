@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
@@ -269,5 +270,25 @@ class ScmMrrController extends Controller
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    /**
+     * Retrieves the materials associated with a given purchase requisition ID.
+     *
+     * @return JsonResponse
+     */
+    public function getMaterialByPrId(): JsonResponse
+    {
+        $prMaterials = ScmPoLine::query()
+            ->with('scmMaterial')
+            ->where('scm_pr_id', request()->pr_id)
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['brand'] = $item->brand;
+                $data['model'] = $item->model;
+                return $data;
+            });
+        return response()->success('data list', $prMaterials, 200);
     }
 }
