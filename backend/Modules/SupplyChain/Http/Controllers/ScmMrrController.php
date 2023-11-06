@@ -11,6 +11,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
@@ -58,6 +59,8 @@ class ScmMrrController extends Controller
 
             $scmMrr = ScmMrr::create($requestData);
             $scmMrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
+            (new StockLedgerData)->insert($scmMrr, $request->scmMrrLines);
+
             DB::commit();
 
             return response()->success('Data created succesfully', $scmMrr, 201);
@@ -96,6 +99,10 @@ class ScmMrrController extends Controller
 
             $materialReceiptReport->update($request->all());
             $materialReceiptReport->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
+
+            $materialReceiptReport->stockable()->delete();
+            (new StockLedgerData)->insert($materialReceiptReport, $request->scmMrrLines);
+
             DB::commit();
 
             return response()->success('Data updated sucessfully!', $materialReceiptReport, 202);
@@ -146,93 +153,87 @@ class ScmMrrController extends Controller
     public function getPoOrPrWiseMrrData(Request $request): JsonResponse
     {
         try {
-        if($request->pr_id)
-        {
-            $scmPr = ScmPr::query()
-            ->with([
-                'scmWarehouse',
-                'scmPrLines.scmMaterial',
-            ])
-            ->where('id', $request->pr_id)
-            ->first();
+            if ($request->pr_id) {
+                $scmPr = ScmPr::query()
+                    ->with([
+                        'scmWarehouse',
+                        'scmPrLines.scmMaterial',
+                    ])
+                    ->where('id', $request->pr_id)
+                    ->first();
 
-            $data = [
-                'type' => 'CASH',
-                'scmWarehouse' => $scmPr->scmWarehouse,
-                'scm_warehouse_id' => $scmPr->scm_warehouse_id,
-                'acc_cost_center_id' => $scmPr->acc_cost_center_id,
-                'scm_pr_no' => $scmPr->ref_no,
-                'scm_pr_id' => $scmPr->id,
-                'scmPr' => $scmPr,
-                'pr_date' => $scmPr->raised_date,
-                'business_unit' => $scmPr->business_unit,
-                'purchase_center' => $scmPr->purchase_center,
-                'scmMrrLines' => $scmPr->scmPrLines->map(function ($item) {
-                    return [
-                        'scmMaterial' => $item->scmMaterial,
-                        'scm_material_id' => $item->scmMaterial->id,
-                        'unit' => $item->scmMaterial->unit,
-                        'brand' => $item->brand,
-                        'model' => $item->model,
-                        'quantity' => $item->quantity,
-                        'pr_qty' => $item->quantity,
-                        'pr_composite_key' => $item->pr_composite_key,
-                    ];
-                })
-            ];
-        }
-        else if($request->po_id)
-        {
-            $scmPo = ScmPo::query()
-            ->with([
-                'scmWarehouse',
-                'scmPoLines.scmMaterial',
-                'scmPoLines.scmPrLine',
-            ])
-            ->where('id', $request->po_id)
-            ->first();
+                $data = [
+                    'type' => 'CASH',
+                    'scmWarehouse' => $scmPr->scmWarehouse,
+                    'scm_warehouse_id' => $scmPr->scm_warehouse_id,
+                    'acc_cost_center_id' => $scmPr->acc_cost_center_id,
+                    'scm_pr_no' => $scmPr->ref_no,
+                    'scm_pr_id' => $scmPr->id,
+                    'scmPr' => $scmPr,
+                    'pr_date' => $scmPr->raised_date,
+                    'business_unit' => $scmPr->business_unit,
+                    'purchase_center' => $scmPr->purchase_center,
+                    'scmMrrLines' => $scmPr->scmPrLines->map(function ($item) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
+                            'quantity' => $item->quantity,
+                            'pr_qty' => $item->quantity,
+                            'pr_composite_key' => $item->pr_composite_key,
+                        ];
+                    })
+                ];
+            } else if ($request->po_id) {
+                $scmPo = ScmPo::query()
+                    ->with([
+                        'scmWarehouse',
+                        'scmPoLines.scmMaterial',
+                        'scmPoLines.scmPrLine',
+                    ])
+                    ->where('id', $request->po_id)
+                    ->first();
 
-            $data = [
-                'type' => strtoupper($scmPo->purchase_center),
-                'scmWarehouse' => $scmPo->scmWarehouse,
-                'scm_warehouse_id' => $scmPo->scm_warehouse_id,
-                'acc_cost_center_id' => $scmPo->acc_cost_center_id,
-                'scm_po_no' => $scmPo->ref_no,
-                'scm_po_id' => $scmPo->id,
-                'scmPo' => $scmPo,
-                'scmPr' => $scmPo->scmPr,
-                'scm_pr_no' => $scmPo->scmPr->ref_no,
-                'scm_pr_id' => $scmPo->scmPr->id,
-                // 'scmCs' => $scmPo?->scmCs ?? null,
-                // 'scm_cs_id' => $scmPo?->scm_cs_id ?? '',
-                // 'scm_cs_no' => $scmPo?->scmCs?->ref_no ?? '',
-                'po_date' => $scmPo->date,
-                'business_unit' => $scmPo->business_unit,
-                'purchase_center' => $scmPo->purchase_center,
-                'scmMrrLines' => $scmPo->scmPoLines->map(function ($item) {
-                    return [
-                        'scmMaterial' => $item->scmMaterial,
-                        'scm_material_id' => $item->scmMaterial->id,
-                        'unit' => $item->scmMaterial->unit,
-                        'brand' => $item->brand,
-                        'model' => $item->model,
-                        'quantity' => $item->quantity,
-                        'po_qty' => $item->quantity,
-                        'pr_qty' => $item->scmPrLine->quantity,
-                        'rate' => $item->rate,
-                        'net_rate' => $item->net_rate,
-                        'po_composite_key' => $item->po_composite_key,
-                        'pr_composite_key' => $item->pr_composite_key,
-                    ];
-                })
-            ];
-        }
-       
-        else
-        {
-            $data = [$request->all()];
-        }
-        return response()->success('data', $data, 200);
+                $data = [
+                    'type' => strtoupper($scmPo->purchase_center),
+                    'scmWarehouse' => $scmPo->scmWarehouse,
+                    'scm_warehouse_id' => $scmPo->scm_warehouse_id,
+                    'acc_cost_center_id' => $scmPo->acc_cost_center_id,
+                    'scm_po_no' => $scmPo->ref_no,
+                    'scm_po_id' => $scmPo->id,
+                    'scmPo' => $scmPo,
+                    'scmPr' => $scmPo->scmPr,
+                    'scm_pr_no' => $scmPo->scmPr->ref_no,
+                    'scm_pr_id' => $scmPo->scmPr->id,
+                    // 'scmCs' => $scmPo?->scmCs ?? null,
+                    // 'scm_cs_id' => $scmPo?->scm_cs_id ?? '',
+                    // 'scm_cs_no' => $scmPo?->scmCs?->ref_no ?? '',
+                    'po_date' => $scmPo->date,
+                    'business_unit' => $scmPo->business_unit,
+                    'purchase_center' => $scmPo->purchase_center,
+                    'scmMrrLines' => $scmPo->scmPoLines->map(function ($item) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
+                            'quantity' => $item->quantity,
+                            'po_qty' => $item->quantity,
+                            'pr_qty' => $item->scmPrLine->quantity,
+                            'rate' => $item->rate,
+                            'net_rate' => $item->net_rate,
+                            'po_composite_key' => $item->po_composite_key,
+                            'pr_composite_key' => $item->pr_composite_key,
+                        ];
+                    })
+                ];
+            } else {
+                $data = [$request->all()];
+            }
+            return response()->success('data', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

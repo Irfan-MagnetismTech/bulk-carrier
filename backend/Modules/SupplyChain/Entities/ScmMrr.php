@@ -9,6 +9,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,5 +50,10 @@ class ScmMrr extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function stockable()
+    {
+        return $this->morphMany(ScmStockLedger::class, 'stockable');
     }
 }

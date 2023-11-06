@@ -89,7 +89,7 @@ class ScmLcRecordController extends Controller
      */
     public function update(ScmLcRecordRequest $request, ScmLcRecord $lcRecord): JsonResponse
     {
-            $requestData = $request->all();
+        $requestData = $request->all();
         try {
             if (!empty($request->attachment)) {
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/lcRecords', $lcRecord->attachment);
