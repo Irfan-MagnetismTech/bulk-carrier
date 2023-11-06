@@ -162,10 +162,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!purchaseRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="8">Loading...</td>
         </tr>
         <tr v-else-if="!purchaseRequisitions?.data?.length">
-          <td colspan="7">No PR found.</td>
+          <td colspan="8">No PR found.</td>
         </tr>
         </tfoot>
       </table>

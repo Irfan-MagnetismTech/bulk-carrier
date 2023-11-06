@@ -97,10 +97,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!services?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="3">Loading...</td>
         </tr>
         <tr v-else-if="!services?.data?.length">
-          <td colspan="7">No Material Category found.</td>
+          <td colspan="3">No Material Category found.</td>
         </tr>
         </tfoot>
       </table>

@@ -54,8 +54,9 @@
     const watchQuantity = (index) => {
     const rate = computed(() => props.form.scmMrrLines[index].rate);
     watch(rate, (newVal, oldVal) => {
-      if (newVal !== oldVal) {
-        props.form.scmMrrLines[index].net_rate = newVal;
+      if (newVal !== oldVal && oldVal !== null) {
+        // props.form.scmMrrLines[index].net_rate = newVal;
+        alert();
       }
     });
   };
@@ -76,13 +77,13 @@
   <div class="input-group-grid">
       <label class="label-group">
           <span class="label-item-title">Received Date<span class="text-red-500">*</span></span>
-          <input type="date" readonly v-model="form.date" required class="form-input vms-readonly-input" name="date" :id="'date'" />
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group" v-if="form.type == 'FOREIGN'">
           <span class="label-item-title">LC Record No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="text" v-model="form.scmLcRecord" required class="form-input" name="scmLcRecord" :id="'scmLcRecord'" />
+          <Error v-if="errors?.scmLcRecord" :errors="errors.scmLcRecord"  />
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
@@ -91,14 +92,14 @@
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.scm_po_no" required readonly class="form-input vms-readonly-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_po_no" :errors="errors.scm_po_no"  />
+          <input type="date" v-model="form.po_date" required readonly class="form-input vms-readonly-input" name="scm_po_date" :id="'scm_po_date'" />
+          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
       </label>
       
       <label class="label-group">
           <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scm_cs_no" required readonly class="form-input vms-readonly-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_cs_no" :errors="errors.scm_cs_no"  />
+          <input type="text" v-model="form.scm_pr_no" required readonly class="form-input vms-readonly-input" name="scm_pr_no" :id="'scm_pr_no'" />
+          <Error v-if="errors?.scm_pr_no" :errors="errors.scm_pr_no"  />
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
@@ -107,13 +108,13 @@
       </label>
       <label class="label-group" v-if="form.type == 'CASH'">
           <span class="label-item-title">IOU No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scm_pr_no" required class="form-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_pr_no" :errors="errors.scm_pr_no"  />
+          <input type="text" v-model="form.scm_iou_no" required class="form-input" name="scm_iou_no" :id="'scm_iou_no'" />
+          <Error v-if="errors?.scm_iou_no" :errors="errors.scm_iou_no"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Challan<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scm_pr_no" required class="form-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_pr_no" :errors="errors.scm_pr_no"  />
+          <input type="text" v-model="form.challan_no" required class="form-input" name="challan_no" :id="'challan_no'" />
+          <Error v-if="errors?.challan_no" :errors="errors.challan_no"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">Status<span class="text-red-500">*</span></span>
@@ -130,15 +131,15 @@
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.ref_no" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
           <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">QC Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.ref_no" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <textarea v-model="form.qc_remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <Error v-if="errors?.qc_remarks" :errors="errors.qc_remarks" />
     </label>
   </div>
   <div id="">
@@ -197,17 +198,17 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].po_qty" class="form-input">
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].pr_qty" class="form-input">
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].current_stock" class="form-input">
               </label>
             </td>
             <td>
