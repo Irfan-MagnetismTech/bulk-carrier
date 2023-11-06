@@ -116,7 +116,6 @@ export default function useChartererContract() {
 			formData.append('info', JSON.stringify(form));
 
 			const { data, status } = await Api.post('/ops/charterer-contracts', formData);
-			chartererContract.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.charterer-contracts.index' });
 		} catch (error) {

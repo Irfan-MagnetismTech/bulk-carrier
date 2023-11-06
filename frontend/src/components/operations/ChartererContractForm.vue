@@ -153,16 +153,18 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].port_code" label="code_name" class="block form-input">
+              <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsChartererContractsLocalAgents[0].opsPort" label="code_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsChartererContractsLocalAgents[0].port_code"
+                          :required="!form.opsChartererContractsLocalAgents[0].opsPort"
                           v-bind="attributes"
                           v-on="events"
                           />
                   </template>
               </v-select>
+
+              <input type="hidden" v-model="form.opsChartererContractsLocalAgents[0].port_code" />
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Agent Name</span>
@@ -360,9 +362,9 @@ watch(() => props.form, (value) => {
 
     vessels.value = [{...props?.form?.opsVessel}];
     ports.value = [
-      {
-        code_name :props?.form.opsChartererContractsLocalAgents[0].port_code
-      },
+      
+        { ...props?.form.opsChartererContractsLocalAgents[0].opsPort }
+      
 
     ]
 
@@ -371,6 +373,15 @@ watch(() => props.form, (value) => {
       }
   }
 }, {deep: true});
+
+
+watch(() => props.form.opsChartererContractsLocalAgents[0].opsPort, (value) => {
+  if(value) {
+    props.form.opsChartererContractsLocalAgents[0].port_code = value?.code
+  } else {
+    props.form.opsChartererContractsLocalAgents[0].port_code = null
+  }
+}, { deep: true})
 
 watch(() => props.form.opsVessel, (value) => {
   if(value) {
