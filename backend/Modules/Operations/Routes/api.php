@@ -108,5 +108,6 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
+    Route::get('export-lighter-noon-report', [OpsLighterNoonReportController::class, 'exportLighterNoonReport']);
     
 });

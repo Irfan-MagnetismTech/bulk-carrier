@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsLighterNoonReport;
+use Modules\Operations\Http\Exports\LighterNoonReportExport;
 use Modules\Operations\Http\Requests\OpsLighterNoonReportRequest;
 
 class OpsLighterNoonReportController extends Controller
@@ -143,4 +145,14 @@ class OpsLighterNoonReportController extends Controller
          }
      }
      
+
+     public function exportLighterNoonReport(Request $request)
+     {
+         $lighter_noon_report = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->where('id', $request->id)
+         ->first();
+
+        //  dd($lighter_noon_report);
+         return Excel::download(new LighterNoonReportExport($lighter_noon_report), 'LighterNoonReport.xlsx');
+         
+     }
 }

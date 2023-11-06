@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('operations')->group(function() {
     // Route::get('/', 'OperationsController@index');  
-
+    Route::get('export-lighter-noon-report', [OpsLighterNoonReportController::class, 'exportLighterNoonReport']);
 });
 // Route::resources([
 //     'ports' => OpsPortController::class,
