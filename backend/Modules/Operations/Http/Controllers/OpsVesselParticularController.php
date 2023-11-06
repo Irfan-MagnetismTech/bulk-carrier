@@ -173,6 +173,8 @@ class OpsVesselParticularController extends Controller
         return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
         
     }
+
+    
     public function vesselParticularAttachmentDownload(Request $request)
     {
         $particular= OpsVesselParticular::find($request->id);

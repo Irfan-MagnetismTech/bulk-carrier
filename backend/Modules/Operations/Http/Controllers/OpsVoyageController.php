@@ -161,7 +161,7 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageByVoyageNo(Request $request){
+    public function searchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
             ->where(function ($query) use($request) {
