@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('effective_date');
             $table->float('exchange_rate');
             $table->string('currency');
+            $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
