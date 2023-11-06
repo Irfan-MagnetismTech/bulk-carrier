@@ -186,7 +186,7 @@ class MntWorkRequisitionController extends Controller
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
             
             DB::commit();
-            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            return response()->success('Work requisition updated successfully', $workRequisition, 202);
             
         }
         catch (\Exception $e)
@@ -219,7 +219,7 @@ class MntWorkRequisitionController extends Controller
             $workRequisitionLines = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
             
             DB::commit();
-            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            return response()->success('Work requisition updated successfully', $workRequisition, 202);
             
         }
         catch (\Exception $e)
@@ -255,7 +255,7 @@ class MntWorkRequisitionController extends Controller
             $jobLine->update($job);
             
             DB::commit();
-            return response()->success('Work requisition updated successfully', $workRequisition, 201);
+            return response()->success('Work requisition updated successfully', $workRequisition, 202);
             
         }
         catch (\Exception $e)
