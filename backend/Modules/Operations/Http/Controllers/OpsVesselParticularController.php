@@ -34,7 +34,11 @@ class OpsVesselParticularController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $vesselParticular = OpsVesselParticular::with('opsVessel')->latest()->paginate(15);
+            $vesselParticular = OpsVesselParticular::with('opsVessel')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })->latest()->paginate(15);
+            
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }
         catch (QueryException $e)
