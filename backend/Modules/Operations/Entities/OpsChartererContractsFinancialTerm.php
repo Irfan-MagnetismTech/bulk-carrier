@@ -12,7 +12,7 @@ class OpsChartererContractsFinancialTerm extends Model
     protected $fillable = [
         'ops_charterer_contract_id',
         'ops_voyage_id',
-        'ops_cargo_type_id',
+        'ops_cargo_tariff_id',
         'credit_days',
         'billing_cycle',
         'valid_from',
