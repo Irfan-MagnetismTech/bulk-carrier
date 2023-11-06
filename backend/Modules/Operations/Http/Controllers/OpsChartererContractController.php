@@ -55,18 +55,20 @@ class OpsChartererContractController extends Controller
     {
         try {
             DB::beginTransaction();
-            $charterer_contract = $request->except(
+            $charterer_contract_info = $request->except(
                 '_token',
                 'attachment',
                 'opsChartererContractsFinancialTerms',
                 'opsChartererContractsLocalAgents'
             );
-            if(isset($request->attachment)){
-                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/charterer_contracts');
-                $charterer_contract['attachment'] = $attachment;
-            }
-            $charterer_contract = OpsChartererContract::create($charterer_contract);
 
+            if($request->file('attachment')){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/charterer_contracts');
+                $charterer_contract_info['attachment'] = $attachment;
+            }
+
+            $charterer_contract = OpsChartererContract::create($charterer_contract_info);
+     
             $charterer_contract->opsChartererContractsFinancialTerms()->create($request->opsChartererContractsFinancialTerms);
             $charterer_contract->opsChartererContractsLocalAgents()->createMany($request->opsChartererContractsLocalAgents);
             DB::commit();
@@ -118,7 +120,7 @@ class OpsChartererContractController extends Controller
                 'opsChartererContractsLocalAgents'
             );
 
-            if(isset($request->attachment)){
+            if($request->file('attachment')){
                 $this->fileUpload->deleteFile($charterer_contract->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/charterer_contracts', $charterer_contract->attachment);
                 $charterer_contract_info['attachment'] = $attachment;
