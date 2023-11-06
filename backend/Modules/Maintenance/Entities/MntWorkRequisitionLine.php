@@ -22,7 +22,11 @@ class MntWorkRequisitionLine extends Model
         'present_run_hour',
         'status',
         'start_date',
-        'completion_date'
+        'completion_date',
+        'checking',
+        'replace',
+        'cleaning',
+        'remarks'
     ];
     
     public function mntWorkRequisitionItem () : BelongsTo

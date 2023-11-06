@@ -243,8 +243,11 @@ class MntWorkRequisitionController extends Controller
             $wr['start_date'] = $input['start_date'];
             $wr['completion_date'] = $job['last_done'] = $input['completion_date'];
             $job['previous_run_hour'] = $input['present_run_hour'];
+            $wr['checking'] = $input['checking'] ?? 0;
+            $wr['replace'] = $input['replace'] ?? 0;
+            $wr['cleaning'] = $input['cleaning'] ?? 0;
             $wr['remarks'] = $input['remarks'];
-            $wr['status'] = ($input['completion_date'] == '') ? 1: 2;
+            $wr['status'] = ($input['start_date'] == '') ? 0: (($input['completion_date'] == '') ? 1: 2);
 
             DB::beginTransaction();
 
