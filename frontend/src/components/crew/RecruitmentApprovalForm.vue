@@ -16,6 +16,21 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
+function addItem() {
+  let obj = {
+    crw_rank_id: '',
+    candidate_name: '',
+    candidate_contact: '',
+    candidate_email: '',
+    remarks: '',
+  };
+  props.form.crwRecruitmentApprovalLines.push(obj);
+}
+
+function removeItem(index){
+  props.form.crwRecruitmentApprovalLines.splice(index, 1);
+}
+
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {

@@ -114,18 +114,18 @@ onMounted(() => {
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Document List</legend>
-    <table class="w-full whitespace-no-wrap" id="table">
+    <table class="w-full" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 w-1/6 align-bottom">Document Name</th>
-        <th class="px-4 py-3 w-1/6 align-bottom">Issuing Authority</th>
-        <th class="px-4 py-3 w-1/6 align-bottom">Validity Period</th>
-        <th class="px-4 py-3 w-1/6 align-bottom">Validity (In months)</th>
-        <th class="px-4 py-3 align-bottom">Issue Date</th>
-        <th class="px-4 py-3 align-bottom">Expire Date</th>
-        <th class="px-4 py-3 align-bottom">Reference</th>
-        <th class="px-4 py-3 align-bottom">Attachment</th>
-        <th class="px-4 py-3 text-center align-bottom">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+        <th class="w-1/6"><nobr>Document Name</nobr></th>
+        <th><nobr>Issuing Authority</nobr></th>
+        <th><nobr>Validity Period</nobr></th>
+        <th><nobr>Validity <br>(In months)</nobr></th>
+        <th><nobr>Latest <br>Issue Date</nobr></th>
+        <th><nobr>Latest <br>Expire Date</nobr></th>
+        <th><nobr>Reference No.</nobr></th>
+        <th><nobr>Attachment</nobr></th>
+        <th>
           <button type="button" @click="openCrewDocumentAddModal()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -137,29 +137,15 @@ onMounted(() => {
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(crwDocument, index) in form.crwDocuments" :key="crwDocument.id">
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwDocuments[index].name" class="form-input vms-readonly-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <a class="custom_link" href="" target="_blank">link</a>
+        <td>Name ..</td>
+        <td>Authority..</td>
+        <td>5 years</td>
+        <td>60</td>
+        <td>27-12-2019</td>
+        <td>27-12-2023</td>
+        <td>02561655</td>
+        <td>
+          <a class="custom_link" href="" target="_blank">Link</a>
         </td>
         <td class="px-1 py-1 text-center">
           <nobr>
@@ -198,7 +184,7 @@ onMounted(() => {
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
               class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th colspan="5">Add New Crew Document</th>
+            <th colspan="5">Add Crew Document</th>
           </tr>
           </thead>
         </table>
@@ -220,12 +206,23 @@ onMounted(() => {
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.crw_crew_rank" placeholder="5 Years / Permanent" class="form-input" autocomplete="off" required />
+              <select class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">1 Year</option>
+                <option value="24">2 Years</option>
+                <option value="36">3 Years</option>
+                <option value="48">4 Years</option>
+                <option value="60">5 Years</option>
+                <option value="120">10 Years</option>
+                <option value="0">Permanent</option>
+              </select>
               <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Validity(In Months) <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.crw_crew_rank" placeholder="Ex: 60" class="form-input" autocomplete="off" required />
+              <input type="text" v-model="form.crw_crew_rank" placeholder="Ex: 60" class="form-input vms-readonly-input" readonly autocomplete="off" required />
               <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
             </label>
           </div>
@@ -251,8 +248,8 @@ onMounted(() => {
               <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Attachment <span class="text-red-500">*</span></span>
-              <input type="file" class="form-input" autocomplete="off" required />
+              <span class="text-gray-700 dark:text-gray-300">Attachment</span>
+              <input type="file" class="form-input" autocomplete="off" />
               <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
             </label>
           </div>
@@ -304,7 +301,45 @@ onMounted(() => {
           </tr>
           </thead>
         </table>
-
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Add Renew Data</legend>
+          <table class="w-full whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <th class="px-4 py-3 align-bottom">Issue Date</th>
+              <th class="px-4 py-3 align-bottom">Expire Date</th>
+              <th class="px-4 py-3 align-bottom">Reference</th>
+              <th class="px-4 py-3 align-bottom">Attachment</th>
+              <th class="px-4 py-3 align-bottom">Remarks</th>
+              <th class="px-4 py-3 text-center align-bottom">Action</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400">
+              <td class="px-1 py-1">
+                <input type="date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" placeholder="Reference" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="file" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" placeholder="Remarks" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1 text-center">
+                <button type="button" @click="openCrewDocumentAddModal()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  Save
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
           <legend class="px-2 text-gray-700 dark:text-gray-300">Previous Renew Data</legend>
           <table class="w-full whitespace-no-wrap" id="table">
@@ -370,48 +405,6 @@ onMounted(() => {
             </tbody>
           </table>
         </fieldset>
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Add Renew Data</legend>
-          <table class="w-full whitespace-no-wrap" id="table">
-            <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-              <th class="px-4 py-3 align-bottom">Issue Date</th>
-              <th class="px-4 py-3 align-bottom">Expire Date</th>
-              <th class="px-4 py-3 align-bottom">Reference</th>
-              <th class="px-4 py-3 align-bottom">Attachment</th>
-              <th class="px-4 py-3 align-bottom">Remarks</th>
-              <th class="px-4 py-3 text-center align-bottom">Action</th>
-            </tr>
-            </thead>
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400">
-              <td class="px-1 py-1">
-                <input type="date" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="date" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" placeholder="Reference" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="file" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" placeholder="Remarks" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1 text-center">
-                <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-
         <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
           <button type="button" @click="closeCrewDocumentRenewModal" style="color: #1b1e21"
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
