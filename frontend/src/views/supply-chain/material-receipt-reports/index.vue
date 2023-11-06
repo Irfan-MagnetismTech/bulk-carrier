@@ -84,7 +84,7 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Material Receipt Report List</h2>
-    <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button> -->
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -103,12 +103,11 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
+            <th>MRR No</th>
+            <th>PO No</th>
             <th>PR No</th>
-            <th>Raised Date</th>
-            <th>Is Critical</th>
-            <th>Purchase Center</th>
             <th>Warehouse</th>
-            <th>Create</th>
+            <th>Date</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -117,9 +116,10 @@ function confirmDelete(id) {
             <tr v-for="(materialReceiptReport,index) in (materialReceiptReports?.data ? materialReceiptReports?.data : materialReceiptReports)" :key="index">
               <td>{{ materialReceiptReports?.from + index }}</td>
               <td>{{ materialReceiptReport?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.raised_date }}</td>
-              <td>{{ materialReceiptReport?.purchase_center }}</td>
-              <td>{{ materialReceiptReport?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ materialReceiptReport?.scmPo?.ref_no }}</td>
+              <td>{{ materialReceiptReport?.scmPr?.ref_no }}</td>
+              <td>{{ materialReceiptReport?.scmWarehouse?.name }}</td>
+              <td>{{ materialReceiptReport?.date }}</td>
               <td>
                 <span :class="materialReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialReceiptReport?.business_unit }}</span>
               </td>
@@ -131,10 +131,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!materialReceiptReports?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="9">Loading...</td>
+          <td colspan="8">Loading...</td>
         </tr>
         <tr v-else-if="!materialReceiptReports?.data?.length">
-          <td colspan="9">No MRR found.</td>
+          <td colspan="8">No MRR found.</td>
         </tr>
         </tfoot>
       </table>
