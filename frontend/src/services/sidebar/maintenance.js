@@ -12,9 +12,9 @@ export default [
         permissionKey: '',
         subMenu: [
             {
-                route: 'mnt.ship-departments.index',
+                route: '',
                 label: 'Configurations',
-                preIcon: icons.User,
+                preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,

@@ -84,7 +84,7 @@
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-3/12 px-4 py-3 align-bottom">Description <span class="text-red-500">*</span></th>
+            <th class="w-3/12 px-4 py-3 align-bottom">Description</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
@@ -98,8 +98,8 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" required /> </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" required /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" /> </td>
