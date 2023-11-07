@@ -9,9 +9,11 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useLcRecord from '../../../composables/supply-chain/useLcRecord';
+    import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     
     const { material, materials, getMaterials, searchMaterial } = useMaterial();
-    const {searchLcRecord, filteredLcRecords} = useLcRecord();
+    const { searchLcRecord, filteredLcRecords } = useLcRecord();
+    const {getMaterialWiseCurrentStock,CurrentStock} = useStockLedger();
     const store_category = ref([]);
     const firstInitiated = ref(false);
 
@@ -57,7 +59,7 @@
     watch(rate, (newVal, oldVal) => {
       if (newVal !== oldVal && oldVal !== null) {
         // props.form.scmMrrLines[index].net_rate = newVal;
-        alert();
+        
       }
     });
   };
@@ -91,7 +93,17 @@ watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
   function fetchLc(search, loading) {
     loading(true);
     searchLcRecord(search, loading, props.form.business_unit,props.form.scmPo.id);
+}
+
+function changeRate(index) {
+  props.form.scmMrrLines[index].net_rate = props.form.scmMrrLines[index].rate;
+}
+
+  function getCurrentStock(materialId,warehouseId) {
+    getMaterialWiseCurrentStock(materialId,warehouseId);
+    return CurrentStock;
   }
+
 </script>
 <template>
 
@@ -200,12 +212,14 @@ watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
             <th class="py-3 align-center">PO Qty</th>
             <th class="py-3 align-center">PR Qty</th>
             <th class="py-3 align-center">Current Stock</th>
+            <!-- <th class="py-3 align-center">Current Stocksss</th> -->
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 align-center">Rate</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
+          <!-- <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" v-if="form.scmWarehouse != null"> -->
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(scmMrrLine, index) in form.scmMrrLines" :key="index">
             <td class="!w-72">
@@ -253,6 +267,11 @@ watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
                  <input type="text" v-model="form.scmMrrLines[index].current_stock" class="form-input">
               </label>
             </td>
+            <!-- <td>
+              <label class="block w-full mt-2 text-sm">
+                
+              </label>
+            </td> -->
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">
@@ -260,7 +279,7 @@ watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
             </td> 
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].rate" class="form-input" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
+                 <input type="text" v-model="form.scmMrrLines[index].rate" class="form-input" @change="changeRate(index)" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
