@@ -41,6 +41,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
     Route::get('get-po-or-pr-wise-mrr', [ScmMrrController::class, "getPoOrPrWiseMrrData"])->name('getPoOrPrWiseMrrData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
+    Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
