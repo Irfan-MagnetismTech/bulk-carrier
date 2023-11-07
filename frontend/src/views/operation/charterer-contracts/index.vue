@@ -116,10 +116,10 @@ onMounted(() => {
           
           <tfoot v-if="!chartererContracts?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="!chartererContracts?.data?.length">
-            <td colspan="6">No data found.</td>
+            <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>

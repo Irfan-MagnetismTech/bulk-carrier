@@ -136,10 +136,10 @@
                 {{ index+1 }}
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="deliveryRedelivery.opsBunkers[index]?.name">{{ deliveryRedelivery.opsBunkers[index]?.name }}</span>
+                <span class="show-block !justify-center" v-if="deliveryRedelivery.opsBunkers[index]?.name">{{ deliveryRedelivery.opsBunkers[index]?.name }}</span>
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="deliveryRedelivery.opsBunkers[index]?.unit">{{ deliveryRedelivery.opsBunkers[index]?.unit }}</span>
+                <span class="show-block !justify-center" v-if="deliveryRedelivery.opsBunkers[index]?.unit">{{ deliveryRedelivery.opsBunkers[index]?.unit }}</span>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
