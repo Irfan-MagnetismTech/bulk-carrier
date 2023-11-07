@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Crew\Entities\CrwCrewDocumentRenewal;
 use Modules\Crew\Http\Controllers\CrwAgencyBillController;
 use Modules\Crew\Http\Controllers\CrwAgencyContractController;
 use Modules\Crew\Http\Controllers\CrwAgencyController;
@@ -11,6 +12,7 @@ use Modules\Crew\Http\Controllers\CrwCrewAssignmentController;
 use Modules\Crew\Http\Controllers\CrwCrewChecklistController;
 use Modules\Crew\Http\Controllers\CrwCrewController;
 use Modules\Crew\Http\Controllers\CrwCrewDocumentController;
+use Modules\Crew\Http\Controllers\CrwCrewDocumentRenewalController;
 use Modules\Crew\Http\Controllers\CrwCrewProfileController;
 use Modules\Crew\Http\Controllers\CrwCrewRankController;
 use Modules\Crew\Http\Controllers\CrwCrewRequisitionController;
@@ -51,6 +53,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-crews', CrwCrewController::class);
     Route::apiResource('crw-crew-ranks', CrwCrewRankController::class);
     Route::apiResource('crw-crew-documents', CrwCrewDocumentController::class);
+    Route::apiResource('crw-crew-document-renewals', CrwCrewDocumentRenewalController::class);
     Route::apiResource('crw-crew-assignments', CrwCrewAssignmentController::class);
     Route::apiResource('crw-attendances', CrwAttendanceController::class);
     Route::apiResource('crw-incidents', CrwIncidentController::class);
