@@ -161,16 +161,22 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageByVoyageNo(Request $request){
+    public function searchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
             ->where(function ($query) use($request) {
                 $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
             })
+            ->when(request()->vessel_id != null, function($q){
+                $q->where('ops_vessel_id', request()->vessel_id);
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved voyage no.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
+            return response()->success('Successfully retrieved voyages.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

@@ -17,6 +17,7 @@ class OpsHandoverTakeover extends Model
         'currency',
         'ops_vessel_id',
         'ops_charterer_profile_id',
+        'remarks',
         'business_unit'
     ];
 
