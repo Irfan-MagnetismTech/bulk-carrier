@@ -86,6 +86,7 @@ function confirmDelete(id) {
             <th>#</th>
             <th>Unit Name</th>
             <th>Short Code</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
@@ -101,10 +102,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!units?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="3">Loading...</td>
+          <td colspan="4">Loading...</td>
         </tr>
         <tr v-else-if="!units?.data?.length">
-          <td colspan="3">No Units found.</td>
+          <td colspan="4">No Units found.</td>
         </tr>
         </tfoot>
       </table>

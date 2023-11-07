@@ -13,6 +13,7 @@ export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
     const router = useRouter();
     const materialReceiptReports = ref([]);
+    const materialList = ref([]);
     const filteredMaterialRreceiptReports = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
@@ -138,12 +139,12 @@ export default function useMaterialReceiptReport() {
     }
 
     async function showMaterialReceiptReport(materialReceiptReportId) {
-
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
             const { data, status } = await Api.get(`/${BASE}/material-receipt-reports/${materialReceiptReportId}`);
             materialReceiptReport.value = data.value;
+            console.log(materialReceiptReport.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -231,6 +232,32 @@ export default function useMaterialReceiptReport() {
         }
     }
 
+    async function getMaterialList(pr_id, po_id = null,warehouse_id) {
+        //NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-material-for-mrr`,{
+                params: {
+                    scm_pr_id: pr_id,
+                    scm_po_id: po_id,
+                    scm_warehouse_id: warehouse_id,
+                },
+            });
+            materialList.value = data.value;
+            console.log(materialList.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
 
     return {
         materialReceiptReports,
@@ -243,6 +270,8 @@ export default function useMaterialReceiptReport() {
         deleteMaterialReceiptReport,
         searchMaterialReceiptReport,
         getPrAndPoWiseMrrData,
+        getMaterialList,
+        materialList,
         materialObject,
         isLoading,
         errors,

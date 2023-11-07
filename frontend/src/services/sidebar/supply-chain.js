@@ -125,14 +125,35 @@ export default [
             },
             {
                 route: `${BASE}.material-receipt-reports.index`,
-                label: 'Material Receipt Report',
+                label: 'Material Receipt Reports',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
                 subSubMenu: []
-            }
+             },
+             {
+                route: `${BASE}.store-requisitions.index`,
+                label: 'Store Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+               route: `${BASE}.store-issues.index`,
+               label: 'Store Issues',
+               preIcon: icons.User,
+               postIcon: icons.DownArrow,
+               is_active: false,
+               is_open: false,
+               permissionKey: '',
+               subSubMenu: []
+           }
+            
             
         ]
     },

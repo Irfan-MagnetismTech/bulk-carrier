@@ -84,6 +84,7 @@ function confirmDelete(id) {
             <th>Name</th>
             <th>Parent Name</th>
             <th>Short Code</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
@@ -100,10 +101,10 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!materialCategories?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="4">Loading...</td>
+          <td colspan="5">Loading...</td>
         </tr>
         <tr v-else-if="!materialCategories?.data?.length">
-          <td colspan="4">No Material Category found.</td>
+          <td colspan="5">No Material Category found.</td>
         </tr>
         </tfoot>
       </table>

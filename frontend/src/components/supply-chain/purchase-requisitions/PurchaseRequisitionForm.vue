@@ -109,7 +109,8 @@
         props.form.acc_cost_center_id = value?.acc_cost_center_id;
     });
 
-    function setMaterialOtherData(datas,index){
+function setMaterialOtherData(datas, index) {
+      console.log('change_event');
       props.form.scmPrLines[index].unit = datas.unit;
       props.form.scmPrLines[index].scm_material_id = datas.id;
       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id);

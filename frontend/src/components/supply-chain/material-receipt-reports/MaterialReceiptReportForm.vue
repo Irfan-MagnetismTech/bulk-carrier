@@ -10,10 +10,13 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useLcRecord from '../../../composables/supply-chain/useLcRecord';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
+    import useMaterialReceiptReport from '../../../composables/supply-chain/useMaterialReceiptReport';
     
     const { material, materials, getMaterials, searchMaterial } = useMaterial();
     const { searchLcRecord, filteredLcRecords } = useLcRecord();
-    const {getMaterialWiseCurrentStock,CurrentStock} = useStockLedger();
+    const { getMaterialWiseCurrentStock, CurrentStock } = useStockLedger();
+    const { getMaterialList, materialList } = useMaterialReceiptReport();
+
     const store_category = ref([]);
     const firstInitiated = ref(false);
 
@@ -32,8 +35,8 @@
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       form.scmPrLines.push(clonedObj);
-      const index = props.form.scmMrrLines.length - 1;
-      watchQuantity(index);
+      // const index = props.form.scmMrrLines.length - 1;
+      // watchQuantity(index);
     }
 
     function removeMaterial(index){
@@ -43,36 +46,82 @@
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
     
-    onMounted(() => {
-      watchEffect(() => {
-      if(firstInitiated.value == false){
-          props.form.scmMrrLines.forEach((line, index) => {
-          watchQuantity(index);
-        });
-        firstInitiated.value = true;
-      }
-    })
-    });
+    // onMounted(() => {
+    //   watchEffect(() => {
+    //   if(firstInitiated.value == false){
+    //       props.form.scmMrrLines.forEach((line, index) => {
+    //       watchQuantity(index);
+    //     });
+    //     firstInitiated.value = true;
+    //   }
+    // })
+    // });
 
-    const watchQuantity = (index) => {
-    const rate = computed(() => props.form.scmMrrLines[index].rate);
-    watch(rate, (newVal, oldVal) => {
-      if (newVal !== oldVal && oldVal !== null) {
-        // props.form.scmMrrLines[index].net_rate = newVal;
-        
-      }
-    });
-  };
+  //   const watchQuantity = (index) => {
+  //   const rate = computed(() => props.form.scmMrrLines[index].rate);
+  //   watch(rate, (newVal, oldVal) => {
+  //     if (newVal !== oldVal && oldVal !== null) {
+  //       // props.form.scmMrrLines[index].net_rate = newVal;
+
+  //     }
+  //   });
+  // };
+
+
+  function setMaterialOtherData(line, index) {
+  const selectedMaterial = materialList.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              // scmMaterial: '',
+              //   scm_material_id: '',
+              //   unit: '',
+              //   brand: '',
+              //   model: '',
+              //   quantity: 0.0,
+              //   rate: 0.0,
+              //   net_rate: 0.0,
+              //   po_qty: 0.0,
+              //   pr_qty: 0.0,
+              //   current_stock: 0.0,
+              //   po_composite_key: '',
+              //   pr_composite_key: ''
+              props.form.scmMrrLines[index].scm_material_id = selectedMaterial.id;
+              props.form.scmMrrLines[index].unit = selectedMaterial.unit;
+              props.form.scmMrrLines[index].brand = selectedMaterial.brand;
+              props.form.scmMrrLines[index].model = selectedMaterial.model;
+              props.form.scmMrrLines[index].po_qty = selectedMaterial.po_qty;
+              props.form.scmMrrLines[index].pr_qty = selectedMaterial.pr_qty;
+              props.form.scmMrrLines[index].current_stock = selectedMaterial.current_stock;
+              props.form.scmMrrLines[index].po_composite_key = selectedMaterial.po_composite_key;
+              props.form.scmMrrLines[index].pr_composite_key = selectedMaterial.pr_composite_key;
+              props.form.scmMrrLines[index].rate = selectedMaterial.rate;
+              props.form.scmMrrLines[index].net_rate = selectedMaterial.net_rate;
+            }
+          }
+}
+
+
+watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
+      newVal?.forEach((line, index) => {
+        if (line.scmMaterial) {
+          setMaterialOtherData(line, index);
+        }
+      });
+}, { deep: true });
+
 
   watch(() => props?.form?.scmPo, (newVal, oldVal) => {
     if(newVal){
       props.form.scm_po_no = newVal.ref_no;
+      props.form.po_date = newVal.date;
     }
   });
   watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     if(newVal){
       props.form.scm_pr_no = newVal.ref_no;
     }
+    getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id);
   });
   watch(() => props?.form?.scmCs, (newVal, oldVal) => {
     if(newVal){
@@ -99,10 +148,6 @@ function changeRate(index) {
   props.form.scmMrrLines[index].net_rate = props.form.scmMrrLines[index].rate;
 }
 
-  function getCurrentStock(materialId,warehouseId) {
-    getMaterialWiseCurrentStock(materialId,warehouseId);
-    return CurrentStock;
-  }
 
 </script>
 <template>
@@ -199,7 +244,7 @@ function changeRate(index) {
   <div id="">
 
     <div id="customDataTable" style="">
-    <div class="table-responsive min-w-screen overflow-x-scroll">
+    <div class="table-responsive min-w-screen overflow-y-scroll">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="whitespace-no-wrap">
@@ -212,7 +257,6 @@ function changeRate(index) {
             <th class="py-3 align-center">PO Qty</th>
             <th class="py-3 align-center">PR Qty</th>
             <th class="py-3 align-center">Current Stock</th>
-            <!-- <th class="py-3 align-center">Current Stocksss</th> -->
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 align-center">Rate</th>
             <th class="py-3 text-center align-center">Action</th>
@@ -223,7 +267,7 @@ function changeRate(index) {
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(scmMrrLine, index) in form.scmMrrLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmMrrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+              <v-select :options="materialList" placeholder="--Choose an option--" v-model="form.scmMrrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -254,24 +298,19 @@ function changeRate(index) {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].po_qty" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].po_qty" readonly class="form-input vms-readonly-input">
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].pr_qty" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].pr_qty" readonly class="form-input vms-readonly-input">
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].current_stock" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].current_stock" readonly class="form-input vms-readonly-input">
               </label>
             </td>
-            <!-- <td>
-              <label class="block w-full mt-2 text-sm">
-                
-              </label>
-            </td> -->
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">

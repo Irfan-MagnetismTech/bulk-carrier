@@ -361,5 +361,62 @@ export default [
 
     /* Material Receipt Report end */
 
+    /* Store Requisition start */
+
+    {
+        path: `/${BASE}/store-requisitions`,
+        name: `${BASE}.store-requisitions.index`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-requisitions/create`,
+        name: `${BASE}.store-requisitions.create`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-create' },
+    },
+    {
+        path: `/${BASE}/store-requisitions/:storeRequisitionId/edit`,
+        name: `${BASE}.store-requisitions.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-edit' },
+    },
+    {
+        path: `/${BASE}/store-requisitions/:storeRequisitionId`,
+        name: `${BASE}.store-requisitions.show`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-show'  },
+    },
+    /* Store Requisition end */
+
+    /* Store Issue start */
+
+    {
+        path: `/${BASE}/store-issues`,
+        name: `${BASE}.store-issues.index`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-issues/create`,
+        name: `${BASE}.store-issues.create`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-create' },
+    },
+    {
+        path: `/${BASE}/store-issues/:storeIssueId/edit`,
+        name: `${BASE}.store-issues.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-edit' },
+    },
+    {
+        path: `/${BASE}/store-issues/:storeIssueId`,
+        name: `${BASE}.store-issues.show`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-show'  },
+    },
+    /* Store Issue end */
     
 ];

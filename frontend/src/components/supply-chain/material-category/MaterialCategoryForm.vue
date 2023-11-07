@@ -79,6 +79,9 @@ watch(() => props.form, (value) => {
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
       }
+     .required-style{
+        @apply text-red-500;
+      }
       
       >>> {
         --vs-controls-color: #374151;
