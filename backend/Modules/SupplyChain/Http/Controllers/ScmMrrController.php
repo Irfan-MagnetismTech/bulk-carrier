@@ -81,10 +81,10 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+            ->with('scmMrrLines.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
             ->find($id);
 
-        $mrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
+        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
             $lines = [
                 'scm_material_id' => $scmMrrLine->scm_material_id,
                 'scmMaterial' => $scmMrrLine->scmMaterial,
@@ -103,16 +103,12 @@ class ScmMrrController extends Controller
 
             return $lines;
         });
-
-        $scmMrr = [
-            'pr_no' => $scmMrr->ref_no,
-            'scmPrLines' => $mrrLines,
-        ];
+        data_forget($scmMrr, 'scmMrrLines');
+        $scmMrr->scmMrrLines = $scmMrrLines;
 
         try {
             return response()->success('data', $scmMrr, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
