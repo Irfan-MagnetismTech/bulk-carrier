@@ -18,18 +18,26 @@ export default function useCrewDocument() {
         crw_crew_rank: '',
         crw_crew_contact: '',
         crw_crew_email: '',
-        crwDocuments: [
-            {
-                crw_crew_id: '',
-                name: '',
-                issuing_authority: '',
-                validity_period: '',
-                issue_date: '',
-                reference_no: '',
-                validity_period_in_month: '',
-                attachment: '',
-            }
-        ]
+        name: '',
+        issuing_authority: '',
+        validity_period: '',
+        validity_period_in_month: '',
+        issue_date: '',
+        expire_date: '',
+        reference_no: '',
+        attachment: '',
+        // crwDocuments: [
+        //     {
+        //         crw_crew_id: '',
+        //         name: '',
+        //         issuing_authority: '',
+        //         validity_period: '',
+        //         issue_date: '',
+        //         reference_no: '',
+        //         validity_period_in_month: '',
+        //         attachment: '',
+        //     }
+        // ]
     });
 
     const indexPage = ref(null);

@@ -253,13 +253,6 @@ onMounted(() => {
               <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
             </label>
           </div>
-          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-            <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-              <textarea type="text" v-model="form.crw_crew_rank" placeholder="Remarks" class="form-input" autocomplete="off"></textarea>
-              <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
-            </label>
-          </div>
         </fieldset>
 
         <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
@@ -349,7 +342,6 @@ onMounted(() => {
               <th class="px-4 py-3 align-bottom">Expire Date</th>
               <th class="px-4 py-3 align-bottom">Reference</th>
               <th class="px-4 py-3 align-bottom">Attachment</th>
-              <th class="px-4 py-3 align-bottom">Remarks</th>
               <th class="px-4 py-3 text-center align-bottom">Action</th>
             </tr>
             </thead>
@@ -366,9 +358,6 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <input type="file" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" placeholder="Remarks" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1 text-center">
                 <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -390,9 +379,6 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <input type="file" class="form-input" autocomplete="off" />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" placeholder="Remarks" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1 text-center">
                 <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
