@@ -12,6 +12,7 @@ use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
+use Modules\SupplyChain\Http\Controllers\ScmSrController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
@@ -27,6 +28,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'purchase-orders' => ScmPoController::class,
         'lc-records' => ScmLcRecordController::class,
         'material-receipt-reports' => ScmMrrController::class,
+        'store-requisitions' => ScmSrController::class,
     ]);
 
     //Search Apis
