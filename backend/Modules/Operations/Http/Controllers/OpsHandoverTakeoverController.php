@@ -32,7 +32,8 @@ class OpsHandoverTakeoverController extends Controller
     public function index()
     {
         try {
-            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->paginate(15);
+            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers.scmMaterial')->latest()->paginate(15);
+
             return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
@@ -77,7 +78,11 @@ class OpsHandoverTakeoverController extends Controller
     */
     public function show(OpsHandoverTakeover $handover_takeover): JsonResponse
     {
-        $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers');
+        $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers.scmMaterial');
+        $handover_takeover->opsBunkers->map(function($bunker) {
+            $bunker->bunker_name = $bunker->scmMaterial->name;
+            return $bunker;
+        });
         try
         {
             return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
