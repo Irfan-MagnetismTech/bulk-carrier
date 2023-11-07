@@ -108,8 +108,18 @@
           <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
       </div>
-    </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+          <textarea type="text" v-model="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
+          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+        </label>
+        <label class="block w-full mt-2 text-sm"></label>
+
+
+      </div>
+    </div>
     <div v-if="form.opsBunkers?.length" id="bunker-info" class="mt-5">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
         <table class="w-full whitespace-no-wrap" >
@@ -169,12 +179,9 @@
 import { ref, watch, onMounted } from "vue";
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {useStore} from "vuex";
 import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
-import usePort from "../../composables/operations/usePort";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
-import useCargoType from "../../composables/operations/useCargoType";
 
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
@@ -195,11 +202,6 @@ function fetchVessels(search, loading) {
       searchVessels(search, props.form.business_unit, loading);
 }
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
-
 function fetchCharterers(search, loading) {
       loading(true);
       searchChartererProfiles(search, loading)
@@ -218,7 +220,15 @@ watch(() => props.form.opsVessel, (value) => {
 
 watch(() => vessel, (value) => {
   if(value) {
-    props.form.opsBunkers = value?.value?.opsBunkers
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+      props.form.opsBunkers = value?.value?.opsBunkers
+    } else if(props?.formType == 'edit' && editInitiated.value != true) {
+      editInitiated.value = true;
+    }
+
+    if(props?.formType == 'create') {
+      props.form.opsBunkers = value?.value?.opsBunkers
+    }
   }
 }, { deep : true})
 
@@ -241,9 +251,9 @@ watch(() => props.form.currency, (value) => {
   }
 }, { deep: true})
 
-watch(() => props.form, (value) => {
+// watch(() => props.form, (value) => {
 
-  if(props?.formType == 'edit' && editInitiated.value != true) {
+//   if(props?.formType == 'edit' && editInitiated.value != true) {
 
   //   vessels.value = [props?.form?.opsVessel]
 
@@ -251,8 +261,8 @@ watch(() => props.form, (value) => {
   //       console.log("Changing editInitatedValue ")
   //       editInitiated.value = true
   //     }
-  }
-}, {deep: true});
+//   }
+// }, {deep: true});
 
 function calculatePrice(index) {
   console.log("changing")
