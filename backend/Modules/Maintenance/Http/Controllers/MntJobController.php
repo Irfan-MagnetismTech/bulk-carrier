@@ -353,6 +353,13 @@ class MntJobController extends Controller
             if ($returnField == "mntItem" || $returnField == "mntJobLines") {
                 $jobs = $jobs->pluck($returnField)->flatten();
             }
+            
+            $jobs =  $jobs->filter(function ($value) {
+                if($value->cycle_unit != 'Hours')
+                    return strtotime($value->next_due) > strtotime(date('Y-m-d'));
+                else 
+                    return true;
+            });
 
             // dd(DB::getQueryLog());
             return $jobs;
