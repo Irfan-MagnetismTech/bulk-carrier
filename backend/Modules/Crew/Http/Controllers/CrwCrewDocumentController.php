@@ -18,7 +18,8 @@ class CrwCrewDocumentController extends Controller
     public function index()
     {
         try {
-            $crwCrewDocuments = CrwCrewDocument::when(request()->business_unit != "ALL", function($q){
+            $crwCrewDocuments = CrwCrewDocument::when(request()->business_unit != 'ALL', function ($q)
+            {
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
@@ -37,20 +38,22 @@ class CrwCrewDocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
+    {
         try {
-            DB::transaction(function ()
+            DB::transaction(function () use ($request)
             {
-                foreach (request()->crew_documents as $documentData) {
-                    CrwCrewDocument::create($documentData);
-                }
+                $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+                $renewData         = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment');
+                $crewDocument      = CrwCrewDocument::create($documentData);
+                $crewDocumentRenew = $crewDocument->crwCrewDocumentRenewals()->createMany($renewData);
+
                 return response()->success('Updated succesfully', [], 202);
             });
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }        
+        }
     }
 
     /**
@@ -62,7 +65,7 @@ class CrwCrewDocumentController extends Controller
     public function show(CrwCrewDocument $crwCrewDocument)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewDocument, 200);
+            return response()->success('Retrieved succesfully', $crwCrewDocument->load('crwCrewDocumentRenewals'), 200);
         }
         catch (QueryException $e)
         {
@@ -82,7 +85,7 @@ class CrwCrewDocumentController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewDocument)
             {
-                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit');
+                $crwCrewDocumentData = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
                 $crwCrewDocument->update($crwCrewDocumentData);
 
                 return response()->success('Updated succesfully', $crwCrewDocument, 202);

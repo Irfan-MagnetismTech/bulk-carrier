@@ -10,7 +10,7 @@ class CrwCrewDocument extends Model
 {
     use HasFactory;
 
-	protected $fillable = ['crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit'];
+	protected $fillable = ['crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit'];
 
 	public function crwCrewDocumentRenewals(){
 		return $this->hasMany(CrwCrewDocumentRenewal::class);
@@ -19,5 +19,5 @@ class CrwCrewDocument extends Model
     public function crwCrew()
     {
         return $this->belongsTo(CrwCrew::class);
-    }  	
+    }
 }
