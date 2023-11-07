@@ -98,13 +98,11 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'getVesselExpenseHeadByVessel']);
     Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     
-    // end for search api route
-    
+    // end for search api route    
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
     
-        
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
