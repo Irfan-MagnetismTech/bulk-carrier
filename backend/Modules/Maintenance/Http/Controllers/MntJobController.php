@@ -378,31 +378,27 @@ class MntJobController extends Controller
     public function overDueJobs()
     {
         try {
-            $jobs = MntJob::with(['mntItem', 'mntJobLines'])
-                            ->Where(function($jobQuery){
-                                    $jobQuery->where('mnt_jobs.ops_vessel_id', request()->ops_vessel_id)          
-                                        ->when(request()->has('mnt_item_id'), function($qJobs){
-                                            $qJobs->where('mnt_jobs.mnt_item_id', request()->mnt_item_id);  
-                                        })
-                                        ->when(request()->business_unit != "ALL", function($q){
-                                            $q->where('mnt_jobs.business_unit', request()->business_unit);  
-                                        }); 
+            
+            $jobs = MntJob::with(['mntItem','mntJobLines'])
+                            ->where('ops_vessel_id', request()->ops_vessel_id)          
+                            ->when(request()->has('mnt_item_id'), function($qJobs){
+                                $qJobs->where('mnt_item_id', request()->mnt_item_id);  
+                            })
+                            ->when(request()->business_unit != "ALL", function($qJobs){
+                                $qJobs->where('business_unit', request()->business_unit);  
                             })
                             ->get();
-
             
             // To get the return value dynamically
             $returnField = request()->return_field ?? '';
             if ($returnField == "mntJobLines") {
                 $jobs = $jobs->pluck($returnField)->flatten();
-                // $jobsCollection = collect($jobs);
-                $jobs =  $jobs->filter(function ($value) {
-                    return $value->over_due;
-                });
-            
             }
 
-            return $jobs;
+            $jobs =  $jobs->filter(function ($value) {
+                return $value->over_due;
+            });
+            return $jobs->values();
             
         }
         catch (\Exception $e)
