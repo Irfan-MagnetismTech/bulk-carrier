@@ -76,7 +76,7 @@ class MntItemController extends Controller
     {
         try {
             
-            $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups'])->find($id);
+            $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups','mntJobs'])->find($id);
 
             $item['description'] = json_decode($item['description']);
             
