@@ -2,14 +2,22 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
 
 class CrwCrewDocumentController extends Controller
 {
+
+    public function __construct(private FileUploadService $fileUpload)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +31,7 @@ class CrwCrewDocumentController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $crwCrewDocuments, 200);
+            return response()->success('Retrieved Successfully', $crwCrewDocuments, 200);
         }
         catch (QueryException $e)
         {
@@ -44,10 +52,21 @@ class CrwCrewDocumentController extends Controller
             {
                 $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
                 $renewData         = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment');
-                $crewDocument      = CrwCrewDocument::create($documentData);
-                $crewDocumentRenew = $crewDocument->crwCrewDocumentRenewals()->createMany($renewData);
 
-                return response()->success('Updated succesfully', [], 202);
+                $documentData = json_decode($request->get('data'),true);
+                $renewData = json_decode($request->get('data'),true);
+                $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
+
+                $configData = Config::get('crew.crew_document_validity_period');
+
+                if (array_key_exists($documentData['validity_period_in_month'], $configData)) {
+                    $documentData['validity_period'] = $configData[$documentData['validity_period_in_month']];
+                }
+
+                $crewDocument      = CrwCrewDocument::create($documentData);
+                $crewDocumentRenew = $crewDocument->crwCrewDocumentRenewals()->createMany([$renewData]);
+
+                return response()->success('Updated successfully', [], 202);
             });
         }
         catch (QueryException $e)

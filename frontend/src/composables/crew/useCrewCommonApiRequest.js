@@ -11,6 +11,7 @@ export default function useCrewCommonApiRequest() {
     const crwAgencyContracts = ref([]);
     const crews = ref([]);
     const recruitmentApprovals = ref([]);
+    const crewDocuments = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -123,17 +124,41 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
+    async function getCrewDocuments(businessUnit = null,crewId = null) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'business_unit': businessUnit,
+            'crw_crew_id': crewId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-crew-documents', form);
+            crewDocuments.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         crwRankLists,
         crwAgencies,
         crwAgencyContracts,
         crews,
         recruitmentApprovals,
+        crewDocuments,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
         getCrews,
         getRecruitmentApprovals,
+        getCrewDocuments,
         isLoading,
         errors,
     };

@@ -7,6 +7,8 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewDocument() {
     const router = useRouter();
     const crewDocuments = ref([]);
+    const crewRenewDocuments = ref([]);
+    const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
@@ -21,12 +23,12 @@ export default function useCrewDocument() {
         name: '',
         issuing_authority: '',
         validity_period: '',
+        issue_date: null,
+        expire_date: null,
+        reference_no: null,
         validity_period_in_month: '',
-        issue_date: '',
-        expire_date: '',
-        reference_no: '',
         attachment: '',
-        // crwDocuments: [
+        // crwCrewDocumentRenewals: [
         //     {
         //         crw_crew_id: '',
         //         name: '',
@@ -83,7 +85,7 @@ export default function useCrewDocument() {
 
         try {
             const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
-            crewDocuments.value = data.value;
+            crewDocument.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.documents.index" });
         } catch (error) {
@@ -93,6 +95,7 @@ export default function useCrewDocument() {
             loader.hide();
             isLoading.value = false;
         }
+
     }
 
     async function showCrewDocument(documentId) {
@@ -158,13 +161,40 @@ export default function useCrewDocument() {
         }
     }
 
+    async function storeCrewRenewDocument(form, currentCrewDocRenewData) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('data', JSON.stringify(form));
+
+        try {
+            const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
+            crewDocument.value = data.value;
+            notification.showSuccess(status);
+            //await router.push({ name: "crw.documents.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+
+    }
+
     return {
         crewDocuments,
         crewDocument,
         isCrewDocumentAddModalOpen,
         isCrewDocumentRenewModalOpen,
+        crewRenewDocuments,
+        crewRenewDocument,
         getCrewDocuments,
         storeCrewDocument,
+        storeCrewRenewDocument,
         showCrewDocument,
         updateCrewDocument,
         deleteCrewDocument,
