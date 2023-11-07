@@ -25,6 +25,7 @@ class MntWorkRequisitionController extends Controller
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
+                        ->where('status', 0)
                         ->latest()
                         ->paginate(10);
 
@@ -48,7 +49,7 @@ class MntWorkRequisitionController extends Controller
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
-                        ->where('status', 1)
+                        ->where('status', request()->status)
                         ->latest()
                         ->paginate(10);
 
