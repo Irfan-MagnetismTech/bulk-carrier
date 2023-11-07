@@ -11,6 +11,7 @@ export default function useCrewDocument() {
     const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
+    const currentCrewDocRenewData = ref(null);
     const $loading = useLoading();
     const notification = useNotification();
     const crewDocument = ref( {
@@ -171,10 +172,9 @@ export default function useCrewDocument() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
-            crewDocument.value = data.value;
+            const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
+            currentCrewDocRenewData.crwCrewDocumentRenewals = data.value;
             notification.showSuccess(status);
-            //await router.push({ name: "crw.documents.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -185,6 +185,32 @@ export default function useCrewDocument() {
 
     }
 
+    async function updateCrewRenewDocument(form,index) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
+        try {
+            const { data, status } = await Api.post(
+                `/crw/crw-crew-document-renewals/${form.id}`,
+                formData
+            );
+            currentCrewDocRenewData.crwCrewDocumentRenewals[index] = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         crewDocuments,
         crewDocument,
@@ -192,9 +218,11 @@ export default function useCrewDocument() {
         isCrewDocumentRenewModalOpen,
         crewRenewDocuments,
         crewRenewDocument,
+        currentCrewDocRenewData,
         getCrewDocuments,
         storeCrewDocument,
         storeCrewRenewDocument,
+        updateCrewRenewDocument,
         showCrewDocument,
         updateCrewDocument,
         deleteCrewDocument,

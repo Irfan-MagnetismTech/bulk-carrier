@@ -29,7 +29,9 @@ class CrwCrewDocumentRenewalController extends Controller
             $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
             $crwCrewDocumentRenewal  = CrwCrewDocumentRenewal::create($renewData);
 
-            return response()->success('Updated successfully', $crwCrewDocumentRenewal, 202);
+            $allCrewRenewData = CrwCrewDocumentRenewal::where('crw_crew_document_id',$renewData['crw_crew_document_id'])->get();
+
+            return response()->success('Created successfully', $allCrewRenewData, 202);
         }
         catch (QueryException $e)
         {

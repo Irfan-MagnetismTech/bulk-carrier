@@ -7,7 +7,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useCrewDocument from "../../composables/crew/useCrewDocument";
 const { crews, getCrews, crewDocuments, getCrewDocuments } = useCrewCommonApiRequest();
-const { isCrewDocumentAddModalOpen, isCrewDocumentRenewModalOpen, storeCrewDocument, storeCrewRenewDocument } = useCrewDocument();
+const { isCrewDocumentAddModalOpen, isCrewDocumentRenewModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData } = useCrewDocument();
 import env from '../../config/env';
 
 const props = defineProps({
@@ -18,7 +18,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-let currentCrewDocRenewData = ref(null);
+
 let renewFormData = ref({
   crw_crew_document_id: '',
   issue_date: '',
@@ -56,13 +56,12 @@ function openCrewDocumentAddModal(){
 function showCrewDocumentRenewModal(crwDocumentData){
   isCrewDocumentRenewModalOpen.value = 1;
   currentCrewDocRenewData.value = crwDocumentData;
-  renewFormData.crw_crew_document_id = crwDocumentData.crw_crew_document_id;
+  renewFormData.value.crw_crew_document_id = crwDocumentData.id;
 }
 
 function closeCrewDocumentRenewModal(){
   isCrewDocumentRenewModalOpen.value = 0;
   currentCrewDocRenewData.value = null;
-  renewFormData.value = null;
 }
 
 const selectedFile = (event) => {
@@ -74,7 +73,11 @@ const selectedRenewFile = (event) => {
 };
 
 function saveRenewData(){
-  storeCrewRenewDocument(renewFormData,currentCrewDocRenewData.value);
+  storeCrewRenewDocument(renewFormData.value,currentCrewDocRenewData.value);
+}
+
+function updateCrewDocumentRenewData(singleRenewData,index){
+  updateCrewRenewDocument(singleRenewData,index);
 }
 
 onMounted(() => {
@@ -375,7 +378,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1 text-center">
                 <div class="flex items-center gap-1">
-                  <button type="button" @click="openCrewDocumentAddModal()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <button type="button" @click="updateCrewDocumentRenewData(currentCrewDocRenewData.crwCrewDocumentRenewals[renewDataIndex],renewDataIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     Update
                   </button>
                   <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
