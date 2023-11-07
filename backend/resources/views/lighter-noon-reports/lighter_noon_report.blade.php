@@ -21,15 +21,15 @@
 </style>
 <body>    
     <table>
-        <tr rowspan="3">
-            <th colspan="13" style="text-align: center; 
+        <tr>
+            <td colspan="13" style="text-align: center; 
             font-size:20px; 
-            padding:10px;"><h2>LIGHTER NOON REPORT</h2></th>
+            padding:10px;"><h2>LIGHTER NOON REPORT</h2></td>
         </tr>
-        {{-- <tr rowspan="2">
-            <td colspan="13">TOGGI SHIPPING & LOGISTIC</td>
-        </tr> --}}
-
+        <tr>
+            <td colspan="13" style="text-align: center;">TOGGI SHIPPING AND LOGISTIC</td>
+        </tr>
+        <tr></tr>
         <tr>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">DATE</th>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">SHIP NAME</th>
@@ -56,12 +56,11 @@
                     <td>{{ $lighter_noon_report?->next_port}} </td>
                     <td>{{ $lighter_noon_report?->noon_position}} </td>
                     <td>{{ $lighter_noon_report?->status}} </td>
-                    <td> </td>
+                    <td>{{ $lighter_noon_report?->bunkering}} </td>
                     <td>{{ $lighter_noon_report?->engine_running_hours}} </td>
-                    <td>{{ $lighter_noon_report?->opsBunkers?->fuel_con_24h}} </td>
-                    <td></td>
-                    <td>{{ $lighter_noon_report?->remarks}} </td>
-                    
+                    <td>{{ $lighter_noon_report?->fuel_con_24h}} </td>
+                    <td>{{ $lighter_noon_report?->fuel_stock_l}} </td>
+                    <td>{{ $lighter_noon_report?->remarks}} </td>                    
                 </tr>
             @endforeach
         @else

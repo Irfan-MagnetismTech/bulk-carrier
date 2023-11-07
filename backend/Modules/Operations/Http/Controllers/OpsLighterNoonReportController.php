@@ -146,13 +146,17 @@ class OpsLighterNoonReportController extends Controller
      }
      
 
-     public function exportLighterNoonReport(Request $request)
-     {
-         $lighter_noon_report = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->where('id', $request->id)
-         ->first();
+    public function exportLighterNoonReport(Request $request)
+    {
+        $lighter_noon_report = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->where('id', $request->id)
+        ->first();
+        
+        if(isset($lighter_noon_report)){
+            $lighter_noon_report['fuel_con_24h']= $lighter_noon_report->opsBunker->sum('fuel_con_24h');
+            $lighter_noon_report['fuel_stock_l']= $lighter_noon_report->opsBunker->sum('fuel_stock_l');
+        }
 
-        //  dd($lighter_noon_report);
-         return Excel::download(new LighterNoonReportExport($lighter_noon_report), 'LighterNoonReport.xlsx');
-         
-     }
+        return Excel::download(new LighterNoonReportExport($lighter_noon_report), 'LighterNoonReport.xlsx');
+        
+    }
 }

@@ -29,6 +29,8 @@ class OpsBunker extends Model
         'amount_bdt',
         'fuel_con_24h',
         'fuel_con_voyage',
+        'fuel_stock_l',
+        'bunkering',
         'currency',
         'status',
     ];
