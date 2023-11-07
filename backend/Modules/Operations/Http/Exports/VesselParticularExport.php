@@ -25,7 +25,8 @@ class VesselParticularExport implements FromView
 
     public function view(): View {
         return view('vessel-particulars.vessel_particular')->with([
-            'vesselParticular' => $this->vesselParticular,
+            'vesselParticular' => $this->vesselParticular,            
+            'companyName' => 'TOGGI SHIPPING & LOGISTIC',
         ]);
     }
 

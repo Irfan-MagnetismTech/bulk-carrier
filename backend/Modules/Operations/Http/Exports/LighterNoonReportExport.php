@@ -25,6 +25,7 @@ class LighterNoonReportExport implements FromView
     public function view(): View {
         return view('lighter-noon-reports.lighter_noon_report')->with([
             'lighter_noon_reports' => $this->lighter_noon_reports,
+            'companyName' => 'TOGGI SHIPPING & LOGISTIC',
         ]);
     }
 

@@ -13,6 +13,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Http\Exports\LighterNoonReportExport;
 use Modules\Operations\Http\Requests\OpsLighterNoonReportRequest;
+use Modules\Operations\Entities\OpsVessel;
 
 class OpsLighterNoonReportController extends Controller
 {
@@ -148,15 +149,27 @@ class OpsLighterNoonReportController extends Controller
 
     public function exportLighterNoonReport(Request $request)
     {
-        $lighter_noon_report = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->where('id', $request->id)
-        ->first();
+        $lighter_noon_reports['data'] = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
+        ->where('id', $request->id)
+        ->where('ops_vessel_id', $request->vessel_id)
+        ->when(request()->month != null, function($q){
+            $q->whereMonth('date', '=', request()->month);  
+        })        
+        ->get();
         
-        if(isset($lighter_noon_report)){
-            $lighter_noon_report['fuel_con_24h']= $lighter_noon_report->opsBunker->sum('fuel_con_24h');
-            $lighter_noon_report['fuel_stock_l']= $lighter_noon_report->opsBunker->sum('fuel_stock_l');
+        $vessel= OpsVessel::find($request->vessel_id);
+        
+        if(isset($lighter_noon_reports)){
+            $lighter_noon_reports['data']->map(function($lighter_noon_report) {               
+                $lighter_noon_report->fuel_con_24h= $lighter_noon_report->opsBunker->sum('fuel_con_24h');
+                $lighter_noon_report->fuel_stock_l= $lighter_noon_report->opsBunker->sum('fuel_stock_l');
+                return $lighter_noon_report;
+            });
         }
 
-        return Excel::download(new LighterNoonReportExport($lighter_noon_report), 'LighterNoonReport.xlsx');
+        $lighter_noon_reports['vessel_name']=$vessel->name;
+        // dd();
+        return Excel::download(new LighterNoonReportExport($lighter_noon_reports), 'LighterNoonReport.xlsx');
         
     }
 }
