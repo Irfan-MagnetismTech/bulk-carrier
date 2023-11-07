@@ -80,7 +80,7 @@ class OpsHandoverTakeoverController extends Controller
     {
         $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers.scmMaterial');
         $handover_takeover->opsBunkers->map(function($bunker) {
-            $bunker->bunker_name = $bunker->scmMaterial->name;
+            $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
         });
         try

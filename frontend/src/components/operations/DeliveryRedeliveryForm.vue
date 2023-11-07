@@ -147,13 +147,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="Quantity" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="Quantity" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsBunkers[index]?.rate" :errors="errors.opsBunkers[index]?.rate"/>
                 </label>
               </td>
@@ -219,6 +219,7 @@ watch(() => props.form.opsVessel, (value) => {
 }, { deep: true})
 
 watch(() => vessel, (value) => {
+  console.log("vessel change ")
   if(value) {
     if(props?.formType == 'edit' && editInitiated.value == true) {
       props.form.opsBunkers = value?.value?.opsBunkers
@@ -244,28 +245,45 @@ watch(() => props.form.opsChartererProfile, (value) => {
 }, { deep: true})
 
 watch(() => props.form.currency, (value) => {
+  console.log("currency change ")
+
   if(value) {
-    for(const bunker of props.form.opsBunkers) {
-      bunker.rate = 0;
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+
+      for(const bunker of props.form.opsBunkers) {
+        bunker.rate = 0;
+      }
+    }
+
+    if(props?.formType == 'create') {
+
+      for(const bunker of props.form.opsBunkers) {
+        bunker.rate = 0;
+      }
     }
   }
 }, { deep: true})
 
-// watch(() => props.form, (value) => {
+watch(() => props.form.exchange_rate, (value) => {
+console.log("exchange rate changing")
+  if(value) {
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
 
-//   if(props?.formType == 'edit' && editInitiated.value != true) {
+    if(props?.formType == 'create') {
 
-  //   vessels.value = [props?.form?.opsVessel]
-
-  //   if(vessels.value.length > 0) {
-  //       console.log("Changing editInitatedValue ")
-  //       editInitiated.value = true
-  //     }
-//   }
-// }, {deep: true});
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
+  }
+}, {deep: true});
 
 function calculatePrice(index) {
-  console.log("changing")
+  console.log("calculate price")
   let quantity = props.form.opsBunkers[index].quantity ?? 0;
   let rate = props.form.opsBunkers[index].rate ?? 0;
   let exchangeRate = props.form.exchange_rate ?? 0;
