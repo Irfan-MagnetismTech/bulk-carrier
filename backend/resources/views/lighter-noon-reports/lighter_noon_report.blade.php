@@ -24,7 +24,7 @@
         <tr>
             <td colspan="13" style="text-align: center; 
             font-size:20px; 
-            padding:10px;"><h2>DAILY STATUS OF {{(($lighter_noon_reports)? ($lighter_noon_reports['vessel_name']): 'Toggi Shipping')}}</h2></td>
+            padding:10px;"><h2>DAILY STATUS {{(($lighter_noon_reports['vessel_name'])? 'OF '. (ucwords($lighter_noon_reports['vessel_name'])): 'OF Toggi Shipping')}}</h2></td>
         </tr>
         <tr>
             <td colspan="13" style="text-align: center;">{{ html_entity_decode($companyName, ENT_QUOTES, 'UTF-8') }}</td>
@@ -45,7 +45,8 @@
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">FUEL-STOCK/L</th>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">REMARKS</th>
         </tr>
-        @if(isset($lighter_noon_reports['data']))
+        
+        @if(count($lighter_noon_reports['data'])>0)
             @foreach ($lighter_noon_reports['data'] as $lighter_noon_report)
                 <tr>
                     <td>{{date("d-M-Y", strtotime($lighter_noon_report?->date))}}</td>

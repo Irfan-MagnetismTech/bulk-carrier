@@ -20,7 +20,7 @@
     <table>
         <tr rowspan="3">
             <th colspan="11" style="text-align: center; 
-            font-size:20px; 
+            font-size:20px;
             padding:10px;"><h2>PRINCIPAL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->name}} @endif</h2></th>
         </tr>
         <tr>

@@ -151,13 +151,18 @@ class OpsLighterNoonReportController extends Controller
     {
         $lighter_noon_reports['data'] = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
         ->where('id', $request->id)
-        ->where('ops_vessel_id', $request->vessel_id)
+        ->when(isset(request()->vessel_id), function($q){
+            $q->where('ops_vessel_id', request()->vessel_id);  
+        })   
         ->when(request()->month != null, function($q){
             $q->whereMonth('date', '=', request()->month);  
         })        
         ->get();
-        
-        $vessel= OpsVessel::find($request->vessel_id);
+
+        $vessel=null;
+        if($request->vessel_id){
+            $vessel= OpsVessel::find($request->vessel_id);
+        }
         
         if(isset($lighter_noon_reports)){
             $lighter_noon_reports['data']->map(function($lighter_noon_report) {               
@@ -167,8 +172,8 @@ class OpsLighterNoonReportController extends Controller
             });
         }
 
-        $lighter_noon_reports['vessel_name']=$vessel->name;
-        // dd();
+        $lighter_noon_reports['vessel_name']=$vessel?->name;
+
         return Excel::download(new LighterNoonReportExport($lighter_noon_reports), 'LighterNoonReport.xlsx');
         
     }
