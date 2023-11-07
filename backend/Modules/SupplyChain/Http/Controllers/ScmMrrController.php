@@ -11,6 +11,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPoLine;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
@@ -81,10 +82,10 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+            ->with('scmMrrLines.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
             ->find($id);
 
-        $mrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
+        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
             $lines = [
                 'scm_material_id' => $scmMrrLine->scm_material_id,
                 'scmMaterial' => $scmMrrLine->scmMaterial,
@@ -103,16 +104,12 @@ class ScmMrrController extends Controller
 
             return $lines;
         });
-
-        $scmMrr = [
-            'pr_no' => $scmMrr->ref_no,
-            'scmPrLines' => $mrrLines,
-        ];
+        data_forget($scmMrr, 'scmMrrLines');
+        $scmMrr->scmMrrLines = $scmMrrLines;
 
         try {
             return response()->success('data', $scmMrr, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -279,16 +276,50 @@ class ScmMrrController extends Controller
      */
     public function getMaterialByPrId(): JsonResponse
     {
-        $prMaterials = ScmPoLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', request()->pr_id)
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['brand'] = $item->brand;
-                $data['model'] = $item->model;
-                return $data;
-            });
-        return response()->success('data list', $prMaterials, 200);
+        if (!request()->scm_po_id) {
+            $prMaterials = ScmPrLine::query()
+                ->with('scmMaterial')
+                ->where('scm_pr_id', request()->scm_pr_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['unit'] = $item->unit;
+                    $data['quantity'] = $item->quantity;
+                    $data['pr_qty'] = $item->quantity;
+                    $data['po_qty'] = 0;
+                    $data['rate'] = 0;
+                    $data['net_rate'] = 0;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['po_composite_key'] = null;
+                    $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    return $data;
+                });
+            return response()->success('data list', $prMaterials, 200);
+        }
+        
+        if (request()->scm_po_id) {
+            $prMaterials = ScmPoLine::query()
+                ->with('scmMaterial', 'scmPrLine')
+                ->where('scm_po_id', request()->scm_po_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['unit'] = $item->unit;
+                    $data['quantity'] = $item->quantity;
+                    $data['po_qty'] = $item->quantity;
+                    $data['pr_qty'] = $item->scmPrLine->quantity;
+                    $data['rate'] = $item->rate;
+                    $data['net_rate'] = $item->net_rate;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['po_composite_key'] = $item->po_composite_key;
+                    $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    return $data;
+                });
+            return response()->success('data list', $prMaterials, 200);
+        }
     }
 }
