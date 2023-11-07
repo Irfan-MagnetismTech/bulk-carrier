@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -9,11 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVessel;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Http\Exports\LighterNoonReportExport;
 use Modules\Operations\Http\Requests\OpsLighterNoonReportRequest;
-use Modules\Operations\Entities\OpsVessel;
 
 class OpsLighterNoonReportController extends Controller
 {
@@ -156,6 +157,11 @@ class OpsLighterNoonReportController extends Controller
         })   
         ->when(request()->month != null, function($q){
             $q->whereMonth('date', '=', request()->month);  
+        })        
+        ->when([request()->from_date != null && request()->till_date != null], function($q){
+            // $q->whereBetween('date', [request()->from_date,request()->till_date]);  
+            $q->whereDate('created_at', '>=', Carbon::parse(request()->from_date))
+                ->whereDate('created_at', '<=', Carbon::parse(request()->till_date));  
         })        
         ->get();
 

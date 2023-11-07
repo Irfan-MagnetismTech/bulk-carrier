@@ -29,7 +29,14 @@
         <tr>
             <td colspan="13" style="text-align: center;">{{ html_entity_decode($companyName, ENT_QUOTES, 'UTF-8') }}</td>
         </tr>
-        <tr></tr>
+        <tr>
+            <td colspan="10" style="text-align: right;">Date:</td>
+            <td colspan="3">{{ now()->format('d-M-Y') }}</td>
+        </tr>
+        <tr>
+            <td colspan="10" style="text-align: right;">Time:</td>
+            <td colspan="3">{{ now()->format('g:i A') }}</td>
+        </tr>
         <tr>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">DATE</th>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">SHIP NAME</th>
