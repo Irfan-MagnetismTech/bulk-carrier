@@ -28,9 +28,9 @@ class ScmSrController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_vendors = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
+            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
 
-            return response()->success('Data list', $scm_vendors, 200);
+            return response()->success('Data list', $storeRequisitions, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

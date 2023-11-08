@@ -19,4 +19,9 @@ class ScmSiLine extends Model
     {
         return $this->belongsTo(ScmMaterial::class);
     }
+
+    public function scmSrLine(): BelongsTo
+    {
+        return $this->belongsTo(ScmSrLine::class, 'sr_composite_key', 'sr_composite_key');
+    }
 }

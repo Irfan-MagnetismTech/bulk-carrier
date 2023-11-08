@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('scm_sis', function (Blueprint $table) {
             $table->id();
             $table->string('ref_no')->nullable();
-            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses')->nullable();
-            $table->foreignId('scm_sr_id')->constrained('scm_srs')->nullable();
+            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
+            $table->foreignId('scm_sr_id')->constrained('scm_srs');
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->bigInteger('department_id')->nullable();
             $table->date('date')->nullable();

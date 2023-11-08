@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Http\Requests\ScmSrRequest;
+use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Http\Requests\ScmSiRequest;
 
-class ScmSrController extends Controller
+class ScmSiController extends Controller
 {
     function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
     {
@@ -28,9 +30,9 @@ class ScmSrController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_vendors = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
+            $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
 
-            return response()->success('Data list', $scm_vendors, 200);
+            return response()->success('Data list', $storeIssues, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -41,26 +43,26 @@ class ScmSrController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmSrRequest $request): JsonResponse
+    public function store(ScmSiRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSr::class, 'SR');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmSi::class, 'SI');
 
 
 
         try {
             DB::beginTransaction();
 
-            $scmSr = ScmSr::create($request->all());
+            $scmSi = ScmSi::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
 
-            $scmSr->scmSrLines()->createMany($linesData);
+            $scmSi->scmSiLines()->createMany($linesData);
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $scmSr, 201);
+            return response()->success('Data created succesfully', $scmSi, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -70,13 +72,31 @@ class ScmSrController extends Controller
 
     /**
      * Show the specified resource.
-     * @param ScmSr $storeRequisition
+     * @param ScmSi $storeIssue
      * @return JsonResponse
      */
-    public function show(ScmSr $storeRequisition): JsonResponse
+    public function show(ScmSi $storeIssue): JsonResponse
     {
         try {
-            return response()->success('data', $storeRequisition->load('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy'), 200);
+            $storeIssue->load('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSr');
+
+            $scmSiLines = $storeIssue->scmSiLines->map(function ($scmSiLine) use ($storeIssue) {
+                $lines = [
+                    'scm_material_id' => $scmSiLine->scm_material_id,
+                    'scmMaterial' => $scmSiLine->scmMaterial,
+                    'unit' => $scmSiLine->unit,
+                    'quantity' => $scmSiLine->quantity,
+                    'sr_quantity' => $scmSiLine->scmSrLine->quantity,
+                    'current_stock' => (new CurrentStock)->count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id),
+                    'sr_composite_key' => $scmSiLine->sr_composite_key ?? null,
+                ];
+
+                return $lines;
+            });
+            data_forget($storeIssue, 'scmSiLines');
+            $storeIssue->scmSiLines = $scmSiLines;
+
+            return response()->success('Data updated sucessfully!', $storeIssue, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -85,22 +105,24 @@ class ScmSrController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param ScmSrRequest $request
-     * @param ScmSr $storeRequisition
+     * @param ScmSiRequest $request
+     * @param ScmSi $storeIssue
      * @return JsonResponse
      */
-    public function update(ScmSrRequest $request, ScmSr $storeRequisition): JsonResponse
+    public function update(ScmSiRequest $request, ScmSi $storeIssue): JsonResponse
     {
+        $requestData = $request->except('ref_no', 'sr_composite_key');
+
         try {
-            $storeRequisition->update($request->all());
+            $storeIssue->update($requestData);
 
-            $storeRequisition->scmSrLines()->delete();
+            $storeIssue->scmSiLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $storeIssue->id, 'scm_material_id', 'si');
 
-            $storeRequisition->scmSrLines()->createMany($linesData);
+            $storeIssue->scmSiLines()->createMany($linesData);
 
-            return response()->success('Data updated sucessfully!', $storeRequisition, 202);
+            return response()->success('Data updated sucessfully!', $storeIssue, 202);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -109,14 +131,14 @@ class ScmSrController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param ScmSr $storeRequisition
+     * @param ScmSi $storeIssue
      * @return JsonResponse
      */
-    public function destroy(ScmSr $storeRequisition): JsonResponse
+    public function destroy(ScmSi $storeIssue): JsonResponse
     {
         try {
-            $storeRequisition->scmSrLines()->delete();
-            $storeRequisition->delete();
+            $storeIssue->scmSrLines()->delete();
+            $storeIssue->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
@@ -125,15 +147,50 @@ class ScmSrController extends Controller
         }
     }
 
-    public function searchVendor(Request $request): JsonResponse
+    public function getSrWiseData(Request $request): JsonResponse
     {
-        $storeRequisitions = ScmSr::query()
-            ->with('scmSrLines')
-            ->where('name', 'like', "%$request->searchParam%")
-            ->orderByDesc('name')
-            ->limit(10)
-            ->get();
+        try {
+            if ($request->sr_id != null) {
+                $scmSr = ScmSr::query()
+                    ->with([
+                        'scmWarehouse',
+                        'scmSrLines.scmMaterial',
+                    ])
+                    ->where('id', $request->sr_id)
+                    ->first();
 
-        return response()->success('Search result', $storeRequisitions, 200);
+                $data = [
+                    'scmWarehouse' => $scmSr->scmWarehouse,
+                    'scm_warehouse_id' => $scmSr->scm_warehouse_id,
+                    'scm_department_id' => $scmSr->scm_department_id,
+                    'scm_sr_id' => $scmSr->id,
+                    'scmSr' => $scmSr,
+                    'sr_date' => $scmSr->date,
+                    'acc_cost_center_id' => $scmSr->acc_cost_center_id,
+                    'business_unit' => $scmSr->business_unit,
+                    'scmSiLines' => $scmSr->scmSrLines->map(function ($item) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'quantity' => $item->quantity,
+                            'sr_quantity' => $item->quantity,
+                            'sr_composite_key' => $item->sr_composite_key,
+                            // 'rate' => $item->rate,
+                            // 'total_price' => $item->total_price
+                        ];
+                    })
+                ];
+            } else {
+                // $scmCs = ScmCs::query()
+                // ->with('scmWarehouse', 'scmSr')
+                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
+                // ->get();
+            }
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
