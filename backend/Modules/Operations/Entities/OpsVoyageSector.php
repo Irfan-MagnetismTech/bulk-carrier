@@ -23,6 +23,7 @@ class OpsVoyageSector extends Model
         'final_survey_qty',
         'final_received_qty',
         'boat_note_qty',
+        'latest_qty',
         'business_unit'
     ];
 

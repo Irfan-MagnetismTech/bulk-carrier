@@ -154,15 +154,14 @@ class OpsLighterNoonReportController extends Controller
         ->where('id', $request->id)
         ->when(isset(request()->vessel_id), function($q){
             $q->where('ops_vessel_id', request()->vessel_id);  
-        })   
+        })
         ->when(request()->month != null, function($q){
             $q->whereMonth('date', '=', request()->month);  
-        })        
-        ->when([request()->from_date != null && request()->till_date != null], function($q){
-            // $q->whereBetween('date', [request()->from_date,request()->till_date]);  
-            $q->whereDate('created_at', '>=', Carbon::parse(request()->from_date))
-                ->whereDate('created_at', '<=', Carbon::parse(request()->till_date));  
-        })        
+        })
+        ->when(request()->from_date && request()->till_date, function ($query) {
+            $query->whereDate('date', '>=', Carbon::parse(request()->from_date))
+                  ->whereDate('date', '<=', Carbon::parse(request()->till_date));
+        })
         ->get();
 
         $vessel=null;

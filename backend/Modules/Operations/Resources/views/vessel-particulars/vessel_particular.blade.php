@@ -27,12 +27,12 @@
             <td colspan="11" style="text-align: center;">{{ html_entity_decode($companyName, ENT_QUOTES, 'UTF-8') }}</td>
         </tr>
         <tr>
-            <td colspan="8" style="text-align: right;">Date:</td>
-            <td colspan="3">{{ now()->format('d-M-Y') }}</td>
+            <td colspan="9" style="text-align: right;">Date:</td>
+            <td colspan="2">{{ now()->format('d-M-Y') }}</td>
         </tr>
         <tr>
-            <td colspan="8" style="text-align: right;">Time:</td>
-            <td colspan="3">{{ now()->format('g:i A') }}</td>
+            <td colspan="9" style="text-align: right;">Time:</td>
+            <td colspan="2">{{ now()->format('g:i A') }}</td>
         </tr>
         @if(isset($vesselParticular))
             <tr>

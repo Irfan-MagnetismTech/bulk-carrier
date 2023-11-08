@@ -24,18 +24,18 @@
         <tr>
             <td colspan="13" style="text-align: center; 
             font-size:20px; 
-            padding:10px;"><h2>DAILY STATUS {{(($lighter_noon_reports['vessel_name'])? 'OF '. (ucwords($lighter_noon_reports['vessel_name'])): 'OF Toggi Shipping')}}</h2></td>
+            padding:10px;"><h2>DAILY STATUS {{(($lighter_noon_reports['vessel_name'])? 'OF '. (ucwords($lighter_noon_reports['vessel_name'])): 'OF TOGGI SHIPPING')}}</h2></td>
         </tr>
         <tr>
             <td colspan="13" style="text-align: center;">{{ html_entity_decode($companyName, ENT_QUOTES, 'UTF-8') }}</td>
         </tr>
         <tr>
-            <td colspan="10" style="text-align: right;">Date:</td>
-            <td colspan="3">{{ now()->format('d-M-Y') }}</td>
+            <td colspan="11" style="text-align: right;">Date:</td>
+            <td colspan="2">{{ now()->format('d-M-Y') }}</td>
         </tr>
         <tr>
-            <td colspan="10" style="text-align: right;">Time:</td>
-            <td colspan="3">{{ now()->format('g:i A') }}</td>
+            <td colspan="11" style="text-align: right;">Time:</td>
+            <td colspan="2">{{ now()->format('g:i A') }}</td>
         </tr>
         <tr>
             <th style="background-color: blue; color:white; white-space: normal; word-wrap: break-word; text-align: center; vertical-align: middle;">DATE</th>

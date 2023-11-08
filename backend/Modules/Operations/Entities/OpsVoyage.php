@@ -14,6 +14,7 @@ class OpsVoyage extends Model
         'ops_customer_id',
         'ops_vessel_id',
         'mother_vessel',
+        'ops_cargo_tariff_id',
         'ops_cargo_type_id',
         'voyage_sequence',
         'voyage_no',
@@ -44,6 +45,10 @@ class OpsVoyage extends Model
     public function opsCargoType()
     {
         return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
+    }
+    public function opsVoyageExpenditure()
+    {
+        return $this->belongsTo(OpsVoyageExpenditure::class);
     }
 
     public function opsVoyageSectors()

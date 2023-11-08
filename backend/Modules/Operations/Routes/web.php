@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
+use Modules\Operations\Http\Controllers\OpsVoyageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,7 @@ use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 Route::prefix('operations')->group(function() {
     // Route::get('/', 'OperationsController@index');  
     Route::get('export-lighter-noon-report', [OpsLighterNoonReportController::class, 'exportLighterNoonReport']);
+    Route::get('export-voyage-report', [OpsVoyageController::class, 'exportVoyageReport']);
 });
 // Route::resources([
 //     'ports' => OpsPortController::class,

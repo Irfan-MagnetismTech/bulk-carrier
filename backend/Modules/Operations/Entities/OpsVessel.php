@@ -83,6 +83,12 @@ class OpsVessel extends Model
     {
         return $this->hasMany(OpsVoyage::class);
     }
+    
+    public function opsCargoTariff()
+    {
+        return $this->hasMany(OpsCargoTariff::class);
+    }
+
     public function opsMonthWiseExpenseReport()
     {
         return $this->hasMany(OpsMonthWiseExpenseReport::class);

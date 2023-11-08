@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Http\Requests\OpsExpenseHeadRequest;
-use Illuminate\Support\Facades\DB;
 
 class OpsExpenseHeadController extends Controller
 {
@@ -64,7 +65,7 @@ class OpsExpenseHeadController extends Controller
             $head = OpsExpenseHead::create(['name' => $request->name,'business_unit'=> $request ->business_unit, 'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report]);
 
             if(!empty($actualSubHeads)) {
-                $subHeads = collect($request->opsSubHeads)->map(function($item, $key) use ($head)
+                $subHeads = collect($request->opsSubHeads)->map(function($item, $key) use ($head,$request)
                 {
                     return [
                         'name' => $item['name'],
@@ -78,7 +79,7 @@ class OpsExpenseHeadController extends Controller
                 OpsExpenseHead::insert($subHeads);
             }
             DB::commit();
-            return response()->success('Expense head added successfully.', $expenseHead, 201);
+            return response()->success('Expense head added successfully.', $head, 201);
         }
             catch (QueryException $e)
         {
@@ -98,7 +99,7 @@ class OpsExpenseHeadController extends Controller
         
          try
          {
-             return response()->success('Successfully retrieved expense head.', $voyageExpenditureHead->load('opsSubHeads'), 200);
+             return response()->success('Successfully retrieved expense head.', $expense_head->load('opsSubHeads'), 200);
          }
          catch (QueryException $e)
          {
