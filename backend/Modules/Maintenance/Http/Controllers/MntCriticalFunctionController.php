@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntCriticalFunction;
+use Modules\Maintenance\Http\Requests\MntCriticalFunctionRequest;
 
 class MntCriticalFunctionController extends Controller
 {
@@ -42,7 +43,7 @@ class MntCriticalFunctionController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalFunctionRequest $request)
     {
         try {
             $input = $request->all();
@@ -94,7 +95,7 @@ class MntCriticalFunctionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntCriticalFunctionRequest $request, $id)
     {
         try {
             $input = $request->all();

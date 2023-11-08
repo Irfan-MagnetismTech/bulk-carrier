@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntCriticalFunctionRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class MntCriticalFunctionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'function_name'  => ['required', Rule::unique('mnt_critical_functions')->ignore($this->id)],
         ];
     }
 
