@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MntJobLine extends Model
@@ -13,12 +14,24 @@ class MntJobLine extends Model
     use HasFactory;
 
     protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','previous_run_hour','remarks','status'];
-    protected $appends = ['mnt_job_line_id','next_due','over_due','present_run_hour'];
+    protected $appends = ['mnt_job_line_id','next_due','over_due','present_run_hour','mnt_work_requisition_status'];
     
     
     public function mntJob () : BelongsTo
     {
         return $this->belongsTo(MntJob::class);
+    }
+    
+    public function getMntWorkRequisitionStatusAttribute()
+    {
+        $statuses = $this->mntWorkRequisitionLines->pluck('mntWorkRequisitionItem.mntWorkRequisition.status')->unique();
+
+        // Assuming that a job line can be related to multiple requisitions, we collect all unique statuses.
+        return $statuses->last();
+    }
+
+    public function mntWorkRequisitionLines() : HasMany {
+        return $this->hasMany(MntWorkRequisitionLine::class);
     }
     
 
