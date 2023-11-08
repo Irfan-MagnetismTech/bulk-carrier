@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class SupplyChainController extends Controller
 {
@@ -75,5 +76,24 @@ class SupplyChainController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getCurrentStock($materialId = 1, $warehouseId = 1)
+    {
+        $currentStock1 = ScmStockLedger::query()
+            ->where('scm_material_id', $materialId)
+            ->where('scm_warehouse_id', $warehouseId)
+            ->get()
+            ->groupBy('received_date');
+
+        $currentStock2 = ScmStockLedger::query()
+            ->where('scm_material_id', $materialId)
+            ->where('scm_warehouse_id', $warehouseId)
+            ->whereNull('receivable_id')
+            ->get()
+            ->groupBy('received_date');
+
+        dd($currentStock1); 
+        // return response()->json($currentStock);
     }
 }

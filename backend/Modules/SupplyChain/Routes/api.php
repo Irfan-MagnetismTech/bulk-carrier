@@ -15,6 +15,7 @@ use Modules\SupplyChain\Http\Controllers\ScmServiceController;
 use Modules\SupplyChain\Http\Controllers\ScmSrController;
 use Modules\SupplyChain\Http\Controllers\ScmSiController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
+use Modules\SupplyChain\Http\Controllers\SupplyChainController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -60,4 +61,5 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     //Current Stock Apis
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
     Route::get('get-pr-cs-wise-po-data', [ScmPoController::class, "getPoOrPoCsWisePrData"]);
+    Route::get('stock', [SupplyChainController::class, "getCurrentStock"]);
 });
