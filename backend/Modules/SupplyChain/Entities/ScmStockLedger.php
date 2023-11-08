@@ -20,11 +20,11 @@ class ScmStockLedger extends Model
 
     public function parent()
     {
-        return $this->belongsTo(ScmStockLedger::class, 'parent_id');
+        return $this->belongsTo(ScmStockLedger::class, 'parent_id', 'id');
     }
 
     public function child()
     {
-        return $this->hasMany(ScmStockLedger::class, 'parent_id');
+        return $this->hasMany(ScmStockLedger::class,'parent_id');
     }
 }

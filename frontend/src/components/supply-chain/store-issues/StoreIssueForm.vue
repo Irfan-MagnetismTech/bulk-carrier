@@ -3,18 +3,43 @@
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
-    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'ref_no'" />
+    <input
+      type="text"
+      readonly
+      v-model="form.business_unit"
+      required
+      class="form-input vms-readonly-input"
+      name="business_unit"
+      :id="'ref_no'" />
   </div>
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <input
+            type="text"
+            readonly
+            v-model="form.ref_no"
+            required
+            class="form-input vms-readonly-input"
+            name="ref_no"
+            :id="'ref_no'" />
+         <Error
+            v-if="errors?.ref_no"
+            :errors="errors.ref_no" />
       </label>
       <label class="label-group">
           <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.scmSr.ref_no" required class="form-input vms-readonly-input" name="sr_no" :id="'sr_no'" />
-          <Error v-if="errors?.sr_no" :errors="errors.sr_no"  />
+          <input
+            type="text"
+            readonly
+            v-model="form.scmSr.ref_no"
+            required
+            class="form-input vms-readonly-input"
+            name="sr_no"
+            :id="'sr_no'" />
+          <Error
+            v-if="errors?.sr_no"
+            :errors="errors.sr_no" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -28,8 +53,17 @@
               />
           </template>
           </v-select> -->
-          <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scmwarehouse_name" :id="'scmwarehouse_name'" />
-          <Error v-if="errors?.scmwarehouse_name" :errors="errors.scmwarehouse_name" />
+          <input
+            type="text"
+            readonly
+            v-model="form.scmWarehouse.name"
+            required
+            class="form-input vms-readonly-input"
+            name="scmwarehouse_name"
+            :id="'scmwarehouse_name'" />
+          <Error
+            v-if="errors?.scmwarehouse_name"
+            :errors="errors.scmwarehouse_name" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
@@ -48,16 +82,28 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input
+            type="date"
+            v-model="form.date"
+            required
+            class="form-input"
+            name="date"
+            :id="'date'" />
+          <Error
+            v-if="errors?.date"
+            :errors="errors.date" />
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <textarea
+            v-model="form.remarks"
+            class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <Error
+            v-if="errors?.remarks"
+            :errors="errors.remarks" />
     </label>
   </div>
 
@@ -74,15 +120,26 @@
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Sr Quantity</th>
+            <th class="py-3 align-center">Current Stock</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(scmSrLine, index) in form.scmSiLines" :key="index">
+          <tr
+            class="text-gray-700 dark:text-gray-400"
+            v-for="(scmSiLine, index) in form.scmSiLines"
+            :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
+              <v-select
+                :options="materials"
+                placeholder="--Choose an option--"
+                @search="fetchMaterials"
+                v-model="form.scmSiLines[index].scmMaterial"
+                label="material_name_and_code"
+                class="block form-input"
+                @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -95,29 +152,52 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmSiLines[index].unit" class="vms-readonly-input form-input">
+                 <input
+                   type="text"
+                   readonly
+                   v-model="form.scmSiLines[index].unit"
+                   class="vms-readonly-input form-input">
                </label>
-              
-            </td>
-           
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSiLines[index].sr_quantity" class="form-input">
-               </label>
-              
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSiLines[index].quantity" class="form-input">
+                <input
+                   type="text"
+                   v-model="form.scmSiLines[index].sr_quantity"
+                   class="form-input">
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input
+                   type="text"
+                   v-model="form.scmSiLines[index].current_stock"
+                   class="form-input">
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input
+                   type="text"
+                   v-model="form.scmSiLines[index].quantity"
+                   class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+             <button
+                v-if="index!=0"
+                type="button"
+                @click="removeMaterial(index)"
+                class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
               </button>
-              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+             <button
+                v-else
+                type="button"
+                @click="addMaterial()"
+                class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>

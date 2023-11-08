@@ -30,6 +30,7 @@ export default function useStoreIssue() {
         scm_department_id: '',
         scmSr: '',
         scm_sr_id: '',
+        sr_no: '',
         acc_cost_center_id: '',
         remarks: '',
         business_unit: '',
@@ -40,6 +41,7 @@ export default function useStoreIssue() {
                 unit: '',
                 quantity: 0.0,
                 sr_quantity: 0.0,
+                current_stock: 0.0,
                 sr_composite_key: '',
             }
         ],
@@ -50,6 +52,7 @@ export default function useStoreIssue() {
             unit: '',
             quantity: 0.0,
             sr_quantity: 0.0,
+            current_stock: 0.0,
             sr_composite_key: '',
     }
 
