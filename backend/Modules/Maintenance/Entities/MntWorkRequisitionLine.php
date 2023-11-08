@@ -28,6 +28,12 @@ class MntWorkRequisitionLine extends Model
         'cleaning',
         'remarks'
     ];
+
+    protected $casts = [
+        'checking' => 'boolean',
+        'replace' => 'boolean',
+        'cleaning' => 'boolean',
+    ];
     
     public function mntWorkRequisitionItem () : BelongsTo
     {
