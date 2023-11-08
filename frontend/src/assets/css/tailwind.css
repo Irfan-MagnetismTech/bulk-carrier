@@ -19,5 +19,5 @@ input[type='search'] {
 
 .vs--searchable .vs__dropdown-toggle {
 	cursor: text;
-	height: 2.35rem !important;
+	min-height: 2.35rem !important;
 }
