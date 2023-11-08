@@ -49,7 +49,7 @@ class MntWorkRequisitionController extends Controller
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
-                        ->where('status', request()->status)
+                        ->where('status', request()->status ?? 1 )
                         ->latest()
                         ->paginate(10);
 
@@ -239,6 +239,9 @@ class MntWorkRequisitionController extends Controller
     public function updateWipLine(Request $request, $id)
     {
         try {
+            $validated = $request->validate( [
+                'start_date' => ['required']
+            ]);
             $input = $request->all();
 
             $wr['start_date'] = $input['start_date'];
