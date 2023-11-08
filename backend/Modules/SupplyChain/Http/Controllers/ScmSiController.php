@@ -118,7 +118,7 @@ class ScmSiController extends Controller
 
             $storeIssue->scmSiLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $storeIssue->id, 'scm_material_id', 'si');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
 
             $storeIssue->scmSiLines()->createMany($linesData);
 
@@ -137,7 +137,7 @@ class ScmSiController extends Controller
     public function destroy(ScmSi $storeIssue): JsonResponse
     {
         try {
-            $storeIssue->scmSrLines()->delete();
+            $storeIssue->scmSiLines()->delete();
             $storeIssue->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
