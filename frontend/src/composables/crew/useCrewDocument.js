@@ -75,7 +75,7 @@ export default function useCrewDocument() {
         }
     }
 
-    async function storeCrewDocument(form) {
+    async function storeCrewDocument(form,crewDocuments) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -86,9 +86,10 @@ export default function useCrewDocument() {
 
         try {
             const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
-            crewDocument.value = data.value;
+            crewDocuments.push(data.value);
+            isCrewDocumentAddModalOpen.value = 0;
             notification.showSuccess(status);
-            await router.push({ name: "crw.documents.index" });
+            //await router.push({ name: "crw.documents.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

@@ -7,7 +7,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useCrewDocument from "../../composables/crew/useCrewDocument";
 const { crews, getCrews, crewDocuments, getCrewDocuments } = useCrewCommonApiRequest();
-const { isCrewDocumentAddModalOpen, isCrewDocumentRenewModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData } = useCrewDocument();
+const { isLoading, isCrewDocumentAddModalOpen, isCrewDocumentRenewModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData } = useCrewDocument();
 import env from '../../config/env';
 
 const props = defineProps({
@@ -182,11 +182,19 @@ onMounted(() => {
         </td>
       </tr>
       </tbody>
+      <tfoot v-if="!crewDocuments?.length">
+      <tr v-if="isLoading">
+        <td colspan="8">Loading...</td>
+      </tr>
+      <tr v-else-if="!crewDocuments?.length">
+        <td colspan="8">No data found.</td>
+      </tr>
+      </tfoot>
     </table>
   </fieldset>
   <div v-show="isCrewDocumentAddModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
-    <form @submit.prevent="storeCrewDocument(form)" style="position: absolute;top: 0;">
+    <form @submit.prevent="storeCrewDocument(form,crewDocuments)" style="position: absolute;top: 0;">
       <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">

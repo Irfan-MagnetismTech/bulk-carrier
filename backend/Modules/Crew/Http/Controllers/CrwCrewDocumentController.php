@@ -48,13 +48,14 @@ class CrwCrewDocumentController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::transaction(function () use ($request)
-            {
-                $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
-                $renewData         = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment');
+            $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+            $renewData         = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment');
 
-                $documentData = json_decode($request->get('data'),true);
-                $renewData = json_decode($request->get('data'),true);
+            $documentData = json_decode($request->get('data'),true);
+            $renewData = json_decode($request->get('data'),true);
+
+            DB::transaction(function () use ($request,$documentData,$renewData)
+            {
                 $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
 
                 $configData = Config::get('crew.crew_document_validity_period');
@@ -65,9 +66,14 @@ class CrwCrewDocumentController extends Controller
 
                 $crewDocument      = CrwCrewDocument::create($documentData);
                 $crewDocumentRenew = $crewDocument->crwCrewDocumentRenewals()->createMany([$renewData]);
-
-                return response()->success('Updated successfully', [], 202);
             });
+
+            $crwDocuments = CrwCrewDocument::with('crwCrewDocumentRenewals')->where('crw_crew_id', $documentData['crw_crew_id'])
+                ->where('business_unit', $documentData['business_unit'])
+                ->latest()->first();
+
+            return response()->success('Updated successfully', $crwDocuments, 202);
+
         }
         catch (QueryException $e)
         {
