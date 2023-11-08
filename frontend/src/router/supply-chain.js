@@ -404,6 +404,10 @@ export default [
         name: `${BASE}.store-issues.create`,
         component: () => import(`../views/${PATH_BASE}/store-issues/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-create' },
+        props: (route) => ({
+            sr_id: route.query.sr_id,
+        })
+
     },
     {
         path: `/${BASE}/store-issues/:storeIssueId/edit`,

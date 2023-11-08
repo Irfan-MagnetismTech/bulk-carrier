@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_srs', function (Blueprint $table) {
+        Schema::create('scm_sis', function (Blueprint $table) {
             $table->id();
             $table->string('ref_no')->nullable();
             $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses')->nullable();
+            $table->foreignId('scm_sr_id')->constrained('scm_srs')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->bigInteger('department_id')->nullable();
             $table->date('date')->nullable();
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_srs');
+        Schema::dropIfExists('scm_sis');
     }
 };

@@ -52,7 +52,7 @@ class ScmSrController extends Controller
         try {
             DB::beginTransaction();
 
-            $scmSr = ScmSr::create($requestData);
+            $scmSr = ScmSr::create($request->all());
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
 

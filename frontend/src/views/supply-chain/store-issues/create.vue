@@ -10,9 +10,21 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { getStoreIssue, storeIssue, excelExportData, getStoreCategoryWiseExcel, storeStoreIssue,materialObject, errors, isLoading } = useStoreIssue();
+const { getStoreIssue, storeIssue, storeStoreIssue,getSrWiseSi,materialObject, errors, isLoading } = useStoreIssue();
 const page = ref('create');
 const { setTitle } = Title();
+const props = defineProps({
+  sr_id: {
+    type: Number,
+    default: 1,
+    },
+});
+
+
+onMounted(() => {
+    getSrWiseSi(props.sr_id);
+}); 
+
 
 setTitle('Create Store Issue');
 </script>

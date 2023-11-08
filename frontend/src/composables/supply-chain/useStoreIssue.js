@@ -8,6 +8,8 @@ import Store from './../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
 
+import { merge } from 'lodash';
+
 
 export default function useStoreIssue() {
     const BASE = 'scm' 
@@ -24,6 +26,10 @@ export default function useStoreIssue() {
         date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        scmDepartment: '',
+        scm_department_id: '',
+        scmSr: '',
+        scm_sr_id: '',
         acc_cost_center_id: '',
         remarks: '',
         business_unit: '',
@@ -32,17 +38,19 @@ export default function useStoreIssue() {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                specification: '',
-                quantity: 0.0
+                quantity: 0.0,
+                sr_quantity: 0.0,
+                sr_composite_key: '',
             }
         ],
     });
     const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        specification: '',
-        quantity: 0.0,
+            scmMaterial: '',
+            scm_material_id: '',
+            unit: '',
+            quantity: 0.0,
+            sr_quantity: 0.0,
+            sr_composite_key: '',
     }
 
     const errors = ref('');
@@ -172,6 +180,27 @@ export default function useStoreIssue() {
             loading(false)
         }
     }
+    async function getSrWiseSi(srId) {
+        //NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-sr-wise-data`,{
+                params: {
+                    sr_id: srId,
+                },
+            });
+            storeIssue.value = merge(storeIssue.value, data.value);
+            console.log('tag', data)
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
 
  
 
@@ -186,6 +215,7 @@ export default function useStoreIssue() {
         updateStoreIssue,
         deleteStoreIssue,
         materialObject,
+        getSrWiseSi,
         isLoading,
         errors,
     };

@@ -2,7 +2,8 @@
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
+    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'ref_no'" />
   </div>
   <div class="input-group">
       <label class="label-group">
@@ -12,12 +13,12 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <input type="text" readonly v-model="form.scmSr.ref_no" required class="form-input vms-readonly-input" name="sr_no" :id="'sr_no'" />
+          <Error v-if="errors?.sr_no" :errors="errors.sr_no"  />
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -26,12 +27,13 @@
                   v-on="events"
               />
           </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          </v-select> -->
+          <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scmwarehouse_name" :id="'scmwarehouse_name'" />
+          <Error v-if="errors?.scmwarehouse_name" :errors="errors.scmwarehouse_name" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -40,8 +42,9 @@
                   v-on="events"
               />
           </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          </v-select> -->
+          <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
@@ -70,20 +73,20 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Specification</th>
+            <th class="py-3 align-center">Sr Quantity</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
+          <tr class="text-gray-700 dark:text-gray-400" v-for="(scmSrLine, index) in form.scmSiLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmSrLines[index].scmMaterial"
+                        :required="!form.scmSiLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -92,20 +95,20 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmSrLines[index].unit" class="vms-readonly-input form-input">
+                 <input type="text" readonly v-model="form.scmSiLines[index].unit" class="vms-readonly-input form-input">
                </label>
               
             </td>
            
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSrLines[index].specification" class="form-input">
+                 <input type="text" v-model="form.scmSiLines[index].sr_quantity" class="form-input">
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmSiLines[index].quantity" class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -162,11 +165,11 @@
     });
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmSrLines.push(clonedObj);
+      props.form.scmSiLines.push(clonedObj);
     }
 
     function removeMaterial(index){
-      props.form.scmSrLines.splice(index, 1);
+      props.form.scmSiLines.splice(index, 1);
     }
 
     // function setMaterialOtherData(index){
@@ -196,13 +199,13 @@
 
 function setMaterialOtherData(datas, index) {
       console.log('change_event');
-      props.form.scmSrLines[index].unit = datas.unit;
-      props.form.scmSrLines[index].scm_material_id = datas.id;
+      props.form.scmSiLines[index].unit = datas.unit;
+      props.form.scmSiLines[index].scm_material_id = datas.id;
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmSrLines, (newLines) => {
+watch(() => props.form.scmSiLines, (newLines) => {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
 
@@ -211,8 +214,8 @@ watch(() => props.form.scmSrLines, (newLines) => {
       if (selectedMaterial) {
         if ( line.scm_material_id !== selectedMaterial.id
         ) {
-          props.form.scmSrLines[index].unit = selectedMaterial.unit;
-          props.form.scmSrLines[index].scm_material_id = selectedMaterial.id;
+          props.form.scmSiLines[index].unit = selectedMaterial.unit;
+          props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
         }
       }
     }

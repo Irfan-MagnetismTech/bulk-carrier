@@ -13,6 +13,7 @@ use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
 use Modules\SupplyChain\Http\Controllers\ScmSrController;
+use Modules\SupplyChain\Http\Controllers\ScmSiController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
@@ -29,6 +30,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'lc-records' => ScmLcRecordController::class,
         'material-receipt-reports' => ScmMrrController::class,
         'store-requisitions' => ScmSrController::class,
+        'store-issues' => ScmSiController::class,
     ]);
 
     //Search Apis
@@ -42,6 +44,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-lc-record', [ScmLcRecordController::class, "searchLcRecord"])->name('searchLcRecord');
     Route::get('search-materials-by-category', [ScmMaterialController::class, "searchMaterialByCategory"])->name('searchMaterialByCategory');
     Route::get('get-po-or-pr-wise-mrr', [ScmMrrController::class, "getPoOrPrWiseMrrData"])->name('getPoOrPrWiseMrrData');
+    Route::get('get-sr-wise-data', [ScmSiController::class, "getSrWiseData"])->name('getSrWiseData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
     
