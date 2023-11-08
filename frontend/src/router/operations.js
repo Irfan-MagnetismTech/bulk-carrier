@@ -312,4 +312,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/delivery-redelivery/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Voyage Boat Note */
+	{
+		path: `/${BASE}/voyage-boat-notes`,
+		name: `${BASE}.voyage-boat-notes.index`,
+		component: () => import(`../views/${ViEWBASE}/voyage-boat-notes/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/create`,
+		name: `${BASE}.voyage-boat-notes.create`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/:voyageBoatNoteId/edit`,
+		name: `${BASE}.voyage-boat-notes.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/:voyageBoatNoteId/show`,
+		name: `${BASE}.voyage-boat-notes.show`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
