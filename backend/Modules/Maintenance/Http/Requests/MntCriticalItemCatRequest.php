@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntCriticalItemCatRequest extends FormRequest
 {
@@ -14,7 +15,8 @@ class MntCriticalItemCatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'mnt_critical_function_id' => 'required',
+            'category_name'  => ['required', Rule::unique('mnt_critical_item_cats')->ignore($this->id)],
         ];
     }
 

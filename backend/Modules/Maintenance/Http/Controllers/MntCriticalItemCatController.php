@@ -5,6 +5,8 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntCriticalItemCat;
+use Modules\Maintenance\Http\Requests\MntCriticalItemCatRequest;
 
 class MntCriticalItemCatController extends Controller
 {
@@ -14,7 +16,17 @@ class MntCriticalItemCatController extends Controller
      */
     public function index()
     {
-        return view('maintenance::index');
+        try {
+
+            $criticalItemCats = MntCriticalItemCat::with(['mntCriticalFunction'])->paginate(10);
+
+            return response()->success('Critical item categories are retrieved successfully', $criticalItemCats, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -31,9 +43,20 @@ class MntCriticalItemCatController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalItemCatRequest $request)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $criticalItemCat = MntCriticalItemCat::create($input);
+            
+            return response()->success('Critical item category created successfully', $criticalItemCat, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -43,7 +66,17 @@ class MntCriticalItemCatController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+            
+            $criticalItemCat = MntCriticalItemCat::with(['mntCriticalFunction'])->find($id);
+            
+            return response()->success('Critical item category found successfully', $criticalItemCat, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -62,9 +95,21 @@ class MntCriticalItemCatController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntCriticalItemCatRequest $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $criticalItemCat = MntCriticalItemCat::findorfail($id);
+            $criticalItemCat->update($input);
+            
+            return response()->success('critical item category updated successfully', $criticalItemCat, 202);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -74,6 +119,16 @@ class MntCriticalItemCatController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {            
+            $criticalItemCat = MntCriticalItemCat::findorfail($id);
+            $criticalItemCat->delete();
+            
+            return response()->success('Critical item category deleted successfully', $criticalItemCat, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

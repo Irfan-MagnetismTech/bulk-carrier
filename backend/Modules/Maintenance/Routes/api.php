@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
+use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
@@ -31,6 +32,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'run-hours' => MntRunHourController::class,
         'work-requisitions' => MntWorkRequisitionController::class,
         'critical-functions' => MntCriticalFunctionController::class,
+        'critical-item-cats' => MntCriticalItemCatController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);

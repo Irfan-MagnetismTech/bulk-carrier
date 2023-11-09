@@ -50,7 +50,7 @@ class MntCriticalFunctionController extends Controller
             
             $criticalFunction = MntCriticalFunction::create($input);
             
-            return response()->success('critical Function created successfully', $criticalFunction, 201);
+            return response()->success('Critical function created successfully', $criticalFunction, 201);
             
         }
         catch (\Exception $e)
@@ -103,7 +103,7 @@ class MntCriticalFunctionController extends Controller
             $criticalFunction = MntCriticalFunction::findorfail($id);
             $criticalFunction->update($input);
             
-            return response()->success('critical function updated successfully', $criticalFunction, 202);
+            return response()->success('Critical function updated successfully', $criticalFunction, 202);
             
         }
         catch (\Exception $e)
