@@ -63,22 +63,29 @@ export default function useVoyageBoatNote() {
 
 		try {
 			let formData = new FormData();
+			
+			form.opsVoyageSectors.map((element, index) => {
+				if(form.type == 'Boat Note') {
+					element.boat_note_qty = element.quantity
+				} else if(form.type == 'Final Survey') {
+					element.final_survey_qty = element.quantity
+				} else if(form.type == 'Receipt Copy') {
+					element.final_received_qty = element.quantity
+				}
 
-			// form.opsVoyageCertificates.map((element) => {
-			// 	element.ops_maritime_certification_id = element.id
-			// 	element.business_unit = form.business_unit
-			// })
+				element.quantity = null;
+				formData.append('attachments['+index+']', element.attachment);
 
-			// form.opsBunkers.map((element) => {
-			// 	element.scm_material_id = element.id
-			// })
 
-			formData.append('attachment', form.attachment);
+			})
+
+
+			formData.append('attachments', form.attachment);
 			formData.append('info', JSON.stringify(form));
 
 			const { data, status } = await Api.post('/ops/voyage-boat-notes', formData);
 			notification.showSuccess(status);
-			router.push({ name: 'ops.voyage-boat-notes.index' });
+			// router.push({ name: 'ops.voyage-boat-notes.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);

@@ -1,5 +1,4 @@
 <template>
-
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
@@ -30,7 +29,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="tariff_name" class="block form-input">
+              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -44,20 +43,55 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Vessel</span>
-              <input type="number" v-model="form.vessel_name" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="text" readonly v-model="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Draft</span>
-              <input type="number" v-model="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Density</span>
-              <input type="number" v-model="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
         </label>
     </div>
 
-    <div id="sectors">
-      <h4 class="text-md font-semibold mt-3">Sector Info</h4>
+    <div id="sectors" class="mt-5" v-if="form.opsVoyageSectors?.length > 0">
+      <h4 class="text-md font-semibold my-3">Sector Info</h4>
+
+      <table class="w-full whitespace-no-wrap" >
+          <thead v-once>
+            <tr class="w-full">
+              <th>SL</th>
+              <th class="w-72">Loading Point</th>
+              <th>Unloading Point</th>
+              <th>Quantity</th>
+              <th>Attachment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sector, index) in form.opsVoyageSectors">
+              <td>
+                {{ index+1 }}
+              </td>
+              <td>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageSectors[index]?.loading_point">{{ form.opsVoyageSectors[index]?.loading_point }}</span>
+              </td>
+              <td>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageSectors[index]?.unloading_point">{{ form.opsVoyageSectors[index]?.unloading_point }}</span>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model="form.opsVoyageSectors[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsVoyageSectors[index]?.quantity" :errors="errors.opsVoyageSectors[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <input type="file" @change="attachFile($event, index)" class="form-input text-right" autocomplete="off"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      
       
     </div>
     
@@ -65,13 +99,15 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import Error from "../Error.vue";
-import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import useBusinessInfo from "../../composables/useBusinessInfo";
 import useVoyage from "../../composables/operations/useVoyage";
+import useVessel from "../../composables/operations/useVessel";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 
 const editInitiated = ref(false);
 
-const { voyages, searchVoyages } = useVoyage();
+const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
+const { vessel, showVessel } = useVessel();
+
 const props = defineProps({
     form: {
         required: false,
@@ -94,25 +130,44 @@ watch(() => props.form.business_unit, (value) => {
   
 }, { deep : true })
 
+watch(() => props.form.opsVoyage, (value) => {
+  
+  if(value) {
+    props.form.ops_voyage_id = value?.id
+    showVoyage(value?.id)
+    showVessel(value?.ops_vessel_id)
+  }
+
+}, { deep: true })
+
+watch(() => vessel, (value) => {
+  if(value?.value) {
+    props.form.vessel_name = value?.value?.name
+  }
+}, { deep: true })
+
+watch(() => voyage, (value) => {
+  if(value?.value) {
+    props.form.opsVoyageSectors = value?.value?.opsVoyageSectors
+  }
+}, { deep: true })
+
 
 watch(() => props.form, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
 
-    vessels.value = [{...props?.form?.opsVessel}];
-    ports.value = [
-      
-        { ...props?.form.opsChartererContractsLocalAgents[0].opsPort }
-      
-
-    ]
-
+  
     if(vessels.value.length > 0) {
         editInitiated.value = true
       }
   }
 }, {deep: true});
 
+function attachFile(event, index) {
+    let fileData = event.target.files[0];
+    props.form.opsVoyageSectors[index].attachment = fileData;
+}
 
 </script>
 <style lang="postcss" scoped>
