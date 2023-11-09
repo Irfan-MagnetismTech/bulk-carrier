@@ -2,17 +2,10 @@
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
-    <input
-      type="text"
-      readonly
-      v-model="form.business_unit"
-      required
-      class="form-input vms-readonly-input"
-      name="business_unit"
-      :id="'business_unit'" />
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+ 
     <label class="label-group">
           <span class="label-item-title">SIR Ref<span class="text-red-500">*</span></span>
           <input
@@ -29,72 +22,61 @@
       </label>
   </div>
   <div class="input-group">
+    <label class="label-group">
+        <span class="label-item-title">Date<span class="text-red-500">*</span></span>
+        <input
+          type="date"
+          v-model="form.date"
+          required
+          class="form-input"
+          name="date"
+          :id="'date'" />
+        <Error
+          v-if="errors?.date"
+          :errors="errors.date" />
+    </label>
       <label class="label-group">
           <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
-          <input
-            type="text"
-            readonly
-            v-model="form.scmSr.ref_no"
-            required
-            class="form-input vms-readonly-input"
-            name="sr_no"
-            :id="'sr_no'" />
+            <v-select
+                :options="filteredStoreIssues"
+                placeholder="--Choose an option--"
+                @search="fetchStoreIssue"
+                v-model="form.scmSi"
+                label="ref_no"
+                class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmSi"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
           <Error
-            v-if="errors?.sr_no"
-            :errors="errors.sr_no" />
+            v-if="errors?.scm_si_id"
+            :errors="errors.scm_si_id" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select> -->
           <input
             type="text"
             readonly
-            v-model="form.scmWarehouse.name"
+            v-model="form.scm_warehouse_name"
             required
             class="form-input vms-readonly-input"
             name="scmwarehouse_name"
-            :id="'scmwarehouse_name'" />
+            :id="'scm_warehouse_id'" />
           <Error
-            v-if="errors?.scmwarehouse_name"
-            :errors="errors.scmwarehouse_name" />
+            v-if="errors?.scm_warehouse_id"
+            :errors="errors.scm_warehouse_id" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select> -->
           <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
           <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
       </label>
-      <label class="label-group">
-          <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input
-            type="date"
-            v-model="form.date"
-            required
-            class="form-input"
-            name="date"
-            :id="'date'" />
-          <Error
-            v-if="errors?.date"
-            :errors="errors.date" />
-      </label>
+     
   </div>
   
 
@@ -122,9 +104,8 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Sr Quantity</th>
-            <th class="py-3 align-center">Current Stock</th>
             <th class="py-3 align-center">Qty</th>
+            <th class="py-3 align-center">Note</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -143,15 +124,15 @@
                 label="material_name_and_code"
                 class="block form-input"
                 @change="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmSirLines[index].scmMaterial"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmSirLines[index].scmMaterial"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -164,25 +145,17 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input
+                 <input
                    type="text"
-                   v-model="form.scmSirLines[index].sr_quantity"
+                   v-model="form.scmSirLines[index].quantity"
                    class="form-input">
-               </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input
-                   type="text"
-                   v-model="form.scmSirLines[index].current_stock"
-                   class="form-input">
-               </label>
+              </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input
                    type="text"
-                   v-model="form.scmSirLines[index].quantity"
+                   v-model="form.scmSirLines[index].note"
                    class="form-input">
               </label>
             </td>
@@ -230,11 +203,14 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+    import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
+import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
+    const { filteredStoreIssues, searchStoreIssue } = useStoreIssue();
 
-
+    const {getSiWiseSir} = useStoreIssueReturn();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -255,33 +231,32 @@
       props.form.scmSirLines.splice(index, 1);
     }
 
-    // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
-    // }
-
-
- 
-
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 
 
-    function fetchWarehouse(search, loading) {
+    function fetchStoreIssue(search, loading) {
     loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
+    searchStoreIssue(search, loading,props.form.business_unit);
   }
 
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
+  watch(() => props.form.scmSi, (value) => {
+        props.form.scm_si_id = value?.id;
+        props.form.si_no = value?.ref_no;
         props.form.acc_cost_center_id = value?.acc_cost_center_id;
-    });
+        props.form.scm_warehouse_id = value?.scm_warehouse_id;
+        props.form.scmWarehouse = value?.scmWarehouse;
+        props.form.scm_warehouse_name = value?.scmWarehouse.name;
+        props.form.scm_department_id = value?.scm_department_id;
+  });
+
+
+  watch(() => props.form.scm_si_id, (value) => {
+    getSiWiseSir(props.form.scm_si_id);
+  });
 
 function setMaterialOtherData(datas, index) {
-      console.log('change_event');
       props.form.scmSirLines[index].unit = datas.unit;
       props.form.scmSirLines[index].scm_material_id = datas.id;
 }
@@ -318,6 +293,11 @@ watch(() => props.form.scmSirLines, (newLines) => {
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
     props.form.scmWarehouse = null;
+    props.form.scmSi = null;
+    props.form.scm_si_id = null;
+    props.form.si_no = null,
+    props.form.scmDepartment= null,
+    props.form.scm_department_id = null
   }
 });
 

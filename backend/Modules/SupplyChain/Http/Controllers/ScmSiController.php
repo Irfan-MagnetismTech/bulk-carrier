@@ -163,6 +163,28 @@ class ScmSiController extends Controller
         }
     }
 
+    public function searchStoreIssue(Request $request): JsonResponse
+    {
+        try {
+            if ($request->business_unit != 'ALL') {
+                $store_issue = ScmSi::query()
+                    ->with('scmSiLines', 'scmWarehouse')
+                    ->whereBusinessUnit($request->business_unit)
+                    ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                    ->orderByDesc('ref_no')
+                    ->limit(10)
+                    ->get();
+            } else {
+                $purchase_requisition = [];
+            }
+            
+            return response()->success('Search result', $store_issue, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
     public function getSrWiseData(Request $request): JsonResponse
     {
         try {

@@ -110,7 +110,7 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Store Issue List</h2>
-    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.store-issues.create' }" :icon="icons.AddIcon"></default-button>
+    <!-- <default-button :title="'Create Store Issue'" :to="{ name: 'scm.store-issues.create' }" :icon="icons.AddIcon"></default-button> -->
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ storeIssues?.from }}-{{ storeIssues?.to }} of {{ storeIssues?.total }}</span> -->

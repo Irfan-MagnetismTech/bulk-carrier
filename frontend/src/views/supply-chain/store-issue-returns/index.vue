@@ -24,8 +24,6 @@ const props = defineProps({
     default: 1,
   },
 });
-
-const critical = ['No','Yes'];
 // Code for global search start
 const columns = ["ref_no"];
 const searchKey = useDebouncedRef('', 600);
@@ -36,7 +34,7 @@ const icons = useHeroIcon();
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Store Issues');
+setTitle('Store Issue Returns');
 // Code for global search starts here
 
 watch(searchKey, newQuery => {
@@ -109,7 +107,7 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Store Issue List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Store Issue Return List</h2>
     <default-button :title="'Create Store Issue'" :to="{ name: 'scm.store-issue-returns.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">

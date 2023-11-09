@@ -21,39 +21,41 @@ export default function useStoreIssueReturn() {
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const storeIssueReturn = ref( {
+    const storeIssueReturn = ref({
         ref_no: '',
         date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        scm_warehouse_name: '',
+        acc_cost_center_id: '',
         scmDepartment: '',
         scm_department_id: '',
-        scmSr: '',
-        scm_sr_id: '',
-        sr_no: '',
-        acc_cost_center_id: '',
+        scmSi: '',
+        scm_si_id: '',
+        si_no: '',
         remarks: '',
         business_unit: '',
-        scmSrLines: [
+        scmSirLin: [],
+        scmSirLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
                 quantity: 0.0,
-                sr_quantity: 0.0,
-                current_stock: 0.0,
+                note: '',
                 sr_composite_key: '',
+                si_composite_key: '',
             }
         ],
     });
     const materialObject = {
-            scmMaterial: '',
-            scm_material_id: '',
-            unit: '',
-            quantity: 0.0,
-            sr_quantity: 0.0,
-            current_stock: 0.0,
-            sr_composite_key: '',
+        scmMaterial: '',
+        scm_material_id: '',
+        unit: '',
+        quantity: 0.0,
+        note: '',
+        sr_composite_key: '',
+        si_composite_key: '',
     }
 
     const errors = ref('');
@@ -183,7 +185,29 @@ export default function useStoreIssueReturn() {
             loading(false)
         }
     }
-    // async function getSrWiseSi(srId) {
+
+    async function getSiWiseSir(siId) {
+        //NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-si-wise-data`,{
+                params: {
+                    si_id: siId,
+                },
+            });
+            storeIssueReturn.value.scmSirLin = data.value;
+            console.log('sdsd', data)
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    // async function getSiWiseData(srId) {
     //     NProgress.start();
     //     const loader = $loading.show(LoaderConfig);
     //     isLoading.value = true;
@@ -218,7 +242,8 @@ export default function useStoreIssueReturn() {
         updateStoreIssueReturn,
         deleteStoreIssueReturn,
         materialObject,
-        // getSrWiseSi,
+        getSiWiseSir,
+        // getSiWiseData,
         isLoading,
         errors,
     };

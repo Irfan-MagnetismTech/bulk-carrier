@@ -170,11 +170,17 @@ export default function useStoreIssue() {
         }
     }
 
-    async function searchStoreIssue(searchParam, loading) {
+    async function searchStoreIssue(searchParam, loading, business_unit) {
         
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-store-issues`,searchParam);
+            const { data, status } = await Api.get(`/${BASE}/search-store-issue`, {
+                params: {
+                    searchParam: searchParam,
+                    business_unit: business_unit,
+                },
+            }
+            );
             filteredStoreIssues.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
