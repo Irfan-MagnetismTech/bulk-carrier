@@ -68,13 +68,12 @@ export default function useVoyageBoatNote() {
 				}
 
 				element.quantity = null;
-				formData.append('attachments['+index+']', element.attachment);
+				formData.append('attachments['+index+']', element.attachment ?? null);
 
 
 			})
 
 
-			formData.append('attachments', form.attachment);
 			formData.append('info', JSON.stringify(form));
 
 			const { data, status } = await Api.post('/ops/voyage-boat-notes', formData);

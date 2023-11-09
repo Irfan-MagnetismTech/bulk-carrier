@@ -37,11 +37,11 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
-              <input type="text" v-model="form.ship_master" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="text" v-model="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
-            <input type="text" v-model="form.chief_engineer" placeholder="Vessel" class="form-input" autocomplete="off" />
+            <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
       </label>
       
     </div>
@@ -50,19 +50,19 @@
         
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
-              <input type="text" v-model="form.noon_position" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="text" v-model="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status</span>
-              <input type="text" v-model="form.status" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="text" v-model="form.status" placeholder="Status" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
-              <input type="text" v-model="form.engine_running_hours" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
-              <input type="text" v-model="form.lat_long" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="text" v-model="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
         </label>
         
     </div>
@@ -125,7 +125,7 @@
               <th><nobr> Present Stock </nobr></th>
               <th><nobr> FUEL - CON/24H </nobr></th>
               <th><nobr> FUEL - CON/Voyage </nobr></th>
-              <th><nobr> FUEL - Stock/L </nobr></th>
+              <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
             </tr>
           </thead>
           <tbody>
@@ -147,20 +147,20 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
-                  <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity" />
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
-                  <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity" />
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
                 </label>
               </td>
-              <td>
+              <td class="hidden">
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
-                  <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity" />
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
                 </label>
               </td>
             </tr>
@@ -258,10 +258,6 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
-function attachFile(event, index) {
-    let fileData = event.target.files[0];
-    props.form.opsVoyageSectors[index].attachment = fileData;
-}
 
 </script>
 <style lang="postcss" scoped>
