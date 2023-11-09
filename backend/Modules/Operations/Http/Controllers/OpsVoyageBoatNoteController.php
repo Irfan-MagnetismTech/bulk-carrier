@@ -51,7 +51,7 @@ class OpsVoyageBoatNoteController extends Controller
     */
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
-        // dd($request);
+        dd($request->opsVoyageSectors);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
