@@ -172,7 +172,7 @@ watch(() => props.form, (value) => {
 
 function attachFile(event, index) {
     let fileData = event.target.files[0];
-    props.form.opsVoyageSectors[index].attachment = fileData;
+    props.form.opsVoyageBoatNoteLines[index].attachment = fileData;
 }
 
 </script>

@@ -58,7 +58,7 @@ export default function useVoyageBoatNote() {
 		try {
 			let formData = new FormData();
 			
-			form.opsVoyageSectors.map((element, index) => {
+			form.opsVoyageBoatNoteLines.map((element, index) => {
 				if(form.type == 'Boat Note') {
 					element.boat_note_qty = element.quantity
 				} else if(form.type == 'Final Survey') {
