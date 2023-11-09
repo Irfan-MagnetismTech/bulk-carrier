@@ -117,6 +117,20 @@ export default [
                 subSubMenu: [],
             },
 
+            
+            {
+                route: 'mnt.done-work-requisitions.index',
+                label: 'Done Work Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
+
+
 
             
             

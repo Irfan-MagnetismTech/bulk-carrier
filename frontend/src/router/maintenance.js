@@ -211,6 +211,38 @@ export default [
 
 	/* Work Requisition wip end */
 
+	
+	/* Work Requisition Done start */
+	{
+		path: `/${BASE}/done-work-requisitions`,
+		name: `${BASE}.done-work-requisitions.index`,
+		component: () => import(`../views/${VIEWBASE}/done-work-requisition/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'done-work-requisition-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/done-work-requisitions/create`,
+		name: `${BASE}.done-work-requisitions.create`,
+		component: () => import(`../views/${VIEWBASE}/done-work-requisition/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'done-work-requisition-create' },
+	},
+	{
+		path: `/${BASE}/done-work-requisitions/:doneWorkRequisitionId/edit`,
+		name: `${BASE}.done-work-requisitions.edit`,
+		component: () => import(`../views/${VIEWBASE}/done-work-requisition/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'done-work-requisition-edit' },
+	},
+	{
+		path: `/${BASE}/done-work-requisitions/:doneWorkRequisitionId`,
+		name: `${BASE}.done-work-requisitions.show`,
+		component: () => import(`../views/${VIEWBASE}/done-work-requisition/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'done-work-requisition-show'  },
+	},
+
+	/* Work Requisition Done end */
+
+
+
 
 	
 ];

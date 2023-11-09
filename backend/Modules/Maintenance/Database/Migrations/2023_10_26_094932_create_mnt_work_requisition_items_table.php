@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('mnt_work_requisition_id')->references('id')->on('mnt_work_requisitions');
             $table->unsignedBigInteger('mnt_item_id');
             $table->foreign('mnt_item_id')->references('id')->on('mnt_items');
+            $table->integer('present_run_hour')->nullable();
             $table->timestamps();
         });
 

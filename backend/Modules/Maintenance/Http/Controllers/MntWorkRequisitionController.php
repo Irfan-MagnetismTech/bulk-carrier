@@ -94,7 +94,11 @@ class MntWorkRequisitionController extends Controller
             DB::beginTransaction();
             $workRequisition = MntWorkRequisition::create($wr);
 
-            $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()->create(["mnt_item_id"=>$input['mnt_item_id']]);
+            $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()
+                                                   ->create([
+                                                        "mnt_item_id" => $input['mnt_item_id'],
+                                                        "present_run_hour" => $input['present_run_hour']
+                                                    ]);
             $added_job_lines = array();
             foreach ($input['added_job_lines'] as $added_job_line) {
                 $added_job_line['present_run_hour'] = $input['present_run_hour'];
@@ -182,7 +186,10 @@ class MntWorkRequisitionController extends Controller
             $workRequisition->update($wr);
 
             $workRequisitionItem = MntWorkRequisitionItem::where('mnt_work_requisition_id',$workRequisition->id)->first();
-            $workRequisitionItem->update(["mnt_item_id"=>$input['mnt_item_id']]);
+            $workRequisitionItem->update([
+                                    "mnt_item_id" => $input['mnt_item_id'],
+                                    "present_run_hour" => $input['present_run_hour']
+                                ]);
             
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
             
@@ -244,9 +251,23 @@ class MntWorkRequisitionController extends Controller
             ]);
             $input = $request->all();
 
+            if (isset($input['completion_date']) && $input['completion_date'] != "") {
+                $startDate = strtotime($input['start_date']);
+                $completionDate = strtotime($input['completion_date']);
+                if ($startDate > $completionDate) {
+                    $error = array(
+                        "message" => "Completion date should be after start date.",
+                        "errors" => [
+                            "completion_date" => "Completion date should be after start date."
+                        ]
+                    );
+                    return response()->json($error, 422);
+                }
+            }
+
             $wr['start_date'] = $input['start_date'];
             $wr['completion_date'] = $job['last_done'] = $input['completion_date'];
-            $job['previous_run_hour'] = $input['present_run_hour'];
+            $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
             $wr['checking'] = $input['checking'] ?? 0;
             $wr['replace'] = $input['replace'] ?? 0;
             $wr['cleaning'] = $input['cleaning'] ?? 0;
