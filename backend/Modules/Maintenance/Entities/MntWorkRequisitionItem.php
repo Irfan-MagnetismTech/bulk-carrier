@@ -14,7 +14,7 @@ class MntWorkRequisitionItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['mnt_work_requisition_id','mnt_item_id'];
+    protected $fillable = ['mnt_work_requisition_id','mnt_item_id','present_run_hour'];
     
     public function mntWorkRequisition () : BelongsTo
     {
