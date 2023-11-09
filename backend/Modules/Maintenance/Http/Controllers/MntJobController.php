@@ -27,6 +27,7 @@ class MntJobController extends Controller
                         ->when(request()->business_unit != "ALL", function($q){
                             $q->where('business_unit', request()->business_unit);  
                         })
+                        ->latest()
                         ->paginate(10);
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
