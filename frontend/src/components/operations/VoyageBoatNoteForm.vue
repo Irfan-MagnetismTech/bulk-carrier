@@ -55,7 +55,7 @@
         </label>
     </div>
 
-    <div id="sectors" class="mt-5" v-if="form.opsVoyageSectors?.length > 0">
+    <div id="sectors" class="mt-5" v-if="form.opsVoyageBoatNoteLines?.length > 0">
       <h4 class="text-md font-semibold my-3">Sector Info</h4>
 
       <table class="w-full whitespace-no-wrap" >

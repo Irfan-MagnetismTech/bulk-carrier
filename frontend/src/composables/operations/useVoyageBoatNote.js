@@ -12,13 +12,6 @@ export default function useVoyageBoatNote() {
 	const $loading = useLoading();
 	const notification = useNotification();
 
-	const opsChartererLocalAgentObject = {
-		port_code: '',
-		agent_name: '',
-		agent_billing_name: '',
-		agent_billing_email: '',
-	}
-
 	const voyageBoatNote = ref({
 		
 		business_unit: '',
@@ -28,6 +21,7 @@ export default function useVoyageBoatNote() {
 		vessel_draft: '',
 		water_density: '',
 		opsVoyage: '',
+		opsVoyageBoatNoteLines: []
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -183,7 +177,6 @@ export default function useVoyageBoatNote() {
 	return {
 		voyageBoatNotes,
 		voyageBoatNote,
-		opsChartererLocalAgentObject,
 		getVoyageBoatNotes,
 		storeVoyageBoatNote,
 		showVoyageBoatNote,
