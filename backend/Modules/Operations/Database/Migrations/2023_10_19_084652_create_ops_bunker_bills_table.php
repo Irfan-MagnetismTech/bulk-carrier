@@ -16,9 +16,8 @@ return new class extends Migration
         Schema::create('ops_bunker_bills', function (Blueprint $table) {
             $table->id();            
             $table->date('date');
-            $table->bigInteger('scm_vendor_id')->nullable();
-            // $table->foreignId('scm_vendor_id')->constrained('scm_vendors')->onDelete('cascade');
-            $table->string('c');
+            $table->foreignId('scm_vendor_id')->constrained('scm_vendors')->onDelete('cascade');
+            $table->string('vendor_bill_no');
             $table->text('remarks');
             $table->text('attachment');
             $table->string('smr_file_path');

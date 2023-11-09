@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_bunker_bill_id')->constrained('ops_bunker_bills')->onDelete('cascade');
             $table->string('pr_no');
+            $table->text('description')->nullable();
             $table->float('amount');
             $table->timestamps();
         });

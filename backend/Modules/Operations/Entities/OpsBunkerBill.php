@@ -22,10 +22,10 @@ class OpsBunkerBill extends Model
         'business_unit',
     ];
 
-    // public function scmVendor()
-    // {
-    //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
-    // }
+    public function scmVendor()
+    {
+        return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
+    }
 
     public function opsBunkerBillLines()
     {

@@ -2,14 +2,19 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
+use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVessel;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsBunkerBill;
+use Modules\Operations\Http\Exports\SupplierBillExport;
 use Modules\Operations\Http\Requests\OpsBunkerBillRequest;
 
 class OpsBunkerBillController extends Controller
@@ -185,5 +190,20 @@ class OpsBunkerBillController extends Controller
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function exportBunkerBill(Request $request)
+    {
+        $bunker_bill['data'] = OpsBunkerBill::with(
+            'scmVendor','opsBunkerBillLines'
+        )
+        ->where('id', $request->id)       
+        ->first();
+        
+        $bunker_bill['company']="Toggi Shipping";
+        // dd($bunker_bill);
+
+        return Excel::download(new SupplierBillExport($bunker_bill), 'SupplierBill.xlsx');
+        
     }
 }
