@@ -69,7 +69,7 @@ export default function useVoyageBoatNote() {
 
 				element.quantity = null;
 				formData.append('attachments['+index+']', element.attachment ?? null);
-
+				element.attachment = null;
 
 			})
 
