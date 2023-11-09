@@ -423,4 +423,32 @@ export default [
     },
     /* Store Issue end */
     
+     /* Store Issue Return start */
+
+     {
+        path: `/${BASE}/store-issue-returns`,
+        name: `${BASE}.store-issue-returns.index`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-issue-returns/create`,
+        name: `${BASE}.store-issue-returns.create`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-create' },
+    },
+    {
+        path: `/${BASE}/store-issue-returns/:storeIssueReturnId/edit`,
+        name: `${BASE}.store-issue-returns.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-edit' },
+    },
+    {
+        path: `/${BASE}/store-issue-returns/:storeIssueReturnId`,
+        name: `${BASE}.store-issue-returns.show`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-show'  },
+    },
+    /* Store Issue Return end */
 ];

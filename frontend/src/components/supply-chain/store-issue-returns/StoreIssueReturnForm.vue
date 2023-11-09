@@ -14,7 +14,7 @@
   </div>
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <label class="label-group">
-          <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">SIR Ref<span class="text-red-500">*</span></span>
           <input
             type="text"
             readonly
@@ -30,7 +30,7 @@
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
           <input
             type="text"
             readonly
@@ -132,21 +132,21 @@
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr
             class="text-gray-700 dark:text-gray-400"
-            v-for="(scmSiLine, index) in form.scmSiLines"
+            v-for="(scmSirLine, index) in form.scmSirLines"
             :key="index">
             <td class="!w-72">
               <v-select
                 :options="materials"
                 placeholder="--Choose an option--"
                 @search="fetchMaterials"
-                v-model="form.scmSiLines[index].scmMaterial"
+                v-model="form.scmSirLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
+                @change="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmSiLines[index].scmMaterial"
+                        :required="!form.scmSirLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -158,7 +158,7 @@
                  <input
                    type="text"
                    readonly
-                   v-model="form.scmSiLines[index].unit"
+                   v-model="form.scmSirLines[index].unit"
                    class="vms-readonly-input form-input">
                </label>
             </td>
@@ -166,7 +166,7 @@
               <label class="block w-full mt-2 text-sm">
                 <input
                    type="text"
-                   v-model="form.scmSiLines[index].sr_quantity"
+                   v-model="form.scmSirLines[index].sr_quantity"
                    class="form-input">
                </label>
             </td>
@@ -174,7 +174,7 @@
               <label class="block w-full mt-2 text-sm">
                 <input
                    type="text"
-                   v-model="form.scmSiLines[index].current_stock"
+                   v-model="form.scmSirLines[index].current_stock"
                    class="form-input">
                </label>
             </td>
@@ -182,7 +182,7 @@
               <label class="block w-full mt-2 text-sm">
                  <input
                    type="text"
-                   v-model="form.scmSiLines[index].quantity"
+                   v-model="form.scmSirLines[index].quantity"
                    class="form-input">
               </label>
             </td>
@@ -248,11 +248,11 @@
     });
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmSiLines.push(clonedObj);
+      props.form.scmSirLines.push(clonedObj);
     }
 
     function removeMaterial(index){
-      props.form.scmSiLines.splice(index, 1);
+      props.form.scmSirLines.splice(index, 1);
     }
 
     // function setMaterialOtherData(index){
@@ -282,13 +282,13 @@
 
 function setMaterialOtherData(datas, index) {
       console.log('change_event');
-      props.form.scmSiLines[index].unit = datas.unit;
-      props.form.scmSiLines[index].scm_material_id = datas.id;
+      props.form.scmSirLines[index].unit = datas.unit;
+      props.form.scmSirLines[index].scm_material_id = datas.id;
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmSiLines, (newLines) => {
+watch(() => props.form.scmSirLines, (newLines) => {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
 
@@ -297,8 +297,8 @@ watch(() => props.form.scmSiLines, (newLines) => {
       if (selectedMaterial) {
         if ( line.scm_material_id !== selectedMaterial.id
         ) {
-          props.form.scmSiLines[index].unit = selectedMaterial.unit;
-          props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
+          props.form.scmSirLines[index].unit = selectedMaterial.unit;
+          props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
         }
       }
     }

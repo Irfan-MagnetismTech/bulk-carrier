@@ -152,8 +152,17 @@ export default [
                is_open: false,
                permissionKey: '',
                subSubMenu: []
-           }
-            
+           },
+           {
+              route: `${BASE}.store-issue-returns.index`,
+              label: 'Store Issue Returns',
+              preIcon: icons.User,
+              postIcon: icons.DownArrow,
+              is_active: false,
+              is_open: false,
+              permissionKey: '',
+              subSubMenu: []
+          }
             
         ]
     },

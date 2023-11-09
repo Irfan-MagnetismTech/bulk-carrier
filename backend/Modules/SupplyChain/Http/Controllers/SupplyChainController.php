@@ -78,7 +78,7 @@ class SupplyChainController extends Controller
         //
     }
 
-    public function getCurrentStock($materialId = 1, $warehouseId = 1,$qty = 120)
+    public function getCurrentStock($materialId = 1, $warehouseId = 1,$qty = 120, $method = 'average')
     {
         $currentStock1 = ScmStockLedger::query()
             ->where('scm_material_id', $materialId)
@@ -92,11 +92,23 @@ class SupplyChainController extends Controller
                 // return $StockIn + $StockOut > 0; 
             });
 
-            $currentStock1 = $currentStock1->sortBy('received_date');//fifo
-            $currentStock1 = $currentStock1->sortByDesc('received_date');//lifo
-            // $currentStock1 = $currentStock1->sortBy('received_date');//fifo
+            if($method == 'lifo'){
+                $currentStock1 = $currentStock1->sortByDesc('received_date');//lifo
+            }else{
+                $currentStock1 = $currentStock1->sortBy('received_date');//fifo
+            }
+           
+            $TotalPrice = $currentStock1->sum(function($item){
+                return $item->net_unit_price * ($item->quantity - $item->child->sum('quantity'));
+                // return $item->net_unit_price * ($item->quantity + $item->child->sum('quantity'));
+            });
 
-
+             $Qty = $currentStock1->sum(function($item){ 
+                return $item->quantity - $item->child->sum('quantity');
+                // return $item->quantity + $item->child->sum('quantity');
+            });
+            $Rate = $TotalPrice / $Qty;
+            
             $stockOutArray = [];
             $OutQty = $qty;
             foreach($currentStock1 as $key => $value){
@@ -105,44 +117,42 @@ class SupplyChainController extends Controller
                 $currentStock = $StockIn - $StockOut;
                 if($currentStock > $OutQty ){
                     $stockOutArray[] = [
-                        'scm_material_id' => $value->scm_material_id,
-                        'scm_warehouse_id' => $value->scm_warehouse_id,
-                        'acc_cost_center_id' => $value->acc_cost_center_id,
-                        'parent_id' => $value->id,
-                        'recievable_type' => $value->stockable_type,
-                        'recievable_id' => $value->stockable_id,
-                        'quantity' => $OutQty,
-                        // 'quantity' => - $OutQty,
-                        'gross_unit_price' => $value->gross_unit_price,
-                        'gross_foreign_unit_price' => $value->gross_foreign_unit_price,
-                        'net_unit_price' => $value->net_unit_price,
-                        'net_foreign_unit_price' => $value->net_foreign_unit_price,
-                        'currency' => $value->currency,
-                        'exchange_rate' => $value->exchange_rate,
-                        'business_unit' => $value->business_unit,
-                        'received_date' => $value->received_date,
-
+                        'scm_material_id'           => $value->scm_material_id,
+                        'scm_warehouse_id'          => $value->scm_warehouse_id,
+                        'acc_cost_center_id'        => $value->acc_cost_center_id,
+                        'parent_id'                 => $value->id,
+                        'recievable_type'           => $value->stockable_type,
+                        'recievable_id'             => $value->stockable_id,
+                        'quantity'                  => $OutQty,
+                        // 'quantity'               => - $OutQty,
+                        'gross_unit_price'          => $value->gross_unit_price,
+                        'gross_foreign_unit_price'  => $value->gross_foreign_unit_price,
+                        'net_unit_price'            => $method == 'average'? $Rate : $value->net_unit_price,
+                        'net_foreign_unit_price'    => $value->net_foreign_unit_price,
+                        'currency'                  => $value->currency,
+                        'exchange_rate'             => $value->exchange_rate,
+                        'business_unit'             => $value->business_unit,
+                        'received_date'             => $value->received_date,
                     ];
                     break;
                 }else{
                     $stockOutArray[] = [
-                        'scm_material_id' => $value->scm_material_id,
-                        'scm_warehouse_id' => $value->scm_warehouse_id,
-                        'acc_cost_center_id' => $value->acc_cost_center_id,
-                        'parent_id' => $value->id,
-                        'recievable_type' => $value->stockable_type,
-                        'recievable_id' => $value->stockable_id,
-                        'quantity' => $currentStock,
-                        // 'quantity' => - $currentStock,
-                        'gross_unit_price' => $value->gross_unit_price,
-                        'gross_foreign_unit_price' => $value->gross_foreign_unit_price,
-                        'net_unit_price' => $value->net_unit_price,
-                        'net_foreign_unit_price' => $value->net_foreign_unit_price,
-                        'currency' => $value->currency,
-                        'exchange_rate' => $value->exchange_rate,
-                        'business_unit' => $value->business_unit,
-                        'received_date' => $value->received_date,
-
+                        'scm_material_id'           => $value->scm_material_id,
+                        'scm_warehouse_id'          => $value->scm_warehouse_id,
+                        'acc_cost_center_id'        => $value->acc_cost_center_id,
+                        'parent_id'                 => $value->id,
+                        'recievable_type'           => $value->stockable_type,
+                        'recievable_id'             => $value->stockable_id,
+                        'quantity'                  => $currentStock,
+                        // 'quantity'               => - $currentStock,
+                        'gross_unit_price'          => $value->gross_unit_price,
+                        'gross_foreign_unit_price'  => $value->gross_foreign_unit_price,
+                        'net_unit_price'            => $method == 'average'? $Rate : $value->net_unit_price,
+                        'net_foreign_unit_price'    => $value->net_foreign_unit_price,
+                        'currency'                  => $value->currency,
+                        'exchange_rate'             => $value->exchange_rate,
+                        'business_unit'             => $value->business_unit,
+                        'received_date'             => $value->received_date,
                     ];
                     $OutQty = $OutQty - $currentStock;
                 }
