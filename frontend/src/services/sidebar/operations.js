@@ -133,6 +133,29 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
+
+            {
+                route: '',
+                label: 'Voyage Reports',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'ops.lighter-noon-reports.index',
+                        label: 'Noon Reports (L)',
+                        preIcon: '',
+                        postIcon: '',
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
+                ],
+            },
+           
             // {
             //     route: '',
             //     label: 'Voyages',

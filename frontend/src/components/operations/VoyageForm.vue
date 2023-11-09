@@ -216,17 +216,19 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsBunkers[index]"
-                          v-bind="attributes"
-                          v-on="events"
-                          :reaonly="true"
-                          />
-                  </template>
-              </v-select>
+                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsBunkers[index]"
+                            v-bind="attributes"
+                            v-on="events"
+                            :reaonly="true"
+                            />
+                    </template>
+                </v-select> -->
+                <span class="show-block bg-gray-100">{{ form.opsBunkers[index].name }}</span>
+
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>

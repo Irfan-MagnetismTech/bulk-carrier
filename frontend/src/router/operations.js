@@ -338,4 +338,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Lighter Noon Report */
+	{
+		path: `/${BASE}/lighter-noon-reports`,
+		name: `${BASE}.lighter-noon-reports.index`,
+		component: () => import(`../views/${ViEWBASE}/lighter-noon-reports/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/create`,
+		name: `${BASE}.lighter-noon-reports.create`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/edit`,
+		name: `${BASE}.lighter-noon-reports.edit`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/show`,
+		name: `${BASE}.lighter-noon-reports.show`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

@@ -7,11 +7,11 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useVoyageBoatNote from '../../../composables/operations/useVoyageBoatNote';
+import useLighterNoonReport from '../../../composables/operations/useLighterNoonReport';
 import Store from "../../../store";
 
 
-const { voyageBoatNotes, getVoyageBoatNotes, deleteVoyageBoatNote, isLoading } = useVoyageBoatNote();
+const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading } = useLighterNoonReport();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -21,7 +21,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Voyage Boat Note List');
+setTitle('Lighter Noon Report List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -39,14 +39,14 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteVoyageBoatNote(id);
+        deleteLighterNoonReport(id);
     }
   })
 }
 
 onMounted(() => {
   watchEffect(() => {
-    getVoyageBoatNotes(props.page, businessUnit.value)
+    getLighterNoonReports(props.page, businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -66,8 +66,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Voyage Boat Note List</h2>
-    <default-button :title="'Create Voyage Boat Note'" :to="{ name: 'ops.voyage-boat-notes.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Lighter Noon Report List</h2>
+    <default-button :title="'Create Lighter Noon Report'" :to="{ name: 'ops.lighter-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -96,34 +96,34 @@ onMounted(() => {
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody v-if="voyageBoatNotes?.data?.length">
-              <tr v-for="(voyageBoatNote, index) in voyageBoatNotes.data" :key="voyageBoatNote?.id">
-                  <td>{{ voyageBoatNotes.from + index }}</td>
-                  <td>{{ voyageBoatNote?.contract_type }}</td>
-                  <td>{{ voyageBoatNote?.opsChartererProfile?.name }}</td>
-                  <td>{{ voyageBoatNote?.opsChartererProfile?.owner_code }}</td>
-                  <td>{{ voyageBoatNote?.country }}</td>
-                  <td>{{ voyageBoatNote?.email }}</td>
-                  <td>{{ voyageBoatNote?.contact_no }}</td>
+          <tbody v-if="lighterNoonReports?.data?.length">
+              <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
+                  <td>{{ lighterNoonReports.from + index }}</td>
+                  <td>{{ lighterNoonReport?.contract_type }}</td>
+                  <td>{{ lighterNoonReport?.opsChartererProfile?.name }}</td>
+                  <td>{{ lighterNoonReport?.opsChartererProfile?.owner_code }}</td>
+                  <td>{{ lighterNoonReport?.country }}</td>
+                  <td>{{ lighterNoonReport?.email }}</td>
+                  <td>{{ lighterNoonReport?.contact_no }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.voyage-boat-notes.edit', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
-                      <action-button @click="confirmDelete(voyageBoatNote.id)" :action="'delete'"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.lighter-noon-reports.show', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.lighter-noon-reports.edit', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
+                      <action-button @click="confirmDelete(lighterNoonReport.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
           </tbody>
           
-          <tfoot v-if="!voyageBoatNotes?.length">
+          <tfoot v-if="!lighterNoonReports?.length">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
-          <tr v-else-if="!voyageBoatNotes?.data?.length">
+          <tr v-else-if="!lighterNoonReports?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="voyageBoatNotes" to="ops.voyage-boat-notes.index" :page="page"></Paginate>
+    <Paginate :data="lighterNoonReports" to="ops.lighter-noon-reports.index" :page="page"></Paginate>
   </div>
 </template>

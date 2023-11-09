@@ -335,6 +335,8 @@ watch(() => props.form.business_unit, (value) => {
   if(props?.formType != 'edit') {
     props.form.opsVessel = null;
     vessels.value = []
+    props.form.ops_vessel_id = null;
+    props.form.vessel_owner = ''
   }
   
 }, { deep : true })
