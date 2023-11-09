@@ -34,7 +34,6 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
   setTitle('Edit WIP Work Requisition');
 
   watch(wipWorkRequisition, (value) => {
-    console.log(wipWorkRequisition.value);
     wipWorkRequisition.value.ops_vessel_name = value?.opsVessel;
 
     wipWorkRequisition.value.mnt_ship_department_name = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment;
@@ -44,17 +43,18 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
 
     wipWorkRequisition.value.mnt_items = value?.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.mntItems;
     wipWorkRequisition.value.mnt_item_name = value?.mntWorkRequisitionItem?.MntItem;
+    wipWorkRequisition.value.mnt_item_id = value?.mntWorkRequisitionItem?.MntItem?.id;
 
     wipWorkRequisition.value.mntWorkRequisitionLines = value?.mntWorkRequisitionLines;
-    wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
-            {
-                material_name_and_code: '',
-                specification: '',
-                unit: '',
-                quantity: 0,
-                remarks: '',
-            }
-        ];
+    // wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
+    //         {
+    //             material_name_and_code: '',
+    //             specification: '',
+    //             unit: '',
+    //             quantity: 0,
+    //             remarks: '',
+    //         }
+    //     ];
 
     // workRequisition.value.form_type = 'edit';
   });
