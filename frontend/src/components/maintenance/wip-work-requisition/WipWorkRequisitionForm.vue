@@ -1,6 +1,6 @@
 <template>
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Requisition Date </span>
             <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
@@ -38,9 +38,9 @@
             <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+        <label class="block w-full mt-2 text-sm"> 
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -84,13 +84,13 @@
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-3/12 px-4 py-3 align-bottom">Description</th>
+            <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Replace</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Cleaning</th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
+            <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Remarks</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Status</th>
             <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
           </tr>
@@ -102,7 +102,7 @@
               <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" /> </td>
@@ -213,11 +213,6 @@ const props = defineProps({
     errors: { type: [Object, Array], required: false },
 });
 
-
-watch(() => presentRunHour.value, (value) => {
-  props.form.present_run_hour = value?.previous_run_hour;
-});
-
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
@@ -280,11 +275,7 @@ function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
 
 
 onMounted(() => {
-  watchEffect(() => {
-    if(props.form.ops_vessel_id && props.form.mnt_item_id){
-      getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
-    }
-  });
+  
 });
 
 </script>
