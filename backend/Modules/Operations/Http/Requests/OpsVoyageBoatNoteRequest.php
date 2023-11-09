@@ -6,6 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsVoyageBoatNoteRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        // dd(request('info'));
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachments')]);
+        $this->replace($mergeData);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,10 +24,10 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     {
         return [
             'ops_voyage_id'      => ['required'],
-            'ops_vessel_id'      => ['required'],
+            // 'ops_vessel_id'      => ['required'],
             'type'               => ['required'],
-            'vessel_draft'       => ['required', 'string', 'max:255'],
-            'water_density'      => ['required', 'string', 'max:255'],
+            'vessel_draft'       => ['nullable', 'string'],
+            'water_density'      => ['nullable', 'string'],
         ];
     }
 
