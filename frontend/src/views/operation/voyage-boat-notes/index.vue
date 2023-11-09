@@ -87,12 +87,12 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Contract Type</th>
-            <th>Charterer Name</th>
-            <th>Charterer Short Code</th>
-            <th>Country</th>
-            <th>Email</th>
-            <th>Contact</th>
+            <th>Mother Vessel</th>
+            <th>Vessel</th>
+            <th>Voyage No</th>
+            <th>Capacity</th>
+            <th>Initial Survey Qty.</th>
+            <th>Finally Received Qty.</th>
             <th>Actions</th>
           </tr>
           </thead>
