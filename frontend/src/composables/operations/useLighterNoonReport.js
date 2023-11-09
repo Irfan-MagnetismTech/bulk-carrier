@@ -62,28 +62,8 @@ export default function useLighterNoonReport() {
 		isLoading.value = true;
 
 		try {
-			let formData = new FormData();
-			
-			form.opsVoyageSectors.map((element, index) => {
-				if(form.type == 'Boat Note') {
-					element.boat_note_qty = element.quantity
-				} else if(form.type == 'Final Survey') {
-					element.final_survey_qty = element.quantity
-				} else if(form.type == 'Receipt Copy') {
-					element.final_received_qty = element.quantity
-				}
 
-				element.quantity = null;
-				formData.append('attachments['+index+']', element.attachment);
-
-
-			})
-
-
-			formData.append('attachments', form.attachment);
-			formData.append('info', JSON.stringify(form));
-
-			const { data, status } = await Api.post('/ops/lighter-noon-reports', formData);
+			const { data, status } = await Api.post('/ops/lighter-noon-reports', form);
 			notification.showSuccess(status);
 			// router.push({ name: 'ops.lighter-noon-reports.index' });
 		} catch (error) {
@@ -122,15 +102,11 @@ export default function useLighterNoonReport() {
 
 		try {
 
-			let formData = new FormData();
-			formData.append('attachment', form.attachment);
-			formData.append('info', JSON.stringify(form));
-			formData.append('_method', 'PUT');
-
 			const { data, status } = await Api.post(
 				`/ops/lighter-noon-reports/${lighterNoonReportId}`,
-				formData
+				form
 			);
+			
 			// lighterNoonReport.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.lighter-noon-reports.index' });
