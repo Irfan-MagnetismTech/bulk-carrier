@@ -69,20 +69,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sector, index) in form.opsVoyageSectors">
+            <tr v-for="(sector, index) in form.opsVoyageBoatNoteLines">
               <td>
                 {{ index+1 }}
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageSectors[index]?.loading_point">{{ form.opsVoyageSectors[index]?.loading_point }}</span>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point }}</span>
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageSectors[index]?.unloading_point">{{ form.opsVoyageSectors[index]?.unloading_point }}</span>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.unloading_point">{{ form.opsVoyageBoatNoteLines[index]?.unloading_point }}</span>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsVoyageSectors[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
-                  <Error v-if="errors?.opsVoyageSectors[index]?.quantity" :errors="errors.opsVoyageSectors[index]?.quantity" />
+                  <input type="number" step="0.001" v-model="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsVoyageBoatNoteLines[index]?.quantity" :errors="errors.opsVoyageBoatNoteLines[index]?.quantity" />
                 </label>
               </td>
               <td>
@@ -139,6 +139,7 @@ watch(() => props.form.opsVoyage, (value) => {
   
   if(value) {
     props.form.ops_voyage_id = value?.id
+    props.form.ops_vessel_id = value?.ops_vessel_id
     showVoyage(value?.id)
     showVessel(value?.ops_vessel_id)
   }
@@ -153,7 +154,7 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-    props.form.opsVoyageSectors = value?.value?.opsVoyageSectors
+    props.form.opsVoyageBoatNoteLines = value?.value?.opsVoyageSectors
   }
 }, { deep: true })
 
