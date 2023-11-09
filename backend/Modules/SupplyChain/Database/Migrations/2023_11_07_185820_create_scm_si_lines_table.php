@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->string('sr_composite_key')->nullable();
+            $table->string('si_composite_key')->nullable();
             $table->timestamps();
         });
     }

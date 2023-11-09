@@ -159,7 +159,7 @@ class ScmPoController extends Controller
         $scmPoLines = $request['scmPoLines'];
         foreach ($scmPoLines as $key => $value) {
             $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
-            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
+            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($key, $po_id, 'po', $value['scm_material_id']);
         }
         $request['scmPoLines'] = $scmPoLines;
 

@@ -11,7 +11,10 @@ use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmSiRequest;
+use Illuminate\Support\Arr;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class ScmSiController extends Controller
 {
@@ -41,14 +44,12 @@ class ScmSiController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @return JsonResponse
      */
-    public function store(ScmSiRequest $request): JsonResponse
+    public function store(ScmSiRequest $request)
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmSi::class, 'SI');
-
 
 
         try {
@@ -59,6 +60,20 @@ class ScmSiController extends Controller
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
 
             $scmSi->scmSiLines()->createMany($linesData);
+
+            //loop through each line and update current stock
+            $dataForStock = [];
+            //    collect($request->scmSiLines)->map(function ($scmSiLine) use ($scmSi, &$dataForStock) {
+            //        $dataForStock[] = (new StockLedgerData)->out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
+            //     });
+
+            foreach ($request->scmSiLines as $scmSiLine) {
+                $dataForStock[] = (new StockLedgerData)->out($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id, $scmSiLine['quantity']);
+            }
+
+            $dataForStockLedger = array_merge(...$dataForStock);
+
+            $scmSi->stockable()->createMany($dataForStockLedger);
 
             DB::commit();
 
@@ -88,6 +103,7 @@ class ScmSiController extends Controller
                     'quantity' => $scmSiLine->quantity,
                     'sr_quantity' => $scmSiLine->scmSrLine->quantity,
                     'current_stock' => (new CurrentStock)->count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id),
+                    'max_quantity' => $scmSiLine->scmSrLine->scmSiLines->sum('quantity') - $scmSiLine->quantity,
                     'sr_composite_key' => $scmSiLine->sr_composite_key ?? null,
                 ];
 
@@ -159,6 +175,8 @@ class ScmSiController extends Controller
                     ->where('id', $request->sr_id)
                     ->first();
 
+                
+
                 $data = [
                     'scmWarehouse' => $scmSr->scmWarehouse,
                     'scm_warehouse_id' => $scmSr->scm_warehouse_id,
@@ -168,7 +186,7 @@ class ScmSiController extends Controller
                     'sr_date' => $scmSr->date,
                     'acc_cost_center_id' => $scmSr->acc_cost_center_id,
                     'business_unit' => $scmSr->business_unit,
-                    'scmSiLines' => $scmSr->scmSrLines->map(function ($item) {
+                    'scmSiLines' => $scmSr->scmSrLines->map(function ($item) use ($scmSr) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
@@ -176,6 +194,8 @@ class ScmSiController extends Controller
                             'quantity' => $item->quantity,
                             'sr_quantity' => $item->quantity,
                             'sr_composite_key' => $item->sr_composite_key,
+                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmSr->scm_warehouse_id),
+                            'max_quantity' => $item->quantity - $item->scmSiLines->sum('quantity'),
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];

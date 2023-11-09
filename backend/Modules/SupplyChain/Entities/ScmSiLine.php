@@ -12,7 +12,7 @@ class ScmSiLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_sr_id', 'scm_material_id', 'unit', 'quantity', 'sr_composite_key',
+        'scm_sr_id', 'scm_material_id', 'unit', 'quantity', 'sr_composite_key', 'si_composite_key',
     ];
 
     public function scmMaterial(): BelongsTo
