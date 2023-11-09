@@ -10,6 +10,7 @@ use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwCrew;
 use Modules\Crew\Entities\CrwCrewDocument;
+use Modules\Crew\Entities\CrwCrewDocumentRenewal;
 use Modules\Crew\Entities\CrwRank;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
 
@@ -108,12 +109,15 @@ class CrwCommonController extends Controller
     public function getCrewDocuments(Request $request)
     {
         try {
-            $crwAgencies      = CrwCrewDocument::with('crwCrewDocumentRenewals')
+            $crwAgencies      = CrwCrewDocument::with(['crwCrewDocumentRenewals' => function($q){
+                $q->orderBy('issue_date', 'DESC');
+            }])
             ->where('crw_crew_id', $request->crw_crew_id)
             ->when(request()->business_unit != "ALL", function ($q)
             {
                 $q->where('business_unit', request()->business_unit);
             })
+            ->orderBy('id', 'DESC')
             ->get();
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);
@@ -122,6 +126,22 @@ class CrwCommonController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function getCrewDocumentRenewals(Request $request){
+
+        try {
+            $crwDocumentRenewals = CrwCrewDocumentRenewal::where('crw_crew_document_id',$request->crw_crew_document_id)
+                ->orderBy('issue_date','DESC')
+                ->get();
+
+            return response()->success('Retrieved Successfully', $crwDocumentRenewals, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
     }
 
 }

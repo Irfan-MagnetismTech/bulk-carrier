@@ -31,7 +31,7 @@ class CrwCrewDocumentRenewalController extends Controller
 
             $allCrewRenewData = CrwCrewDocumentRenewal::where('crw_crew_document_id',$renewData['crw_crew_document_id'])->get();
 
-            return response()->success('Created successfully', $allCrewRenewData, 202);
+            return response()->success('Created successfully', $crwCrewDocumentRenewal, 202);
         }
         catch (QueryException $e)
         {
@@ -66,12 +66,14 @@ class CrwCrewDocumentRenewalController extends Controller
     public function update(Request $request, CrwCrewDocumentRenewal $crwCrewDocumentRenewal)
     {
         try {
-            $renewData               = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment', 'crw_crew_document_id');
-            // $renewData               = json_decode($request->get('data'), true);
-            // $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
+            $renewData = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment', 'crw_crew_document_id');
+
+            $renewData = json_decode($request->get('data'),true);
+            $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document', $crwCrewDocumentRenewal->attachment);
+
             $crwCrewDocumentRenewal->update($renewData);
 
-            return response()->success('Updated successfully', $crwCrewDocumentRenewal, 202);
+            return response()->success('Updated successfully', $renewData, 202);
         }
         catch (QueryException $e)
         {
@@ -90,7 +92,7 @@ class CrwCrewDocumentRenewalController extends Controller
         try {
             $crwCrewDocumentRenewal->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

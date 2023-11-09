@@ -108,13 +108,17 @@ class CrwCrewDocumentController extends Controller
     public function update(Request $request, CrwCrewDocument $crwCrewDocument)
     {
         try {
-            DB::transaction(function () use ($request, $crwCrewDocument)
-            {
-                $crwCrewDocumentData = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
-                $crwCrewDocument->update($crwCrewDocumentData);
 
-                return response()->success('Updated succesfully', $crwCrewDocument, 202);
-            });
+            $crwCrewDocumentData = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+
+            $configData = Config::get('crew.crew_document_validity_period');
+            if (array_key_exists($crwCrewDocumentData['validity_period_in_month'], $configData)) {
+                $crwCrewDocumentData['validity_period'] = $configData[$crwCrewDocumentData['validity_period_in_month']];
+            }
+
+            $crwCrewDocument->update($crwCrewDocumentData);
+
+            return response()->success('Updated successfully', $crwCrewDocument, 202);
         }
         catch (QueryException $e)
         {

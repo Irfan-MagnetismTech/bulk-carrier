@@ -11,11 +11,13 @@ export default function useCrewDocument() {
     const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
+    const isDocumentEditModal = ref(0);
     const currentCrewDocRenewData = ref(null);
     const $loading = useLoading();
     const notification = useNotification();
     const crewDocument = ref( {
         business_unit: '',
+        id: '',
         crw_crew_id: '',
         crw_crew_name: '',
         crw_crew_rank: '',
@@ -85,8 +87,17 @@ export default function useCrewDocument() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
-            crewDocuments.push(data.value);
+            if(form.id){
+                const { data, status } = await Api.put(`/crw/crw-crew-documents/${form.id}`, form);
+                let crewDoc = crewDocuments.find(doc => doc.id === form.id);
+                crewDoc.name = data.value.name;
+                crewDoc.issuing_authority = data.value.issuing_authority;
+                crewDoc.validity_period = data.value.validity_period;
+                isDocumentEditModal.value = 0;
+            } else {
+                const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
+                crewDocuments.push(data.value);
+            }
             isCrewDocumentAddModalOpen.value = 0;
             notification.showSuccess(status);
             //await router.push({ name: "crw.documents.index" });
@@ -145,15 +156,15 @@ export default function useCrewDocument() {
         }
     }
 
-    async function deleteCrewDocument(documentId) {
+    async function deleteCrewDocument(docDataId,docDataIndex,crewDocuments) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-crew-documents/${documentId}`);
+            const { data, status } = await Api.delete( `/crw/crw-crew-documents/${docDataId}`);
+            crewDocuments.splice(docDataIndex, 1);
             notification.showSuccess(status);
-            await getCrewDocuments(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -174,7 +185,7 @@ export default function useCrewDocument() {
 
         try {
             const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
-            currentCrewDocRenewData.crwCrewDocumentRenewals = data.value;
+            currentCrewDocRenewData.unshift(data.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -186,7 +197,7 @@ export default function useCrewDocument() {
 
     }
 
-    async function updateCrewRenewDocument(form,index) {
+    async function updateCrewRenewDocument(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -201,11 +212,29 @@ export default function useCrewDocument() {
                 `/crw/crw-crew-document-renewals/${form.id}`,
                 formData
             );
-            currentCrewDocRenewData.crwCrewDocumentRenewals[index] = data.value;
+            //currentCrewDocRenewData.crwCrewDocumentRenewals[index] = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+    async function deleteCrewRenewDocument(renewDataId,renewDataIndex,crewDocumentRenewals) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.delete( `/crw/crw-crew-document-renewals/${renewDataId}`);
+            crewDocumentRenewals.splice(renewDataIndex, 1);
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -220,6 +249,7 @@ export default function useCrewDocument() {
         crewRenewDocuments,
         crewRenewDocument,
         currentCrewDocRenewData,
+        isDocumentEditModal,
         getCrewDocuments,
         storeCrewDocument,
         storeCrewRenewDocument,
@@ -227,6 +257,7 @@ export default function useCrewDocument() {
         showCrewDocument,
         updateCrewDocument,
         deleteCrewDocument,
+        deleteCrewRenewDocument,
         isLoading,
         errors,
     };

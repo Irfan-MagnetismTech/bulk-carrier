@@ -6,9 +6,10 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useCrewDocument from "../../composables/crew/useCrewDocument";
-const { crews, getCrews, crewDocuments, getCrewDocuments } = useCrewCommonApiRequest();
-const { isLoading, isCrewDocumentAddModalOpen, isCrewDocumentRenewModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData } = useCrewDocument();
+const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewals, crewDocumentRenewals, isCrewDocumentRenewModalOpen } = useCrewCommonApiRequest();
+const { isLoading, isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal } = useCrewDocument();
 import env from '../../config/env';
+import Swal from "sweetalert2";
 
 const props = defineProps({
   form: {
@@ -28,7 +29,21 @@ let renewFormData = ref({
 });
 
 function closeCrewDocumentAddModal(){
+  isDocumentEditModal.value = 0;
   isCrewDocumentAddModalOpen.value = 0;
+  resetCrewDocumentModalData();
+}
+
+function resetCrewDocumentModalData(){
+  props.form.id = '';
+  props.form.name = '';
+  props.form.issuing_authority = '';
+  props.form.validity_period = '';
+  props.form.validity_period_in_month = '';
+  props.form.issue_date = '';
+  props.form.expire_date = '';
+  props.form.reference_no = '';
+  props.form.attachment = '';
 }
 
 watch(() => props.form, (value) => {
@@ -53,15 +68,28 @@ function openCrewDocumentAddModal(){
   isCrewDocumentAddModalOpen.value = 1;
 }
 
-function showCrewDocumentRenewModal(crwDocumentData){
-  isCrewDocumentRenewModalOpen.value = 1;
-  currentCrewDocRenewData.value = crwDocumentData;
-  renewFormData.value.crw_crew_document_id = crwDocumentData.id;
+function showCrewDocumentRenewModal(crwDocumentId){
+  if(crwDocumentId){
+    getCrewDocumentRenewals(crwDocumentId);
+  }
+  renewFormData.value.crw_crew_document_id = crwDocumentId;
+
+  // isCrewDocumentRenewModalOpen.value = 1;
+  // currentCrewDocRenewData.value = crwDocumentData;
+  // renewFormData.value.crw_crew_document_id = crwDocumentData.id;
 }
 
 function closeCrewDocumentRenewModal(){
   isCrewDocumentRenewModalOpen.value = 0;
   currentCrewDocRenewData.value = null;
+  resetCrewDocumentRenewModalData();
+}
+
+function resetCrewDocumentRenewModalData(){
+  renewFormData.value.issue_date = '';
+  renewFormData.value.expire_date = '';
+  renewFormData.value.reference_no = '';
+  renewFormData.value.attachment = '';
 }
 
 const selectedFile = (event) => {
@@ -72,12 +100,60 @@ const selectedRenewFile = (event) => {
   renewFormData.value.attachment = event.target.files[0];
 };
 
-function saveRenewData(){
-  storeCrewRenewDocument(renewFormData.value,currentCrewDocRenewData.value);
+function selectedRenewUpdateFile(index,event){
+  crewDocumentRenewals.value[index].attachment = event.target.files[0];
 }
 
-function updateCrewDocumentRenewData(singleRenewData,index){
-  updateCrewRenewDocument(singleRenewData,index);
+function saveRenewData(){
+  storeCrewRenewDocument(renewFormData.value,crewDocumentRenewals.value);
+}
+
+function updateCrewDocumentRenewData(singleRenewData){
+  updateCrewRenewDocument(singleRenewData);
+}
+
+function deleteCrewDocumentRenewData(renewDataId,renewDataIndex){
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to change delete this item!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteCrewRenewDocument(renewDataId,renewDataIndex,crewDocumentRenewals.value);
+    }
+  })
+}
+
+//let isDocumentEditModal = ref(0);
+
+function updateDocumentBasicData(crwDocumentData){
+  props.form.id = crwDocumentData?.id;
+  props.form.name = crwDocumentData?.name;
+  props.form.issuing_authority = crwDocumentData?.issuing_authority;
+  props.form.validity_period = crwDocumentData?.validity_period_in_month;
+  props.form.validity_period_in_month = crwDocumentData?.validity_period_in_month;
+  isDocumentEditModal.value = 1;
+  isCrewDocumentAddModalOpen.value = 1;
+}
+
+function deleteDocumentBasicData(crwDocumentDataId,index){
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to change delete this item!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteCrewDocument(crwDocumentDataId,index,crewDocuments.value);
+    }
+  })
 }
 
 onMounted(() => {
@@ -170,14 +246,14 @@ onMounted(() => {
         </td>
         <td class="px-1 py-1 text-center">
           <nobr>
-            <a @click="showCrewDocumentRenewModal(crwDocumentData)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+            <a @click="showCrewDocumentRenewModal(crwDocumentData?.id)" style="display: inline-block;cursor: pointer" class="relative tooltip">
               <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
               </svg>
               <span class="tooltiptext">Renew</span>
             </a>
-            <action-button :action="'edit'"></action-button>
-            <action-button :action="'delete'"></action-button>
+            <action-button :action="'edit'" @click="updateDocumentBasicData(crwDocumentData,index)"></action-button>
+            <action-button :action="'delete'" @click="deleteDocumentBasicData(crwDocumentData?.id,index)"></action-button>
           </nobr>
         </td>
       </tr>
@@ -256,7 +332,7 @@ onMounted(() => {
             </label>
           </div>
         </fieldset>
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+        <fieldset v-if="!isDocumentEditModal" class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
           <legend class="px-2 text-gray-700 dark:text-gray-300">Validity Info</legend>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
@@ -366,30 +442,39 @@ onMounted(() => {
               <th class="px-4 py-3 align-bottom">Issue Date</th>
               <th class="px-4 py-3 align-bottom">Expire Date</th>
               <th class="px-4 py-3 align-bottom">Reference No</th>
+              <th class="px-4 py-3 align-bottom">Prev. Attachment</th>
               <th class="px-4 py-3 align-bottom">Attachment</th>
               <th class="px-4 py-3 text-center align-bottom">Action</th>
             </tr>
             </thead>
             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400" v-for="(renewData,renewDataIndex) in currentCrewDocRenewData?.crwCrewDocumentRenewals" :key="renewDataIndex">
+            <tr class="text-gray-700 dark:text-gray-400" v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
               <td class="px-1 py-1">
-                <input type="date" v-model="currentCrewDocRenewData.crwCrewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model="currentCrewDocRenewData.crwCrewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model="currentCrewDocRenewData.crwCrewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
+                <input type="text" v-model="crewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1">
-                <input type="file" class="form-input" autocomplete="off" />
+                <template v-if="crewDocumentRenewals[renewDataIndex]?.attachment">
+                  <a class="custom_link" :href="env.BASE_API_URL+'/'+crewDocumentRenewals[renewDataIndex]?.attachment" target="_blank">
+                    Link
+                  </a>
+                </template>
+                <template v-else>---</template>
+              </td>
+              <td class="px-1 py-1">
+                <input type="file" @change="selectedRenewUpdateFile(renewDataIndex,$event)" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1 text-center">
                 <div class="flex items-center gap-1">
-                  <button type="button" @click="updateCrewDocumentRenewData(currentCrewDocRenewData.crwCrewDocumentRenewals[renewDataIndex],renewDataIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <button type="button" @click="updateCrewDocumentRenewData(renewData)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     Update
                   </button>
-                  <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <button type="button" @click="deleteCrewDocumentRenewData(renewData.id,renewDataIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     Delete
                   </button>
                 </div>

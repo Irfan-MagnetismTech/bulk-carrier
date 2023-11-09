@@ -70,7 +70,7 @@ class CrwAgencyContractController extends Controller
     public function show(CrwAgencyContract $crwAgencyContract)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgencyContract, 200);
+            return response()->success('Retrieved successfully', $crwAgencyContract, 200);
         }
         catch (QueryException $e)
         {

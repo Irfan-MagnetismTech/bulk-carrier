@@ -12,6 +12,8 @@ export default function useCrewCommonApiRequest() {
     const crews = ref([]);
     const recruitmentApprovals = ref([]);
     const crewDocuments = ref([]);
+    const crewDocumentRenewals = ref([]);
+    const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -146,6 +148,28 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
+    async function getCrewDocumentRenewals(crwCrewDocumentId) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'crw_crew_document_id': crwCrewDocumentId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-crew-document-renewals', form);
+            crewDocumentRenewals.value = data.value;
+            isCrewDocumentRenewModalOpen.value = 1;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         crwRankLists,
         crwAgencies,
@@ -153,12 +177,15 @@ export default function useCrewCommonApiRequest() {
         crews,
         recruitmentApprovals,
         crewDocuments,
+        crewDocumentRenewals,
+        isCrewDocumentRenewModalOpen,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
         getCrews,
         getRecruitmentApprovals,
         getCrewDocuments,
+        getCrewDocumentRenewals,
         isLoading,
         errors,
     };
