@@ -24,6 +24,7 @@ class MntItemController extends Controller
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
+            ->latest()
             ->paginate(10);
 
             return response()->success('Items retrieved successfully', $item, 200);
