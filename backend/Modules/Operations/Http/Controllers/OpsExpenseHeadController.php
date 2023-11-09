@@ -119,52 +119,52 @@ class OpsExpenseHeadController extends Controller
     public function update(OpsExpenseHeadRequest $request, OpsExpenseHead $expense_head): JsonResponse
     {
         try {
-        $expense_head->update(['name' => $request->name, 'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report]);
+            $expense_head->update(['name' => $request->name, 'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report]);
 
-        $actualSubHeads = collect($request->opsSubHeads)->map(function ($item, $key) {
-            if(!empty($item['name'])) {
-                return $item;
+            $actualSubHeads = collect($request->opsSubHeads)->map(function ($item, $key) {
+                if(!empty($item['name'])) {
+                    return $item;
+                }
+            })->filter()->toArray();
+
+            if(!empty($actualSubHeads)) {
+
+                $subHeads = collect($request->opsSubHeads)->whereNotNull('head_id')->map(function($item, $key) use ($request, $expense_head)
+                {
+                    return [
+                        'id' => $item['id'],
+                        'head_id' => $expense_head->id,
+                        'name' => $item['name'],
+                        'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
+                        'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? null
+                    ];
+                })->toArray();
+
+                $newHeads = collect($request->opsSubHeads)->whereNull('head_id')->map(function($item, $key) use ($expense_head) {
+                    return [
+                        'head_id' => $expense_head->id,
+                        'name' => $item['name'],
+                        'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
+                    ];
+                })->toArray();
+
+                $oldIds = $expense_head->opsSubHeads->pluck('id')->toArray();
+                $newIds = collect($subHeads)->pluck('id')->toArray();
+
+                $deletable = array_diff($oldIds, $newIds);
+
+                $fields = ['head_id', 'name', 'billing_type', 'is_visible_in_voyage_report'];
+
+                DB::beginTransaction();
+                OpsExpenseHead::whereIn('id', $deletable)->delete();
+                OpsExpenseHead::insert($newHeads);
+                OpsExpenseHead::upsert($subHeads, ['id'], $fields);
+                DB::commit();
             }
-        })->filter()->toArray();
-
-        if(!empty($actualSubHeads)) {
-
-            $subHeads = collect($request->opsSubHeads)->whereNotNull('head_id')->map(function($item, $key) use ($request, $expense_head)
-            {
-                return [
-                    'id' => $item['id'],
-                    'head_id' => $expense_head->id,
-                    'name' => $item['name'],
-                    'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                    'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? null
-                ];
-            })->toArray();
-
-            $newHeads = collect($request->opsSubHeads)->whereNull('head_id')->map(function($item, $key) use ($expense_head) {
-                return [
-                    'head_id' => $expense_head->id,
-                    'name' => $item['name'],
-                    'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                ];
-            })->toArray();
-
-            $oldIds = $expense_head->opsSubHeads->pluck('id')->toArray();
-            $newIds = collect($subHeads)->pluck('id')->toArray();
-
-            $deletable = array_diff($oldIds, $newIds);
-
-            $fields = ['head_id', 'name', 'billing_type', 'is_visible_in_voyage_report'];
-
-            DB::beginTransaction();
-            OpsExpenseHead::whereIn('id', $deletable)->delete();
-            OpsExpenseHead::insert($newHeads);
-            OpsExpenseHead::upsert($subHeads, ['id'], $fields);
-            DB::commit();
-        }
-        return response()->success('Expense head updated successfully.', $expense_head, 200);
+            return response()->success('Expense head updated successfully.', $expense_head, 200);
         }
         catch (QueryException $e)
-        {            
+        {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
