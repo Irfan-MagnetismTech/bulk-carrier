@@ -98,7 +98,10 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> </td>
+            <td class="px-1 py-1"> 
+              <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> 
+              <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
+            </td>
             <td class="px-1 py-1"> <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
@@ -107,7 +110,7 @@
             <td class="px-1 py-1"> 
               <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span>
             </td>
-            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="updateWipWorkRequisitionLine(mntWorkRequisitionLine, mntWorkRequisitionLine.id)">Submit</button> 
+            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="submitWipWorkRequisitionLine(mntWorkRequisitionLine)">Submit</button> 
             </td>
           </tr>
         </tbody>
@@ -120,12 +123,16 @@
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Remarks</th>
-            <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+            <th class="w-1/12 px-4 py-3 align-bottom text-center">
+              <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addConsumedSparePart"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg></button> 
+            </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -146,9 +153,7 @@
             <td class="px-1 py-1"><input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionMaterial.unit" placeholder="Unit" readonly /></td>
             <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" placeholder="Quantity" required /></td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.remarks" placeholder="Remarks" /></td>
-            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addConsumedSparePart"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index != 0" @click="removeConsumedSparePart(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <td class="px-1 py-1"><button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md"  @click="removeConsumedSparePart(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg></button>
             </td>
@@ -164,6 +169,8 @@
 <script setup>
 import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
+
+import Swal from "sweetalert2";
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {onMounted, ref, watch, watchEffect} from "vue";
@@ -216,7 +223,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 });
 
 watch(() => props.form.mntWorkRequisitionMaterials, (value) => {
-  value.forEach(val => {
+  value?.forEach(val => {
     if (!val.material_name_and_code) {
       val.specification = '';
       val.unit = '';
@@ -253,9 +260,31 @@ function removeConsumedSparePart(index) {
   props.form.mntWorkRequisitionMaterials.splice(index, 1);
 }
 
+function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
+  // console.log(mntWorkRequisitionLine);
+  mntWorkRequisitionLine.start_date_error = [''];
+  if (!mntWorkRequisitionLine.start_date) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    }).then((result)=>{
+      if (result.isConfirmed) {
+        mntWorkRequisitionLine.start_date_error = ["Start date field is required."]
+      }
+    });
+  }
+  else
+    updateWipWorkRequisitionLine(mntWorkRequisitionLine, mntWorkRequisitionLine.id);
+}
+
 
 onMounted(() => {
-  
+  watchEffect(() => {
+    if(props.form.ops_vessel_id && props.form.mnt_item_id){
+      getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
+    }
+  });
 });
 
 </script>

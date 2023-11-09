@@ -209,6 +209,8 @@
         <div v-else class="py-10 bg-purple-100 text-center rounded-md">
           <p class="text-md font-bold">No job found</p>
         </div>
+
+        <Error v-if="errors?.added_job_lines" :errors="errors.added_job_lines" />
         
       </div>
     </div>

@@ -72,6 +72,7 @@ export default function useWipWorkRequisition() {
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
+                    status: 1,
                 },
             });
             wipWorkRequisitions.value = data.value;
