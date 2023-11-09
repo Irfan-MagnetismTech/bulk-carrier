@@ -5,6 +5,8 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntCriticalItem;
+use Modules\Maintenance\Http\Requests\MntCriticalItemRequest;
 
 class MntCriticalItemController extends Controller
 {
@@ -14,7 +16,17 @@ class MntCriticalItemController extends Controller
      */
     public function index()
     {
-        return view('maintenance::index');
+        try {
+
+            $criticalItems = MntCriticalItem::with(['mntCriticalItemCat.mntCriticalFunction'])->paginate(10);
+
+            return response()->success('Critical items are retrieved successfully', $criticalItems, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -31,9 +43,20 @@ class MntCriticalItemController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalItemRequest $request)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $criticalItem = MntCriticalItem::create($input);
+            
+            return response()->success('Critical item created successfully', $criticalItem, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -43,7 +66,17 @@ class MntCriticalItemController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+            
+            $criticalItem = MntCriticalItem::with(['mntCriticalItemCat'])->find($id);
+            
+            return response()->success('Critical item found successfully', $criticalItem, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -62,9 +95,21 @@ class MntCriticalItemController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntCriticalItemRequest $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $criticalItem = MntCriticalItem::findorfail($id);
+            $criticalItem->update($input);
+            
+            return response()->success('critical item updated successfully', $criticalItem, 202);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -74,6 +119,16 @@ class MntCriticalItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {            
+            $criticalItem = MntCriticalItem::findorfail($id);
+            $criticalItem->delete();
+            
+            return response()->success('Critical item deleted successfully', $criticalItem, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

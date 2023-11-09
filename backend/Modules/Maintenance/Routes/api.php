@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
+use Modules\Maintenance\Http\Controllers\MntCriticalItemController;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
@@ -33,6 +34,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'work-requisitions' => MntWorkRequisitionController::class,
         'critical-functions' => MntCriticalFunctionController::class,
         'critical-item-cats' => MntCriticalItemCatController::class,
+        'critical-items' => MntCriticalItemController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
