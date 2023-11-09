@@ -251,6 +251,20 @@ class MntWorkRequisitionController extends Controller
             ]);
             $input = $request->all();
 
+            if (isset($input['completion_date']) && $input['completion_date'] != "") {
+                $startDate = strtotime($input['start_date']);
+                $completionDate = strtotime($input['completion_date']);
+                if ($startDate > $completionDate) {
+                    $error = array(
+                        "message" => "Completion date should be after start date.",
+                        "errors" => [
+                            "completion_date" => "Completion date should be after start date."
+                        ]
+                    );
+                    return response()->json($error, 422);
+                }
+            }
+
             $wr['start_date'] = $input['start_date'];
             $wr['completion_date'] = $job['last_done'] = $input['completion_date'];
             $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
