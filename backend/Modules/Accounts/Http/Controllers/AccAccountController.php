@@ -58,7 +58,7 @@ class AccAccountController extends Controller
     public function show(AccAccount $accAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accAccount, 200);
+            return response()->success('Retrieved succesfully', $accAccount->load('balanceIncome', 'parent:id,account_name'), 200);
         }
         catch (QueryException $e)
         {

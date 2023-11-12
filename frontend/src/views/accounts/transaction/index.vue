@@ -65,8 +65,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Transaction List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'acc.transactions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Voucher List</h2>
+    <default-button :title="'Create Voucher'" :to="{ name: 'acc.transactions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
@@ -93,34 +93,39 @@ onMounted(() => {
             <th> Cheque Number </th>
             <th> Cheque Date </th>
             <th> Bill No </th>
-            <th>Account Name </th>
-            <th>Debit Amount </th>
-            <th>Credit Amount </th>
-            <th>Action</th>
+            <th> Account Name </th>
+            <th> Debit Amount </th>
+            <th> Credit Amount </th>
+            <th> Business Unit </th>
+            <th> Action </th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(transactionData,index) in transactions?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td> {{ transactionData?.costCenter?.name }} </td>
+            <template v-for="(transactionData,index) in transactions?.data" :key="index">
+              <tr v-for="(ledger, ledgerIndex) in transactionData?.ledgerEntries" :key="ledgerIndex">
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ index + 1 }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.costCenter?.name }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.voucher_type }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.transaction_date }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_type }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_no }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.instrument_date }}</nobr> </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.bill_no }} </td>
 
+                <td class="text-left"> {{ ledger?.account.account_name }} </td>
+                <td class="text-right"> {{ ledger.dr_amount }} </td>
+                <td class="text-right"> {{ ledger.cr_amount }} </td>
 
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length">
+                  <span :class="transactionData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ transactionData?.business_unit }}</span>
+                </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length">
+                  <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
+                  <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
+                </td>
+              </tr>
+            </template>
 
-
-            <td>{{ transactionData?.transaction_date }}</td>
-            <td>{{ transactionData?.voucher_type }}</td>
-            <td> Will be account head </td>
-            <td>{{ transactionData?.bill_no }}</td>
-            <td>15000</td>
-            <td>11000</td>
-            <td>
-              <span :class="transactionData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ transactionData?.business_unit }}</span>
-            </td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
-              <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
-            </td>
-          </tr>
           </tbody>
           <tfoot v-if="!transactions?.data?.length">
           <tr v-if="isLoading">
