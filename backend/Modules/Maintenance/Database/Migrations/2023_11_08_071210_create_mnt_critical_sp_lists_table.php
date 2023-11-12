@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('ops_vessel_id')->references('id')->on('ops_vessels');
             $table->date('record_date');
             $table->string('reference_no')->nullable();
+            $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();
         });
 
