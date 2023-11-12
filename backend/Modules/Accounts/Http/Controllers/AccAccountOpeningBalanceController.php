@@ -24,7 +24,7 @@ class AccAccountOpeningBalanceController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accAccountOpeningBalances, 200);
+            return response()->success('Retrieved Successfully', $accAccountOpeningBalances, 200);
         }
         catch (QueryException $e)
         {
@@ -44,7 +44,7 @@ class AccAccountOpeningBalanceController extends Controller
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
             $accAccountOpeningBalance = AccAccountOpeningBalance::create($accountsOpeningBalanceData);
 
-            return response()->success('Created Succesfully', $accAccountOpeningBalance, 201);
+            return response()->success('Created Successfully', $accAccountOpeningBalance, 201);
         }
         catch (QueryException $e)
         {
@@ -81,7 +81,7 @@ class AccAccountOpeningBalanceController extends Controller
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
             $accAccountOpeningBalance->update($accountsOpeningBalanceData);
 
-            return response()->success('Updated succesfully', $accAccountOpeningBalance, 202);
+            return response()->success('Updated Successfully', $accAccountOpeningBalance, 202);
         }
         catch (QueryException $e)
         {
@@ -100,7 +100,7 @@ class AccAccountOpeningBalanceController extends Controller
         try {
             $accAccountOpeningBalance->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

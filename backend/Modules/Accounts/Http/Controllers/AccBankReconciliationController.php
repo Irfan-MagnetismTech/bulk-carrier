@@ -32,7 +32,7 @@ class AccBankReconciliationController extends Controller
             ->latest()
             ->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accTransactions, 200);
+            return response()->success('Retrieved Successfully', $accTransactions, 200);
         }
         catch (QueryException $e)
         {
@@ -53,7 +53,7 @@ class AccBankReconciliationController extends Controller
             $bankReconciliationData['status']  = 'Complete';
             $accBankReconciliation             = AccBankReconciliation::create($bankReconciliationData);
 
-            return response()->success('Created Succesfully', $accBankReconciliation, 201);
+            return response()->success('Created Successfully', $accBankReconciliation, 201);
         }
         catch (QueryException $e)
         {
