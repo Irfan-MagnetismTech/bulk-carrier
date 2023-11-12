@@ -62,7 +62,7 @@ export default function useAccountCommonApiRequest() {
 
     async function getAccount(account_name=null, businessUnit, loading=null) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -77,7 +77,7 @@ export default function useAccountCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
 
@@ -85,7 +85,7 @@ export default function useAccountCommonApiRequest() {
 
     async function getCostCenter(name=null, businessUnit, loading=null) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -100,7 +100,7 @@ export default function useAccountCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
 
@@ -108,7 +108,7 @@ export default function useAccountCommonApiRequest() {
 
     async function getGeneratedAccountCode(balanceIncomeLineId, loading=null) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -122,7 +122,7 @@ export default function useAccountCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
 
