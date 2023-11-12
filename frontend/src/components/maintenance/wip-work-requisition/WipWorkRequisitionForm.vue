@@ -98,11 +98,13 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
-            <td class="px-1 py-1"> 
+            <td class="px-1 py-1">
               <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> 
-              <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
+            <td class="px-1 py-1"> 
+              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> 
+              <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" />
+            </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" /> </td>

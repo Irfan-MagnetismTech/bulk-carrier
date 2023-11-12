@@ -96,38 +96,61 @@ export default [
             },
             
             {
-                route: 'mnt.work-requisitions.index',
+                route: '',
                 label: 'Work Requisitions',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
-                subSubMenu: [],
+                subSubMenu: [
+                    {
+                        route: 'mnt.work-requisitions.create',
+                        label: 'Create',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    
+                    {
+                        route: 'mnt.work-requisitions.index',
+                        label: 'Pending',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    
+                    {
+                        route: 'mnt.wip-work-requisitions.index',
+                        label: 'WIP',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+              
+                    {
+                        route: 'mnt.done-work-requisitions.index',
+                        label: 'Done',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                ],
             },
             
-            {
-                route: 'mnt.wip-work-requisitions.index',
-                label: 'WIP Work Requisitions',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [],
-            },
-
             
-            {
-                route: 'mnt.done-work-requisitions.index',
-                label: 'Done Work Requisitions',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [],
-            },
 
 
 
