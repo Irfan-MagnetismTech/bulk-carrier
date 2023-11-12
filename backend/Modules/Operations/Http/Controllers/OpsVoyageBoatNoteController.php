@@ -93,7 +93,6 @@ class OpsVoyageBoatNoteController extends Controller
     public function show(OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
         $voyage_boat_note->load('opsVessel','opsVoyage','opsVoyageBoatNoteLines');
-        // dd($voyage_boat_note);
         try
         {
             return response()->success('Successfully retrieved voyage boat note.', $voyage_boat_note, 200);
@@ -114,7 +113,6 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-        $opsVoyageBoatNoteLines = collect($request->opsVoyageBoatNoteLines);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -123,9 +121,8 @@ class OpsVoyageBoatNoteController extends Controller
             );
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
-            $voyage_boat_note->update($voyageBoatNoteInfo);    
-
-
+            $voyage_boat_note->update($voyageBoatNoteInfo);
+            
             // $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request,$voyage_boat_note) {                
             //     $attachment_path = 'null';
 
