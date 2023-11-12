@@ -74,14 +74,15 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
               <select name="" id="" class="form-input" v-model="form.currency">
-                <option value="USD">USD</option>
-                <option value="BDT">BDT</option>
+                  <option value="" disabled>Select Currency</option>
+                  <option v-for="currency in currencies">{{ currency }}</option>
               </select>
             <Error v-if="errors?.currency" :errors="errors.currency" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
               <select name="" id="" class="form-input" v-model="form.status">
+                <option value="" disabled>Select Status</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
@@ -182,13 +183,16 @@
 
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import Error from "../../Error.vue";
 import usePort from '../../../composables/operations/usePort';
 import useVessel from '../../../composables/operations/useVessel';
 import useCargoType from '../../../composables/operations/useCargoType';
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import useBusinessInfo from "../../../composables/useBusinessInfo"
 
+
+const { getCurrencies, currencies } = useBusinessInfo();
 const { ports, searchPorts } = usePort();
 const { vessels, searchVessels } = useVessel();
 const { cargoTypes, searchCargoTypes } = useCargoType();
@@ -241,6 +245,9 @@ watch(() => props.form, (value) => {
     }
   }, {deep: true});
 
+onMounted(() => {
+  getCurrencies();
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {
