@@ -33,7 +33,7 @@ watch(generatedAccountCode, (value) => {
 });
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getBalanceIncomeLineLists(props.form.business_unit);
     getBalanceIncomeAccountLists(props.form.business_unit,props.form.acc_balance_and_income_line_id);
