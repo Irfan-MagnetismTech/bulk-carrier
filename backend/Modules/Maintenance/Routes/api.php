@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Entities\MntCriticalFunction;
+use Modules\Maintenance\Entities\MntCriticalItemCat;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemController;
@@ -73,6 +74,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::put('update-work-requisition-line-wip/{id}', [MntWorkRequisitionController::class, 'updateWipLine']);
     // mntCriticalFunctions
     Route::get('get-critical-functions', [MntCriticalFunctionController::class, 'mntCriticalFunctions']);
-
+    // getCriticalFunctionWiseItemCats
+    Route::get('get-critical-function-wise-item-cats/{id}', [MntCriticalItemCatController::class, 'getCriticalFunctionWiseItemCats']);
 
 });

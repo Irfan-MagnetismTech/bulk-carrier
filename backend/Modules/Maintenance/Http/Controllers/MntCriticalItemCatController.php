@@ -131,4 +131,18 @@ class MntCriticalItemCatController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getCriticalFunctionWiseItemCats($id) {
+        try {
+
+            $criticalItemCats = MntCriticalItemCat::where('mnt_critical_function_id', $id)->get();
+
+            return response()->success('Critical function wise item categories are retrieved successfully', $criticalItemCats, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
