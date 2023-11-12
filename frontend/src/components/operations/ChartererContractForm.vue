@@ -26,7 +26,7 @@
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input

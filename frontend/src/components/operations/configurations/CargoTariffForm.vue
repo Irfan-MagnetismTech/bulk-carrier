@@ -8,7 +8,7 @@
           <Error v-if="errors?.tariff_name" :errors="errors.tariff_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                 <template #search="{attributes, events}">
                     <input
@@ -92,8 +92,8 @@
           <table class="w-full whitespace-no-wrap" >
               <thead v-once>
                 <tr class="w-full">
-                  <th>Particulars</th>
-                  <th>Unit</th>
+                  <th>Particulars <span class="text-red-500">*</span></th>
+                  <th>Unit <span class="text-red-500">*</span></th>
                   <th>Jan</th>
                   <th>Feb</th>
                   <th>Mar</th>
@@ -125,40 +125,40 @@
                       <input type="text" v-model="form.opsCargoTariffLines[index].unit" placeholder="Unit" class="form-input" required autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jan" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jan" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].feb" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].feb" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].mar" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].mar" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].apr" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].apr" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].may" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].may" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jun" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jun" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jul" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jul" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].aug" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].aug" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].sep" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].sep" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].oct" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].oct" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].nov" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].nov" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].dec" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].dec" class="form-input" autocomplete="off" />
                     </td>
                     <td>
                       <button type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

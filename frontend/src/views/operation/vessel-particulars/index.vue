@@ -148,8 +148,8 @@ onMounted(() => {
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                       </button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-particulars.edit', params: { vesselParticularId: vesselParticular.id } }"></action-button>
                       <action-button :action="'show'" :to="{ name: 'ops.vessel-particulars.show', params: { vesselParticularId: vesselParticular.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-particulars.edit', params: { vesselParticularId: vesselParticular.id } }"></action-button>
                       <action-button @click="confirmDelete(vesselParticular.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
