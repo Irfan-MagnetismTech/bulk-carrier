@@ -95,21 +95,22 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Date</th>
             <th>Cost Center</th>
-            <th>Account Head</th>
-            <th>Credit Amount</th>
+            <th>Account Name</th>
+            <th>Date</th>
             <th>Debit Amount</th>
+            <th>Credit Amount</th>
             <th>Business Unit</th>
             <th>Action</th>
+
           </tr>
           </thead>
           <tbody>
           <tr v-for="(balanceData,index) in openingBalances?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ balanceData?.date }}</td>
             <td>{{ balanceData?.costCenter?.name }}</td>
             <td>{{ balanceData?.account?.account_name }}</td>
+            <td>{{ balanceData?.date }}</td>
             <td>{{ balanceData?.cr_amount }}</td>
             <td>{{ balanceData?.dr_amount }}</td>
             <td>

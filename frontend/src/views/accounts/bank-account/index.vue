@@ -95,11 +95,14 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Beneficiary Bank</th>
-            <th>Beneficiary Bank Branch</th>
-            <th>Routing No</th>
-            <th>Beneficiary Account No.</th>
-            <th>Contact</th>
+            <th> Bank Name </th>
+            <th> Branch Name  </th>
+            <th> Account Type  </th>
+            <th> Account Name  </th>
+            <th> Account No  </th>
+            <th> Routing No  </th>
+            <th> Contact No  </th>
+            <th> Opening Date  </th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -109,9 +112,12 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td>{{ account?.bank_name }}</td>
             <td>{{ account?.branch_name }}</td>
-            <td>{{ account?.routing_number }}</td>
+            <td> {{ account?.account_type }} </td>
+            <td> {{ account?.account_name }} </td>
             <td>{{ account?.account_number }}</td>
+            <td>{{ account?.routing_number }}</td>
             <td>{{ account?.contact_number }}</td>
+            <td>{{ account?.opening_date }}</td>            
             <td>
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>

@@ -86,21 +86,30 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Date</th>
-            <th>Voucher Type</th>
-            <th>Account Head</th>
-            <th>Bill/Mr</th>
-            <th>Debit Amount</th>
-            <th>Credit Amount</th>
+            <th> Cost Center </th>
+            <th> Voucher Type </th>
+            <th> Applied Date </th>
+            <th> Payment Type </th>
+            <th> Cheque Number </th>
+            <th> Cheque Date </th>
+            <th> Bill No </th>
+            <th>Account Name </th>
+            <th>Debit Amount </th>
+            <th>Credit Amount </th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(transactionData,index) in transactions?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td> {{ transactionData?.costCenter?.name }} </td>
+
+
+
+
             <td>{{ transactionData?.transaction_date }}</td>
             <td>{{ transactionData?.voucher_type }}</td>
-            <td>Will be account head</td>
+            <td> Will be account head </td>
             <td>{{ transactionData?.bill_no }}</td>
             <td>15000</td>
             <td>11000</td>
