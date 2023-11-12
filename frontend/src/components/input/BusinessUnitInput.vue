@@ -5,7 +5,10 @@ import Store from "../../store";
 
 export default {
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: '',
+    },
     page: {
       type: String,
       default: 'create'
@@ -31,7 +34,7 @@ export default {
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
       <select v-if="page === 'create'" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-input" required>
-        <option value="ALL" disabled>Select</option>
+        <option value="" disabled selected>Select</option>
         <option value="PSML">PSML</option>
         <option value="TSLL">TSLL</option>
       </select>

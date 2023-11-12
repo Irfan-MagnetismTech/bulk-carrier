@@ -19,7 +19,7 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 
 </script>
