@@ -258,7 +258,7 @@ class MntWorkRequisitionController extends Controller
                     $error = array(
                         "message" => "Completion date should be after start date.",
                         "errors" => [
-                            "completion_date" => "Completion date should be after start date."
+                            "completion_date" => ["Completion date should be after start date."]
                         ]
                     );
                     return response()->json($error, 422);

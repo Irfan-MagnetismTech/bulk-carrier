@@ -40,7 +40,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -208,9 +208,7 @@ const props = defineProps({
 });
 
 
-watch(() => presentRunHour.value, (value) => {
-  props.form.present_run_hour = value?.previous_run_hour;
-});
+
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
@@ -274,11 +272,7 @@ function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
 
 
 onMounted(() => {
-  watchEffect(() => {
-    if(props.form.ops_vessel_id && props.form.mnt_item_id){
-      getItemPresentRunHour(props.form.ops_vessel_id, props.form.mnt_item_id);
-    }
-  });
+  
 });
 
 </script>

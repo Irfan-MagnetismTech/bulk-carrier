@@ -159,11 +159,13 @@ export default function useWipWorkRequisition() {
                 `/mnt/update-work-requisition-line-wip/${workRequisitionLineId}`,
                 workRequisitionLine
             );
+            workRequisitionLine.errors = '';
             workRequisitionLine.status = data?.value?.status ?? 0;
             notification.showSuccess(status);
             // router.push({ name: "mnt.wip-work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
+            workRequisitionLine.errors = data.errors;
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
