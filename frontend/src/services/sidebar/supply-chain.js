@@ -162,7 +162,17 @@ export default [
               is_open: false,
               permissionKey: '',
               subSubMenu: []
-          }
+            },
+            {
+                route: `${BASE}.movement-requisitions.index`,
+                label: 'Movement Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
             
         ]
     },

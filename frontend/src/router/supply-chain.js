@@ -451,4 +451,34 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-show'  },
     },
     /* Store Issue Return end */
+
+
+     /* Movement Requisition start */
+
+     {
+        path: `/${BASE}/movement-requisitions`,
+        name: `${BASE}.movement-requisitions.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-requisitions/create`,
+        name: `${BASE}.movement-requisitions.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-create' },
+    },
+    {
+        path: `/${BASE}/movement-requisitions/:movementRequisitionId/edit`,
+        name: `${BASE}.movement-requisitions.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-edit' },
+    },
+    {
+        path: `/${BASE}/movement-requisitions/:movementRequisitionId`,
+        name: `${BASE}.movement-requisitions.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-show'  },
+    },
+    /* Movement Requisition end */
 ];

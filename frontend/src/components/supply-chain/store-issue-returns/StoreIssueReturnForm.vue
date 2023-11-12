@@ -41,6 +41,7 @@
                 :options="filteredStoreIssues"
                 placeholder="--Choose an option--"
                 @search="fetchStoreIssue"
+                @change="setStoreIssueOtherData(form.scmSi)"
                 v-model="form.scmSi"
                 label="ref_no"
                 class="block form-input">
@@ -238,21 +239,37 @@
 
 
 
-  function fetchStoreIssue(search, loading) {
+function fetchStoreIssue(search, loading) {
+    if (search.length > 0) {
       loading(true);
       searchStoreIssue(search, loading, props.form.business_unit);
+    }
   }
 
-watch(() => props.form.scmSi, (newVal,oldVal) => {
-      props.form.scm_si_id = newVal?.id;
-      props.form.si_no = newVal?.ref_no;
-      props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
-      props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-      props.form.scmWarehouse = newVal?.scmWarehouse;
-      props.form.scm_department_id = newVal?.scm_department_id;
-      filteredStoreIssues.value = [];
-          
-});
+function setStoreIssueOtherData(datas) {
+      props.form.scm_si_id = datas.id;
+      props.form.si_no = datas.ref_no;
+      props.form.acc_cost_center_id = datas.acc_cost_center_id;
+      props.form.scm_warehouse_id = datas.scm_warehouse_id;
+      props.form.scmWarehouse = datas.scmWarehouse;
+      props.form.scm_department_id = datas.scm_department_id;
+      filteredStoreIssues.value = []; 
+      console.log(datas);
+      getSiWiseSir(datas.id);    
+}
+
+
+
+// watch(() => props.form.scmSi, (new Val,oldVal) => {
+//       props.form.scm_si_id = newVal?.id;
+//       props.form.si_no = newVal?.ref_no;
+//       props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
+//       props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
+//       props.form.scmWarehouse = newVal?.scmWarehouse;
+//       props.form.scm_department_id = newVal?.scm_department_id;
+//       filteredStoreIssues.value = []; 
+//       getSiWiseSir(newVal?.id);    
+// });
 
 watch(() => props.form.scmWarehouse, (value) => {
   if (value) {
@@ -262,17 +279,20 @@ watch(() => props.form.scmWarehouse, (value) => {
 
 
 
-watch(() => props.form.scm_si_id, (value) => {
-  if (value) {
-    getSiWiseSir(value);
-  }
-});
+// watch(() => props.form.scm_si_id, (value) => {
+//   if (value) {
+
+//   }
+// });
 
 // watchEffect filteredStoreIssueReturnLines
-watchEffect(() => {
-  props.form.scmSirLines = filteredStoreIssueReturnLines.value;
+// watchEffect(() => {
+//   props.form.scmSirLines = filteredStoreIssueReturnLines.value;
+// });
+//watch filteredStoreIssueReturnLines
+watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
+  props.form.scmSirLines = newVal;
 });
-
 function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].unit = datas.unit;
       props.form.scmSirLines[index].scm_material_id = datas.id;
