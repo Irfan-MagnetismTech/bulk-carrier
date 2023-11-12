@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntCriticalVesselItemRequest extends FormRequest
 {
@@ -14,7 +15,11 @@ class MntCriticalVesselItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id' => 'required',
+            'mnt_critical_item_id' => ['required', Rule::unique('mnt_critical_vessel_items')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->route('critical-item-cat'), 'id')],
+            'mntCriticalItemSps.*.sp_name' => 'required',
+            'mntCriticalItemSps.*.unit' => 'required',
+            'mntCriticalItemSps.*.rob' => 'required|integer|min:1',
         ];
     }
 
@@ -26,7 +31,7 @@ class MntCriticalVesselItemRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'mnt_critical_item_id.unique' => 'The Critical item for selected vessel already exists.',
         ];
     }
 
