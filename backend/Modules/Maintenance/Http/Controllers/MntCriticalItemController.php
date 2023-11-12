@@ -131,4 +131,22 @@ class MntCriticalItemController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getCriticalItems() {
+        try {
+
+            $criticalItems = MntCriticalItem::select("*")            
+                                ->when(request()->has('mnt_critical_item_cat_id'), function($q){
+                                    $q->where('mnt_critical_item_cat_id', request()->mnt_critical_item_cat_id); 
+                                })
+                                ->get();
+
+            return response()->success('Critical items are retrieved successfully', $criticalItems, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

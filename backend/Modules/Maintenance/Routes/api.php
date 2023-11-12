@@ -75,6 +75,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     // mntCriticalFunctions
     Route::get('get-critical-functions', [MntCriticalFunctionController::class, 'mntCriticalFunctions']);
     // getCriticalFunctionWiseItemCats
-    Route::get('get-critical-function-wise-item-cats/{id}', [MntCriticalItemCatController::class, 'getCriticalFunctionWiseItemCats']);
+    Route::get('get-critical-item-cats', [MntCriticalItemCatController::class, 'getCriticalItemCats']);
+    Route::get('get-critical-items', [MntCriticalItemController::class, 'getCriticalItems']);
 
 });

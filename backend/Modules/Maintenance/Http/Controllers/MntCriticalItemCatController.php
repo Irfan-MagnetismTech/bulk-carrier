@@ -132,12 +132,15 @@ class MntCriticalItemCatController extends Controller
         }
     }
 
-    public function getCriticalFunctionWiseItemCats($id) {
+    public function getCriticalItemCats() {
         try {
 
-            $criticalItemCats = MntCriticalItemCat::where('mnt_critical_function_id', $id)->get();
-
-            return response()->success('Critical function wise item categories are retrieved successfully', $criticalItemCats, 200);
+            $criticalItemCats = MntCriticalItemCat::select("*")            
+                                ->when(request()->has('mnt_critical_function_id'), function($q){
+                                    $q->where('mnt_critical_function_id', request()->mnt_critical_function_id); 
+                                })
+                                ->get();
+            return response()->success('Critical item categories are retrieved successfully', $criticalItemCats, 200);
             
         }
         catch (\Exception $e)
