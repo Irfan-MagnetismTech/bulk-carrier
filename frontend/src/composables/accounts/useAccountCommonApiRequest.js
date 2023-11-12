@@ -19,7 +19,7 @@ export default function useAccountCommonApiRequest() {
 
     async function getBalanceIncomeLineLists(businessUnit) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -33,14 +33,14 @@ export default function useAccountCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
     async function getBalanceIncomeAccountLists(businessUnit,acc_balance_and_income_line_id) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -55,7 +55,7 @@ export default function useAccountCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
