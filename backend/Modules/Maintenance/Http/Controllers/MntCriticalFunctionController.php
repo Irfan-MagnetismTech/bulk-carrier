@@ -28,6 +28,25 @@ class MntCriticalFunctionController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function mntCriticalFunctions()
+    {
+        try {
+
+            $criticalFunctions = MntCriticalFunction::select('*')->get();
+
+            return response()->success('Critical functions are retrieved successfully', $criticalFunctions, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.
