@@ -20,7 +20,7 @@ class AccCostCenterController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accCostCenters, 200);
+            return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }
         catch (\Exception $e)
         {

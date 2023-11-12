@@ -29,7 +29,7 @@ class AccBankAccountController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accBankAccounts, 200);
+            return response()->success('Retrieved Successfully', $accBankAccounts, 200);
         }
         catch (QueryException $e)
         {
@@ -46,7 +46,7 @@ class AccBankAccountController extends Controller
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');
             $accBankAccount     = AccBankAccount::create($accBankAccountData);
 
-            return response()->success('Created Succesfully', $accBankAccount, 201);
+            return response()->success('Created Successfully', $accBankAccount, 201);
         }
         catch (QueryException $e)
         {
@@ -60,7 +60,7 @@ class AccBankAccountController extends Controller
     public function show(AccBankAccount $accBankAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accBankAccount, 200);
+            return response()->success('Retrieved Successfully', $accBankAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -78,7 +78,7 @@ class AccBankAccountController extends Controller
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');
             $accBankAccount->update($accBankAccountData);
 
-            return response()->success('Updated succesfully', $accBankAccount, 202);
+            return response()->success('Updated Successfully', $accBankAccount, 202);
         }
         catch (QueryException $e)
         {
@@ -94,7 +94,7 @@ class AccBankAccountController extends Controller
         try {
             $accBankAccount->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

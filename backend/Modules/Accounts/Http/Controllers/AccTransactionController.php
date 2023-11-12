@@ -21,9 +21,11 @@ class AccTransactionController extends Controller
             $crwCrewRanks = AccTransaction::with('ledgerEntries.account', 'costCenter')->withCount('ledgerEntries as total_ledger')
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            })
+            ->orderBy('transaction_date', 'DESC')
+            ->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
+            return response()->success('Retrieved Successfully', $crwCrewRanks, 200);
         }
         catch (QueryException $e)
         {
@@ -103,7 +105,7 @@ class AccTransactionController extends Controller
         try {
             $accTransaction->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
