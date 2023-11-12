@@ -241,6 +241,35 @@ export default [
 
 	/* Work Requisition Done end */
 
+	/* Critical Ship Function start */
+	{
+		path: `/${BASE}/critical-functions`,
+		name: `${BASE}.critical-functions.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-functions/create`,
+		name: `${BASE}.critical-functions.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-create' },
+	},
+	{
+		path: `/${BASE}/critical-functions/:criticalFunctionId/edit`,
+		name: `${BASE}.critical-functions.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-edit' },
+	},
+	{
+		path: `/${BASE}/critical-functions/:criticalFunctionId`,
+		name: `${BASE}.critical-functions.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-show'  },
+	},
+
+	/* Critical Ship Function end */
+
 
 
 
