@@ -68,7 +68,7 @@ class MntCriticalItemController extends Controller
     {
         try {
             
-            $criticalItem = MntCriticalItem::with(['mntCriticalItemCat'])->find($id);
+            $criticalItem = MntCriticalItem::with(['mntCriticalItemCat.mntCriticalFunction.mntCriticalItemCats'])->find($id);
             
             return response()->success('Critical item found successfully', $criticalItem, 200);
             
