@@ -12,7 +12,7 @@
             <span class="show-block">{{ cargoTariff?.tariff_name }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <span class="show-block">{{ cargoTariff?.opsVessel?.name }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -49,7 +49,7 @@
           <table class="w-full whitespace-no-wrap" >
               <thead v-once class="bg-gray-300">
                 <tr class="w-full">
-                  <th class="!w-48 block">Particulars</th>
+                  <th class="block">Particulars</th>
                   <th>Unit</th>
                   <th>Jan</th>
                   <th>Feb</th>
@@ -69,46 +69,46 @@
               <tbody>
                   <tr v-for="(item, index) in cargoTariff.opsCargoTariffLines">
                     <td>
-                      <span class="show-block">{{ cargoTariff.opsCargoTariffLines[index].particular }}</span>
+                      <span>{{ cargoTariff.opsCargoTariffLines[index].particular }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ cargoTariff.opsCargoTariffLines[index].unit }}</span>
+                      <span>{{ cargoTariff.opsCargoTariffLines[index].unit }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jan) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jan) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].feb) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].feb) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].mar) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].mar) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].apr) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].apr) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].may) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].may) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jun) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jun) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jul) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].jul) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].aug) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].aug) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].sep) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].sep) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].oct) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].oct) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].nov) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].nov) }}</span>
                     </td>
                     <td>
-                      <span class="show-block">{{ numberFormat(cargoTariff.opsCargoTariffLines[index].dec) }}</span>
+                      <span>{{ numberFormat(cargoTariff.opsCargoTariffLines[index].dec) }}</span>
                     </td>
                   </tr>
               </tbody>

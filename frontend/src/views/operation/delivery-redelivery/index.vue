@@ -10,6 +10,8 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import useDeliveryRedelivery from '../../../composables/operations/useDeliveryRedelivery';
 import Store from "../../../store";
 import moment from 'moment';
+import useHelper from "../../../composables/useHelper";
+
 
 const { deliveryRedeliveries, getDeliveryRedeliverys, deleteDeliveryRedelivery, isLoading } = useDeliveryRedelivery();
 const icons = useHeroIcon();
@@ -26,7 +28,7 @@ setTitle('Delivery Redelivery List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const { numberFormat } = useHelper();
 
 function confirmDelete(id) {
   Swal.fire({
@@ -106,10 +108,16 @@ onMounted(() => {
                   </td>
                   <td>{{ deliveryRedelivery?.note_type }}</td>
                   <td>
-
+                    {{ numberFormat(deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
+  return accumulator + currentObject.amount_usd;
+}, 0)) }}
                   </td>
                   <td>
-                    
+                  
+                    {{ numberFormat(deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
+  return accumulator + currentObject.amount_bdt;
+}, 0)) }}
+
                   </td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>

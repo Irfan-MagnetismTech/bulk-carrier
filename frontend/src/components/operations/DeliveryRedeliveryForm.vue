@@ -45,7 +45,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -108,8 +108,18 @@
           <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
       </div>
-    </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+          <textarea type="text" v-model="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
+          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+        </label>
+        <label class="block w-full mt-2 text-sm"></label>
+
+
+      </div>
+    </div>
     <div v-if="form.opsBunkers?.length" id="bunker-info" class="mt-5">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
         <table class="w-full whitespace-no-wrap" >
@@ -137,13 +147,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="Quantity" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="Quantity" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsBunkers[index]?.rate" :errors="errors.opsBunkers[index]?.rate"/>
                 </label>
               </td>
@@ -169,12 +179,9 @@
 import { ref, watch, onMounted } from "vue";
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {useStore} from "vuex";
 import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
-import usePort from "../../composables/operations/usePort";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
-import useCargoType from "../../composables/operations/useCargoType";
 
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
@@ -195,11 +202,6 @@ function fetchVessels(search, loading) {
       searchVessels(search, props.form.business_unit, loading);
 }
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
-
 function fetchCharterers(search, loading) {
       loading(true);
       searchChartererProfiles(search, loading)
@@ -217,8 +219,17 @@ watch(() => props.form.opsVessel, (value) => {
 }, { deep: true})
 
 watch(() => vessel, (value) => {
+  console.log("vessel change ")
   if(value) {
-    props.form.opsBunkers = value?.value?.opsBunkers
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+      props.form.opsBunkers = value?.value?.opsBunkers
+    } else if(props?.formType == 'edit' && editInitiated.value != true) {
+      editInitiated.value = true;
+    }
+
+    if(props?.formType == 'create') {
+      props.form.opsBunkers = value?.value?.opsBunkers
+    }
   }
 }, { deep : true})
 
@@ -234,28 +245,45 @@ watch(() => props.form.opsChartererProfile, (value) => {
 }, { deep: true})
 
 watch(() => props.form.currency, (value) => {
+  console.log("currency change ")
+
   if(value) {
-    for(const bunker of props.form.opsBunkers) {
-      bunker.rate = 0;
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+
+      for(const bunker of props.form.opsBunkers) {
+        bunker.rate = 0;
+      }
+    }
+
+    if(props?.formType == 'create') {
+
+      for(const bunker of props.form.opsBunkers) {
+        bunker.rate = 0;
+      }
     }
   }
 }, { deep: true})
 
-watch(() => props.form, (value) => {
+watch(() => props.form.exchange_rate, (value) => {
+console.log("exchange rate changing")
+  if(value) {
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
 
-  if(props?.formType == 'edit' && editInitiated.value != true) {
+    if(props?.formType == 'create') {
 
-  //   vessels.value = [props?.form?.opsVessel]
-
-  //   if(vessels.value.length > 0) {
-  //       console.log("Changing editInitatedValue ")
-  //       editInitiated.value = true
-  //     }
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
   }
 }, {deep: true});
 
 function calculatePrice(index) {
-  console.log("changing")
+  console.log("calculate price")
   let quantity = props.form.opsBunkers[index].quantity ?? 0;
   let rate = props.form.opsBunkers[index].rate ?? 0;
   let exchangeRate = props.form.exchange_rate ?? 0;

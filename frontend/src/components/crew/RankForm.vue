@@ -3,8 +3,9 @@ import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useRole from "../../composables/administration/useRole";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import Store from "../../store";
 
 const props = defineProps({
   form: {
@@ -19,9 +20,10 @@ const props = defineProps({
 });
 
 const { roles, getRoles } = useRole();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
-  getRoles();
+  props.form.business_unit = businessUnit.value;
 });
 
 </script>

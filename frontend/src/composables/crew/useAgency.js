@@ -21,7 +21,8 @@ export default function useAgency() {
         website: '',
         logo: '',
         country: '',
-        crwAgencyContactPeople: [
+        business_unit: '',
+        crwAgencyContactPersons: [
             {
                 name: '',
                 contact_no: '',
@@ -32,18 +33,25 @@ export default function useAgency() {
         ]
     });
 
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencies(page) {
+    async function getAgencies(page,businessUnit) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+
+        indexPage.value = page;
+        indexBusinessUnit.value = businessUnit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-agencies',{
                 params: {
                     page: page || 1,
+                    business_unit: businessUnit,
                 },
             });
             agencies.value = data.value;
@@ -62,8 +70,12 @@ export default function useAgency() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('logo', form.logo);
+        formData.append('data', JSON.stringify(form));
+
         try {
-            const { data, status } = await Api.post('/crw/crw-agencies', form);
+            const { data, status } = await Api.post('/crw/crw-agencies', formData);
             agency.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.agencies.index" });
@@ -99,10 +111,15 @@ export default function useAgency() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('logo', form.logo);
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
         try {
-            const { data, status } = await Api.put(
+            const { data, status } = await Api.post(
                 `/crw/crw-agencies/${agencyId}`,
-                form
+                formData
             );
             agency.value = data.value;
             notification.showSuccess(status);
@@ -124,7 +141,7 @@ export default function useAgency() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-agencies/${agencyId}`);
             notification.showSuccess(status);
-            await getAgencies();
+            await getAgencies(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

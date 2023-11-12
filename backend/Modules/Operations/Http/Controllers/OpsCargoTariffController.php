@@ -51,7 +51,6 @@ class OpsCargoTariffController extends Controller
     */
     public function store(OpsCargoTariffRequest $request): JsonResponse
     {
-        // dd($request);
         try {
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
