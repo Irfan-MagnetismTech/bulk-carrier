@@ -18,8 +18,18 @@ const props = defineProps({
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+function checkWhitespace(value) {
+  if (/^\s+$/.test(props.form.bank_name)) {props.form.bank_name = '';}
+  if (/^\s+$/.test(props.form.branch_name)) {props.form.branch_name = '';}
+  if (/^\s+$/.test(props.form.account_type)) {props.form.account_type = '';}
+  if (/^\s+$/.test(props.form.account_name)) {props.form.account_name = '';}
+  if (/^\s+$/.test(props.form.account_number)) {props.form.account_number = '';}
+  if (/^\s+$/.test(props.form.routing_number)) {props.form.routing_number = '';}
+  if (/^\s+$/.test(props.form.contact_number)) {props.form.contact_number = '';}
+}
+
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 
 </script>
@@ -33,39 +43,39 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Bank Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.bank_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.bank_name" @input="checkWhitespace" placeholder="Bank name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.bank_name" :errors="errors.bank_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Branch Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.branch_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.branch_name" @input="checkWhitespace" placeholder="Bank name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.branch_name" :errors="errors.branch_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_type" placeholder="Account type" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.account_type" @input="checkWhitespace" placeholder="Account type" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.account_type" :errors="errors.account_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_name" placeholder="Account name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="Account name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.account_name" :errors="errors.account_name" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Account No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_number" placeholder="Account no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model="form.account_number" @input="checkWhitespace" placeholder="Account no" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.account_number" :errors="errors.account_number" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Routing No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.routing_number" placeholder="Routing no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model="form.routing_number" @input="checkWhitespace" placeholder="Routing no" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.routing_number" :errors="errors.routing_number" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Contact No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.contact_number" placeholder="Contact no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model="form.contact_number" @input="checkWhitespace" placeholder="Contact no" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.contact_number" :errors="errors.contact_number" />
     </label>
     <label class="block w-full mt-2 text-sm">
