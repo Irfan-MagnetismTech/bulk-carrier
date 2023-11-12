@@ -270,6 +270,38 @@ export default [
 
 	/* Critical Ship Function end */
 
+	
+	/* Critical Item Categories Start */
+	{
+		path: `/${BASE}/critical-item-categories`,
+		name: `${BASE}.critical-item-categories.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-item-categories/create`,
+		name: `${BASE}.critical-item-categories.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-create' },
+	},
+	{
+		path: `/${BASE}/critical-item-categories/:criticalItemCategoryId/edit`,
+		name: `${BASE}.critical-item-categories.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-edit' },
+	},
+	{
+		path: `/${BASE}/critical-item-categories/:criticalItemCategoryId`,
+		name: `${BASE}.critical-item-categories.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-show'  },
+	},
+
+	/* Critical Item Categories End */
+
+
+
 
 
 
