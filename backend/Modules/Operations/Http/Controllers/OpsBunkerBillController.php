@@ -201,7 +201,6 @@ class OpsBunkerBillController extends Controller
         ->first();
         
         $bunker_bill['company']="Toggi Shipping";
-        // dd($bunker_bill);
 
         return Excel::download(new SupplierBillExport($bunker_bill), 'SupplierBill.xlsx');
         

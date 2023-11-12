@@ -51,7 +51,9 @@ class OpsVoyageBoatNoteController extends Controller
     */
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
-        // dd($request);
+        $opsVoyageBoatNoteLines = collect($request->opsVoyageBoatNoteLines);
+        
+        // dd($opsVoyageBoatNoteLines);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -59,9 +61,19 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
+            $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request) {
+                $attachment_path = 'null';
+                
+                if(isset($request->attachment[$index]) && $request->attachment[$index] != null){
+                    $attachment_path = $this->fileUpload->handleFile($request->attachment[$index], 'ops/voyage/boat_note_line');
+                }
+            
+                $boat_note['attachment'] = $attachment_path;
+                return $boat_note;
+            });
+
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
-            $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
+            $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($opsVoyageBoatNoteLines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
         }
