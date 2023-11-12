@@ -5,7 +5,7 @@ namespace Modules\SupplyChain\Traits;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-trait StockLedgerTrait
+trait StockLedger
 {
     /**
      * Get the stock ledgers associated with the stockable entity.

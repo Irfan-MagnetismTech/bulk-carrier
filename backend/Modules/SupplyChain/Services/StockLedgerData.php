@@ -70,7 +70,7 @@ class StockLedgerData
             $stockIn = $value->quantity;
             $stockOut = $value->child->sum('quantity');
             $currentStock = $stockIn + $stockOut;
-            if ($currentStock > $outQty) {
+            if ($currentStock >= $outQty) {
                 $stockOutArray[] = [
                     'scm_material_id'           => $value->scm_material_id,
                     'scm_warehouse_id'          => $value->scm_warehouse_id,
