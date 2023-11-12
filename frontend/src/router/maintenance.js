@@ -300,6 +300,38 @@ export default [
 
 	/* Critical Item Categories End */
 
+	
+	/* Critical Items Start */
+	{
+		path: `/${BASE}/critical-items`,
+		name: `${BASE}.critical-items.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-items/create`,
+		name: `${BASE}.critical-items.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-create' },
+	},
+	{
+		path: `/${BASE}/critical-items/:criticalItemId/edit`,
+		name: `${BASE}.critical-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-edit' },
+	},
+	{
+		path: `/${BASE}/critical-items/:criticalItemId`,
+		name: `${BASE}.critical-items.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-show'  },
+	},
+
+	/* Critical Items End */
+
+
+
 
 
 

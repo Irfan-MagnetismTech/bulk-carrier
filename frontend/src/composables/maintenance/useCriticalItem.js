@@ -6,17 +6,20 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useCriticalItemCategory() {
+export default function useCriticalItem() {
     const router = useRouter();
-    const criticalItemCategories = ref([]);
-    const criticalFunctionWiseItemCategories = ref([]);
+    const criticalItems = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const criticalItemCategory = ref( {
+    const criticalItem = ref( {
         mnt_critical_function_id: '',
         mnt_critical_function_name: '',
-        category_name: '',
+        mnt_critical_item_cat_id: '',
+        mnt_critical_item_cat_name: '',
+        item_name: '',
+        specification: '',
         notes: '',
+        mntItemCategories: [],
         // business_unit: '',
     });
 
@@ -26,7 +29,7 @@ export default function useCriticalItemCategory() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCriticalItemCategories(page, businessUnit) {
+    async function getCriticalItems(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -35,13 +38,13 @@ export default function useCriticalItemCategory() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/mnt/critical-item-cats',{
+            const {data, status} = await Api.get('/mnt/critical-items',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            criticalItemCategories.value = data.value;
+            criticalItems.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -53,16 +56,16 @@ export default function useCriticalItemCategory() {
         }
     }
 
-    async function storeCriticalItemCategory(form) {
+    async function storeCriticalItem(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/mnt/critical-item-cats', form);
-            criticalItemCategory.value = data.value;
+            const { data, status } = await Api.post('/mnt/critical-items', form);
+            criticalItem.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-item-categories.index" });
+            router.push({ name: "mnt.critical-items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -72,14 +75,14 @@ export default function useCriticalItemCategory() {
         }
     }
 
-    async function showCriticalItemCategory(criticalItemCategoryId) {
+    async function showCriticalItem(criticalItemId) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/critical-item-cats/${criticalItemCategoryId}`);
-            criticalItemCategory.value = data.value;
+            const { data, status } = await Api.get(`/mnt/critical-items/${criticalItemId}`);
+            criticalItem.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -91,19 +94,19 @@ export default function useCriticalItemCategory() {
         }
     }
 
-    async function updateCriticalItemCategory(form, criticalItemCategoryId) {
+    async function updateCriticalItem(form, criticalItemId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/critical-item-cats/${criticalItemCategoryId}`,
+                `/mnt/critical-items/${criticalItemId}`,
                 form
             );
-            criticalItemCategory.value = data.value;
+            criticalItem.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-item-categories.index" });
+            router.push({ name: "mnt.critical-items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -114,45 +117,21 @@ export default function useCriticalItemCategory() {
         }
     }
 
-    async function deleteCriticalItemCategory(criticalItemCategoryId) {
+    async function deleteCriticalItem(criticalItemId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/critical-item-cats/${criticalItemCategoryId}`);
+            const { data, status } = await Api.delete( `/mnt/critical-items/${criticalItemId}`);
             notification.showSuccess(status);
-            await getCriticalItemCategories(indexPage.value, indexBusinessUnit.value);
+            await getCriticalItems(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
-        }
-    }
-
-    //get-critical-function-wise-item-cats
-    async function getCriticalFunctionWiseItemCategories(mntCriticalFunctionId){
-        //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        try {
-            const {data, status} = await Api.get('/mnt/get-critical-item-cats',{
-                params: {
-                    mnt_critical_function_id: mntCriticalFunctionId,
-                },
-            });
-            criticalFunctionWiseItemCategories.value = data.value;
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
         }
     }
 
@@ -160,15 +139,13 @@ export default function useCriticalItemCategory() {
 
     
     return {
-        criticalItemCategories,
-        criticalItemCategory,
-        criticalFunctionWiseItemCategories,
-        getCriticalItemCategories,
-        storeCriticalItemCategory,
-        showCriticalItemCategory,
-        updateCriticalItemCategory,
-        deleteCriticalItemCategory,
-        getCriticalFunctionWiseItemCategories,
+        criticalItems,
+        criticalItem,
+        getCriticalItems,
+        storeCriticalItem,
+        showCriticalItem,
+        updateCriticalItem,
+        deleteCriticalItem,
         isLoading,
         errors,
     };
