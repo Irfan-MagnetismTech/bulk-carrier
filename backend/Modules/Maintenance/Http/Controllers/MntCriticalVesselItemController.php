@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntCriticalVesselItem;
+use Modules\Maintenance\Http\Requests\MntCriticalVesselItemRequest;
 
 class MntCriticalVesselItemController extends Controller
 {
@@ -48,7 +49,7 @@ class MntCriticalVesselItemController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalVesselItemRequest $request)
     {
         try {
             $vesselItem['ops_vessel_id'] = $request->get('ops_vessel_id');
@@ -110,7 +111,7 @@ class MntCriticalVesselItemController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntCriticalVesselItemRequest $request, $id)
     {
         try {
             $vesselItem['ops_vessel_id'] = $request->get('ops_vessel_id');

@@ -103,7 +103,7 @@ class MntCriticalItemController extends Controller
             $criticalItem = MntCriticalItem::findorfail($id);
             $criticalItem->update($input);
             
-            return response()->success('critical item updated successfully', $criticalItem, 202);
+            return response()->success('Critical item updated successfully', $criticalItem, 202);
             
         }
         catch (\Exception $e)

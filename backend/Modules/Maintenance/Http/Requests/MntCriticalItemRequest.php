@@ -16,7 +16,7 @@ class MntCriticalItemRequest extends FormRequest
     {
         return [
             'mnt_critical_item_cat_id' => 'required',
-            'item_name'  => ['required', Rule::unique('mnt_critical_items')->ignore($this->id)],
+            'item_name'  => ['required', Rule::unique('mnt_critical_items')->ignore($this->route('critical_item'), 'id')],
         ];
     }
 

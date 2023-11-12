@@ -15,11 +15,12 @@ class MntCriticalVesselItemRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'business_unit' => 'required',
             'ops_vessel_id' => 'required',
-            'mnt_critical_item_id' => ['required', Rule::unique('mnt_critical_vessel_items')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->route('critical-item-cat'), 'id')],
+            'mnt_critical_item_id' => ['required', Rule::unique('mnt_critical_vessel_items')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->route('critical_vessel_item'), 'id')],
             'mntCriticalItemSps.*.sp_name' => 'required',
             'mntCriticalItemSps.*.unit' => 'required',
-            'mntCriticalItemSps.*.rob' => 'required|integer|min:1',
+            'mntCriticalItemSps.*.min_rob' => 'required|integer|min:1',
         ];
     }
 
