@@ -22,7 +22,8 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function getCode(el, loading){
-  loading = true
+  alert("df")
+  loading = true;
   getGeneratedAccountCode(el.target.value);
 }
 
@@ -32,11 +33,20 @@ watch(generatedAccountCode, (value) => {
   }
 });
 
+watch(() => props.form.acc_balance_and_income_line_name, (newEntries, oldEntries) => {
+    getGeneratedAccountCode(props.form.acc_balance_and_income_line_name.id);
+    }, { deep: true }
+);
+
 watch(() => props.form, (newEntries, oldEntries) => {
       props.form.acc_balance_and_income_line_id = props.form?.acc_balance_and_income_line_name?.id ?? '';
       props.form.parent_account_id = props.form?.parent_account_name?.id ?? '';
     }, { deep: true }
 );
+
+function checkWhitespace(value) {
+  if (/^\s+$/.test(props.form.account_name)) {props.form.account_name = '';}
+}
 
 onMounted(() => {
   //props.form.business_unit = businessUnit.value;
@@ -57,7 +67,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Balance/Income Line <span class="text-red-500">*</span></span>
-        <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.acc_balance_and_income_line_name" label="line_text"  class="block w-full rounded form-input">
+        <v-select :options="balanceIncomeLineLists" :loading="isLoading" @input="getCode($event)" placeholder="--Choose an option--" v-model="form.acc_balance_and_income_line_name" label="line_text"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_balance_and_income_line_name" v-bind="attributes" v-on="events"/>
           </template>
@@ -90,7 +100,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_name" placeholder="A/C name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.account_name" :errors="errors.account_name" />
       </label>
     </div>
