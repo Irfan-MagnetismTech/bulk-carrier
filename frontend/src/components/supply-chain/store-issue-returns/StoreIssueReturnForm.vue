@@ -244,15 +244,14 @@
   }
 
 watch(() => props.form.scmSi, (newVal,oldVal) => {
-  if (newVal !== oldVal) {
       props.form.scm_si_id = newVal?.id;
       props.form.si_no = newVal?.ref_no;
       props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
       props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
       props.form.scmWarehouse = newVal?.scmWarehouse;
       props.form.scm_department_id = newVal?.scm_department_id;
-      // filteredStoreIssues.value = [];
-    }
+      filteredStoreIssues.value = [];
+          
 });
 
 watch(() => props.form.scmWarehouse, (value) => {
@@ -265,13 +264,13 @@ watch(() => props.form.scmWarehouse, (value) => {
 
 watch(() => props.form.scm_si_id, (value) => {
   if (value) {
-    // getSiWiseSir(value);
+    getSiWiseSir(value);
   }
 });
 
 // watchEffect filteredStoreIssueReturnLines
 watchEffect(() => {
-  // props.form.scmSirLines = filteredStoreIssueReturnLines.value;
+  props.form.scmSirLines = filteredStoreIssueReturnLines.value;
 });
 
 function setMaterialOtherData(datas, index) {
