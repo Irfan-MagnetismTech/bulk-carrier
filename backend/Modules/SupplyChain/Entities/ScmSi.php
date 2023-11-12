@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Entities\ScmSiLine;
 use Modules\SupplyChain\Entities\ScmWarehouse;
-use Modules\SupplyChain\Traits\StockLedgerTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\SupplyChain\Traits\StockLedger;
 
 class ScmSi extends Model
 {
-    use HasFactory, StockLedgerTrait;
+    use HasFactory, StockLedger;
 
     protected $fillable = [
         'ref_no', 'scm_warehouse_id', 'acc_cost_center_id','scm_sr_id', 'department_id', 'date', 'remarks', 'business_unit', 'created_by',

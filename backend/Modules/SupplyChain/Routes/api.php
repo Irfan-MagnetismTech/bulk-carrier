@@ -1,22 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
-use Modules\SupplyChain\Http\Controllers\ScmUnitController;
-use Modules\SupplyChain\Http\Controllers\ScmVendorController;
-use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
-use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
-use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
-use Modules\SupplyChain\Http\Controllers\ScmMrrController;
-use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
-use Modules\SupplyChain\Http\Controllers\ScmServiceController;
-use Modules\SupplyChain\Http\Controllers\ScmSrController;
 use Modules\SupplyChain\Http\Controllers\ScmSiController;
+use Modules\SupplyChain\Http\Controllers\ScmSrController;
+use Modules\SupplyChain\Http\Controllers\ScmMmrController;
+use Modules\SupplyChain\Http\Controllers\ScmMrrController;
 use Modules\SupplyChain\Http\Controllers\ScmSirController;
-use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
+use Modules\SupplyChain\Http\Controllers\ScmUnitController;
+use Modules\SupplyChain\Http\Controllers\ScmVendorController;
+use Modules\SupplyChain\Http\Controllers\ScmServiceController;
+use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
+use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\SupplyChainController;
+use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
+use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
+use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
+use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -34,6 +35,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'store-requisitions' => ScmSrController::class,
         'store-issues' => ScmSiController::class,
         'store-issue-returns' => ScmSirController::class,
+        'movement-requisitions' => ScmMmrController::class,
     ]);
 
     //Search Apis

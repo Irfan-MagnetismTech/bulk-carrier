@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSir;
 use Modules\SupplyChain\Entities\ScmSr;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
@@ -52,16 +53,74 @@ class ScmSirController extends Controller
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmSir::class, 'SIR');
 
+        $dataForStockLedger = [];
 
+        foreach ($requestData['scmSirLines'] as $key => $value) {
+
+            $stockLedgerData = ScmStockLedger::query()
+                ->where([
+                    'stockable_id' => $requestData['scmSi']['id'],
+                    'scm_warehouse_id' => $requestData['scm_warehouse_id'],
+                    'stockable_type' => ScmSi::class,
+                    'scm_material_id' => $value['scm_material_id']
+                ])
+                ->orderByDesc('id')
+                ->get();
+
+            $remainingQty = $value['quantity'];
+
+            foreach ($stockLedgerData as $key => $stock) {
+
+                $convertMinusToPlus = $stock->quantity < 0 ? $stock->quantity * -1 : $stock->quantity;
+                if ($convertMinusToPlus >= $remainingQty) {
+                    $dataForStockLedger[] = [
+                        'scm_material_id' => $stock->scm_material_id,
+                        'scm_warehouse_id' => $stock->scm_warehouse_id,
+                        'acc_cost_center_id' => $stock->acc_cost_center_id,
+                        'parent_id' => $stock->parent_id,
+                        'quantity' => $remainingQty,
+                        'recievable_type' => $stock->recievable_type,
+                        'recievable_id' => $stock->recievable_id,
+                        'gross_unit_price' => $stock->gross_unit_price,
+                        'gross_foreign_unit_price' => $stock->gross_foreign_unit_price,
+                        'net_unit_price' => $stock->net_unit_price,
+                        'net_foreign_unit_price' => $stock->net_foreign_unit_price,
+                        'currency' => $stock->currency,
+                        'exchange_rate' => $stock->exchange_rate,
+                        'business_unit' => $stock->business_unit,
+                        'received_date' => $stock->received_date,
+                    ];
+                    break;
+                } else {
+                    $dataForStockLedger[] = [
+                        'scm_material_id' => $stock->scm_material_id,
+                        'scm_warehouse_id' => $stock->scm_warehouse_id,
+                        'acc_cost_center_id' => $stock->acc_cost_center_id,
+                        'parent_id' => $stock->parent_id,
+                        'quantity' => $convertMinusToPlus,
+                        'recievable_type' => $stock->recievable_type,
+                        'recievable_id' => $stock->recievable_id,
+                        'gross_unit_price' => $stock->gross_unit_price,
+                        'gross_foreign_unit_price' => $stock->gross_foreign_unit_price,
+                        'net_unit_price' => $stock->net_unit_price,
+                        'net_foreign_unit_price' => $stock->net_foreign_unit_price,
+                        'currency' => $stock->currency,
+                        'exchange_rate' => $stock->exchange_rate,
+                        'business_unit' => $stock->business_unit,
+                        'received_date' => $stock->received_date,
+                    ];
+                    $remainingQty = $remainingQty - $convertMinusToPlus;
+                }
+            }
+        }
 
         try {
             DB::beginTransaction();
 
             $scmSir = ScmSir::create($requestData);
-
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSirLines, $scmSir->id, 'scm_material_id', 'sir');
-
             $scmSir->scmSirLines()->createMany($linesData);
+            $scmSir->stockable()->createMany($dataForStockLedger);
 
             DB::commit();
 
@@ -80,7 +139,7 @@ class ScmSirController extends Controller
      */
     public function show(ScmSir $storeIssueReturn): JsonResponse
     {
-        
+
         try {
             $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSi');
 
@@ -154,39 +213,38 @@ class ScmSirController extends Controller
 
     public function getSiWiseData(Request $request): JsonResponse
     {
-            if ($request->si_id != null) {
-                $scmSi = ScmSi::query()
-                    ->with([
-                        'scmWarehouse',
-                        'scmSiLines.scmMaterial',
-                    ])
-                    ->where('id', $request->si_id)
-                    ->first();
+        if ($request->si_id != null) {
+            $scmSi = ScmSi::query()
+                ->with([
+                    'scmWarehouse',
+                    'scmSiLines.scmMaterial',
+                ])
+                ->where('id', $request->si_id)
+                ->first();
 
-                $data = [             
-                    'scmSirLines' => $scmSi->scmSiLines->map(function ($item) {
-                        return [
-                            'scmMaterial' => $item->scmMaterial,
-                            'scm_material_id' => $item->scmMaterial->id,
-                            'unit' => $item->scmMaterial->unit,
-                            'quantity' => $item->quantity,
-                            'notes' => '',
-                            'si_quantity' => $item->quantity,
-                            'sr_composite_key' => $item->sr_composite_key,
-                            'si_composite_key' => $item->si_composite_key,
-                            // 'rate' => $item->rate,
-                            // 'total_price' => $item->total_price
-                        ];
-                    })
-                ];
-            } else {
-                // $scmCs = ScmCs::query()
-                // ->with('scmWarehouse', 'scmSr')
-                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
-                // ->get();
-            }
+            $data = [
+                'scmSirLines' => $scmSi->scmSiLines->map(function ($item) {
+                    return [
+                        'scmMaterial' => $item->scmMaterial,
+                        'scm_material_id' => $item->scmMaterial->id,
+                        'unit' => $item->scmMaterial->unit,
+                        'quantity' => $item->quantity,
+                        'notes' => '',
+                        'si_quantity' => $item->quantity,
+                        'sr_composite_key' => $item->sr_composite_key,
+                        'si_composite_key' => $item->si_composite_key,
+                        // 'rate' => $item->rate,
+                        // 'total_price' => $item->total_price
+                    ];
+                })
+            ];
+        } else {
+            // $scmCs = ScmCs::query()
+            // ->with('scmWarehouse', 'scmSr')
+            // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
+            // ->get();
+        }
 
-            return response()->success('data', $data, 200);
-       
+        return response()->success('data', $data, 200);
     }
 }
