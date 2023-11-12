@@ -4,19 +4,17 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
-// import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
-
 import { merge } from 'lodash';
 
 
 export default function useStoreIssueReturn() {
     const BASE = 'scm' 
-    const { downloadFile } = useHelper();
     const router = useRouter();
     const storeIssueReturns = ref([]);
     const filteredStoreIssueReturns = ref([]);
+    const filteredStoreIssueReturnLines = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -35,17 +33,7 @@ export default function useStoreIssueReturn() {
         si_no: '',
         remarks: '',
         business_unit: '',
-        scmSirLin: [],
         scmSirLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                quantity: 0.0,
-                note: '',
-                sr_composite_key: '',
-                si_composite_key: '',
-            }
         ],
     });
     const materialObject = {
@@ -53,7 +41,7 @@ export default function useStoreIssueReturn() {
         scm_material_id: '',
         unit: '',
         quantity: 0.0,
-        note: '',
+        notes: '',
         sr_composite_key: '',
         si_composite_key: '',
     }
@@ -115,7 +103,7 @@ export default function useStoreIssueReturn() {
     }
 
     async function showStoreIssueReturn(storeIssueReturnId) {
-
+        console.log('tag', storeIssueReturnId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -188,21 +176,18 @@ export default function useStoreIssueReturn() {
 
     async function getSiWiseSir(siId) {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/get-si-wise-data`,{
                 params: {
                     si_id: siId,
                 },
             });
-            storeIssueReturn.value.scmSirLin = data.value;
-            console.log('sdsd', data)
+            filteredStoreIssueReturnLines.value = data.value.scmSirLines;
         } catch (error) {
             console.log('tag', error)
         } finally {
-            loader.hide();
-            isLoading.value = false;
             //NProgress.done();
         }
     }
@@ -235,6 +220,7 @@ export default function useStoreIssueReturn() {
         storeIssueReturns,
         storeIssueReturn,
         filteredStoreIssueReturns,
+        filteredStoreIssueReturnLines,
         searchStoreIssueReturn,
         getStoreIssueReturns,
         storeStoreIssueReturn,

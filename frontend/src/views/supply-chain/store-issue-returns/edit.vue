@@ -15,7 +15,7 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 const route = useRoute();
-const storeIssueReturnId = route.params.StoreIssueReturn;
+const storeIssueReturnId = route.params.storeIssueReturnId;
 const formType = 'edit';
 
 setTitle('Edit Store Issue Return');

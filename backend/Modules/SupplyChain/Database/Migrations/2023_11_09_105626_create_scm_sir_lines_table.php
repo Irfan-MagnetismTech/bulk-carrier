@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('scm_sir_lines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('scm_sir_id');
             $table->foreignId('scm_material_id')->constrained('scm_materials');
-            $table->foreignId('scm_sr_id')->constrained('scm_srs');
+            $table->foreignId('scm_sir_id')->constrained('scm_sirs');
             $table->string('unit');
             $table->bigInteger('quantity');
             $table->string('notes');

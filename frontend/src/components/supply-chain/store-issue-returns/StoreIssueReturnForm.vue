@@ -155,7 +155,7 @@
               <label class="block w-full mt-2 text-sm">
                  <input
                    type="text"
-                   v-model="form.scmSirLines[index].note"
+                   v-model="form.scmSirLines[index].notes"
                    class="form-input">
               </label>
             </td>
@@ -193,7 +193,7 @@
 
 
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, toRefs } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -204,13 +204,13 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
-import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
+    import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { filteredStoreIssues, searchStoreIssue } = useStoreIssue();
-
-    const {getSiWiseSir} = useStoreIssueReturn();
+    const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
+    
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -221,7 +221,9 @@ import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssue
       default: {}
     },
 
-    });
+    }); 
+    const form = toRefs(props).form;
+    
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmSirLines.push(clonedObj);
@@ -236,25 +238,41 @@ import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssue
 
 
 
-    function fetchStoreIssue(search, loading) {
-    loading(true);
-    searchStoreIssue(search, loading,props.form.business_unit);
+  function fetchStoreIssue(search, loading) {
+      loading(true);
+      searchStoreIssue(search, loading, props.form.business_unit);
   }
 
-  watch(() => props.form.scmSi, (value) => {
-        props.form.scm_si_id = value?.id;
-        props.form.si_no = value?.ref_no;
-        props.form.acc_cost_center_id = value?.acc_cost_center_id;
-        props.form.scm_warehouse_id = value?.scm_warehouse_id;
-        props.form.scmWarehouse = value?.scmWarehouse;
-        props.form.scm_warehouse_name = value?.scmWarehouse.name;
-        props.form.scm_department_id = value?.scm_department_id;
-  });
+watch(() => props.form.scmSi, (newVal,oldVal) => {
+  if (newVal !== oldVal) {
+      props.form.scm_si_id = newVal?.id;
+      props.form.si_no = newVal?.ref_no;
+      props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
+      props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
+      props.form.scmWarehouse = newVal?.scmWarehouse;
+      props.form.scm_department_id = newVal?.scm_department_id;
+      // filteredStoreIssues.value = [];
+    }
+});
+
+watch(() => props.form.scmWarehouse, (value) => {
+  if (value) {
+    props.form.scm_warehouse_name = value?.scmWarehouse?.name;
+  }
+});
 
 
-  watch(() => props.form.scm_si_id, (value) => {
-    getSiWiseSir(props.form.scm_si_id);
-  });
+
+watch(() => props.form.scm_si_id, (value) => {
+  if (value) {
+    // getSiWiseSir(value);
+  }
+});
+
+// watchEffect filteredStoreIssueReturnLines
+watchEffect(() => {
+  // props.form.scmSirLines = filteredStoreIssueReturnLines.value;
+});
 
 function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].unit = datas.unit;
@@ -263,23 +281,23 @@ function setMaterialOtherData(datas, index) {
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmSirLines, (newLines) => {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
+// watch(() => props.form.scmSirLines, (newLines) => {
+//   newLines.forEach((line, index) => {
+//     // const previousLine = previousLines.value[index];
 
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmSirLines[index].unit = selectedMaterial.unit;
-          props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
-        }
-      }
-    }
-  });
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+//     if (line.scmMaterial) {
+//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//       if (selectedMaterial) {
+//         if ( line.scm_material_id !== selectedMaterial.id
+//         ) {
+//           props.form.scmSirLines[index].unit = selectedMaterial.unit;
+//           props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
+//         }
+//       }
+//     }
+//   });
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
 
 
     function fetchMaterials(search, loading) {
@@ -297,7 +315,9 @@ watch(() => props.form.scmSirLines, (newLines) => {
     props.form.scm_si_id = null;
     props.form.si_no = null,
     props.form.scmDepartment= null,
-    props.form.scm_department_id = null
+    props.form.scm_department_id = null,
+    props.form.scmSirLines = [];
+    filteredStoreIssues.value = [];
   }
 });
 

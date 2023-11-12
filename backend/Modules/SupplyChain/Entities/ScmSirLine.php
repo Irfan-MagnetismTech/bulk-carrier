@@ -12,8 +12,10 @@ use Modules\SupplyChain\Entities\ScmMaterial;
 class ScmSirLine extends Model
 {
     use HasFactory;
-
-    protected $fillable = [];
+    
+    protected $fillable = [
+        'scm_sir_id', 'scm_material_id', 'unit', 'quantity', 'notes', 'si_composite_key', 'sr_composite_key',
+    ];
 
     public function scmMaterial(): BelongsTo
     {

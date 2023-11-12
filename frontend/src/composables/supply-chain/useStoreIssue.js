@@ -181,10 +181,12 @@ export default function useStoreIssue() {
                 },
             }
             );
+            console.log('tag', data)
             filteredStoreIssues.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
+            console.log('tag', data)
         } finally {
             loading(false)
         }

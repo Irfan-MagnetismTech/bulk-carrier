@@ -80,8 +80,9 @@ class ScmSirController extends Controller
      */
     public function show(ScmSir $storeIssueReturn): JsonResponse
     {
+        
         try {
-            $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSr', 'scmSi');
+            $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSi');
 
             $scmSirLines = $storeIssueReturn->scmSirLines->map(function ($scmSirLine) use ($storeIssueReturn) {
                 $lines = [
@@ -162,13 +163,14 @@ class ScmSirController extends Controller
                     ->where('id', $request->si_id)
                     ->first();
 
-                $data = [
+                $data = [             
                     'scmSirLines' => $scmSi->scmSiLines->map(function ($item) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
                             'quantity' => $item->quantity,
+                            'notes' => '',
                             'si_quantity' => $item->quantity,
                             'sr_composite_key' => $item->sr_composite_key,
                             'si_composite_key' => $item->si_composite_key,

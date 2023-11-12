@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('ref_no');
             $table->foreignId('scm_si_id')->constrained('scm_sis');
             $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
-            $table->bigInteger('acc_cost_center_id');
-            $table->bigInteger('department_id');
-            $table->date('date');
+            $table->bigInteger('acc_cost_center_id')->nullable();
+            $table->bigInteger('department_id')->nullable();
+            $table->date('date')->nullable();
             $table->string('business_unit')->comment('TSLL,PSML');
-            $table->bigInteger('created_by')->comment('user_id');
+            $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();
         });
     }
