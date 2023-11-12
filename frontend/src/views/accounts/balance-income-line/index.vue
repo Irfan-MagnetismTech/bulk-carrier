@@ -97,8 +97,8 @@ onMounted(() => {
             <th>#</th>
             <th>Line Name</th>
             <th>Value Type</th>
-            <th>Parent</th>
             <th>Line Type</th>
+            <th>Parent Line</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -108,8 +108,8 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td>{{ incomeLine?.line_text }}</td>
             <td>{{ incomeLine?.value_type === 'D' ? 'Debit' : 'Credit' }}</td>
-            <td>{{ incomeLine?.parentLine?.line_text ?? '---' }}</td>
             <td>{{ incomeLine?.line_type }}</td>
+            <td>{{ incomeLine?.parentLine?.line_text ?? '---' }}</td>
             <td>
               <span :class="incomeLine?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ incomeLine?.business_unit }}</span>
             </td>

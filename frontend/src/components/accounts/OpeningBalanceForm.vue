@@ -71,7 +71,7 @@ onMounted(() => {
         <Error v-if="errors?.acc_cost_center_name" :errors="errors.acc_cost_center_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
         <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_account_name" v-bind="attributes" v-on="events"/>

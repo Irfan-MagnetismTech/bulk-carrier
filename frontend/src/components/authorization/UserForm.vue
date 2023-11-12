@@ -23,7 +23,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">User Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="User Name" class="form-input" autocomplete="off" />
+            <input type="text" v-model="form.name" placeholder="User Name" class="form-input" autocomplete="off" required />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
       <label class="block w-full mt-2 text-sm">
