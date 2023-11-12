@@ -42,7 +42,7 @@ export default function useCargoTariff() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCargoTariffs(page,columns = null, searchKey = null, table = null) {
+	async function getCargoTariffs(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -51,9 +51,7 @@ export default function useCargoTariff() {
 			const { data, status } = await Api.get('/ops/cargo-tariffs', {
 				params: {
 					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
+					business_unit: businessUnit
 				},
 			});
 			cargoTariffs.value = data.value;
@@ -151,15 +149,14 @@ export default function useCargoTariff() {
 	}
 
 	// Get ports by name or code
-	async function getCargoTariffsByNameOrCode(name_or_code, service = null) {
-		NProgress.start();
+	async function searchCargoTariffs(searchParam, business_unit, loading) {
+		// NProgress.start();
 		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// isLoading.value = true;
 
 		try {
-			const { data } = await Api.post(
-				'dataencoding/ports/get-ports-by-name-or-code',
-				{ name_or_code , service }
+			const { data } = await Api.get(
+				'ops/search-cargo-tariffs?tariff_name='+searchParam+'&business_unit='+business_unit,
 			);
 			cargoTariffs.value = data.value;
 			cargoTariff.value = data.value;
@@ -167,8 +164,7 @@ export default function useCargoTariff() {
 			error.value = Error.showError(error);
 		} finally {
 			//loader.hide();
-			isLoading.value = false;
-			NProgress.done();
+			loading(false)
 		}
 	}
 
@@ -181,7 +177,7 @@ export default function useCargoTariff() {
 		showCargoTariff,
 		updateCargoTariff,
 		deleteCargoTariff,
-		getCargoTariffsByNameOrCode,
+		searchCargoTariffs,
 		isLoading,
 		errors,
 	};

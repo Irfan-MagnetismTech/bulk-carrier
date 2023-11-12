@@ -6,10 +6,15 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
+    import cloneDeep from 'lodash/cloneDeep';
+    import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors,searchVendor } = useVendor();
+    const { vendors, searchVendor } = useVendor();
+    const { currencies, getCurrencies } = useBusinessInfo();
+    const { getMaterialList, prMaterialList } = usePurchaseOrder();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -28,16 +33,18 @@
     });
 
     function addMaterial() {
-      props.form.scmPoLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPoLines.push(clonedObj);
     }
 
     function removeMaterial(index){
-      props.form.scmPoLines.splice(index, 1);
-}
+          props.form.scmPoLines.splice(index, 1);
+    }
 
     function addTerms() {
-          props.form.scmPoTerms.push(props.termsObject);
-        }
+          const clonedTermObj = cloneDeep(props.termsObject);
+          props.form.scmPoTerms.push(clonedTermObj);
+      }
 
     function removeTerms(index){
       props.form.scmPoTerms.splice(index, 1);
@@ -49,12 +56,6 @@
     //   props.form.materials[index].material_category_id = material.category.id;
     //   props.form.materials[index].material_category_name = material.category.name;
     // }
-
-
-    watch(() => props?.form?.status, (newVal, oldVal) => {
-      props?.form?.status == props?.form?.status;
-    })
-
 
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -70,69 +71,44 @@
     // }, { deep: true });
 
     // });// Code for global search end here
-
-
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    console.log(props.form.business_unit);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
-
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-  });
     
     function fetchVendor(search, loading) {
-    loading(true);
-    searchVendor(search, loading);
-  }
-    function fetchPurchaseRequisition(search, loading) {
-    loading(true);
-    searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
+      loading(true);
+      searchVendor(search, loading);
     }
 
-    watch(() => props.form.scmPurchaseRequisition, (value) => {
-          props.form.scm_pr_id = value?.id;
-      });
-
-    function setMaterialOtherData(datas,index){
-      console.log(datas);
-      props.form.scmPoLines[index].unit = datas.unit;
-      props.form.scmPoLines[index].scm_material_id = datas.id;
+function setMaterialOtherData(line, index) {
+  const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
+              props.form.scmPoLines[index].unit = selectedMaterial.unit;
+              props.form.scmPoLines[index].brand = selectedMaterial.brand;
+              props.form.scmPoLines[index].model = selectedMaterial.model;;
+            }
+          }
     }
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
-  watch(() => props.form.business_unit, (newValue, oldValue) => {
-    if(newValue !== oldValue && oldValue != ''){
-      props.form.scm_warehouse_id = '';
-      props.form.scmWarehouse = null;
-    }
-  });
-
-//watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find sub_total from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find discount from sub_total with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from sub_total and discount with parseFloat and toFixed 2
-//watch props.form.materials find vat from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find net_amount from total_amount and vat with parseFloat and toFixed 2
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_amount);
+      newVal?.forEach((line, index) => {
+        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total += parseFloat(props.form.scmPoLines[index].total_price);
+        if (line.scmMaterial) {
+          setMaterialOtherData(line, index);
+        }
       });
-  props.form.sub_total = parseFloat(total.toFixed(2));
+      props.form.sub_total = parseFloat(total.toFixed(2));
       calculateNetAmount();
+
+  
 }, { deep: true });
     
   function calculateNetAmount(){
     props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
     props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
-}
+  }
  
   watch(() => props?.form?.discount, (newVal, oldVal) => {
     calculateNetAmount();
@@ -140,75 +116,30 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
   watch(() => props?.form?.vat, (newVal, oldVal) => {
     calculateNetAmount();
   });
+  onMounted(() => {
+    getCurrencies()
+    watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+      getMaterialList(props.form.scm_pr_id);
+    });
+  }); 
 
+//watch scmVendor to change scm_vendor_id
+watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
+  if(newVal){
+    props.form.scm_vendor_id = newVal.id;
+  }
+});
+watch(() => props?.form?.scmPr, (newVal, oldVal) => {
+  if(newVal){
+    props.form.pr_no = newVal.ref_no;
+  }
+});
 </script>
 <template>
 
-  
-<!-- const purchaseOrder = ref( {
-        ref_no: '',
-        scmWarehouse: '',
-        scm_warehouse_name: '',
-        scm_warehouse_id: '',
-        po_date: '',
-        pr_no: null,
-        scm_pr_id: null,
-        scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
-        scmCs: null,
-        scmVendor: null,
-        scm_vendor_id: null,
-        vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
-        remarks: '',
-        sub_total: 0.0,
-        discount: 0.0,
-        total_amount: 0.0,
-        vat: 0.0,
-        net_amount: 0.0,
-        attachment: '',
-        business_unit: '',
-        scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
-        scmPoTerms: [
-                        {
-                            details: ''
-                        }
-                    ],  
-        });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
-    }
-
-    const termsObject =  {
-        details: ''
-    } -->
-
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
@@ -225,26 +156,17 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       </label>
       <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.po_date" required class="form-input" name="po_date" :id="'po_date'" />
-          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPr" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmPr"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
+          <Error v-if="errors?.pr_no" :errors="errors.pr_no"  />
       </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.pr_date" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
+          <input type="date" v-model="form.pr_date" required readonly class="form-input vms-readonly-input" name="pr_date" :id="'pr_date'" />
           <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
       </label>
       
@@ -256,7 +178,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
         <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
     </label>
-    <label class="label-group" v-if="form.cs_no != ''">
+    <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
           <select class="form-input" v-model="form.scm_vendor_id">
             <option value="" disabled>select</option>
@@ -281,14 +203,23 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       
       <label class="label-group">
         <span class="label-item-title">Currency</span>
-        <input type="text" v-model="form.currency" required class="form-input" name="currency" :id="'currency'" />
+        <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.currency"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
         <Error v-if="errors?.currency" :errors="errors.currency"/>
     </label>
-      <label class="label-group">
-          <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.convertion_rate" required class="form-input" name="approved_date" :id="'convertion_rate'" />
-          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
-      </label>
+    <label class="label-group" v-if="form.currency == 'USD'">
+        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+        <Error v-if="errors?.foreign_to_usd" :errors="errors.convertion_rate"  />
+    </label>
   </div>
 
   <div class="input-group !w-3/4">
@@ -321,7 +252,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
           <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -342,7 +273,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
               <input type="text" v-model="form.scmPoLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].required_date" class="form-input">
+              <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
               <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
@@ -351,7 +282,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
               <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
+              <input type="text" v-model="form.scmPoLines[index].total_price" class="form-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
@@ -412,7 +343,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
          <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
             <td>
-              <input type="text" v-model="form.scmPoTerms[index].details" class="form-input">
+              <input type="text" v-model="form.scmPoTerms[index].description" class="form-input">
             </td>
            
             <td class="px-1 py-1 text-center">

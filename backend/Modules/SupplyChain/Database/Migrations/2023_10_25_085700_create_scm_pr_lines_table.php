@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('specification')->nullable();
             $table->decimal('quantity')->nullable();
             $table->date('required_date')->nullable();
+            $table->string('pr_composite_key')->nullable();
             $table->timestamps();
         });
     }

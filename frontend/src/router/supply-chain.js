@@ -289,5 +289,35 @@ export default [
 
     /* Purchase Requisition end */
 
+    /* LC Record start */
+
+    {
+        path: `/${BASE}/lc-records`,
+        name: `${BASE}.lc-records.index`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/lc-records/create`,
+        name: `${BASE}.lc-records.create`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-create' },
+    },
+    {
+        path: `/${BASE}/lc-records/:lcRecordId/edit`,
+        name: `${BASE}.lc-records.edit`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-edit' },
+    },
+    {
+        path: `/${BASE}/lc-records/:lcRecordId`,
+        name: `${BASE}.lc-records.show`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-show'  },
+    },
+
+    /* LC Record end */
+
     
 ];

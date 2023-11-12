@@ -169,7 +169,7 @@ class OpsVesselCertificateController extends Controller
             
             $vessel_certificate->update($vesselCertificate);
             DB::commit();
-            return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 200);
+            return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 202);
         }
         catch (QueryException $e)
         {

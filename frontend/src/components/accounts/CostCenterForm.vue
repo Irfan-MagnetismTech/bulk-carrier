@@ -24,7 +24,7 @@ function checkWhitespace(value) {
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 
 </script>

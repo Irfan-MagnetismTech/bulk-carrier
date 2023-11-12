@@ -22,6 +22,7 @@ class OpsBunker extends Model
         'requested_quantity',
         'exchange_rate_bdt',
         'exchange_rate_usd',
+        'rate',
         'amount',
         'opening_balance',
         'amount_usd',

@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('operations')->group(function() {
-    // Route::get('/', 'OperationsController@index');
-
+    // Route::get('/', 'OperationsController@index');  
 
 });
 // Route::resources([

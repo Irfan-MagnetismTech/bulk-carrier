@@ -46,12 +46,12 @@ function confirmDelete(id) {
   })
 }
 
-function dlGeneralParticular(vesselParticularId) {
-  downloadGeneralParticular(vesselParticularId)
+function dlGeneralParticular(vesselName, vesselParticularId) {
+  downloadGeneralParticular(vesselName, vesselParticularId)
 }
 
-function dlChartererParticular(vesselParticularId) {
-  downloadChartererParticular(vesselParticularId)
+function dlChartererParticular(vesselName, vesselParticularId) {
+  downloadChartererParticular(vesselName, vesselParticularId)
 }
 
 onMounted(() => {
@@ -136,13 +136,13 @@ onMounted(() => {
                   <td>{{ vesselParticular?.dwt }}</td>
                   <td>{{ vesselParticular?.tues_capacity }}</td>
                   <td class="flex border-b-0 border-l-0 items-center justify-center space-x-2 text-gray-600 ">
-                      <button @click="dlGeneralParticular(vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                      <button @click="dlGeneralParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                         General
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                       </button>
-                      <button @click="dlChartererParticular(vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                      <button @click="dlChartererParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                         Charterer
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

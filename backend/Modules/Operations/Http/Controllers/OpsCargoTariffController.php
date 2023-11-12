@@ -111,7 +111,7 @@ class OpsCargoTariffController extends Controller
             $cargo_tariff->update($cargoTariffInfo);            
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
-            return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
+            return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 202);
         }
         catch (QueryException $e)
         {            
