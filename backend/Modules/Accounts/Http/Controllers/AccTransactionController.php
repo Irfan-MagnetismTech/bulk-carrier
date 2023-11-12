@@ -18,7 +18,7 @@ class AccTransactionController extends Controller
     public function index()
     {
         try {
-            $crwCrewRanks = AccTransaction::with('ledgerEntries.account')->withCount('ledgerEntries as total_ledger')
+            $crwCrewRanks = AccTransaction::with('ledgerEntries.account', 'costCenter')->withCount('ledgerEntries as total_ledger')
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })->paginate(10);
