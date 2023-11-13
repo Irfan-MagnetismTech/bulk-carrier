@@ -83,6 +83,7 @@ class OpsLighterNoonReportController extends Controller
     public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
     {
         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
+        
         $lighter_noon_report->opsBunkers->map(function($bunker) {
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
@@ -178,7 +179,6 @@ class OpsLighterNoonReportController extends Controller
         
         if(isset($lighter_noon_reports)){
             $lighter_noon_reports['data']->map(function($lighter_noon_report) {               
-                // dd($lighter_noon_report);
                 $lighter_noon_report->fuel_con_24h= $lighter_noon_report->opsBunkers->sum('fuel_con_24h');
                 $lighter_noon_report->fuel_stock_l= $lighter_noon_report->opsBunkers->sum('fuel_stock_l');
                 return $lighter_noon_report;
@@ -187,6 +187,7 @@ class OpsLighterNoonReportController extends Controller
 
         $lighter_noon_reports['vessel_name']=$vessel?->name;
 
+        dd($lighter_noon_reports);
         return Excel::download(new LighterNoonReportExport($lighter_noon_reports), 'LighterNoonReport.xlsx');
         
     }

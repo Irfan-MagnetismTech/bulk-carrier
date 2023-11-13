@@ -153,7 +153,7 @@ class OpsVoyageBoatNoteController extends Controller
                 $voyage_sector->update($data);
             }
             
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines, $request->attachment,$voyage_boat_note->opsVoyageBoatNoteLines);
 
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
