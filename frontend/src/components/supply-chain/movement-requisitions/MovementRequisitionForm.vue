@@ -4,47 +4,76 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group">
+  <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">MR Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
+  </div>
+  <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
-      </label>
-      <label class="label-group">
-          <span class="label-item-title">Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
+      <label class="label-group">
+          <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <Error v-if="errors?.date" :errors="errors.date"  />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="-- Search Here --" @search="fetchFromWarehouse"  v-model="form.scmFromWarehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmFromWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+          <Error v-if="errors?.unit" :errors="errors.unit" />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="-- Search Here --" @search="fetchToWarehouse"  v-model="form.scmToWarehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmToWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+          <Error v-if="errors?.unit" :errors="errors.unit" />
+      </label>
+     
+     
   </div>
 
+  <div class="input-group !w-2/4">
+    <label class="label-group">
+        <span class="label-item-title">Requested By <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+          <Error v-if="errors?.unit" :errors="errors.unit" />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Material Required For<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.requested_by" required class="form-input" name="requested_by" :id="'requested_by'" />
+      </label>
+  </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
@@ -66,6 +95,8 @@
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Specification</th>
+            <th class="py-3 align-center">Present Stock</th>
+            <th class="py-3 align-center">Available Stock</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
@@ -95,6 +126,18 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmSrLines[index].specification" class="form-input">
+               </label>
+              
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmSrLines[index].present_stock" class="form-input">
+               </label>
+              
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmSrLines[index].available_stock" class="form-input">
                </label>
               
             </td>
@@ -180,15 +223,43 @@
 
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
+  //   function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+  // }
+
+  function fetchFromWarehouse(search, loading) {
+      if (search.length > 0) {
+        loading(true);
+        searchWarehouse(search, loading, props.form.business_unit);
+      }
+    }
+
+function fetchToWarehouse(search, loading) {
+    if (search.length > 0) {
+        loading(true);
+      searchWarehouse(search, loading, props.form.business_unit);
+    }
   }
 
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-        props.form.acc_cost_center_id = value?.acc_cost_center_id;
+  watch(() => props.form.scmFromWarehouse, (value) => {
+        props.form.from_warehouse_id = value?.id;
+        props.form.from_cost_center_id = value?.acc_cost_center_id;
+    // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
+    // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
+       warehouses.value = [];
     });
+
+  watch(() => props.form.scmToWarehouse, (value) => {
+        props.form.to_warehouse_id = value?.id;
+        props.form.to_cost_center_id = value?.acc_cost_center_id;
+        warehouses.value = [];
+  });
+    
+  // watch(() => props.form.scmWarehouse, (value) => {
+  //       props.form.scm_warehouse_id = value?.id;
+  //       props.form.acc_cost_center_id = value?.acc_cost_center_id;
+  //   });
 
 function setMaterialOtherData(datas, index) {
       props.form.scmSrLines[index].unit = datas.unit;
@@ -226,7 +297,14 @@ watch(() => props.form.scmSrLines, (newLines) => {
    if(newValue !== oldValue && oldValue != ''){
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
-    props.form.scmWarehouse = null;
+     props.form.scmWarehouse = null;
+     props.form.scmFromWarehouse = null;
+     props.form.scmToWarehouse = null;
+     props.form.from_warehouse_id = '';
+     props.form.from_cost_center_id = '';
+     props.form.to_warehouse_id = '';
+     props.form.to_cost_center_id = '';
+      
   }
 });
 

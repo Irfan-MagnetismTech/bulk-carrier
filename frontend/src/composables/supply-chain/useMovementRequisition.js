@@ -15,6 +15,8 @@ export default function useMovementRequisition() {
     const router = useRouter();
     const movementRequisitions = ref([]);
     const filteredMovementRequisitions = ref([]);
+    const filteredToWarehouses = ref([]);
+    const filteredFromWarehouses = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -22,9 +24,16 @@ export default function useMovementRequisition() {
     const movementRequisition = ref( {
         ref_no: '',
         date: '',
-        scmWarehouse: '',
+        delivery_date: '',
+        fromWarehouse: '',
+        from_warehouse_id: '',
+        toWarehouse: '',
+        to_warehouse_id: '',
         scm_warehouse_id: '',
-        acc_cost_center_id: '',
+        from_cost_center_id: '',
+        to_cost_center_id: '',
+        requested_by: '',
+        required_for: '',
         remarks: '',
         business_unit: '',
         scmSrLines: [
@@ -33,6 +42,8 @@ export default function useMovementRequisition() {
                 scm_material_id: '',
                 unit: '',
                 specification: '',
+                available_stock: '',
+                present_stock: '',
                 quantity: 0.0
             }
         ],
@@ -42,7 +53,9 @@ export default function useMovementRequisition() {
         scm_material_id: '',
         unit: '',
         specification: '',
-        quantity: 0.0,
+        available_stock: '',
+        present_stock: '',
+        quantity: 0.0
     }
 
     const errors = ref('');
