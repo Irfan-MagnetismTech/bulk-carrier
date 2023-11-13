@@ -24,7 +24,7 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     {
         return [
             'ops_voyage_id'      => ['required'],
-            // 'ops_vessel_id'      => ['required'],
+            'ops_vessel_id'      => ['required'],
             'type'               => ['required'],
             'vessel_draft'       => ['nullable', 'string'],
             'water_density'      => ['nullable', 'string'],

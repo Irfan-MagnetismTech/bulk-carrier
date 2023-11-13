@@ -51,7 +51,8 @@ class OpsVoyageBoatNoteController extends Controller
     */
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
-        dd($request->opsVoyageSectors);
+        $opsVoyageBoatNoteLines = collect($request->opsVoyageBoatNoteLines);
+        
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -59,8 +60,19 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
+            // $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request) {
+            //     $attachment_path = 'null';
+                
+            //     if(isset($request->attachment[$index]) && $request->attachment[$index] != null){
+            //         $attachment_path = $this->fileUpload->handleFile($request->attachment[$index], 'ops/voyage/boat_note_line');
+            //     }
+            
+            //     $boat_note['attachment'] = $attachment_path;
+            //     return $boat_note;
+            // });
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
+
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
             $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
@@ -110,8 +122,25 @@ class OpsVoyageBoatNoteController extends Controller
             );
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
-            $voyage_boat_note->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$voyage_boat_note->opsVoyageBoatNoteLines);
+            $voyage_boat_note->update($voyageBoatNoteInfo);
+            
+            // $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request,$voyage_boat_note) {                
+            //     $attachment_path = 'null';
+
+            //     if(isset($request->attachment[$index]) && $request->attachment[$index] != null){
+            //         if ($index < count($voyage_boat_note->opsVoyageBoatNoteLines)) {
+            //             $this->fileUpload->deleteFile($voyage_boat_note->opsVoyageBoatNoteLines[$index]->attachment);
+            //         }
+            //         $attachment_path = $this->fileUpload->handleFile($request->attachment[$index], 'ops/voyage/boat_note_line');
+
+            //     }
+            
+            //     $boat_note['attachment'] = $attachment_path;
+            //     return $boat_note;
+            // });
+            
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
+
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
