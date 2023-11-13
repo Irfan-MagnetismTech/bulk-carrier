@@ -5,6 +5,7 @@ import {onMounted, computed, ref, watch} from "vue";
 import {useStore} from "vuex";
 import env from '../../config/env';
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import Store from "../../store";
 
 const props = defineProps({
   form: {
@@ -20,6 +21,7 @@ const props = defineProps({
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 watch(dropZoneFile, (value) => {
   if (value !== null && value !== undefined) {
@@ -28,12 +30,15 @@ watch(dropZoneFile, (value) => {
 });
 
 onMounted(() => {
-
+  props.form.business_unit = businessUnit.value;
 });
 
 </script>
 <template>
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Policy Name <span class="text-red-500">*</span></span>

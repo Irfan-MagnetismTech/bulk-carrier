@@ -1,11 +1,12 @@
 <script setup>
 import Error from "../Error.vue";
 import useVessel from "../../composables/operations/useVessel";
-import {onMounted, watch} from "vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import {onMounted, ref, watch, watchEffect} from "vue";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import Store from "../../store";
 const { vessels, searchVessels } = useVessel();
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -14,6 +15,7 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function addItem() {
   let obj = {
@@ -40,13 +42,20 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  getCrewRankLists();
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrewRankLists(props.form.business_unit);
+  });
 });
 
 </script>
 
 <template>
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>

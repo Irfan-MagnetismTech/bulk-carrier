@@ -18,9 +18,12 @@ class CrwRecruitmentApprovalController extends Controller
     public function index()
     {
         try {
-            $crwRecruitmentApprovals = CrwRecruitmentApproval::with('crwRecruitmentApprovalLines')->get();
 
-            return response()->success('Retrieved Succesfully', $crwRecruitmentApprovals, 200);
+            $crwRecruitmentApprovals = CrwRecruitmentApproval::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })->paginate(10);
+
+            return response()->success('Retrieved Successfully', $crwRecruitmentApprovals, 200);
         }
         catch (QueryException $e)
         {

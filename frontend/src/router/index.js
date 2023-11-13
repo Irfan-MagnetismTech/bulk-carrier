@@ -3,7 +3,8 @@ import administration from "./administration";
 import maintenance from "./maintenance";
 import operations from "./operations";
 import supplyChain from "./supply-chain";
-import crew from "./crew"; 
+import crew from "./crew";
+import account from "./account";
 
 const router = createRouter({
 
@@ -32,6 +33,7 @@ const router = createRouter({
                 ...operations,
                 ...supplyChain,
                 ...crew,
+                ...account,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },
             ]
         },

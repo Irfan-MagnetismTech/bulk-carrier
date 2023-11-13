@@ -18,8 +18,8 @@ class CrwCrewDocumentController extends Controller
     public function index()
     {
         try {
-            $crwCrewDocuments = CrwCrewDocument::with('crwCrewDocumentRenewals')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $crwCrewDocuments = CrwCrewDocument::when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
 
             return response()->success('Retrieved Succesfully', $crwCrewDocuments, 200);
@@ -37,21 +37,20 @@ class CrwCrewDocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         try {
-            DB::transaction(function () use ($request)
+            DB::transaction(function ()
             {
-                $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit');
-                $crwCrewDocument     = CrwCrewDocument::create($crwCrewDocumentData);
-                $crwCrewDocument->crwCrewDocumentRenewals()->createMany($request->crwCrewDocumentRenewals);
-
-                return response()->success('Created Succesfully', $crwCrewDocument, 201);
+                foreach (request()->crew_documents as $documentData) {
+                    CrwCrewDocument::create($documentData);
+                }
+                return response()->success('Updated succesfully', [], 202);
             });
         }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
-        }
+        }        
     }
 
     /**
@@ -63,7 +62,7 @@ class CrwCrewDocumentController extends Controller
     public function show(CrwCrewDocument $crwCrewDocument)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewDocument->load('crwCrewDocumentRenewals'), 200);
+            return response()->success('Retrieved succesfully', $crwCrewDocument, 200);
         }
         catch (QueryException $e)
         {
@@ -85,8 +84,6 @@ class CrwCrewDocumentController extends Controller
             {
                 $crwCrewDocumentData = $request->only('crw_crew_id', 'reference_no', 'name', 'issuing_authority', 'validity_period', 'business_unit');
                 $crwCrewDocument->update($crwCrewDocumentData);
-                $crwCrewDocument->crwCrewDocumentRenewals()->delete();
-                $crwCrewDocument->crwCrewDocumentRenewals()->createMany($request->crwCrewDocumentRenewals);
 
                 return response()->success('Updated succesfully', $crwCrewDocument, 202);
             });
