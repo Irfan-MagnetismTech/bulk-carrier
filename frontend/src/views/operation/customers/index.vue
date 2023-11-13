@@ -99,6 +99,7 @@ onMounted(() => {
                   <td>{{ customer?.phone }}</td>
                   <td>{{ customer?.email_general }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
+                      <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>
                       <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
