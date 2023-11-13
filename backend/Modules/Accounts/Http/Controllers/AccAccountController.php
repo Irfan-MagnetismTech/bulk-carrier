@@ -19,9 +19,9 @@ class AccAccountController extends Controller
         try {
             $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            })->get();
 
-            return response()->success('Retrieved Succesfully', $accounts, 200);
+            return response()->success('Retrieved Successfully', $accounts, 200);
         }
         catch (QueryException $e)
         {
