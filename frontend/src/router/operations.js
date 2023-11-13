@@ -65,6 +65,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/customers/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/customers/:customerId/show`,
+		name: `${BASE}.configurations.customers.show`,
+		component: () => import (`../views/${ViEWBASE}/customers/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Cargo Tariffs */
 	{
 		path: `/${BASE}/cargo-tariffs`,
@@ -362,6 +368,12 @@ export default [
 		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/show`,
 		name: `${BASE}.lighter-noon-reports.show`,
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/copy`,
+		name: `${BASE}.lighter-noon-reports.copy`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/copy.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 ];

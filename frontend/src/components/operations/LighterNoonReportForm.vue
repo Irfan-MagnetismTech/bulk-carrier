@@ -35,6 +35,11 @@
               </v-select>
               <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
+      
+      
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
               <input type="text" v-model="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
@@ -43,11 +48,6 @@
             <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
             <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
       </label>
-      
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
               <input type="text" v-model="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
@@ -56,6 +56,11 @@
               <span class="text-gray-700 dark:text-gray-300">Status</span>
               <input type="text" v-model="form.status" placeholder="Status" class="form-input" autocomplete="off" />
         </label>
+        
+        
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
               <input type="number" step="0.001" v-model="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
@@ -64,17 +69,16 @@
               <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
               <input type="text" v-model="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
         </label>
-        
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Date</span>
               <input type="datetime-local" v-model="form.date" placeholder="Vessel" class="form-input" autocomplete="off" />
         </label>
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Last Port <span class="text-red-500">*</span></span>
-          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.lastPort" label="code_name" class="block form-input" :reduce="port=>port.code">
+          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -89,7 +93,7 @@
 
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Next Port <span class="text-red-500">*</span></span>
-          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.nextPort" label="code_name" class="block form-input" :reduce="port=>port.code">
+          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -102,7 +106,6 @@
           <input type="hidden" v-model="form.next_port" />
         </label>
 
-        <label class="block w-full mt-2 text-sm"></label>
 
     </div>
 
@@ -147,19 +150,19 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
                 </label>
               </td>
               <td class="hidden">
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
                 </label>
               </td>
@@ -210,10 +213,9 @@ function fetchVessels(search, loading) {
 watch(() => props.form.business_unit, (value) => {
   if(props?.formType != 'edit') {
     props.form.opsVoyage = null;
-    vessel.value = null;
-    props.form.opsVoyageSectors = null;
-    props.form.vessel_name = null;
     props.form.ops_voyage_id = null;
+    props.form.opsVessel = null;
+    props.form.ops_vessel_id = null;
   }
   
 
@@ -234,24 +236,31 @@ watch(() => props.form.opsVessel, (value) => {
   }
 }, { deep: true })
 
-watch(() => vessel, (value) => {
-  if(value?.value) {
-    props.form.opsBunkers = value?.value?.opsBunkers
+watch(() => props.form.lastPort, (value) => {
+  if(value) {
+    props.form.last_port = value?.code
   }
 }, { deep: true })
 
-// watch(() => voyage, (value) => {
-//   if(value?.value) {
-//     props.form.opsVoyageSectors = value?.value?.opsVoyageSectors
-//   }
-// }, { deep: true })
+watch(() => props.form.nextPort, (value) => {
+  if(value) {
+    props.form.next_port = value?.code
+  }
+}, { deep: true })
 
+
+watch(() => vessel, (value) => {
+  if(value?.value) {
+    if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
+      props.form.opsBunkers = value?.value?.opsBunkers
+    }
+  }
+}, { deep: true })
 
 watch(() => props.form, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
-
-  
+   
     if(vessels.value.length > 0) {
         editInitiated.value = true
       }
