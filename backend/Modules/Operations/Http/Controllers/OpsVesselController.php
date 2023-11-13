@@ -102,7 +102,7 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers'
+            'opsBunkers.scmMaterial'
         ]);
         
         $vessel->opsVesselCertificates->map(function($certificate) {
@@ -114,6 +114,7 @@ class OpsVesselController extends Controller
         });
 
         $vessel->opsBunkers->map(function($bunker) {
+            $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
         });
