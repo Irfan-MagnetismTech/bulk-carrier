@@ -157,7 +157,9 @@ class OpsLighterNoonReportController extends Controller
     public function exportLighterNoonReport(Request $request)
     {
         $lighter_noon_reports['data'] = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
-        ->where('id', $request->id)
+        ->when(isset(request()->id), function($q){
+            $q->where('id', request()->id);  
+        })
         ->when(isset(request()->vessel_id), function($q){
             $q->where('ops_vessel_id', request()->vessel_id);  
         })
@@ -169,7 +171,6 @@ class OpsLighterNoonReportController extends Controller
                   ->whereDate('date', '<=', Carbon::parse(request()->till_date));
         })
         ->get();
-
         $vessel=null;
         if($request->vessel_id){
             $vessel= OpsVessel::find($request->vessel_id);
@@ -177,8 +178,9 @@ class OpsLighterNoonReportController extends Controller
         
         if(isset($lighter_noon_reports)){
             $lighter_noon_reports['data']->map(function($lighter_noon_report) {               
-                $lighter_noon_report->fuel_con_24h= $lighter_noon_report->opsBunker->sum('fuel_con_24h');
-                $lighter_noon_report->fuel_stock_l= $lighter_noon_report->opsBunker->sum('fuel_stock_l');
+                // dd($lighter_noon_report);
+                $lighter_noon_report->fuel_con_24h= $lighter_noon_report->opsBunkers->sum('fuel_con_24h');
+                $lighter_noon_report->fuel_stock_l= $lighter_noon_report->opsBunkers->sum('fuel_stock_l');
                 return $lighter_noon_report;
             });
         }
