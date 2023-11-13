@@ -50,7 +50,7 @@ class OpsLighterNoonReportController extends Controller
      */
      public function store(OpsLighterNoonReportRequest $request): JsonResponse
      {
-         // dd($request);
+        //  dd($request);
          try {
              DB::beginTransaction();
              $lighterNoonReportInfo = $request->except(
@@ -70,25 +70,30 @@ class OpsLighterNoonReportController extends Controller
          }
      }
  
-     /**
-      * Display the specified maritime certification.
-      *
-      * @param  OpsLighterNoonReport  $lighter_noon_report
-      * @return JsonResponse
-      */
-     public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
-     {
-         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
-         try
-         {
-             return response()->success('Successfully retrieved lighter noon report.', $lighter_noon_report, 200);
-         }
-         catch (QueryException $e)
-         {
-             return response()->error($e->getMessage(), 500);
-         }
- 
-     }
+    /**
+     * Display the specified maritime certification.
+    *
+    * @param  OpsLighterNoonReport  $lighter_noon_report
+    * @return JsonResponse
+    */
+    public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
+    {
+        $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
+        $lighter_noon_report->opsBunkers->map(function($bunker) {
+            $bunker->name = $bunker->scmMaterial->name;
+            return $bunker;
+        });
+
+        try
+        {
+            return response()->success('Successfully retrieved lighter noon report.', $lighter_noon_report, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
  
  
        /**
@@ -100,6 +105,7 @@ class OpsLighterNoonReportController extends Controller
       */
      public function update(OpsLighterNoonReportRequest $request, OpsLighterNoonReport $lighter_noon_report): JsonResponse
      {
+
          try {
              DB::beginTransaction();
              $lighterNoonReportInfo = $request->except(
