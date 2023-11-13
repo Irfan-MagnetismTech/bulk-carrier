@@ -105,7 +105,7 @@ export default function useVessel() {
 
 		try {
 			const { data, status } = await Api.post('/ops/vessels', form);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.configurations.vessels.index' });
 		} catch (error) {
@@ -156,7 +156,7 @@ export default function useVessel() {
 				`/ops/vessels/${vesselId}`,
 				form
 			);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.configurations.vessels.index' });
 		} catch (error) {
