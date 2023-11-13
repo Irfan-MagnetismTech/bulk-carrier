@@ -10,6 +10,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import $ from 'jquery';
+window.$ = $;
+import DataTable from 'datatables.net-dt';
+
 const router = useRouter();
 
 const props = defineProps({
@@ -62,6 +66,31 @@ onMounted(() => {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
     })
+    .then(() => {
+      console.log("asdfasf")
+      new DataTable('#example', {
+            initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        let column = this;
+                        let title = column.footer().textContent;
+        
+                        // Create input element
+                        let input = document.createElement('input');
+                        input.placeholder = title;
+                        column.footer().replaceChildren(input);
+        
+                        // Event listener for user input
+                        input.addEventListener('keyup', () => {
+                            if (column.search() !== this.value) {
+                                column.search(input.value).draw();
+                            }
+                        });
+                    });
+            }
+        });
+    })
     .catch((error) => {
       console.error("Error fetching ranks:", error);
     });
@@ -91,7 +120,7 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table id="example" class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
