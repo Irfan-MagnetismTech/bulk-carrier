@@ -50,7 +50,6 @@ class OpsLighterNoonReportController extends Controller
     */
     public function store(OpsLighterNoonReportRequest $request): JsonResponse
     {
-    //  dd($request);
         try {
             DB::beginTransaction();
             $lighterNoonReportInfo = $request->except(
@@ -79,6 +78,7 @@ class OpsLighterNoonReportController extends Controller
     public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
     {
         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
+        
         $lighter_noon_report->opsBunkers->map(function($bunker) {
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
@@ -105,7 +105,6 @@ class OpsLighterNoonReportController extends Controller
     */
     public function update(OpsLighterNoonReportRequest $request, OpsLighterNoonReport $lighter_noon_report): JsonResponse
     {
-
         try {
             DB::beginTransaction();
             $lighterNoonReportInfo = $request->except(
