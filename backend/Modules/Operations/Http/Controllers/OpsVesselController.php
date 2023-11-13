@@ -70,7 +70,7 @@ class OpsVesselController extends Controller
             $vesselInfo = $request->except(
                 '_token',
                 'opsVesselCertificates',
-                'opsBunkers',
+                'opsBunkers.scmMaterial',
             );
             $vessel = OpsVessel::create($vesselInfo);
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
@@ -104,7 +104,7 @@ class OpsVesselController extends Controller
             },
             'opsBunkers.scmMaterial'
         ]);
-        
+
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
