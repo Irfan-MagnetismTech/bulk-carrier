@@ -65,7 +65,7 @@ export default function useLighterNoonReport() {
 
 			const { data, status } = await Api.post('/ops/lighter-noon-reports', form);
 			notification.showSuccess(status);
-			// router.push({ name: 'ops.lighter-noon-reports.index' });
+			router.push({ name: 'ops.lighter-noon-reports.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
