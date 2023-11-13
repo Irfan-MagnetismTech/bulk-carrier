@@ -187,7 +187,7 @@ class OpsLighterNoonReportController extends Controller
 
         $lighter_noon_reports['vessel_name']=$vessel?->name;
 
-        dd($lighter_noon_reports);
+        // dd($lighter_noon_reports);
         return Excel::download(new LighterNoonReportExport($lighter_noon_reports), 'LighterNoonReport.xlsx');
         
     }
