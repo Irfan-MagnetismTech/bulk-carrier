@@ -213,10 +213,9 @@ function fetchVessels(search, loading) {
 watch(() => props.form.business_unit, (value) => {
   if(props?.formType != 'edit') {
     props.form.opsVoyage = null;
-    vessel.value = null;
-    props.form.opsVoyageSectors = null;
-    props.form.vessel_name = null;
     props.form.ops_voyage_id = null;
+    props.form.opsVessel = null;
+    props.form.ops_vessel_id = null;
   }
   
 
