@@ -30,7 +30,7 @@
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               
               <span class="show-block">{{ chartererContract.opsVessel?.name }}</span>
 

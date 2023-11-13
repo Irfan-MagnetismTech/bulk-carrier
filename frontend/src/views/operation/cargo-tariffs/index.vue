@@ -105,9 +105,9 @@ onMounted(() => {
                   <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
                   <td>{{ cargoTariff?.status }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                      <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                      <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                    <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                    <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
@@ -115,10 +115,10 @@ onMounted(() => {
           
           <tfoot v-if="!cargoTariffs?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="!cargoTariffs?.data?.length">
-            <td colspan="6">No data found.</td>
+            <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>

@@ -26,7 +26,11 @@ class OpsCustomerRequest extends FormRequest
             'business_license_no'   => ['nullable', 'string', 'max:255'],
             'bin_gst_sst_type'      => ['nullable', 'string', 'max:255'],
             'bin_gst_sst_no'        => ['nullable', 'string', 'max:255'],
-            'phone'                 => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if (strlen((string) $value) < 10) {
+                    $fail('The ' . $attribute . ' must be at least 10 characters.');
+                }
+            }],
             'company_reg_no'        => ['nullable', 'string', 'max:255'],
             'email_general'         => 'nullable|email',
             'email_agreement'       => 'nullable|email',

@@ -3,7 +3,7 @@
       <business-unit-input v-model="form.business_unit"></business-unit-input>
 
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.vessel_name" placeholder="Certificate Type" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
         <input type="hidden" v-model="form.ops_vessel_id" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
 
