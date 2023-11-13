@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Entities\OpsVoyageSector;
 use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
 
 class OpsVoyageBoatNoteController extends Controller
@@ -33,6 +34,7 @@ class OpsVoyageBoatNoteController extends Controller
     {
         try {
             $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            // ->groupBy('ops_voyage_id');
             return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
         catch (QueryException $e)
@@ -50,8 +52,7 @@ class OpsVoyageBoatNoteController extends Controller
     */
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
-        $opsVoyageBoatNoteLines = collect($request->opsVoyageBoatNoteLines);
-        
+        // dd($request);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -59,16 +60,26 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
-            // $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request) {
-            //     $attachment_path = 'null';
-                
-            //     if(isset($request->attachment[$index]) && $request->attachment[$index] != null){
-            //         $attachment_path = $this->fileUpload->handleFile($request->attachment[$index], 'ops/voyage/boat_note_line');
-            //     }
-            
-            //     $boat_note['attachment'] = $attachment_path;
-            //     return $boat_note;
-            // });
+
+            foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+                if($request->type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($request->type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($request->type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }
+
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
+
             $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
 
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
@@ -119,24 +130,28 @@ class OpsVoyageBoatNoteController extends Controller
                 '_token',
                 'opsVoyageBoatNoteLines',
             );
+
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
             $voyage_boat_note->update($voyageBoatNoteInfo);
             
-            // $opsVoyageBoatNoteLines = $opsVoyageBoatNoteLines->map(function($boat_note, $index) use ($request,$voyage_boat_note) {                
-            //     $attachment_path = 'null';
-
-            //     if(isset($request->attachment[$index]) && $request->attachment[$index] != null){
-            //         if ($index < count($voyage_boat_note->opsVoyageBoatNoteLines)) {
-            //             $this->fileUpload->deleteFile($voyage_boat_note->opsVoyageBoatNoteLines[$index]->attachment);
-            //         }
-            //         $attachment_path = $this->fileUpload->handleFile($request->attachment[$index], 'ops/voyage/boat_note_line');
-
-            //     }
-            
-            //     $boat_note['attachment'] = $attachment_path;
-            //     return $boat_note;
-            // });
+            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $note_line){
+                if($request->type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($request->type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($request->type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
             
             $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
 
