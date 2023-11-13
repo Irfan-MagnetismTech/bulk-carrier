@@ -4,9 +4,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Entities\MntCriticalFunction;
 use Modules\Maintenance\Entities\MntCriticalItemCat;
+use Modules\Maintenance\Entities\MntCriticalSpList;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemController;
+use Modules\Maintenance\Http\Controllers\MntCriticalSpListController;
 use Modules\Maintenance\Http\Controllers\MntCriticalVesselItemController;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
@@ -39,6 +41,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'critical-item-cats' => MntCriticalItemCatController::class,
         'critical-items' => MntCriticalItemController::class,
         'critical-vessel-items' => MntCriticalVesselItemController::class,
+        'critical-sp-lists' => MntCriticalSpListController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
