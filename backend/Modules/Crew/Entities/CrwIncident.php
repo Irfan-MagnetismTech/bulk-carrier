@@ -5,6 +5,7 @@ namespace Modules\Crew\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Operations\Entities\OpsVessel;
 
 class CrwIncident extends Model
 {
@@ -19,5 +20,5 @@ class CrwIncident extends Model
 	public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class);
-    }	
+    }
 }

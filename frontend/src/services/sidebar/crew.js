@@ -123,7 +123,7 @@ export default [
                 ],
             },
             {
-                route: 'administration.users.index',
+                route: '',
                 label: 'Crew Profile',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -132,7 +132,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.profiles.create',
                         label: 'Add Crew',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -142,7 +142,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.profiles.index',
                         label: 'Crew List',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -154,7 +154,7 @@ export default [
                 ],
             },
             {
-                route: 'administration.users.index',
+                route: '',
                 label: 'Crew Documents',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -163,7 +163,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.documents.index',
                         label: 'Document List',
                         preIcon: '',
                         postIcon: icons.DownArrow,
