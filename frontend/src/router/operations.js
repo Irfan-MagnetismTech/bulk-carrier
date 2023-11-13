@@ -370,4 +370,10 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/copy`,
+		name: `${BASE}.lighter-noon-reports.copy`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/copy.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
