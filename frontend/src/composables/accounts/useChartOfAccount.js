@@ -11,7 +11,9 @@ export default function useChartOfAccount() {
     const notification = useNotification();
     const chartOfAccount = ref( {
         acc_balance_and_income_line_id: '',
+        acc_balance_and_income_line_name: '',
         parent_account_id: '',
+        parent_account_name: '',
         account_name: '',
         account_code: '',
         account_type: '',

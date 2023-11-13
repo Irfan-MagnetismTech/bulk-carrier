@@ -18,6 +18,11 @@ const props = defineProps({
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+function checkWhitespace(value) {
+  if (/^\s+$/.test(props.form.name)) {props.form.name = '';}
+  if (/^\s+$/.test(props.form.short_name)) {props.form.short_name = '';}
+}
+
 onMounted(() => {
   //props.form.business_unit = businessUnit.value;
 });
@@ -32,12 +37,12 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Cost Center Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.name" placeholder="Line text" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.name" @input="checkWhitespace" v-model="form.name" placeholder="Cost center name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.name" :errors="errors.name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.short_name" placeholder="Line text" class="form-input" autocomplete="off" required />
+        <input type="text" v-model="form.short_name" @input="checkWhitespace" placeholder="Short name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.short_name" :errors="errors.short_name" />
       </label>
       <label class="block w-full mt-2 text-sm">

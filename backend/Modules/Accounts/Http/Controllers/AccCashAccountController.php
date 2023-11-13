@@ -21,7 +21,7 @@ class AccCashAccountController extends Controller
                 $q->where('business_unit', request()->business_unit);  
             })->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accCashAccounts, 200);
+            return response()->success('Retrieved Successfully', $accCashAccounts, 200);
         }
         catch (QueryException $e)
         {
@@ -41,7 +41,7 @@ class AccCashAccountController extends Controller
             $accCashAccountData = $request->only('name', 'business_unit');
             $accCashAccount    = AccCashAccount::create($accCashAccountData);
 
-            return response()->success('Created Succesfully', $accCashAccount, 201);
+            return response()->success('Created Successfully', $accCashAccount, 201);
         }
         catch (QueryException $e)
         {
@@ -58,7 +58,7 @@ class AccCashAccountController extends Controller
     public function show(AccCashAccount $accCashAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accCashAccount, 200);
+            return response()->success('Retrieved Successfully', $accCashAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -79,7 +79,7 @@ class AccCashAccountController extends Controller
             $accCashAccountData = $request->only('name', 'business_unit');
             $accCashAccount->update($accCashAccountData);
 
-            return response()->success('Updated succesfully', $accCashAccount, 202);
+            return response()->success('Updated Successfully', $accCashAccount, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class AccCashAccountController extends Controller
         try {
             $accCashAccount->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
