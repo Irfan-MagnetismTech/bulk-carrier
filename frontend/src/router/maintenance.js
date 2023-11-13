@@ -330,6 +330,38 @@ export default [
 
 	/* Critical Items End */
 
+	
+	/* Critical Vessel Items Start */
+	{
+		path: `/${BASE}/critical-vessel-items`,
+		name: `${BASE}.critical-vessel-items.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/create`,
+		name: `${BASE}.critical-vessel-items.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-create' },
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/:criticalVesselItemId/edit`,
+		name: `${BASE}.critical-vessel-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-edit' },
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/:criticalVesselItemId`,
+		name: `${BASE}.critical-vessel-items.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-show'  },
+	},
+
+	/* Critical Vessel Items End */
+
+
+
 
 
 
