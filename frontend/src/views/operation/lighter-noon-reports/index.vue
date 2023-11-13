@@ -9,7 +9,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useLighterNoonReport from '../../../composables/operations/useLighterNoonReport';
 import Store from "../../../store";
-
+import moment from 'moment';
 
 const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading } = useLighterNoonReport();
 const icons = useHeroIcon();
@@ -87,28 +87,39 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Mother Vessel</th>
+            <th>Date and Time</th>
             <th>Vessel</th>
-            <th>Voyage No</th>
-            <th>Capacity</th>
-            <th>Initial Survey Qty.</th>
-            <th>Finally Received Qty.</th>
+            <th>Voyage</th>
+            <th>Cargo Type</th>
+            <th>Last Port</th>
+            <th>Next Port</th>
+            <th>Lat / Long</th>
+            <th>Master</th>
+            <th>Chief Engineer</th>
             <th>Actions</th>
           </tr>
           </thead>
           <tbody v-if="lighterNoonReports?.data?.length">
               <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
                   <td>{{ lighterNoonReports.from + index }}</td>
-                  <td>{{ lighterNoonReport?.contract_type }}</td>
-                  <td>{{ lighterNoonReport?.opsChartererProfile?.name }}</td>
-                  <td>{{ lighterNoonReport?.opsChartererProfile?.owner_code }}</td>
-                  <td>{{ lighterNoonReport?.country }}</td>
-                  <td>{{ lighterNoonReport?.email }}</td>
-                  <td>{{ lighterNoonReport?.contact_no }}</td>
+                  <td>
+                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
+                  </td>
+                  <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
+                  <td>{{ lighterNoonReport?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ lighterNoonReport?.opsVoyage?.opsCargoType?.cargo_type }}</td>
+                  <td><nobr>{{ lighterNoonReport?.last_port }}</nobr></td>
+                  <td><nobr>{{ lighterNoonReport?.next_port }}</nobr></td>
+                  <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
+                  <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>
+                  <td><nobr>{{ lighterNoonReport?.chief_engineer }}</nobr></td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'show'" :to="{ name: 'ops.lighter-noon-reports.show', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.lighter-noon-reports.edit', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
-                      <action-button @click="confirmDelete(lighterNoonReport.id)" :action="'delete'"></action-button>
+                      <nobr>
+                        <action-button :action="'copy'" :to="{ name: 'ops.lighter-noon-reports.show', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
+                        <action-button :action="'show'" :to="{ name: 'ops.lighter-noon-reports.show', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
+                        <action-button :action="'edit'" :to="{ name: 'ops.lighter-noon-reports.edit', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
+                        <action-button @click="confirmDelete(lighterNoonReport.id)" :action="'delete'"></action-button>
+                      </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>

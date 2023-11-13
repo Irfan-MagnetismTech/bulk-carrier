@@ -31,7 +31,7 @@ class OpsLighterNoonReportController extends Controller
     public function index()
     {
         try {
-            $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage','opsBunkers')->latest()->paginate(15);
+            $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved lighter noon reports.', $lighterNoonReports, 200);
         }
@@ -78,7 +78,7 @@ class OpsLighterNoonReportController extends Controller
       */
      public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
      {
-         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers');
+         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
          try
          {
              return response()->success('Successfully retrieved lighter noon report.', $lighter_noon_report, 200);
