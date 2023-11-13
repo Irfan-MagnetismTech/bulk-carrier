@@ -102,7 +102,7 @@ export default function useLighterNoonReport() {
 
 		try {
 
-			const { data, status } = await Api.post(
+			const { data, status } = await Api.put(
 				`/ops/lighter-noon-reports/${lighterNoonReportId}`,
 				form
 			);

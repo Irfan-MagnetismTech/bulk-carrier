@@ -99,12 +99,24 @@ onMounted(() => {
           <tbody v-if="voyageBoatNotes?.data?.length">
               <tr v-for="(voyageBoatNote, index) in voyageBoatNotes.data" :key="voyageBoatNote?.id">
                   <td>{{ voyageBoatNotes.from + index }}</td>
-                  <td>{{ voyageBoatNote?.contract_type }}</td>
-                  <td>{{ voyageBoatNote?.opsChartererProfile?.name }}</td>
-                  <td>{{ voyageBoatNote?.opsChartererProfile?.owner_code }}</td>
-                  <td>{{ voyageBoatNote?.country }}</td>
-                  <td>{{ voyageBoatNote?.email }}</td>
-                  <td>{{ voyageBoatNote?.contact_no }}</td>
+                  <td>{{ voyageBoatNote?.opsVoyage?.mother_vessel }}</td>
+                  <td>{{ voyageBoatNote?.opsVessel?.name }}</td>
+                  <td>{{ voyageBoatNote?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ voyageBoatNote?.opsVessel?.capacity }}</td>
+                  <td>
+                    {{ 
+                  voyageBoatNote?.opsVoyage?.opsVoyageSectors.reduce((accumulator, currentObject) => {
+  return accumulator + currentObject.initial_survey_qty
+}, 0)
+                  }}
+                  </td>
+                  <td>
+                    {{ 
+                  voyageBoatNote?.opsVoyage?.opsVoyageSectors.reduce((accumulator, currentObject) => {
+  return accumulator + currentObject.final_received_qty
+}, 0)
+                  }}  
+                  </td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.voyage-boat-notes.edit', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>

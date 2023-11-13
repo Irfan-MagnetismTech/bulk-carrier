@@ -32,7 +32,7 @@ class OpsVoyageBoatNoteController extends Controller
     public function index()
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
