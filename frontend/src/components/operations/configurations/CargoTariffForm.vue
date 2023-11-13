@@ -26,9 +26,13 @@
             </v-select>
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+       
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loading_point" label="name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -73,7 +77,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
-              <select name="" id="" class="form-input" v-model="form.currency">
+              <select name="" id="" required class="form-input" v-model="form.currency">
                   <option value="" disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
               </select>
@@ -81,14 +85,13 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
-              <select name="" id="" class="form-input" v-model="form.status">
+              <select name="" id="" required class="form-input" v-model="form.status">
                 <option value="" disabled>Select Status</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
             <Error v-if="errors?.status" :errors="errors.status" />
           </label>
-          <label class="block w-full mt-2 text-sm"></label>
     </div>
 
     <div class="mt-3 md:mt-8">

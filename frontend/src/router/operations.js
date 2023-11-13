@@ -65,6 +65,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/customers/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/customers/:customerId/show`,
+		name: `${BASE}.configurations.customers.show`,
+		component: () => import (`../views/${ViEWBASE}/customers/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Cargo Tariffs */
 	{
 		path: `/${BASE}/cargo-tariffs`,
