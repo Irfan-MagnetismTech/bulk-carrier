@@ -67,12 +67,11 @@ const vendor_type = ['Foreign', 'Local'];
                     <Error v-if="errors?.address" :errors="errors.address" /> 
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Origin </span>
-                    <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
-                        
-                    </v-select>
-                    <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" />
-                    <Error v-if="errors?.country_id" :errors="errors.country_id" />
+                    <span class="label-item-title">Origin</span>
+                    <!-- <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select> -->
+                    <!-- <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" /> -->
+                    <input type="text" required v-model="form.country_name" class="label-item-input" name="country_id" :id="'country_name'" />                   
+                    <Error v-if="errors?.country_name" :errors="errors.country_name" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Vendor Type <span class="required-style">*</span></span>
