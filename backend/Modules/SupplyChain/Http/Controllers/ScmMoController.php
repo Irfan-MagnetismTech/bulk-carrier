@@ -31,7 +31,7 @@ class ScmMoController extends Controller
     {
         try {
             $movementOuts = ScmMo::with(
-                'ScmMoLines.scmMaterial',
+                'scmMoLines.scmMaterial',
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
@@ -66,8 +66,8 @@ class ScmMoController extends Controller
             //loop through each line and update current stock
             $dataForStock = [];
 
-            foreach ($request->scmMoLines as $ScmMoLine) {
-                $dataForStock[] = (new StockLedgerData)->out($ScmMoLine['scm_material_id'], $ScmMo->scm_warehouse_id, $ScmMoLine['quantity']);
+            foreach ($request->scmMoLines as $scmMoLine) {
+                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $ScmMo->scm_warehouse_id, $scmMoLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
@@ -137,11 +137,11 @@ class ScmMoController extends Controller
         try {
             $movementOut->update($requestData);
 
-            $movementOut->ScmMoLines()->delete();
+            $movementOut->scmMoLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->ScmMoLines, $movementOut->id, 'scm_material_id', 'mo');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
 
-            $movementOut->ScmMoLines()->createMany($linesData);
+            $movementOut->scmMoLines()->createMany($linesData);
 
             return response()->success('Data updated sucessfully!', $movementOut, 202);
         } catch (\Exception $e) {
@@ -158,7 +158,7 @@ class ScmMoController extends Controller
     public function destroy(ScmMo $movementOut): JsonResponse
     {
         try {
-            $movementOut->ScmMoLines()->delete();
+            $movementOut->scmMoLines()->delete();
             $movementOut->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
