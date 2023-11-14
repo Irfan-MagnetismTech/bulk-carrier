@@ -31,7 +31,11 @@ class OpsChartererContractRequest extends FormRequest
             'address'                       => ['required', 'string', 'max:255'],
             'billing_address'               => ['required', 'string', 'max:255'],
             'email'                         => ['required', 'email', 'max:255'],
-            'contact_no'                    => ['required', 'string', 'max:255'],
+            'contact_no'                    => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if (strlen((string) $value) < 10) {
+                    $fail('The ' . $attribute . ' must be at least 10 characters.');
+                }
+            }],
             'bank_branch_id'               => ['nullable', 'numeric', 'max:10'],
             'bank_branch_name'               => ['nullable', 'string'],
             // 'attachment'                    => ['nullable', 'mimes:png,jpeg,jpg,pdf,xlsx,docx,doc|max:2048'],
