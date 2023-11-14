@@ -13,12 +13,12 @@ trait GlobalSearchTrait
     public function scopeGlobalSearch($query, $request)
     {
 
-        $baseTableQueries       = collect($request)->filter(fn($q) => $q['relation_name'] === null);
-        $relationalTableQueries = collect($request)->filter(fn($q) => $q['relation_name'] != null);
+        $baseTableQueries       = collect($request['filter_options'])->filter(fn($q) => $q['relation_name'] === null);
+        $relationalTableQueries = collect($request['filter_options'])->filter(fn($q) => $q['relation_name'] != null);
 
-        // $query->when(request()->business_unit != "ALL", function($q){
-        //     $q->where('business_unit', request()->business_unit);
-        // });
+        $query->when(request()->business_unit != "ALL", function($q){
+            $q->where('business_unit', request()->business_unit);
+        });
 
         foreach ($baseTableQueries as $key => $baseTableQuery)
         {
@@ -32,7 +32,7 @@ trait GlobalSearchTrait
         {
             $query->when($relationalTableQuery['search_param'], function ($q) use ($relationalTableQuery)
             {
-                $q->with('balanceIncome', 'parent:id,account_name')->whereHas($relationalTableQuery['relation_name'], function ($q) use ($relationalTableQuery)
+                $q->whereHas($relationalTableQuery['relation_name'], function ($q) use ($relationalTableQuery)
                 {
                     $q->where($relationalTableQuery['field_name'], 'LIKE', '%' . $relationalTableQuery['search_param'] . '%')->orderBy($relationalTableQuery['field_name'], $relationalTableQuery['order_by']);
                 });
