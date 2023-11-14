@@ -2,7 +2,7 @@
 import {onMounted, watchEffect,watch,ref} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import useMovementRequisition from "../../../composables/supply-chain/useMovementRequisition";
+import useMovementOut from "../../../composables/supply-chain/useMovementOut";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -12,7 +12,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import { useRouter } from 'vue-router';
 
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getMovementRequisitions, movementRequisitions, deleteMovementRequisition, isLoading } = useMovementRequisition();
+const { getMovementOuts, movementOuts, deleteMovementOut, isLoading } = useMovementOut();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -36,17 +36,17 @@ const icons = useHeroIcon();
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Movement Requisitions');
+setTitle('Movement Outs');
 // Code for global search starts here
 
 watch(searchKey, newQuery => {
-  getMovementRequisitions(props.page, columns, searchKey.value, table);
+  getMovementOuts(props.page, columns, searchKey.value, table);
 });
 
 
 onMounted(() => {
   watchEffect(() => {
-    getMovementRequisitions(props.page,businessUnit.value)
+    getMovementOuts(props.page,businessUnit.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
@@ -61,8 +61,8 @@ onMounted(() => {
 });
 // Code for global search end here
 
-// const navigateToPOCreate = (movementRequisitionId) => {
-//   const pr_id = movementRequisitionId; 
+// const navigateToPOCreate = (movementOutId) => {
+//   const pr_id = movementOutId; 
 //   const cs_id = null;
 //   const routeOptions = {
 //     name: 'scm.store-orders.create',
@@ -74,8 +74,8 @@ onMounted(() => {
 //   router.push(routeOptions);
 // };  
 
-// const navigateToMRRCreate = (movementRequisitionId) => {
-//   const pr_id = movementRequisitionId; 
+// const navigateToMRRCreate = (movementOutId) => {
+//   const pr_id = movementOutId; 
 //   const po_id = null;
 //   const routeOptions = {
 //     name: 'scm.material-receipt-reports.create',
@@ -99,7 +99,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMovementRequisition(id);
+            deleteMovementOut(id);
           }
         })
       }
@@ -120,11 +120,11 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Movement Requisition List</h2>
-    <default-button :title="'Create Movement Requisition'" :to="{ name: 'scm.movement-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Movement Out List</h2>
+    <default-button :title="'Create Movement Out'" :to="{ name: 'scm.movement-outs.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ movementRequisitions?.from }}-{{ movementRequisitions?.to }} of {{ movementRequisitions?.total }}</span> -->
+    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ movementOuts?.from }}-{{ movementOuts?.to }} of {{ movementOuts?.total }}</span> -->
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
     <div class="relative w-full">
@@ -151,38 +151,38 @@ function confirmDelete(id) {
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(movementRequisition,index) in (movementRequisitions?.data ? movementRequisitions?.data : movementRequisitions)" :key="index">
-              <td>{{ movementRequisitions?.from + index }}</td>
-              <td>{{ movementRequisition?.ref_no }}</td>
-              <td>{{ movementRequisition?.fromWarehouse?.name?? '' }}</td>
-              <td>{{ movementRequisition?.toWarehouse?.name?? '' }}</td>
-              <td>{{ movementRequisition?.date }}</td>
-              <td>{{ movementRequisition?.required_date }}</td>
+            <tr v-for="(movementOut,index) in (movementOuts?.data ? movementOuts?.data : movementOuts)" :key="index">
+              <td>{{ movementOuts?.from + index }}</td>
+              <td>{{ movementOut?.ref_no }}</td>
+              <td>{{ movementOut?.fromWarehouse?.name?? '' }}</td>
+              <td>{{ movementOut?.toWarehouse?.name?? '' }}</td>
+              <td>{{ movementOut?.date }}</td>
+              <td>{{ movementOut?.required_date }}</td>
               <td>
-                <span :class="movementRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementRequisition?.business_unit }}</span>
+                <span :class="movementOut?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementOut?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToSICreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
-                  <!-- <button @click="navigateToPOCreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
-                  <action-button :action="'edit'" :to="{ name: 'scm.movement-requisitions.edit', params: { movementRequisitionId: movementRequisition.id } }"></action-button>
-                  <action-button @click="confirmDelete(movementRequisition.id)" :action="'delete'"></action-button>
+                  <button @click="navigateToSICreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
+                  <!-- <button @click="navigateToPOCreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+                  <button @click="navigateToMRRCreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'edit'" :to="{ name: 'scm.movement-outs.edit', params: { movementOutId: movementOut.id } }"></action-button>
+                  <action-button @click="confirmDelete(movementOut.id)" :action="'delete'"></action-button>
                 </div>
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!movementRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!movementOuts?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="8">Loading...</td>
         </tr>
-        <tr v-else-if="!movementRequisitions?.data?.length">
+        <tr v-else-if="!movementOuts?.data?.length">
           <td colspan="8">No SR found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="movementRequisitions" to="scm.movement-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="movementOuts" to="scm.movement-outs.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

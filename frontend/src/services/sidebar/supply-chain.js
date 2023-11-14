@@ -173,7 +173,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-            
+            {
+                route: `${BASE}.movement-outs.index`,
+                label: 'Movement Outs',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
         ]
     },
 ];

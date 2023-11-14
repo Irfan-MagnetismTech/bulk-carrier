@@ -9,19 +9,19 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 
 
-export default function useMovementRequisition() {
+export default function useMovementOut() {
     const BASE = 'scm' 
     const { downloadFile } = useHelper();
     const router = useRouter();
-    const movementRequisitions = ref([]);
-    const filteredMovementRequisitions = ref([]);
+    const movementOuts = ref([]);
+    const filteredMovementOuts = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const movementRequisition = ref( {
+    const movementOut = ref( {
         ref_no: '',
         date: '',
         delivery_date: '',
@@ -63,7 +63,7 @@ export default function useMovementRequisition() {
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
 
-    async function getMovementRequisitions(page, businessUnit, columns = null, searchKey = null, table = null) {
+    async function getMovementOuts(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -72,7 +72,7 @@ export default function useMovementRequisition() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/movement-requisitions`,{
+            const {data, status} = await Api.get(`/${BASE}/movement-outs`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
@@ -81,7 +81,7 @@ export default function useMovementRequisition() {
                     business_unit: businessUnit,
                 },
             });
-            movementRequisitions.value = data.value;
+            movementOuts.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -92,7 +92,7 @@ export default function useMovementRequisition() {
             //NProgress.done();
         }
     }
-    async function storeMovementRequisition(form) {
+    async function storeMovementOut(form) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -101,10 +101,10 @@ export default function useMovementRequisition() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-requisitions`, formData);
-            movementRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/movement-outs`, formData);
+            movementOut.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-requisitions.index` });
+            router.push({ name: `${BASE}.movement-outs.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -114,14 +114,14 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function showMovementRequisition(movementRequisitionId) {
+    async function showMovementOut(movementOutId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/movement-requisitions/${movementRequisitionId}`);
-            movementRequisition.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/movement-outs/${movementOutId}`);
+            movementOut.value = data.value;
 
         } catch (error) {
             const { data, status } = error.response;
@@ -132,7 +132,7 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function updateMovementRequisition(form, movementRequisitionId) {
+    async function updateMovementOut(form, movementOutId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -141,10 +141,10 @@ export default function useMovementRequisition() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-requisitions/${movementRequisitionId}`, formData);
-            movementRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/movement-outs/${movementOutId}`, formData);
+            movementOut.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-requisitions.index` });
+            router.push({ name: `${BASE}.movement-outs.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -154,15 +154,15 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function deleteMovementRequisition(movementRequisitionId) {
+    async function deleteMovementOut(movementOutId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/movement-requisitions/${movementRequisitionId}`);
+            const { data, status } = await Api.delete( `/${BASE}/movement-outs/${movementOutId}`);
             notification.showSuccess(status);
-            await getMovementRequisitions(indexPage.value,indexBusinessUnit.value);
+            await getMovementOuts(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -172,12 +172,12 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function searchMovementRequisition(searchParam, loading) {
+    async function searchMovementOut(searchParam, loading) {
         
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
-            filteredMovementRequisitions.value = data.value;
+            filteredMovementOuts.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -189,15 +189,15 @@ export default function useMovementRequisition() {
  
 
     return {
-        movementRequisitions,
-        movementRequisition,
-        filteredMovementRequisitions,
-        searchMovementRequisition,
-        getMovementRequisitions,
-        storeMovementRequisition,
-        showMovementRequisition,
-        updateMovementRequisition,
-        deleteMovementRequisition,
+        movementOuts,
+        movementOut,
+        filteredMovementOuts,
+        searchMovementOut,
+        getMovementOuts,
+        storeMovementOut,
+        showMovementOut,
+        updateMovementOut,
+        deleteMovementOut,
         materialObject,
         isLoading,
         errors,

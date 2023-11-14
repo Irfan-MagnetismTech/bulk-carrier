@@ -481,4 +481,34 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-show'  },
     },
     /* Movement Requisition end */
+
+    /* Movement Out start */
+
+    {
+        path: `/${BASE}/movement-outs`,
+        name: `${BASE}.movement-outs.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-outs/create`,
+        name: `${BASE}.movement-outs.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-create' },
+    },
+    {
+        path: `/${BASE}/movement-outs/:movementOutId/edit`,
+        name: `${BASE}.movement-outs.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-edit' },
+    },
+    {
+        path: `/${BASE}/movement-outs/:movementOutId`,
+        name: `${BASE}.movement-outs.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-show'  },
+    },
+    
+    /* Movement Out end */
 ];
