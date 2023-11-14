@@ -10,10 +10,6 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
-import $ from 'jquery';
-window.$ = $;
-import DataTable from 'datatables.net-dt';
-import 'datatables.net-dt/css/jquery.dataTables.css';
 
 const router = useRouter();
 
@@ -67,9 +63,6 @@ onMounted(() => {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
     })
-    .then(() => {
-      new DataTable('#example', {});
-    })
     .catch((error) => {
       console.error("Error fetching ranks:", error);
     });
@@ -88,12 +81,12 @@ onMounted(() => {
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
-<!--    <div class="relative w-full">-->
-<!--      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">-->
-<!--        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />-->
-<!--      </svg>-->
-<!--      <input type="text" placeholder="Search..." class="search" />-->
-<!--    </div>-->
+    <div class="relative w-full">
+      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+      </svg>
+      <input type="text" placeholder="Search..." class="search" />
+    </div>
   </div>
 
   <div id="customDataTable">
