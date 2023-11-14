@@ -60,7 +60,8 @@ export default function useVessel() {
         minimum_stock: 0,
         store_category: '',
         description: '',
-        sample_photo: null
+        sample_photo: null,
+		is_new: true
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);

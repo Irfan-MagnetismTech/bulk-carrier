@@ -239,7 +239,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="form.opsBunkers[index]?.is_new" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -248,7 +248,7 @@
                           v-on="events"
                           />
                   </template>
-              </v-select> -->
+              </v-select>
               <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.name">{{ form.opsBunkers[index]?.name }}</span>
 
             </td>
@@ -257,7 +257,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                <input type="number" step="0.001" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit' || !form.opsBunkers[index]?.is_new"/>
                 <Error v-if="errors?.opsBunkers[index]?.opening_balance" :errors="errors.opsBunkers[index]?.opening_balance" />
               </label>
             </td>
