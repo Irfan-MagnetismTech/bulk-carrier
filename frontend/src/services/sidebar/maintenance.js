@@ -196,7 +196,7 @@ export default [
 
                     
                     {
-                        // route: 'mnt.critical-vessel-items.index',
+                        route: 'mnt.critical-vessel-items.index',
                         label: 'Vessel Items',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

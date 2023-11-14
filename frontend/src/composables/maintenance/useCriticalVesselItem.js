@@ -24,7 +24,7 @@ export default function useCriticalItem() {
         notes: '',
         business_unit: '',
         
-        mntCriticalItemSps: [],
+        mntCriticalItemSps: [{sp_name: '', unit: '', min_rob: ''}],
         mntCriticalItemCategories: [],
         mntCriticalItems: [],
     });

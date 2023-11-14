@@ -136,7 +136,7 @@ export default function useCriticalItem() {
         }
     }
 
-    async function getCriticalItemCategoriesWiseItems(mntCriticalItemCatId){
+    async function getCriticalItemCategoryWiseItems(mntCriticalItemCatId){
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -171,7 +171,7 @@ export default function useCriticalItem() {
         showCriticalItem,
         updateCriticalItem,
         deleteCriticalItem,
-        getCriticalItemCategoriesWiseItems,
+        getCriticalItemCategoryWiseItems,
         isLoading,
         errors,
     };
