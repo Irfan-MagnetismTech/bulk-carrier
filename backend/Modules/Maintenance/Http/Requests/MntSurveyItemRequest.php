@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntSurveyItemRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class MntSurveyItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'item_name'  => ['required', Rule::unique('mnt_survey_items')->ignore($this->route('survey_item'), 'id')],
         ];
     }
 
