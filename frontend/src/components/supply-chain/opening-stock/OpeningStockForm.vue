@@ -17,6 +17,7 @@
       page: {required: false,default: {}}
     });
 
+    const warehouseKey = ref(0);
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
     function addRow() {
@@ -33,6 +34,7 @@
       console.log(datas);
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
+      materials.value = [];
     }
 
 
@@ -48,7 +50,9 @@
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
-        props.form.scm_cost_center_id = value?.scm_cost_center_id;
+    props.form.scm_cost_center_id = value?.scm_cost_center_id;
+    warehouses.value = [];
+    warehouseKey.value += 1;
     });
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
@@ -70,6 +74,7 @@ watch(() => props.form.scmOpeningStockLines, (newLines) => {
         ) {
           props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
           props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+          materials.value = [];
         }
       }
     }
@@ -113,7 +118,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Search Here --" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
