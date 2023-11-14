@@ -169,11 +169,12 @@ class MntCriticalVesselItemController extends Controller
     public function getCriticalVesselItems() {
         try {
 
-            $criticalVesselItems = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction','mntCriticalItemSps'])            
+            $criticalVesselItems = MntCriticalVesselItem::with(['mntCriticalItem.mntCriticalItemSps'])            
                                 ->when(request()->has('ops_vessel_id'), function($q){
                                     $q->where('ops_vessel_id', request()->ops_vessel_id); 
                                 })
-                                ->get();
+                                ->where('is_critical', 1)
+                                ->get()->pluck('mntCriticalItem');
 
             return response()->success('Critical vessel items are retrieved successfully', $criticalVesselItems, 200);
             
