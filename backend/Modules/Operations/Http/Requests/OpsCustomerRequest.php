@@ -32,9 +32,9 @@ class OpsCustomerRequest extends FormRequest
                 }
             }],
             'company_reg_no'        => ['nullable', 'string', 'max:255'],
-            'email_general'         => 'nullable|email',
-            'email_agreement'       => 'nullable|email',
-            'email_invoice'         => 'nullable|email',
+            'email_general'         => ['nullable', 'email'],
+            'email_agreement'       => ['nullable', 'email'],
+            'email_invoice'         => ['nullable', 'email'],
             'business_unit'         => ['nullable', 'string', 'max:255'],
         ];
     }

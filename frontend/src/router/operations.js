@@ -318,4 +318,88 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/delivery-redelivery/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Voyage Boat Note */
+	{
+		path: `/${BASE}/voyage-boat-notes`,
+		name: `${BASE}.voyage-boat-notes.index`,
+		component: () => import(`../views/${ViEWBASE}/voyage-boat-notes/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/create`,
+		name: `${BASE}.voyage-boat-notes.create`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/:voyageBoatNoteId/edit`,
+		name: `${BASE}.voyage-boat-notes.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-boat-notes/:voyageBoatNoteId/show`,
+		name: `${BASE}.voyage-boat-notes.show`,
+		component: () => import (`../views/${ViEWBASE}/voyage-boat-notes/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Lighter Noon Report */
+	{
+		path: `/${BASE}/lighter-noon-reports`,
+		name: `${BASE}.lighter-noon-reports.index`,
+		component: () => import(`../views/${ViEWBASE}/lighter-noon-reports/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/create`,
+		name: `${BASE}.lighter-noon-reports.create`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/edit`,
+		name: `${BASE}.lighter-noon-reports.edit`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/show`,
+		name: `${BASE}.lighter-noon-reports.show`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/copy`,
+		name: `${BASE}.lighter-noon-reports.copy`,
+		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/copy.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Bulk Noon Report */
+	{
+		path: `/${BASE}/bulk-noon-reports`,
+		name: `${BASE}.bulk-noon-reports.index`,
+		component: () => import(`../views/${ViEWBASE}/bulk-noon-reports/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/create`,
+		name: `${BASE}.bulk-noon-reports.create`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/edit`,
+		name: `${BASE}.bulk-noon-reports.edit`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/show`,
+		name: `${BASE}.bulk-noon-reports.show`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	}
 ];
