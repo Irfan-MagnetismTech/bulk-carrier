@@ -153,6 +153,16 @@ export default [
                         permissionKey: '',
                         subSubMenu: []
                     },
+                    {
+                        route: 'ops.bulk-noon-reports.index',
+                        label: 'Noon Reports (B)',
+                        preIcon: '',
+                        postIcon: '',
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: []
+                    },
                 ],
             },
            

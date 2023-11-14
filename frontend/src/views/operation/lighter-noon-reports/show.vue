@@ -63,7 +63,7 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Date</span>
               <span class="show-block">
-                <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY HH:mm A') : null }}</nobr>
+                <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
               </span>
         </label>
     </div>

@@ -376,4 +376,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/copy.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Bulk Noon Report */
+	{
+		path: `/${BASE}/bulk-noon-reports`,
+		name: `${BASE}.bulk-noon-reports.index`,
+		component: () => import(`../views/${ViEWBASE}/bulk-noon-reports/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/create`,
+		name: `${BASE}.bulk-noon-reports.create`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/edit`,
+		name: `${BASE}.bulk-noon-reports.edit`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/show`,
+		name: `${BASE}.bulk-noon-reports.show`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	}
 ];
