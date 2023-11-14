@@ -127,10 +127,10 @@ onMounted(() => {
           
           <tfoot v-if="!lighterNoonReports?.length">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
+            <td colspan="11">Loading...</td>
           </tr>
           <tr v-else-if="!lighterNoonReports?.data?.length">
-            <td colspan="8">No data found.</td>
+            <td colspan="11">No data found.</td>
           </tr>
           </tfoot>
       </table>
