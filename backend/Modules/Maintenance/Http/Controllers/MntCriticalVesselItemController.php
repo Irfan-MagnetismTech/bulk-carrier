@@ -164,4 +164,24 @@ class MntCriticalVesselItemController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+    public function getCriticalVesselItems() {
+        try {
+
+            $criticalVesselItems = MntCriticalVesselItem::with(['mntCriticalItem.mntCriticalItemSps'])            
+                                ->when(request()->has('ops_vessel_id'), function($q){
+                                    $q->where('ops_vessel_id', request()->ops_vessel_id); 
+                                })
+                                ->where('is_critical', 1)
+                                ->get()->pluck('mntCriticalItem');
+
+            return response()->success('Critical vessel items are retrieved successfully', $criticalVesselItems, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

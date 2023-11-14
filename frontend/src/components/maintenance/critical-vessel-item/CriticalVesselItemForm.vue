@@ -32,8 +32,8 @@
         <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
       </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Catrgory <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Critical Function" :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat_name" label="category_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <span class="text-gray-700 dark:text-gray-300">Critical Catrgory <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Critical Category" :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat_name" label="category_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -48,7 +48,7 @@
         </label>
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Item <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Critical Item <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Item" :options="form.mntCriticalItems" @search="" v-model="form.mnt_critical_item_name" label="item_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -71,7 +71,7 @@
       
       <div class="block w-full mt-2 text-sm">
         <!-- <span class="text-gray-700 dark:text-gray-300">Notes</span> -->
-        <input type="checkbox" v-model="form.is_critical"/> Critical Item
+        <input type="checkbox" v-model="form.is_critical" /> Critical Item
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </div>
 
@@ -175,8 +175,14 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
 
+watch(() => props.form.is_critical, (newValue, oldValue) => {
+  if (newValue != oldValue && oldValue != null) {
+    props.form.mntCriticalItemSps = newValue == true  ? [{ sp_name: '', unit: '', min_rob: 0 }] : [];
+  }
+});
+
 function addCriticalItemSp() {
-  props.form.mntCriticalItemSps.push({sp_name: '', unit: '', min_rob: ''});
+  props.form.mntCriticalItemSps.push({sp_name: '', unit: '', min_rob: 0});
 }
 function removeCriticalItemSp(index) {
   props.form.mntCriticalItemSps.splice(index, 1);

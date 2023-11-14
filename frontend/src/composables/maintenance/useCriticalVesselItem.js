@@ -20,11 +20,11 @@ export default function useCriticalItem() {
         mnt_critical_item_cat_name: '',
         mnt_critical_item_id: '',
         mnt_critical_item_name: '',
-        is_critical: false,
+        is_critical: null,
         notes: '',
         business_unit: '',
         
-        mntCriticalItemSps: [{sp_name: '', unit: '', min_rob: ''}],
+        mntCriticalItemSps: [],
         mntCriticalItemCategories: [],
         mntCriticalItems: [],
     });

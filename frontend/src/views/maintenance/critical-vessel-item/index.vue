@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const { criticalVesselItem, getCriticalVesselItems, deleteCriticalVesselItem, isLoading } = useCriticalVesselItem();
+const { criticalVesselItems, getCriticalVesselItems, deleteCriticalVesselItem, isLoading } = useCriticalVesselItem();
 const { setTitle } = Title();
 setTitle('Critical Vessel Item List');
 
@@ -88,36 +88,34 @@ onMounted(() => {
       <input type="text" placeholder="Search..." class="search" />
     </div>
   </div>
-
   <div id="customDataTable">
+
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
             <th class="w-1/12">#</th>
-            <th class="w-2/12">Vessel Name</th>
-            <th class="w-2/12">Function Name</th>
-            <th class="w-2/12">Category Name</th>
-            <th class="w-2/12">Item Name</th>
-            <th class="w-2/12">Notes</th>
-            <!-- <th class="w-2/12">Business Unit</th> -->
+            <th class="w-2/12">Vessel</th>
+            <th class="w-2/12">Cri. Function</th>
+            <th class="w-2/12">Cri. Category</th>
+            <th class="w-2/12">Cri. Item</th>
+            <th class="w-2/12">Business Unit</th>
             <th class="w-1/12">Action</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(criticalVesselItem,index) in criticalVesselItems?.data" :key="index">
-            <!-- <td>{{ index + 1 }}</td>
-            <td>{{ criticalItem?.mntCriticalItemCat?.mntCriticalFunction?.function_name }}</td>
-            <td>{{  criticalItem?.mntCriticalItemCat?.category_name }}</td>
-            <td>{{ criticalItem?.item_name }}</td>
-            <td>{{ criticalItem?.specification }}</td>
-            <td>{{ criticalItem?.notes }}</td> -->
-            <!-- <td><span :class="criticalItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalItem?.business_unit }}</span></td> -->
-            <!-- <td>
-                <action-button :action="'edit'" :to="{ name: 'mnt.critical-items.edit', params: { criticalItemId: criticalItem?.id } }"></action-button>
-                <action-button @click="confirmDelete(criticalItem?.id)" :action="'delete'"></action-button>
-            </td> -->
+            <td>{{ index + 1 }}</td>
+            <td>{{ criticalVesselItem?.opsVessel?.name }}</td>
+            <td>{{ criticalVesselItem?.mntCriticalItem?.mntCriticalItemCat?.mntCriticalFunction?.function_name }}</td>
+            <td>{{ criticalVesselItem?.mntCriticalItem?.mntCriticalItemCat?.category_name }}</td>
+            <td>{{ criticalVesselItem?.mntCriticalItem?.item_name }}</td>
+            <td><span :class="criticalVesselItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalVesselItem?.business_unit }}</span></td>
+            <td>
+                <action-button :action="'edit'" :to="{ name: 'mnt.critical-vessel-items.edit', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
+                <action-button @click="confirmDelete(criticalVesselItem?.id)" :action="'delete'"></action-button>
+            </td>
           </tr>
           </tbody>
           <tfoot v-if="!criticalVesselItems?.data?.length">
@@ -125,7 +123,7 @@ onMounted(() => {
             <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="!criticalVesselItems?.data?.length">
-            <td colspan="7">No item found.</td>
+            <td colspan="7">No critical vessel item found.</td>
           </tr>
           </tfoot>
       </table>

@@ -33,12 +33,12 @@
   
   setTitle('Edit Critical Vessel Item');
 
-  // watch(criticalItem, (value) => {
-  //   criticalItem.value.mnt_critical_function_name = value?.mntCriticalItemCat?.mntCriticalFunction;
-
-  //   criticalItem.value.mnt_critical_item_cat_name = value?.mntCriticalItemCat?.category_name;
-  //   criticalItem.value.mntItemCategories = value?.mntCriticalItemCat?.mntCriticalFunction?.mntCriticalItemCats;
-  // });
+  watch(criticalVesselItem, (value) => {
+    criticalVesselItem.value.ops_vessel_name = value?.opsVessel;
+    criticalVesselItem.value.mnt_critical_function_name = value?.mntCriticalItem?.mntCriticalItemCat?.mntCriticalFunction;
+    criticalVesselItem.value.mnt_critical_item_cat_name = value?.mntCriticalItem?.mntCriticalItemCat;
+    criticalVesselItem.value.mnt_critical_item_name = value?.mntCriticalItem;
+  });
   
   onMounted(() => {
       showCriticalVesselItem(criticalVesselItemId);
