@@ -22,7 +22,7 @@ class MntCriticalVesselItemRequest extends FormRequest
             'mntCriticalItemSps' => 'array|required_if:is_critical,true',
             'mntCriticalItemSps.*.sp_name' => 'required_if:is_critical,true',
             'mntCriticalItemSps.*.unit' => 'required_if:is_critical,true',
-            'mntCriticalItemSps.*.min_rob' => 'required_if:is_critical,true|integer|min:1',
+            'mntCriticalItemSps.*.min_rob' => $this->is_critical == true ? 'required_if:is_critical,true|integer|min:1': '',
         ];
     }
 
