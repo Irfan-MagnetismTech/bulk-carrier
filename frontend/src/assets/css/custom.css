@@ -26,6 +26,14 @@
     height: 2.30rem !important;
 }
 
+.filter_input{
+    padding: 0 5px;
+    display: block;
+    width: 100%;
+    border-radius: 0.25rem;
+    font-size: 12px;
+}
+
 /* title-tip down */
 [data-title]:hover {
     position: relative;

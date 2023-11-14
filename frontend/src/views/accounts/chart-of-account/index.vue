@@ -27,10 +27,10 @@ setTitle('Chart of Accounts List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-let showFilter = true
+let showFilter = ref(false);
 
 function swapFilter() {
-  showFilter = !showFilter
+  showFilter.value = !showFilter.value;
 }
 
 function confirmDelete(id) {
@@ -58,20 +58,21 @@ watch(
     }
 );
 
-onMounted(() => {
-  watchEffect(() => {
-  getChartOfAccounts(props.page, businessUnit.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching ranks:", error);
-    });
-});
+onMounted(() => {
+//   watchEffect(() => {
+//   getChartOfAccounts(props.page, businessUnit.value)
+//     .then(() => {
+//       const customDataTable = document.getElementById("customDataTable");
+//
+//       if (customDataTable) {
+//         tableScrollWidth.value = customDataTable.scrollWidth;
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching ranks:", error);
+//     });
+// });
 
 });
 
@@ -79,55 +80,61 @@ onMounted(() => {
 
 <template>
   <!-- Heading -->
-  <div class="flex items-center justify-between w-full my-3" v-once>
+  <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Chart of Accounts List</h2>
     <default-button :title="'Create Chart of Accounts'" :to="{ name: 'acc.chart-of-accounts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
+<!--  <div class="flex items-center justify-between mb-2 select-none">-->
+<!--    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>-->
+<!--    &lt;!&ndash; Search &ndash;&gt;-->
+<!--    <div class="relative w-full">-->
+<!--      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">-->
+<!--        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />-->
+<!--      </svg>-->
+<!--      <input type="text" placeholder="Search..." class="search" />-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <p v-if="showFilter">{{ showFilter }}</p>-->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen">
       
-      <table id="example" class="w-full whitespace-no-wrap" >
-          <thead v-once>
+      <table class="w-full whitespace-no-wrap" >
+          <thead>
             <tr class="w-full">
-              <th class="w-12 flex border-0 items-center justify-center">
-                #
-                <button @click="swapFilter()" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
-                  </svg>
-                </button>
-
+              <th class="w-16 min-w-full">
+                <div class="w-full flex items-center justify-between">
+                  # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                </div>
               </th>
               <th>Balance/Income Line</th>
-              <th>Balance/Income Line Type</th>
+              <th><nobr>Balance/Income Line Type</nobr></th>
               <th>Parent Account</th>
               <th>Account Code</th>
               <th>Account Name</th>
               <th>Account Type</th>
-              <th>Business Unit</th>
-              <th>Action</th>
+<!--              <th>Business Unit</th>-->
+              <th class="w-20 min-w-full">Action</th>
             </tr>
-            <tr class="w-full">
-              <th></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="form-input" required autocomplete="off" /></th>
-              <th></th>
+            <tr class="w-full" v-if="showFilter">
+              <th>
+                <select name="" id="" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -145,9 +152,9 @@ onMounted(() => {
               <span v-if="chartAccountData?.account_type===4" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Revenues</span>
               <span v-if="chartAccountData?.account_type===5" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-pink-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Expenses</span>
             </td>
-            <td>
-              <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>
-            </td>
+<!--            <td>-->
+<!--              <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>-->
+<!--            </td>-->
             <td>
               <action-button :action="'edit'" :to="{ name: 'acc.chart-of-accounts.edit', params: { chartOfAccountId: chartAccountData?.id } }"></action-button>
               <action-button @click="confirmDelete(chartAccountData?.id)" :action="'delete'"></action-button>
