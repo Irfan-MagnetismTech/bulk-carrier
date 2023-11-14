@@ -41,7 +41,6 @@ class FileUploadService
         }
     }
 
-
     // note : new data, new attachment filse, file storing path, previous data which is get from database and, field name if it's not attachment
     public function handleMultipleFiles(string $path, array $newData, array $attachments, array $oldData = null, string $field = 'attachment'): array|null
     {

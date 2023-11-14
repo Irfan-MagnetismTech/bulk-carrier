@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Entities\OpsVoyageSector;
 use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
 
 class OpsVoyageBoatNoteController extends Controller
@@ -32,7 +33,7 @@ class OpsVoyageBoatNoteController extends Controller
     public function index()
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines')->latest()->paginate(15);
             
             return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
@@ -59,8 +60,29 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
+
+            foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+                if($request->type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($request->type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($request->type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }
+
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
+
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
+
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
             $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
             return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
@@ -108,10 +130,31 @@ class OpsVoyageBoatNoteController extends Controller
                 '_token',
                 'opsVoyageBoatNoteLines',
             );
+
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
-            $voyage_boat_note->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$voyage_boat_note->opsVoyageBoatNoteLines);
+            $voyage_boat_note->update($voyageBoatNoteInfo);
+            
+            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $note_line){
+                if($request->type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($request->type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($request->type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
+            
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
+
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();

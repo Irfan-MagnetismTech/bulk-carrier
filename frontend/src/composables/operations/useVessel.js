@@ -60,7 +60,8 @@ export default function useVessel() {
         minimum_stock: 0,
         store_category: '',
         description: '',
-        sample_photo: null
+        sample_photo: null,
+		is_new: true
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -105,9 +106,9 @@ export default function useVessel() {
 
 		try {
 			const { data, status } = await Api.post('/ops/vessels', form);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.vessels.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -156,9 +157,9 @@ export default function useVessel() {
 				`/ops/vessels/${vesselId}`,
 				form
 			);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.vessels.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
