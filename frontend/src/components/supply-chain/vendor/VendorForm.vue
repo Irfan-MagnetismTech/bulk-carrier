@@ -36,7 +36,7 @@
 //             console.error('An error occurred:', error);
 //         });
 //     }
-//gete all product types it is array
+
 function fetchAllProductTypes() {
     getAllProductTypes().then(AllProductTypes => {
         product_types.value = AllProductTypes;
@@ -62,23 +62,38 @@ const vendor_type = ['Foreign', 'Local'];
                     <Error v-if="errors?.name" :errors="errors.name" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Address <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.address" class="form-input" name="address" :id="'address'" />
-                    <Error v-if="errors?.address" :errors="errors.address" />
+                    <span class="label-item-title">Address <span class="required-style">*</span></span>
+                    <input type="text" required v-model="form.address" class="form-input" name="address" :id="'address'" />
+                    <Error v-if="errors?.address" :errors="errors.address" /> 
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Origin</span>
-                    <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-                    <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" />
-                    <Error v-if="errors?.country_id" :errors="errors.country_id" />
+                    <!-- <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select> -->
+                    <!-- <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" /> -->
+                    <input type="text" required v-model="form.country_name" class="label-item-input" name="country_id" :id="'country_name'" />                   
+                    <Error v-if="errors?.country_name" :errors="errors.country_name" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Vendor Type</span>
+                    <span class="label-item-title">Vendor Type <span class="required-style">*</span></span>
                     <!-- <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                     <option value="0">Foreign</option>
                     <option value="1">Local</option>
                     </select> -->
-                    <v-select :options="vendor_type" placeholder="--Choose an option--" v-model="form.vendor_type" label="Vendor Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                   <v-select
+                      :options="vendor_type"
+                      placeholder="--Choose an option--"
+                      v-model="form.vendor_type"
+                      label="Vendor Type"
+                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.vendor_type"
+                                v-bind="attributes"
+                                v-on="events"
+                                />
+                        </template>
+                    </v-select>
                     
                     <Error v-if="errors?.vendor_type" :errors="errors.vendor_type" />
                 </label>
@@ -86,13 +101,33 @@ const vendor_type = ['Foreign', 'Local'];
 
             <div class="input-group !w-1/2">
                 <label class="label-group">
-                    <span class="label-item-title">Product Source Type</span>
-                    <v-select :options="product_source_type" placeholder="--Choose an option--" v-model="form.product_source_type" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <span class="label-item-title">Product Source Type <span class="required-style">*</span></span>
+                    <v-select
+                      :options="product_source_type"
+                      placeholder="--Choose an option--"
+                      v-model="form.product_source_type"
+                      label="Product Source Type"
+                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.product_source_type"
+                                v-bind="attributes"
+                                v-on="events"
+                                />
+                        </template>
+                    </v-select>
                     <Error v-if="errors?.product_source_type" :errors="errors.product_source_type" />
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Product Type <span class="text-red-500">*</span></span>
-                    <v-select name="user" v-model="form.product_type" placeholder="--Choose an option--" label="Product Type" :options="product_types" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                   <v-select
+                      name="user"
+                      v-model="form.product_type"
+                      placeholder="--Choose an option--"
+                      label="Product Type"
+                      :options="product_types"
+                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                     </v-select>
                     <Error v-if="errors?.product_type" :errors="errors.product_type" />
                 </label>
@@ -110,7 +145,7 @@ const vendor_type = ['Foreign', 'Local'];
                     <Error v-if="errors?.form.scmVendorContactPersons[0].name" :errors="errors.form.scmVendorContactPersons[0].name" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Contact<span class="text-red-500">*</span></span>
+                    <span class="label-item-title">Designation<span class="text-red-500">*</span></span>
                     <input type="text" required v-model="form.scmVendorContactPersons[0].designation" class="form-input" name="designation" :id="'designation'" />
                     <Error v-if="errors?.form.scmVendorContactPersons[0].designation" :errors="errors.form.scmVendorContactPersons[0].designation" />
                 </label>
@@ -148,6 +183,9 @@ const vendor_type = ['Foreign', 'Local'];
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+      }
+      .required-style {
+        @apply text-red-500;
       }
       
       >>> {
