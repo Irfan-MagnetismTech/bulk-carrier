@@ -38,8 +38,8 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Line Text <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.line_text" placeholder="Line text" class="form-input" autocomplete="off" required />
+        <span class="text-gray-700 dark:text-gray-300">Line Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.line_text" placeholder="Line Name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.line_text" :errors="errors.line_text" />
       </label>
       <label class="block w-full mt-2 text-sm">

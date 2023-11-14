@@ -13,7 +13,7 @@ class CrwCrewProfileController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-    
+
     }
     /**
      * Display a listing of the resource.
@@ -23,9 +23,15 @@ class CrwCrewProfileController extends Controller
     public function index()
     {
         try {
-            $crwCrewProfiles = CrwCrewProfile::with('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $profiles = CrwCrewProfile::with('educations')->get();
+
+            dd($profiles);
+
+
+            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees')->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })->paginate(10);
+
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
         }
@@ -46,18 +52,17 @@ class CrwCrewProfileController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'rank_id', 'department_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
                 $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile');
                 $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile');
 
-
                 $crwCrewProfile = CrwCrewProfile::create($crwCrewProfileData);
-                $crwCrewProfile->crwCrewEducations()->createMany($request->crwCrewEducations);
-                $crwCrewProfile->crwCrewTrainings()->createMany($request->crwCrewTrainings);
-                $crwCrewProfile->crwCrewExperiences()->createMany($request->crwCrewExperiences);
-                $crwCrewProfile->crwCrewLanguages()->createMany($request->crwCrewLanguages);
-                $crwCrewProfile->crwCrewReferences()->createMany($request->crwCrewReferences);
-                $crwCrewProfile->crwCrewNominees()->createMany($request->crwCrewNominees);
+                $crwCrewProfile->educations()->createMany($request->educations);
+                $crwCrewProfile->trainings()->createMany($request->trainings);
+                $crwCrewProfile->experiences()->createMany($request->experiences);
+                $crwCrewProfile->languages()->createMany($request->languages);
+                $crwCrewProfile->references()->createMany($request->references);
+                $crwCrewProfile->nominees()->createMany($request->nominees);
 
                 return response()->success('Created Succesfully', $crwCrewProfile, 201);
             });
@@ -76,8 +81,9 @@ class CrwCrewProfileController extends Controller
      */
     public function show(CrwCrewProfile $crwCrewProfile)
     {
+        dd($crwCrewProfile);
         try {
-            return response()->success('Retrieved succesfully', $crwCrewProfile->load('crwCrewEducations', 'crwCrewTrainings', 'crwCrewExperiences', 'crwCrewLanguages', 'crwCrewReferences', 'crwCrewNominees'), 200);
+            return response()->success('Retrieved succesfully', $crwCrewProfile->load('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
         }
         catch (QueryException $e)
         {
@@ -97,26 +103,26 @@ class CrwCrewProfileController extends Controller
         try {
             DB::transaction(function () use ($request, $crwCrewProfile)
             {
-                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
+                $crwCrewProfileData = $request->only('crw_recruitment_approval_id', 'hired_by', 'ageny_id','rank_id', 'department_id', 'crw_rank_id', 'first_name', 'last_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'business_unit');
 
                 $crwCrewProfileData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-profile', $crwCrewProfile->attachment);
-                $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile', $crwCrewProfile->picture); 
-                
+                $crwCrewProfileData['picture'] = $this->fileUpload->handleFile($request->picture, 'crw/crew-profile', $crwCrewProfile->picture);
+
                 $crwCrewProfile->update($crwCrewProfileData);
 
-                $crwCrewProfile->crwCrewEducations()->delete();
-                $crwCrewProfile->crwCrewTrainings()->delete();
-                $crwCrewProfile->crwCrewExperiences()->delete();
-                $crwCrewProfile->crwCrewLanguages()->delete();
-                $crwCrewProfile->crwCrewReferences()->delete();
-                $crwCrewProfile->crwCrewNominees()->delete();
+                $crwCrewProfile->educations()->delete();
+                $crwCrewProfile->trainings()->delete();
+                $crwCrewProfile->experiences()->delete();
+                $crwCrewProfile->languages()->delete();
+                $crwCrewProfile->references()->delete();
+                $crwCrewProfile->nominees()->delete();
 
-                $crwCrewProfile->crwCrewEducations()->createMany($request->crwCrewEducations);
-                $crwCrewProfile->crwCrewTrainings()->createMany($request->crwCrewTrainings);
-                $crwCrewProfile->crwCrewExperiences()->createMany($request->crwCrewExperiences);
-                $crwCrewProfile->crwCrewLanguages()->createMany($request->crwCrewLanguages);
-                $crwCrewProfile->crwCrewReferences()->createMany($request->crwCrewReferences);
-                $crwCrewProfile->crwCrewNominees()->createMany($request->crwCrewNominees);
+                $crwCrewProfile->educations()->createMany($request->educations);
+                $crwCrewProfile->trainings()->createMany($request->trainings);
+                $crwCrewProfile->experiences()->createMany($request->experiences);
+                $crwCrewProfile->languages()->createMany($request->languages);
+                $crwCrewProfile->references()->createMany($request->references);
+                $crwCrewProfile->nominees()->createMany($request->nominees);
 
                 return response()->success('Updated succesfully', $crwCrewProfile, 202);
             });

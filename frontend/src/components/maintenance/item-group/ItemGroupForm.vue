@@ -1,6 +1,6 @@
 <template>
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
           <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
@@ -60,11 +60,12 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   if(newValue !== oldValue && oldValue != ''){
     props.form.mnt_ship_department_name = null;
   }
+  shipDepartments.value = [];
 });
 
 onMounted(() => {
   watchEffect(() => {
-    if(businessUnit.value){
+    if(businessUnit.value && businessUnit.value != 'ALL'){
       getShipDepartmentsWithoutPagination(businessUnit.value);
     }
   });

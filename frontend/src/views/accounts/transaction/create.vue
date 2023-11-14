@@ -8,7 +8,7 @@ const icons = useHeroIcon();
 const { transaction, storeTransaction, isLoading, bgColor, errors } = useTransaction();
 const { setTitle } = Title();
 
-setTitle('Create Transaction');
+setTitle('Create Voucher');
 
 const page = 'create';
 
@@ -19,8 +19,8 @@ function handleColorSelected(color) {
 <template>
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3 " v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Create Transaction</h2>
-      <default-button :title="'Transaction List'" :to="{ name: 'acc.transactions.index' }" :icon="icons.DataBase"></default-button>
+        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Create Voucher</h2>
+      <default-button :title="'Voucher List'" :to="{ name: 'acc.transactions.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden" :style="{ 'background-color': bgColor }">
         <form @submit.prevent="storeTransaction(transaction)">

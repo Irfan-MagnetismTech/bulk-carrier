@@ -22,6 +22,7 @@ class MntItemGroupController extends Controller
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
+            ->latest()
             ->paginate(10);
 
             return response()->success('Item groups retrieved successfully', $itemGroups, 200);
