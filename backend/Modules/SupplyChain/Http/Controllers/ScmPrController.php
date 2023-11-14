@@ -211,7 +211,7 @@ class ScmPrController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function searchOpeningStock(Request $request): JsonResponse
+    public function searchPr(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $purchase_requisition = ScmPr::query()

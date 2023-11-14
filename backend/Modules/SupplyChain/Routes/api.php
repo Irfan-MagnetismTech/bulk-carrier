@@ -54,6 +54,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-si-wise-data', [ScmSirController::class, "getSiWiseData"])->name('getSiWiseData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
+    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));

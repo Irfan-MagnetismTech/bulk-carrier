@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmMmr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Http\Requests\ScmMmrRequest;
 
 class ScmMmrController extends Controller
@@ -28,7 +30,12 @@ class ScmMmrController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $movementRequisitions = ScmMmr::with('scmMmrLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
+            $movementRequisitions = ScmMmr::with(
+                'fromWarehouse',
+                'toWarehouse',
+                'createdBy',
+                'scmMmrLines.scmMaterial',
+            )->latest()->paginate(10);
 
             return response()->success('Data list', $movementRequisitions, 200);
         } catch (\Exception $e) {
@@ -46,8 +53,6 @@ class ScmMmrController extends Controller
         $requestData = $request->except('ref_no', 'mmr_composite_key');
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmMmr::class, 'MMR');
-
-
 
         try {
             DB::beginTransaction();
@@ -71,12 +76,32 @@ class ScmMmrController extends Controller
     /**
      * Show the specified resource.
      * @param ScmMmr $movementRequisition
+     * 
      * @return JsonResponse
      */
     public function show(ScmMmr $movementRequisition): JsonResponse
     {
         try {
-            return response()->success('data', $movementRequisition->load('scmMmrLines.scmMaterial', 'scmWarehouse', 'createdBy'), 200);
+            $movementRequisition->load('scmMmrLines.scmMaterial', 'fromWarehouse', 'toWarehouse', 'createdBy',);
+
+            $scmMmrLines = $movementRequisition->scmMmrLines->map(function ($scmMmrLine) use ($movementRequisition) {
+                $lines = [
+                    'scm_material_id' => $scmMmrLine->scm_material_id,
+                    'scmMaterial' => $scmMmrLine->scmMaterial,
+                    'unit' => $scmMmrLine->unit,
+                    'specification' => $scmMmrLine->specification,
+                    'present_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->to_warehouse_id),
+                    'available_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->from_warehouse_id),
+                    'quantity' => $scmMmrLine->quantity,
+                ];
+
+                return $lines;
+            });
+
+            data_forget($movementRequisition, 'scmMmrLines');
+
+            $movementRequisition->scmMmrLines = $scmMmrLines;
+            return response()->success('data', $movementRequisition, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -135,5 +160,14 @@ class ScmMmrController extends Controller
             ->get();
 
         return response()->success('Search result', $movementRequisitions, 200);
+    }
+    public function getCurrentStockByWarehouse(): JsonResponse
+    {
+        $stockData = [
+            'from_warehouse_stock' => (new CurrentStock)->count(request()->scm_material_id, request()->from_warehouse_id),
+            'to_warehouse_stock' => (new CurrentStock)->count(request()->scm_material_id, request()->to_warehouse_id)
+        ];
+
+        return response()->success('Search result', $stockData, 200);
     }
 }

@@ -157,7 +157,9 @@ class ScmSirController extends Controller
 
                 return $lines;
             });
+
             data_forget($storeIssueReturn, 'scmSirLines');
+            
             $storeIssueReturn->scmSirLines = $scmSirLines;
 
             return response()->success('Data updated sucessfully!', $storeIssueReturn, 200);
