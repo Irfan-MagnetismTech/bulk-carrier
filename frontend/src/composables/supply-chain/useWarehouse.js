@@ -171,6 +171,47 @@ export default function useWarehouse() {
         }
     }
 
+
+    async function searchFromWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+
+    async function searchToWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+
     return {
         warehouses,
         warehouse,
@@ -181,6 +222,8 @@ export default function useWarehouse() {
         updateWarehouse,
         deleteWarehouse,
         getCostCenters,
+        searchToWarehouse,
+        searchFromWarehouse,
         costCenters,
         isLoading,
         errors,
