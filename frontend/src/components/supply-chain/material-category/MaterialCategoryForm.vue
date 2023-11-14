@@ -38,7 +38,6 @@ watch(() => props.form, (value) => {
                       <template #search="{attributes, events}">
                         <input
                             class="vs__search"
-                            :required="!form.parent_category_name"
                             v-bind="attributes"
                             v-on="events"
                             />
@@ -53,7 +52,7 @@ watch(() => props.form, (value) => {
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <input type="text" required v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
                     <Error v-if="errors?.short_code" :errors="errors.short_code" />
                 </label>
             </div>
@@ -78,6 +77,9 @@ watch(() => props.form, (value) => {
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+      }
+      .required-style {
+        @apply text-red-500;
       }
       
       >>> {

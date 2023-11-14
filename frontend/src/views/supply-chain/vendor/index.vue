@@ -86,6 +86,7 @@ function confirmDelete(id) {
             <th>Origin</th>
             <th>Contact</th>
             <th>Email</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
