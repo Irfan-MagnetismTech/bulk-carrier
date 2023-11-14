@@ -85,9 +85,9 @@ function confirmDelete(id) {
             <th>#</th>
             <th>Name</th>
             <th>Material Code</th>
+            <th>Unit</th>
             <th>Category</th>
             <th>Minimum Stock</th>
-            <th>Unit</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -96,9 +96,9 @@ function confirmDelete(id) {
             <td>{{ index + 1 }}</td>
             <td>{{ material.name }}</td>
             <td>{{ material.material_code }}</td>
+            <td>{{ material.unit }}</td>
             <td>{{ material.scmMaterialCategory.name }}</td>
             <td>{{ material.minimum_stock }}</td>
-            <td>{{ material.unit }}</td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
