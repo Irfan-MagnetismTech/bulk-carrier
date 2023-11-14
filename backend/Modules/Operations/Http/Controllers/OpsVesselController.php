@@ -70,7 +70,7 @@ class OpsVesselController extends Controller
             $vesselInfo = $request->except(
                 '_token',
                 'opsVesselCertificates',
-                'opsBunkers',
+                'opsBunkers.scmMaterial',
             );
             $vessel = OpsVessel::create($vesselInfo);
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
@@ -102,9 +102,9 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers'
+            'opsBunkers.scmMaterial'
         ]);
-        
+
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
@@ -114,6 +114,7 @@ class OpsVesselController extends Controller
         });
 
         $vessel->opsBunkers->map(function($bunker) {
+            $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
         });

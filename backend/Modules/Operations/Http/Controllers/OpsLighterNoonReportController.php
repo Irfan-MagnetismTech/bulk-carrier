@@ -42,33 +42,32 @@ class OpsLighterNoonReportController extends Controller
     }
  
  
-        /**
-      * Store a newly created resource in storage.
-      * 
-      * @param OpsLighterNoonReportRequest $request
-      * @return JsonResponse
-     */
-     public function store(OpsLighterNoonReportRequest $request): JsonResponse
-     {
-        //  dd($request);
-         try {
-             DB::beginTransaction();
-             $lighterNoonReportInfo = $request->except(
-                 '_token',
-                 'opsBunkers',
-             );
- 
-             $lighter_noon_report = OpsLighterNoonReport::create($lighterNoonReportInfo);
-             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
-             DB::commit();
-             return response()->success('Lighter noon report added successfully.', $lighter_noon_report, 201);
-         }
-         catch (QueryException $e)
-         {
-             DB::rollBack();
-             return response()->error($e->getMessage(), 500);
-         }
-     }
+    /**
+     * Store a newly created resource in storage.
+    * 
+    * @param OpsLighterNoonReportRequest $request
+    * @return JsonResponse
+    */
+    public function store(OpsLighterNoonReportRequest $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $lighterNoonReportInfo = $request->except(
+                '_token',
+                'opsBunkers',
+            );
+
+            $lighter_noon_report = OpsLighterNoonReport::create($lighterNoonReportInfo);
+            $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
+            DB::commit();
+            return response()->success('Lighter noon report added successfully.', $lighter_noon_report, 201);
+        }
+        catch (QueryException $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
  
     /**
      * Display the specified maritime certification.
@@ -79,6 +78,7 @@ class OpsLighterNoonReportController extends Controller
     public function show(OpsLighterNoonReport $lighter_noon_report): JsonResponse
     {
         $lighter_noon_report->load('opsVessel','opsVoyage','opsBunkers', 'lastPort', 'nextPort');
+        
         $lighter_noon_report->opsBunkers->map(function($bunker) {
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
@@ -96,57 +96,56 @@ class OpsLighterNoonReportController extends Controller
     }
  
  
-       /**
-      * Update the specified resource in storage.
-      *
-      * @param OpsLighterNoonReportRequest $request
-      * @param  OpsLighterNoonReport  $lighter_noon_report
-      * @return JsonResponse
-      */
-     public function update(OpsLighterNoonReportRequest $request, OpsLighterNoonReport $lighter_noon_report): JsonResponse
-     {
+    /**
+     * Update the specified resource in storage.
+    *
+    * @param OpsLighterNoonReportRequest $request
+    * @param  OpsLighterNoonReport  $lighter_noon_report
+    * @return JsonResponse
+    */
+    public function update(OpsLighterNoonReportRequest $request, OpsLighterNoonReport $lighter_noon_report): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $lighterNoonReportInfo = $request->except(
+                '_token',
+                'opsBunkers',
+            );
+        
+            $lighter_noon_report->update($lighterNoonReportInfo);            
+            $lighter_noon_report->opsBunkers()->delete();
+            $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
+            DB::commit();
+            return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 202);
+        }
+        catch (QueryException $e)
+        {            
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
-         try {
-             DB::beginTransaction();
-             $lighterNoonReportInfo = $request->except(
-                 '_token',
-                 'opsBunkers',
-             );
-            
-             $lighter_noon_report->update($lighterNoonReportInfo);            
-             $lighter_noon_report->opsBunkers()->delete();
-             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
-             DB::commit();
-             return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 202);
-         }
-         catch (QueryException $e)
-         {            
-             DB::rollBack();
-             return response()->error($e->getMessage(), 500);
-         }
-     }
- 
-     /**
-      * Remove the specified vessel from storage.
-      *
-      * @param  OpsLighterNoonReport  $lighter_noon_report
-      * @return \Illuminate\Http\JsonResponse
-      */
-     public function destroy(OpsLighterNoonReport $lighter_noon_report): JsonResponse
-     {
-         try
-         {
-             $lighter_noon_report->opsBunkers()->delete();
-             $lighter_noon_report->delete();
- 
-             return response()->json([
-                 'message' => 'Successfully deleted lighter noon report.',
-             ], 204);
-         }
-         catch (QueryException $e)
-         {
-             return response()->error($e->getMessage(), 500);
-         }
-     }
+    /**
+     * Remove the specified vessel from storage.
+    *
+    * @param  OpsLighterNoonReport  $lighter_noon_report
+    * @return \Illuminate\Http\JsonResponse
+    */
+    public function destroy(OpsLighterNoonReport $lighter_noon_report): JsonResponse
+    {
+        try
+        {
+            $lighter_noon_report->opsBunkers()->delete();
+            $lighter_noon_report->delete();
+
+            return response()->json([
+                'message' => 'Successfully deleted lighter noon report.',
+            ], 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
      
 }
