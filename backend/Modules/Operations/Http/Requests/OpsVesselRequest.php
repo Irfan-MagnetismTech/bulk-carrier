@@ -38,9 +38,17 @@ class OpsVesselRequest extends FormRequest
             'port_of_registry'=> ['required', 'string', 'max:255'],
             'nrt'             => ['required', 'integer', 'min:0', 'max:10000000'],
             'dwt'             => ['required'],
-            'imo'             => ['required', 'string', 'max:50'],
+            'imo'             => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if (strlen((string) $value) < 10) {
+                    $fail('The ' . $attribute . ' must be at least 10 characters.');
+                }
+            }],
             'grt'             => ['required', 'integer', 'min:0', 'max:10000000'],
-            'official_number' => ['required', 'string', 'max:50'],
+            'official_number' => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if (strlen((string) $value) < 10) {
+                    $fail('The ' . $attribute . ' must be at least 10 characters.');
+                }
+            }],
             'keel_laying_date'=> ['required'],
             'launching_date'  => ['required'],
             'mmsi'            => ['required'],
