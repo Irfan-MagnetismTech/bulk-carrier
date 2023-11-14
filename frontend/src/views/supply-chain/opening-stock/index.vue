@@ -91,7 +91,7 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Name</th>
+            <th>Date</th>
             <th>Warehouse</th>
             <th>Business Unit</th>
             <th>Action</th>
