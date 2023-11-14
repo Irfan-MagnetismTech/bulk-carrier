@@ -16,10 +16,19 @@ class AccAccountController extends Controller
      */
     public function index(Request $request)
     {
+        // $data = AccAccount::globalSearch($request->all())->get(); 
+
+        // dd($data->toArray()); 
+
+        // $this->globalSearch($request->all(), 'AccAccount');
+
         try {
-            $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')
+            ->globalSearch($request->all())
+            // ->when(request()->business_unit != "ALL", function($q){
+            //     $q->where('business_unit', request()->business_unit);
+            // })
+            ->paginate(10);
 
             return response()->success('Retrieved Successfully', $accounts, 200);
         }
