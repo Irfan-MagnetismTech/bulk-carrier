@@ -141,6 +141,20 @@ onMounted(() => {
       });
 });
 
+const descSort = ref(false)
+const ascSort = ref(false)
+
+function sortThings() {
+  console.log(descSort.value)
+  if(descSort.value==false) {
+    ascSort.value = false
+    descSort.value = true
+  } else {
+    ascSort.value = true
+    descSort.value = false
+  }
+}
+
 </script>
 
 <template>
@@ -173,7 +187,15 @@ onMounted(() => {
                   # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                 </div>
               </th>
-              <th>Balance/Income Line</th>
+              <th>
+                <div class="flex justify-between items-center">
+                  <span>Balance/Income Line</span>
+                  <div class="flex flex-col cursor-pointer" @click="sortThings">
+                    <div v-html="icons.descIcon" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
               <th><nobr>Balance/Income Line Type</nobr></th>
               <th>Parent Account</th>
               <th>Account Code</th>
