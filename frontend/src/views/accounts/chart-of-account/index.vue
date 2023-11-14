@@ -10,6 +10,11 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import $ from 'jquery';
+window.$ = $;
+import DataTable from 'datatables.net-dt';
+import 'datatables.net-dt/css/jquery.dataTables.css';
+
 const router = useRouter();
 
 const props = defineProps({
@@ -62,6 +67,9 @@ onMounted(() => {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
     })
+    .then(() => {
+      new DataTable('#example', {});
+    })
     .catch((error) => {
       console.error("Error fetching ranks:", error);
     });
@@ -80,18 +88,18 @@ onMounted(() => {
   <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
     <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
+<!--    <div class="relative w-full">-->
+<!--      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">-->
+<!--        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />-->
+<!--      </svg>-->
+<!--      <input type="text" placeholder="Search..." class="search" />-->
+<!--    </div>-->
   </div>
 
   <div id="customDataTable">
-    <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+    <div  class="table-responsive max-w-screen">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table id="example" class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
@@ -106,7 +114,7 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
+          <tr v-for="(chartAccountData,index) in chartOfAccounts" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
@@ -129,16 +137,16 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!chartOfAccounts?.data?.length">
+          <tfoot v-if="!chartOfAccounts?.length">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
-          <tr v-else-if="!chartOfAccounts?.data?.data?.length">
+          <tr v-else-if="!chartOfAccounts?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="chartOfAccounts" to="acc.chart-of-accounts.index" :page="page"></Paginate>
+
   </div>
 </template>
