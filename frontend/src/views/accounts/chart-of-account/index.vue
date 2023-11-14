@@ -58,22 +58,87 @@ watch(
     }
 );
 
+let filterOptions = ref( {
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "filter_options": [
+    {
+      "rel_type": "belongsTo",
+      "relation_name": "balanceIncome",
+      "field_name": "line_text",
+      "search_param": "",
+      "action": null,
+      "order_by": "asc",
+      "date_from": null
+    },
+    {
+      "rel_type": "belongsTo",
+      "relation_name": "balanceIncome",
+      "field_name": "line_type",
+      "search_param": "",
+      "action": null,
+      "order_by": "asc",
+      "date_from": null
+    },
+    {
+      "rel_type": "belongsTo",
+      "relation_name": "parent",
+      "field_name": "account_name",
+      "search_param": "",
+      "action": null,
+      "order_by": "desc",
+      "date_from": null
+    },
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "account_code",
+      "search_param": "",
+      "action": null,
+      "order_by": "desc",
+      "date_from": null
+    },
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "account_name",
+      "search_param": "",
+      "action": null,
+      "order_by": "desc",
+      "date_from": null
+    },
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "account_type",
+      "search_param": "",
+      "action": null,
+      "order_by": "desc",
+      "date_from": null
+    }
+  ]
+});
+
+watch(() => filterOptions.value, (value) => {
+  if(value){
+    //console.log("ASDSD: ", filterOptions.value);
+    getChartOfAccounts(filterOptions.value);
+  }
+}, {deep: true});
 
 onMounted(() => {
-//   watchEffect(() => {
-//   getChartOfAccounts(props.page, businessUnit.value)
-//     .then(() => {
-//       const customDataTable = document.getElementById("customDataTable");
-//
-//       if (customDataTable) {
-//         tableScrollWidth.value = customDataTable.scrollWidth;
-//       }
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching ranks:", error);
-//     });
-// });
+  getChartOfAccounts(filterOptions.value)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
 
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ranks:", error);
+      });
 });
 
 </script>
@@ -119,26 +184,35 @@ onMounted(() => {
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
-                <select name="" id="" class="filter_input">
+                <select v-model="filterOptions.items_per_page" class="filter_input">
                   <option value="15">15</option>
                   <option value="30">30</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
-              <th><input type="text" placeholder="" class="filter_input" required autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
-                <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
+                <select class="filter_input" v-model="filterOptions.filter_options[5].search_param" autocomplete="off">
+                  <option value="" disabled selected>Select</option>
+                  <option value="1"> Assets </option>
+                  <option value="2"> Liabilities </option>
+                  <option value="3"> Equity </option>
+                  <option value="4"> Revenues </option>
+                  <option value="5"> Expenses </option>
+                </select>
+              </th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
             </tr>
           </thead>
           <tbody>
-          <tr v-for="(chartAccountData,index) in chartOfAccounts" :key="index">
+          <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
@@ -161,7 +235,7 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!chartOfAccounts?.length">
+          <tfoot v-if="!chartOfAccounts?.data?.length">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
@@ -171,6 +245,6 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-
+    <Paginate :data="chartOfAccounts" to="acc.chart-of-accounts.index" :page="page"></Paginate>
   </div>
 </template>

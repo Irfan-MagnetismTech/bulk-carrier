@@ -29,20 +29,24 @@ export default function useChartOfAccount() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getChartOfAccounts(page,businessUnit) {
+    async function getChartOfAccounts(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
+            const filter_options = {
+                ...filterOptions.filter_options
+            }
+
             const {data, status} = await Api.get('/acc/acc-accounts',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             chartOfAccounts.value = data.value;
             notification.showSuccess(status);
