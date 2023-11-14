@@ -25,6 +25,7 @@ class ScmMmrController extends Controller
 
     /**
      * Display a listing of the resource.
+     * 
      * @return JsonResponse
      */
     public function index(): JsonResponse
@@ -46,6 +47,7 @@ class ScmMmrController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
      * @return JsonResponse
      */
     public function store(ScmMmrRequest $request): JsonResponse
@@ -75,8 +77,8 @@ class ScmMmrController extends Controller
 
     /**
      * Show the specified resource.
-     * @param ScmMmr $movementRequisition
      * 
+     * @param ScmMmr $movementRequisition
      * @return JsonResponse
      */
     public function show(ScmMmr $movementRequisition): JsonResponse
@@ -110,6 +112,7 @@ class ScmMmrController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
      * @param ScmMmrRequest $request
      * @param ScmMmr $movementRequisition
      * @return JsonResponse
@@ -134,6 +137,7 @@ class ScmMmrController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * 
      * @param ScmMmr $movementRequisition
      * @return JsonResponse
      */
@@ -149,18 +153,12 @@ class ScmMmrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-
-    public function searchVendor(Request $request): JsonResponse
-    {
-        $movementRequisitions = ScmMmr::query()
-            ->with('scmMmrLines')
-            ->where('name', 'like', "%$request->searchParam%")
-            ->orderByDesc('name')
-            ->limit(10)
-            ->get();
-
-        return response()->success('Search result', $movementRequisitions, 200);
-    }
+    
+    /**
+     * Retrieves the current stock data for a given warehouse.
+     *
+     * @return JsonResponse
+     */
     public function getCurrentStockByWarehouse(): JsonResponse
     {
         $stockData = [
@@ -169,5 +167,78 @@ class ScmMmrController extends Controller
         ];
 
         return response()->success('Search result', $stockData, 200);
+    }
+
+    /**
+     * Searches for MMR records based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchMmr(Request $request): JsonResponse
+    {
+        try {
+            if ($request->business_unit != 'ALL') {
+                $movementRequisitions = ScmMmr::query()
+                    ->with('scmMmrLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
+                    ->whereBusinessUnit($request->business_unit)
+                    ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                    ->orderByDesc('ref_no')
+                    ->limit(10)
+                    ->get();
+            } else {
+                $movementRequisitions = [];
+            }
+
+            return response()->success('Search result', $movementRequisitions, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getMmrWiseData(Request $request): JsonResponse
+    {
+        try {
+            if ($request->mmr_id != null) {
+                $scmMmr = ScmMmr::query()
+                    ->with('scmMmrLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
+                    ->where('id', $request->mmr_id)
+                    ->first();
+
+                $data = [
+                    'scmWarehouse' => $scmMmr->scmWarehouse,
+                    'scm_warehouse_id' => $scmMmr->scm_warehouse_id,
+                    'scm_department_id' => $scmMmr->scm_department_id,
+                    'scm_mmr_id' => $scmMmr->id,
+                    'scmMmr' => $scmMmr,
+                    'acc_cost_center_id' => $scmMmr->acc_cost_center_id,
+                    'business_unit' => $scmMmr->business_unit,
+                    'scmMmrLines' => $scmMmr->scmMmrLines->map(function ($item) use ($scmMmr) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'quantity' => $item->quantity,
+                            'mmr_quantity' => $item->quantity,
+                            'mmr_composite_key' => $item->mmr_composite_key,
+                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
+                            // 'max_quantity' => "$item->quantity - $item->scmSiLines->sum('quantity'),"
+                            // 'rate' => $item->rate,
+                            // 'total_price' => $item->total_price
+                        ];
+                    })
+                ];
+            } else {
+                // $scmCs = ScmCs::query()
+                // ->with('scmWarehouse', 'scmMmr')
+                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
+                // ->get();
+            }
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

@@ -18,6 +18,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
+use Modules\SupplyChain\Http\Controllers\ScmMoController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -36,6 +37,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'store-issues' => ScmSiController::class,
         'store-issue-returns' => ScmSirController::class,
         'movement-requisitions' => ScmMmrController::class,
+        'movement-outs' => ScmMoController::class,
     ]);
 
     //Search Apis
@@ -52,7 +54,9 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-po-or-pr-wise-mrr', [ScmMrrController::class, "getPoOrPrWiseMrrData"])->name('getPoOrPrWiseMrrData');
     Route::get('get-sr-wise-data', [ScmSiController::class, "getSrWiseData"])->name('getSrWiseData');
     Route::get('get-si-wise-data', [ScmSirController::class, "getSiWiseData"])->name('getSiWiseData');
+    Route::get('get-mmr-wise-data', [ScmMmrController::class, "getMmrWiseData"])->name('getMmrWiseData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
+    Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     

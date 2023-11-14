@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMmr;
+use Modules\SupplyChain\Entities\ScmMoLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,5 +25,10 @@ class ScmMmrLine extends Model
     public function scmMaterial(): BelongsTo
     {
         return $this->belongsTo(ScmMaterial::class);
+    }
+
+    public function scmMoLines()
+    {
+        return $this->hasMany(ScmMoLine::class, 'mmr_composite_key', 'mmr_composite_key');
     }
 }
