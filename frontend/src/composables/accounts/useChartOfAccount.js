@@ -45,6 +45,7 @@ export default function useChartOfAccount() {
             const {data, status} = await Api.get('/acc/acc-accounts',{
                 params: {
                    page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }
             });

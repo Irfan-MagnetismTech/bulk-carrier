@@ -122,10 +122,13 @@ let filterOptions = ref( {
 
 watch(() => filterOptions.value, (value) => {
   if(value){
-    //console.log("ASDSD: ", filterOptions.value);
     getChartOfAccounts(filterOptions.value);
   }
 }, {deep: true});
+
+function setSortingState(index,order){
+  filterOptions.value.filter_options[index].order_by = order;
+}
 
 onMounted(() => {
   getChartOfAccounts(filterOptions.value)
@@ -188,19 +191,59 @@ function sortThings() {
                 </div>
               </th>
               <th>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-evenly items-center">
                   <span>Balance/Income Line</span>
-                  <div class="flex flex-col cursor-pointer" @click="sortThings">
-                    <div v-html="icons.descIcon" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
-              <th><nobr>Balance/Income Line Type</nobr></th>
-              <th>Parent Account</th>
-              <th>Account Code</th>
-              <th>Account Name</th>
-              <th>Account Type</th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Balance/Income Line Type</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Parent Account</nobr></span>
+                  <div class="flex flex-col cursor-pointer" @click="sortThings">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Account Code</nobr></span>
+                  <div class="flex flex-col cursor-pointer" @click="sortThings">
+                    <div v-html="icons.descIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(3,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Account Name</nobr></span>
+                  <div class="flex flex-col cursor-pointer" @click="sortThings">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Account Type</nobr></span>
+                  <div class="flex flex-col cursor-pointer" @click="sortThings">
+                    <div v-html="icons.descIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(5,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
 <!--              <th>Business Unit</th>-->
               <th class="w-20 min-w-full">Action</th>
             </tr>
@@ -236,11 +279,11 @@ function sortThings() {
           <tbody>
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ chartAccountData?.balanceIncome?.line_text }}</td>
+            <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
             <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
             <td>{{ chartAccountData?.account_code }}</td>
-            <td>{{ chartAccountData?.account_name }}</td>
+            <td class="text-left">{{ chartAccountData?.account_name }}</td>
             <td>
               <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Assets</span>
               <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Liabilities</span>

@@ -16,16 +16,11 @@ class AccAccountController extends Controller
      */
     public function index(Request $request)
     {
-//        info($request->filter_options);
-        //$decode = json_decode($request->data);
 
-        $perPage = $request->has('items_per_page') ? $request->items_per_page : 15;
-
-        //return response()->success('Retrieved Successfully', $decode->filter_options, 200);
         try {
             $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')
             ->globalSearch($request->all())
-            ->paginate($perPage);
+            ->paginate($request->items_per_page);
 
             return response()->success('Retrieved Successfully', $accounts, 200);
         }
