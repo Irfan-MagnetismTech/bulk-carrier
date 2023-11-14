@@ -17,10 +17,12 @@ class MntCriticalVesselItemRequest extends FormRequest
         return [
             'business_unit' => 'required',
             'ops_vessel_id' => 'required',
+            'is_critical' => 'required',
             'mnt_critical_item_id' => ['required', Rule::unique('mnt_critical_vessel_items')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->route('critical_vessel_item'), 'id')],
-            'mntCriticalItemSps.*.sp_name' => 'required',
-            'mntCriticalItemSps.*.unit' => 'required',
-            'mntCriticalItemSps.*.min_rob' => 'required|integer|min:1',
+            'mntCriticalItemSps' => 'array|required_if:is_critical,true',
+            'mntCriticalItemSps.*.sp_name' => 'required_if:is_critical,true',
+            'mntCriticalItemSps.*.unit' => 'required_if:is_critical,true',
+            'mntCriticalItemSps.*.min_rob' => 'required_if:is_critical,true|integer|min:1',
         ];
     }
 
