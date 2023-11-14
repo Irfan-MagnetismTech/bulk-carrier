@@ -359,6 +359,37 @@ export default [
 	},
 
 	/* Critical Vessel Items End */
+	
+	
+	/* Critical Spare List Start */
+	{
+		path: `/${BASE}/critical-spare-lists`,
+		name: `${BASE}.critical-spare-lists.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/create`,
+		name: `${BASE}.critical-spare-lists.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-create' },
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/:criticalSpareListId/edit`,
+		name: `${BASE}.critical-spare-lists.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-edit' },
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/:criticalSpareListId`,
+		name: `${BASE}.critical-spare-lists.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-show'  },
+	},
+
+	/* Critical Spare List End */
+
 
 
 

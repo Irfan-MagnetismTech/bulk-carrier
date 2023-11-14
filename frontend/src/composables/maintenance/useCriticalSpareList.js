@@ -6,27 +6,18 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useCriticalVesselItem() {
+export default function useCriticalSpareList() {
     const router = useRouter();
-    const criticalVesselItems = ref([]);
+    const criticalSparelists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const criticalVesselItem = ref({
+    const criticalSpareList = ref( {
         ops_vessel_id: '',
         ops_vessel_name: '',
-        mnt_critical_function_id: '',
-        mnt_critical_function_name: '',
-        mnt_critical_item_cat_id: '',
-        mnt_critical_item_cat_name: '',
-        mnt_critical_item_id: '',
-        mnt_critical_item_name: '',
-        is_critical: null,
-        notes: '',
+        reference_no: '',
+        record_date: '',
         business_unit: '',
-        
-        mntCriticalItemSps: [],
-        mntCriticalItemCategories: [],
-        mntCriticalItems: [],
+        mntCriticalSpListLine: [],
     });
 
     const indexPage = ref(null);
@@ -35,7 +26,7 @@ export default function useCriticalVesselItem() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCriticalVesselItems(page, businessUnit) {
+    async function getCriticalSpareLists(page, businessUnit) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -44,13 +35,13 @@ export default function useCriticalVesselItem() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get('/mnt/critical-vessel-items',{
+            const {data, status} = await Api.get('/mnt/critical-spare-lists',{
                 params: {
                     page: page || 1,
                     business_unit: businessUnit,
                 },
             });
-            criticalVesselItems.value = data.value;
+            criticalSpareLists.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -62,16 +53,16 @@ export default function useCriticalVesselItem() {
         }
     }
 
-    async function storeCriticalVesselItem(form) {
+    async function storeCriticalSpareList(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/mnt/critical-vessel-items', form);
-            criticalVesselItem.value = data.value;
+            const { data, status } = await Api.post('/mnt/critical-spare-lists', form);
+            criticalSpareList.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-vessel-items.index" });
+            router.push({ name: "mnt.critical-spare-lists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -81,14 +72,14 @@ export default function useCriticalVesselItem() {
         }
     }
 
-    async function showCriticalVesselItem(criticalVesselItemId) {
+    async function showCriticalSpareList(criticalSpareListId) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/critical-vessel-items/${criticalVesselItemId}`);
-            criticalVesselItem.value = data.value;
+            const { data, status } = await Api.get(`/mnt/critical-spare-lists/${criticalSpareListId}`);
+            criticalSpareList.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -100,19 +91,19 @@ export default function useCriticalVesselItem() {
         }
     }
 
-    async function updateCriticalVesselItem(form, criticalVesselItemId) {
+    async function updateCriticalSpareList(form, criticalSpareListId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/critical-vessel-items/${criticalVesselItemId}`,
+                `/mnt/critical-spare-lists/${criticalSpareListId}`,
                 form
             );
-            criticalVesselItem.value = data.value;
+            criticalSpareList.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-vessel-items.index" });
+            router.push({ name: "mnt.critical-spare-lists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -123,15 +114,15 @@ export default function useCriticalVesselItem() {
         }
     }
 
-    async function deleteCriticalVesselItem(criticalVesselItemId) {
+    async function deleteCriticalSpareList(criticalSparelistId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/critical-vessel-items/${criticalVesselItemId}`);
+            const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSparelistId}`);
             notification.showSuccess(status);
-            await getCriticalVesselItems(indexPage.value, indexBusinessUnit.value);
+            await getCriticalSpareListItems(indexPage.value, indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -141,41 +132,18 @@ export default function useCriticalVesselItem() {
         }
     }
 
-    async function getVesselWiseCriticalVesselItems(opsVesselId){
-        //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        try {
-            const {data, status} = await Api.get('/mnt/get-critical-vessel-items',{
-                params: {
-                    ops_vessel_id: opsVesselId,
-                },
-            });
-            criticalVesselItems.value = data.value;
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            // loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
-        }
-    }
-
+    
     
 
     
     return {
-        criticalVesselItems,
-        criticalVesselItem,
-        getCriticalVesselItems,
-        storeCriticalVesselItem,
-        showCriticalVesselItem,
-        updateCriticalVesselItem,
-        deleteCriticalVesselItem,
-        getVesselWiseCriticalVesselItems,
+        criticalSparelists,
+        criticalSpareList,
+        getCriticalSpareLists,
+        storeCriticalSpareList,
+        showCriticalSpareList,
+        updateCriticalSpareList,
+        deleteCriticalSpareList,
         isLoading,
         errors,
     };
