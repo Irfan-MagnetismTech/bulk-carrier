@@ -10,7 +10,7 @@ class MntSurveyType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['suvey_type_name','due_period','window_period'];
+    protected $fillable = ['survey_type_name','due_period','window_period'];
 
     public function mntSurvey() : HasMany {
         return $this->hasMany(MntSurvey::class);
