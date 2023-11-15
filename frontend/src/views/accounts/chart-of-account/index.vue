@@ -28,11 +28,6 @@ setTitle('Chart of Accounts List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-let showFilter = ref(false);
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
 
 function confirmDelete(id) {
   Swal.fire({
@@ -59,6 +54,10 @@ watch(
     }
 );
 
+let showFilter = ref(false);
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
 let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
@@ -119,8 +118,6 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-const loaderType = ref(null);
-
 onMounted(() => {
   watchEffect(() => {
   filterOptions.value.page = props.page;
@@ -131,7 +128,6 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
-        loaderType.value = 'table-loader';
       })
       .catch((error) => {
         console.error("Error fetching ranks:", error);
