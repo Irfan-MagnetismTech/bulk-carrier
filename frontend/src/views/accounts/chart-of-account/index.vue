@@ -144,19 +144,19 @@ onMounted(() => {
       });
 });
 
-const descSort = ref(false)
-const ascSort = ref(false)
-
-function sortThings() {
-  console.log(descSort.value)
-  if(descSort.value==false) {
-    ascSort.value = false
-    descSort.value = true
-  } else {
-    ascSort.value = true
-    descSort.value = false
-  }
-}
+// const descSort = ref(false)
+// const ascSort = ref(false)
+//
+// function sortThings() {
+//   console.log(descSort.value)
+//   if(descSort.value==false) {
+//     ascSort.value = false
+//     descSort.value = true
+//   } else {
+//     ascSort.value = true
+//     descSort.value = false
+//   }
+// }
 
 </script>
 
@@ -194,8 +194,8 @@ function sortThings() {
                 <div class="flex justify-evenly items-center">
                   <span>Balance/Income Line</span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(0,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'asc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300' : filterOptions.filter_options[0].order_by === 'asc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
