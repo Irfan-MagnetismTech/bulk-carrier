@@ -48,7 +48,7 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "origin",
+      "field_name": "country_name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -204,7 +204,7 @@ function confirmDelete(id) {
             <tr v-for="(vendor,index) in vendors.data" :key="vendor.id">
               <td>{{ index + 1 }}</td>
               <td>{{ vendor.name }}</td>
-              <td>{{ vendor.origin }}</td>
+              <td>{{ vendor.country_name }}</td>
               <td>{{ vendor.scmVendorContactPerson.phone }}</td>
               <td>{{ vendor.scmVendorContactPerson.email }}</td>
               <td>

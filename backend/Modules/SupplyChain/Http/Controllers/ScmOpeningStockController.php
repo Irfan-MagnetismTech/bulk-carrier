@@ -19,8 +19,7 @@ class ScmOpeningStockController extends Controller
         try {
             $scm_opening_stocks = ScmOpeningStock::query()
                 ->with('scmOpeningStockLines', 'scmWarehouse')
-                ->globalSearch($request->all())
-                ->paginate($request->items_per_page);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_opening_stocks, 200);
         } catch (\Exception $e) {

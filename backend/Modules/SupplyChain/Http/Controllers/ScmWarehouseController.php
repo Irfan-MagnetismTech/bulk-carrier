@@ -19,8 +19,7 @@ class ScmWarehouseController extends Controller
         try {
             $scmWarehouses = ScmWarehouse::query()
                 ->with('scmWarehouseContactPerson')
-                ->globalSearch($request->all())
-                ->paginate($request->items_per_page);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {

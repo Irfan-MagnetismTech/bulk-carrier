@@ -173,7 +173,11 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-<!--              <th>Business Unit</th>-->
+             <th>
+              <div class="flex justify-evenly item-center">
+                <span><nobr>Business Unit</nobr></span>
+              </div>
+              </th>
               <th class="w-20 min-w-full">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -221,4 +225,3 @@ onMounted(() => {
     <Paginate :data="ranks" to="scm.warehouse.index" :page="page"></Paginate>
   </div>
 </template>
-

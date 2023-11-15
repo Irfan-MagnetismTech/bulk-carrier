@@ -19,8 +19,7 @@ class ScmMaterialCategoryController extends Controller
     {
         try {
             $scm_material_categories = ScmMaterialCategory::with('parent')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+                ->globalSearch($request->all());
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {

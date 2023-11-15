@@ -29,8 +29,7 @@ class ScmLcRecordController extends Controller
         try {
             $scmLcRecords = ScmLcRecord::query()
                 ->with('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo')
-                ->globalSearch($request->all())
-                ->paginate($request->items_per_page);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmLcRecords, 200);
         } catch (\Exception $e) {
