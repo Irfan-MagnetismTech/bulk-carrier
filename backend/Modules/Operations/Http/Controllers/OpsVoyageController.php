@@ -28,11 +28,12 @@ class OpsVoyageController extends Controller
     * @param Request $request
     * @return JsonResponse
     **/
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
-        // dd('voyage');
         try {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
+            ->globalSearch($request->all())
+            ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }
