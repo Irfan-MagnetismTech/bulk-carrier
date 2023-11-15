@@ -19,10 +19,7 @@ class AccAccountOpeningBalanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account','costCenter')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account','costCenter')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accAccountOpeningBalances, 200);
         }

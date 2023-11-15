@@ -21,13 +21,10 @@ class AccBankAccountController extends Controller
         // $this->middleware('permission:configuration-bank-account-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $accBankAccounts = AccBankAccount::when(request()->business_unit != 'ALL', function ($q)
-            {
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accBankAccounts = AccBankAccount::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accBankAccounts, 200);
         }

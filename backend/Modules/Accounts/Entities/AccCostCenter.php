@@ -4,10 +4,11 @@ namespace Modules\Accounts\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\GlobalSearchTrait;
 
 class AccCostCenter extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * @var array
