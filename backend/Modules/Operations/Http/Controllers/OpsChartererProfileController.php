@@ -28,10 +28,11 @@ class OpsChartererProfileController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->paginate(15);
+            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer profiles.', $charterer_profiles, 200);
         }

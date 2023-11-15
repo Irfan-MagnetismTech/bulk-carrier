@@ -33,9 +33,7 @@ class OpsHandoverTakeoverController extends Controller
     {
         try {
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers.scmMaterial')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->latest()->paginate(15);
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }

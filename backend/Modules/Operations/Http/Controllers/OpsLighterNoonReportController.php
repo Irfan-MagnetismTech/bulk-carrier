@@ -28,10 +28,11 @@ class OpsLighterNoonReportController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')->latest()->paginate(15);
+            $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved lighter noon reports.', $lighterNoonReports, 200);
         }

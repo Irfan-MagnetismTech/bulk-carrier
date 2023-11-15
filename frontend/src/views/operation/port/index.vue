@@ -62,12 +62,10 @@ watch(
 );
 
 let filterOptions = ref( {
-  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "filter_options": [
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "code",
       "search_param": "",
@@ -76,7 +74,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "name",
       "search_param": "",
@@ -93,6 +90,8 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
+
     getPorts(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -141,8 +140,8 @@ onMounted(() => {
                 <div class="flex justify-evenly items-center">
                   <span>Name</span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>

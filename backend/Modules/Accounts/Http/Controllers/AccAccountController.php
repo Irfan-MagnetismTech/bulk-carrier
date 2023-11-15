@@ -18,8 +18,7 @@ class AccAccountController extends Controller
     {
         try {
             $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accounts, 200);
         }

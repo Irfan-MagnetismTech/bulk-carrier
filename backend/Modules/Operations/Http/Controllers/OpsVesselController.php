@@ -29,7 +29,7 @@ class OpsVesselController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try
         {
@@ -43,10 +43,7 @@ class OpsVesselController extends Controller
                 },
                 'opsBunkers'
             ])
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->latest()->paginate(10);   
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }

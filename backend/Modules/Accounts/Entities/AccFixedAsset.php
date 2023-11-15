@@ -5,10 +5,11 @@ namespace Modules\Accounts\Entities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use App\Traits\GlobalSearchTrait;
 
 class AccFixedAsset extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * @var array

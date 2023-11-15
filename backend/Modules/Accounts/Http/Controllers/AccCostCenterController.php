@@ -16,9 +16,7 @@ class AccCostCenterController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCostCenters = AccCostCenter::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(1);
+            $accCostCenters = AccCostCenter::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }

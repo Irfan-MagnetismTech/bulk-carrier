@@ -23,22 +23,25 @@ export default function useMaterialCategory() {
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    async function getMaterialCategories(page,columns = null, searchKey = null, table = null) {
+    async function getMaterialCategories(filterOptions) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = page;
+        indexPage.value = filterOptions.page;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/material-categories`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const filter_options = {
+                ...filterOptions.filter_options
+            }
+
+            const {data, status} = await Api.get(`/${BASE}/material-categories`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
