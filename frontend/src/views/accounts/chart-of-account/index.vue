@@ -120,17 +120,18 @@ let filterOptions = ref( {
   ]
 });
 
-watch(() => filterOptions.value, (value) => {
-  if(value){
-    getChartOfAccounts(filterOptions.value);
-  }
-}, {deep: true});
+// watch(() => filterOptions.value, (value) => {
+//   if(value){
+//     getChartOfAccounts(filterOptions.value);
+//   }
+// }, {deep: true});
 
 function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
+  watchEffect(() => {
   getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
@@ -142,6 +143,7 @@ onMounted(() => {
       .catch((error) => {
         console.error("Error fetching ranks:", error);
       });
+  });
 });
 
 // const descSort = ref(false)
