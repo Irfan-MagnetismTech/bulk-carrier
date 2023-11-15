@@ -2,13 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\DB;
 
 class OpsVessel extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
     /**
      * The attributes that are mass assignable.
      *
