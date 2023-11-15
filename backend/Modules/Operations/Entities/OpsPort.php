@@ -4,10 +4,11 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\GlobalSearchTrait;
 
 class OpsPort extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
     /**
      * The attributes that are mass assignable.
      *

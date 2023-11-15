@@ -23,8 +23,7 @@ class MntWorkRequisitionController extends Controller
         try {
             $runHours = MntWorkRequisition::with(['opsVessel:id,name','mntWorkRequisitionItem.mntItem'])
                         ->where('status', 0)
-                        ->globalSearch($request->all())
-                        ->paginate($request->items_per_page);
+                        ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
             
@@ -44,8 +43,7 @@ class MntWorkRequisitionController extends Controller
         try {
             $runHours = MntWorkRequisition::with(['opsVessel:id,name','mntWorkRequisitionItem.mntItem'])
                         ->where('status', request()->status ?? 1 )
-                        ->globalSearch($request->all())
-                        ->paginate($request->items_per_page);
+                        ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
             

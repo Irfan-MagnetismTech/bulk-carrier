@@ -22,8 +22,7 @@ class MntShipDepartmentController extends Controller
         try {
 
             $shipDepartments = MntShipDepartment::select('*')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
             
