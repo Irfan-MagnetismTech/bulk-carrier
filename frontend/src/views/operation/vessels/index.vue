@@ -57,7 +57,7 @@ watch(
 	() => businessUnit.value,
 	(newBusinessUnit, oldBusinessUnit) => {
 		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "ops.configurations.ports.index", query: { page: 1 } })
+		router.push({ name: "ops.vessels.index", query: { page: 1 } })
 		}	
 	}
 
