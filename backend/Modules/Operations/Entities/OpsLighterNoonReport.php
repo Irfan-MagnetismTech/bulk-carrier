@@ -23,6 +23,7 @@ class OpsLighterNoonReport extends Model
         'next_port',
         'business_unit',
         'remarks',
+        'lat_long'
     ];
 
 
@@ -39,5 +40,13 @@ class OpsLighterNoonReport extends Model
     public function opsBunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
+
+    public function lastPort() {
+        return $this->belongsTo(OpsPort::class, 'last_port', 'code');
+    }
+
+    public function nextPort() {
+        return $this->belongsTo(OpsPort::class, 'next_port', 'code');
     }
 }

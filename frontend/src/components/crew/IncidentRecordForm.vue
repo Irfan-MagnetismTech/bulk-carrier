@@ -2,8 +2,11 @@
 import Error from "../Error.vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
+import useVessel from "../../composables/operations/useVessel";
+const { vessels, getVesselsWithoutPaginate } = useVessel();
+const { crews, getCrews } = useCrewCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -13,12 +16,46 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
+
+const selectedFile = (event) => {
+  props.form.attachment = event.target.files[0];
+};
+
+watch(() => props.form, (value) => {
+  if(value){
+    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+    value?.crwIncidentParticipants?.forEach((line, index) => {
+      props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
+      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwRank?.name ?? '';
+
+      // const selectedCrew = crews.value.find(crew => crew.id === line.scmMaterial.id);
+      // if (selectedMaterial) {
+      //   props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+      // }
+    });
+  }
+}, {deep: true});
+
+function addItem() {
+  let obj = {
+    crw_crew_id: '',
+    crw_crew_name: '',
+    crw_crew_rank: '',
+    injury_status: '',
+    notes: '',
+  };
+  props.form.crwIncidentParticipants.push(obj);
+}
+
+function removeItem(index){
+  props.form.crwIncidentParticipants.splice(index, 1);
+}
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    getCrewRankLists(props.form.business_unit);
+    getVesselsWithoutPaginate(props.form.business_unit);
+    getCrews(props.form.business_unit);
   });
 });
 
@@ -33,93 +70,93 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
+        <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.ops_vessel_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Page Title <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.page_title" placeholder="Page Title" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.page_title" :errors="errors.page_title" />
+        <span class="text-gray-700 dark:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
+        <input type="datetime-local" v-model="form.date_time" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.date_time" :errors="errors.date_time" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.subject" placeholder="Subject" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.subject" :errors="errors.subject" />
+        <span class="text-gray-700 dark:text-gray-300">Incident Type <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.type" placeholder="Ex: Collision, Robbery" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.type" :errors="errors.type" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.total_approved" :errors="errors.total_approved" />
+        <span class="text-gray-700 dark:text-gray-300">Incident Location <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.location" placeholder="Ex: Deck, Engine room" class="form-input" autocomplete="off" required />
+        <Error v-if="errors?.location" :errors="errors.location" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agreed To Join <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_agreed_to_join" placeholder="Ex: 5" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_agreed_to_join" :errors="errors.crew_agreed_to_join" />
+      <span class="text-gray-700 dark:text-gray-300">Reported Person<span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.reported_by" placeholder="Reporting person" class="form-input" autocomplete="off" required />
+      <Error v-if="errors?.reported_by" :errors="errors.reported_by" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Selected <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_selected" :errors="errors.crew_selected" />
+      <span class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Attachment </span>
+      <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+      <Error v-if="errors?.attachment" :errors="errors.attachment" />
     </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Panel <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_panel" :errors="errors.crew_panel" />
-    </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Rest <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.crew_rest" :errors="errors.crew_rest" />
-    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Body <span class="text-red-500">*</span></span>
-      <textarea v-model="form.body" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
-      <Error v-if="errors?.body" :errors="errors.body" />
+      <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
+      <textarea v-model="form.description" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
+      <Error v-if="errors?.description" :errors="errors.description" />
     </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-      <textarea type="text" v-model="form.remarks" placeholder="Type here...." class="form-input" autocomplete="off"></textarea>
-      <Error v-if="errors?.remarks" :errors="errors.remarks" />
-    </label>
+    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Candidate List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Candidate Name <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Contact <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Email</th>
-        <th class="px-4 py-3 align-bottom">Remarks</th>
+        <th class="px-4 py-3 w-1/6 align-bottom">Crew Name <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 w-1/6 align-bottom">Rank <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 w-1/6 align-bottom">Injury Status <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Notes</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(incidentParticipant, index) in form.crwIncidentParticipants" :key="incidentParticipant.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
-            <option value="" disabled>select</option>
-            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
-          </select>
+          <v-select :options="crews" placeholder="--Choose an option--" v-model="form.crwIncidentParticipants[index].crw_crew_name" label="name" class="block form-input">
+            <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.crwIncidentParticipants[index].crw_crew_name"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+            </template>
+          </v-select>
+          <Error v-if="errors?.crwIncidentParticipants[index].crw_crew_name" :errors="errors.crwIncidentParticipants[index].crw_crew_name" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Crew name" class="form-input" autocomplete="off" required />
+          <input type="text" v-model="form.crwIncidentParticipants[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].candidate_contact" placeholder="Contact" class="form-input" autocomplete="off" required />
+          <input type="text" v-model="form.crwIncidentParticipants[index].injury_status" placeholder="Injury status" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="email" v-model="form.crwRecruitmentApprovalLines[index].candidate_email" placeholder="Email" class="form-input" autocomplete="off" />
-        </td>
-        <td class="px-1 py-1">
-          <input type="text" v-model="form.crwRecruitmentApprovalLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.crwIncidentParticipants[index].notes" placeholder="Notes" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

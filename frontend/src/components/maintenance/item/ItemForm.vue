@@ -1,12 +1,8 @@
 <template>
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <!-- <select v-model="form.mnt_ship_department_id" required class="form-input">
-              <option value="" disabled selected>Select Ship Department</option>
-              <option v-for="shipDepartment in shipDepartments" :value="shipDepartment.id">{{ shipDepartment.name }}</option>
-            </select> -->
             <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -22,11 +18,6 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-          <!-- <select v-model="form.mnt_item_group_id" required class="form-input" @change="fetchItemCode" >
-            <option value="" disabled selected>Select Item Group</option>
-            <option v-for="itemGroup in itemGroups" :value="itemGroup.id">{{ itemGroup.name }}</option>
-              
-            </select> -->
             <v-select placeholder="Select Item Group" :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -51,13 +42,6 @@
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
     </div>
-    <!-- <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Description <span class="text-red-500">*</span></span>
-            <textarea v-model="form.description" placeholder="Description" class="form-input"></textarea>
-          <Error v-if="errors?.description" :errors="errors.description" />
-        </label>
-    </div> -->
 
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Description</legend>
@@ -83,37 +67,11 @@
             </table>
   </fieldset>
 
-    <!-- <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" >
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Description </span>
-            <table class="w-full whitespace-no-wrap" id="table">
-              <thead>
-                <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                  <th class="px-4 py-3 align-bottom">Key <span class="text-red-500">*</span></th>
-                  <th class="px-4 py-3 align-bottom">Value <span class="text-red-500">*</span></th>
-                  <th class="px-4 py-3 align-bottom text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                <tr class="text-gray-700 dark:text-gray-400" v-for="(des, index) in form.description" :key="index">
-                  <td><input class="form-input" required v-model="des.key" placeholder="Key" /></td>
-                  <td><input class="form-input" required v-model="des.value" placeholder="Value" /></td>
-                  <td><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index==0" @click="addRow"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index!=0" @click="removeRow(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg></button></td>
-                </tr>
-              </tbody>
-            </table>
-          <Error v-if="errors?.description" :errors="errors.description" />
-        </label>
-    </div> -->
 
     <div class="flex flex-col justify-center  w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> </span>
-            <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit'" /> Enable Regular Run Hour Entry
+            <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit' && form.mntJobs?.length" /> Enable Regular Run Hour Entry
           <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
         </label>        
     </div>
@@ -151,6 +109,7 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
   if(oldValue !== ''){
     props.form.mnt_item_group_name = null;
     props.form.mnt_item_group_id = null;
+    shipDepartmentWiseItemGroups.value = [];
   }
   if(props.form.mnt_ship_department_id)
     getShipDepartmentWiseItemGroups(props.form.mnt_ship_department_id);
@@ -161,7 +120,11 @@ watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
   
   if((oldValue !== '' || props.page !== 'edit') && props.form.mnt_item_group_id){
     // fetchItemCode();
+    props.form.item_code = '';
     getItemCodeByGroupId(props.form, props.form.mnt_item_group_id);
+  }
+  else if (!props.form.mnt_item_group_id) {
+    props.form.item_code = '';
   }
 });
 
@@ -191,12 +154,13 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   if(newValue !== oldValue && oldValue != ''){
     props.form.mnt_ship_department_name = null;
   }
+  shipDepartments.value = [];
 });
 
 
 onMounted(() => {
   watchEffect(() => {
-    if(businessUnit.value){
+    if(businessUnit.value && businessUnit.value != 'ALL'){
       getShipDepartmentsWithoutPagination(businessUnit.value);
     }
       

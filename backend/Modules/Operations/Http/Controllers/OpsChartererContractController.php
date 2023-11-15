@@ -29,12 +29,15 @@ class OpsChartererContractController extends Controller
         * @param Request $request
         * @return JsonResponse
         */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
         try {
             $charterer_contracts = OpsChartererContract::with('opsVessel',
-            'opsChartererProfile',               'opsChartererContractsFinancialTerms.opsCargoTariff',
-            'opsChartererContractsLocalAgents.opsPort')->latest()->paginate(15);
+            'opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff',
+            'opsChartererContractsLocalAgents.opsPort')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->paginate(15);
             
             return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
         }

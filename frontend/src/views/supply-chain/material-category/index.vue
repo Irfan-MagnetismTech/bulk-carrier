@@ -84,6 +84,7 @@ function confirmDelete(id) {
             <th>Name</th>
             <th>Parent Name</th>
             <th>Short Code</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>

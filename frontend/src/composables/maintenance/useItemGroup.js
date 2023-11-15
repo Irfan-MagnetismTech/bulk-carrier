@@ -159,7 +159,7 @@ export default function useItemGroup() {
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-item-groups/${mntShipDepartmentId}`);
             shipDepartmentWiseItemGroups.value = data.value;
-            console.log(shipDepartmentWiseItemGroups.value);
+            // console.log(shipDepartmentWiseItemGroups.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
