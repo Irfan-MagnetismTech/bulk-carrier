@@ -18,7 +18,7 @@ class AccCostCenterController extends Controller
         try {
             $accCostCenters = AccCostCenter::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
-            })->paginate(1);
+            })->paginate(10);
 
             return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }
