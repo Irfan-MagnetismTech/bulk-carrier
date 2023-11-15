@@ -65,7 +65,6 @@ let filterOptions = ref( {
   "page": props.page,
   "filter_options": [
     {
-      "rel_type": "belongsTo",
       "relation_name": "balanceIncome",
       "field_name": "line_text",
       "search_param": "",
@@ -74,7 +73,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": "belongsTo",
       "relation_name": "balanceIncome",
       "field_name": "line_type",
       "search_param": "",
@@ -83,7 +81,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": "belongsTo",
       "relation_name": "parent",
       "field_name": "account_name",
       "search_param": "",
@@ -92,7 +89,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_code",
       "search_param": "",
@@ -101,7 +97,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_name",
       "search_param": "",
@@ -110,7 +105,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_type",
       "search_param": "",
@@ -125,15 +119,18 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const loaderType = ref(null);
+
 onMounted(() => {
   watchEffect(() => {
-  getChartOfAccounts(filterOptions.value)
+  getChartOfAccounts(filterOptions.value,loaderType)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
+        loaderType.value = 'table-loader';
       })
       .catch((error) => {
         console.error("Error fetching ranks:", error);

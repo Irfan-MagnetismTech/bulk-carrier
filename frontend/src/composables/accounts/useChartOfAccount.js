@@ -29,9 +29,9 @@ export default function useChartOfAccount() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getChartOfAccounts(filterOptions) {
+    async function getChartOfAccounts(filterOptions,loaderType) {
 
-        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         indexPage.value = filterOptions.page;
@@ -52,7 +52,7 @@ export default function useChartOfAccount() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            //loader.hide();
+            loader.hide();
             isLoading.value = false;
         }
     }
