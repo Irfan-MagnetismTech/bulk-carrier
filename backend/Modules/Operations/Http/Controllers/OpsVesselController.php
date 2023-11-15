@@ -43,8 +43,7 @@ class OpsVesselController extends Controller
                 },
                 'opsBunkers'
             ])
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }

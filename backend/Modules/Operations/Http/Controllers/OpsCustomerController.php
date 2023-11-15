@@ -33,8 +33,7 @@ class OpsCustomerController extends Controller
     {
         try {
 
-            $customers = OpsCustomer::globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            $customers = OpsCustomer::globalSearch($request->all());
 
             return response()->success('Successfully retrieved customers.', $customers, 200);
         }

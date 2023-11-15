@@ -28,16 +28,12 @@ class ScmPoController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmWarehouses = ScmPo::query()
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {
@@ -251,7 +247,7 @@ class ScmPoController extends Controller
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
                 return $data;
-        });
+            });
         return response()->success('data list', $prMaterials, 200);
     }
 
@@ -265,7 +261,7 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms','scmVendor')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
                 ->whereBusinessUnit($request->business_unit)
                 ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')

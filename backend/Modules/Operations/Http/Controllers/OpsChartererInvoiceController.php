@@ -28,10 +28,11 @@ class OpsChartererInvoiceController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->paginate(15);
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer invoices.', $charterer_invoices, 200);
         }

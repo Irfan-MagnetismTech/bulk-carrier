@@ -32,24 +32,26 @@ export default function useWarehouse() {
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getWarehouses(page,businessUnit,columns = null, searchKey = null, table = null) {
+    async function getWarehouses(filterOptions) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/warehouses`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-                    business_unit: businessUnit,
-				},
-			});
+            const filter_options = {
+                ...filterOptions.filter_options
+            }
+
+            const {data, status} = await Api.get(`/${BASE}/warehouses`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
