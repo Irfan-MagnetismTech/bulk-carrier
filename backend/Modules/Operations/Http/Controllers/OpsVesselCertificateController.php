@@ -43,7 +43,6 @@ class OpsVesselCertificateController extends Controller
                     ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
             })
             ->globalSearch($request->all())
-            ->paginate($request->items_per_page)
             ->groupBy('ops_vessel_id');
             
             // Calculate days difference using map

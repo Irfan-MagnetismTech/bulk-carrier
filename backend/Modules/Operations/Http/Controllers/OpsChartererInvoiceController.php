@@ -32,8 +32,7 @@ class OpsChartererInvoiceController extends Controller
     {
         try {
             $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer invoices.', $charterer_invoices, 200);
         }

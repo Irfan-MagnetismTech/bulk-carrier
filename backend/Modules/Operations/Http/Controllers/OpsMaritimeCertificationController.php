@@ -32,8 +32,7 @@ class OpsMaritimeCertificationController extends Controller
     {
         // dd($request);
         try {
-            $maritimeCertifications = OpsMaritimeCertification::globalSearch($request->all())
-                ->paginate($request->items_per_page);
+            $maritimeCertifications = OpsMaritimeCertification::globalSearch($request->all());
             
             return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertifications, 200);
         }

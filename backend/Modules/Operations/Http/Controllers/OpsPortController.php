@@ -33,8 +33,7 @@ class OpsPortController extends Controller
     {
         try {
             // dd($request->all());
-            $ports = OpsPort::globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            $ports = OpsPort::globalSearch($request->all());
             
             return response()->success('Successfully retrieved ports.', $ports, 200);
         }

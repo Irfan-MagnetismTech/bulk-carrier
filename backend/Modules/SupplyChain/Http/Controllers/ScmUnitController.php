@@ -19,7 +19,7 @@ class ScmUnitController extends Controller
         try {
             $scm_units = ScmUnit::query()
                 ->globalSearch($request->all())
-                ->paginate($request->items_per_page);;
+     ;;
 
             return response()->success('Data list', $scm_units, 200);
         } catch (\Exception $e) {

@@ -33,8 +33,7 @@ class OpsCargoTariffController extends Controller
     {
         try {
             $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
             }

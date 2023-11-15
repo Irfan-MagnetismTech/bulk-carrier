@@ -32,8 +32,7 @@ class OpsLighterNoonReportController extends Controller
     {
         try {
             $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved lighter noon reports.', $lighterNoonReports, 200);
         }

@@ -32,8 +32,7 @@ class OpsChartererProfileController extends Controller
     {
         try {
             $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer profiles.', $charterer_profiles, 200);
         }
