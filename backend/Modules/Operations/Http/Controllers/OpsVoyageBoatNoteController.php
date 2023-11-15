@@ -30,10 +30,12 @@ class OpsVoyageBoatNoteController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines')
+            ->globalSearch($request->all())
+            ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
         }
