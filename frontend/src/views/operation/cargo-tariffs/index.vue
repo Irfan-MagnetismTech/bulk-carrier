@@ -67,48 +67,48 @@ let filterOptions = ref( {
 "filter_options": [
 
 			{
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": null,
+			"field_name": "tariff_name",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
 			"date_from": null
 			},
       {
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": "opsVessel",
+			"field_name": "name",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
 			"date_from": null
 			},
       {
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": null,
+			"field_name": "loading_point",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
 			"date_from": null
 			},
       {
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": null,
+			"field_name": "unloading_point",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
 			"date_from": null
 			},
       {
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": "opsCargoType",
+			"field_name": "cargo_type",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
 			"date_from": null
 			},
       {
-			"relation_name": "balanceIncome",
-			"field_name": "line_text",
+			"relation_name": null,
+			"field_name": "status",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
