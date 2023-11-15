@@ -69,7 +69,7 @@ let filterOptions = ref( {
       "field_name": "line_text",
       "search_param": "",
       "action": null,
-      "order_by": "asc",
+      "order_by": null,
       "date_from": null
     },
     {
@@ -78,7 +78,7 @@ let filterOptions = ref( {
       "field_name": "line_type",
       "search_param": "",
       "action": null,
-      "order_by": "asc",
+      "order_by": null,
       "date_from": null
     },
     {
@@ -87,7 +87,7 @@ let filterOptions = ref( {
       "field_name": "account_name",
       "search_param": "",
       "action": null,
-      "order_by": "desc",
+      "order_by": null,
       "date_from": null
     },
     {
@@ -96,7 +96,7 @@ let filterOptions = ref( {
       "field_name": "account_code",
       "search_param": "",
       "action": null,
-      "order_by": "desc",
+      "order_by": null,
       "date_from": null
     },
     {
@@ -105,7 +105,7 @@ let filterOptions = ref( {
       "field_name": "account_name",
       "search_param": "",
       "action": null,
-      "order_by": "desc",
+      "order_by": null,
       "date_from": null
     },
     {
@@ -114,7 +114,7 @@ let filterOptions = ref( {
       "field_name": "account_type",
       "search_param": "",
       "action": null,
-      "order_by": "desc",
+      "order_by": null,
       "date_from": null
     }
   ]
@@ -194,8 +194,8 @@ onMounted(() => {
                 <div class="flex justify-evenly items-center">
                   <span>Balance/Income Line</span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(0,'asc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300' : filterOptions.filter_options[0].order_by === 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
@@ -203,44 +203,44 @@ onMounted(() => {
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Balance/Income Line Type</nobr></span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(1,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Parent Account</nobr></span>
-                  <div class="flex flex-col cursor-pointer" @click="sortThings">
-                    <div v-html="icons.descIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(2,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Account Code</nobr></span>
-                  <div class="flex flex-col cursor-pointer" @click="sortThings">
-                    <div v-html="icons.descIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(3,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Account Name</nobr></span>
-                  <div class="flex flex-col cursor-pointer" @click="sortThings">
-                    <div v-html="icons.descIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(4,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Account Type</nobr></span>
-                  <div class="flex flex-col cursor-pointer" @click="sortThings">
-                    <div v-html="icons.descIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : descSort, 'text-gray-300' : !descSort }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(5,'asc')" :class="{'text-gray-800' : ascSort, 'text-gray-300' : !ascSort }" class=" font-semibold"></div>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
