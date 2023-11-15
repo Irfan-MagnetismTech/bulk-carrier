@@ -1,7 +1,12 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
-      <business-unit-input v-model="form.business_unit"></business-unit-input>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+      </div>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
