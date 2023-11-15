@@ -45,7 +45,7 @@ export default function useWarehouse() {
                 ...filterOptions.filter_options
             }
 
-            const {data, status} = await Api.get(`/${BASE}/vendors`,{
+            const {data, status} = await Api.get(`/${BASE}/warehouses`,{
                 params: {
                    page: filterOptions.page,
                    items_per_page: filterOptions.items_per_page,
