@@ -28,13 +28,12 @@ class OpsMaritimeCertificationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         // dd($request);
         try {
-            $maritimeCertifications = OpsMaritimeCertification::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-                })->latest()->paginate(10);
+            $maritimeCertifications = OpsMaritimeCertification::globalSearch($request->all())
+                ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertifications, 200);
         }
