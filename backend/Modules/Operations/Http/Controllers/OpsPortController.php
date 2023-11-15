@@ -32,8 +32,8 @@ class OpsPortController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
+            // dd($request->all());
             $ports = OpsPort::globalSearch($request->all())
-            ->latest()
             ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved ports.', $ports, 200);

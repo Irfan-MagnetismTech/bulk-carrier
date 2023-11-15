@@ -33,9 +33,8 @@ class OpsCargoTypeController extends Controller
     {
         try {
             $cargo_types = OpsCargoType::globalSearch($request->all())
-            ->latest()
             ->paginate($request->items_per_page);
-            
+
             return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
         }
         catch (QueryException $e)
