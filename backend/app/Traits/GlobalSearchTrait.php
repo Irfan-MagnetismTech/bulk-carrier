@@ -11,13 +11,11 @@ trait GlobalSearchTrait
      * @param $request
      */
     public function scopeGlobalSearch($query, $request)
-    {
+    {        
         $request = json_decode($request['data']);
-        //dd($decode->filter_options[0]->field_name);
+
         $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
         $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null);
-
-        //dd($relationalTableQueries);
 
         $query->when($request->business_unit != "ALL", function($q) use ($request){
             $q->where('business_unit', $request->business_unit);
