@@ -33,19 +33,24 @@ export default function useCustomer() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCustomers(page,columns = null, searchKey = null, table = null) {
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+
+	async function getCustomers(filterOptions) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+
 		try {
 			const { data, status } = await Api.get('/ops/customers', {
 				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			customers.value = data.value;
 			notification.showSuccess(status);

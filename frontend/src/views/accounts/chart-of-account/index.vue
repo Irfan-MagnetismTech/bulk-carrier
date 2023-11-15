@@ -65,7 +65,6 @@ let filterOptions = ref( {
   "page": props.page,
   "filter_options": [
     {
-      "rel_type": "belongsTo",
       "relation_name": "balanceIncome",
       "field_name": "line_text",
       "search_param": "",
@@ -74,7 +73,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": "belongsTo",
       "relation_name": "balanceIncome",
       "field_name": "line_type",
       "search_param": "",
@@ -83,7 +81,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": "belongsTo",
       "relation_name": "parent",
       "field_name": "account_name",
       "search_param": "",
@@ -92,7 +89,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_code",
       "search_param": "",
@@ -101,7 +97,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_name",
       "search_param": "",
@@ -110,7 +105,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "account_type",
       "search_param": "",
@@ -125,8 +119,11 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const loaderType = ref(null);
+
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
   getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
@@ -134,6 +131,7 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
+        loaderType.value = 'table-loader';
       })
       .catch((error) => {
         console.error("Error fetching ranks:", error);
@@ -292,14 +290,14 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!isLoading">
-          <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
-          </tr>
-          <tr v-else-if="!isLoading">
-            <td colspan="9">No data found.</td>
-          </tr>
-          </tfoot>
+        <tfoot v-if="!chartOfAccounts?.data?.length">
+        <tr v-if="isLoading">
+          <td colspan="9">Loading...</td>
+        </tr>
+        <tr v-else-if="!chartOfAccounts?.data?.length">
+          <td colspan="9">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
     <Paginate :data="chartOfAccounts" to="acc.chart-of-accounts.index" :page="page"></Paginate>

@@ -2,14 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVesselParticular extends Model
 {
-    use HasFactory;
-    // public static $snakeAttributes = false;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ops_vessel_id',
