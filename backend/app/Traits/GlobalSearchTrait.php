@@ -17,7 +17,7 @@ trait GlobalSearchTrait
         $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
         $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null);
 
-        $query->when($request->business_unit != "ALL", function($q) use ($request){
+        $query->when(isset($request->business_unit) && $request->business_unit != "ALL", function($q) use ($request){
             $q->where('business_unit', $request->business_unit);
         });
 
