@@ -26,19 +26,20 @@ export default function useItemGroup() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getItemGroups(page, businessUnit) {
+    async function getItemGroups(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
             const {data, status} = await Api.get('/mnt/item-groups',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             itemGroups.value = data.value;
@@ -47,7 +48,7 @@ export default function useItemGroup() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }
@@ -62,7 +63,7 @@ export default function useItemGroup() {
             const { data, status } = await Api.post('/mnt/item-groups', form);
             itemGroup.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.item-groups.index" });
+            await router.push({ name: "mnt.item-groups.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -103,7 +104,7 @@ export default function useItemGroup() {
             );
             itemGroup.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.item-groups.index" });
+            await router.push({ name: "mnt.item-groups.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
