@@ -23,21 +23,19 @@ trait GlobalSearchTrait
 
         foreach ($baseTableQueries as $key => $baseTableQuery)
         {
-            $query->when($baseTableQuery->search_param, function ($q) use ($baseTableQuery)
-            {
-                $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%')->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by);
-            });
+            $query->when($baseTableQuery->search_param, fn($q) => $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%'));
+
+            $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));            
         }
 
         foreach ($relationalTableQueries as $key => $relationalTableQuery)
         {
             $query->when($relationalTableQuery->search_param, function ($q) use ($relationalTableQuery)
             {
-                $q->whereHas($relationalTableQuery->relation_name, function ($q) use ($relationalTableQuery)
-                {
-                    $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%')->orderBy($relationalTableQuery->field_name, $relationalTableQuery->order_by);
-                });
+                $q->whereHas($relationalTableQuery->relation_name, fn($q) => $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%'));                
             });
         }
+
+        return $query->paginate($request->items_per_page); 
     }
 }
