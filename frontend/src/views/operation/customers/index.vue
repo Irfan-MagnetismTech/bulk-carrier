@@ -1,14 +1,18 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import Store from './../../../store/index.js';
+
 const icons = useHeroIcon();
 import useCustomer from '../../../composables/operations/useCustomer';
 const { customers, getCustomers, deleteCustomer, isLoading } = useCustomer();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
   page: {
@@ -40,9 +44,80 @@ function confirmDelete(id) {
   })
 }
 
+let showFilter = ref(false);
+
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
+
+watch(
+
+	() => businessUnit.value,
+	(newBusinessUnit, oldBusinessUnit) => {
+		if (newBusinessUnit !== oldBusinessUnit) {
+		router.push({ name: "ops.customers.index", query: { page: 1 } })
+		}	
+	}
+);
+
+let filterOptions = ref( {
+"business_unit": businessUnit.value,
+"items_per_page": 15,
+"page": props.page,
+"filter_options": [
+
+			{
+			"relation_name": null,
+			"field_name": "code",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "legal_name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "phone",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "email_general",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			}
+	]
+});
+
+function setSortingState(index,order){
+  filterOptions.value.filter_options[index].order_by = order;
+}
+
 onMounted(() => {
   watchEffect(() => {
-    getCustomers(props.page)
+  filterOptions.value.page = props.page;
+
+    getCustomers(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
@@ -65,30 +140,85 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Customer List</h2>
     <default-button :title="'Create Customer'" :to="{ name: 'ops.configurations.customers.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Customer Code</th>
-            <th>Customer Name</th>
-            <th>Legal Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
+          <thead>
+            <tr class="w-full">
+              <th class="w-16 min-w-full">
+                  <div class="w-full flex items-center justify-between">
+                    # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                  </div>
+                </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Customer Code</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Customer Name</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Legal Name</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Phone</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Email</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>Actions</th>
+            </tr>
+            <tr class="w-full" v-if="showFilter">
+
+              <th>
+                <select v-model="filterOptions.items_per_page" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+
+            </tr>
           </thead>
           <tbody v-if="customers?.data?.length">
               <tr v-for="(customer, index) in customers.data" :key="customer?.id">
