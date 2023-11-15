@@ -16,7 +16,6 @@ class AccAccountController extends Controller
      */
     public function index(Request $request)
     {
-
         try {
             $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')
             ->globalSearch($request->all())
