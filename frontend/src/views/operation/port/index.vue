@@ -67,7 +67,6 @@ let filterOptions = ref( {
   "page": props.page,
   "filter_options": [
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "code",
       "search_param": "",
@@ -76,7 +75,6 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "rel_type": null,
       "relation_name": null,
       "field_name": "name",
       "search_param": "",

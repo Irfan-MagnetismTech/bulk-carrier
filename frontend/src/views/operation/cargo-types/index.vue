@@ -51,7 +51,6 @@ let filterOptions = ref( {
 "filter_options": [
 
 			{
-			"rel_type": null,
 			"relation_name": null,
 			"field_name": "cargo_type",
 			"search_param": "",
@@ -60,7 +59,6 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
-			"rel_type": null,
 			"relation_name": null,
 			"field_name": "description",
 			"search_param": "",
@@ -116,15 +114,7 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Cargo Type List</h2>
     <default-button :title="'Create Cargo Type'" :to="{ name: 'ops.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
+
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
