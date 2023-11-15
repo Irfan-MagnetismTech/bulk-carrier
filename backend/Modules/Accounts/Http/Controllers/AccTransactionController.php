@@ -15,15 +15,12 @@ class AccTransactionController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $crwCrewRanks = AccTransaction::with('ledgerEntries.account', 'costCenter')->withCount('ledgerEntries as total_ledger')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })
-            ->orderBy('transaction_date', 'DESC')
-            ->paginate(10);
+            ->globalSearch($request->all())
+            ;
 
             return response()->success('Retrieved Successfully', $crwCrewRanks, 200);
         }

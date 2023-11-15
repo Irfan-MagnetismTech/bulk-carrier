@@ -5,10 +5,11 @@ namespace Modules\Accounts\Entities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
+use App\Traits\GlobalSearchTrait;
 
 class AccBalanceAndIncomeLine extends Model
 {
-    use HasFactory, NodeTrait;
+    use HasFactory, NodeTrait, GlobalSearchTrait;
 
     /**
      * @var array
