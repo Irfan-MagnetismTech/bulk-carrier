@@ -14,16 +14,13 @@ class ScmWarehouseController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmWarehouses = ScmWarehouse::query()
-                ->with('scmWarehouseContactPersons')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->with('scmWarehouseContactPerson')
+                ->globalSearch($request->all())
+                ->paginate($request->items_per_page);
 
             return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {
