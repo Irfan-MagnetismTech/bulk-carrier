@@ -9,42 +9,42 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 
 
-export default function useMovementRequisition() {
+export default function useMovementIn() {
     const BASE = 'scm' 
     const { downloadFile } = useHelper();
     const router = useRouter();
-    const movementRequisitions = ref([]);
-    const filteredMovementRequisitions = ref([]);
+    const movementIns = ref([]);
+    const filteredMovementIns = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const filteredMovementRequisitionLines = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const movementRequisition = ref( {
+    const movementIn = ref( {
         ref_no: '',
         date: '',
-        delivery_date: '',
         fromWarehouse: '',
         from_warehouse_id: '',
+        from_warehouse_name: '',
         toWarehouse: '',
         to_warehouse_id: '',
-        scm_warehouse_id: '',
+        to_warehouse_name: '',
         from_cost_center_id: '',
         to_cost_center_id: '',
-        requested_by: '',
-        required_for: '',
-        remarks: '',
+        scmMmr: '',
+        scm_mmr_id: '',
         business_unit: '',
-        scmMmrLines: [
+        scmMoLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                specification: '',
-                available_stock: '',
-                present_stock: '',
-                quantity: 0.0
+                remarks: '',
+                mmr_quantity: 0.00,
+                mo_quantity: 0.00,
+                quantity: 0.00
             }
         ],
     });
@@ -52,10 +52,10 @@ export default function useMovementRequisition() {
         scmMaterial: '',
         scm_material_id: '',
         unit: '',
-        specification: '',
-        available_stock: '',
-        present_stock: '',
-        quantity: 0.0
+        remarks: '',
+        mmr_quantity: 0.00,
+        mo_quantity: 0.00,
+        quantity: 0.00
     }
 
     const errors = ref('');
@@ -63,7 +63,7 @@ export default function useMovementRequisition() {
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
 
-    async function getMovementRequisitions(page, businessUnit, columns = null, searchKey = null, table = null) {
+    async function getMovementIns(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -72,7 +72,7 @@ export default function useMovementRequisition() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/movement-requisitions`,{
+            const {data, status} = await Api.get(`/${BASE}/movement-ins`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
@@ -81,7 +81,7 @@ export default function useMovementRequisition() {
                     business_unit: businessUnit,
                 },
             });
-            movementRequisitions.value = data.value;
+            movementIns.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -92,7 +92,7 @@ export default function useMovementRequisition() {
             //NProgress.done();
         }
     }
-    async function storeMovementRequisition(form) {
+    async function storeMovementIn(form) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -101,10 +101,10 @@ export default function useMovementRequisition() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-requisitions`, formData);
-            movementRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/movement-ins`, formData);
+            movementIn.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-requisitions.index` });
+            router.push({ name: `${BASE}.movement-ins.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -114,15 +114,15 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function showMovementRequisition(movementRequisitionId) {
+    async function showMovementIn(movementInId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/movement-requisitions/${movementRequisitionId}`);
-            movementRequisition.value = data.value;
-
+            const { data, status } = await Api.get(`/${BASE}/movement-ins/${movementInId}`);
+            movementIn.value = data.value;
+console.log(movementIn.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -132,7 +132,7 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function updateMovementRequisition(form, movementRequisitionId) {
+    async function updateMovementIn(form, movementInId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -141,10 +141,10 @@ export default function useMovementRequisition() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-requisitions/${movementRequisitionId}`, formData);
-            movementRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/movement-ins/${movementInId}`, formData);
+            movementIn.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-requisitions.index` });
+            router.push({ name: `${BASE}.movement-ins.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -154,15 +154,15 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function deleteMovementRequisition(movementRequisitionId) {
+    async function deleteMovementIn(movementInId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/movement-requisitions/${movementRequisitionId}`);
+            const { data, status } = await Api.delete( `/${BASE}/movement-ins/${movementInId}`);
             notification.showSuccess(status);
-            await getMovementRequisitions(indexPage.value,indexBusinessUnit.value);
+            await getMovementIns(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -172,38 +172,49 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function searchMovementRequisition(searchParam, loading, business_unit) {
+    async function searchMovementIn(searchParam, loading) {
+        
+
         try {
-            const { data, status } = await Api.get(`/${BASE}/search-mmr`, {
-                params: {
-                    searchParam: searchParam,
-                    business_unit: business_unit,
-                },
-            }
-            );
-            console.log('tag', data)
-            filteredMovementRequisitions.value = data.value;
+            const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
+            filteredMovementIns.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
-            console.log('tag', data)
         } finally {
             loading(false)
+        }
+    }
+    async function getMmrWiseMo(mmrId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-data`,{
+                params: {
+                    mmr_id: mmrId,
+                },
+            });
+            filteredMovementRequisitionLines.value = data.value.scmMmrLines;
+            console.log(filteredMovementRequisitionLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
         }
     }
 
  
 
     return {
-        movementRequisitions,
-        movementRequisition,
-        filteredMovementRequisitions,
-        searchMovementRequisition,
-        getMovementRequisitions,
-        storeMovementRequisition,
-        showMovementRequisition,
-        updateMovementRequisition,
-        deleteMovementRequisition,
+        movementIns,
+        movementIn,
+        filteredMovementIns,
+        searchMovementIn,
+        getMovementIns,
+        storeMovementIn,
+        showMovementIn,
+        updateMovementIn,
+        deleteMovementIn,
+        filteredMovementRequisitionLines,
+        getMmrWiseMo,
         materialObject,
         isLoading,
         errors,

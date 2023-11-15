@@ -183,6 +183,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
+            {
+                route: `${BASE}.movement-ins.index`,
+                label: 'Movement Ins',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
         ]
     },
 ];

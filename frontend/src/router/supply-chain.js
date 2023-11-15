@@ -511,4 +511,34 @@ export default [
     },
     
     /* Movement Out end */
+    
+    /* Movement In start */
+
+    {
+        path: `/${BASE}/movement-ins`,
+        name: `${BASE}.movement-ins.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-ins/create`,
+        name: `${BASE}.movement-ins.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-create' },
+    },
+    {
+        path: `/${BASE}/movement-ins/:movementInId/edit`,
+        name: `${BASE}.movement-ins.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-edit' },
+    },
+    {
+        path: `/${BASE}/movement-ins/:movementInId`,
+        name: `${BASE}.movement-ins.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-show'  },
+    },
+    
+    /* Movement In end */
 ];

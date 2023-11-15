@@ -17,6 +17,7 @@ export default function useMovementOut() {
     const filteredMovementOuts = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const filteredMovementRequisitionLines = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -24,27 +25,25 @@ export default function useMovementOut() {
     const movementOut = ref( {
         ref_no: '',
         date: '',
-        delivery_date: '',
         fromWarehouse: '',
         from_warehouse_id: '',
+        from_warehouse_name: '',
         toWarehouse: '',
         to_warehouse_id: '',
-        scm_warehouse_id: '',
+        to_warehouse_name: '',
         from_cost_center_id: '',
         to_cost_center_id: '',
-        requested_by: '',
-        required_for: '',
-        remarks: '',
+        scmMmr: '',
+        scm_mmr_id: '',
         business_unit: '',
-        scmMmrLines: [
+        scmMoLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                specification: '',
-                available_stock: '',
-                present_stock: '',
-                quantity: 0.0
+                remarks: '',
+                mmr_quantity: 0.00,
+                quantity: 0.00
             }
         ],
     });
@@ -52,10 +51,9 @@ export default function useMovementOut() {
         scmMaterial: '',
         scm_material_id: '',
         unit: '',
-        specification: '',
-        available_stock: '',
-        present_stock: '',
-        quantity: 0.0
+        remarks: '',
+        mmr_quantity: 0.00,
+        quantity: 0.00
     }
 
     const errors = ref('');
@@ -122,7 +120,7 @@ export default function useMovementOut() {
         try {
             const { data, status } = await Api.get(`/${BASE}/movement-outs/${movementOutId}`);
             movementOut.value = data.value;
-
+console.log(movementOut.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -185,6 +183,21 @@ export default function useMovementOut() {
             loading(false)
         }
     }
+    async function getMmrWiseMo(mmrId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-data`,{
+                params: {
+                    mmr_id: mmrId,
+                },
+            });
+            filteredMovementRequisitionLines.value = data.value.scmMmrLines;
+            console.log(filteredMovementRequisitionLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
 
  
 
@@ -198,6 +211,8 @@ export default function useMovementOut() {
         showMovementOut,
         updateMovementOut,
         deleteMovementOut,
+        filteredMovementRequisitionLines,
+        getMmrWiseMo,
         materialObject,
         isLoading,
         errors,

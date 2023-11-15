@@ -6,7 +6,7 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">MO Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">MI Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
@@ -37,25 +37,118 @@
           <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
       </label>
       <label class="label-group">
+        <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" />
+          <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+      </label>
+  </div>
+  <div class="input-group !w-1/4">
+    <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
   </div>
 
-
-  <div id="">
-
     <div id="">
+      <div class="table-responsive min-w-screen">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+          <table class="whitespace-no-wrap">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <th class="py-3 align-center">Material Name </th>
+              <th class="py-3 align-center">Unit</th>
+              <th class="py-3 align-center">MR Quantity</th>
+              <th class="py-3 align-center">MO Quantity</th>
+              <th class="py-3 align-center">Qty</th>
+              <th class="py-3 align-center">Remarks</th>
+              <th class="py-3 text-center align-center">Action</th>
+            </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400" v-for="(scmMoLine, index) in form.scmMoLines" :key="index">
+              <td class="!w-72">
+                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmMoLines[index].scmMaterial"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" readonly v-model="form.scmMoLines[index].unit" class="vms-readonly-input form-input">
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model="form.scmMoLines[index].mmr_quantity" class="form-input">
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model="form.scmMoLines[index].mo_quantity" class="form-input">
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model="form.scmMoLines[index].quantity" class="form-input">
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model="form.scmMoLines[index].available_stock" class="form-input">
+                </label>
+                
+              </td>
+              <td class="px-1 py-1 text-center">
+                <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+                <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </div>
+    </div>
+  <hr class="w-7"/>
+<div class="mt-5">
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+  <legend class="px-2 text-gray-700 dark:text-gray-300">Shortage <span class="text-red-500">*</span></legend>
+  
+  <div class="input-group !w-1/2">
+      <label class="label-group">
+        <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.to_warehouse_name" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
+          <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" />
+          <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+      </label>
+  </div>
+  <div class="mt-5">
     <div class="table-responsive min-w-screen">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+    <table class="whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">MR Quantity</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 align-center">Remarks</th>
             <th class="py-3 text-center align-center">Action</th>
@@ -79,11 +172,6 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" readonly v-model="form.scmMoLines[index].unit" class="vms-readonly-input form-input">
-               </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMoLines[index].mmr_quantity" class="form-input">
                </label>
             </td>
             <td>
@@ -112,10 +200,10 @@
           </tr>
           </tbody>
         </table>
-      </fieldset>
-    </div>
-    </div>
   </div>
+  </div>
+  </fieldset>
+</div>
 
 
 </template>
