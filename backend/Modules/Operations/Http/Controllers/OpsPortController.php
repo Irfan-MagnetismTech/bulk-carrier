@@ -31,11 +31,10 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        // dd('dfdf');
         try {
             $ports = OpsPort::globalSearch($request->all())
             ->latest()
-            ->paginate(10);
+            ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved ports.', $ports, 200);
         }
