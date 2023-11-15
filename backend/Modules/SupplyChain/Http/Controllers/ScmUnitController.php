@@ -18,8 +18,7 @@ class ScmUnitController extends Controller
     {
         try {
             $scm_units = ScmUnit::query()
-                ->globalSearch($request->all())
-     ;;
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_units, 200);
         } catch (\Exception $e) {

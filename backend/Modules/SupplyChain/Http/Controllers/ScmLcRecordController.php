@@ -24,16 +24,12 @@ class ScmLcRecordController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmLcRecords = ScmLcRecord::query()
                 ->with('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmLcRecords, 200);
         } catch (\Exception $e) {
@@ -89,7 +85,7 @@ class ScmLcRecordController extends Controller
      */
     public function update(ScmLcRecordRequest $request, ScmLcRecord $lcRecord): JsonResponse
     {
-            $requestData = $request->all();
+        $requestData = $request->all();
         try {
             if (!empty($request->attachment)) {
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/lcRecords', $lcRecord->attachment);
