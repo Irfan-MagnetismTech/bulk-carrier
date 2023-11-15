@@ -21,8 +21,8 @@ export default function useBankAccount() {
         opening_balance: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -32,8 +32,7 @@ export default function useBankAccount() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-bank-accounts',{
@@ -121,7 +120,7 @@ export default function useBankAccount() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-bank-accounts/${bankAccountId}`);
             notification.showSuccess(status);
-            await getBankAccounts(indexPage.value,indexBusinessUnit.value);
+            await getBankAccounts(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

@@ -23,9 +23,8 @@ export default function useChartOfAccount() {
         is_archived: 0,
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -34,8 +33,7 @@ export default function useChartOfAccount() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
 
@@ -124,7 +122,7 @@ export default function useChartOfAccount() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-accounts/${chartOfAccountId}`);
             notification.showSuccess(status);
-            await getChartOfAccounts(indexPage.value,indexBusinessUnit.value);
+            await getChartOfAccounts(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
