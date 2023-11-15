@@ -21,12 +21,12 @@
                     <Error v-if="errors?.name" :errors="errors.name" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <span class="label-item-title">Short Code <span class="required-style">*</span></span>
+                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" required/>
                     <Error v-if="errors?.short_code" :errors="errors.short_code" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Description <span class="text-red-500">*</span></span>
+                    <span class="label-item-title">Description <span class="required-style"></span></span>
                     <input type="text" v-model="form.description" class="form-input" name="description" :id="'description'" />
                     <Error v-if="errors?.description" :errors="errors.description" />
                 </label>
@@ -54,6 +54,9 @@
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+      }
+      .required-style {
+        @apply text-red-500;
       }
       
       >>> {

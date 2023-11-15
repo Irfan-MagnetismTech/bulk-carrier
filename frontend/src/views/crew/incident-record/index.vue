@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 const icons = useHeroIcon();
 const router = useRouter();
+import env from '../../../config/env';
 
 const props = defineProps({
   page: {
@@ -97,11 +98,12 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Incident Date</th>
+            <th>Incident Date & Time</th>
             <th>Vessel Name</th>
             <th>Incident Type</th>
             <th>Location</th>
             <th>Reporting Person</th>
+            <th>Attachment</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -110,10 +112,17 @@ onMounted(() => {
           <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>Vessel Name</td>
+            <td>{{ crwIncidentRecord?.opsVessel?.name }}</td>
             <td>{{ crwIncidentRecord?.type }}</td>
             <td>{{ crwIncidentRecord?.location }}</td>
             <td>{{ crwIncidentRecord?.reported_by }}</td>
+            <td>
+              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">{{
+                  (typeof crwIncidentRecord?.attachment === 'string')
+                      ? '('+crwIncidentRecord?.attachment.split('/').pop()+')'
+                      : '----'
+                }}</a>
+            </td>
             <td>
               <span :class="crwIncidentRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwIncidentRecord?.business_unit }}</span>
             </td>

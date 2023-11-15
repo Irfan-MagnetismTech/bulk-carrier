@@ -134,6 +134,7 @@ export default [
         component: () => import(`../views/crew/recruitment-approval/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
     /* Crew agencies Routes */
     {
         path: `/${BASE}/agencies`,
@@ -194,6 +195,48 @@ export default [
         path: `/${BASE}/agency-bills/:agencyBillId/edit`,
         name: `${BASE}.agencyBills.edit`,
         component: () => import(`../views/crew/agency-bill/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
+    /* Crew Profile Routes */
+    {
+        path: `/${BASE}/profiles`,
+        name: `${BASE}.profiles.index`,
+        component: () => import(`../views/crew/profile/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/profiles/create`,
+        name: `${BASE}.profiles.create`,
+        component: () => import(`../views/crew/profile/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/profiles/:profileId/edit`,
+        name: `${BASE}.profiles.edit`,
+        component: () => import(`../views/crew/profile/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
+    /* Crew documents Routes */
+    {
+        path: `/${BASE}/documents`,
+        name: `${BASE}.documents.index`,
+        component: () => import(`../views/crew/document/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/documents/create`,
+        name: `${BASE}.documents.create`,
+        component: () => import(`../views/crew/document/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/documents/:documentId/edit`,
+        name: `${BASE}.documents.edit`,
+        component: () => import(`../views/crew/document/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 

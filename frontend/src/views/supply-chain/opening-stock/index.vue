@@ -91,16 +91,17 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Name</th>
-            <th>Short Code</th>
+            <th>Date</th>
+            <th>Warehouse</th>
             <th>Business Unit</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
             <tr v-for="(openingStock,index) in (openingStocks?.data ? openingStocks?.data : openingStocks)" :key="index">
               <td>{{ openingStocks?.from + index }}</td>
               <td>{{ openingStock?.date }}</td>
-              <td>{{ openingStock?.scm_warehouse_id }}</td>
+              <td>{{ openingStock?.scmWarehouse?.name }}</td>
               <td>
                 <span :class="openingStock?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ openingStock?.business_unit }}</span>
               </td>

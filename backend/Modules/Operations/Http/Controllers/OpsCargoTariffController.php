@@ -29,18 +29,22 @@ class OpsCargoTariffController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-   public function index(Request $request): JsonResponse
-   {
-       try {
-           $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->paginate(15);
-           
-           return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
-       }
-       catch (QueryException $e)
-       {
-           return response()->error($e->getMessage(), 500);
-       }
-   }
+    public function index(Request $request): JsonResponse
+    {
+        try {
+                $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
+                ->when(request()->business_unit != "ALL", function($q){
+                    $q->where('business_unit', request()->business_unit);  
+                })
+                ->latest()->paginate(15);
+            
+            return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
+            }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 
        /**
