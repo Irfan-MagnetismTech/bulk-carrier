@@ -85,7 +85,7 @@
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(job_line, index) in form.mntJobLines" :key="index">
-            <td class="px-1 py-1"><input type="text" class="form-input" required  v-model="job_line.job_description" placeholder="Job Description" /></td>
+            <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="job_line.job_description" placeholder="Job Description" /></td>
             <td class="px-1 py-1">
               <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="" disabled selected>Select Cycle Unit</option>
@@ -99,7 +99,7 @@
             <td class="px-1 py-1"><input type="number" :max="job_line.cycle - 1" required class="form-input"  v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
             <td class="px-1 py-1"><input type="date" required class="form-input"  v-model="job_line.last_done"/></td>
             
-            <td class="px-1 py-1"><input type="text" class="form-input"  v-model="job_line.remarks" placeholder="Remarks" /></td>
+            <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="job_line.remarks" placeholder="Remarks" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addJob"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index != 0" @click="removeJob(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
