@@ -21,8 +21,7 @@ class MntItemController extends Controller
         try {
 
             $item = MntItem::with(['mntItemGroup.mntShipDepartment'])
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Items retrieved successfully', $item, 200);
             

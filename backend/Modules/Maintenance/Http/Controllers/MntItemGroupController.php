@@ -19,8 +19,7 @@ class MntItemGroupController extends Controller
         try {
 
             $itemGroups = MntItemGroup::with('mntShipDepartment')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Item groups retrieved successfully', $itemGroups, 200);
             

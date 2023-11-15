@@ -28,8 +28,7 @@ class MntRunHourController extends Controller
                                 ->select(DB::raw("MAX(id)"))
                                 ->groupBy(['ops_vessel_id','mnt_item_id']);
                         })
-                        ->globalSearch($request->all())
-                        ->paginate($request->items_per_page);
+                        ->globalSearch($request->all());
 
             return response()->success('Run hours retrieved successfully', $runHours, 200);
             

@@ -24,8 +24,7 @@ class MntJobController extends Controller
         try {
 
             $jobs = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment'])
-                            ->globalSearch($request->all())
-                            ->paginate($request->items_per_page);
+                            ->globalSearch($request->all());
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
             
