@@ -51,7 +51,6 @@ let filterOptions = ref( {
 "filter_options": [
 
 			{
-			"rel_type": null,
 			"relation_name": null,
 			"field_name": "cargo_type",
 			"search_param": "",
@@ -60,7 +59,6 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
-			"rel_type": null,
 			"relation_name": null,
 			"field_name": "description",
 			"search_param": "",
