@@ -32,11 +32,10 @@ class OpsCargoTariffController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-                $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
-                ->when(request()->business_unit != "ALL", function($q){
-                    $q->where('business_unit', request()->business_unit);  
-                })
-                ->latest()->paginate(15);
+            $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
+            ->globalSearch($request->all())
+            ->latest()
+            ->paginate($request->items_per_page);
             
             return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
             }

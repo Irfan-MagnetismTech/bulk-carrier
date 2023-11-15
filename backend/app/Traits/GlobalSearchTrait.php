@@ -11,7 +11,7 @@ trait GlobalSearchTrait
      * @param $request
      */
     public function scopeGlobalSearch($query, $request)
-    {        
+    {
         $request = json_decode($request['data']);
 
         $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
