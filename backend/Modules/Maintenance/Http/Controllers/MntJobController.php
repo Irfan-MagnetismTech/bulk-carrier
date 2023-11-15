@@ -19,16 +19,13 @@ class MntJobController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
             $jobs = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+                            ->globalSearch($request->all())
+                            ->paginate($request->items_per_page);
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
             

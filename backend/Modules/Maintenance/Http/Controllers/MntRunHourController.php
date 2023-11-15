@@ -18,7 +18,7 @@ class MntRunHourController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
@@ -28,11 +28,8 @@ class MntRunHourController extends Controller
                                 ->select(DB::raw("MAX(id)"))
                                 ->groupBy(['ops_vessel_id','mnt_item_id']);
                         })
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+                        ->globalSearch($request->all())
+                        ->paginate($request->items_per_page);
 
             return response()->success('Run hours retrieved successfully', $runHours, 200);
             
