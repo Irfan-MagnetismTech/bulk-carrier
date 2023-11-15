@@ -57,7 +57,7 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "mnt.ship-departments.index", query: { page: 1 } })
+        router.push({ name: "mnt.item-groups.index", query: { page: 1 } })
       }
     }
 );
