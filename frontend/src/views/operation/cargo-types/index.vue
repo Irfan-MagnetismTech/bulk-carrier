@@ -91,6 +91,8 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
+
     getCargoTypes(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");

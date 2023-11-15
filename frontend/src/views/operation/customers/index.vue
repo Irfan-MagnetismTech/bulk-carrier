@@ -115,6 +115,8 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
+
     getCustomers(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");

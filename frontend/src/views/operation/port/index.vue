@@ -91,6 +91,8 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
+
     getPorts(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
