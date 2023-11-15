@@ -10,9 +10,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const router = useRouter();
-
+const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
   page: {
     type: Number,
@@ -120,12 +121,6 @@ let filterOptions = ref( {
   ]
 });
 
-// watch(() => filterOptions.value, (value) => {
-//   if(value){
-//     getChartOfAccounts(filterOptions.value);
-//   }
-// }, {deep: true});
-
 function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
@@ -144,21 +139,12 @@ onMounted(() => {
         console.error("Error fetching ranks:", error);
       });
   });
-});
 
-// const descSort = ref(false)
-// const ascSort = ref(false)
-//
-// function sortThings() {
-//   console.log(descSort.value)
-//   if(descSort.value==false) {
-//     ascSort.value = false
-//     descSort.value = true
-//   } else {
-//     ascSort.value = true
-//     descSort.value = false
-//   }
-// }
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
+
+});
 
 </script>
 
@@ -246,7 +232,11 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-<!--              <th>Business Unit</th>-->
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Business Unit</nobr></span>
+                </div>
+              </th>
               <th class="w-20 min-w-full">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -293,21 +283,21 @@ onMounted(() => {
               <span v-if="chartAccountData?.account_type===4" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Revenues</span>
               <span v-if="chartAccountData?.account_type===5" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-pink-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Expenses</span>
             </td>
-<!--            <td>-->
-<!--              <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>-->
-<!--            </td>-->
+            <td>
+              <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>
+            </td>
             <td>
               <action-button :action="'edit'" :to="{ name: 'acc.chart-of-accounts.edit', params: { chartOfAccountId: chartAccountData?.id } }"></action-button>
               <action-button @click="confirmDelete(chartAccountData?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!chartOfAccounts?.data?.length">
+          <tfoot v-if="!isLoading">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
+            <td colspan="9">Loading...</td>
           </tr>
-          <tr v-else-if="!chartOfAccounts?.data?.length">
-            <td colspan="8">No data found.</td>
+          <tr v-else-if="!isLoading">
+            <td colspan="9">No data found.</td>
           </tr>
           </tfoot>
       </table>
