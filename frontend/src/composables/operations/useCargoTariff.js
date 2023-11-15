@@ -42,17 +42,24 @@ export default function useCargoTariff() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCargoTariffs(page, businessUnit) {
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+
+	async function getCargoTariffs(filterOptions) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+
 		try {
 			const { data, status } = await Api.get('/ops/cargo-tariffs', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			cargoTariffs.value = data.value;
 			notification.showSuccess(status);

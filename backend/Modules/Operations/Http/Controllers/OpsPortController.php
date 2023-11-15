@@ -31,20 +31,11 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        // dd('dfdf');
         try {
-            $ports = OpsPort::latest()->paginate(15);
-            // if($request->searchKey != null) {
-            //     // $ports = $this->globalSearch($request->all());
-            // } else {
-            //     $ports = tap(OpsPort::query()->paginate(15), function ($paginatedInstance){
-            //         return $paginatedInstance->getCollection()->transform(function ($permission){
-            //             $permission->subject_type = base64_encode(get_class($permission));
-            //             return $permission;
-            //         });
-            //     }
-            //     );
-            // }
+            // dd($request->all());
+            $ports = OpsPort::globalSearch($request->all())
+            ->paginate($request->items_per_page);
+            
             return response()->success('Successfully retrieved ports.', $ports, 200);
         }
         catch (QueryException $e)
