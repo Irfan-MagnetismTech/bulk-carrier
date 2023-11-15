@@ -34,9 +34,9 @@ class OpsPortController extends Controller
         // dd('dfdf');
         try {
             $ports = OpsPort::globalSearch($request->all())
-            ->latest()           
-            ->paginate($request->items_per_page);
-
+            ->latest()
+            ->paginate(10);
+            
             return response()->success('Successfully retrieved ports.', $ports, 200);
         }
         catch (QueryException $e)
