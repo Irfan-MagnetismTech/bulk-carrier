@@ -29,7 +29,7 @@ export default function useChartOfAccount() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getChartOfAccounts(filterOptions,loaderType) {
+    async function getChartOfAccounts(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -41,7 +41,7 @@ export default function useChartOfAccount() {
 
             const {data, status} = await Api.get('/acc/acc-accounts',{
                 params: {
-                   page: filterOptions.page,
+                   page: filterOptions.page || 1,
                    items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }

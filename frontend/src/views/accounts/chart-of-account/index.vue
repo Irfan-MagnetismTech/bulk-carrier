@@ -123,7 +123,8 @@ const loaderType = ref(null);
 
 onMounted(() => {
   watchEffect(() => {
-  getChartOfAccounts(filterOptions.value,loaderType)
+  filterOptions.value.page = props.page;
+  getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
 
@@ -289,14 +290,14 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!isLoading">
-          <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
-          </tr>
-          <tr v-else-if="!isLoading">
-            <td colspan="9">No data found.</td>
-          </tr>
-          </tfoot>
+        <tfoot v-if="!chartOfAccounts?.data?.length">
+        <tr v-if="isLoading">
+          <td colspan="9">Loading...</td>
+        </tr>
+        <tr v-else-if="!chartOfAccounts?.data?.length">
+          <td colspan="9">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
     <Paginate :data="chartOfAccounts" to="acc.chart-of-accounts.index" :page="page"></Paginate>
