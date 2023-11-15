@@ -14,14 +14,11 @@ class AccFixedAssetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })
-            ->paginate(10);
+            ->globalSearch($request->all());
 
             return response()->json([
                 'status' => 'success',
