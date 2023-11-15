@@ -14,10 +14,12 @@ class ScmUnitController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $scm_units = ScmUnit::latest()->paginate(10);
+            $scm_units = ScmUnit::query()
+                ->globalSearch($request->all())
+                ->paginate($request->items_per_page);;
 
             return response()->success('Data list', $scm_units, 200);
         } catch (\Exception $e) {
