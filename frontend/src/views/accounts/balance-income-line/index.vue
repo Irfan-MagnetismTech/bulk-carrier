@@ -92,6 +92,13 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchEffect(() => {
   filterOptions.value.page = props.page;
@@ -139,7 +146,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap">
           <thead>
           <tr class="w-full">
-            <th class="w-16 min-w-full">
+            <th class="w-16">
               <div class="w-full flex items-center justify-between">
                 # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
               </div>
@@ -209,11 +216,14 @@ onMounted(() => {
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
             </th>
+            <th>
+              <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+            </th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(incomeLine,index) in balanceIncomeLines?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ incomeLine?.line_text }}</td>
             <td>{{ incomeLine?.value_type === 'D' ? 'Debit' : 'Credit' }}</td>
             <td>{{ incomeLine?.line_type }}</td>

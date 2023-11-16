@@ -20,6 +20,12 @@ const { setTitle } = Title();
 
 setTitle('Edit Balance Income Line');
 
+watch(balanceIncomeLine, (value) => {
+  if(value) {
+    balanceIncomeLine.value.parent_id_name = balanceIncomeLine.value.parentLine;
+  }
+});
+
 onMounted(() => {
   showBalanceIncomeLine(balanceIncomeLineId);
 });

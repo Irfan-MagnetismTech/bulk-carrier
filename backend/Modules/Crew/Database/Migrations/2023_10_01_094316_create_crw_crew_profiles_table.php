@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('crw_recruitment_approval_id')->nullable();
 			$table->enum('hired_by', ['Agency', 'Company'])->nullable();
-			$table->unsignedBigInteger('ageny_id')->nullable();
+			$table->unsignedBigInteger('agency_id')->nullable();
 			$table->unsignedBigInteger('department_id')->nullable();
 			$table->unsignedBigInteger('rank_id')->nullable();
 			$table->string('first_name');
