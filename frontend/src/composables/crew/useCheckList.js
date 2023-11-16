@@ -21,8 +21,7 @@ export default function useCheckList() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -32,11 +31,9 @@ export default function useCheckList() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
-
             const {data, status} = await Api.get('/crw/crw-crew-checklists',{
                 params: {
                    page: filterOptions.page || 1,
@@ -122,7 +119,7 @@ export default function useCheckList() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-checklists/${checkListId}`);
             notification.showSuccess(status);
-            await getCheckLists(indexPage.value,indexBusinessUnit.value);
+            await getCheckLists(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

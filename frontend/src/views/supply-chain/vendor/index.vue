@@ -27,7 +27,7 @@ setTitle('Vendors');
 const icons = useHeroIcon();
 
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -84,12 +84,14 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
+    filterOptions.value.page = props.page;
     getVendors(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching vendors:", error);

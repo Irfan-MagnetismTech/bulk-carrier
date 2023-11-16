@@ -28,7 +28,7 @@ const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -76,6 +76,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
+    filterOptions.value.page = props.page;
     getMaterialCategories(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");

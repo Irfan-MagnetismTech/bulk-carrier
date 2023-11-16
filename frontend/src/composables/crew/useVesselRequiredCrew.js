@@ -26,8 +26,7 @@ export default function useVesselRequiredCrew() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -37,11 +36,8 @@ export default function useVesselRequiredCrew() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
-
+        filterParams.value = filterOptions;
         try {
-
             const {data, status} = await Api.get('/crw/crw-vessel-required-crews',{
                 params: {
                    page: filterOptions.page || 1,
@@ -127,7 +123,7 @@ export default function useVesselRequiredCrew() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`);
             notification.showSuccess(status);
-            await getVesselRequiredCrews(indexPage.value,indexBusinessUnit.value);
+            await getVesselRequiredCrews(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

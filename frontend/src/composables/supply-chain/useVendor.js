@@ -29,7 +29,7 @@ export default function useVendor() {
     });
 
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
@@ -38,13 +38,9 @@ export default function useVendor() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
+        filterParams.value = filterOptions;
 
         try {
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/vendors`,{
                 params: {
                    page: filterOptions.page,
@@ -130,7 +126,7 @@ export default function useVendor() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/vendors/${vendorId}`);
             notification.showSuccess(status);
-            await getVendors(indexPage.value);
+            await getVendors(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

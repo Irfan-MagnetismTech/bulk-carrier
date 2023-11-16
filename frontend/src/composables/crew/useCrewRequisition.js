@@ -24,8 +24,7 @@ export default function useCrewRequisition() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -35,11 +34,8 @@ export default function useCrewRequisition() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
-
+        filterParams.value = filterOptions;
         try {
-
             const {data, status} = await Api.get('/crw/crw-requisitions',{
                 params: {
                    page: filterOptions.page || 1,
@@ -125,7 +121,7 @@ export default function useCrewRequisition() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-requisitions/${crewRequisitionId}`);
             notification.showSuccess(status);
-            await getCrewRequisitions(indexPage.value,indexBusinessUnit.value);
+            await getCrewRequisitions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

@@ -24,7 +24,7 @@ const debouncedValue = useDebouncedRef('', 800);
 setTitle('Services');
 const icons = useHeroIcon();
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -54,6 +54,8 @@ let filterOptions = ref( {
   ]
 });
 
+
+
 function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
@@ -64,12 +66,14 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
+    filterOptions.value.page = props.page;
     getServices(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching services:", error);

@@ -39,8 +39,8 @@ export default function useOpeningStock() {
         rate: 0.0,
       };
     
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+   
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -50,14 +50,9 @@ export default function useOpeningStock() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/opening-stocks`,{
                 params: {
                    page: filterOptions.page,
@@ -147,7 +142,7 @@ export default function useOpeningStock() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/opening-stocks/${openingStockId}`);
             notification.showSuccess(status);
-            await getOpeningStocks(indexPage.value,indexBusinessUnit.value);
+            await getOpeningStocks(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
