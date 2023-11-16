@@ -14,12 +14,10 @@ class CrwRankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwRanks = CrwRank::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwRanks = CrwRank::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwRanks, 200);
         }

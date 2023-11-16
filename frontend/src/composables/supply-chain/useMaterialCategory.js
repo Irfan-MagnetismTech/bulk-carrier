@@ -18,7 +18,7 @@ export default function useMaterialCategory() {
         parent_id: '',
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -28,13 +28,9 @@ export default function useMaterialCategory() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
+        filterParams.value = filterOptions;
 
         try {
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/material-categories`,{
                 params: {
                    page: filterOptions.page,
@@ -120,7 +116,7 @@ export default function useMaterialCategory() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);
-            await getMaterialCategories(indexPage.value);
+            await getMaterialCategories(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

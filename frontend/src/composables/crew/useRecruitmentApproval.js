@@ -32,26 +32,25 @@ export default function useRecruitmentApproval() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRecruitmentApprovals(page,businessUnit) {
+    async function getRecruitmentApprovals(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page || 1,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             recruitmentApprovals.value = data.value;
             notification.showSuccess(status);
@@ -131,7 +130,7 @@ export default function useRecruitmentApproval() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
             notification.showSuccess(status);
-            await getRecruitmentApprovals(indexPage.value, indexBusinessUnit.value);
+            await getRecruitmentApprovals(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

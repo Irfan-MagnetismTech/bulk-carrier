@@ -17,7 +17,7 @@ export default function useUnit() {
         short_code: '',
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -29,13 +29,8 @@ export default function useUnit() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
+        filterParams.value = filterOptions;
         try {
-
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/units`,{
                 params: {
                    page: filterOptions.page,
@@ -122,7 +117,7 @@ export default function useUnit() {
             const { data, status } = await Api.delete( `/${BASE}/units/${unitId}`);
             console.log(status);
             notification.showSuccess(status);
-            await getUnits(indexPage.value);
+            await getUnits(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

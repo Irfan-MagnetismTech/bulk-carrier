@@ -11,12 +11,10 @@ use Modules\Crew\Entities\CrwCrewRequisition;
 class CrwCrewRequisitionController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines','opsVessel:id,name')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines','opsVessel:id,name')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewRequisitions, 200);
         }

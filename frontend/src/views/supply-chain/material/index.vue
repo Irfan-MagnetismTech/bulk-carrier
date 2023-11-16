@@ -25,7 +25,7 @@ const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -91,12 +91,14 @@ setTitle('Materials');
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
   getMaterials(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching materials:", error);
