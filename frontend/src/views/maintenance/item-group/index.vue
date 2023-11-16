@@ -32,6 +32,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let showFilter = ref(false);
+let isTableLoader = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
@@ -104,6 +105,7 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
   getItemGroups(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -111,6 +113,7 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching item groups:", error);

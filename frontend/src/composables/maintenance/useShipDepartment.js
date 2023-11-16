@@ -17,19 +17,19 @@ export default function useShipDepartment() {
         business_unit: '',
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
 
     async function getShipDepartments(filterOptions) {
         //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/ship-departments',{
@@ -45,7 +45,7 @@ export default function useShipDepartment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            // loader.hide();
+            loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }
@@ -120,7 +120,7 @@ export default function useShipDepartment() {
         try {
             const { data, status } = await Api.delete( `/mnt/ship-departments/${shipDepartmentId}`);
             notification.showSuccess(status);
-            await getShipDepartments(indexPage.value, indexBusinessUnit.value);
+            await getShipDepartments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

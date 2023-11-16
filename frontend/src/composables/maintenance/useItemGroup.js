@@ -20,19 +20,21 @@ export default function useItemGroup() {
         business_unit: '',
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    // const indexPage = ref(null);
+    // const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
 
     async function getItemGroups(filterOptions) {
         //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/item-groups',{
@@ -48,7 +50,7 @@ export default function useItemGroup() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            // loader.hide();
+            loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }
@@ -123,7 +125,7 @@ export default function useItemGroup() {
         try {
             const { data, status } = await Api.delete( `/mnt/item-groups/${itemGroupId}`);
             notification.showSuccess(status);
-            await getItemGroups(indexPage.value, indexBusinessUnit.value);
+            await getItemGroups(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
