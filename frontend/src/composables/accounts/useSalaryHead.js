@@ -28,7 +28,7 @@ export default function useCostCenter() {
         indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
-            const {data, status} = await Api.get('/acc/acc-cost-centers',{
+            const {data, status} = await Api.get('/acc/acc-salary-heads',{
                 params: {
                     page: filterOptions.page || 1,
                     items_per_page: filterOptions.items_per_page,
@@ -52,10 +52,10 @@ export default function useCostCenter() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/acc/acc-cost-centers', form);
+            const { data, status } = await Api.post('/acc/acc-salary-heads', form);
             salaryHead.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.cost-centers.index" });
+            await router.push({ name: "acc.salary-heads.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -71,7 +71,7 @@ export default function useCostCenter() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-cost-centers/${salaryHeadId}`);
+            const { data, status } = await Api.get(`/acc/acc-salary-heads/${salaryHeadId}`);
             salaryHead.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -90,12 +90,12 @@ export default function useCostCenter() {
 
         try {
             const { data, status } = await Api.put(
-                `/acc/acc-cost-centers/${salaryHeadId}`,
+                `/acc/acc-salary-heads/${salaryHeadId}`,
                 form
             );
             salaryHead.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.cost-centers.index" });
+            await router.push({ name: "acc.salary-heads.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -111,7 +111,7 @@ export default function useCostCenter() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-cost-centers/${salaryHeadId}`);
+            const { data, status } = await Api.delete( `/acc/acc-salary-heads/${salaryHeadId}`);
             notification.showSuccess(status);
             await getSalaryHeads(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
