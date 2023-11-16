@@ -98,37 +98,31 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Incident Date & Time</th>
-            <th>Vessel Name</th>
-            <th>Incident Type</th>
-            <th>Location</th>
-            <th>Reporting Person</th>
-            <th>Attachment</th>
+            <th>Crew Name</th>
+            <th>Department</th>
+            <th>Rank/Designation</th>
+            <th>Contact No.</th>
+            <th>Email</th>
+            <th>Hired By</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(crwIncidentRecord,index) in crewProfiles?.data" :key="index">
+          <tr v-for="(crwProfileData,index) in crewProfiles?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>{{ crwIncidentRecord?.opsVessel?.name }}</td>
-            <td>{{ crwIncidentRecord?.type }}</td>
-            <td>{{ crwIncidentRecord?.location }}</td>
-            <td>{{ crwIncidentRecord?.reported_by }}</td>
+            <td>{{ crwProfileData?.crewBasicInfo?.name }}</td>
+            <td>{{ crwProfileData?.department_id }}</td>
+            <td>{{ crwProfileData?.crewRank?.name }}</td>
+            <td>{{ crwProfileData?.crewBasicInfo?.contact }}</td>
+            <td>{{ crwProfileData?.crewBasicInfo?.email }}</td>
+            <td>{{ crwProfileData?.hired_by }}</td>
             <td>
-              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">{{
-                  (typeof crwIncidentRecord?.attachment === 'string')
-                      ? '('+crwIncidentRecord?.attachment.split('/').pop()+')'
-                      : '----'
-                }}</a>
+              <span :class="crwProfileData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwProfileData?.business_unit }}</span>
             </td>
             <td>
-              <span :class="crwIncidentRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwIncidentRecord?.business_unit }}</span>
-            </td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwIncidentRecord?.id } }"></action-button>
-              <action-button @click="confirmDelete(crwIncidentRecord?.id)" :action="'delete'"></action-button>
+              <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwProfileData?.id } }"></action-button>
+              <action-button @click="confirmDelete(crwProfileData?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
           </tbody>

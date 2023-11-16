@@ -43,8 +43,7 @@ class OpsVesselController extends Controller
                 },
                 'opsBunkers'
             ])
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
@@ -100,7 +99,8 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers.scmMaterial'
+            'opsBunkers.scmMaterial',
+            'portOfRegistry'
         ]);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
@@ -114,6 +114,7 @@ class OpsVesselController extends Controller
         $vessel->opsBunkers->map(function($bunker) {
             $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
+            $bunker->is_readonly = true;
             return $bunker;
         });
 

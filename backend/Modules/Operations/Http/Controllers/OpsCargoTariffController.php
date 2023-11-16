@@ -33,11 +33,10 @@ class OpsCargoTariffController extends Controller
     {
         try {
             $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
-            }
+        }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
@@ -80,7 +79,7 @@ class OpsCargoTariffController extends Controller
      */
     public function show(OpsCargoTariff $cargo_tariff): JsonResponse
     {
-        $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines');
+        $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines', 'loadingPoint', 'unloadingPoint');
         try
         {
             return response()->success('Successfully retrieved cargo tariff.', $cargo_tariff, 200);

@@ -87,7 +87,7 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Material Code <span class="required-style">*</span></span>
-                    <input type="text" v-model="form.material_code" class="form-input" name="material_code" :id="'material_code'" />
+                    <input type="text" required v-model="form.material_code" class="form-input" name="material_code" :id="'material_code'" />
                     <Error v-if="errors?.material_code" :errors="errors.material_code" />
                 </label>
                 <label class="label-group">

@@ -9,7 +9,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import usePort from '../../../composables/operations/usePort';
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const props = defineProps({
   page: {
@@ -23,6 +23,7 @@ setTitle('Port List');
 
 const icons = useHeroIcon();
 const { ports, getPorts, deletePort, isLoading } = usePort();
+const debouncedValue = useDebouncedRef('', 800);
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -62,7 +63,6 @@ watch(
 );
 
 let filterOptions = ref( {
-  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "filter_options": [
@@ -91,20 +91,24 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    filterOptions.value.page = props.page;
 
-    getPorts(filterOptions.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+      getPorts(filterOptions.value)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching data.", error);
-    });
-});
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data.", error);
+      });
+  });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -123,7 +127,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16 min-w-full">
+              <th class="w-16">
                 <div class="w-full flex items-center justify-between">
                   # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                 </div>
@@ -146,7 +150,7 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 
@@ -166,22 +170,21 @@ onMounted(() => {
 
               </th>
 
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
 
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
 
 
               <th>
                 
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-
               </th>
 
             </tr>
           </thead>
           <tbody v-if="ports?.data?.length">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
-                  <td>{{ ports.from + index }}</td>
+                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
+
                   <td>{{ port?.code }}</td>
                   <td>{{ port?.name }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">

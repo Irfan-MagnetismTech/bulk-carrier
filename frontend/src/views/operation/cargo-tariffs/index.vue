@@ -9,7 +9,9 @@ import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Store from "../../../store";
 import useCargoTariff from '../../../composables/operations/useCargoTariff';
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
+const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
   page: {
     type: Number,
@@ -54,7 +56,7 @@ watch(
 	() => businessUnit.value,
 	(newBusinessUnit, oldBusinessUnit) => {
 		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "ops.configurations.ports.index", query: { page: 1 } })
+		router.push({ name: "ops.configurations.cargo-tariffs.index", query: { page: 1 } })
 		}	
 	}
 
@@ -114,6 +116,14 @@ let filterOptions = ref( {
 			"order_by": null,
 			"date_from": null
 			},
+      {
+			"relation_name": null,
+			"field_name": "business_unit",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
 	]
 });
 
@@ -138,6 +148,10 @@ onMounted(() => {
         console.error("Error fetching data.", error);
       });
   });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 </script>
 
@@ -154,11 +168,11 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16 min-w-full">
+              <th class="w-16">
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
-                </th>
+              </th>
               <th>
                 <div class="flex justify-evenly items-center">
                     <span>Tariff Name</span>
@@ -213,10 +227,18 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-              <th>Actions</th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Business Unit</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
-
               <th>
                 <select v-model="filterOptions.items_per_page" class="filter_input">
                   <option value="15">15</option>
@@ -225,12 +247,12 @@ onMounted(() => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -239,17 +261,22 @@ onMounted(() => {
           </thead>
           <tbody v-if="cargoTariffs?.data?.length">
               <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
-                  <td>{{ cargoTariffs.from + index }}</td>
+                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ cargoTariff?.tariff_name }}</td>
                   <td>{{ cargoTariff?.opsVessel?.name }}</td>
                   <td>{{ cargoTariff?.loading_point }}</td>
                   <td>{{ cargoTariff?.unloading_point }}</td>
                   <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
                   <td>{{ cargoTariff?.status }}</td>
+                  <td>
+                    <span :class="cargoTariff?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ cargoTariff?.business_unit }}</span>
+                  </td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                    <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                    <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                    <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                    <nobr>
+                      <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                      <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                    </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>

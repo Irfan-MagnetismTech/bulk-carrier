@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
+use App\Traits\GlobalSearchTrait;
 
 class CrwRecruitmentApprovalController extends Controller
 {
@@ -15,13 +16,11 @@ class CrwRecruitmentApprovalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $crwRecruitmentApprovals = CrwRecruitmentApproval::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwRecruitmentApprovals = CrwRecruitmentApproval::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwRecruitmentApprovals, 200);
         }

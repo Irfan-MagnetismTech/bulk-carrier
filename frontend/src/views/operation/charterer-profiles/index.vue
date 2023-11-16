@@ -92,7 +92,7 @@ onMounted(() => {
             <th>Country</th>
             <th>Email</th>
             <th>Contact</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="chartererProfiles?.data?.length">

@@ -28,11 +28,6 @@ setTitle('Chart of Accounts List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-let showFilter = ref(false);
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
 
 function confirmDelete(id) {
   Swal.fire({
@@ -50,15 +45,20 @@ function confirmDelete(id) {
   })
 }
 
-watch(
-    () => businessUnit.value,
-    (newBusinessUnit, oldBusinessUnit) => {
-      if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "acc.chart-of-accounts.index", query: { page: 1 } })
-      }
-    }
-);
+// watch(
+//     () => businessUnit.value,
+//     (newBusinessUnit, oldBusinessUnit) => {
+//       if (newBusinessUnit !== oldBusinessUnit) {
+//         router.push({ name: "acc.chart-of-accounts.index", query: { page: 1 } })
+//       }
+//     }
+// );
 
+let isTableLoader = ref(false);
+let showFilter = ref(false);
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
 let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
@@ -119,8 +119,6 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-const loaderType = ref(null);
-
 onMounted(() => {
   watchEffect(() => {
   filterOptions.value.page = props.page;
@@ -131,7 +129,7 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
-        loaderType.value = 'table-loader';
+        isTableLoader.value = true;
       })
       .catch((error) => {
         console.error("Error fetching ranks:", error);
@@ -171,7 +169,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16 min-w-full">
+              <th class="w-16">
                 <div class="w-full flex items-center justify-between">
                   # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                 </div>
@@ -268,7 +266,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
             <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>

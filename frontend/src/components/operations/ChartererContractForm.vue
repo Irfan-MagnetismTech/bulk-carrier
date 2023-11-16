@@ -12,7 +12,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Contract Name</span>
-              <input type="text" v-model="form.contract_name" placeholder="Contract Name" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.contract_name" placeholder="Contract Name" class="form-input" autocomplete="off" />
             <Error v-if="errors?.contract_name" :errors="errors.contract_name" />
           </label>
           <label class="block w-full mt-2 text-sm">
@@ -62,22 +62,22 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-mode="form.ops_charterer_profile_id" />
+              <input type="hidden" v-model.trim="form.ops_charterer_profile_id" />
 
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Charterer Code</span>
-              <input type="text" v-model="form.charterer_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <input type="text" v-model.trim="form.charterer_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.charterer_code" :errors="errors.charterer_code" />
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Country</span>
-              <input type="text" v-model="form.country" placeholder="Country" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.country" placeholder="Country" class="form-input" autocomplete="off" />
             <Error v-if="errors?.country" :errors="errors.country" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Address</span>
-            <input type="text" v-model="form.address" placeholder="Address" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.address" placeholder="Address" class="form-input" autocomplete="off" />
           <Error v-if="errors?.address" :errors="errors.address" />
         </label>
         
@@ -85,18 +85,18 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Billing Address</span>
-              <input type="text" v-model="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
             <Error v-if="errors?.billing_address" :errors="errors.billing_address" />
           </label>
         
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Email</span>
-              <input type="text" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
             <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Contact No.</span>
-            <input type="text" v-model="form.contact_no" placeholder="Contact No." class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input" autocomplete="off" />
           <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -111,30 +111,30 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Bank Name</span>
-              <input type="text" v-model="form.bank_name" placeholder="Bank Name" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.bank_name" placeholder="Bank Name" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Bank Branch </span>
-              <input type="text" v-model="form.bank_branch_name" placeholder="Bank Branch" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.bank_branch_name" placeholder="Bank Branch" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Account No</span>
-            <input type="text" v-model="form.bank_account_no" placeholder="Account No" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.bank_account_no" placeholder="Account No" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Account Name</span>
-              <input type="text" v-model="form.bank_account_name" placeholder="Account Name" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.bank_account_name" placeholder="Account Name" class="form-input" autocomplete="off" />
           </label>
           
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Swift Code</span>
-              <input type="text" v-model="form.swift_code" placeholder="Swift Code" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.swift_code" placeholder="Swift Code" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Routing No</span>
-            <input type="text" v-model="form.routing_no" placeholder="Routing No" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.routing_no" placeholder="Routing No" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency</span>
@@ -168,15 +168,15 @@
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Agent Name</span>
-              <input type="text" v-model="form.opsChartererContractsLocalAgents[0].agent_name" placeholder="Agent Name" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.opsChartererContractsLocalAgents[0].agent_name" placeholder="Agent Name" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Billing Name </span>
-              <input type="text" v-model="form.opsChartererContractsLocalAgents[0].agent_billing_name" placeholder="Billing Name" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.opsChartererContractsLocalAgents[0].agent_billing_name" placeholder="Billing Name" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Billing Email</span>
-            <input type="text" v-model="form.opsChartererContractsLocalAgents[0].agent_billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.opsChartererContractsLocalAgents[0].agent_billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
       </div>
     </div>
@@ -186,19 +186,19 @@
       <div v-if="form.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Credit Days</span>
-              <input type="number" v-model="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
+              <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Billing Cycle </span>
-              <input type="text" v-model="form.opsChartererContractsFinancialTerms.billing_cycle" placeholder="Billing Cycle" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.opsChartererContractsFinancialTerms.billing_cycle" placeholder="Billing Cycle" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Valid From</span>
-            <input type="date" v-model="form.opsChartererContractsFinancialTerms.valid_from" placeholder="Valid From" class="form-input" autocomplete="off" />
+            <input type="date" v-model.trim="form.opsChartererContractsFinancialTerms.valid_from" placeholder="Valid From" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Valid Till</span>
-            <input type="date" v-model="form.opsChartererContractsFinancialTerms.valid_till" placeholder="Valid Till" class="form-input" autocomplete="off" />
+            <input type="date" v-model.trim="form.opsChartererContractsFinancialTerms.valid_till" placeholder="Valid Till" class="form-input" autocomplete="off" />
         </label>
       </div>
       <div v-if="form.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -228,7 +228,7 @@
           </label>
           <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Approximate Load Amount</span>
-            <input type="number" v-model="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
+            <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
           </label>
           <label v-else class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
@@ -240,23 +240,23 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Per Day Charge</span>
-              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
         </label>
         <label v-if="form.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Per MT Charge</span>
-              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Cleaning Fee </span>
-              <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.cleaning_fee" placeholder="Cleaning Fee" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.cleaning_fee" placeholder="Cleaning Fee" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Cancellation Fee <small>(%)</small></span>
-            <input type="text" v-model="form.opsChartererContractsFinancialTerms.cancellation_fee" placeholder="Cancellation Fee" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.opsChartererContractsFinancialTerms.cancellation_fee" placeholder="Cancellation Fee" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Others Fee</span>
-            <input type="number" step="0.001" v-model="form.opsChartererContractsFinancialTerms.others_fee" placeholder="Others Fee" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.others_fee" placeholder="Others Fee" class="form-input" autocomplete="off" />
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -264,11 +264,11 @@
               <span class="text-gray-700 dark:text-gray-300 font-semibold">Bunker Provider</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <input type="radio" v-model="form.opsChartererContractsFinancialTerms.bunker_provider" name="bunker_provider" value="Ship Owner" />
-              <span class="text-gray-700 dark:text-gray-300 ml-2">By Ship Owner </span>
-          </label>
+            <input type="radio" v-model.trim="form.opsChartererContractsFinancialTerms.bunker_provider" name="bunker_provider" value="Ship Owner" />
+            <span class="text-gray-700 dark:text-gray-300 ml-2">By Ship Owner </span>
+        </label>
         <label class="block w-full mt-2 text-sm">
-            <input type="radio" v-model="form.opsChartererContractsFinancialTerms.bunker_provider" name="bunker_provider" value="By Charterer" />
+            <input type="radio" v-model.trim="form.opsChartererContractsFinancialTerms.bunker_provider" name="bunker_provider" value="By Charterer" />
             <span class="text-gray-700 dark:text-gray-300 ml-2">By Charterer</span>
         </label>
         <label class="block w-full mt-2 text-sm"></label>

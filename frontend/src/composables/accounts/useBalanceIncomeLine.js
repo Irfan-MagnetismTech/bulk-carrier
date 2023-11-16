@@ -14,6 +14,7 @@ export default function useBalanceIncomeLine() {
         line_text: '',
         value_type: '',
         parent_id: '',
+        parent_id_name: '',
         visible_index: '',
         printed_no: '',
         _lft: '',
@@ -26,20 +27,21 @@ export default function useBalanceIncomeLine() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getBalanceIncomeLines(page,businessUnit) {
+    async function getBalanceIncomeLines(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
             const {data, status} = await Api.get('/acc/acc-balance-and-income-lines',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                    page: filterOptions.page || 1,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                }
             });
             balanceIncomeLines.value = data.value;
             notification.showSuccess(status);

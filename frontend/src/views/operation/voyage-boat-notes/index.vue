@@ -93,7 +93,7 @@ onMounted(() => {
             <th>Capacity</th>
             <th>Initial Survey Qty.</th>
             <th>Finally Received Qty.</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="voyageBoatNotes?.data?.length">

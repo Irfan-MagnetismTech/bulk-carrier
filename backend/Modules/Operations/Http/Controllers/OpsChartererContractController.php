@@ -35,8 +35,7 @@ class OpsChartererContractController extends Controller
             $charterer_contracts = OpsChartererContract::with('opsVessel',
             'opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff',
             'opsChartererContractsLocalAgents.opsPort')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
         }

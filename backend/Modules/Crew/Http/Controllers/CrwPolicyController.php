@@ -24,12 +24,10 @@ class CrwPolicyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwPolicies = CrwPolicy::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwPolicies = CrwPolicy::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwPolicies, 200);
         }

@@ -14,12 +14,10 @@ class CrwCrewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrews = CrwCrew::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwCrews = CrwCrew::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrews, 200);
         }

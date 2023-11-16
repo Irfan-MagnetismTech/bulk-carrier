@@ -23,12 +23,10 @@ class CrwAgencyContractController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwAgencyContracts = CrwAgencyContract::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->with('crwAgency:id,name')->paginate(10);
+            $crwAgencyContracts = CrwAgencyContract::with('crwAgency:id,name')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwAgencyContracts, 200);
         }
@@ -70,7 +68,7 @@ class CrwAgencyContractController extends Controller
     public function show(CrwAgencyContract $crwAgencyContract)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgencyContract, 200);
+            return response()->success('Retrieved successfully', $crwAgencyContract, 200);
         }
         catch (QueryException $e)
         {

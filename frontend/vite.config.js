@@ -7,7 +7,7 @@ export default defineConfig({
   // mode: 'production',
   plugins: [
     vue()
-    ],
+  ],
   server: { 
     host: true,
   }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwVesselRequiredCrew;
+use Modules\Crew\Http\Requests\CrwVesselRequiredCrewRequest;
 
 class CrwVesselRequiredCrewController extends Controller
 {
@@ -15,13 +16,10 @@ class CrwVesselRequiredCrewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')
-                ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwVesselRequiredCrews, 200);
         }
@@ -37,7 +35,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwVesselRequiredCrewRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -79,7 +77,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \App\Models\CrwVesselRequiredCrew  $crwVesselRequiredCrew
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
+    public function update(CrwVesselRequiredCrewRequest $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
             DB::transaction(function () use ($request, $crwVesselRequiredCrew)

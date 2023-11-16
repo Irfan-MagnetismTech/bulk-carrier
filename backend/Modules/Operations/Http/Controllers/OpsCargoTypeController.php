@@ -32,8 +32,7 @@ class OpsCargoTypeController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $cargo_types = OpsCargoType::globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            $cargo_types = OpsCargoType::globalSearch($request->all());
 
             return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
         }
