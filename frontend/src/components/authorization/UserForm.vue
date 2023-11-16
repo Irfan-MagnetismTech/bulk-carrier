@@ -55,7 +55,6 @@
 <script setup>
 import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
-
 import useRole from "../../composables/administration/useRole";
 import {onMounted} from "vue";
 

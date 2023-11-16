@@ -255,7 +255,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   <td>
                     <span :class="customer?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customer?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>

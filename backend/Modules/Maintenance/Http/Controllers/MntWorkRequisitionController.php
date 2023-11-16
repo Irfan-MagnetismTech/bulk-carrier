@@ -18,16 +18,12 @@ class MntWorkRequisitionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $runHours = MntWorkRequisition::with(['opsVessel:id,name','mntWorkRequisitionItem.mntItem'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
                         ->where('status', 0)
-                        ->latest()
-                        ->paginate(10);
+                        ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
             
@@ -42,16 +38,12 @@ class MntWorkRequisitionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function indexWip()
+    public function indexWip(Request $request)
     {
         try {
             $runHours = MntWorkRequisition::with(['opsVessel:id,name','mntWorkRequisitionItem.mntItem'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
                         ->where('status', request()->status ?? 1 )
-                        ->latest()
-                        ->paginate(10);
+                        ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
             

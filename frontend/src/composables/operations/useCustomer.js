@@ -35,6 +35,7 @@ export default function useCustomer() {
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
 	async function getCustomers(filterOptions) {
 		//NProgress.start();
@@ -43,6 +44,8 @@ export default function useCustomer() {
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
+
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/customers', {
@@ -135,7 +138,7 @@ export default function useCustomer() {
 		try {
 			const { data, status } = await Api.delete( `/ops/customers/${customerId}`);
 			notification.showSuccess(status);
-			await getCustomers();
+			await getCustomers(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

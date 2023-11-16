@@ -160,7 +160,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
                 </div>
               </th>
-              <th class="w-20 min-w-full">Action</th>
+              <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
