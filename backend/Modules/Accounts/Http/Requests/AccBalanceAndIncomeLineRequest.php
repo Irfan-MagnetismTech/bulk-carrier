@@ -25,7 +25,8 @@ class AccBalanceAndIncomeLineRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'line_text.max' => 'The Line Name field cannot exceed 255 characters.'
+            'line_text.max' => 'The Line Name field is required.',
+            'line_text.max' => 'The Line Name field must not exceed 255 characters.'
         ];
     }
 

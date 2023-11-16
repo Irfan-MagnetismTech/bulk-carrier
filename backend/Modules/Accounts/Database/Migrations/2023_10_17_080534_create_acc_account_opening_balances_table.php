@@ -18,8 +18,8 @@ return new class extends Migration
 			$table->unsignedBigInteger('acc_cost_center_id');
 			$table->unsignedBigInteger('acc_account_id');
 			$table->date('date');
-			$table->decimal('dr_amount')->nullable();
-			$table->decimal('cr_amount')->nullable();
+			$table->decimal('dr_amount', 10, 2)->nullable();
+			$table->decimal('cr_amount', 10, 2)->nullable();
 			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();
         });

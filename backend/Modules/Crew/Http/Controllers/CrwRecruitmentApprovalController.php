@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
 use App\Traits\GlobalSearchTrait;
+use Modules\Crew\Http\Requests\CrwRecruitmentApprovalRequest;
 
 class CrwRecruitmentApprovalController extends Controller
 {
@@ -36,7 +37,7 @@ class CrwRecruitmentApprovalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwRecruitmentApprovalRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -78,7 +79,7 @@ class CrwRecruitmentApprovalController extends Controller
      * @param  \App\Models\CrwRecruitmentApproval  $crwRecruitmentApproval
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwRecruitmentApproval $crwRecruitmentApproval)
+    public function update(CrwRecruitmentApprovalRequest $request, CrwRecruitmentApproval $crwRecruitmentApproval)
     {
         try {
             DB::transaction(function () use ($request, $crwRecruitmentApproval)
