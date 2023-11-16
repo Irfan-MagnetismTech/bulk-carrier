@@ -95,7 +95,7 @@ onMounted(() => {
             <th>Type</th>
             <th>Total Amount <small>(USD)</small></th>
             <th>Total Amount <small>(BDT)</small></th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="deliveryRedeliveries?.data?.length">
