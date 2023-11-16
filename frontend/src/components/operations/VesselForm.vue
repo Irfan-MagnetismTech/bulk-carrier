@@ -19,7 +19,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Flag <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
+        <input type="text" v-model.trim="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.flag" :errors="errors.flag" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -29,22 +29,22 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Vessel Name" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.name" placeholder="Vessel Name" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Short Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.short_code" placeholder="Vessel Short Code" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.short_code" placeholder="Vessel Short Code" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.short_code" :errors="errors.short_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Call Sign <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.call_sign" placeholder="Call Sign" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.call_sign" placeholder="Call Sign" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.call_sign" :errors="errors.call_sign" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Owner Name <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.owner_name" placeholder="Owner Name" class="form-input" required autocomplete="off" />
+          <input type="text" v-model.trim="form.owner_name" placeholder="Owner Name" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
         </label>
     </div>
@@ -52,12 +52,12 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Manager/Operator <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.manager" placeholder="Manager/Operator" class="form-input" required autocomplete="off" />
+        <input type="text" v-model.trim="form.manager" placeholder="Manager/Operator" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.manager" :errors="errors.manager" />
       </label>
       <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Classification <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.classification" placeholder="Classification" class="form-input" required autocomplete="off" />
+        <input type="text" v-model.trim="form.classification" placeholder="Classification" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.classification" :errors="errors.classification" />
       </label>
       
@@ -73,7 +73,7 @@
                     />
             </template>
         </v-select>
-        <input type="hidden" v-model="form.port_of_registry" />
+        <input type="hidden" v-model.trim="form.port_of_registry" />
         <Error v-if="errors?.port_of_registry" :errors="errors.port_of_registry" />
       </label>
     </div>

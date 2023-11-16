@@ -32,7 +32,7 @@
 
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Certificate Type </span>
-          <input type="text" v-model="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
+          <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
           <Error v-if="errors?.type" :errors="errors.type" />
         </label>
     </div>
@@ -41,12 +41,12 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Validity Period </span>
-            <input type="text" v-model="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+            <input type="text" v-model.trim="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
           <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Reference Number </span>
-            <input type="text" v-model="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
           <Error v-if="errors?.reference_number" :errors="errors.reference_number" />
         </label>
         <label class="block w-full mt-2 text-sm">
