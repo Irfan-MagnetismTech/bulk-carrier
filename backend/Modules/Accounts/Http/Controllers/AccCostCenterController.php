@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCostCenter;
+use Modules\Accounts\Http\Requests\AccCostCenterRequest;
 
 class AccCostCenterController extends Controller
 {
@@ -33,7 +34,7 @@ class AccCostCenterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) : JsonResponse
+    public function store(AccCostCenterRequest $request) : JsonResponse
     {
         try {
             $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');
@@ -77,7 +78,7 @@ class AccCostCenterController extends Controller
      * @param  \App\Models\AccCostCenter  $AccCostCenter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccCostCenter $AccCostCenter)
+    public function update(AccCostCenterRequest $request, AccCostCenter $AccCostCenter)
     {
         try {
             $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');

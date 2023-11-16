@@ -89,17 +89,28 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+    
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
 
       getPorts(filterOptions.value)
       .then(() => {
+        paginatedPage.value = props.page;
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
+
+
       })
       .catch((error) => {
         console.error("Error fetching data.", error);
@@ -183,7 +194,7 @@ onMounted(() => {
           </thead>
           <tbody v-if="ports?.data?.length">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
-                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
 
                   <td>{{ port?.code }}</td>
                   <td>{{ port?.name }}</td>

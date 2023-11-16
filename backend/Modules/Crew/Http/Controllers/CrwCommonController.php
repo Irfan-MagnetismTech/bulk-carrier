@@ -21,7 +21,10 @@ class CrwCommonController extends Controller
     {
         try {
 
-            $crwRanks      = CrwRank::globalSearch($request->all());
+            $crwRanks      = CrwRank::when(request()->business_unit != "ALL", function ($q)
+            {
+                $q->where('business_unit', request()->business_unit);
+            })->get();
 
             return response()->success('Retrieved Successfully', $crwRanks, 200);
         }

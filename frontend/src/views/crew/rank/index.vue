@@ -47,17 +47,6 @@ function swapFilter() {
   showFilter.value = !showFilter.value;
 }
 
-watch(
-
-	() => businessUnit.value,
-	(newBusinessUnit, oldBusinessUnit) => {
-		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "crw.ranks.index", query: { page: 1 } })
-		}	
-	}
-
-);
-
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
@@ -98,11 +87,9 @@ function setSortingState(index,order){
 onMounted(() => {
   watchEffect(() => {
   filterOptions.value.page = props.page;
-
   getRanks(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
-
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
@@ -184,8 +171,8 @@ onMounted(() => {
           <tbody>
           <tr v-for="(rank,index) in ranks?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ rank?.name }}</td>
-            <td>{{ rank?.short_name }}</td>
+            <td class="text-left">{{ rank?.name }}</td>
+            <td class="text-left">{{ rank?.short_name }}</td>
             <td>
               <span :class="rank?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rank?.business_unit }}</span>
             </td>
