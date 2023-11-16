@@ -14,7 +14,8 @@ class ScmWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'scmWarehouseContactPersons.*.email' => 'required|email',
         ];
     }
 
@@ -26,7 +27,9 @@ class ScmWarehouseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'scmWarehouseContactPersons.*.email.required' => 'Email is required',
+            'scmWarehouseContactPersons.*.email.email' => 'Email is not valid',
         ];
     }
 

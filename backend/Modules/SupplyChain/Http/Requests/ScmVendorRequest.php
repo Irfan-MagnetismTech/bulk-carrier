@@ -15,7 +15,7 @@ class ScmVendorRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email.*' => 'required|email',
+            'scmVendorContactPersons.*.email' => 'required|email',
         ];
     }
 
@@ -28,8 +28,8 @@ class ScmVendorRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required',
-            'email.*.required' => 'Email is required',
-            'email.*.email' => 'Email is not valid',
+            'scmVendorContactPersons.*.email.required' => 'Email is required',
+            'scmVendorContactPersons.*.email.email' => 'Email is not valid',
         ];
     }
 
