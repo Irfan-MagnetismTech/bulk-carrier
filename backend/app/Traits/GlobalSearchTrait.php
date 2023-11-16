@@ -35,18 +35,19 @@ trait GlobalSearchTrait
         {
             $query->when($baseTableQuery->search_param, fn($q) => $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%'));
 
-            $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));            
+            $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));
         }
 
         foreach ($relationalTableQueries as $key => $relationalTableQuery)
         {
             $query->when($relationalTableQuery->search_param, function ($q) use ($relationalTableQuery)
             {
-                $q->whereHas($relationalTableQuery->relation_name, fn($q) => $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%'));                
+                $q->whereHas($relationalTableQuery->relation_name, fn($q) => $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%'));
             });
         }
 
-        $query_result = $query->get(); 
+
+        $query_result = $query->get();
 
         foreach ($relationalTableQueries as $key => $relationalTableQuery)
         {
@@ -76,7 +77,12 @@ trait GlobalSearchTrait
             }
         }
         $items = $query_result->values()->all();
-        $items = new LengthAwarePaginator($items, $query_result->count(), $request->items_per_page);
+        $total = count($items);
+        $perPage = $request->items_per_page;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = collect(array_slice($items, $perPage * ($currentPage - 1), $perPage));
+
+        $items = new LengthAwarePaginator($currentItems, $total, $perPage);
         return $items;
     }
 }

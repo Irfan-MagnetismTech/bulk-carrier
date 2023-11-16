@@ -2,10 +2,12 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwRank;
+use Modules\Crew\Http\Requests\CrwRankRequest;
 
 class CrwRankController extends Controller
 {
@@ -33,7 +35,7 @@ class CrwRankController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwRankRequest $request)
     {
         try {
             $crwRankData = $request->only('name', 'short_name', 'business_unit');
@@ -41,7 +43,7 @@ class CrwRankController extends Controller
 
             return response()->success('Created Succesfully', $crwRank, 201);
         }
-        catch (QueryException $e)
+        catch (Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -71,7 +73,7 @@ class CrwRankController extends Controller
      * @param  \App\Models\CrwRank  $crwRank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwRank $crwRank)
+    public function update(CrwRankRequest $request, CrwRank $crwRank)
     {
         try {
             $crwRankData = $request->only('name', 'short_name', 'business_unit');

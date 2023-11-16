@@ -14,6 +14,7 @@ export default function useBalanceIncomeLine() {
         line_text: '',
         value_type: '',
         parent_id: '',
+        parent_id_name: '',
         visible_index: '',
         printed_no: '',
         _lft: '',
