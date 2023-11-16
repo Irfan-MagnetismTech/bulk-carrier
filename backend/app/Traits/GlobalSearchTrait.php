@@ -77,7 +77,12 @@ trait GlobalSearchTrait
             }
         }
         $items = $query_result->values()->all();
-        $items = new LengthAwarePaginator($items, $query_result->count(), $request->items_per_page);
+        $total = count($items);
+        $perPage = $request->items_per_page;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = collect(array_slice($items, $perPage * ($currentPage - 1), $perPage));
+
+        $items = new LengthAwarePaginator($currentItems, $total, $perPage);
         return $items;
     }
 }
