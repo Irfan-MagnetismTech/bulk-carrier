@@ -15,20 +15,16 @@ class RoleController extends Controller
 {
     use HasRoles;
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
 
-            $roles = Role::with('permissions')->orderBy('name', 'ASC')->get();
+            $roles = Role::with('permissions')->globalSearch($request->all());
 
-            return response()->json([
-                'value'   => $roles,
-                'message' => 'Roles retrieved Successfully.',
-            ], 200);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->success('Data list', $roles, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
         }
 
     }
