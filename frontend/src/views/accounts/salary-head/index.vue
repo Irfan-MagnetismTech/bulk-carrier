@@ -45,10 +45,10 @@ function confirmDelete(id) {
 }
 
 // watch(
-//     () => businessUnit.value,
+//     () => props.page,
 //     (newBusinessUnit, oldBusinessUnit) => {
 //       if (newBusinessUnit !== oldBusinessUnit) {
-//         router.push({ name: "acc.cost-centers.index", query: { page: 1 } })
+//         router.push({ name: "acc.salary-heads.index", query: { page: 1 } })
 //       }
 //     }
 // );
@@ -80,7 +80,7 @@ function swapFilter() {
 
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+  filterOptions.value.page = props.page;
   getSalaryHeads(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");

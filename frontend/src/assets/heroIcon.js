@@ -64,6 +64,7 @@ export default function useHeroIcon() {
     const RenewIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
         '  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />\n' +
         '</svg>\n';
+    const NotFilterIcon = '<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#888888" d="m14.8 11.975l-1.425-1.425L16.95 6H8.825l-2-2H19q.625 0 .9.55t-.1 1.05l-5 6.375ZM19.775 22.6L14 16.825V19q0 .425-.288.713T13 20h-2q-.425 0-.713-.288T10 19v-6.175l-8.6-8.6L2.8 2.8l18.4 18.4l-1.425 1.4Zm-6.4-12.05Z"/></svg>';
 
     return {
         HomeSolid,
@@ -92,6 +93,7 @@ export default function useHeroIcon() {
         Calculator,
         Eye,
         EyeSlash,
-        RenewIcon
+        RenewIcon,
+        NotFilterIcon,
     }
 };

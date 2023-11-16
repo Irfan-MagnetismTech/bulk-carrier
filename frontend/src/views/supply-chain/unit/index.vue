@@ -181,6 +181,6 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="units" to="scm.unit.index" :page="page"></Paginate>
+    <Paginate :data="units" to="scm.units.index" :page="page"></Paginate>
   </div>
 </template>

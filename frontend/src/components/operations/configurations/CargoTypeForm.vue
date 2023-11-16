@@ -3,12 +3,12 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Description</span>
-            <input type="text" v-model="form.description" placeholder="Name" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.description" placeholder="Description" class="form-input" autocomplete="off" />
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
     </div>

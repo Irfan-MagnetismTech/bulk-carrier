@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsPort;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVessel extends Model
@@ -71,5 +72,9 @@ class OpsVessel extends Model
     public function opsBunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
+
+    public function portOfRegistry() {
+        return $this->belongsTo(OpsPort::class, 'port_of_registry', 'code');
     }
 }

@@ -67,7 +67,7 @@ const vendor_type = ['Foreign', 'Local'];
                     <Error v-if="errors?.address" :errors="errors.address" /> 
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Origin</span>
+                    <span class="label-item-title">Origin<span class="required-style">*</span></span>
                     <!-- <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select> -->
                     <!-- <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" /> -->
                     <input type="text" required v-model="form.country_name" class="label-item-input" name="country_id" :id="'country_name'" />                   
@@ -128,6 +128,14 @@ const vendor_type = ['Foreign', 'Local'];
                       label="Product Type"
                       :options="product_types"
                       class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.product_type"
+                                v-bind="attributes"
+                                v-on="events"
+                                />
+                        </template>
                     </v-select>
                     <Error v-if="errors?.product_type" :errors="errors.product_type" />
                 </label>
@@ -156,7 +164,7 @@ const vendor_type = ['Foreign', 'Local'];
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Email <span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.scmVendorContactPersons[0].email" class="form-input" name="name" :id="'name'" />
+                    <input type="email" required v-model="form.scmVendorContactPersons[0].email" class="form-input" name="name" :id="'name'" />
                     <Error v-if="errors?.scmVendorContactPersons[0].email" :errors="errors.scmVendorContactPersons[0].email" />
                 </label>
             </div>
