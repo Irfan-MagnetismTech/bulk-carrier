@@ -118,7 +118,7 @@ export default function useCargoType() {
 		try {
 			const { data, status } = await Api.delete( `/ops/cargo-types/${cargoTypeId}`);
 			notification.showSuccess(status);
-			await getCargoTypes();
+			await getCargoTypes(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

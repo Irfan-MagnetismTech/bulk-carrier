@@ -118,7 +118,7 @@ export default function usePort() {
 		try {
 			const { data, status } = await Api.delete( `/ops/ports/${portId}`);
 			notification.showSuccess(status);
-			await getPorts();
+			await getPorts(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

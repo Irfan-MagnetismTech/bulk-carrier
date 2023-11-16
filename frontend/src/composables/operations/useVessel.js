@@ -186,7 +186,7 @@ export default function useVessel() {
 		try {
 			const { data, status } = await Api.delete( `/ops/vessels/${vesselId}`);
 			notification.showSuccess(status);
-			await getVessels();
+			await getVessels(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
