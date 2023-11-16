@@ -24,7 +24,7 @@ export default function useShipDepartment() {
 
     async function getShipDepartments(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'spinner', 'color': '#7e3af2'});
         isLoading.value = true;
 
         // indexPage.value = filterOptions.page;
@@ -45,7 +45,7 @@ export default function useShipDepartment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }
