@@ -119,7 +119,7 @@ onMounted(() => {
 }, 0)) }}
 
                   </td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.delivery-redelivery.edit', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
                       <action-button @click="confirmDelete(deliveryRedelivery.id)" :action="'delete'"></action-button>

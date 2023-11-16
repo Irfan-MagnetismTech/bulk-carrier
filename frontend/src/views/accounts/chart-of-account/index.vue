@@ -119,9 +119,18 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const currentPage = ref(1);
+
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    
+  if(currentPage.value == props.page && currentPage.value != 1) {
+    filterOptions.value.page = 1;
+  } else {
+    filterOptions.value.page = props.page;
+  }
+  currentPage.value = props.page;
+
   getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");

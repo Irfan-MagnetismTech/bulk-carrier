@@ -88,9 +88,17 @@ function confirmDelete(id) {
   })
 }
 
+const currentPage = ref(1);
+
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+  
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
 
     getCargoTypes(filterOptions.value)
     .then(() => {
@@ -170,7 +178,7 @@ onMounted(() => {
                   <td>{{ cargoTypes.from + index }}</td>
                   <td>{{ cargoType?.cargo_type }}</td>
                   <td>{{ cargoType?.description }}</td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
                       <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->

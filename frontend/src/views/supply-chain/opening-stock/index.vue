@@ -218,7 +218,7 @@ function confirmDelete(id) {
                                 <span><nobr>Business Unit</nobr></span>
                             </div>
                         </th>
-                        <th class="w-20 min-w-full">Action</th>
+                        <th class="">Action</th>
                     </tr>
                     <tr class="w-full" v-if="showFilter">
                         <th>
