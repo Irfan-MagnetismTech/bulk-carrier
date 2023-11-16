@@ -18,6 +18,7 @@ export default function useShipDepartment() {
     });
 
     const filterParams = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
