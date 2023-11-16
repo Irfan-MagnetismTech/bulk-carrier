@@ -9,7 +9,6 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
-import Paginate from '../../../components/utils/paginate.vue';
 
 const props = defineProps({
   page: {
@@ -140,7 +139,7 @@ function confirmDelete(id) {
                   </div>
                 </div>
               </th>
-              <th class="w-20 min-w-full">Action</th>
+              <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>

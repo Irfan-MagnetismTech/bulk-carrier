@@ -1,15 +1,62 @@
 <script setup>
-import { onMounted } from '@vue/runtime-core';
+import { onMounted,ref, watchEffect } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRole from "../../../composables/administration/useRole";
 import Title from "../../../services/title";
 import Swal from "sweetalert2";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import useHeroIcon from "../../../assets/heroIcon";
+const icons = useHeroIcon();
+
+const props = defineProps({
+  page: {
+    type: Number,
+    default: 1,
+  },
+});
+
 
 const { roles, getRoles, deleteRole, isLoading } = useRole();
 
 const { setTitle } = Title();
 
 setTitle('Roles');
+
+let showFilter = ref(false);
+let isTableLoader = ref(false);
+
+
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
+
+let filterOptions = ref({
+  "items_per_page": 15,
+  "page": props.page,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": "permissions",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    }
+  ]
+});
+
+function setSortingState(index,order){
+  filterOptions.value.filter_options[index].order_by = order;
+}
+
 
 function deleteRoleByID(roleId) {
   Swal.fire({
@@ -28,8 +75,26 @@ function deleteRoleByID(roleId) {
 }
 
 onMounted(() => {
-  getRoles();
+  watchEffect(() => {
+    filterOptions.value.page = props.page;
+    getRoles(filterOptions.value)
+        .then(() => {
+          const customDataTable = document.getElementById("customDataTable");
+
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+          isTableLoader.value = true;
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
+
 </script>
 
 <template>
@@ -46,16 +111,58 @@ onMounted(() => {
     <div class="w-full overflow-hidden">
       <div class="w-full overflow-x-auto">
         <table class="w-full whitespace-no-wrap">
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="text-xs font-semibold tracking-wide text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="p-1">SL</th>
             <th class="p-1 w-2/12">Role</th>
             <th class="p-1">Permission Name</th>
             <th class="p-1 w-1/12">Action</th>
           </tr>
+          </thead> -->
+          <thead>
+            <tr class="w-full">
+              <th class="w-16 min-w-full">
+                <div class="w-full flex items-center justify-between">
+                  # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Role</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Permission Name</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th class="">Action</th>
+              
+            </tr>
+            <tr class="w-full" v-if="showFilter">
+              <th>
+                <select v-model="filterOptions.items_per_page" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th></th>
+            </tr>
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr v-for="(roleData,index) in roles" :key="index">
+          <tr v-for="(roleData,index) in roles.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ roleData?.name }}</td>
             <td style="text-align: left !important;">
@@ -69,17 +176,19 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!roles?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
-          <tr v-else-if="!roles?.length">
+          <tr v-else-if="!roles?.data?.length">
             <td colspan="4">No role list found.</td>
           </tr>
           </tfoot>
         </table>
       </div>
+      <Paginate :data="roles" to="administration.user.roles.index" :page="page"></Paginate>
     </div>
+
   </div>
 </template>
 <style lang="postcss" scoped>

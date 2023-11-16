@@ -169,7 +169,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 <span><nobr>Business Unit</nobr></span>
               </div>
               </th>
-              <th class="w-20 min-w-full">Action</th>
+              <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -186,6 +186,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+             
             </tr>
           </thead>
           <tbody>
