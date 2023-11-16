@@ -42,19 +42,19 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
-              <input type="text" v-model="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
-            <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
       </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
-              <input type="text" v-model="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status</span>
-              <input type="text" v-model="form.status" placeholder="Status" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.status" placeholder="Status" class="form-input" autocomplete="off" />
         </label>
         
         
@@ -63,15 +63,15 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
-              <input type="number" step="0.001" v-model="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
-              <input type="text" v-model="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Date</span>
-              <input type="datetime-local" v-model="form.date" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <input type="datetime-local" v-model.trim="form.date" placeholder="Vessel" class="form-input" autocomplete="off" />
         </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -112,7 +112,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-              <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
         </label>
     </div>
 
@@ -150,19 +150,19 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
                 </label>
               </td>
               <td class="hidden">
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
                 </label>
               </td>

@@ -72,7 +72,7 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Email <span class="required-style">*</span></span>
-                    <input type="text" required v-model="form.scmWarehouseContactPersons[0].email" class="form-input" name="warehouse_contact_person_email" :id="'warehouse_contact_person_email'" />
+                    <input type="email" required v-model="form.scmWarehouseContactPersons[0].email" class="form-input" name="warehouse_contact_person_email" :id="'warehouse_contact_person_email'" />
                     <Error v-if="errors?.warehouse_contact_person_email" :errors="errors.warehouse_contact_person_email" />
                 </label>
             </div>

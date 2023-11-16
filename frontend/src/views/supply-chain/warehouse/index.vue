@@ -10,6 +10,7 @@ import Store from './../../../store/index.js';
 import Swal from "sweetalert2";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import Paginate from '../../../components/utils/paginate.vue';
 
 const props = defineProps({
   page: {
@@ -130,17 +131,6 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th class="">SL. </th>
-            <th class="">Name</th>
-            <th class="">Contact Person</th>
-            <th class="">Contact No</th>
-            <th>Business Unit</th>
-            <th class="px-4 py-3 text-center">Actions</th>
-          </tr>
-          </thead> -->
-
           <thead>
             <tr class="w-full">
               <th class="w-16 min-w-full">
@@ -218,12 +208,12 @@ onMounted(() => {
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
-          <tr v-else-if="!warehouses?.data?.data?.length">
+          <tr v-else-if="!warehouses?.data?.length">
             <td colspan="4">No Warehouse found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="ranks" to="scm.warehouse.index" :page="page"></Paginate>
+    <Paginate :data="warehouses" to="scm.warehouse.index" :page="page"></Paginate>
   </div>
 </template>

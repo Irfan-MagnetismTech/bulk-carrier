@@ -19,13 +19,13 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Type </span>
            
-            <input type="text" v-model="form.vessel_type" placeholder="Vessel Type" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.vessel_type" placeholder="Vessel Type" class="form-input" autocomplete="off" />
 
           <Error v-if="errors?.vessel_type" :errors="errors.vessel_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Owner Name </span>
-          <input type="text" v-model="form.owner_name" placeholder="Owner Name" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.owner_name" placeholder="Owner Name" class="form-input" autocomplete="off" />
           <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
         </label>
     </div>
@@ -34,22 +34,22 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Previous Name </span>
-            <input type="text" v-model="form.previous_name" placeholder="Previous Name" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.previous_name" placeholder="Previous Name" class="form-input" autocomplete="off" />
           <Error v-if="errors?.previous_name" :errors="errors.previous_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Short Code </span>
-            <input type="text" v-model="form.short_code" placeholder="Vessel Short Code" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.short_code" placeholder="Vessel Short Code" class="form-input" autocomplete="off" />
           <Error v-if="errors?.short_code" :errors="errors.short_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Call Sign </span>
-            <input type="text" v-model="form.call_sign" placeholder="Call Sign" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.call_sign" placeholder="Call Sign" class="form-input" autocomplete="off" />
           <Error v-if="errors?.call_sign" :errors="errors.call_sign" />
         </label>
         <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Manager/Operator </span>
-        <input type="text" v-model="form.manager" placeholder="Manager/Operator" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.manager" placeholder="Manager/Operator" class="form-input" autocomplete="off" />
         <Error v-if="errors?.manager" :errors="errors.manager" />
       </label>
     </div>
@@ -58,17 +58,17 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Classification </span>
-        <input type="text" v-model="form.classification" placeholder="Classification" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.classification" placeholder="Classification" class="form-input" autocomplete="off" />
         <Error v-if="errors?.classification" :errors="errors.classification" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Flag </span>
-        <input type="text" v-model="form.flag" placeholder="Flag" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.flag" placeholder="Flag" class="form-input" autocomplete="off" />
         <Error v-if="errors?.flag" :errors="errors.flag" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Previous Flag</span>
-        <input type="text" v-model="form.previous_flag" placeholder="Previous Flag" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.previous_flag" placeholder="Previous Flag" class="form-input" autocomplete="off" />
         <Error v-if="errors?.previous_flag" :errors="errors.previous_flag" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -82,22 +82,22 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">GRT </span>
-        <input type="text" v-model="form.grt" placeholder="GRT" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.grt" placeholder="GRT" class="form-input" autocomplete="off" />
         <Error v-if="errors?.grt" :errors="errors.grt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">NRT </span>
-        <input type="text" v-model="form.nrt" placeholder="NRT" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.nrt" placeholder="NRT" class="form-input" autocomplete="off" />
         <Error v-if="errors?.nrt" :errors="errors.nrt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">DWT </span>
-        <input type="text" v-model="form.dwt" placeholder="DWT" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.dwt" placeholder="DWT" class="form-input" autocomplete="off" />
         <Error v-if="errors?.dwt" :errors="errors.dwt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">IMO Number </span>
-        <input type="text" v-model="form.imo" placeholder="IMO Number" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.imo" placeholder="IMO Number" class="form-input" autocomplete="off" />
         <Error v-if="errors?.imo" :errors="errors.imo" />
       </label>
     </div>
@@ -106,12 +106,12 @@
       
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Class No </span>
-            <input type="text" v-model="form.class_no" placeholder="Class No" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.class_no" placeholder="Class No" class="form-input" autocomplete="off" />
           <Error v-if="errors?.class_no" :errors="errors.class_no" />
         </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Official Number </span>
-        <input type="text" v-model="form.official_number" placeholder="Official Number" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.official_number" placeholder="Official Number" class="form-input" autocomplete="off" />
         <Error v-if="errors?.official_number" :errors="errors.official_number" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -129,22 +129,22 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">MMSI </span>
-        <input type="text" v-model="form.mmsi" placeholder="MMSI" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.mmsi" placeholder="MMSI" class="form-input" autocomplete="off" />
         <Error v-if="errors?.mmsi" :errors="errors.mmsi" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Length Overall </span>
-        <input type="text" v-model="form.overall_length" placeholder="Length Overall" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.overall_length" placeholder="Length Overall" class="form-input" autocomplete="off" />
         <Error v-if="errors?.overall_length" :errors="errors.overall_length" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Width Overall </span>
-        <input type="text" v-model="form.overall_width" placeholder="Width Overall" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.overall_width" placeholder="Width Overall" class="form-input" autocomplete="off" />
         <Error v-if="errors?.overall_width" :errors="errors.overall_width" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Year Built </span>
-        <input type="text" v-model="form.year_built" placeholder="Year Built" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.year_built" placeholder="Year Built" class="form-input" autocomplete="off" />
         <Error v-if="errors?.year_built" :errors="errors.year_built" />
       </label>
     </div>
@@ -152,17 +152,17 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Breadth </span>
-        <input type="text" v-model="form.breadth" placeholder="Breadth" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.breadth" placeholder="Breadth" class="form-input" autocomplete="off" />
         <Error v-if="errors?.breadth" :errors="errors.breadth" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Depth (Moulded) </span>
-        <input type="text" v-model="form.depth_moulded" placeholder="Depth (Moulded)" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.depth_moulded" placeholder="Depth (Moulded)" class="form-input" autocomplete="off" />
         <Error v-if="errors?.depth_moulded" :errors="errors.depth_moulded" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Maker SSAS </span>
-        <input type="text" v-model="form.maker_ssas" placeholder="Maker SSAS" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.maker_ssas" placeholder="Maker SSAS" class="form-input" autocomplete="off" />
         <Error v-if="errors?.maker_ssas" :errors="errors.maker_ssas" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -184,22 +184,22 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Engine Type </span>
-            <input type="text" v-model="form.engine_type" placeholder="Engine Type" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.engine_type" placeholder="Engine Type" class="form-input" autocomplete="off" />
           <Error v-if="errors?.engine_type" :errors="errors.engine_type" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">LOA </span>
-            <input type="text" v-model="form.loa" placeholder="LOA" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.loa" placeholder="LOA" class="form-input" autocomplete="off" />
           <Error v-if="errors?.loa" :errors="errors.loa" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Depth </span>
-            <input type="text" v-model="form.depth" placeholder="Depth" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.depth" placeholder="Depth" class="form-input" autocomplete="off" />
           <Error v-if="errors?.depth" :errors="errors.depth" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">ECDIS Type </span>
-          <input type="text" v-model="form.ecdis_type" placeholder="ECDIS Type" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.ecdis_type" placeholder="ECDIS Type" class="form-input" autocomplete="off" />
           <Error v-if="errors?.ecdis_type" :errors="errors.ecdis_type" />
         </label>
     </div>
@@ -208,22 +208,22 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">BHP </span>
-            <input type="text" v-model="form.bhp" placeholder="BHP" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.bhp" placeholder="BHP" class="form-input" autocomplete="off" />
           <Error v-if="errors?.bhp" :errors="errors.bhp" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Email </span>
-            <input type="text" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
           <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">LBC </span>
-          <input type="text" v-model="form.lbc" placeholder="LBC" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.lbc" placeholder="LBC" class="form-input" autocomplete="off" />
           <Error v-if="errors?.lbc" :errors="errors.lbc" />
         </label>
         <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Cargo Hold </span>
-        <input type="text" v-model="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" autocomplete="off" />
         <Error v-if="errors?.total_cargo_hold" :errors="errors.total_cargo_hold" />
       </label>
     </div>
@@ -232,12 +232,12 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Capacity </span>
-        <input type="text" v-model="form.capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
         <Error v-if="errors?.capacity" :errors="errors.capacity" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Tues Capacity </span>
-        <input type="text" v-model="form.tues_capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
+        <input type="text" v-model.trim="form.tues_capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
         <Error v-if="errors?.tues_capacity" :errors="errors.tues_capacity" />
       </label>
       
