@@ -135,6 +135,7 @@ function setSortingState(index, order) {
 }
 
 const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 onMounted(() => {
   watchEffect(() => {
@@ -148,6 +149,7 @@ onMounted(() => {
 
     getCargoTariffs(filterOptions.value)
       .then(() => {
+        paginatedPage.value = props.page;
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
@@ -271,7 +273,7 @@ onMounted(() => {
           </thead>
           <tbody v-if="cargoTariffs?.data?.length">
               <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
-                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ cargoTariff?.tariff_name }}</td>
                   <td>{{ cargoTariff?.opsVessel?.name }}</td>
                   <td>{{ cargoTariff?.loading_point }}</td>

@@ -91,6 +91,7 @@ function confirmDelete(id) {
 }
 
 const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 onMounted(() => {
   watchEffect(() => {
@@ -104,6 +105,7 @@ onMounted(() => {
 
     getCargoTypes(filterOptions.value)
     .then(() => {
+      paginatedPage.value = props.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -177,14 +179,14 @@ onMounted(() => {
           </thead>
           <tbody v-if="cargoTypes?.data?.length">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">
-                  <td>{{ cargoTypes.from + index }}</td>
-                  <td>{{ cargoType?.cargo_type }}</td>
-                  <td>{{ cargoType?.description }}</td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
-                      <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
-                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                  </td>
+                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                <td>{{ cargoType?.cargo_type }}</td>
+                <td>{{ cargoType?.description }}</td>
+                <td class="items-center justify-center space-x-1 text-gray-600">
+                    <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
+                    <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
+                  <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                </td>
               </tr>
           </tbody>
           
