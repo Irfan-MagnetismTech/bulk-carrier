@@ -17,14 +17,22 @@ export default function useRole() {
     });
     const errors = ref(null);
     const isLoading = ref(false);
+    const filterParams = ref(null);
 
-    async function getRoles() {
+    async function getRoles(filterOptions) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/administration/roles');
+            const {data, status} = await Api.get('/administration/roles',{
+                params: {
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
+            });
             roles.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -137,7 +145,7 @@ export default function useRole() {
         try {
             const { data, status } = await Api.delete( `/administration/roles/${roleId}`);
             notification.showSuccess(status);
-            await getRoles();
+            await getRoles(filterOptions.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
