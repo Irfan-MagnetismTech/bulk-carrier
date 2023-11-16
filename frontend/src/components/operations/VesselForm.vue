@@ -86,17 +86,17 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">NRT <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.nrt" placeholder="NRT" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.nrt" placeholder="NRT" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.nrt" :errors="errors.nrt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">DWT <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.dwt" placeholder="DWT" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.dwt" placeholder="DWT" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.dwt" :errors="errors.dwt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">IMO Number <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.imo" placeholder="IMO Number" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.imo" placeholder="IMO Number" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.imo" :errors="errors.imo" />
       </label>
     </div>
@@ -104,12 +104,12 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">GRT <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.grt" placeholder="GRT" class="form-input" required autocomplete="off" />
+        <input type="number" stpe="0.001" v-model="form.grt" placeholder="GRT" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.grt" :errors="errors.grt" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Official Number <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.official_number" placeholder="Official Number" class="form-input" required autocomplete="off" />
+        <input type="number" v-model="form.official_number" placeholder="Official Number" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.official_number" :errors="errors.official_number" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -132,17 +132,17 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Length Overall <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.overall_length" placeholder="Length Overall" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.overall_length" placeholder="Length Overall" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.overall_length" :errors="errors.overall_length" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Width Overall <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.overall_width" placeholder="Width Overall" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.overall_width" placeholder="Width Overall" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.overall_width" :errors="errors.overall_width" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Year Built <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.year_built" placeholder="Year Built" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.year_built" placeholder="Year Built" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.year_built" :errors="errors.year_built" />
       </label>
     </div>
@@ -150,12 +150,12 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Cargo Hold <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" required autocomplete="off" />
+        <input type="number" v-model="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.total_cargo_hold" :errors="errors.total_cargo_hold" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Capacity <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
+        <input type="number" step="0.001" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.capacity" :errors="errors.capacity" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -198,7 +198,7 @@
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.opsVesselCertificates[index]"
+                        :required="!form.opsVesselCertificates[index].name"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -248,7 +248,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select v-if="form.opsBunkers[index]?.is_new" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -258,7 +258,7 @@
                           />
                   </template>
               </v-select>
-              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.name">{{ form.opsBunkers[index]?.name }}</span>
+              <!-- <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.name">{{ form.opsBunkers[index]?.name }}</span> -->
 
             </td>
             <td>
@@ -266,8 +266,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit' || !form.opsBunkers[index]?.is_new"/>
-                <Error v-if="errors?.opsBunkers[index].opening_balance" :errors="errors.opsBunkers[index].opening_balance" />
+                <input type="number" step="0.001" required v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
               </label>
             </td>
             <td :class="formType=='edit' ? 'hidden' : '' ">
