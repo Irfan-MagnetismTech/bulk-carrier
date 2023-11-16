@@ -268,10 +268,10 @@ filterOptions.value.filter_options.forEach((option, index) => {
           
           <tfoot v-if="!customers?.length">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="!customers?.data?.length">
-            <td colspan="6">No data found.</td>
+            <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>

@@ -144,7 +144,7 @@ export default function useCargoTariff() {
 		try {
 			const { data, status } = await Api.delete( `/ops/cargo-tariffs/${cargoTariffId}`);
 			notification.showSuccess(status);
-			await getCargoTariffs();
+			await getCargoTariffs(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
