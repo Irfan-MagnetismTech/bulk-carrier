@@ -150,7 +150,7 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 
