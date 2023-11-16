@@ -124,10 +124,13 @@ const currentPage = ref(1);
 onMounted(() => {
   watchEffect(() => {
     
-  console.log('ddd - page: ', props.page);
+  if(currentPage.value == props.page && currentPage.value != 1) {
+    filterOptions.value.page = 1;
+  } else {
+    filterOptions.value.page = props.page;
+  }
+  currentPage.value = props.page;
 
-  filterOptions.value.page = props.page;
-  // currentPage.value = 
   getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
