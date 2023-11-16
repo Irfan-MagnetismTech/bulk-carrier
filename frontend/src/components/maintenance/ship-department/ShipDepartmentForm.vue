@@ -12,6 +12,7 @@
         <Error v-if="errors?.short_code" :errors="errors.short_code" />
       </label>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>
     
 </template>
 <script setup>
@@ -22,6 +23,7 @@ import useShipDepartment from "../../../composables/maintenance/useShipDepartmen
 import {onMounted} from "vue";
 // import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
