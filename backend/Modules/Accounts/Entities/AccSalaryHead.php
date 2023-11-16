@@ -10,5 +10,5 @@ class AccSalaryHead extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['business_unit'];
+    protected $fillable = ['name', 'business_unit'];
 }
