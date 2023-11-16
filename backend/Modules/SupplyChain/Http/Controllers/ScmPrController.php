@@ -32,16 +32,12 @@ class ScmPrController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scm_prs = ScmPr::query()
                 ->with('scmPrLines', 'scmWarehouse')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($q) {
-                    $q->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);;
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_prs, 200);
         } catch (\Exception $e) {
@@ -224,7 +220,7 @@ class ScmPrController extends Controller
         } else {
             $purchase_requisition = [];
         }
-        
+
         return response()->success('Search result', $purchase_requisition, 200);
     }
 }

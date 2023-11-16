@@ -30,20 +30,22 @@ export default function useCrewRequisition() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewRequisitions(page,businessUnit) {
+    async function getCrewRequisitions(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
+
             const {data, status} = await Api.get('/crw/crw-requisitions',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page || 1,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             crewRequisitions.value = data.value;
             notification.showSuccess(status);

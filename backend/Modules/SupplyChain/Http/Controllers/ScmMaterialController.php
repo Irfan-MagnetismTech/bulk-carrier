@@ -29,10 +29,11 @@ class ScmMaterialController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $scm_material_categories = ScmMaterial::with('scmMaterialCategory')->latest()->paginate(10);
+            $scm_material_categories = ScmMaterial::with('scmMaterialCategory')
+                ->globalSearch($request->all());
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {

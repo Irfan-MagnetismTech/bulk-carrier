@@ -202,8 +202,8 @@ onMounted(() => {
           <tbody>
           <tr v-for="(center,index) in costCenters?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ center?.name }}</td>
-            <td>{{ center?.short_name }}</td>
+            <td class="text-left">{{ center?.name }}</td>
+            <td class="text-left">{{ center?.short_name }}</td>
             <td>{{ center?.type }}</td>
             <td>
               <span :class="center?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ center?.business_unit }}</span>

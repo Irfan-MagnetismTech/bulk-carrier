@@ -10,9 +10,11 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+
 const icons = useHeroIcon();
 const router = useRouter();
-
+const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
   page: {
     type: Number,
@@ -27,7 +29,11 @@ setTitle('Recruitment Approval');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+let showFilter = ref(false);
 
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
 
 function confirmDelete(id) {
   Swal.fire({
@@ -54,21 +60,102 @@ watch(
     }
 );
 
+let filterOptions = ref( {
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "applied_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "page_title",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "subject",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "total_approved",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "crew_agreed_to_join",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "crew_selected",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "crew_panel",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "crew_rest",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    }
+  ]
+});
+
+function setSortingState(index,order){
+  filterOptions.value.filter_options[index].order_by = order;
+}
+
+const loaderType = ref(null);
+
 onMounted(() => {
   watchEffect(() => {
-  getRecruitmentApprovals(props.page,businessUnit.value)
+  getRecruitmentApprovals(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      loaderType.value = 'table-loader';
     })
     .catch((error) => {
       console.error("Error fetching ranks:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -79,22 +166,12 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Recruitment Approval List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.recruitmentApprovals.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Applied Date</th>
@@ -108,6 +185,114 @@ onMounted(() => {
             <th>Rest</th>
             <th>Action</th>
           </tr>
+          </thead> -->
+          <thead>
+            <tr class="w-full">
+              <th class="w-16 min-w-full">
+                <div class="w-full flex items-center justify-between">
+                  # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Applied Date</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Page Title</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Subject</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+               <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Business Unit</nobr></span>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Approved</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Agreed to Join</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Selected</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Panel</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Rest</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th class="w-20 min-w-full">Action</th>
+            </tr>
+            <tr class="w-full" v-if="showFilter">
+              <th>
+                <select v-model="filterOptions.items_per_page" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+            </tr>
           </thead>
           <tbody>
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">

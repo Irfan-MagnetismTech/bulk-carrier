@@ -45,15 +45,16 @@ function confirmDelete(id) {
   })
 }
 
-watch(
-    () => businessUnit.value,
-    (newBusinessUnit, oldBusinessUnit) => {
-      if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "acc.chart-of-accounts.index", query: { page: 1 } })
-      }
-    }
-);
+// watch(
+//     () => businessUnit.value,
+//     (newBusinessUnit, oldBusinessUnit) => {
+//       if (newBusinessUnit !== oldBusinessUnit) {
+//         router.push({ name: "acc.chart-of-accounts.index", query: { page: 1 } })
+//       }
+//     }
+// );
 
+let isTableLoader = ref(false);
 let showFilter = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
@@ -128,6 +129,7 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
+        isTableLoader.value = true;
       })
       .catch((error) => {
         console.error("Error fetching ranks:", error);
@@ -264,7 +266,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
             <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>

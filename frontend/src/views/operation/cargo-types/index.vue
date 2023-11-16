@@ -45,7 +45,6 @@ watch(
 );
 
 let filterOptions = ref( {
-"business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
 "filter_options": [
