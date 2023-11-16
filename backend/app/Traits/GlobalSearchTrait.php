@@ -14,8 +14,17 @@ trait GlobalSearchTrait
     {
         $request = json_decode($request['data']);
 
-        $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
-        $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null);
+        // $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
+        // $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null);
+
+        $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null)->map(function ($item) {
+            $item->search_param = trim($item->search_param);
+            return $item;
+        });
+        $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null)->map(function ($item) {
+            $item->search_param = trim($item->search_param);
+            return $item;
+        });
 
         $query->when(isset($request->business_unit) && $request->business_unit != "ALL", function($q) use ($request){
             $q->where('business_unit', $request->business_unit);
