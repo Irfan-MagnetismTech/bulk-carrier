@@ -8,7 +8,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import { useStore } from 'vuex';
     import env from '../../../config/env';
-
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     
     const { materialCategories, searchMaterialCategory } = useMaterialCategory();
     const { getAllStoreCategories } = useBusinessInfo();
@@ -83,12 +83,12 @@
                 <label class="label-group">
                     <span class="label-item-title">Material Name <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.name" :errors="errors.name" />
+                    <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Material Code <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.material_code" class="form-input" name="material_code" :id="'material_code'" />
-                    <Error v-if="errors?.material_code" :errors="errors.material_code" />
+                    <!-- <Error v-if="errors?.material_code" :errors="errors.material_code" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Category Name <span class="required-style">*</span></span>
@@ -110,7 +110,7 @@
                         </template>
                     </v-select>
                     <input type="hidden" v-model="form.scm_material_category_id" class="label-item-input" name="parent_category" :id="'parent_category'" />
-                    <Error v-if="errors?.scm_material_category_id" :errors="errors.scm_material_category_id" />
+                    <!-- <Error v-if="errors?.scm_material_category_id" :errors="errors.scm_material_category_id" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Unit <span class="text-red-500">*</span></span>
@@ -132,19 +132,19 @@
                         />
                     </template>
                     </v-select>
-                    <Error v-if="errors?.unit" :errors="errors.unit" />
+                    <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
                 </label>
             </div>
             <div class="input-group !w-3/4">
                 <label class="label-group">
                     <span class="label-item-title">HS Code <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.hs_code" class="form-input" name="hs_code" :id="'hs_code'" />
-                    <Error v-if="errors?.hs_code" :errors="errors.hs_code" />
+                    <!-- <Error v-if="errors?.hs_code" :errors="errors.hs_code" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Minimum Stock <span class="text-red-500">*</span></span>
                     <input type="number" min="0" v-model="form.minimum_stock" class="form-input" name="minimum_stock" :id="'minimum_stock'" />
-                    <Error v-if="errors?.minimum_stock" :errors="errors.minimum_stock" />
+                    <!-- <Error v-if="errors?.minimum_stock" :errors="errors.minimum_stock" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Store Category <span class="text-red-500">*</span></span>
@@ -164,14 +164,14 @@
                             />
                         </template>
                     </v-select>
-                    <Error v-if="errors?.store_category" :errors="errors.store_category" />
+                    <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
                 </label>
             </div>          
             <div class="input-group !w-1/2">
                 <label class="label-group">
                     <span class="label-item-title">Description</span>
                     <textarea v-model="form.description" class="form-input" name="description" :id="'description'"></textarea>
-                    <Error v-if="errors?.description" :errors="errors.description" />
+                    <!-- <Error v-if="errors?.description" :errors="errors.description" /> -->
                 </label>
             </div>
             <div class="input-group">
@@ -189,6 +189,8 @@
                 <DropZoneV2 :form="form" :page="page"></DropZoneV2>
                 </label>
             </div>
+            
+            <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
      #table, #table th, #table td{
