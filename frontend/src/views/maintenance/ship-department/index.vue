@@ -101,11 +101,22 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+  
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+
   getShipDepartments(filterOptions.value)
     .then(() => {
+      paginatedPage.value = props.page;
+
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -208,7 +219,8 @@ onMounted(() => {
           <tbody>
             
           <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+
             <td>{{ shipDepartment?.name }}</td>
             <td>{{ shipDepartment?.short_code }}</td>
             <td><span :class="shipDepartment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ shipDepartment?.business_unit }}</span></td>
