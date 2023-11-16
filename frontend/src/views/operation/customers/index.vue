@@ -124,6 +124,7 @@ function setSortingState(index,order){
 }
 
 const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 onMounted(() => {
   watchEffect(() => {
@@ -137,6 +138,7 @@ onMounted(() => {
 
     getCustomers(filterOptions.value)
     .then(() => {
+      paginatedPage.value = props.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -254,7 +256,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </thead>
           <tbody v-if="customers?.data?.length">
               <tr v-for="(customer, index) in customers.data" :key="customer?.id">
-                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ customer?.code }}</td>
                   <td>{{ customer?.name }}</td>
                   <td>{{ customer?.legal_name }}</td>
