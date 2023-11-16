@@ -10,7 +10,6 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.tariff_name" :errors="errors.tariff_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
@@ -24,7 +23,6 @@
                         />
                 </template>
             </v-select>
-          <Error v-if="errors?.description" :errors="errors.description" />
         </label>
        
     </div>
@@ -43,7 +41,6 @@
                 </template>
             </v-select>
             <input type="hidden" v-model="form.loading_point" />
-          <Error v-if="errors?.loading_point" :errors="errors.loading_point" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
@@ -59,7 +56,6 @@
             </v-select>
             <input type="hidden" v-model="form.unloading_point" />
 
-          <Error v-if="errors?.unloading_point" :errors="errors.unloading_point" />
         </label>
     </div>
 
@@ -76,7 +72,6 @@
                         />
                 </template>
             </v-select>
-            <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
@@ -84,7 +79,6 @@
                   <option value="" disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
               </select>
-            <Error v-if="errors?.currency" :errors="errors.currency" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
@@ -93,7 +87,6 @@
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
-            <Error v-if="errors?.status" :errors="errors.status" />
           </label>
     </div>
 
@@ -187,6 +180,9 @@
       </div>
     </div>
 
+    <ErrorComponent :errors="errors"></ErrorComponent>
+
+
 </template>
 <script setup>
 import { ref, watch, onMounted } from 'vue';
@@ -196,6 +192,7 @@ import useVessel from '../../../composables/operations/useVessel';
 import useCargoType from '../../../composables/operations/useCargoType';
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useBusinessInfo from "../../../composables/useBusinessInfo"
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
 const { getCurrencies, currencies } = useBusinessInfo();
