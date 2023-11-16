@@ -12,6 +12,7 @@ export default function useCrewProfile() {
     const crewProfile = ref( {
         business_unit: '',
         crw_recruitment_approval_id: '',
+        crw_recruitment_approval_name: '',
         hired_by: '',
         agency_id: '',
         agency_name: '',
@@ -25,7 +26,7 @@ export default function useCrewProfile() {
         gender: '',
         religion: '',
         marital_status: '',
-        nationality: '',
+        nationality: 'Bangladeshi',
         nid_no: '',
         passport_no: '',
         passport_issue_date: '',
@@ -145,6 +146,7 @@ export default function useCrewProfile() {
 
         let formData = new FormData();
         formData.append('attachment', form.attachment);
+        formData.append('picture', form.picture);
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -186,6 +188,7 @@ export default function useCrewProfile() {
 
         let formData = new FormData();
         formData.append('attachment', form.attachment);
+        formData.append('picture', form.picture);
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 

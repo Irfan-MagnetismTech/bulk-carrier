@@ -1,12 +1,12 @@
 <script setup>
 import Error from "../Error.vue";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useCrewCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 
-const { balanceIncomeLineLists, getBalanceIncomeLineLists } = useAccountCommonApiRequest();
+const { balanceIncomeLineLists, getBalanceIncomeLineLists, isLoading } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -21,8 +21,13 @@ const props = defineProps({
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+watch(() => props.form, (newEntries, oldEntries) => {
+      props.form.parent_id = props.form?.parent_id_name?.id ?? '';
+    }, { deep: true }
+);
+
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getBalanceIncomeLineLists(props.form.business_unit);
   });
@@ -31,20 +36,25 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
+    <business-unit-input :page="page" v-model.trim="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Parent Line <span class="text-red-500">*</span></span>
+    <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.parent_id_name" label="line_text"  class="block w-full rounded form-input">
+      <template #search="{attributes, events}">
+        <input class="vs__search w-full" style="width: 50%" :required="!form.parent_id_name" v-bind="attributes" v-on="events"/>
+      </template>
+    </v-select>
+    </label>
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Line Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.line_text" placeholder="Line Name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.line_text" placeholder="Line Name" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.line_text" :errors="errors.line_text" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Value Type <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.value_type" autocomplete="off" required >
+        <select class="form-input" v-model.trim="form.value_type" autocomplete="off" required >
           <option value="" disabled selected>Select</option>
           <option value="D">Debit</option>
           <option value="C">Credit</option>
@@ -53,7 +63,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Line Type <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.line_type" autocomplete="off" required >
+        <select class="form-input" v-model.trim="form.line_type" autocomplete="off" required >
           <option value="" disabled selected>Select</option>
           <option value="base_header">base_header</option>
           <option value="balance_header">balance_header</option>
@@ -63,14 +73,14 @@ onMounted(() => {
         </select>
         <Error v-if="errors?.line_type" :errors="errors.line_type" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Parent Line</span>
-        <select class="form-input" v-model="form.parent_id" autocomplete="off" >
-          <option value="" disabled selected>Select</option>
-          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
-        </select>
-        <Error v-if="errors?.parent_id" :errors="errors.parent_id" />
-      </label>
+<!--      <label class="block w-full mt-2 text-sm">-->
+<!--        <span class="text-gray-700 dark:text-gray-300">Parent Line</span>-->
+<!--        <select class="form-input" v-model="form.parent_id" autocomplete="off" >-->
+<!--          <option value="" disabled selected>Select</option>-->
+<!--          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>-->
+<!--        </select>-->
+<!--        <Error v-if="errors?.parent_id" :errors="errors.parent_id" />-->
+<!--      </label>-->
     </div>
 </template>
 <style lang="postcss" scoped>
