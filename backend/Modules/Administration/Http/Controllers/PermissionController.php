@@ -29,10 +29,6 @@ class PermissionController extends Controller
             // }
 
             $permissions = Permission::query()->globalSearch($request->all());
-            return response()->json([
-                'value'   => $permissions,
-                'message' => $request->all(),
-            ], 422);
 
             return response()->success('Data list', $permissions, 200);
         } catch (\Exception $e) {
