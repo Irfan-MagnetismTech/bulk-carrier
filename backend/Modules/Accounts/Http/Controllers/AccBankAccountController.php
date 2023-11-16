@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccBankAccount;
+use Modules\Accounts\Http\Requests\AccBankAccountRequest;
 use Spatie\Permission\Traits\HasRoles;
 
 class AccBankAccountController extends Controller
@@ -37,7 +38,7 @@ class AccBankAccountController extends Controller
     /**
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(AccBankAccountRequest $request)
     {
         try {
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');
@@ -69,7 +70,7 @@ class AccBankAccountController extends Controller
      * @param Request $request
      * @param AccBankAccount $accBankAccount
      */
-    public function update(Request $request, AccBankAccount $accBankAccount)
+    public function update(AccBankAccountRequest $request, AccBankAccount $accBankAccount)
     {
         try {
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');

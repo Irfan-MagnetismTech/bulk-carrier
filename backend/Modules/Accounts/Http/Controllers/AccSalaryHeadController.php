@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccSalaryHead;
+use Modules\Accounts\Http\Requests\AccSalaryHeadRequest;
 
 class AccSalaryHeadController extends Controller
 {
@@ -33,7 +34,7 @@ class AccSalaryHeadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccSalaryHeadRequest $request)
     {
         try {
             $accSalaryHeadData = $request->only('name', 'short_name', 'business_unit', 'type');
@@ -77,7 +78,7 @@ class AccSalaryHeadController extends Controller
      * @param  \App\Models\AccSalaryHead  $AccSalaryHead
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccSalaryHead $accSalaryHead)
+    public function update(AccSalaryHeadRequest $request, AccSalaryHead $accSalaryHead)
     {
         try {
             $accSalaryHeadData = $request->only('name', 'short_name', 'business_unit', 'type');

@@ -30,40 +30,63 @@ trait GlobalSearchTrait
             $q->where('business_unit', $request->business_unit);
         });
 
-        foreach ($baseTableQueries as $key => $baseTableQuery) {
-            $query->when($baseTableQuery->search_param, fn ($q) => $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%'));
+        // Search in base table
+        foreach ($baseTableQueries as $key => $baseTableQuery)
+        {
+            $query->when($baseTableQuery->search_param, fn($q) => $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%'));
 
-            $query->when($baseTableQuery->order_by, fn ($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));
+            // $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));
         }
 
-        foreach ($relationalTableQueries as $key => $relationalTableQuery) {
-            $query->when($relationalTableQuery->search_param, function ($q) use ($relationalTableQuery) {
-                $q->whereHas($relationalTableQuery->relation_name, fn ($q) => $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%'));
+        // Search in relationship tables
+        foreach ($relationalTableQueries as $key => $relationalTableQuery)
+        {
+            $query->when($relationalTableQuery->search_param, function ($q) use ($relationalTableQuery)
+            {
+                $q->whereHas($relationalTableQuery->relation_name, fn($q) => $q->where($relationalTableQuery->field_name, 'LIKE', '%' . $relationalTableQuery->search_param . '%'));
             });
         }
 
         $query_result = $query->get();
 
-        foreach ($relationalTableQueries as $key => $relationalTableQuery) {
+        foreach ($request->filter_options as $key => $filterOption)
+        {
+            if($filterOption->relation_name === null) {
+                if ($filterOption->order_by == "asc")
+                {
+                    $query_result = $query_result->sortBy(function ($q) use ($filterOption){
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
 
-            if ($relationalTableQuery->order_by == "asc") {
-                $query_result = $query_result->sortBy(function ($q) use ($relationalTableQuery) {
-                    $relations = explode(".", $relationalTableQuery->relation_name);
-                    foreach ($relations as $relation) {
-                        $q = $q->{$relation};
-                    }
-                    return $q->{$relationalTableQuery->field_name};
-                });
-            }
+                if ($filterOption->order_by == "desc")
+                {
+                    $query_result = $query_result->sortByDesc(function ($q) use ($filterOption){
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
+            } else {
+                if ($filterOption->order_by == "asc")
+                {
+                    $query_result = $query_result->sortBy(function ($q) use ($filterOption){
+                        $relations = explode(".", $filterOption->relation_name);
+                        foreach($relations as $relation) {
+                            $q = $q->{$relation};
+                        }
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
 
-            if ($relationalTableQuery->order_by == "desc") {
-                $query_result = $query_result->sortByDesc(function ($q) use ($relationalTableQuery) {
-                    $relations = explode(".", $relationalTableQuery->relation_name);
-                    foreach ($relations as $relation) {
-                        $q = $q->{$relation};
-                    }
-                    return $q->{$relationalTableQuery->field_name};
-                });
+                if ($filterOption->order_by == "desc")
+                {
+                    $query_result = $query_result->sortByDesc(function ($q) use ($filterOption){
+                        $relations = explode(".", $filterOption->relation_name);
+                        foreach($relations as $relation) {
+                            $q = $q->{$relation};
+                        }
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
             }
         }
 

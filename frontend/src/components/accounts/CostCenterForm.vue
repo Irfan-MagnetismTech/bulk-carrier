@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -33,12 +34,10 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Cost Center Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.name" v-model="form.name" placeholder="Cost center name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.name" :errors="errors.name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.short_name" placeholder="Short name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.short_name" :errors="errors.short_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Type <span class="text-red-500">*</span></span>
@@ -48,8 +47,8 @@ onMounted(() => {
           <option value="Bulk Carrier">Bulk Carrier</option>
           <option value="Head Office">Head Office</option>
         </select>
-        <Error v-if="errors?.type" :errors="errors.type" />
       </label>
     </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped></style>

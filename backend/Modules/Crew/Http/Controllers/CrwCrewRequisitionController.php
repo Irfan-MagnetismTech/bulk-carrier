@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewRequisition;
+use Modules\Crew\Http\Requests\CrwRequisitionRequest;
 
 class CrwCrewRequisitionController extends Controller
 {
@@ -24,7 +25,7 @@ class CrwCrewRequisitionController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(CrwRequisitionRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -53,7 +54,7 @@ class CrwCrewRequisitionController extends Controller
         }
     }
 
-    public function update(Request $request, CrwCrewRequisition $crwRequisition)
+    public function update(CrwRequisitionRequest $request, CrwCrewRequisition $crwRequisition)
     {
         try {
             DB::transaction(function () use ($request, $crwRequisition)

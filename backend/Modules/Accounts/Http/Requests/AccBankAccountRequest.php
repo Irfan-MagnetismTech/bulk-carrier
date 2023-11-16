@@ -11,20 +11,26 @@ class AccBankAccountRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'bank_name'       => ['required', 'string', 'max:255'],
+            'branch_name'     => ['required', 'string', 'max:255'],
+            'account_type'    => ['required', 'string', 'max:255'],
+            'account_name'    => ['required', 'string', 'max:255'],
+            'account_number'  => ['required', 'string', 'max:255'],
+            'routing_number'  => ['required', 'string', 'max:255'],
+            'contact_number'  => ['required', 'string', 'max:255'],
+            'opening_date'    => ['required'],
+            'opening_balance' => ['required', 'numeric', 'max:9999999999.99'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];
