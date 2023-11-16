@@ -118,11 +118,20 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+
   getItems(filterOptions.value)
     .then(() => {
+      paginatedPage.value = props.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -249,7 +258,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(item,index) in items?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ item?.mntItemGroup?.mntShipDepartment?.name }}</td>
             <td>{{ item?.mntItemGroup?.name }}</td>
             <td>{{ item?.item_code }}</td>
