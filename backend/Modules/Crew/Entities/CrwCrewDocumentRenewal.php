@@ -10,5 +10,5 @@ class CrwCrewDocumentRenewal extends Model
 {
     use HasFactory;
 
-	protected $fillable = ['issue_date', 'expire_date', 'reference_no', 'attachment'];
+	protected $fillable = ['issue_date', 'expire_date', 'reference_no', 'attachment', 'crw_crew_document_id'];
 }

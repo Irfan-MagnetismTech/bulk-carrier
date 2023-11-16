@@ -109,7 +109,7 @@ onMounted(() => {
             <th>Actual Load</th> -->
             <!-- Its Hidden cause when there will be multiple sectors, it won't be useful anymore as there will be multiple initial and actual loads -->
             <th>Voyage Status</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="voyages?.data?.length">
