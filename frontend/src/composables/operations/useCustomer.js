@@ -35,6 +35,7 @@ export default function useCustomer() {
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
 	async function getCustomers(filterOptions) {
 		//NProgress.start();

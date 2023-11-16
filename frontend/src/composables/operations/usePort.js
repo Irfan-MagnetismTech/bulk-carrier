@@ -18,6 +18,7 @@ export default function usePort() {
 	const isLoading = ref(false);
 	const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 	
 	async function getPorts(filterOptions) {
 		//NProgress.start();
@@ -26,6 +27,8 @@ export default function usePort() {
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
+
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/ports', {
