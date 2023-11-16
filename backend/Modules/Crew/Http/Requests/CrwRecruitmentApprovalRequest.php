@@ -13,10 +13,23 @@ class CrwRecruitmentApprovalRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'total_required_manpower'                        => ['required', 'numeric', 'max:2000'],
             'applied_date'                                   => ['required'],
+            'page_title'                                     => ['required', 'string', 'max:255'],
+            'subject'                                        => ['required', 'string', 'max:255'],
+            'total_approved'                                 => ['required', 'numeric', 'max:2000'],
+            'crew_agreed_to_join'                            => ['required', 'numeric', 'max:2000'],
+            'crew_selected'                                  => ['required', 'numeric', 'max:2000'],
+            'crew_panel'                                     => ['required', 'numeric', 'max:2000'],
+            'crew_rest'                                      => ['required', 'numeric', 'max:2000'],
+            'body'                                           => ['required', 'string', 'max:2000'],
+            'remarks'                                        => ['required', 'string', 'max:700'],
+            'total_required_manpower'                        => ['required', 'numeric', 'max:2000'],
             'business_unit'                                  => ['required', 'string', 'max:255'],
-            'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'max:255'],
+
+            'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
+            'crwVesselRequiredCrewLines.*.candidate_name'    => ['required', 'string', 'max:255'],
+            'crwVesselRequiredCrewLines.*.candidate_contact' => ['required', 'string', 'max:255'],
+            'crwVesselRequiredCrewLines.*.candidate_email'   => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -27,7 +40,10 @@ class CrwRecruitmentApprovalRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crwVesselRequiredCrewLines.*.required_manpower.max' => 'The Required Manpower must not exceed 2000.',
+            'crwVesselRequiredCrewLines.*.candidate_name.max'    => 'The Candidate Name field must not exceed 255 characters.',
+            'crwVesselRequiredCrewLines.*.candidate_contact.max' => 'The Candidate Contact field must not exceed 255 characters.',
+            'crwVesselRequiredCrewLines.*.candidate_email.max'   => 'The Candidate Email field must not exceed 255 characters.',
         ];
     }
 
