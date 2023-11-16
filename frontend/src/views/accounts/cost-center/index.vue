@@ -200,7 +200,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(center,index) in costCenters?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ center?.name }}</td>
             <td class="text-left">{{ center?.short_name }}</td>
             <td>{{ center?.type }}</td>
