@@ -20,17 +20,15 @@ class CrwCrewProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $profiles = CrwCrewProfile::with('educations')->get();
 
             dd($profiles);
 
-
-            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees')
+            ->globalSearch($request->all());
 
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);

@@ -21,12 +21,10 @@ class CrwIncidentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->with('opsVessel:id,name')->paginate(10);
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwIncidents, 200);
         }
