@@ -6,13 +6,11 @@ import useNotification from '../../composables/useNotification.js';
 
 export default function useCostCenter() {
     const router = useRouter();
-    const costCenters = ref([]);
+    const salaryHeads = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const costCenter = ref( {
+    const salaryHead = ref( {
         name: '',
-        short_name: '',
-        type: '',
         business_unit: '',
     });
     const indexPage = ref(null);
@@ -21,7 +19,7 @@ export default function useCostCenter() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCostCenters(filterOptions) {
+    async function getSalaryHeads(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;

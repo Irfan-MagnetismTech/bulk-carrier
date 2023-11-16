@@ -2,6 +2,7 @@
 
 namespace Modules\Accounts\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCostCenter;
@@ -32,7 +33,7 @@ class AccCostCenterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         try {
             $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');
