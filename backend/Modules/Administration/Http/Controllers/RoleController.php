@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Administration\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Role as SpatieRole;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Role; 
 
 class RoleController extends Controller
 {

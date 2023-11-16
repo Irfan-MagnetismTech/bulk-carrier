@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Administration\Http\Requests\PermissionRequest;
-use Spatie\Permission\Models\Permission;
-
+use Spatie\Permission\Models\Permission as SpatiePermission;
+use App\Models\Permission;
 class PermissionController extends Controller
 {
     /**
@@ -112,4 +112,29 @@ class PermissionController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * 
+     * Give Permission GroupBy  Menu and subject
+     * 
+     * @return JsonResponse
+     * 
+     */
+
+    public function getPermissionsGroupBySubject(): JsonResponse
+    {
+        try {
+            $permissions = Permission::query()->get()->groupBy('menu')->map(function ($item, $key) {
+                         return $item->groupBy('subject');
+                     });
+            return response()->json([
+                'value'   => $permissions,
+                'message' => 'Successfully retrieved permissions.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+
+    }
+
 }
