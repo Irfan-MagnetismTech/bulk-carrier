@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading } = useShipDepartment();
+const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading, isTableLoading } = useShipDepartment();
 const { setTitle } = Title();
 setTitle('Ship Department List');
 
@@ -32,7 +33,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 function swapFilter() {
   showFilter.value = !showFilter.value;
@@ -70,6 +71,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -93,14 +95,35 @@ let filterOptions = ref( {
   ]
 });
 
+watch(
+    () => filterOptions.value.page,
+    (value) => {
+      setFilter();
+    }
+);
 
-function setSortingState(index,order){
-  filterOptions.value.filter_options[index].order_by = order;
+watch(
+    () => filterOptions.business_unit,
+    (value) => {
+      setFilter();
+    }
+);
+
+
+
+function setFilter() {
+  filterOptions.value.isFilter = true;
 }
+function setSortingState(index, order) {
+  filterOptions.value.filter_options[index].order_by = order;
+  setFilter();
+}
+
 
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    filterOptions.value.page = props.page;
+    
   getShipDepartments(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -108,7 +131,7 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching ship departments:", error);
@@ -180,7 +203,7 @@ onMounted(() => {
               </th>
             <th class="w-2/12">
               <div class="flex justify-evenly items-center">
-                  <span>Business Unit</span>
+                  <span>Business Unit{{ isTableLoading }}</span>
                 
                 </div>
               </th>
@@ -195,15 +218,14 @@ onMounted(() => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input @input="setFilter()"  v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input @input="setFilter()"  v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
             </tr>
           </thead>
-          <tbody>
-            
+          <tbody class="relative">
           <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ shipDepartment?.name }}</td>
@@ -215,11 +237,20 @@ onMounted(() => {
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && shipDepartments?.data?.length"></LoaderComponent>
+            
           </tbody>
-          <tfoot v-if="!shipDepartments?.data?.length">
+          <tfoot v-if="!shipDepartments?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
               <td colspan="5">Loading...</td>
+            </tr>     
+            <tr v-else-if="isTableLoading">
+              <td colspan="5">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+                
+              </td>
             </tr>
+
             <tr v-else-if="!shipDepartments?.data?.length">
               <td colspan="5">No ship department found.</td>
             </tr>

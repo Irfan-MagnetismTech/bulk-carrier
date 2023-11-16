@@ -21,16 +21,24 @@ export default function useShipDepartment() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
     async function getShipDepartments(filterOptions) {
         //NProgress.start();
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'spinner', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+        }
+        else {
+            isTableLoading.value = true;
+        }
+        
 
         // indexPage.value = filterOptions.page;
         // indexBusinessUnit.value = filterOptions.business_unit;
         filterParams.value = filterOptions;
-
+        
         try {
             const {data, status} = await Api.get('/mnt/ship-departments',{
                 params: {
@@ -45,8 +53,13 @@ export default function useShipDepartment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            // loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+            }
             //NProgress.done();
         }
     }
@@ -166,6 +179,7 @@ export default function useShipDepartment() {
         deleteShipDepartment,
         getShipDepartmentsWithoutPagination,
         isLoading,
+        isTableLoading,
         errors,
     };
 }
