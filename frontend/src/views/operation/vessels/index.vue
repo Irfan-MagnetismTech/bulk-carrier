@@ -124,6 +124,14 @@ let filterOptions = ref( {
 			"action": null,
 			"order_by": null,
 			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": 'business_unit',
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
 			}
 	]
 });
@@ -234,6 +242,15 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Business Unit</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
               <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -269,7 +286,10 @@ onMounted(() => {
                   <td>{{ vessel?.capacity }}</td>
                   <td></td>
                   <td></td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td>
+                    <span :class="vessel?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vessel?.business_unit }}</span>
+                  </td>
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.vessels.show', params: { vesselId: vessel.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.vessels.edit', params: { vesselId: vessel.id } }"></action-button>
