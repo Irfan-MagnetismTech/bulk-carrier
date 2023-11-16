@@ -35,7 +35,7 @@ export default function useCostCenter() {
                     data: JSON.stringify(filterOptions)
                 },
             });
-            costCenters.value = data.value;
+            salaryHeads.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -46,14 +46,14 @@ export default function useCostCenter() {
         }
     }
 
-    async function storeCostCenter(form) {
+    async function storeSalaryHead(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.post('/acc/acc-cost-centers', form);
-            costCenter.value = data.value;
+            salaryHead.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "acc.cost-centers.index" });
         } catch (error) {
@@ -65,14 +65,14 @@ export default function useCostCenter() {
         }
     }
 
-    async function showCostCenter(costCenterId) {
+    async function showSalaryHead(salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-cost-centers/${costCenterId}`);
-            costCenter.value = data.value;
+            const { data, status } = await Api.get(`/acc/acc-cost-centers/${salaryHeadId}`);
+            salaryHead.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -83,17 +83,17 @@ export default function useCostCenter() {
         }
     }
 
-    async function updateCostCenter(form, costCenterId) {
+    async function updateSalaryHead(form, salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/acc/acc-cost-centers/${costCenterId}`,
+                `/acc/acc-cost-centers/${salaryHeadId}`,
                 form
             );
-            costCenter.value = data.value;
+            salaryHead.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "acc.cost-centers.index" });
         } catch (error) {
@@ -105,15 +105,15 @@ export default function useCostCenter() {
         }
     }
 
-    async function deleteCostCenter(costCenterId) {
+    async function deleteSalaryHead(salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-cost-centers/${costCenterId}`);
+            const { data, status } = await Api.delete( `/acc/acc-cost-centers/${salaryHeadId}`);
             notification.showSuccess(status);
-            await getCostCenters(indexPage.value,indexBusinessUnit.value);
+            await getSalaryHeads(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -124,13 +124,13 @@ export default function useCostCenter() {
     }
 
     return {
-        costCenters,
-        costCenter,
-        getCostCenters,
-        storeCostCenter,
-        showCostCenter,
-        updateCostCenter,
-        deleteCostCenter,
+        salaryHeads,
+        salaryHead,
+        getSalaryHeads,
+        storeSalaryHead,
+        showSalaryHead,
+        updateSalaryHead,
+        deleteSalaryHead,
         isLoading,
         errors,
     };
