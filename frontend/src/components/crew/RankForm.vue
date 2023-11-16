@@ -6,6 +6,7 @@ import useRole from "../../composables/administration/useRole";
 import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -33,14 +34,13 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.name" placeholder="Rank Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.name" :errors="errors.name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.short_name" placeholder="Short Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.short_name" :errors="errors.short_name" />
       </label>
     </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 </style>
