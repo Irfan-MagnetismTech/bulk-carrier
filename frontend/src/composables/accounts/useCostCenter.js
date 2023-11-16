@@ -49,7 +49,6 @@ export default function useCostCenter() {
     }
 
     async function storeCostCenter(form) {
-        console.log("VALUE: " +form.name);
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;

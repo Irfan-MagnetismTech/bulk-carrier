@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import Paginate from '../../../components/utils/paginate.vue';
 
 const props = defineProps({
   page: {
@@ -24,7 +25,7 @@ const debouncedValue = useDebouncedRef('', 800);
 setTitle('Services');
 const icons = useHeroIcon();
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -54,6 +55,8 @@ let filterOptions = ref( {
   ]
 });
 
+
+
 function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
@@ -64,12 +67,14 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
+    filterOptions.value.page = props.page;
     getServices(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching services:", error);
@@ -119,7 +124,7 @@ function confirmDelete(id) {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Unit Name</span>
+                  <span>Service Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>

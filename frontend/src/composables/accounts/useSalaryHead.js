@@ -4,55 +4,38 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 
-export default function useRecruitmentApproval() {
+export default function useCostCenter() {
     const router = useRouter();
-    const recruitmentApprovals = ref([]);
+    const salaryHeads = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const recruitmentApproval = ref( {
-        applied_date: '',
-        page_title: '',
-        subject: '',
-        total_approved: '',
-        crew_agreed_to_join: '',
-        crew_selected: '',
-        crew_panel: '',
-        crew_rest: '',
-        body: '',
-        remarks: '',
+    const salaryHead = ref( {
+        name: '',
         business_unit: '',
-        crwRecruitmentApprovalLines: [
-            {
-                crw_rank_id: '',
-                candidate_name: '',
-                candidate_contact: '',
-                candidate_email: '',
-                remarks: '',
-            }
-        ]
     });
-
-    const filterParams = ref(null);
+    const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRecruitmentApprovals(filterOptions) {
+    async function getSalaryHeads(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        filterParams.value = filterOptions;
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
-            const {data, status} = await Api.get('/crw/crw-recruitment-approvals',{
+            const {data, status} = await Api.get('/acc/acc-salary-heads',{
                 params: {
-                   page: filterOptions.page || 1,
-                   items_per_page: filterOptions.items_per_page,
-                   data: JSON.stringify(filterOptions)
-                }
+                    page: filterOptions.page || 1,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                },
             });
-            recruitmentApprovals.value = data.value;
+            salaryHeads.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -63,16 +46,16 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function storeRecruitmentApproval(form) {
+    async function storeSalaryHead(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
-            recruitmentApproval.value = data.value;
+            const { data, status } = await Api.post('/acc/acc-salary-heads', form);
+            salaryHead.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
+            await router.push({ name: "acc.salary-heads.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -82,14 +65,14 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function showRecruitmentApproval(recruitmentApprovalId) {
+    async function showSalaryHead(salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
-            recruitmentApproval.value = data.value;
+            const { data, status } = await Api.get(`/acc/acc-salary-heads/${salaryHeadId}`);
+            salaryHead.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -100,19 +83,19 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function updateRecruitmentApproval(form, recruitmentApprovalId) {
+    async function updateSalaryHead(form, salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
+                `/acc/acc-salary-heads/${salaryHeadId}`,
                 form
             );
-            recruitmentApproval.value = data.value;
+            salaryHead.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
+            await router.push({ name: "acc.salary-heads.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -122,15 +105,15 @@ export default function useRecruitmentApproval() {
         }
     }
 
-    async function deleteRecruitmentApproval(recruitmentApprovalId) {
+    async function deleteSalaryHead(salaryHeadId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`);
+            const { data, status } = await Api.delete( `/acc/acc-salary-heads/${salaryHeadId}`);
             notification.showSuccess(status);
-            await getRecruitmentApprovals(filterParams.value);
+            await getSalaryHeads(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -141,13 +124,13 @@ export default function useRecruitmentApproval() {
     }
 
     return {
-        recruitmentApprovals,
-        recruitmentApproval,
-        getRecruitmentApprovals,
-        storeRecruitmentApproval,
-        showRecruitmentApproval,
-        updateRecruitmentApproval,
-        deleteRecruitmentApproval,
+        salaryHeads,
+        salaryHead,
+        getSalaryHeads,
+        storeSalaryHead,
+        showSalaryHead,
+        updateSalaryHead,
+        deleteSalaryHead,
         isLoading,
         errors,
     };

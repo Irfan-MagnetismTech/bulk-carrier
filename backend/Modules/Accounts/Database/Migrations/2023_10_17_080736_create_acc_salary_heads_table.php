@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('acc_salary_heads', function (Blueprint $table) {
             $table->id();
+			$table->string('name');                        
 			$table->enum('business_unit', ['PSML', 'TSLL']);                        
-            $table->softDeletes();
             $table->timestamps();
         });
     }
