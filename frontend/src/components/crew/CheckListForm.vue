@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref} from "vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -26,7 +27,7 @@ function removeCheckListItem(index){
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 </script>
 
@@ -39,12 +40,10 @@ onMounted(() => {
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.effective_date" class="form-input" autocomplete="off" required />
-          <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
         </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Remarks</span>
         <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.remarks" :errors="errors.remarks" />
       </label>
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -82,6 +81,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

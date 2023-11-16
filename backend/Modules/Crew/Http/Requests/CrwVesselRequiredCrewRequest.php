@@ -16,7 +16,8 @@ class CrwVesselRequiredCrewRequest extends FormRequest
             'total_crew'                                     => ['required', 'numeric', 'max:2000'],
             'effective_date'                                 => ['required'],
             'business_unit'                                  => ['required', 'string', 'max:255'],
-            'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'max:255'],
+            'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
+            'crwVesselRequiredCrewLines.*.eligibility'       => ['required', 'string', 'max:700'],
         ];
     }
 
@@ -27,7 +28,10 @@ class CrwVesselRequiredCrewRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'crwVesselRequiredCrewLines.*.required_manpower.max' => 'The Required Manpower[:index] field must not be greater than 2000.',
+            'total_crew.required'                                => 'The Total Crew field is required.',
+            'total_crew.max'                                     => 'The Total Crew field must not exceed 2000.',
+            'crwVesselRequiredCrewLines.*.required_manpower.max' => 'The Required Manpower field must not exceed 2000.',
+            'crwVesselRequiredCrewLines.*.eligibility.required'  => 'The Eligibility field is required.',
         ];
     }
 

@@ -26,7 +26,11 @@ class CrwRankRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'name.max'      => 'The Rank Name field cannot exceed 255 characters.',
+            'name.required' => 'The Rank Name field is required.',
+
+            'short_name.max'      => 'The Short Name field cannot exceed 255 characters.',
+            'short_name.required' => 'The Short Name field is required.',
         ];
     }
 
