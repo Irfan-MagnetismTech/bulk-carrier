@@ -135,7 +135,7 @@ function confirmDelete(id) {
           </thead> -->
                 <thead>
                     <tr class="w-full">
-                        <th class="w-16 min-w-full">
+                        <th class="w-16">
                             <div
                                 class="flex w-full items-center justify-between"
                             >
