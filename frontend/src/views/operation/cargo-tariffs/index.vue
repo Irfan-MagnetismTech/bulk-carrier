@@ -172,7 +172,7 @@ onMounted(() => {
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
-                </th>
+              </th>
               <th>
                 <div class="flex justify-evenly items-center">
                     <span>Tariff Name</span>
@@ -236,10 +236,9 @@ onMounted(() => {
                     </div>
                   </div>
               </th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
-
               <th>
                 <select v-model="filterOptions.items_per_page" class="filter_input">
                   <option value="15">15</option>

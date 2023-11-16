@@ -86,7 +86,7 @@ onMounted(() => {
             <th>Certificate Name</th>
             <th>Certificate Type</th>
             <th>Validity Period</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="maritimeCertificates?.data?.length">
