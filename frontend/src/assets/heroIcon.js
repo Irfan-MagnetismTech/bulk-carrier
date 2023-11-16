@@ -61,6 +61,8 @@ export default function useHeroIcon() {
         '  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />\n' +
         '</svg>\n';
 
+    const NotFilterIcon = '<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#888888" d="m14.8 11.975l-1.425-1.425L16.95 6H8.825l-2-2H19q.625 0 .9.55t-.1 1.05l-5 6.375ZM19.775 22.6L14 16.825V19q0 .425-.288.713T13 20h-2q-.425 0-.713-.288T10 19v-6.175l-8.6-8.6L2.8 2.8l18.4 18.4l-1.425 1.4Zm-6.4-12.05Z"/></svg>';
+
     return {
         HomeSolid,
         CubeOutline,
@@ -87,6 +89,7 @@ export default function useHeroIcon() {
         ascIcon,
         Calculator,
         Eye,
-        EyeSlash
+        EyeSlash,
+        NotFilterIcon,
     }
 };

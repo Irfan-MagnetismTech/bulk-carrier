@@ -13,9 +13,8 @@ export default function useCostCenter() {
         name: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
@@ -24,8 +23,7 @@ export default function useCostCenter() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-salary-heads',{
@@ -113,7 +111,7 @@ export default function useCostCenter() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-salary-heads/${salaryHeadId}`);
             notification.showSuccess(status);
-            await getSalaryHeads(indexPage.value,indexBusinessUnit.value);
+            await getSalaryHeads(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
