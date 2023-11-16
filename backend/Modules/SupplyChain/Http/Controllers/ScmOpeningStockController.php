@@ -75,7 +75,7 @@ class ScmOpeningStockController extends Controller
     public function show(ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
-            return response()->success('data', $opening_stock->load('scmOpeningStockLines', 'scmWarehouse'), 200);
+            return response()->success('data', $opening_stock->load('scmOpeningStockLines.scmMaterial', 'scmWarehouse'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

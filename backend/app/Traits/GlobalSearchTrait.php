@@ -8,36 +8,37 @@ use Illuminate\Pagination\LengthAwarePaginator;
 trait GlobalSearchTrait
 {
     /**
-     * @param Builder $query
-     * @param $request
+     * Scope a query for a global search.
+     *
+     * @param mixed $query
+     * @param mixed $request
      */
     public function scopeGlobalSearch($query, $request)
     {
         $request = json_decode($request['data']);
 
-        // $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null);
-        // $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null);
-
-        $baseTableQueries       = collect($request->filter_options)->filter(fn($q) => $q->relation_name === null)->map(function ($item) {
+        $baseTableQueries       = collect($request->filter_options)->filter(fn ($q) => $q->relation_name === null)->map(function ($item) {
             $item->search_param = trim($item->search_param);
             return $item;
         });
-        $relationalTableQueries = collect($request->filter_options)->filter(fn($q) => $q->relation_name != null)->map(function ($item) {
+        $relationalTableQueries = collect($request->filter_options)->filter(fn ($q) => $q->relation_name != null)->map(function ($item) {
             $item->search_param = trim($item->search_param);
             return $item;
         });
 
-        $query->when(isset($request->business_unit) && $request->business_unit != "ALL", function($q) use ($request){
+        $query->when(isset($request->business_unit) && $request->business_unit != "ALL", function ($q) use ($request) {
             $q->where('business_unit', $request->business_unit);
         });
 
+        // Search in base table
         foreach ($baseTableQueries as $key => $baseTableQuery)
         {
             $query->when($baseTableQuery->search_param, fn($q) => $q->where($baseTableQuery->field_name, 'LIKE', '%' . $baseTableQuery->search_param . '%'));
 
-            $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));
+            // $query->when($baseTableQuery->order_by, fn($query) => $query->orderBy($baseTableQuery->field_name, $baseTableQuery->order_by));
         }
 
+        // Search in relationship tables
         foreach ($relationalTableQueries as $key => $relationalTableQuery)
         {
             $query->when($relationalTableQuery->search_param, function ($q) use ($relationalTableQuery)
@@ -46,36 +47,49 @@ trait GlobalSearchTrait
             });
         }
 
-
         $query_result = $query->get();
 
-        foreach ($relationalTableQueries as $key => $relationalTableQuery)
+        foreach ($request->filter_options as $key => $filterOption)
         {
+            if($filterOption->relation_name === null) {
+                if ($filterOption->order_by == "asc")
+                {
+                    $query_result = $query_result->sortBy(function ($q) use ($filterOption){
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
 
-            if ($relationalTableQuery->order_by == "asc")
-            {
-                // var_dump($relationalTableQuery->relation_name);
-                $query_result = $query_result->sortBy(function ($q) use ($relationalTableQuery){
-                    $relations = explode(".", $relationalTableQuery->relation_name);
-                    foreach($relations as $relation) {
-                        $q = $q->{$relation};
-                    }
-                    return $q->{$relationalTableQuery->field_name};
-                });
-            }
+                if ($filterOption->order_by == "desc")
+                {
+                    $query_result = $query_result->sortByDesc(function ($q) use ($filterOption){
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
+            } else {
+                if ($filterOption->order_by == "asc")
+                {
+                    $query_result = $query_result->sortBy(function ($q) use ($filterOption){
+                        $relations = explode(".", $filterOption->relation_name);
+                        foreach($relations as $relation) {
+                            $q = $q->{$relation};
+                        }
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
 
-            if ($relationalTableQuery->order_by == "desc")
-            {
-                // var_dump($relationalTableQuery->relation_name);
-                $query_result = $query_result->sortByDesc(function ($q) use ($relationalTableQuery){
-                    $relations = explode(".", $relationalTableQuery->relation_name);
-                    foreach($relations as $relation) {
-                        $q = $q->{$relation};
-                    }
-                    return $q->{$relationalTableQuery->field_name};
-                });
+                if ($filterOption->order_by == "desc")
+                {
+                    $query_result = $query_result->sortByDesc(function ($q) use ($filterOption){
+                        $relations = explode(".", $filterOption->relation_name);
+                        foreach($relations as $relation) {
+                            $q = $q->{$relation};
+                        }
+                        return $q->{$filterOption->field_name};
+                    }, SORT_NATURAL|SORT_FLAG_CASE);
+                }
             }
         }
+
         $items = $query_result->values()->all();
         $total = count($items);
         $perPage = $request->items_per_page;

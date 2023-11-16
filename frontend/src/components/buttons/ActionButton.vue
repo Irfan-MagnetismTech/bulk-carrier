@@ -22,7 +22,7 @@ const isTooltipShowing = ref(false);
         </svg>
         <span class="tooltiptext">{{ action }}</span>
       </div>
-    <router-link v-else :to="to" class="relative" @mouseenter="isTooltipShowing = true" @mouseleave="isTooltipShowing = false">
+    <router-link v-else :to="to" class="relative px-0.5" @mouseenter="isTooltipShowing = true" @mouseleave="isTooltipShowing = false">
       <div v-if="action == 'edit'" class="tooltip">
         <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-purple-500 dark:text-gray-400 dark:hover:text-purple-500'" viewBox="0 0 20 20" fill="currentColor">
           <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />

@@ -113,7 +113,7 @@ onMounted(() => {
                   <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.chief_engineer }}</nobr></td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'copy'" :to="{ name: 'ops.lighter-noon-reports.copy', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
                         <action-button :action="'show'" :to="{ name: 'ops.lighter-noon-reports.show', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>

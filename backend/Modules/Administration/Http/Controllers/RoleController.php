@@ -15,22 +15,16 @@ class RoleController extends Controller
 {
     use HasRoles;
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
+            $roles = Role::with('permissions')->globalSearch($request->all());
 
-            $roles = Role::with('permissions')->orderBy('name', 'ASC')->get();
+            return response()->success('Data list', $roles, 200);
+        } catch (\Exception $e) {
 
-            return response()->json([
-                'value'   => $roles,
-                'message' => 'Roles retrieved Successfully.',
-            ], 200);
+            return response()->error($e->getMessage(), 500);
         }
-        catch (\Exception $e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-
     }
 
     /**
@@ -39,7 +33,6 @@ class RoleController extends Controller
     public function store(RoleRequest $request): JsonResponse
     {
         try {
-
             $role = Role::create(['name' => $request->name]);
             $role->syncPermissions([$request->current_permissions]);
 
@@ -47,9 +40,7 @@ class RoleController extends Controller
                 'value'   => $role,
                 'message' => 'Role added Successfully.',
             ], 201);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -60,19 +51,16 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-
         $permissions = Permission::get(['id', 'name', 'subject', 'menu']);
 
-        $usersPermissions = $permissions->groupBy('menu')->map(function ($menu, $menuKey) use ($role)
-        {
+        $usersPermissions = $permissions->groupBy('menu')->map(function ($menu, $menuKey) use ($role) {
             $givenPermissions = $menu->pluck('id')->intersect($role->permissions->pluck('id'));
             $allAccess        = count($givenPermissions) < count($menu->pluck('id')) ? False : True;
             $menus            = [
                 'item_name'  => $menuKey,
                 'item_type'  => 'Menu',
                 'is_checked' => $allAccess,
-                'childs'     => $menu->groupBy('subject')->map(function ($subject, $subjectKey) use ($role)
-                {
+                'childs'     => $menu->groupBy('subject')->map(function ($subject, $subjectKey) use ($role) {
                     $givenPermissions = $subject->pluck('id')->intersect($role->permissions->pluck('id'));
                     $allAccess        = count($givenPermissions) < count($subject->pluck('id')) ? False : True;
 
@@ -80,8 +68,7 @@ class RoleController extends Controller
                         'item_name'  => $subjectKey,
                         'item_type'  => 'Subject',
                         'is_checked' => $allAccess,
-                        'childs'     => $subject->map(function ($item) use ($role)
-                        {
+                        'childs'     => $subject->map(function ($item) use ($role) {
                             $is_checked         = $role->permissions->pluck('id')->contains($item->id);
                             $item['is_checked'] = $is_checked;
 
@@ -103,9 +90,7 @@ class RoleController extends Controller
                 'value'   => $role,
                 'message' => 'Successfully retrieved role and permission.',
             ], 200);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -125,9 +110,7 @@ class RoleController extends Controller
                 'value'   => $role,
                 'message' => 'Role updated Successfully.',
             ], 201);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -144,11 +127,8 @@ class RoleController extends Controller
                 'value'   => '',
                 'message' => 'Role deleted Successfully.',
             ], 204);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
-
 }
