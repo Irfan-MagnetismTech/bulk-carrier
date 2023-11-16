@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwVesselRequiredCrew;
+use Modules\Crew\Http\Requests\CrwVesselRequiredCrewRequest;
 
 class CrwVesselRequiredCrewController extends Controller
 {
@@ -34,7 +35,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwVesselRequiredCrewRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -76,7 +77,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \App\Models\CrwVesselRequiredCrew  $crwVesselRequiredCrew
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
+    public function update(CrwVesselRequiredCrewRequest $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
             DB::transaction(function () use ($request, $crwVesselRequiredCrew)

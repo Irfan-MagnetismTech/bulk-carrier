@@ -2,23 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PRINCIPAL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</title>
+    <title>SUMMARY</title>
+    <style>
+        table, tr, td, th
+        {
+            border: 1px solid #252525;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
-<style>
-    .title{
-        text-align: center; 
-        font-size:20px; 
-        padding:10px;
-    }
-    .float-left{
-        float: left !important;
-    }
-</style>
 <body>    
     <table>
-        <tr rowspan="3">
+        <tr>
             <th colspan="11" style="text-align: center; 
             font-size:20px; 
             padding:10px;"><h2>PRINCIPAL PARTICULAR @if(isset($vesselParticular))- {{$vesselParticular->opsVessel->short_code}} @endif</h2></th>

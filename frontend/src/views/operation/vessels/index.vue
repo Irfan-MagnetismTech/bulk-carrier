@@ -166,7 +166,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16 min-w-full">
+              <th class="w-16">
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
@@ -234,7 +234,7 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 

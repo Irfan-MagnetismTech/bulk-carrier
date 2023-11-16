@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('crw_crew_document_id');
             $table->foreign('crw_crew_document_id', 'fk_crw_crew_document_renewal_id')->references('id')->on('crw_crew_documents')->cascadeOnDelete();
-
-			$table->date('issue_date');
-			$table->date('expire_date');
+			$table->date('issue_date')->nullable();
+			$table->date('expire_date')->nullable();
 			$table->string('reference_no')->nullable();
-			$table->string('attachment')->nullable();            
+			$table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
