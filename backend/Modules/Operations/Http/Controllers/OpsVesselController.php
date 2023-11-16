@@ -114,6 +114,7 @@ class OpsVesselController extends Controller
         $vessel->opsBunkers->map(function($bunker) {
             $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
+            $bunker->is_readonly = true;
             return $bunker;
         });
 

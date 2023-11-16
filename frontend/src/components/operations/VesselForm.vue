@@ -248,7 +248,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -258,7 +258,7 @@
                           />
                   </template>
               </v-select>
-              <!-- <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.name">{{ form.opsBunkers[index]?.name }}</span> -->
+              <span v-else class="show-block !justify-center !bg-gray-100">{{ form.opsBunkers[index]?.name }}</span>
 
             </td>
             <td>
@@ -266,10 +266,10 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" required v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                <input type="number" :readonly="form.opsBunkers[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off"/>
               </label>
             </td>
-            <td :class="formType=='edit' ? 'hidden' : '' ">
+            <td :class="{hidden : form.opsBunkers[index]?.is_readonly}">
               <button type="button" @click="removeBunker(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
