@@ -73,18 +73,26 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-
-
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     getVendors(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -194,7 +202,7 @@ function confirmDelete(id) {
           </thead>
           <tbody>
             <tr v-for="(vendor,index) in vendors.data" :key="vendor.id">
-              <td>{{ index + 1 }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ vendor.name }}</td>
               <td>{{ vendor.country_name }}</td>
               <td>{{ vendor.scmVendorContactPerson.phone }}</td>
