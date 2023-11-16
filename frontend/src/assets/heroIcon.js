@@ -94,10 +94,7 @@ export default function useHeroIcon() {
         Calculator,
         Eye,
         EyeSlash,
-<<<<<<< HEAD
-        RenewIcon
-=======
+        RenewIcon,
         NotFilterIcon,
->>>>>>> 131be6b9db8f604dd1bace57cd58faf86e298458
     }
 };
