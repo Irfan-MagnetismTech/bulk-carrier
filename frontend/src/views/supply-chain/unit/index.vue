@@ -145,7 +145,7 @@ function confirmDelete(id) {
                   </div>
                 </div>
               </th>
-              <th class="">Action</th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>

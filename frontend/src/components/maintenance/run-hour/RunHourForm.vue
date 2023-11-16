@@ -77,7 +77,7 @@
           </div>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Previous Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input vms-readonly-input" readonly />
+            <input type="text" v-model.trim="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -98,7 +98,7 @@
         </label>
         
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -111,6 +111,7 @@ import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const props = defineProps({
   form: {

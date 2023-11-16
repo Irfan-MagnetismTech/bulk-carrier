@@ -269,7 +269,7 @@ onMounted(() => {
                   <td>{{ vessel?.capacity }}</td>
                   <td></td>
                   <td></td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.vessels.show', params: { vesselId: vessel.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.vessels.edit', params: { vesselId: vessel.id } }"></action-button>

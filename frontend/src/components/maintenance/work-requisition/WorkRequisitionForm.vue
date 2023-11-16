@@ -8,7 +8,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Reference No <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.reference_no" placeholder="Reference No" class="form-input" required />
+            <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" required />
           <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -85,7 +85,7 @@
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
             <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 

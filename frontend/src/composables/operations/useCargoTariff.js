@@ -44,6 +44,7 @@ export default function useCargoTariff() {
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
 	async function getCargoTariffs(filterOptions) {
 		//NProgress.start();
@@ -52,6 +53,7 @@ export default function useCargoTariff() {
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/cargo-tariffs', {
@@ -144,7 +146,7 @@ export default function useCargoTariff() {
 		try {
 			const { data, status } = await Api.delete( `/ops/cargo-tariffs/${cargoTariffId}`);
 			notification.showSuccess(status);
-			await getCargoTariffs();
+			await getCargoTariffs(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

@@ -30,25 +30,24 @@ export default function useRunHour() {
         form_type: 'create'
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRunHours(page, businessUnit) {
+    async function getRunHours(filterOptions) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/run-hours',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             runHours.value = data.value;
@@ -72,7 +71,7 @@ export default function useRunHour() {
             const { data, status } = await Api.post('/mnt/run-hours', form);
             runHour.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.run-hours.index" });
+            await router.push({ name: "mnt.run-hours.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -113,7 +112,7 @@ export default function useRunHour() {
             );
             runHour.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.run-hours.index" });
+            await router.push({ name: "mnt.run-hours.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -132,7 +131,7 @@ export default function useRunHour() {
         try {
             const { data, status } = await Api.delete( `/mnt/run-hours/${runHourId}`);
             notification.showSuccess(status);
-            await getRunHours(indexPage.value, indexBusinessUnit.value);
+            await getRunHours(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
