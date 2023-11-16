@@ -14,16 +14,12 @@ class ScmOpeningStockController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scm_opening_stocks = ScmOpeningStock::query()
-                ->with('scmOpeningStockLines')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($q) {
-                    $q->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);;
+                ->with('scmOpeningStockLines', 'scmWarehouse')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_opening_stocks, 200);
         } catch (\Exception $e) {
@@ -79,7 +75,7 @@ class ScmOpeningStockController extends Controller
     public function show(ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
-            return response()->success('data', $opening_stock->load('scmOpeningStockLines.scmMaterial', 'scmWarehouse'), 200);
+            return response()->success('data', $opening_stock->load('scmOpeningStockLines', 'scmWarehouse'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

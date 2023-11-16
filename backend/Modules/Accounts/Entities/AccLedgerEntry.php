@@ -18,6 +18,6 @@ class AccLedgerEntry extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(AccTransaction::class)->withDefault();
+        return $this->belongsTo(AccTransaction::class, 'acc_transaction_id', 'id')->withDefault();
     }
 }

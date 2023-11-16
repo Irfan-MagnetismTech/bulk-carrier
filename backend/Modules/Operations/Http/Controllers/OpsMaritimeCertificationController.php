@@ -28,13 +28,11 @@ class OpsMaritimeCertificationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         // dd($request);
         try {
-            $maritimeCertifications = OpsMaritimeCertification::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-                })->latest()->paginate(10);
+            $maritimeCertifications = OpsMaritimeCertification::globalSearch($request->all());
             
             return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertifications, 200);
         }
@@ -100,7 +98,7 @@ class OpsMaritimeCertificationController extends Controller
             DB::beginTransaction();
             $maritime_certification->update($request->all());
             DB::commit();
-            return response()->success('Maritime certification updated successfully.', $maritime_certification, 200);
+            return response()->success('Maritime certification updated successfully.', $maritime_certification, 202);
         }
         catch (QueryException $e)
         {

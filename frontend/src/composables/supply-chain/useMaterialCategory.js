@@ -18,27 +18,26 @@ export default function useMaterialCategory() {
         parent_id: '',
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    async function getMaterialCategories(page,columns = null, searchKey = null, table = null) {
+    async function getMaterialCategories(filterOptions) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = page;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/material-categories`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/material-categories`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -117,7 +116,7 @@ export default function useMaterialCategory() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);
-            await getMaterialCategories(indexPage.value);
+            await getMaterialCategories(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

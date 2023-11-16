@@ -51,7 +51,7 @@
                 <Error v-if="errors?.mother_vessel" :errors="errors.mother_vessel" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                 <template #search="{attributes, events}">
                     <input
@@ -216,17 +216,19 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsBunkers[index]"
-                          v-bind="attributes"
-                          v-on="events"
-                          :reaonly="true"
-                          />
-                  </template>
-              </v-select>
+                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsBunkers[index]"
+                            v-bind="attributes"
+                            v-on="events"
+                            :reaonly="true"
+                            />
+                    </template>
+                </v-select> -->
+                <span class="show-block bg-gray-100">{{ form.opsBunkers[index].name }}</span>
+
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>

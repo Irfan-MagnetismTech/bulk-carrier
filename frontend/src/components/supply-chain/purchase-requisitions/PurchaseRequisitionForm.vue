@@ -10,6 +10,7 @@
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
+    import cloneDeep from 'lodash/cloneDeep';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
@@ -32,9 +33,10 @@
 
     });
 
-    const purchase_center = ['Local', 'Foreign','Plant'];
+    const purchase_center = ['Local', 'Foreign', 'Plant'];
     function addMaterial() {
-      props.form.scmPrLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPrLines.push(clonedObj);
     }
 
     function removeMaterial(index){
@@ -256,26 +258,26 @@ onMounted(() => {
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
-    <div id="customDataTable">
-    <div class="table-responsive min-w-screen overflow-x-auto" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+    <div id="customDataTable" style="width: calc(100vw - 100px); margin: 0 auto;">
+    <div class="table-responsive min-w-screen overflow-x-scroll">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="!w-[100rem] whitespace-no-wrap">
+        <table class="whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="!w-72 py-3 align-center">Material Name </th>
-            <th class="!w-20 py-3 align-center">Unit</th>
-            <th class="!w-20 py-3 align-center">Brand</th>
-            <th class="!w-20 py-3 align-center">Model</th>
-            <th class="!w-30 py-3 align-center">Specification</th>
-            <th class="!w-20 py-3 align-center">Origin</th>
-            <th class="!w-40 py-3 align-center">Sample</th>
-            <th class="!w-20 py-3 align-center">Drawing No</th>
-            <th class="!w-20 py-3 align-center">Part No</th>
-            <th class="!w-25 py-3 align-center">ROB</th>
-            <th class="!w-25 py-3 align-center">Qty</th>
-            <th class="!w-30 py-3 align-center">Required Date</th>
-            <th class="!w-30 py-3 text-center align-center">Action</th>
+            <th style="min-width: 600px;" class="py-3 align-center">Material Name </th>
+            <th style="min-width: 600px;" class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center">Brand</th>
+            <th class="py-3 align-center">Model</th>
+            <th class="py-3 align-center">Specification</th>
+            <th class="py-3 align-center">Origin</th>
+            <th class="py-3 align-center">Sample</th>
+            <th class="py-3 align-center">Drawing No</th>
+            <th class="py-3 align-center">Part No</th>
+            <th class="py-3 align-center">ROB</th>
+            <th class="py-3 align-center">Qty</th>
+            <th class="py-3 align-center">Required Date</th>
+            <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 

@@ -29,26 +29,25 @@ export default function useVendor() {
     });
 
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getVendors(page,columns = null, searchKey = null, table = null) {
+    async function getVendors(filterOptions) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = page;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/vendors`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/vendors`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             vendors.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -127,7 +126,7 @@ export default function useVendor() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/vendors/${vendorId}`);
             notification.showSuccess(status);
-            await getVendors(indexPage.value);
+            await getVendors(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

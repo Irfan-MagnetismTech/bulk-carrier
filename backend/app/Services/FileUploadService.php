@@ -41,22 +41,22 @@ class FileUploadService
         }
     }
 
-    // note : new data, file storing path, previous data which is get from database and, field name if it's not attachment
-    public function handleMultipleFiles(string $path, array $newData, array $oldData = null, string $field = 'attachment'): array|null
+    // note : new data, new attachment filse, file storing path, previous data which is get from database and, field name if it's not attachment
+    public function handleMultipleFiles(string $path, array $newData, array $attachments, array $oldData = null, string $field = 'attachment'): array|null
     {
         try {
             $results = [];
-            $oldLength = count($oldData);
+            $oldLength =0;
+            if($oldData != null){
+                $oldLength = count($oldData);
+            }
 
             foreach ($newData as $key => $value) {
-                $data = $value->except(
-                    $field,
-                );
-                if (isset($value->attachment)) {
+                if (isset($attachments[$key])) {
                     if ($key < $oldLength) {
                         $this->deleteFile($oldData[$key]->attachment);
                     }
-                    $attachment = $this->handleFile($value->attachment, $path);
+                    $attachment = $this->handleFile($attachments[$key], $path);
                     $data[$field] = $attachment;
                 }
                 $results[$key] = $data;

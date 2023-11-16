@@ -1,7 +1,12 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
-      <business-unit-input v-model="form.business_unit"></business-unit-input>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+      </div>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
@@ -10,7 +15,11 @@
             </select>
           <Error v-if="errors?.vessel_type" :errors="errors.vessel_type" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Flag <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
+        <Error v-if="errors?.flag" :errors="errors.flag" />
+      </label>
       <label class="block w-full mt-2 text-sm"></label>
     </div>
 
@@ -38,21 +47,17 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Manager/Operator <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.manager" placeholder="Manager/Operator" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.manager" :errors="errors.manager" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Classification <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.classification" placeholder="Classification" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.classification" :errors="errors.classification" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Flag <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
-        <Error v-if="errors?.flag" :errors="errors.flag" />
-      </label>
+      
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
         <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="name" class="block form-input" :reduce="port=>port.code">
@@ -166,8 +171,8 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
           <tr class="w-full">
-            <th>SL</th>
-            <th class="!w-72">Certificate Name</th>
+            <th class="!w-12">SL</th>
+            <th class="!w-80">Certificate Name</th>
             <th>Certificate Type</th>
             <th>Validity Period</th>
             <th class="w-16">
@@ -185,7 +190,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates"  v-model="form.opsVesselCertificates[index]" label="name" class="block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates"  v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -219,11 +224,12 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
           <tr class="w-full">
-            <th>SL</th>
-            <th>Bunker Name</th>
-            <th>Unit</th>
+            <th class="!w-12">SL</th>
+            <th class="!w-80">Bunker Name</th>
+            <th class="!w-20">Unit</th>
             <th>Opening Balance</th>
-            <th class="w-16" :class="formType=='edit' ? 'hidden' : '' ">
+            <th class="w-16">
+              <!--  :class="formType=='edit' ? 'hidden' : '' " -->
               <button type="button" @click="addBunker()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -237,24 +243,26 @@
             <td>
               {{ index+1 }}
             </td>
-            <td class="w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.opsBunkers[index]"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
+            <td>
+              <v-select v-if="form.opsBunkers[index]?.is_new" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.opsBunkers[index]"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.name">{{ form.opsBunkers[index]?.name }}</span>
+
             </td>
             <td>
               <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="text" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                <input type="number" step="0.001" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit' || !form.opsBunkers[index]?.is_new"/>
                 <Error v-if="errors?.opsBunkers[index]?.opening_balance" :errors="errors.opsBunkers[index]?.opening_balance" />
               </label>
             </td>

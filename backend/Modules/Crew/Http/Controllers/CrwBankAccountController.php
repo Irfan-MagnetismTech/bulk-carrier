@@ -19,12 +19,10 @@ class CrwBankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwBankAccounts = CrwBankAccount::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwBankAccounts = CrwBankAccount::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
         }

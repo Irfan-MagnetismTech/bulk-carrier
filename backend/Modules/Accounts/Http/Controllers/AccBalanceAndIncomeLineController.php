@@ -17,9 +17,7 @@ class AccBalanceAndIncomeLineController extends Controller
     public function index(Request $request)
     {
         try {
-            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully te', $balanceIncomeLines, 200);
         }
@@ -41,7 +39,7 @@ class AccBalanceAndIncomeLineController extends Controller
             $balanceAndIncomeLineData = $request->only('line_type','line_text','value_type','parent_id','visible_index','printed_no','business_unit');
             $accBalanceAndIncomeLine     = AccBalanceAndIncomeLine::create($balanceAndIncomeLineData);
 
-            return response()->success('Created Succesfully', $accBalanceAndIncomeLine, 201);
+            return response()->success('Created Successfully', $accBalanceAndIncomeLine, 201);
         }
         catch (QueryException $e)
         {
@@ -98,7 +96,7 @@ class AccBalanceAndIncomeLineController extends Controller
         try {
             $accBalanceAndIncomeLine->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

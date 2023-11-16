@@ -65,9 +65,9 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
 //    Route::post('get-accounts', [AccountsCommonController::class, 'getAccounts']);
 //
 //    //AIS Reports
-//    Route::post('day-book', [AisReportController::class, 'dayBook']);
+    Route::post('day-book', [AisReportController::class, 'dayBook']);
     Route::post('ledgers', [AisReportController::class, 'ledger']);
-//    Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
+    Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
     Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
     Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
 });

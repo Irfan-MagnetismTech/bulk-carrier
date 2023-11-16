@@ -2,6 +2,7 @@
 
 namespace Modules\Accounts\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCostCenter;
@@ -16,11 +17,9 @@ class AccCostCenterController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCostCenters = AccCostCenter::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accCostCenters = AccCostCenter::globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $accCostCenters, 200);
+            return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }
         catch (\Exception $e)
         {
@@ -34,7 +33,7 @@ class AccCostCenterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         try {
             $costCenterData = $request->only('name', 'short_name', 'business_unit', 'type');

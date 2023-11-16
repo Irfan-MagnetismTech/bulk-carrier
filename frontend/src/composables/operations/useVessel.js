@@ -60,22 +60,30 @@ export default function useVessel() {
         minimum_stock: 0,
         store_category: '',
         description: '',
-        sample_photo: null
+        sample_photo: null,
+		is_new: true
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getVessels(page, businessUnit) {
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+
+	async function getVessels(filterOptions) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+
 		try {
 			const { data, status } = await Api.get('/ops/vessels', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit,
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			vessels.value = data.value;
 			notification.showSuccess(status);
@@ -105,9 +113,9 @@ export default function useVessel() {
 
 		try {
 			const { data, status } = await Api.post('/ops/vessels', form);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.vessels.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -156,9 +164,9 @@ export default function useVessel() {
 				`/ops/vessels/${vesselId}`,
 				form
 			);
-			vessel.value = data.value;
+			// vessel.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.configurations.vessels.index' });
+			router.push({ name: 'ops.vessels.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -233,7 +241,7 @@ export default function useVessel() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-vessels?name=${searchParam}&business_unit=${businessUnit}`);
+			const { data, status } = await Api.get(`/ops/search-vessels?name_or_code=${searchParam}&business_unit=${businessUnit}`);
 			vessels.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {

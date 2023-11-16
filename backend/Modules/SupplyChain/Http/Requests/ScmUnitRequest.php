@@ -15,7 +15,7 @@ class ScmUnitRequest extends FormRequest
     //         'data'      => $validator->errors(),
     //     ], 500));
     // }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,8 +24,8 @@ class ScmUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'short_code' => Rule::unique('scm_units')->ignore($this->unit, 'short_code'),
+            'name' => ['required', Rule::unique('scm_units')->ignore($this->unit, 'name')],
+            'short_code' => ['required', Rule::unique('scm_units')->ignore($this->unit, 'short_code')],
         ];
     }
 

@@ -158,7 +158,7 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="purchaseRequisitions" to="scm.opening-stock.index" :page="page"></Paginate>
+    <Paginate :data="purchaseRequisitions" to="scm.purchase-requisitions.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

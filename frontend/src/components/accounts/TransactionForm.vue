@@ -8,7 +8,7 @@ import useAccountCommonApiRequest from "../../composables/accounts/useAccountCom
 import useTransaction from "../../composables/accounts/useTransaction";
 const { vessels, searchVessels } = useVessel();
 
-const { allAccountLists, getAccount, allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
+const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 
 const { emit } = getCurrentInstance();
 const { bgColor } = useTransaction();
@@ -112,18 +112,22 @@ function fetchAccounts(search, loading) {
   }
 }
 
-function fetchCostCenters(search, loading) {
-  if(search.length < 3) {
-    return;
-  } else {
-    getCostCenter(search, props.form.business_unit, loading);
-  }
+function checkWhitespace(value) {
+  if (/^\s+$/.test(props.form.instrument_no)) {props.form.instrument_no = '';}
+  if (/^\s+$/.test(props.form.bill_no)) {props.form.bill_no = '';}
+  if (/^\s+$/.test(props.form.narration)) {props.form.narration = '';}
+
+  props.form.ledgerEntries?.forEach((entry, index) => {
+    if (/^\s+$/.test(props.form.ledgerEntries[index].ref_bill)) {props.form.ledgerEntries[index].ref_bill = '';}
+    if (/^\s+$/.test(props.form.ledgerEntries[index].remarks)) {props.form.ledgerEntries[index].remarks = '';}
+  });
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    getAccount(props.form.business_unit);
+    getCostCenter(null,props.form.business_unit);
+    getAccount(null,props.form.business_unit);
   });
 });
 
@@ -139,7 +143,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" @search="fetchCostCenters" v-model="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
           </template>
@@ -178,7 +182,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="label-group">
       <span class="label-item-title"> Cheque Number <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Cheque no." v-model="form.instrument_no" required />
+      <input type="text" @input="checkWhitespace" class="label-item-input" placeholder="Cheque no." v-model="form.instrument_no" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Check Date <span class="text-red-500">*</span></span>
@@ -187,11 +191,11 @@ onMounted(() => {
     </label>
     <label class="label-group">
       <span class="label-item-title"> Bill No. <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Bill no." v-model="form.bill_no" required />
+      <input type="text" @input="checkWhitespace" class="label-item-input" placeholder="Bill no." v-model="form.bill_no" required />
     </label>
     <label class="label-group">
       <span class="label-item-title"> Narration <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Narration" v-model="form.narration" required />
+      <input type="text" @input="checkWhitespace" class="label-item-input" placeholder="Narration" v-model="form.narration" required />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -200,9 +204,9 @@ onMounted(() => {
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Accounts <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Ref Bill <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Debit <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Credit <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Ref Bill</th>
+        <th class="px-4 py-3 align-bottom">Debit Amount <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Credit Amount <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
@@ -211,7 +215,7 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(ledgerEntry, index) in form.ledgerEntries" :key="ledgerEntry.id">
         <td class="px-1 py-1">
-          <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.ledgerEntries[index].acc_account_name" label="account_name"  class="block w-full rounded form-input">
+          <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.ledgerEntries[index].acc_account_name" label="account_name"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!form.ledgerEntries[index].acc_account_name" v-bind="attributes" v-on="events"/>
             </template>
@@ -219,7 +223,7 @@ onMounted(() => {
           <Error v-if="errors?.form.ledgerEntries[index].acc_account_name" :errors="errors.form.ledgerEntries[index].acc_account_name" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.ledgerEntries[index].ref_bill" placeholder="Ref bill" class="form-input" required autocomplete="off" />
+          <input type="text" v-model="form.ledgerEntries[index].ref_bill" @input="checkWhitespace" placeholder="Ref bill" class="form-input" required autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="number" step=".01" v-model="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
@@ -228,7 +232,7 @@ onMounted(() => {
           <input type="number" step=".01" v-model="form.ledgerEntries[index].cr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.ledgerEntries[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+          <input type="text" v-model="form.ledgerEntries[index].remarks" @input="checkWhitespace" placeholder="Remarks" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

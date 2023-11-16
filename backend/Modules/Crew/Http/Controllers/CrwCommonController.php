@@ -17,14 +17,11 @@ use Modules\Crew\Entities\CrwRecruitmentApproval;
 class CrwCommonController extends Controller
 {
 
-    public function getCrewRanks()
+    public function getCrewRanks(Request $request)
     {
         try {
 
-            $crwRanks      = CrwRank::when(request()->business_unit != "ALL", function ($q)
-            {
-                $q->where('business_unit', request()->business_unit);
-            })->get();
+            $crwRanks      = CrwRank::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwRanks, 200);
         }

@@ -15,15 +15,14 @@ class AccTransactionController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrewRanks = AccTransaction::with('ledgerEntries.account')->withCount('ledgerEntries as total_ledger')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwCrewRanks = AccTransaction::with('ledgerEntries.account', 'costCenter')->withCount('ledgerEntries as total_ledger')
+            ->globalSearch($request->all())
+            ;
 
-            return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
+            return response()->success('Retrieved Successfully', $crwCrewRanks, 200);
         }
         catch (QueryException $e)
         {
@@ -103,7 +102,7 @@ class AccTransactionController extends Controller
         try {
             $accTransaction->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

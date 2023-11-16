@@ -1,5 +1,11 @@
 <template>
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+    </div>
+
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
@@ -7,7 +13,7 @@
           <Error v-if="errors?.tariff_name" :errors="errors.tariff_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                 <template #search="{attributes, events}">
                     <input
@@ -20,33 +26,40 @@
             </v-select>
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+       
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loading_point" label="name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.loading_point"
+                        :required="!form.loadingPoint"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
-          <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
+            <input type="hidden" v-model="form.loading_point" />
+          <Error v-if="errors?.loading_point" :errors="errors.loading_point" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.unloading_point"
+                        :required="!form.unloadingPoint"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
-          <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
+            <input type="hidden" v-model="form.unloading_point" />
+
+          <Error v-if="errors?.unloading_point" :errors="errors.unloading_point" />
         </label>
     </div>
 
@@ -67,21 +80,21 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
-              <select name="" id="" class="form-input" v-model="form.currency">
-                <option value="USD">USD</option>
-                <option value="BDT">BDT</option>
+              <select name="" id="" required class="form-input" v-model="form.currency">
+                  <option value="" disabled>Select Currency</option>
+                  <option v-for="currency in currencies">{{ currency }}</option>
               </select>
             <Error v-if="errors?.currency" :errors="errors.currency" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
-              <select name="" id="" class="form-input" v-model="form.status">
+              <select name="" id="" required class="form-input" v-model="form.status">
+                <option value="" disabled>Select Status</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
             <Error v-if="errors?.status" :errors="errors.status" />
           </label>
-          <label class="block w-full mt-2 text-sm"></label>
     </div>
 
     <div class="mt-3 md:mt-8">
@@ -91,8 +104,8 @@
           <table class="w-full whitespace-no-wrap" >
               <thead v-once>
                 <tr class="w-full">
-                  <th>Particulars</th>
-                  <th>Unit</th>
+                  <th>Particulars <span class="text-red-500">*</span></th>
+                  <th>Unit <span class="text-red-500">*</span></th>
                   <th>Jan</th>
                   <th>Feb</th>
                   <th>Mar</th>
@@ -124,43 +137,43 @@
                       <input type="text" v-model="form.opsCargoTariffLines[index].unit" placeholder="Unit" class="form-input" required autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jan" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jan" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].feb" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].feb" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].mar" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].mar" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].apr" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].apr" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].may" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].may" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jun" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jun" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jul" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].jul" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].aug" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].aug" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].sep" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].sep" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].oct" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].oct" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].nov" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].nov" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].dec" class="form-input" required autocomplete="off" />
+                      <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].dec" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <button type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <button type="button" v-if="index>0" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                         </svg>
@@ -176,13 +189,16 @@
 
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import Error from "../../Error.vue";
 import usePort from '../../../composables/operations/usePort';
 import useVessel from '../../../composables/operations/useVessel';
 import useCargoType from '../../../composables/operations/useCargoType';
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import useBusinessInfo from "../../../composables/useBusinessInfo"
 
+
+const { getCurrencies, currencies } = useBusinessInfo();
 const { ports, searchPorts } = usePort();
 const { vessels, searchVessels } = useVessel();
 const { cargoTypes, searchCargoTypes } = useCargoType();
@@ -222,6 +238,14 @@ function removeItem(index){
   props.form.opsCargoTariffLines.splice(index, 1);
 }
 
+watch(() => props.form.loadingPoint, (value) => {
+  props.form.loading_point = value.code;
+}, {deep: true})
+
+watch(() => props.form.unloadingPoint, (value) => {
+  props.form.unloading_point = value.code;
+}, {deep: true})
+
 watch(() => props.form, (value) => {
 
     if(props?.formType == 'edit' && editInitiated.value != true) {
@@ -235,6 +259,9 @@ watch(() => props.form, (value) => {
     }
   }, {deep: true});
 
+onMounted(() => {
+  getCurrencies();
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {

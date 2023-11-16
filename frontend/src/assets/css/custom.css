@@ -9,7 +9,7 @@
 }
 
 .vs--searchable .vs__dropdown-toggle {
-    height: 2.05rem !important;
+    /* height: 2.05rem !important; */
 }
 
 .vms-no-data-found{
@@ -23,7 +23,15 @@
 }
 
 .vs--searchable .vs__dropdown-toggle {
-    height: 2.30rem !important;
+    /* height: 2.30rem !important; */
+}
+
+.filter_input{
+    padding: 0 5px;
+    display: block;
+    width: 100%;
+    border-radius: 0.25rem;
+    font-size: 12px;
 }
 
 /* title-tip down */

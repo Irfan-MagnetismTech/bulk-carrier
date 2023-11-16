@@ -77,7 +77,7 @@ function fetchAccounts(search, loading) {
                 <td class="text-sm !text-left"> {{ bookData?.account?.account_name }} </td>
               <td class="text-sm"> {{ bookData?.transaction?.voucher_type }} </td>
               <td class="text-sm transaction_col" style="color: blueviolet">
-                <router-link :to="{ name: 'accounts.transactions.show', params: { transactionId: bookData?.transaction?.id } }" target="_blank">
+                <router-link :to="{ name: 'acc.transactions.show', params: { transactionId: bookData?.transaction?.id } }" target="_blank">
                   {{ bookData?.transaction?.id }}
                 </router-link>
               </td>

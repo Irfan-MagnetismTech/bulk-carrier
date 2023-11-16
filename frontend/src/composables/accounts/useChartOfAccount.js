@@ -11,7 +11,9 @@ export default function useChartOfAccount() {
     const notification = useNotification();
     const chartOfAccount = ref( {
         acc_balance_and_income_line_id: '',
+        acc_balance_and_income_line_name: '',
         parent_account_id: '',
+        parent_account_name: '',
         account_name: '',
         account_code: '',
         account_type: '',
@@ -21,26 +23,26 @@ export default function useChartOfAccount() {
         is_archived: 0,
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getChartOfAccounts(page,businessUnit) {
+    async function getChartOfAccounts(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
+
             const {data, status} = await Api.get('/acc/acc-accounts',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page || 1,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             chartOfAccounts.value = data.value;
             notification.showSuccess(status);
@@ -120,7 +122,7 @@ export default function useChartOfAccount() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-accounts/${chartOfAccountId}`);
             notification.showSuccess(status);
-            await getChartOfAccounts(indexPage.value,indexBusinessUnit.value);
+            await getChartOfAccounts(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

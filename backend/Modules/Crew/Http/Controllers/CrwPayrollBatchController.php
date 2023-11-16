@@ -10,12 +10,10 @@ use Modules\Crew\Entities\CrwPayrollBatch;
 
 class CrwPayrollBatchController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $CrwPayrollBatches = CrwPayrollBatch::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $CrwPayrollBatches = CrwPayrollBatch::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $CrwPayrollBatches, 200);
         }
