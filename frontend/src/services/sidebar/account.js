@@ -66,7 +66,7 @@ export default [
                         permissionKey: '',
                     },
                     {
-                        route: '',
+                        route: 'acc.salary-heads.index',
                         label: 'Salary Heads',
                         preIcon: '',
                         postIcon: icons.DownArrow,

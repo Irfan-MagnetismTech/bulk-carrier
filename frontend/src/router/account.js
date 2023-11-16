@@ -110,6 +110,27 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    /* Salary head Routes */
+    {
+        path: `/${BASE}/salary-heads`,
+        name: `${BASE}.salary-heads.index`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/salary-heads/create`,
+        name: `${BASE}.salary-heads.create`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/salary-heads/:salaryHeadId/edit`,
+        name: `${BASE}.salary-heads.edit`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* Cash Accounts Routes */
     {
         path: `/${BASE}/cash-accounts`,

@@ -8,11 +8,13 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Store from './../../../store/index.js';
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import useCustomer from '../../../composables/operations/useCustomer';
 
 const icons = useHeroIcon();
-import useCustomer from '../../../composables/operations/useCustomer';
 const { customers, getCustomers, deleteCustomer, isLoading } = useCustomer();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const debouncedValue = useDebouncedRef('', 800);
 
 const props = defineProps({
   page: {
@@ -130,6 +132,10 @@ onMounted(() => {
     });
 });
 
+filterOptions.value.filter_options.forEach((option, index) => {
+	filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+});
+
 });
 
 </script>
@@ -222,16 +228,18 @@ onMounted(() => {
           </thead>
           <tbody v-if="customers?.data?.length">
               <tr v-for="(customer, index) in customers.data" :key="customer?.id">
-                  <td>{{ customers.from + index }}</td>
+                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ customer?.code }}</td>
                   <td>{{ customer?.name }}</td>
                   <td>{{ customer?.legal_name }}</td>
                   <td>{{ customer?.phone }}</td>
                   <td>{{ customer?.email_general }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                      <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>
-                      <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
+                      <nobr>
+                        <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
+                        <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>
+                        <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
+                      </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>

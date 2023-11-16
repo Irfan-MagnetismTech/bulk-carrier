@@ -32,31 +32,34 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.loading_point"
+                        :required="!form.loadingPoint"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
-          <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
+            <input type="hidden" v-model="form.loading_point" />
+          <Error v-if="errors?.loading_point" :errors="errors.loading_point" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.unloading_point"
+                        :required="!form.unloadingPoint"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
-          <Error v-if="errors?.cargo_type" :errors="errors.cargo_type" />
+            <input type="hidden" v-model="form.unloading_point" />
+
+          <Error v-if="errors?.unloading_point" :errors="errors.unloading_point" />
         </label>
     </div>
 
@@ -170,7 +173,7 @@
                       <input type="number" step="0.001" v-model="form.opsCargoTariffLines[index].dec" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <button type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <button type="button" v-if="index>0" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                         </svg>
@@ -234,6 +237,14 @@ function addItem() {
 function removeItem(index){
   props.form.opsCargoTariffLines.splice(index, 1);
 }
+
+watch(() => props.form.loadingPoint, (value) => {
+  props.form.loading_point = value.code;
+}, {deep: true})
+
+watch(() => props.form.unloadingPoint, (value) => {
+  props.form.unloading_point = value.code;
+}, {deep: true})
 
 watch(() => props.form, (value) => {
 

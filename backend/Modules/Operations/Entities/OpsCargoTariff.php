@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsPort;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,5 +36,13 @@ class OpsCargoTariff extends Model
     public function opsCargoTariffLines()
     {
         return $this->hasMany(OpsCargoTariffLine::class, 'ops_cargo_tariff_id', 'id');
+    }
+
+    public function loadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'loading_point', 'code');
+    }
+
+    public function unloadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
     }
 }
