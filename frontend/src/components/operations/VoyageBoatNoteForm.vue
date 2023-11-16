@@ -43,15 +43,15 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Vessel</span>
-              <input type="text" readonly v-model="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Draft</span>
-              <input type="number" step="0.001" v-model="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Density</span>
-              <input type="number" step="0.001" v-model="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
         </label>
     </div>
 
@@ -81,7 +81,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsVoyageBoatNoteLines[index]?.quantity" :errors="errors.opsVoyageBoatNoteLines[index]?.quantity" />
                 </label>
               </td>

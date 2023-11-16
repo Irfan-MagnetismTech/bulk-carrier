@@ -132,16 +132,6 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Name</th>
-            <th>Origin</th>
-            <th>Contact</th>
-            <th>Email</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <thead>
             <tr class="w-full">
               <th class="w-16 min-w-full">

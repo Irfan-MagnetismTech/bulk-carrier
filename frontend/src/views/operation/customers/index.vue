@@ -107,6 +107,14 @@ let filterOptions = ref( {
 			"action": null,
 			"order_by": null,
 			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "business_unit",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
 			}
 	]
 });
@@ -203,6 +211,15 @@ filterOptions.value.filter_options.forEach((option, index) => {
                     </div>
                   </div>
               </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                    <span>Business Unit</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
+                  </div>
+              </th>
               <th>Actions</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -215,14 +232,15 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th></th>
 
             </tr>
           </thead>
@@ -234,6 +252,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   <td>{{ customer?.legal_name }}</td>
                   <td>{{ customer?.phone }}</td>
                   <td>{{ customer?.email_general }}</td>
+                  <td>
+                    <span :class="customer?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customer?.business_unit }}</span>
+                  </td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
