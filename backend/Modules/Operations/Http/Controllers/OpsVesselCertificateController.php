@@ -32,7 +32,7 @@ class OpsVesselCertificateController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         $currentDate = Carbon::now();
         try {
@@ -42,8 +42,7 @@ class OpsVesselCertificateController extends Controller
                     ->from('ops_vessel_certificates')
                     ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
             })
-            ->latest()
-            ->paginate(15)
+            ->globalSearch($request->all())
             ->groupBy('ops_vessel_id');
             
             // Calculate days difference using map
@@ -57,7 +56,6 @@ class OpsVesselCertificateController extends Controller
                 });
             });
 
-            // dd($vesselCertificates);
             return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
         }
         catch (QueryException $e)

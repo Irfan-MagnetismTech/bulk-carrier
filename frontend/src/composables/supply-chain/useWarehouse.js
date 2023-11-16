@@ -27,29 +27,25 @@ export default function useWarehouse() {
     });
 
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getWarehouses(page,businessUnit,columns = null, searchKey = null, table = null) {
+    async function getWarehouses(filterOptions) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/warehouses`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-                    business_unit: businessUnit,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/warehouses`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -128,7 +124,7 @@ export default function useWarehouse() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/warehouses/${warehouseId}`);
             notification.showSuccess(status);
-            await getWarehouses(indexPage.value,indexBusinessUnit.value);
+            await getWarehouses(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

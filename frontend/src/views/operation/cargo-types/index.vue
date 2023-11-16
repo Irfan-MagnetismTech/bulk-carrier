@@ -39,13 +39,12 @@ watch(
 	() => businessUnit.value,
 	(newBusinessUnit, oldBusinessUnit) => {
 		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "ops.configurations.ports.index", query: { page: 1 } })
+		router.push({ name: "ops.configurations.cargo-types.index", query: { page: 1 } })
 		}	
 	}
 );
 
 let filterOptions = ref( {
-"business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
 "filter_options": [
@@ -159,8 +158,8 @@ onMounted(() => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>

@@ -17,9 +17,7 @@ class AccBalanceAndIncomeLineController extends Controller
     public function index(Request $request)
     {
         try {
-            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully te', $balanceIncomeLines, 200);
         }

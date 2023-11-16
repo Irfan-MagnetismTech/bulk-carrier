@@ -32,8 +32,7 @@ class OpsVoyageController extends Controller
     {
         try {
             $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }

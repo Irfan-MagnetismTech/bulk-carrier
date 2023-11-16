@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Operations\Entities\OpsVessel;
+use App\Traits\GlobalSearchTrait;
 
 class CrwVesselRequiredCrew extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
 	protected $fillable = ['ops_vessel_id', 'total_crew', 'effective_date', 'remarks', 'business_unit'];
 

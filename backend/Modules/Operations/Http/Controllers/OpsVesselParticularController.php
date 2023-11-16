@@ -35,8 +35,7 @@ class OpsVesselParticularController extends Controller
     {
         try {
             $vesselParticular = OpsVesselParticular::with('opsVessel')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
         }

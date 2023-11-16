@@ -33,8 +33,7 @@ class OpsHandoverTakeoverController extends Controller
     {
         try {
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers.scmMaterial')
-            ->globalSearch($request->all())
-            ->paginate($request->items_per_page);
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
         }

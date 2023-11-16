@@ -22,14 +22,14 @@
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-              <input type="date" v-model="form.effective_date" placeholder="Effective Date" class="form-input" autocomplete="off" />
+              <input type="date" v-model.trim="form.effective_date" placeholder="Effective Date" class="form-input" autocomplete="off" />
               <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
 
             </label>
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Exchange Rate</span>
-              <input type="number" step="0.001" v-model="form.exchange_rate" placeholder="Exchange Rate" class="form-input" autocomplete="off" />
+              <input type="number" step="0.001" v-model.trim="form.exchange_rate" placeholder="Exchange Rate" class="form-input" autocomplete="off" />
             <Error v-if="errors?.exchange_rate" :errors="errors.exchange_rate" />
           </label>
 
@@ -60,17 +60,17 @@
             </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Vessel Code</span>
-              <input type="text" v-model="form.short_code" placeholder="Vessel Code" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <input type="text" v-model.trim="form.short_code" placeholder="Vessel Code" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.short_code" :errors="errors.short_code" />
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Vessel Owner Name</span>
-              <input type="text" v-model="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <input type="text" v-model.trim="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Capacity</span>
-            <input type="text" v-model="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
+            <input type="text" v-model.trim="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
           <Error v-if="errors?.capacity" :errors="errors.capacity" />
         </label>
         
@@ -94,17 +94,17 @@
         
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Charterer Code</span>
-              <input type="text" v-model="form.owner_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.owner_code" :errors="errors.owner_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Charterer Email</span>
-              <input type="text" v-model="form.email" placeholder="Charterer Email" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <input type="text" v-model.trim="form.email" placeholder="Charterer Email" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Contact No.</span>
-            <input type="text" v-model="form.contact_no" placeholder="Contact No." class="form-input bg-gray-100" readonly autocomplete="off" />
+            <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input bg-gray-100" readonly autocomplete="off" />
           <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
       </div>
@@ -112,7 +112,7 @@
 
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-          <textarea type="text" v-model="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
+          <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
           <Error v-if="errors?.remarks" :errors="errors.remarks" />
         </label>
         <label class="block w-full mt-2 text-sm"></label>
@@ -147,25 +147,25 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].quantity" placeholder="Quantity" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
                   <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model="form.opsBunkers[index].rate" placeholder="Rate" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].rate" placeholder="Rate" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsBunkers[index]?.rate" :errors="errors.opsBunkers[index]?.rate"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.opsBunkers[index].amount_usd" placeholder="USD Amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="text" v-model.trim="form.opsBunkers[index].amount_usd" placeholder="USD Amount" class="form-input text-right" autocomplete="off" readonly/>
                   <Error v-if="errors?.opsBunkers[index]?.amount_usd" :errors="errors.opsBunkers[index]?.amount_usd" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.opsBunkers[index].amount_bdt" placeholder="BDT Amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="text" v-model.trim="form.opsBunkers[index].amount_bdt" placeholder="BDT Amount" class="form-input text-right" autocomplete="off" readonly/>
                   <Error v-if="errors?.opsBunkers[index]?.amount_bdt" :errors="errors.opsBunkers[index]?.amount_bdt" />
                 </label>
               </td>
