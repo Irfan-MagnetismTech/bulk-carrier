@@ -30,6 +30,7 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 let showFilter = ref(false);
+let isTableLoader = ref(false);
 
 function swapFilter() {
   showFilter.value = !showFilter.value;
@@ -87,10 +88,9 @@ function setSortingState(index,order){
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-const loaderType = ref(null);
-
 onMounted(() => {
   watchEffect(() => {
+  filterOptions.value.page = props.page;
   getCrewRequisitions(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -98,7 +98,7 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      loaderType.value = 'table-loader';
+      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching ranks:", error);

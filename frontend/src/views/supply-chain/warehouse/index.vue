@@ -33,7 +33,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const debouncedValue = useDebouncedRef('', 800);
 
 let showFilter = ref(false);
-
+let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -94,7 +94,8 @@ function confirmDelete(id) {
 }
 
 onMounted(() => {
-    watchEffect(() => {
+  watchEffect(() => {
+    filterOptions.value.page = props.page;
     getWarehouses(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");
@@ -102,6 +103,7 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
+        isTableLoader.value = true;
       })
       .catch((error) => {
         console.error("Error fetching warehouses:", error);

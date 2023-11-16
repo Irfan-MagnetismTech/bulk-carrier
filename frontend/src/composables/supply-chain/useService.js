@@ -17,7 +17,7 @@ export default function useService() {
         description: ''
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -26,14 +26,9 @@ export default function useService() {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
-
-        indexPage.value = filterOptions.page;
+        filterParams.value = filterOptions;
 
         try {
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/services`,{
                 params: {
                    page: filterOptions.page,
@@ -119,7 +114,7 @@ export default function useService() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/services/${serviceId}`);
             notification.showSuccess(status);
-            await getServices(indexPage.value);
+            await getServices(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

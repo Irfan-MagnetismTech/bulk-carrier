@@ -26,38 +26,38 @@ const props = defineProps({
 })
 
 setTitle('Opening Stocks')
-// Code for global search starts here
 
 const icons = useHeroIcon()
 
 const debouncedValue = useDebouncedRef('', 800)
 
 let showFilter = ref(false)
+let isTableLoader = ref(false);
 
 function swapFilter() {
     showFilter.value = !showFilter.value
 }
 
 let filterOptions = ref({
-    business_unit: businessUnit.value,
-    items_per_page: 15,
-    page: props.page,
-    filter_options: [
+    "business_unit": businessUnit.value,
+    "items_per_page": 15,
+    "page": props.page,
+    "filter_options": [
         {
-            relation_name: null,
-            field_name: 'date',
-            search_param: '',
-            action: null,
-            order_by: null,
-            date_from: null,
+            "relation_name": null,
+            "field_name": 'date',
+            "search_param": '',
+            "action": null,
+            "order_by": null,
+            "date_from": null,
         },
         {
-            relation_name: 'scmWarehouse',
-            field_name: 'name',
-            search_param: '',
-            action: null,
-            order_by: null,
-            date_from: null,
+            "relation_name": 'scmWarehouse',
+            "field_name": 'name',
+            "search_param": '',
+            "action": null,
+            "order_by": null,
+            "date_from": null,
         },
     ],
 })
@@ -71,6 +71,7 @@ const screenWidth = screen.width > 768 ? screen.width - 260 : screen.width
 
 onMounted(() => {
     watchEffect(() => {
+        filterOptions.value.page = props.page;
         getOpeningStocks(filterOptions.value)
             .then(() => {
                 const customDataTable =
@@ -78,6 +79,7 @@ onMounted(() => {
                 if (customDataTable) {
                     tableScrollWidth.value = customDataTable.scrollWidth
                 }
+                isTableLoader.value = true;
             })
             .catch(error => {
                 console.error('Error fetching opening-stock category:', error)

@@ -25,7 +25,7 @@ export default function useMaterial() {
             sample_photo: null
         });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
     const errors = ref('');
     const isLoading = ref(false);
@@ -35,13 +35,8 @@ export default function useMaterial() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
-        indexPage.value = filterOptions.page;
-
+        filterParams.value = filterOptions;
         try {
-            const filter_options = {
-                ...filterOptions.filter_options
-            }
-
             const {data, status} = await Api.get(`/${BASE}/materials`,{
                 params: {
                    page: filterOptions.page,
@@ -131,7 +126,7 @@ export default function useMaterial() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/materials/${materialId}`);
             notification.showSuccess(status);
-            await getMaterials(indexPage.value);
+            await getMaterials(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
