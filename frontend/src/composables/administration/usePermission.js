@@ -16,18 +16,28 @@ export default function usePermission() {
     });
     const errors = ref(null);
     const isLoading = ref(false);
+    const filterParams = ref(null);
+    
 
-    async function getPermissions(page,isPaginate = true) {
+    // async function getPermissions(page, isPaginate = true) {
+    async function getPermissions(filterOptions) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
-
+        filterParams.value = filterOptions;
         try {
+            // const { data, status } = await Api.get('/administration/permissions', {
+            //     params: {
+            //         page: page || 1,
+            //         isPaginate: isPaginate,
+            //     },
+            // });
             const { data, status } = await Api.get('/administration/permissions', {
                 params: {
-                    page: page || 1,
-                    isPaginate: isPaginate,
-                },
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
             });
             permissions.value = data.value;
             notification.showSuccess(status);
@@ -113,7 +123,8 @@ export default function usePermission() {
         try {
             const { data, status } = await Api.delete( `/permissions/${permissionId}`);
             notification.showSuccess(status);
-            await getPermissions();
+            // await getPermissions();
+            await getPermissions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

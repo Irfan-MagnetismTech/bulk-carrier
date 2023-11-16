@@ -11,20 +11,21 @@ class CrwRecruitmentApprovalRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'total_required_manpower'                        => ['required', 'numeric', 'max:2000'],
+            'applied_date'                                   => ['required'],
+            'business_unit'                                  => ['required', 'string', 'max:255'],
+            'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'max:255'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];
