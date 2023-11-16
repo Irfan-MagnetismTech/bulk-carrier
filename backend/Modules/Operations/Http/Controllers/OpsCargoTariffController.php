@@ -36,7 +36,7 @@ class OpsCargoTariffController extends Controller
             ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
-            }
+        }
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
