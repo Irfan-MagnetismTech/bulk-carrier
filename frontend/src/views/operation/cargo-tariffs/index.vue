@@ -9,7 +9,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Store from "../../../store";
 import useCargoTariff from '../../../composables/operations/useCargoTariff';
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
+
+const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
   page: {
     type: Number,
@@ -138,6 +141,10 @@ onMounted(() => {
         console.error("Error fetching data.", error);
       });
   });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 </script>
 
@@ -239,7 +246,7 @@ onMounted(() => {
           </thead>
           <tbody v-if="cargoTariffs?.data?.length">
               <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
-                  <td>{{ cargoTariffs.from + index }}</td>
+                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ cargoTariff?.tariff_name }}</td>
                   <td>{{ cargoTariff?.opsVessel?.name }}</td>
                   <td>{{ cargoTariff?.loading_point }}</td>
@@ -247,9 +254,11 @@ onMounted(() => {
                   <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
                   <td>{{ cargoTariff?.status }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
-                    <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                    <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
-                    <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                    <nobr>
+                      <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-tariffs.edit', params: { cargoTariffId: cargoTariff.id } }"></action-button>
+                      <action-button @click="confirmDelete(cargoTariff.id)" :action="'delete'"></action-button>
+                    </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>

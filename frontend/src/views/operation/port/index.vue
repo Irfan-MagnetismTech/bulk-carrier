@@ -9,7 +9,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import usePort from '../../../composables/operations/usePort';
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const props = defineProps({
   page: {
@@ -23,6 +23,7 @@ setTitle('Port List');
 
 const icons = useHeroIcon();
 const { ports, getPorts, deletePort, isLoading } = usePort();
+const debouncedValue = useDebouncedRef('', 800);
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -90,20 +91,24 @@ function setSortingState(index,order){
 
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    filterOptions.value.page = props.page;
 
-    getPorts(filterOptions.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+      getPorts(filterOptions.value)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching data.", error);
-    });
-});
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data.", error);
+      });
+  });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -172,15 +177,14 @@ onMounted(() => {
 
               <th>
                 
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-
               </th>
 
             </tr>
           </thead>
           <tbody v-if="ports?.data?.length">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
-                  <td>{{ ports.from + index }}</td>
+                  <td>{{ ((page-1) * filterOptions.items_per_page) + index + 1 }}</td>
+
                   <td>{{ port?.code }}</td>
                   <td>{{ port?.name }}</td>
                   <td class="items-center justify-center space-x-2 text-gray-600">
