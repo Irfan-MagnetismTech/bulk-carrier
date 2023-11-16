@@ -115,11 +115,15 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 onMounted(() => {
   watchEffect(() => {
@@ -133,6 +137,8 @@ onMounted(() => {
 
   getChartOfAccounts(filterOptions.value)
       .then(() => {
+        paginatedPage.value = props.page;
+
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
@@ -275,7 +281,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
-            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
             <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>

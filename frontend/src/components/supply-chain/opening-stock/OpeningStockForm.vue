@@ -6,6 +6,7 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import Store from "../../../store";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -113,8 +114,8 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="date" required v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -128,7 +129,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
   </div> 
   <!-- CS Materials -->
@@ -163,10 +164,10 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
           <input type="text" v-model="form.scmOpeningStockLines[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
+          <input type="text" required v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
+          <input type="text" required v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!=0" type="button" @click="removeRow(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -184,7 +185,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </tbody>
     </table>
   </fieldset>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
     .input-group {
