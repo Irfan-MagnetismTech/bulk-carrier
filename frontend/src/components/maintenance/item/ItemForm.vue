@@ -76,7 +76,7 @@
         </label>        
     </div>
 
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>   
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -87,6 +87,7 @@ import {onMounted, watch, watchEffect, ref} from "vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { getItemCodeByGroupId } = useItem();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();

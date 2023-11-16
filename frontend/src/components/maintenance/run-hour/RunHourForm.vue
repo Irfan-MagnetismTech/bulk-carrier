@@ -98,7 +98,7 @@
         </label>
         
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -111,6 +111,7 @@ import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const props = defineProps({
   form: {

@@ -27,7 +27,7 @@
         <Error v-if="errors?.short_code" :errors="errors.short_code" />
       </label>
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -36,6 +36,7 @@ import Editor from '@tinymce/tinymce-vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({

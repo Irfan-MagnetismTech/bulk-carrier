@@ -109,7 +109,7 @@
         </tbody>
       </table>
     </fieldset>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -121,6 +121,7 @@ import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useVessel from "../../../composables/operations/useVessel";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
 const { vessels, getVesselsWithoutPaginate } = useVessel();
