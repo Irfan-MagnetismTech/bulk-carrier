@@ -5,6 +5,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useCrewCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const { balanceIncomeLineLists, getBalanceIncomeLineLists, isLoading } = useAccountCommonApiRequest();
 
@@ -50,7 +51,6 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Line Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.line_text" placeholder="Line Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.line_text" :errors="errors.line_text" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Value Type <span class="text-red-500">*</span></span>
@@ -59,7 +59,6 @@ onMounted(() => {
           <option value="D">Debit</option>
           <option value="C">Credit</option>
         </select>
-        <Error v-if="errors?.value_type" :errors="errors.value_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Line Type <span class="text-red-500">*</span></span>
@@ -71,7 +70,6 @@ onMounted(() => {
           <option value="balance_line">balance_line</option>
           <option value="income_line">income_line</option>
         </select>
-        <Error v-if="errors?.line_type" :errors="errors.line_type" />
       </label>
 <!--      <label class="block w-full mt-2 text-sm">-->
 <!--        <span class="text-gray-700 dark:text-gray-300">Parent Line</span>-->
@@ -82,6 +80,7 @@ onMounted(() => {
 <!--        <Error v-if="errors?.parent_id" :errors="errors.parent_id" />-->
 <!--      </label>-->
     </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

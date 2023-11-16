@@ -28,10 +28,11 @@ class CrwVesselRequiredCrewRequest extends FormRequest
      */
     public function messages(): array {
         return [
+            'effective_date.required'                            => 'The Effective Date field is required.',
             'total_crew.required'                                => 'The Total Crew field is required.',
             'total_crew.max'                                     => 'The Total Crew field must not exceed 2000.',
-            'crwVesselRequiredCrewLines.*.required_manpower.max' => 'The Required Manpower field must not exceed 2000.',
-            'crwVesselRequiredCrewLines.*.eligibility.required'  => 'The Eligibility field is required.',
+            'crwVesselRequiredCrewLines.*.required_manpower.max' => 'The Required Manpower[:index] field must not exceed 2000.',
+            'crwVesselRequiredCrewLines.*.eligibility.max'       => 'The Eligibility[:index] field cannot exceed 700 characters.',
         ];
     }
 

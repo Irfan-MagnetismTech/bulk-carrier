@@ -93,6 +93,7 @@
 <script setup>
 import Error from "../../Error.vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
     form: {

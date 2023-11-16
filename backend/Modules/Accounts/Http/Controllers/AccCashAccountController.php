@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCashAccount;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccCashAccountRequest;
 
 class AccCashAccountController extends Controller
 {
@@ -33,7 +34,7 @@ class AccCashAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccCashAccountRequest $request)
     {
         try {
             $accCashAccountData = $request->only('name', 'business_unit');
@@ -71,7 +72,7 @@ class AccCashAccountController extends Controller
      * @param  \App\Models\AccCashAccount  $accCashAccount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccCashAccount $accCashAccount)
+    public function update(AccCashAccountRequest $request, AccCashAccount $accCashAccount)
     {
         try {
             $accCashAccountData = $request->only('name', 'business_unit');

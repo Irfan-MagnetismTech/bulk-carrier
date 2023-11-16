@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import useVoyageBoatNote from "../../../composables/operations/useVoyageBoatNote";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -54,6 +55,7 @@ function confirmDelete(id) {
 //     }
 // );
 
+use
 let isTableLoader = ref(false);
 let showFilter = ref(false);
 function swapFilter() {

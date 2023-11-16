@@ -181,7 +181,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody>
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td class="w-1/6">{{ chkList?.effective_date }}</td>
+            <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
             <td class="w-1/6">
               <span :class="chkList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chkList?.business_unit }}</span>
             </td>

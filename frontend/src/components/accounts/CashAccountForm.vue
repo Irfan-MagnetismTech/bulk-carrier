@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -19,7 +20,7 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 
 </script>
@@ -29,9 +30,9 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Cash Account Name <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.name" placeholder="Cash account name" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.name" :errors="errors.name" />
     </label>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

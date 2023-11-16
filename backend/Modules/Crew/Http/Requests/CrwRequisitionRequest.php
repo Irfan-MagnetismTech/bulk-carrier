@@ -16,7 +16,7 @@ class CrwRequisitionRequest extends FormRequest
             'applied_date'                                => ['required'],
             'total_required_manpower'                     => ['required', 'numeric', 'max:2000'],
             'business_unit'                               => ['required', 'string', 'max:255'],
-            'crwCrewRequisitionLines.*.required_manpower' => ['required', 'max:255'],
+            'crwCrewRequisitionLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
         ];
     }
 
@@ -27,6 +27,8 @@ class CrwRequisitionRequest extends FormRequest
      */
     public function messages(): array {
         return [
+            'applied_date.required'                           => 'The Applied Date Required.',
+            'total_required_manpower.max'                     => 'The Total Required Manpower field must not exceed 2000.',
             'crwCrewRequisitionLines.*.required_manpower.max' => 'The Required Manpower[:index] field must not be greater than 2000.',
         ];
     }

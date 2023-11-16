@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccAccountOpeningBalance;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccAccountOpeningBalanceRequest;
 
 class AccAccountOpeningBalanceController extends Controller
 {
@@ -35,7 +36,7 @@ class AccAccountOpeningBalanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccAccountOpeningBalanceRequest $request)
     {
         try {
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
@@ -72,7 +73,7 @@ class AccAccountOpeningBalanceController extends Controller
      * @param  \App\Models\AccAccountOpeningBalance  $accAccountOpeningBalance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccAccountOpeningBalance $accAccountOpeningBalance) : JsonResponse
+    public function update(AccAccountOpeningBalanceRequest $request, AccAccountOpeningBalance $accAccountOpeningBalance) : JsonResponse
     {
         try {
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
