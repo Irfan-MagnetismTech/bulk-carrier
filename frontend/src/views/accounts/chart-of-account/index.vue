@@ -127,7 +127,7 @@ onMounted(() => {
   console.log('ddd - page: ', props.page);
 
   filterOptions.value.page = props.page;
-  currentPage.value = 
+  // currentPage.value = 
   getChartOfAccounts(filterOptions.value)
       .then(() => {
         const customDataTable = document.getElementById("customDataTable");

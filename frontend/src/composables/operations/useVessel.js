@@ -68,6 +68,7 @@ export default function useVessel() {
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
 	async function getVessels(filterOptions) {
 		//NProgress.start();
@@ -76,6 +77,8 @@ export default function useVessel() {
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
+
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/vessels', {
