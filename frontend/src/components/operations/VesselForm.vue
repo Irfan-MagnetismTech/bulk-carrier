@@ -1,17 +1,19 @@
 <template>
+
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
         <label class="block w-full mt-2 text-sm"></label>
         <label class="block w-full mt-2 text-sm"></label>
         <label class="block w-full mt-2 text-sm"></label>
-      </div>
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
-              <option value="TSLL">TSLL</option>
+              <option value="" disabled>Select Type</option>
               <option value="PSML">PSML</option>
+              <option value="TSLL">TSLL</option>
             </select>
           <Error v-if="errors?.vessel_type" :errors="errors.vessel_type" />
       </label>
@@ -20,6 +22,7 @@
         <input type="text" v-model="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
         <Error v-if="errors?.flag" :errors="errors.flag" />
       </label>
+      <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
     </div>
 
@@ -60,16 +63,17 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="name" class="block form-input" :reduce="port=>port.code">
+        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.port_of_registry"
+                    :required="!form.portOfRegistry"
                     v-bind="attributes"
                     v-on="events"
                     />
             </template>
         </v-select>
+        <input type="hidden" v-model="form.port_of_registry" />
         <Error v-if="errors?.port_of_registry" :errors="errors.port_of_registry" />
       </label>
     </div>
@@ -190,7 +194,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates"  v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -263,7 +267,7 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input type="number" step="0.001" v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off" :disabled="formType=='edit' || !form.opsBunkers[index]?.is_new"/>
-                <Error v-if="errors?.opsBunkers[index]?.opening_balance" :errors="errors.opsBunkers[index]?.opening_balance" />
+                <Error v-if="errors?.opsBunkers[index].opening_balance" :errors="errors.opsBunkers[index].opening_balance" />
               </label>
             </td>
             <td :class="formType=='edit' ? 'hidden' : '' ">
@@ -284,6 +288,8 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
 import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
+import { watch } from 'vue';
+
 
 const props = defineProps({
     form: {
@@ -303,6 +309,12 @@ function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
 }
+
+watch(() => props.form.portOfRegistry, (value) => {
+  if(value) {
+    props.form.port_of_registry = props.form.portOfRegistry.code
+  }
+})
 
 function addBunker() {
   props.form.opsBunkers.push({... props.bunkerObject });
@@ -325,7 +337,6 @@ function fetchBunker(search, loading) {
   loading(true);
   searchMaterialWithCategory(search, 1, loading)
 }
-
 
 function fetchPorts(search, loading) {
       loading(true);

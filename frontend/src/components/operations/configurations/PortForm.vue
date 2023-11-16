@@ -3,12 +3,12 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Port/Ghat Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.code" placeholder="Code" class="form-input" required autocomplete="off" />
+            <input type="text" v-model="form.code" placeholder="Port/Ghat Code" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.code" :errors="errors.code" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Port/Ghat Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Name" class="form-input" required autocomplete="off" />
+            <input type="text" v-model="form.name" placeholder="Port/Ghat Name" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
     </div>

@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
           <Error v-if="errors?.tariff_name" :errors="errors.tariff_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -32,7 +32,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -47,7 +47,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input" :reduce="port=>port.code">
+            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -220,6 +220,12 @@ function fetchVessels(search, loading) {
       searchVessels(search, props.form.business_unit, loading);
 }
 
+watch(() => props.form.business_unit, (value) => {
+  if(value) {
+    // searchVessels(null, props.form.business_unit, false);
+  }
+})
+
 function fetchPorts(search, loading) {
       loading(true);
       searchPorts(search, loading)
@@ -239,11 +245,15 @@ function removeItem(index){
 }
 
 watch(() => props.form.loadingPoint, (value) => {
-  props.form.loading_point = value.code;
+  if(value) {
+    props.form.loading_point = value.code;
+  }
 }, {deep: true})
 
 watch(() => props.form.unloadingPoint, (value) => {
-  props.form.unloading_point = value.code;
+  if(value) {
+    props.form.unloading_point = value.code;
+  }
 }, {deep: true})
 
 watch(() => props.form, (value) => {
@@ -261,6 +271,8 @@ watch(() => props.form, (value) => {
 
 onMounted(() => {
   getCurrencies();
+  // searchPorts(null, true);
+  // searchCargoTypes(null,);
 })
 </script>
 <style lang="postcss" scoped>

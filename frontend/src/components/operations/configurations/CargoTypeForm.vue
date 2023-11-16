@@ -8,7 +8,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Description</span>
-            <input type="text" v-model="form.description" placeholder="Name" class="form-input" autocomplete="off" />
+            <input type="text" v-model="form.description" placeholder="Description" class="form-input" autocomplete="off" />
           <Error v-if="errors?.description" :errors="errors.description" />
         </label>
     </div>

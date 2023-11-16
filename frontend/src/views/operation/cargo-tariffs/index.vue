@@ -11,7 +11,6 @@ import Store from "../../../store";
 import useCargoTariff from '../../../composables/operations/useCargoTariff';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 
-
 const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
   page: {

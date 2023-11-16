@@ -99,7 +99,8 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers.scmMaterial'
+            'opsBunkers.scmMaterial',
+            'portOfRegistry'
         ]);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
