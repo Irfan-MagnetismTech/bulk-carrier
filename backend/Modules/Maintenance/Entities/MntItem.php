@@ -2,6 +2,7 @@
 
 namespace Modules\Maintenance\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MntItem extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = ['mnt_item_group_id', 'name', 'item_code', 'description', 'has_run_hour', 'business_unit'];
     protected $casts = [
