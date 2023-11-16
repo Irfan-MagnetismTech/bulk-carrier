@@ -17,30 +17,32 @@ class PermissionController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            if($request->isPaginate === "true"){
-                $permissions = Permission::query()->paginate(10);
-            } else {
-                $permissions = Permission::query()->get()->groupBy('menu')->map(function ($item, $key) {
-                    return $item->groupBy('subject');
-                });
-            }
+            // if($request->isPaginate === "true"){
+            //     $permissions = Permission::query()->paginate(10);
+            // } else {
+            //     $permissions = Permission::query()->get()->groupBy('menu')->map(function ($item, $key) {
+            //         return $item->groupBy('subject');
+            //     });
+            // }
 
+            $permissions = Permission::query()->globalSearch($request->all());
             return response()->json([
                 'value'   => $permissions,
-                'message' => 'Permissions retrieved Successfully.',
-            ], 200);
-        }
-        catch (\Exception$e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+                'message' => $request->all(),
+            ], 422);
+
+            return response()->success('Data list', $permissions, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
         }
     }
 
 
-    public function store(PermissionRequest $permissionRequest) : JsonResponse
+    public function store(PermissionRequest $permissionRequest): JsonResponse
     {
         try {
             $permissions = Permission::create($permissionRequest->all());
@@ -49,9 +51,7 @@ class PermissionController extends Controller
                 'value'   => $permissions,
                 'message' => 'Permission added Successfully.',
             ], 201);
-        }
-        catch (\Exception$e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -64,20 +64,16 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission): JsonResponse
     {
-        try
-        {
+        try {
             $permission['subject_type'] = base64_encode(get_class($permission));
 
             return response()->json([
                 'value'   => $permission,
                 'message' => 'Successfully retrieved Permission',
             ], 200);
-        }
-        catch (\Exception$e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
-
     }
 
     /**
@@ -96,9 +92,7 @@ class PermissionController extends Controller
                 'value'   => $permission,
                 'message' => 'Permission updated Successfully.',
             ], 201);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -118,9 +112,7 @@ class PermissionController extends Controller
                 'value'   => '',
                 'message' => 'Permission deleted Successfully.',
             ], 204);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
