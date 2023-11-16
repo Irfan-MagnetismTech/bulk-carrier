@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccAccount;
+use Modules\Accounts\Http\Requests\AccAccountRequest;
 
 class AccAccountController extends Controller
 {
@@ -34,7 +35,7 @@ class AccAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccAccountRequest $request)
     {
         try {
             $accAccountData = $request->only('acc_balance_and_income_line_id','parent_account_id','account_name','account_code','account_type','accountable_type','accountable_id','official_code','is_archived','business_unit');
@@ -72,7 +73,7 @@ class AccAccountController extends Controller
      * @param  \App\Models\AccAccount  $accAccount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccAccount $accAccount)
+    public function update(AccAccountRequest $request, AccAccount $accAccount)
     {
         try {
             $accAccountData = $request->only('acc_balance_and_income_line_id','parent_account_id','account_name','account_code','account_type','accountable_type','accountable_id','official_code','is_archived','business_unit');

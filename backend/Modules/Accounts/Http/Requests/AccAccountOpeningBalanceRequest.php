@@ -14,7 +14,8 @@ class AccAccountOpeningBalanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'dr_amount' => ['required', 'numeric', 'max:9999999999.99'],
+            'cr_amount' => ['required', 'numeric', 'max:9999999999.99'],
         ];
     }
 

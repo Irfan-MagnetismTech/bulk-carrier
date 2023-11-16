@@ -5,6 +5,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
 const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
@@ -32,7 +33,7 @@ function removeItem(index){
 
 function fetchVessels(search, loading) {
   loading(true);
-  searchVessels(search, loading)
+  searchVessels(search, props.form.business_unit, loading)
 }
 
 watch(() => props.form, (value) => {
@@ -42,7 +43,6 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCrewRankLists(props.form.business_unit);
   });
@@ -69,24 +69,20 @@ onMounted(() => {
             />
           </template>
         </v-select>
-        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.total_required_manpower" placeholder="Ex: 14" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.total_required_manpower" :errors="errors.remarks" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks</span>
       <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -110,7 +106,7 @@ onMounted(() => {
           </select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="number" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.crwCrewRequisitionLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -131,6 +127,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

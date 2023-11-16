@@ -136,11 +136,15 @@ let filterOptions = ref( {
 	]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 onMounted(() => {
   watchEffect(() => {
@@ -154,6 +158,7 @@ onMounted(() => {
 
     getVessels(filterOptions.value)
     .then(() => {
+      paginatedPage.value = props.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -287,7 +292,7 @@ onMounted(() => {
           </thead>
           <tbody v-if="vessels?.data?.length">
               <tr v-for="(vessel, index) in vessels.data" :key="vessel?.id">
-                  <td>{{ vessels.from + index }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ vessel?.name }}</td>
                   <td>{{ vessel?.short_code }}</td>
                   <td>{{ vessel?.vessel_type }}</td>
