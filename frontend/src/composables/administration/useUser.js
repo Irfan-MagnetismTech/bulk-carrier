@@ -20,17 +20,20 @@ export default function useUser() {
     });
     const errors = ref(null);
     const isLoading = ref(false);
+    const filterParams = ref(null);
 
-    async function getUsers(page) {
+    async function getUsers(filterOptions) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
-
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get('/administration/users',{
                 params: {
-                    page: page || 1,
-                },
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
             });
             users.value = data.value;
             notification.showSuccess(status);
@@ -110,7 +113,7 @@ export default function useUser() {
         try {
             const { data, status } = await Api.delete( `/administration/users/${userId}`);
             notification.showSuccess(status);
-            await getUsers();
+            await getUsers(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
