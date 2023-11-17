@@ -30,35 +30,6 @@ const page = ref('edit');
 
 setTitle('Edit Role');
 
-watch(() => permissions.value, (value) => {
-  role.value.permissions = value;
-  Object.entries(role?.value?.permissions).forEach(([permissionMenuKey, permissionMenuData]) => {
-    console.log("Key:" + permissionMenuKey + "Data:" + permissionMenuData);
-    Object.entries(role?.value?.permissions[permissionMenuKey]).forEach(([permissionSubjectKey, permissionSubjectData]) => {
-      Object.entries(role?.value?.permissions[permissionMenuKey][permissionSubjectKey]).forEach(([permissionIndex, permissionData]) => {
-        // check permissionData.id exist in props.form.current_permissions array or not. if true, set is_checked to true
-        if (role?.value?.current_permissions?.includes(permissionData.id)) {
-          role.value.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = true;
-        } else {
-          role.value.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = false;
-        }
-        //if all permissionData.is_checked is true, set permissionSubjectData.is_checked to true
-        if (permissionData?.is_checked === false) {
-          role.value.permissions[permissionMenuKey][permissionSubjectKey].is_checked = false;
-        } else {
-          role.value.permissions[permissionMenuKey][permissionSubjectKey].is_checked = true;
-        }
-      });
-      //if all permissionSubjectData.is_checked is true, set permissionMenuData.is_checked to true
-      if (permissionSubjectData?.is_checked === false) {
-        role.value.permissions[permissionMenuKey].is_checked = false;
-      } else {
-        role.value.permissions[permissionMenuKey].is_checked = true;
-      }
-    });
-  });
-});
-
 onMounted(() => {
   getPermissions(1, false);
   showRole(roleId);

@@ -16,25 +16,102 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-function inputCheckedByMenu(permissionMenuKey) {
-  //for each props.form.permissions[permissionMenuKey]
+function inputCheckBymenu2(permissionMenuKey){
   Object.entries(props.form.permissions[permissionMenuKey]).forEach(([permissionSubjectKey, permissionSubjectData]) => {
-    props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked = !props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked;
+    if(props.form.permissions[permissionMenuKey].is_checked){
+      props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked = true;
+    } else {
+      props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked = false;
+    }
+
     Object.entries(props.form.permissions[permissionMenuKey][permissionSubjectKey]).forEach(([permissionIndex, permissionData]) => {
       if (permissionIndex !== 'is_checked') {
-        props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = !props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked;
+        if(props.form.permissions[permissionMenuKey].is_checked){
+          props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = true;
+        } else{
+          props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = false;
+        }
       }
     });
   });
 }
 
+function inputCheckedByMenu(permissionMenuKey) {
+
+  console.log("Permission " + permissionMenuKey);
+
+  const sum = Object.values(props.form.permissions[permissionMenuKey]).reduce((sum, obj) => {
+    //console.log("ASAS " , obj)
+    // return sum + obj.property;
+    if(obj){
+      if(!obj.is_checked){
+        return sum + 1;
+      } else{
+        return sum + 0;
+      }
+    } else{
+      return sum + 0;
+    }
+  },0);
+
+  if(sum === 0){
+    props.form.permissions[permissionMenuKey].is_checked = true;
+  } else {
+    props.form.permissions[permissionMenuKey].is_checked = false;
+  }
+
+}
+
+function inputCheckedBySubject2(permissionMenuKey, permissionSubjectKey)
+{
+  Object.entries(props.form.permissions[permissionMenuKey][permissionSubjectKey]).forEach(([permissionIndex, permissionData]) => {
+    if (permissionIndex !== 'is_checked') {
+      if(props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked){
+        props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = true;
+      } else {
+        props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = false;
+      }
+    }
+  });
+  inputCheckedByMenu(permissionMenuKey);
+}
 function inputCheckedBySubject(permissionMenuKey, permissionSubjectKey) {
-  //for each props.form.permissions[permissionMenuKey][permissionSubjectKey]
   Object.entries(props.form.permissions[permissionMenuKey][permissionSubjectKey]).forEach(([permissionIndex, permissionData]) => {
     if (permissionIndex !== 'is_checked') {
       props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = !props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked;
     }
   });
+
+  const sum = Object.values(props.form.permissions[permissionMenuKey][permissionSubjectKey]).reduce((sum, obj) => {
+    // return sum + obj.property;
+    if(obj.name){
+      if(!obj.is_checked){
+        return sum + 1;
+      } else{
+        return sum + 0;
+      }
+    } else{
+      return sum + 0;
+    }
+  },0);
+
+  if(sum === 0){
+    props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked = true;
+  } else {
+    props.form.permissions[permissionMenuKey][permissionSubjectKey].is_checked = false;
+  }
+
+  inputCheckedByMenu(permissionMenuKey);
+
+}
+
+function inputCheckedByPermission(permissionMenuKey,permissionSubjectKey,permissionIndex) {
+  Object.entries(props.form.permissions[permissionMenuKey][permissionSubjectKey]).forEach(([permissionIndex, permissionData]) => {
+    if (permissionIndex !== 'is_checked') {
+      props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked = !props.form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked;
+    }
+  });
+  inputCheckedBySubject(permissionMenuKey,permissionSubjectKey);
 }
 
 </script>
@@ -53,17 +130,17 @@ function inputCheckedBySubject(permissionMenuKey, permissionSubjectKey) {
     <div class="mt-2">
       <div :id="'menu_' + menuIndex" :class="menuIndex%2===0 ? 'bg-gray-100' : 'bg-yellow-100'" style="position: relative" class="px-2 py-2 border sm:rounded-lg mb-1" v-for="(permissionMenuData,permissionMenuKey,menuIndex) in form?.permissions" :key="menuIndex">
         <label class="flex items-center mb-2 text-gray-600 dark:text-gray-400">
-          <input @change="inputCheckedByMenu(permissionMenuKey)" v-model="form.permissions[permissionMenuKey].is_checked" type="checkbox" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+          <input @change="inputCheckBymenu2(permissionMenuKey)" v-model="form.permissions[permissionMenuKey].is_checked" type="checkbox" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
           <span class="ml-2 font-bold">{{ permissionMenuKey }}</span>
         </label>
         <template v-for="(permissionSubjectData,permissionSubjectKey,subjectIndex) in form?.permissions[permissionMenuKey]" :key="subjectIndex">
           <label class="flex ml-6 items-center mb-2 text-gray-600 dark:text-gray-400" v-if="permissionSubjectKey!=='is_checked'">
-            <input @change="inputCheckedBySubject(permissionMenuKey,permissionSubjectKey)" type="checkbox" :class="'menu_' + menuIndex" v-model="form.permissions[permissionMenuKey][permissionSubjectKey].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+            <input @change="inputCheckedBySubject2(permissionMenuKey,permissionSubjectKey)" type="checkbox" :class="'menu_' + menuIndex" v-model="form.permissions[permissionMenuKey][permissionSubjectKey].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
             <span class="ml-2 font-bold">{{ permissionSubjectKey }}</span>
           </label>
           <div class="inline-block mb-2 ml-12">
             <template v-for="(permissionData,permissionIndex) in form?.permissions[permissionMenuKey][permissionSubjectKey]" :key="permissionIndex">
-              <label class="flex flex-column items-center text-gray-600 dark:text-gray-400 ml-2 break-words">
+              <label @change="inputCheckedByPermission(permissionMenuKey,permissionSubjectKey,permissionIndex)" v-if="permissionData?.name" class="flex flex-column items-center text-gray-600 dark:text-gray-400 ml-2 break-words">
                 <input type="checkbox" :class="'menu_' + menuIndex,'permission_' + subjectIndex" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" v-model="form.permissions[permissionMenuKey][permissionSubjectKey][permissionIndex].is_checked" :value="permissionData?.id">
                 <span class="ml-1 font-normal">{{ permissionData?.name }}</span>
               </label>

@@ -124,7 +124,6 @@ onMounted(() => {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
 
-
       })
       .catch((error) => {
         console.error("Error fetching data.", error);
