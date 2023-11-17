@@ -218,7 +218,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody class="relative">
           <tr v-for="(user,index) in users.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ user?.roles[0].name }}</td>
+            <td>{{ user?.roles[0]?.name }}</td>
             <td>{{ user?.name }}</td>
             <td>{{ user?.email }}</td>
             <td>
