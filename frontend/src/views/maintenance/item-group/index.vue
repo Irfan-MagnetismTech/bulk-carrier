@@ -118,7 +118,7 @@ onMounted(() => {
     currentPage.value = props.page;
   getItemGroups(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
 
       const customDataTable = document.getElementById("customDataTable");
 

@@ -124,7 +124,7 @@ onMounted(() => {
     
     getShipDepartments(filterOptions.value)
       .then(() => {
-        paginatedPage.value = props.page;
+        paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
