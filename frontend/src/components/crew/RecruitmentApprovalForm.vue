@@ -115,7 +115,7 @@ onMounted(() => {
           </select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Crew name" class="form-input" autocomplete="off" required />
+          <input type="text" v-model.trim="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Candidate Name" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwRecruitmentApprovalLines[index].candidate_contact" placeholder="Contact" class="form-input" autocomplete="off" required />
