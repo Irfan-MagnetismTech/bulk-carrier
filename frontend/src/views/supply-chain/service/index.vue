@@ -71,6 +71,13 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
@@ -168,6 +175,9 @@ function confirmDelete(id) {
               </th>
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody class="relative">
