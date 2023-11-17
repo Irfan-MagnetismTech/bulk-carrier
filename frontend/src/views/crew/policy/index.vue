@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import usePolicy from "../../../composables/crew/usePolicy";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 const icons = useHeroIcon();
 import env from '../../../config/env';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -19,7 +20,7 @@ const props = defineProps({
   },
 });
 
-const { policies, getPolicies, deletePolicy, isLoading } = usePolicy();
+const { policies, getPolicies, deletePolicy, isLoading, isTableLoading  } = usePolicy();
 const { setTitle } = Title();
 setTitle('Policy List');
 
@@ -64,7 +65,8 @@ watch(
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
-"page": props.page,
+  "page": props.page,
+  "isFilter": false,
 "filter_options": [
 
 			{
@@ -94,14 +96,22 @@ let filterOptions = ref( {
 	]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
   filterOptions.value.page = props.page;
 
+  if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getPolicies(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -184,7 +194,7 @@ onMounted(() => {
               <th></th>
               </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(crwPolicy,index) in policies?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ crwPolicy?.name }}</td>
@@ -205,11 +215,17 @@ onMounted(() => {
               <action-button @click="confirmDelete(crwPolicy?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && policies?.data?.length"></LoaderComponent>
           </tbody>
-        <tfoot v-if="!policies?.data?.length">
+        <tfoot v-if="!policies?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
           <td colspan="5">Loading...</td>
         </tr>
+        <tr v-else-if="isTableLoading">
+              <td colspan="5">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
         <tr v-else-if="!policies?.data?.data?.length">
           <td colspan="5">No data found.</td>
         </tr>

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect, watch} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRecruitmentApproval from "../../../composables/crew/useRecruitmentApproval";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading } = useRecruitmentApproval();
+const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading, isTableLoading  } = useRecruitmentApproval();
 const { setTitle } = Title();
 setTitle('Recruitment Approval');
 
@@ -65,6 +66,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -133,14 +135,22 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getRecruitmentApprovals(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -270,17 +280,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th>
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ rcrApproval?.applied_date }}</td>
@@ -299,11 +309,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && recruitmentApprovals?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!recruitmentApprovals?.data?.length">
           <tr v-if="isLoading">
             <td colspan="11">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="11">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!recruitmentApprovals?.data?.length">
             <td colspan="11">No data found.</td>
           </tr>

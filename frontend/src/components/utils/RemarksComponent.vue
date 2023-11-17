@@ -6,7 +6,7 @@ defineEmits(['update:modelValue'])
 <template>
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">{{ fieldLabel }} </span> 
-        (<span :class="{ 'text-red-600' : modelValue.length == maxlength }" class="font-semibold">{{ modelValue.length }}</span>/{{ maxlength }} Characters)
+        (<span :class="{ 'text-red-600' : modelValue?.length == maxlength }" class="font-semibold">{{ modelValue?.length }}</span>/{{ maxlength }} Characters)
 
         <textarea type="text" 
         :maxlength="maxlength"

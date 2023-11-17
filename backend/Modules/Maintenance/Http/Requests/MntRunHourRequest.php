@@ -15,7 +15,7 @@ class MntRunHourRequest extends FormRequest
     {
         return [
             'running_hour' => 'required|integer',
-            'updated_on' => 'required'
+            'updated_on' => 'required|date'
         ];
     }
 

@@ -54,44 +54,47 @@ class RoleController extends Controller
     {
         $permissions = Permission::get(['id', 'name', 'subject', 'menu']);
 
-        $usersPermissions = $permissions->groupBy('menu')->map(function ($menu, $menuKey) use ($role) {
-            $givenPermissions = $menu->pluck('id')->intersect($role->permissions->pluck('id'));
-            $allAccess        = count($givenPermissions) < count($menu->pluck('id')) ? False : True;
-            $menus            = [
-                'item_name'  => $menuKey,
-                'item_type'  => 'Menu',
-                'is_checked' => $allAccess,
-                'childs'     => $menu->groupBy('subject')->map(function ($subject, $subjectKey) use ($role) {
-                    $givenPermissions = $subject->pluck('id')->intersect($role->permissions->pluck('id'));
-                    $allAccess        = count($givenPermissions) < count($subject->pluck('id')) ? False : True;
+        $usersPermissions = $permissions->groupBy('menu')->map(function ($menu) use ($role)
+        {
+            $subjects = $menu->flatten()->groupBy('subject')->map(function ($subject) use ($role)
+            {
+                $items = $subject->map(function ($item) use ($role)
+                {
+                    $is_checked         = $role->permissions->pluck('id')->contains($item?->id);
+                    $item['is_checked'] = $is_checked;
 
-                    return $item = [
-                        'item_name'  => $subjectKey,
-                        'item_type'  => 'Subject',
-                        'is_checked' => $allAccess,
-                        'childs'     => $subject->map(function ($item) use ($role) {
-                            $is_checked         = $role->permissions->pluck('id')->contains($item->id);
-                            $item['is_checked'] = $is_checked;
+                    return $item;
+                });
 
-                            return $item;
-                        })->values(),
-                    ];
-                })->values(),
-            ];
+                $givenPermissions    = $subject->pluck('id')->intersect($role->permissions->pluck('id'));
+                $allAccess           = count($givenPermissions) < count($subject->pluck('id')) ? false : true;
+                $items['is_checked'] = $allAccess;
 
-            return $menus;
-        })->values();
+                return $items;
+            });
 
-        return $usersPermissions;
+            $givenPermissions       = $menu->pluck('id')->intersect($role->permissions->pluck('id'));
+            $allAccess              = count($givenPermissions) < count($menu->pluck('id')) ? false : true;
+            $subjects['is_checked'] = $allAccess;
+
+            return $subjects;
+        });
 
         try {
-            $role['current_permissions'] = $role->permissions->pluck('id');
+            $newData = [
+                'id'          => $role->id,
+                'name'        => $role->name,
+                'guard_name'  => $role->guard_name,
+                'permissions' => $usersPermissions,
+            ];
 
             return response()->json([
-                'value'   => $role,
+                'value'   => $newData,
                 'message' => 'Successfully retrieved role and permission.',
             ], 200);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }

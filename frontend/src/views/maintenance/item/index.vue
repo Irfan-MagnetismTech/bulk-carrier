@@ -41,7 +41,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item group!",
+    text: "You want to delete this item group!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -140,7 +140,7 @@ onMounted(() => {
     }
   getItems(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -201,8 +201,8 @@ onMounted(() => {
                 </div>
             </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Ship Department</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Ship Department</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -211,8 +211,8 @@ onMounted(() => {
                 </div>
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Item Group</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Item Group</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -221,8 +221,8 @@ onMounted(() => {
                 </div>
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Item Code</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Item Code</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -231,8 +231,8 @@ onMounted(() => {
                 </div>
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Item Name</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Item Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -277,8 +277,8 @@ onMounted(() => {
                 <action-button :action="'edit'" :to="{ name: 'mnt.items.edit', params: { itemId: item?.id } }"></action-button>
                 <action-button @click="confirmDelete(item?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!items?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCheckList from "../../../composables/crew/useCheckList";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { checklists, getCheckLists, deleteCheckList, isLoading } = useCheckList();
+const { checklists, getCheckLists, deleteCheckList, isLoading, isTableLoading  } = useCheckList();
 const { setTitle } = Title();
 setTitle('Onboard Check List');
 
@@ -60,6 +61,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -80,15 +82,23 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getCheckLists(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -178,7 +188,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>              
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
@@ -198,11 +208,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </nobr>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && checklists?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!checklists?.data?.length">
+          <tfoot v-if="!checklists?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="5">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="5">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!checklists?.data?.length">
             <td colspan="5">No checklist found.</td>
           </tr>

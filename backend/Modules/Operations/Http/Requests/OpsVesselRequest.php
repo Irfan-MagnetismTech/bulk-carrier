@@ -26,6 +26,7 @@ class OpsVesselRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this);
         return [
             'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'vessel_type'     => ['required', 'string', 'max:255'],

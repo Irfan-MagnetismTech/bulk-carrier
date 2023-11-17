@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { itemGroups, getItemGroups, deleteItemGroup, isLoading } = useItemGroup();
+const { itemGroups, getItemGroups, deleteItemGroup, isLoading,isTableLoading } = useItemGroup();
 const { setTitle } = Title();
 setTitle('Item Group List');
 
@@ -32,7 +33,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
@@ -40,7 +41,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item group!",
+    text: "You want to delete this item group!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -66,6 +67,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -99,6 +101,9 @@ let filterOptions = ref( {
 
   ]
 });
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -109,23 +114,28 @@ function setSortingState(index, order) {
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
   getItemGroups(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
 
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching item groups:", error);
@@ -177,8 +187,8 @@ onMounted(() => {
                 </div>
             </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Ship Department</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Ship Department</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -187,8 +197,8 @@ onMounted(() => {
                 </div>
               </th>
             <th class="w-3/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Name</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -198,8 +208,8 @@ onMounted(() => {
 
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Short Code</span>
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Short Code</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -232,7 +242,7 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(itemGroup,index) in itemGroups?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
 
@@ -245,11 +255,17 @@ onMounted(() => {
                 <action-button @click="confirmDelete(itemGroup?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && itemGroups?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!itemGroups?.data?.length">
+          <tfoot v-if="!itemGroups?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="6">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!itemGroups?.data?.length">
             <td colspan="6">No item group found.</td>
           </tr>
