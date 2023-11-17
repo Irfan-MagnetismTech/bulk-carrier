@@ -91,7 +91,7 @@ onMounted(() => {
     <legend class="px-2 text-gray-700 dark:text-gray-300">Item List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Eligibility <span class="text-red-500">*</span></th>
@@ -104,7 +104,7 @@ onMounted(() => {
       <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwVesselRequiredCrewLines" :key="requiredCrewLine.id">
         <td class="px-1 py-1">
           <select class="form-input" v-model.trim="form.crwVesselRequiredCrewLines[index].crw_rank_id" required>
-            <option value="" disabled>select</option>
+            <option value="" disabled>Select</option>
             <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
         </td>
@@ -112,7 +112,7 @@ onMounted(() => {
           <input type="number" v-model.trim="form.crwVesselRequiredCrewLines[index].required_manpower" placeholder="Ex: 2" required class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwVesselRequiredCrewLines[index].eligibility" placeholder="EX: COC-III" required class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwVesselRequiredCrewLines[index].eligibility" placeholder="Ex: COC-III" required class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwVesselRequiredCrewLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />

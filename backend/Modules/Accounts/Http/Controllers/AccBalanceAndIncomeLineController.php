@@ -20,7 +20,7 @@ class AccBalanceAndIncomeLineController extends Controller
         try {
             $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->globalSearch($request->all());
 
-            return response()->success('Retrieved Successfully te', $balanceIncomeLines, 200);
+            return response()->success('Retrieved Successfully', $balanceIncomeLines, 200);
         }
         catch (QueryException $e)
         {
@@ -57,7 +57,7 @@ class AccBalanceAndIncomeLineController extends Controller
     public function show(AccBalanceAndIncomeLine $accBalanceAndIncomeLine)
     {
         try {
-            return response()->success('Retrieved successfully', $accBalanceAndIncomeLine->load('parentLine:id,line_text'), 200);
+            return response()->success('Retrieved Successfully', $accBalanceAndIncomeLine->load('parentLine:id,line_text'), 200);
         }
         catch (QueryException $e)
         {
@@ -78,7 +78,7 @@ class AccBalanceAndIncomeLineController extends Controller
             $balanceAndIncomeLineData = $request->only('line_type','line_text','value_type','parent_id','visible_index','printed_no','business_unit');
             $accBalanceAndIncomeLine->update($balanceAndIncomeLineData);
 
-            return response()->success('Updated successfully', $accBalanceAndIncomeLine, 202);
+            return response()->success('Updated Successfully', $accBalanceAndIncomeLine, 202);
         }
         catch (QueryException $e)
         {

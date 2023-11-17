@@ -41,7 +41,7 @@ class CrwRankController extends Controller
             $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank     = CrwRank::create($crwRankData);
 
-            return response()->success('Created Succesfully', $crwRank, 201);
+            return response()->success('Created Successfully', $crwRank, 201);
         }
         catch (Exception $e)
         {
@@ -58,7 +58,7 @@ class CrwRankController extends Controller
     public function show(CrwRank $crwRank)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwRank, 200);
+            return response()->success('Retrieved Succesfully', $crwRank, 200);
         }
         catch (QueryException $e)
         {
@@ -79,7 +79,7 @@ class CrwRankController extends Controller
             $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank->update($crwRankData);
 
-            return response()->success('Updated succesfully', $crwRank, 202);
+            return response()->success('Updated Successfully', $crwRank, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class CrwRankController extends Controller
         try {
             $crwRank->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
