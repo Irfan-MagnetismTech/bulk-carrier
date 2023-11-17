@@ -94,12 +94,13 @@ onMounted(() => {
     }
     getRoles(filterOptions.value)
         .then(() => {
+          paginatedPage.value = filterOptions.value.page;
           const customDataTable = document.getElementById("customDataTable");
 
           if (customDataTable) {
             tableScrollWidth.value = customDataTable.scrollWidth;
           }
-          isTableLoader.value = true;
+          // isTableLoader.value = true;
         })
         .catch((error) => {
           console.error("Error fetching users:", error);

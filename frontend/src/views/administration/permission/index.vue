@@ -103,13 +103,14 @@ onMounted(() => {
       filterOptions.value.isFilter = true;
     }
     getPermissions(filterOptions.value)
-        .then(() => {
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
           const customDataTable = document.getElementById("customDataTable");
 
           if (customDataTable) {
             tableScrollWidth.value = customDataTable.scrollWidth;
           }
-          isTableLoader.value = true;
+          // isTableLoader.value = true;
         })
         .catch((error) => {
           console.error("Error fetching users:", error);

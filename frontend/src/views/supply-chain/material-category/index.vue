@@ -93,7 +93,8 @@ onMounted(() => {
       filterOptions.value.isFilter = true;
     }
     getMaterialCategories(filterOptions.value)
-    .then(() => {
+      .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
