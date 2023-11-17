@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import Title from "../../../services/title";
@@ -94,55 +94,43 @@ let filterOptions = ref( {
     }
   ]
 });
-
-watch(
-    () => filterOptions.value.page,
-    (value) => {
-      setFilter();
-    }
-);
-
-watch(
-    () => filterOptions.business_unit,
-    (value) => {
-      setFilter();
-    }
-);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 
-function setFilter() {
-  filterOptions.value.isFilter = true;
-}
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
   });
   filterOptions.value.filter_options[index].order_by = order;
-  setFilter();
 }
 
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
+    // console.log(object);
     filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
     
-  getShipDepartments(filterOptions.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+    getShipDepartments(filterOptions.value)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-      // isTableLoader.value = true;
-    })
-    .catch((error) => {
-      console.error("Error fetching ship departments:", error);
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+        // isTableLoader.value = true;
+      })
+      .catch((error) => {
+        console.error("Error fetching ship departments:", error);
+      });
     });
-  });
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+    filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
 });
 
 </script>
@@ -206,7 +194,7 @@ onMounted(() => {
               </th>
             <th class="w-2/12">
               <div class="flex justify-evenly items-center">
-                  <span>Business Unit{{ isTableLoading }}</span>
+                  <span>Business Unit</span>
                 
                 </div>
               </th>
@@ -214,15 +202,15 @@ onMounted(() => {
           </tr>
           <tr class="w-full" v-if="showFilter">
               <th>
-                <select v-model="filterOptions.items_per_page" class="filter_input">
+                <select  v-model="filterOptions.items_per_page" class="filter_input">
                   <option value="15">15</option>
                   <option value="30">30</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input @input="setFilter()"  v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input @input="setFilter()"  v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -249,11 +237,9 @@ onMounted(() => {
             </tr>     
             <tr v-else-if="isTableLoading">
               <td colspan="5">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
-                
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
-
             <tr v-else-if="!shipDepartments?.data?.length">
               <td colspan="5">No ship department found.</td>
             </tr>

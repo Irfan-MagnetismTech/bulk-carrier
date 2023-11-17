@@ -26,15 +26,18 @@ export default function useShipDepartment() {
     async function getShipDepartments(filterOptions) {
         //NProgress.start();
         let loader = null;
+        
         if (!filterOptions.isFilter) {
             loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
             isLoading.value = true;
+            isTableLoading.value = false;
         }
         else {
             isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
         }
-        
-
+                
         // indexPage.value = filterOptions.page;
         // indexBusinessUnit.value = filterOptions.business_unit;
         filterParams.value = filterOptions;
@@ -59,6 +62,7 @@ export default function useShipDepartment() {
             }
             else {
                 isTableLoading.value = false;
+                loader?.hide();
             }
             //NProgress.done();
         }
