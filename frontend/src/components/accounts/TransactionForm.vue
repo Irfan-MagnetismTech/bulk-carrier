@@ -124,6 +124,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <ErrorComponent :errors="errors"></ErrorComponent>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
@@ -210,7 +211,6 @@ onMounted(() => {
               <input class="vs__search w-full" style="width: 50%" :required="!form.ledgerEntries[index].acc_account_name" v-bind="attributes" v-on="events"/>
             </template>
           </v-select>
-          <Error v-if="errors?.form.ledgerEntries[index].acc_account_name" :errors="errors.form.ledgerEntries[index].acc_account_name" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref bill" class="form-input" required autocomplete="off" />
@@ -250,7 +250,6 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
-  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
