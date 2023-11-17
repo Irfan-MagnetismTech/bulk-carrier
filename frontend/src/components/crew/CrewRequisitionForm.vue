@@ -89,7 +89,7 @@ onMounted(() => {
     <legend class="px-2 text-gray-700 dark:text-gray-300">Item List <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
@@ -101,7 +101,7 @@ onMounted(() => {
       <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwCrewRequisitionLines" :key="requiredCrewLine.id">
         <td class="px-1 py-1">
           <select class="form-input" v-model="form.crwCrewRequisitionLines[index].crw_rank_id" required>
-            <option value="" disabled>select</option>
+            <option value="" disabled>Select</option>
             <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
         </td>
