@@ -33,11 +33,24 @@ export default function useItem() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
     async function getItems(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
         filterParams.value = filterOptions;
 
@@ -55,9 +68,17 @@ export default function useItem() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
             //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -260,6 +281,7 @@ export default function useItem() {
         getItemGroupWiseItems,
         getVesselWiseJobItems,
         isLoading,
+        isTableLoading,
         errors,
     };
 }
