@@ -10,6 +10,7 @@ export default function useService() {
     const router = useRouter();
     const services = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const service = ref( {
         name: '',
@@ -152,6 +153,7 @@ export default function useService() {
         showService,
         updateService,
         deleteService,
+        isTableLoading,
         isLoading,
         errors,
     };

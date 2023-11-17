@@ -22,7 +22,6 @@ class CrwRecruitmentApprovalRequest extends FormRequest
             'crew_panel'                                     => ['required', 'numeric', 'max:2000'],
             'crew_rest'                                      => ['required', 'numeric', 'max:2000'],
             'body'                                           => ['required', 'string', 'max:2000'],
-            'remarks'                                        => ['required', 'string', 'max:700'],
             'business_unit'                                  => ['required', 'string', 'max:255'],
 
             'crwVesselRequiredCrewLines.*.candidate_name'    => ['required', 'string', 'max:255'],

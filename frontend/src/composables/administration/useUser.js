@@ -9,6 +9,7 @@ export default function useUser() {
     const router = useRouter();
     const users = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const user = ref( {
         name: '',
@@ -23,9 +24,21 @@ export default function useUser() {
     const filterParams = ref(null);
 
     async function getUsers(filterOptions) {
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        
         filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get('/administration/users',{
@@ -161,6 +174,7 @@ export default function useUser() {
         showUser,
         updateUserPassword,
         updateUser,
+        isTableLoading,
         deleteUser,
         isLoading,
         errors,

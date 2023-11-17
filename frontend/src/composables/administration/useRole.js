@@ -10,6 +10,7 @@ export default function useRole() {
     const router = useRouter();
     const $loading = useLoading();
     const roles = ref([]);
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const role = ref( {
         name: '',
@@ -20,9 +21,21 @@ export default function useRole() {
     const filterParams = ref(null);
 
     async function getRoles(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        
         filterParams.value = filterOptions;
 
         try {
@@ -162,6 +175,7 @@ export default function useRole() {
         storeRole,
         showRole,
         updateRole,
+        isTableLoading,
         deleteRole,
         isLoading,
         errors,

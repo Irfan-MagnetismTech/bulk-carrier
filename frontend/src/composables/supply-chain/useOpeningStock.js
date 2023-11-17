@@ -9,6 +9,7 @@ export default function useOpeningStock() {
     const BASE = 'scm' 
     const router = useRouter();
     const openingStocks = ref([]);
+     const isTableLoading = ref(false);
     const filteredOpeningStocks = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
@@ -46,9 +47,20 @@ export default function useOpeningStock() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getOpeningStocks(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
         filterParams.value = filterOptions;
 
@@ -163,6 +175,7 @@ export default function useOpeningStock() {
         updateOpeningStock,
         deleteOpeningStock,
         materialObject,
+        isTableLoading,
         isLoading,
         errors,
     };
