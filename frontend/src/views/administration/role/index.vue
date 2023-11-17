@@ -64,6 +64,7 @@ function setSortingState(index, order) {
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function deleteRoleByID(roleId) {
   Swal.fire({
