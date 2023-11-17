@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useVesselRequiredCrew from "../../../composables/crew/useVesselRequiredCrew";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const icons = useHeroIcon();
 
 const router = useRouter();
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { vesselRequiredCrews, getVesselRequiredCrews, deleteVesselRequiredCrew, isLoading } = useVesselRequiredCrew();
+const { vesselRequiredCrews, getVesselRequiredCrews, deleteVesselRequiredCrew, isLoading, isTableLoading  } = useVesselRequiredCrew();
 const { setTitle } = Title();
 setTitle('Vessel Required Crew');
 
@@ -58,6 +59,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": "opsVessel",
@@ -94,14 +96,22 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getVesselRequiredCrews(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -215,7 +225,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(requiredCrew,index) in vesselRequiredCrews?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ requiredCrew?.opsVessel?.name }}</td>
@@ -230,11 +240,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselRequiredCrews?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!vesselRequiredCrews?.data?.length">
+          <tfoot v-if="!vesselRequiredCrews?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!vesselRequiredCrews?.data?.length">
             <td colspan="7">No data found.</td>
           </tr>
