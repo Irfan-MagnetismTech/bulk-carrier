@@ -284,10 +284,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
                         <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
                       </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                  </td>
+                  </td>                  
+                </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && customers?.data?.length"></LoaderComponent>
-
-              </tr>
           </tbody>
           
           <tfoot v-if="!customers?.data?.length" class="relative h-[250px]">
