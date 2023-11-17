@@ -100,7 +100,7 @@ class ScmWarehouseController extends Controller
         }
     }
 
-    public function searchWarehouse(ScmWarehouseRequest $request): JsonResponse
+    public function searchWarehouse(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $warehouse = ScmWarehouse::query()
@@ -113,7 +113,7 @@ class ScmWarehouseController extends Controller
         } else {
             $warehouse = [];
         }
-
+        
         return response()->success('Search result', $warehouse, 200);
     }
 }

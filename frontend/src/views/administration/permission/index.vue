@@ -189,8 +189,8 @@ onMounted(() => {
           <td>{{ permission?.menu }}</td>
           <td>{{ permission?.subject }}</td>
           <td>{{ permission?.name }}</td>
-          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && permissions?.data?.length"></LoaderComponent>
         </tr>
+        <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && permissions?.data?.length"></LoaderComponent>
         </tbody>
         <tfoot v-if="!permissions?.data?.length">
         <tr v-if="isLoading">

@@ -106,7 +106,7 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      // isTableLoader.value = true;
+  
     })
     .catch((error) => {
       console.error("Error fetching vendors:", error);
@@ -218,8 +218,8 @@ function confirmDelete(id) {
                 <action-button :action="'edit'" :to="{ name: 'scm.vendor.edit', params: { vendorId: vendor.id } }"></action-button>
                 <action-button @click="confirmDelete(vendor.id)" :action="'delete'"></action-button>
               </td>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vendors?.data?.length"></LoaderComponent>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vendors?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!vendors?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">

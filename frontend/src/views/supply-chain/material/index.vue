@@ -251,8 +251,8 @@ function confirmDelete(id) {
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
             </td>
-             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">

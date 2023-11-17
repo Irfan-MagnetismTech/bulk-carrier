@@ -26,6 +26,7 @@ class OpsVesselRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this);
         return [
             'name'            => ['required', 'string', 'max:255', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'vessel_type'     => ['required', 'string', 'max:255'],
@@ -48,7 +49,7 @@ class OpsVesselRequest extends FormRequest
             'overall_width'   => ['required'],
             'year_built'      => ['required', 'integer', 'min:1900', 'max:3000'],
             'capacity'        => ['required', 'integer', 'min:0', 'max:10000000'],
-            'total_cargo_hold'=> ['required', 'numeric', 'max:255'],
+            'total_cargo_hold'=> ['required', 'numeric', 'max:10000000'],
             'live_tracking_config'=> ['nullable', 'string', 'max:5000'],
             'remarks'         => ['nullable', 'string', 'max:5000'],
         ];
