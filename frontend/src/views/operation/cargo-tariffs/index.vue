@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,6 +10,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import Store from "../../../store";
 import useCargoTariff from '../../../composables/operations/useCargoTariff';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
 });
 
 const icons = useHeroIcon();
-const { cargoTariffs, getCargoTariffs, deleteCargoTariff, isLoading } = useCargoTariff();
+const { cargoTariffs, getCargoTariffs, deleteCargoTariff, isLoading, isTableLoading } = useCargoTariff();
 
 const { setTitle } = Title();
 setTitle('Cargo Tariff List');
@@ -66,6 +67,7 @@ let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
+"isFilter": false,
 "filter_options": [
 
 			{
@@ -127,6 +129,8 @@ let filterOptions = ref( {
 	]
 });
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -138,7 +142,7 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -146,6 +150,10 @@ onMounted(() => {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
     getCargoTariffs(filterOptions.value)
       .then(() => {
@@ -271,7 +279,7 @@ onMounted(() => {
 
             </tr>
           </thead>
-          <tbody v-if="cargoTariffs?.data?.length">
+          <tbody v-if="cargoTariffs?.data?.length" class="relative">
               <tr v-for="(cargoTariff, index) in cargoTariffs.data" :key="cargoTariff?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ cargoTariff?.tariff_name }}</td>
@@ -291,13 +299,20 @@ onMounted(() => {
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTariffs?.data?.length"></LoaderComponent>
+
               </tr>
           </tbody>
           
-          <tfoot v-if="!cargoTariffs?.length">
+          <tfoot v-if="!cargoTariffs?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!cargoTariffs?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
