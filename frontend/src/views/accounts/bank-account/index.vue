@@ -139,6 +139,13 @@ let filterOptions = ref( {
   ]
 });
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 function setSortingState(index,order){
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -304,6 +311,9 @@ onMounted(() => {
             <th><input v-model="filterOptions.filter_options[7].search_param" type="date" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+            </th>
+            <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
             </th>
           </tr>
           </thead>
