@@ -65,7 +65,7 @@ let filterOptions = ref( {
   "page": props.page,
   "filter_options": [
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "bank_name",
       "search_param": "",
       "action": null,
@@ -73,7 +73,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "branch_name",
       "search_param": "",
       "action": null,
@@ -81,7 +81,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "account_type",
       "search_param": "",
       "action": null,
@@ -89,7 +89,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "account_name",
       "search_param": "",
       "action": null,
@@ -97,7 +97,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "account_number",
       "search_param": "",
       "action": null,
@@ -105,7 +105,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "routing_number",
       "search_param": "",
       "action": null,
@@ -113,7 +113,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "contact_number",
       "search_param": "",
       "action": null,
@@ -121,7 +121,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "opening_date",
       "search_param": "",
       "action": null,
@@ -129,7 +129,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "opening_balance",
       "search_param": "",
       "action": null,
@@ -145,6 +145,10 @@ function clearFilter(){
     filterOptions.value.filter_options[index].order_by = null;
   });
 }
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function setSortingState(index,order){
   filterOptions.value.filter_options.forEach(function (t) {
