@@ -38,7 +38,7 @@ export default function useUser() {
             isLoading.value = false;
             loader?.hide();
         }
-        
+
         filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get('/administration/users',{
@@ -54,8 +54,14 @@ export default function useUser() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+             if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 

@@ -36,7 +36,7 @@ export default function usePermission() {
             isLoading.value = false;
             loader?.hide();
         }
-        
+
         filterParams.value = filterOptions;
         try {
             // const { data, status } = await Api.get('/administration/permissions', {
@@ -57,9 +57,14 @@ export default function usePermission() {
         } catch (error) {
             const { data, status } = error.response;
         } finally {
-            //NProgress.done();
-            loader.hide();
-            isLoading.value = false;
+             if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
