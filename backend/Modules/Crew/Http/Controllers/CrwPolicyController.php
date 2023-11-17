@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Modules\Crew\Entities\CrwPolicy;
+use Modules\Crew\Http\Requests\CrwPolicyRequest;
 
 class CrwPolicyController extends Controller
 {
@@ -43,7 +44,7 @@ class CrwPolicyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwPolicyRequest $request)
     {
         try {
             $crwPolicyData               = $request->only('name', 'type', 'business_unit');
@@ -83,7 +84,7 @@ class CrwPolicyController extends Controller
      * @param  \App\Models\CrwPolicy  $crwPolicy
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwPolicy $crwPolicy)
+    public function update(CrwPolicyRequest $request, CrwPolicy $crwPolicy)
     {
         try {
             $crwPolicyData               = $request->only('name', 'type', 'business_unit');
