@@ -162,7 +162,7 @@ export default function useVesselRequiredCrew() {
         updateVesselRequiredCrew,
         deleteVesselRequiredCrew,
         isLoading,
-        
+        isTableLoading,
         errors,
     };
 }
