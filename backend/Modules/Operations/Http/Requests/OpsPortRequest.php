@@ -26,7 +26,7 @@ class OpsPortRequest extends FormRequest
     {        
         return [
             'code'  => ['required','string', 'max:255', Rule::unique('ops_ports')->ignore($this->route('port'), 'id')],
-            'name'  => ['required', 'string', 'max:255'],
+            'name'  => ['required', 'string', 'max:255', Rule::unique('ops_ports')->ignore($this->route('port'), 'id')],
         ];
     }
 
@@ -39,8 +39,11 @@ class OpsPortRequest extends FormRequest
     {
         return [
             'name.required' => 'Port Name is required',
+            'name.unique' => 'Port Name is already taken',
             'name.max' => 'Port Name may not be greater than :max characters.',
+            'code.required' => 'Port code is required',
             'code.unique' => 'Port code is already taken',
+            'code.max' => 'Port code may not be greater than :max characters.',
         ];
     }
 
