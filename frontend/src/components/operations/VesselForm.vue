@@ -266,7 +266,7 @@ import useMaritimeCertificates from "../../composables/operations/useMaritimeCer
 import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
 import { watch } from 'vue';
-import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 
 const props = defineProps({
