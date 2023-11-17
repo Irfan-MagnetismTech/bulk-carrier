@@ -51,8 +51,8 @@ function swapFilter() {
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
-  "page": props.page,
-  "isFilter": false,
+"page": props.page,
+"isFilter": false,
 "filter_options": [
 
 			{
@@ -83,6 +83,8 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
@@ -93,12 +95,19 @@ function setSortingState(index, order) {
 
 onMounted(() => {
   watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
   getRanks(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -180,7 +189,7 @@ onMounted(() => {
           </thead>
           <tbody class="relative">
           <tr v-for="(rank,index) in ranks?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ rank?.name }}</td>
             <td class="text-left">{{ rank?.short_name }}</td>
             <td>

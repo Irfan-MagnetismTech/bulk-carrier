@@ -192,7 +192,7 @@ onMounted(() => {
         </tr>
         <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && permissions?.data?.length"></LoaderComponent>
         </tbody>
-        <tfoot v-if="!permissions?.data?.length">
+        <tfoot v-if="!permissions?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
           <td colspan="5">Loading...</td>
         </tr>

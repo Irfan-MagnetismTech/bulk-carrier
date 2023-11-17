@@ -195,7 +195,7 @@ onMounted(() => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>

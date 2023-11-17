@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { materialCategory, storeMaterialCategory,isLoading } = useMaterialCategory();
+const { materialCategory, storeMaterialCategory,isLoading,errors } = useMaterialCategory();
 const { setTitle } = Title();
 
 setTitle('Create Material Category');
