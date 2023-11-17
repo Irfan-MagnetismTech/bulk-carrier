@@ -299,9 +299,9 @@ onMounted(() => {
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
+                  
+                </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTariffs?.data?.length"></LoaderComponent>
-
-              </tr>
           </tbody>
           
           <tfoot v-if="!cargoTariffs?.data?.length"  class="relative h-[250px]">

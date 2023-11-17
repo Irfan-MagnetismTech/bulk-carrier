@@ -36,7 +36,7 @@ class OpsCustomerRequest extends FormRequest
             'email_general'         => ['nullable', 'email'],
             'email_agreement'       => ['nullable', 'email'],
             'email_invoice'         => ['nullable', 'email'],
-            'business_unit'         => ['nullable', 'string', 'max:255'],
+            'business_unit'         => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -65,6 +65,7 @@ class OpsCustomerRequest extends FormRequest
             'phone.required' => 'Contact phone is required',
             'phone.digits_between' => 'Phone number must be between :min and :max characters',
             'company_reg_no.max' => 'Company Reg. no may not be greater than :max characters.',
+            'business_unit.required' => 'Business unit is required',
         ];
     }
 

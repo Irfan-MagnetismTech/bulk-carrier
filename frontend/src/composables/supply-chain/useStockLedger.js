@@ -11,6 +11,7 @@ export default function useStockLedger() {
     const router = useRouter();
     const materials = ref([]);
     const CurrentStock = ref(0);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
         const material = ref( {

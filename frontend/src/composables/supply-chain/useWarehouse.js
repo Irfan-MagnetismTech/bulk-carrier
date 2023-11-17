@@ -9,6 +9,7 @@ export default function useWarehouse() {
     const BASE = 'scm' 
     const router = useRouter();
     const warehouses = ref([]);
+    const isTableLoading = ref(false);
     const costCenters = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
@@ -53,9 +54,14 @@ export default function useWarehouse() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -178,6 +184,7 @@ export default function useWarehouse() {
         updateWarehouse,
         deleteWarehouse,
         getCostCenters,
+        isTableLoading,
         costCenters,
         isLoading,
         errors,

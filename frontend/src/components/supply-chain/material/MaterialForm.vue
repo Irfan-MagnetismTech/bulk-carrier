@@ -151,7 +151,7 @@
                     <v-select
                       name="user"
                       v-model="form.store_category"
-                      placeholder="--Choose an option--"
+                      placeholder="--Choose An Option--"
                       label="Store Category"
                       :options="store_category"
                       class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">

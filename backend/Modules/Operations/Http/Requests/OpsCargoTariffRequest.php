@@ -46,6 +46,7 @@ class OpsCargoTariffRequest extends FormRequest
             'currency.required' => 'Currency is required',
             'currency.max' => 'Currency may not be greater than :max characters.',
             'status.required' => 'Status is required',
+            'business_unit.required' => 'Business unit is required',
         ];
     }
 
