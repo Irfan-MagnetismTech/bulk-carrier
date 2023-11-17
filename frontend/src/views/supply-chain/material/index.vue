@@ -83,6 +83,8 @@ let filterOptions = ref( {
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -248,7 +250,7 @@ function confirmDelete(id) {
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
             </td>
-             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
+             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tr>
           </tbody>
           <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
@@ -256,12 +258,12 @@ function confirmDelete(id) {
           <td colspan="7">Loading...</td>
         </tr>
         <tr v-else-if="isTableLoading">
-              <td colspan="7">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-              </td>
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
         </tr>
         <tr v-else-if="!materials?.data?.length">
-          <td colspan="7">No Materials found.</td>
+          <td colspan="7">No Datas found.</td>
         </tr>
         </tfoot>
       </table>

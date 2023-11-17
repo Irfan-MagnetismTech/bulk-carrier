@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useUnit from "../../../composables/supply-chain/useUnit";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -17,7 +18,7 @@ const props = defineProps({
   },
 });
 
-const { units, getUnits, deleteUnit, isLoading} = useUnit();
+const { units, getUnits, deleteUnit, isLoading, isTableLoading} = useUnit();
 const icons = useHeroIcon();
 const { setTitle } = Title();
 const debouncedValue = useDebouncedRef('', 800);
@@ -27,7 +28,7 @@ setTitle('Units');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 function swapFilter() {
   showFilter.value = !showFilter.value;
@@ -36,6 +37,7 @@ function swapFilter() {
 let filterOptions = ref( {
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -64,15 +66,19 @@ function setSortingState(index, order) {
 }
 const currentPage = ref(1);
 const paginatedPage = ref(1);
-  
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getUnits(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -169,7 +175,7 @@ function confirmDelete(id) {
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(unit,index) in units?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ unit?.name }}</td>
@@ -178,14 +184,20 @@ function confirmDelete(id) {
               <action-button :action="'edit'" :to="{ name: 'scm.unit.edit', params: { unitId: unit?.id } }"></action-button>
               <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
             </td>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && units?.data?.length"></LoaderComponent>
           </tr>
           </tbody>
           <tfoot v-if="!units?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
+        <tr v-else-if="isTableLoading">
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
+        </tr>
         <tr v-else-if="!units?.data?.length">
-          <td colspan="7">No Units found.</td>
+          <td colspan="7">No Datas found.</td>
         </tr>
         </tfoot>
       </table>

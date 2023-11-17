@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import usePermission from "../../../composables/administration/usePermission";
 import Title from "../../../services/title";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useHeroIcon from "../../../assets/heroIcon";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -18,14 +19,14 @@ const props = defineProps({
   },
 });
 
-const { permissions, getPermissions, deletePermission, isLoading } = usePermission();
+const { permissions, getPermissions, deletePermission, isLoading, isTableLoading } = usePermission();
 const { setTitle } = Title();
 setTitle('Permission List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -35,6 +36,7 @@ function swapFilter() {
 let filterOptions = ref({
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -90,13 +92,16 @@ function confirmDelete(id) {
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
     getPermissions(filterOptions.value)
         .then(() => {
           const customDataTable = document.getElementById("customDataTable");
@@ -176,17 +181,23 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
              </tr>
           </thead>
-        <tbody>
+        <tbody class="relative">
         <tr v-for="(permission,index) in permissions?.data" :key="index">
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
           <td>{{ permission?.menu }}</td>
           <td>{{ permission?.subject }}</td>
           <td>{{ permission?.name }}</td>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && permissions?.data?.length"></LoaderComponent>
         </tr>
         </tbody>
         <tfoot v-if="!permissions?.data?.length">
         <tr v-if="isLoading">
           <td colspan="5">Loading...</td>
+        </tr>
+        <tr v-else-if="isTableLoading">
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
         </tr>
         <tr v-else-if="!permissions?.data?.length">
           <td colspan="5">No permission found.</td>
