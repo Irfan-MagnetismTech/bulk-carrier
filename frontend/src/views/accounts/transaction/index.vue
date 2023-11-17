@@ -155,6 +155,13 @@ function confirmDelete(id) {
   })
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 
 onMounted(() => {
   watchPostEffect(() => {

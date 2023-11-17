@@ -80,7 +80,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "date",
       "search_param": "",
       "action": null,
@@ -88,7 +88,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "cr_amount",
       "search_param": "",
       "action": null,
@@ -96,7 +96,7 @@ let filterOptions = ref( {
       "date_from": null
     },
     {
-      "relation_name": "",
+      "relation_name": null,
       "field_name": "dr_amount",
       "search_param": "",
       "action": null,
