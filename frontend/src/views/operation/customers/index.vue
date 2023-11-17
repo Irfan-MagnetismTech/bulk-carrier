@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect } from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,9 +10,10 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import Store from './../../../store/index.js';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useCustomer from '../../../composables/operations/useCustomer';
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
-const { customers, getCustomers, deleteCustomer, isLoading } = useCustomer();
+const { customers, getCustomers, deleteCustomer, isLoading, isTableLoading } = useCustomer();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -119,6 +120,9 @@ let filterOptions = ref( {
 	]
 });
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -130,7 +134,7 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -138,6 +142,10 @@ onMounted(() => {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
     getCustomers(filterOptions.value)
     .then(() => {
@@ -257,7 +265,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 
             </tr>
           </thead>
-          <tbody v-if="customers?.data?.length">
+          <tbody v-if="customers?.data?.length" class="relative">
               <tr v-for="(customer, index) in customers.data" :key="customer?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ customer?.code }}</td>
@@ -276,13 +284,20 @@ filterOptions.value.filter_options.forEach((option, index) => {
                       </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && customers?.data?.length"></LoaderComponent>
+
               </tr>
           </tbody>
           
-          <tfoot v-if="!customers?.length">
+          <tfoot v-if="!customers?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!customers?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
