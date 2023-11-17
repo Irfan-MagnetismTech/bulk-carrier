@@ -91,16 +91,16 @@ onMounted(() => {
 <!--        </select>-->
 <!--        <Error v-if="errors?.parent_account_id" :errors="errors.parent_account_id" />-->
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
-      </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
+    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
@@ -120,8 +120,6 @@ onMounted(() => {
         <option value="1"> Yes </option>
       </select>
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
