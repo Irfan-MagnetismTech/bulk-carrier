@@ -20,11 +20,11 @@
 <script setup>
 import RoleForm from '../../../components/authorization/RoleForm.vue';
 import useRole from '../../../composables/administration/useRole';
-import usePermission from '../../../composables/administration/usePermission';
 import {ref,onMounted,watch} from "vue";
 import Title from "../../../services/title";
+import useAdministrationCommonApiRequest from "../../../composables/administration/useAdministrationCommonApiRequest";
 const { role, storeRole, isLoading, errors } = useRole();
-const { permissions, getPermissions } = usePermission();
+const { permissions, getPermissionList } = useAdministrationCommonApiRequest();
 const page = ref('create');
 
 const props = defineProps({
@@ -45,6 +45,6 @@ watch(() => permissions.value, (value) => {
 });
 
 onMounted(() => {
-  getPermissions(props.page, false);
+  getPermissionList();
 });
 </script>
