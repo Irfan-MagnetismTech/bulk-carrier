@@ -32,7 +32,6 @@
     }
 
     function setMaterialOtherData(datas,index){
-      console.log(datas);
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
       materials.value = [];
@@ -50,7 +49,7 @@
   }
 
   watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
+    props.form.scm_warehouse_id = value?.id;
     props.form.scm_cost_center_id = value?.scm_cost_center_id;
     warehouses.value = [];
     warehouseKey.value += 1;
