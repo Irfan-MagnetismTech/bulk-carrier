@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading } = useShipDepartment();
+const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading, isTableLoading } = useShipDepartment();
 const { setTitle } = Title();
 setTitle('Ship Department List');
 
@@ -32,7 +33,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 function swapFilter() {
   showFilter.value = !showFilter.value;
@@ -70,6 +71,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -92,6 +94,9 @@ let filterOptions = ref( {
     }
   ]
 });
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
 
 
 function setSortingState(index, order) {
@@ -104,8 +109,7 @@ function setSortingState(index, order) {
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 onMounted(() => {
-  watchEffect(() => {
-  
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
@@ -113,24 +117,28 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
-  getShipDepartments(filterOptions.value)
-    .then(() => {
-      paginatedPage.value = props.page;
+    // console.log(object);
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    
+    getShipDepartments(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = props.page;
+        const customDataTable = document.getElementById("customDataTable");
 
-      const customDataTable = document.getElementById("customDataTable");
-
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-      isTableLoader.value = true;
-    })
-    .catch((error) => {
-      console.error("Error fetching ship departments:", error);
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+        // isTableLoader.value = true;
+      })
+      .catch((error) => {
+        console.error("Error fetching ship departments:", error);
+      });
     });
-  });
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+    filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
 });
 
 </script>
@@ -202,7 +210,7 @@ onMounted(() => {
           </tr>
           <tr class="w-full" v-if="showFilter">
               <th>
-                <select v-model="filterOptions.items_per_page" class="filter_input">
+                <select  v-model="filterOptions.items_per_page" class="filter_input">
                   <option value="15">15</option>
                   <option value="30">30</option>
                   <option value="50">50</option>
@@ -216,8 +224,7 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            
+          <tbody class="relative">
           <tr v-for="(shipDepartment,index) in shipDepartments?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
 
@@ -230,10 +237,17 @@ onMounted(() => {
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && shipDepartments?.data?.length"></LoaderComponent>
+            
           </tbody>
-          <tfoot v-if="!shipDepartments?.data?.length">
+          <tfoot v-if="!shipDepartments?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
               <td colspan="5">Loading...</td>
+            </tr>     
+            <tr v-else-if="isTableLoading">
+              <td colspan="5">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
             </tr>
             <tr v-else-if="!shipDepartments?.data?.length">
               <td colspan="5">No ship department found.</td>

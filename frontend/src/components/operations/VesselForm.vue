@@ -141,7 +141,7 @@
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
-      <RemarksComponent v-model="form.remarks" :maxlength="20" :fieldLabel="'Remarks'"></RemarksComponent>
+      <RemarksComponent v-model="form.remarks" :maxlength="255" :fieldLabel="'Remarks'"></RemarksComponent>
     </div>
 
     <div class="mt-3 md:mt-8">
