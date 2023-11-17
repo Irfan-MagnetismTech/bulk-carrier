@@ -66,6 +66,7 @@ watch(
 let filterOptions = ref( {
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -97,7 +98,6 @@ function setSortingState(index, order) {
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
-let isTableLoader = ref(false);
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -109,7 +109,6 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
-    filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
@@ -124,8 +123,6 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
-      isTableLoader.value = true;
-
 
 
       })
@@ -220,16 +217,16 @@ onMounted(() => {
                       <action-button @click="confirmDelete(port.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
-                  <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
+                  <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ports?.data?.length"></LoaderComponent>
               </tr>
           </tbody>
           
-          <tfoot v-if="!ports?.length" class="relative h-[250px]">
+          <tfoot v-if="!ports?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="6">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>

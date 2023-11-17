@@ -58,7 +58,7 @@ class AccAccountOpeningBalanceController extends Controller
     public function show(AccAccountOpeningBalance $accAccountOpeningBalance)
     {
         try {
-            return response()->success('Retrieved successfully', $accAccountOpeningBalance->load('account','costCenter'), 200);
+            return response()->success('Retrieved Successfully', $accAccountOpeningBalance->load('account','costCenter'), 200);
         }
         catch (QueryException $e)
         {

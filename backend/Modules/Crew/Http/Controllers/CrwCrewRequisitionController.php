@@ -17,7 +17,7 @@ class CrwCrewRequisitionController extends Controller
         try {
             $crwCrewRequisitions = CrwCrewRequisition::with('crwCrewRequisitionLines','opsVessel:id,name')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwCrewRequisitions, 200);
+            return response()->success('Retrieved Successfully', $crwCrewRequisitions, 200);
         }
         catch (QueryException $e)
         {
@@ -34,7 +34,7 @@ class CrwCrewRequisitionController extends Controller
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
-                return response()->success('Created Succesfully', $crwCrewRequisition, 201);
+                return response()->success('Created Successfully', $crwCrewRequisition, 201);
             });
         }
         catch (QueryException $e)
@@ -46,7 +46,7 @@ class CrwCrewRequisitionController extends Controller
     public function show(CrwCrewRequisition $crwRequisition)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwRequisition->load('crwCrewRequisitionLines','opsVessel'), 200);
+            return response()->success('Retrieved Successfully', $crwRequisition->load('crwCrewRequisitionLines','opsVessel'), 200);
         }
         catch (QueryException $e)
         {
@@ -64,7 +64,7 @@ class CrwCrewRequisitionController extends Controller
                 $crwRequisition->crwCrewRequisitionLines()->delete();
                 $crwRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
-                return response()->success('Updated succesfully', $crwRequisition, 202);
+                return response()->success('Updated Successfully', $crwRequisition, 202);
             });
         }
         catch (QueryException $e)
@@ -78,7 +78,7 @@ class CrwCrewRequisitionController extends Controller
         try {
             $crwRequisition->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

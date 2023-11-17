@@ -46,7 +46,7 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval     = CrwRecruitmentApproval::create($crwRecruitmentApprovalData);
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Created Succesfully', $crwRecruitmentApproval, 201);
+                return response()->success('Created Successfully', $crwRecruitmentApproval, 201);
             });
         }
         catch (QueryException $e)
@@ -64,7 +64,7 @@ class CrwRecruitmentApprovalController extends Controller
     public function show(CrwRecruitmentApproval $crwRecruitmentApproval)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines'), 200);
+            return response()->success('Retrieved Successfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines'), 200);
         }
         catch (QueryException $e)
         {
@@ -89,7 +89,7 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->delete();
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Updated succesfully', $crwRecruitmentApproval, 202);
+                return response()->success('Updated Successfully', $crwRecruitmentApproval, 202);
             });
         }
         catch (QueryException $e)
@@ -109,7 +109,7 @@ class CrwRecruitmentApprovalController extends Controller
         try {
             $crwRecruitmentApproval->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
