@@ -12,6 +12,7 @@ const icons = useHeroIcon();
 import env from '../../../config/env';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const props = defineProps({
   page: {
@@ -140,7 +141,9 @@ onMounted(() => {
       console.error("Error fetching ranks:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
