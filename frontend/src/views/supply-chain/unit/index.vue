@@ -188,7 +188,7 @@ function confirmDelete(id) {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && units?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!units?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!units?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>

@@ -15,7 +15,7 @@ const route = useRoute();
 const icons = useHeroIcon();
 const { setTitle } = Title();
 
-const { materialCategory, showMaterialCategory, updateMaterialCategory,isLoading } = useMaterialCategory();
+const { materialCategory, showMaterialCategory, updateMaterialCategory,isLoading,errors } = useMaterialCategory();
 
 const materialCategoryId = route.params.materialCategoryId;
 

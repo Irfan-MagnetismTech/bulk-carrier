@@ -32,8 +32,6 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
-const debouncedValue = useDebouncedRef('', 800);
-
 let showFilter = ref(false);
 // let isTableLoader = ref(false);
 
@@ -221,7 +219,7 @@ onMounted(() => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && warehouses?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!warehouses?.data?.length">
+          <tfoot v-if="!warehouses?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
