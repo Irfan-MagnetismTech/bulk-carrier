@@ -37,11 +37,18 @@ function swapFilter() {
   showFilter.value = !showFilter.value;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item!",
+    text: "You want to delete this item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -105,15 +112,22 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
   watchPostEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
   getVesselRequiredCrews(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -223,11 +237,12 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th><button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button></th>
             </tr>
           </thead>
           <tbody  class="relative">
           <tr v-for="(requiredCrew,index) in vesselRequiredCrews?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ requiredCrew?.opsVessel?.name }}</td>
             <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
             <td>{{ requiredCrew?.opsVessel?.vessel_type }}</td>

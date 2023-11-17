@@ -40,7 +40,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item!",
+    text: "You want to delete this item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -59,6 +59,14 @@ let filterOptions = ref( {
   "page": props.page,
   "isFilter": false,
   "filter_options": [
+  {
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
     {
       "relation_name": null,
       "field_name": "applied_date",
@@ -67,14 +75,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null
     },
-    {
-      "relation_name": "opsVessel",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
+    
     {
       "relation_name": null,
       "field_name": "total_required_manpower",
@@ -102,14 +103,22 @@ function clearFilter(){
   });
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
   watchPostEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
   getCrewRequisitions(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -205,7 +214,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </thead>
           <tbody  class="relative">
           <tr v-for="(requiredCrew,index) in crewRequisitions?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ requiredCrew?.opsVessel?.name }}</td>
             <td>{{ requiredCrew?.applied_date }}</td>
             <td>{{ requiredCrew?.total_required_manpower }}</td>
