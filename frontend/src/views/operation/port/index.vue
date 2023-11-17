@@ -104,7 +104,6 @@ onMounted(() => {
     
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      props.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
