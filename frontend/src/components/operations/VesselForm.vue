@@ -140,10 +140,8 @@
       
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Remarks </span>
-        <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-      </label>
+      
+      <RemarksComponent v-model="form.remarks" :maxlength="20" :fieldLabel="'Remarks'"></RemarksComponent>
     </div>
 
     <div class="mt-3 md:mt-8">
@@ -267,6 +265,7 @@ import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
 import { watch } from 'vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
 
 const props = defineProps({
