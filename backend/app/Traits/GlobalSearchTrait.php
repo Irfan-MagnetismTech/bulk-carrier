@@ -47,10 +47,12 @@ trait GlobalSearchTrait
             });
         }
 
-        $query_result = $query->get();
+        $query_result = $query->latest()->get();
 
+        //Sorting query result
         foreach ($request->filter_options as $key => $filterOption)
         {
+            // Sorting items in base table
             if($filterOption->relation_name === null) {
                 if ($filterOption->order_by == "asc")
                 {
@@ -65,7 +67,7 @@ trait GlobalSearchTrait
                         return $q->{$filterOption->field_name};
                     }, SORT_NATURAL|SORT_FLAG_CASE);
                 }
-            } else {
+            } else { // Sorting items in relationship 
                 if ($filterOption->order_by == "asc")
                 {
                     $query_result = $query_result->sortBy(function ($q) use ($filterOption){
@@ -73,7 +75,8 @@ trait GlobalSearchTrait
                         foreach($relations as $relation) {
                             $q = $q->{$relation};
                         }
-                        return $q->{$filterOption->field_name};
+                        if ($q)
+                            return $q->{$filterOption->field_name};
                     }, SORT_NATURAL|SORT_FLAG_CASE);
                 }
 
@@ -84,7 +87,8 @@ trait GlobalSearchTrait
                         foreach($relations as $relation) {
                             $q = $q->{$relation};
                         }
-                        return $q->{$filterOption->field_name};
+                        if ($q)
+                            return $q->{$filterOption->field_name};
                     }, SORT_NATURAL|SORT_FLAG_CASE);
                 }
             }

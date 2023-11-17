@@ -2,12 +2,12 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useUnit from "../../../composables/supply-chain/useUnit.js";
-import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     
-    const props = defineProps({
-        form: { type: Object, required: true },
-        errors: { type: [Object, Array], required: false },
-    });
+const props = defineProps({
+    form: { type: Object, required: true },
+    errors: { type: [Object, Array], required: false },
+});
 
     
 

@@ -29,7 +29,7 @@ class CrwPolicyController extends Controller
         try {
             $crwPolicies = CrwPolicy::globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwPolicies, 200);
+            return response()->success('Retrieved Successfully', $crwPolicies, 200);
         }
         catch (QueryException $e)
         {
@@ -51,7 +51,7 @@ class CrwPolicyController extends Controller
 
             $crwPolicy = CrwPolicy::create($crwPolicyData);
 
-            return response()->success('Created Succesfully', $crwPolicy, 201);
+            return response()->success('Created Successfully', $crwPolicy, 201);
         }
         catch (QueryException $e)
         {
@@ -68,7 +68,7 @@ class CrwPolicyController extends Controller
     public function show(CrwPolicy $crwPolicy)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwPolicy, 200);
+            return response()->success('Retrieved Successfully', $crwPolicy, 200);
         }
         catch (QueryException $e)
         {
@@ -91,7 +91,7 @@ class CrwPolicyController extends Controller
 
             $crwPolicy->update($crwPolicyData);
 
-            return response()->success('Updated succesfully', $crwPolicy, 202);
+            return response()->success('Updated Successfully', $crwPolicy, 202);
         }
         catch (QueryException $e)
         {

@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OpsCargoTypeRequest extends FormRequest
@@ -14,7 +15,7 @@ class OpsCargoTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cargo_type'    => ['required', 'string', 'max:255'],
+            'cargo_type'    => ['required', 'string', 'max:255', Rule::unique('ops_cargo_types')->ignore($this->route('cargo_type'), 'id')],
             'description'   => ['nullable', 'string', 'max:5000'],
         ];
     }
@@ -27,7 +28,10 @@ class OpsCargoTypeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'cargo_type.required' => 'Cargo type is required',
+            'cargo_type.unique' => 'Cargo type is already taken',
+            'cargo_type.max' => 'Cargo type may not be greater than :max characters.',
+            'description.max' => 'Cargo description may not be greater than :max characters.',
         ];
     }
 

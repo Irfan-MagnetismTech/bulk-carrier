@@ -11,6 +11,7 @@ export default function useMaterial() {
     const router = useRouter();
     const materials = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
         const material = ref( {
             name: '',
@@ -32,8 +33,17 @@ export default function useMaterial() {
 
     async function getMaterials(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
         filterParams.value = filterOptions;
         try {
@@ -51,8 +61,14 @@ export default function useMaterial() {
             notification.showError(status);
             console.log(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -199,6 +215,7 @@ export default function useMaterial() {
         showMaterial,
         updateMaterial,
         deleteMaterial,
+        isTableLoading,
         searchMaterialWithCategory,
         isLoading,
         errors

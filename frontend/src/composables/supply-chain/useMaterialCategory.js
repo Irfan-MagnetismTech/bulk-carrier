@@ -10,6 +10,7 @@ export default function useMaterialCategory() {
     const router = useRouter();
     const materialCategories = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const materialCategory = ref( {
         name: '',
@@ -24,10 +25,21 @@ export default function useMaterialCategory() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getMaterialCategories(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        
         filterParams.value = filterOptions;
 
         try {
@@ -149,6 +161,7 @@ export default function useMaterialCategory() {
         showMaterialCategory,
         updateMaterialCategory,
         deleteMaterialCategory,
+        isTableLoading,
         isLoading,
         errors,
     };

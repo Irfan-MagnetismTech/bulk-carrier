@@ -63,7 +63,7 @@ class CrwBankAccountController extends Controller
     public function show(CrwBankAccount $crwBankAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwBankAccount, 200);
+            return response()->success('Retrieved Succesfully', $crwBankAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -86,7 +86,7 @@ class CrwBankAccountController extends Controller
 
             $crwBankAccount->update($crwBankAccountData);
 
-            return response()->success('Updated succesfully', $crwBankAccount, 202);
+            return response()->success('Updated Succesfully', $crwBankAccount, 202);
         }
         catch (QueryException $e)
         {

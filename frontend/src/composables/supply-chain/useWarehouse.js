@@ -9,6 +9,7 @@ export default function useWarehouse() {
     const BASE = 'scm' 
     const router = useRouter();
     const warehouses = ref([]);
+    const isTableLoading = ref(false);
     const costCenters = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
@@ -178,6 +179,7 @@ export default function useWarehouse() {
         updateWarehouse,
         deleteWarehouse,
         getCostCenters,
+        isTableLoading,
         costCenters,
         isLoading,
         errors,

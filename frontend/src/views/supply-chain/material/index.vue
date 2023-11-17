@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMaterial from "../../../composables/supply-chain/useMaterial";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 
 const props = defineProps({
@@ -19,13 +20,13 @@ const props = defineProps({
 });
 
 
-const { materials, getMaterials, deleteMaterial, isLoading } = useMaterial();
+const { materials, getMaterials, deleteMaterial, isLoading, isTableLoading } = useMaterial();
 const { setTitle } = Title();
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -35,6 +36,7 @@ function swapFilter() {
 let filterOptions = ref( {
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -81,6 +83,8 @@ let filterOptions = ref( {
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -95,21 +99,23 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 setTitle('Materials');
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-  
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getMaterials(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching materials:", error);
@@ -232,7 +238,7 @@ function confirmDelete(id) {
               <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(material,index) in materials?.data" :key="material.id">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ material.name }}</td>
@@ -244,14 +250,20 @@ function confirmDelete(id) {
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
             </td>
+             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tr>
           </tbody>
-          <tfoot v-if="!materials?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
+        <tr v-else-if="isTableLoading">
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
+        </tr>
         <tr v-else-if="!materials?.data?.length">
-          <td colspan="7">No Materials found.</td>
+          <td colspan="7">No Datas found.</td>
         </tr>
         </tfoot>
       </table>
