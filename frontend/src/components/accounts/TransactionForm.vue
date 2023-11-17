@@ -6,6 +6,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useTransaction from "../../composables/accounts/useTransaction";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
@@ -249,6 +250,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
