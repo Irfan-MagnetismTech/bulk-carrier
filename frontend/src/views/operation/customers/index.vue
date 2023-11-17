@@ -250,7 +250,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
               </th>
               <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+                Action
               </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -271,7 +271,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-              <th></th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
 
             </tr>
           </thead>

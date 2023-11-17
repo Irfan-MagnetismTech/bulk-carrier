@@ -264,7 +264,7 @@ onMounted(() => {
                   </div>
               </th>
               <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+                Action
               </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -285,7 +285,9 @@ onMounted(() => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody v-if="cargoTariffs?.data?.length" class="relative">
