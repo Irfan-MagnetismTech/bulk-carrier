@@ -163,7 +163,7 @@ export default function useRole() {
         try {
             const { data, status } = await Api.delete( `/administration/roles/${roleId}`);
             notification.showSuccess(status);
-            await getRoles(filterOptions.value);
+            await getRoles(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

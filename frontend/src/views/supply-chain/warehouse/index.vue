@@ -32,8 +32,6 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
-const debouncedValue = useDebouncedRef('', 800);
-
 let showFilter = ref(false);
 // let isTableLoader = ref(false);
 
@@ -99,6 +97,13 @@ function confirmDelete(id) {
       deleteWarehouse(id);
     }
   })
+}
+
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
 }
 
 onMounted(() => {
@@ -203,6 +208,9 @@ onMounted(() => {
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody class="relative">
@@ -221,7 +229,7 @@ onMounted(() => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && warehouses?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!warehouses?.data?.length">
+          <tfoot v-if="!warehouses?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>

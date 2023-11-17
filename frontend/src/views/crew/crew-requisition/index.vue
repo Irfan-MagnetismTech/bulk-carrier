@@ -95,6 +95,13 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     filterOptions.value.page = props.page;
@@ -191,6 +198,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody  class="relative">
@@ -210,7 +220,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!crewRequisitions?.data?.length"  class="relative h-[250px]">
+          <tfoot v-if="!crewRequisitions?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>

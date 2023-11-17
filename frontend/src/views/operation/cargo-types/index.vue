@@ -80,6 +80,14 @@ function setSortingState(index, order) {
   });
   filterOptions.value.filter_options[index].order_by = order;
 }
+
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
@@ -125,12 +133,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-
-    filterOptions.value.filter_options.forEach((option, index) => {
-      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-    });
-  
-});
+    
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -173,7 +180,9 @@ onMounted(() => {
                     </div>
                   </div>
               </th>
-              <th>Action</th>
+              <th>
+                Action
+              </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 
@@ -188,7 +197,7 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
-                <!-- <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit> -->
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
           </thead>
@@ -202,6 +211,7 @@ onMounted(() => {
                     <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
                   <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                 </td>
+
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTypes?.data?.length"></LoaderComponent>
           </tbody>

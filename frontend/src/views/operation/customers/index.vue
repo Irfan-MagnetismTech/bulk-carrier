@@ -131,6 +131,13 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
@@ -242,7 +249,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
                     </div>
                   </div>
               </th>
-              <th>Action</th>
+              <th>
+                Action
+              </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 
@@ -262,7 +271,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-              <th></th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
 
             </tr>
           </thead>

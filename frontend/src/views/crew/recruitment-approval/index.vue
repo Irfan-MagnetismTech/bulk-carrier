@@ -143,7 +143,12 @@ function setSortingState(index, order) {
   });
   filterOptions.value.filter_options[index].order_by = order;
 }
-
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -288,7 +293,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
+
           </thead>
           <tbody  class="relative">
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
@@ -311,7 +320,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && recruitmentApprovals?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!recruitmentApprovals?.data?.length">
+          <tfoot v-if="!recruitmentApprovals?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="11">Loading...</td>
           </tr>

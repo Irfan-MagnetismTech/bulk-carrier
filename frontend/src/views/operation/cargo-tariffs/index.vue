@@ -138,8 +138,17 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+
+
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -256,7 +265,9 @@ onMounted(() => {
                     </div>
                   </div>
               </th>
-              <th>Action</th>
+              <th>
+                Action
+              </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -276,7 +287,9 @@ onMounted(() => {
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody v-if="cargoTariffs?.data?.length" class="relative">

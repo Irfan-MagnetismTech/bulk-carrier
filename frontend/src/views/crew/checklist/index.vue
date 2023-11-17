@@ -15,7 +15,6 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
-const debouncedValue = useDebouncedRef('', 800);
 
 const props = defineProps({
   page: {
@@ -83,6 +82,8 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
@@ -91,16 +92,27 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
 
 onMounted(() => {
   watchPostEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
   getCheckLists(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -185,12 +197,15 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>              
+              </th>      
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>        
             </tr>
           </thead>
           <tbody class="relative">
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
             <td style="text-align: left !important;">
               <span v-for="(chkListLine,index) in chkList?.crwCrewChecklistLines" :key="index"

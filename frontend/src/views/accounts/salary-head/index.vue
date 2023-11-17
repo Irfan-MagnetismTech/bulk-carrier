@@ -11,6 +11,8 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+
 const router = useRouter();
 
 const props = defineProps({
@@ -20,7 +22,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { salaryHeads, getSalaryHeads, deleteSalaryHead, isLoading } = useSalaryHead();
+const { salaryHeads, getSalaryHeads, deleteSalaryHead, isLoading ,isTableLoading} = useSalaryHead();
 const { setTitle } = Title();
 setTitle('Salary Head List');
 
@@ -70,19 +72,42 @@ let filterOptions = ref( {
   ]
 });
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index,order){
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getSalaryHeads(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -148,6 +173,9 @@ onMounted(() => {
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
             </th>
+            <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
           </tr>
           </thead>
           <tbody>
@@ -162,10 +190,16 @@ onMounted(() => {
               <action-button @click="confirmDelete(head?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && salaryHeads?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!salaryHeads?.data?.length">
+          <tfoot v-if="!salaryHeads?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!salaryHeads?.data?.length">
             <td colspan="4">No data found.</td>

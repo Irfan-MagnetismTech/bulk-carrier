@@ -355,15 +355,18 @@ onMounted(() => {
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody class="relative">
             <template v-for="(transactionData,index) in transactions?.data" :key="index">
               <tr v-for="(ledger, ledgerIndex) in transactionData?.ledgerEntries" :key="ledgerIndex">
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ index + 1 }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.costCenter?.name }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.voucher_type }} </td>
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.transaction_date }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.transaction_date }}</nobr> </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_no }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.instrument_date }}</nobr> </td>
@@ -377,8 +380,10 @@ onMounted(() => {
                   <span :class="transactionData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ transactionData?.business_unit }}</span>
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length">
-                  <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
-                  <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
+                  <nobr>
+                    <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
+                    <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
+                  </nobr>
                 </td>
               </tr>
             </template>
@@ -386,15 +391,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!transactions?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
+            <td colspan="13">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="13">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
           <tr v-else-if="!transactions?.data?.length">
-            <td colspan="9">No data found.</td>
+            <td colspan="13">No data found.</td>
           </tr>
           </tfoot>
       </table>

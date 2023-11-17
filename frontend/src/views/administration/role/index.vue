@@ -82,6 +82,13 @@ function deleteRoleByID(roleId) {
   })
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
@@ -175,7 +182,10 @@ onMounted(() => {
               </th>
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th></th>
+              
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <!-- <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"> -->
@@ -195,7 +205,7 @@ onMounted(() => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>

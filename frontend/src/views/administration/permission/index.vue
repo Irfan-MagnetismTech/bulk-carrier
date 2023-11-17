@@ -92,6 +92,13 @@ function confirmDelete(id) {
   })
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
@@ -181,7 +188,10 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-             </tr>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th> 
+            </tr>
           </thead>
         <tbody class="relative">
         <tr v-for="(permission,index) in permissions?.data" :key="index">
@@ -192,7 +202,7 @@ onMounted(() => {
         </tr>
         <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && permissions?.data?.length"></LoaderComponent>
         </tbody>
-        <tfoot v-if="!permissions?.data?.length">
+        <tfoot v-if="!permissions?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
           <td colspan="5">Loading...</td>
         </tr>
