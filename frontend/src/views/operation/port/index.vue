@@ -217,8 +217,8 @@ onMounted(() => {
                       <action-button @click="confirmDelete(port.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
-                  <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ports?.data?.length"></LoaderComponent>
-              </tr>
+                </tr>
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ports?.data?.length"></LoaderComponent>
           </tbody>
           
           <tfoot v-if="!ports?.data?.length" class="relative h-[250px]">
