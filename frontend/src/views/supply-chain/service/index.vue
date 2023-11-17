@@ -179,8 +179,8 @@ function confirmDelete(id) {
                 <action-button :action="'edit'" :to="{ name: 'scm.service.edit', params: { serviceId: service.id } }"></action-button>
                 <action-button @click="confirmDelete(service.id)" :action="'delete'"></action-button>
               </td>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && services?.data?.length"></LoaderComponent>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && services?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!services?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">

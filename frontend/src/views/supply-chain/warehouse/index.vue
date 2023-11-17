@@ -218,8 +218,8 @@ onMounted(() => {
               <action-button :action="'edit'" :to="{ name: 'scm.warehouse.edit', params: { warehouseId: warehouse?.id } }"></action-button>
               <action-button @click="confirmDelete(warehouse?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && warehouses?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && warehouses?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!warehouses?.data?.length">
           <tr v-if="isLoading">

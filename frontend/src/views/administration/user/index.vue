@@ -219,8 +219,8 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
               <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!users?.length">
           <tr v-if="isLoading">
