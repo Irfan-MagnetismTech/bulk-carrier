@@ -277,8 +277,8 @@ onMounted(() => {
                 <action-button :action="'edit'" :to="{ name: 'mnt.items.edit', params: { itemId: item?.id } }"></action-button>
                 <action-button @click="confirmDelete(item?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && items?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!items?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">

@@ -278,8 +278,8 @@ onMounted(() => {
                 <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && runHours?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && runHours?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!runHours?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">

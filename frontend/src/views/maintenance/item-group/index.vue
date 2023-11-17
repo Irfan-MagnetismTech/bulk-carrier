@@ -254,8 +254,8 @@ onMounted(() => {
                 <action-button :action="'edit'" :to="{ name: 'mnt.item-groups.edit', params: { itemGroupId: itemGroup?.id } }"></action-button>
                 <action-button @click="confirmDelete(itemGroup?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && itemGroups?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && itemGroups?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!itemGroups?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
