@@ -12,7 +12,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
 const store = useStore();
 
-const { unit, showUnit, updateUnit,isLoading } = useUnit();
+const { unit, showUnit, updateUnit,isLoading,errors} = useUnit();
 const { setTitle } = Title();
 const route = useRoute();
 const unitId = route.params.unitId;
@@ -22,7 +22,6 @@ setTitle('Edit Unit');
 
 onMounted(() => {
     showUnit(unitId);
-    
 });
 
 </script>

@@ -1,12 +1,8 @@
 <template>
-     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
-    </div>
+     
 
     <h4 class="text-md font-semibold">Customer Info</h4>
+    
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         
         <label class="block w-full mt-2 text-sm">

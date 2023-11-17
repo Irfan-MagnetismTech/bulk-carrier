@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useWarehouse from "../../../composables/supply-chain/useWarehouse";
@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import Paginate from '../../../components/utils/paginate.vue';
+import { watchAtMost } from "@vueuse/core";
 
 const props = defineProps({
   page: {
@@ -99,7 +100,7 @@ function confirmDelete(id) {
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
