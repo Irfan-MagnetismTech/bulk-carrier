@@ -141,7 +141,7 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
-    filterOptions.value.page = props.page;
+    // filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
@@ -253,7 +253,7 @@ onMounted(() => {
                 </div>
             </th>
             <th class="w-1/12">
-              <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              Action
             </th>
           </tr>
           <tr class="w-full" v-if="showFilter">
@@ -271,6 +271,9 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
           </thead>

@@ -287,7 +287,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
               </th>
               <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+                Action
               </th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -309,6 +309,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th><input v-model.trim="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
 
             </tr>
@@ -335,6 +338,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                     
                   </td>
+                  
                 </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vessels?.data?.length"></LoaderComponent>
           </tbody>

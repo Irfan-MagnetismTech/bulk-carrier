@@ -363,10 +363,10 @@ onMounted(() => {
           <tbody class="relative">
             <template v-for="(transactionData,index) in transactions?.data" :key="index">
               <tr v-for="(ledger, ledgerIndex) in transactionData?.ledgerEntries" :key="ledgerIndex">
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ index + 1 }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.costCenter?.name }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.voucher_type }} </td>
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.transaction_date }} </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.transaction_date }}</nobr> </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_no }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.instrument_date }}</nobr> </td>
@@ -391,15 +391,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!transactions?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
+            <td colspan="13">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="13">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
           <tr v-else-if="!transactions?.data?.length">
-            <td colspan="9">No data found.</td>
+            <td colspan="13">No data found.</td>
           </tr>
           </tfoot>
       </table>
