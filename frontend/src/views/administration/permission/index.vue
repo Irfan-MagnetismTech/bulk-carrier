@@ -63,9 +63,15 @@ let filterOptions = ref({
   ]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -85,7 +91,12 @@ function confirmDelete(id) {
 
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     getPermissions(filterOptions.value)
         .then(() => {
           const customDataTable = document.getElementById("customDataTable");
@@ -167,7 +178,7 @@ onMounted(() => {
           </thead>
         <tbody>
         <tr v-for="(permission,index) in permissions?.data" :key="index">
-          <td>{{ permissions?.from + index }}</td>
+          <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
           <td>{{ permission?.menu }}</td>
           <td>{{ permission?.subject }}</td>
           <td>{{ permission?.name }}</td>
