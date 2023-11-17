@@ -31,7 +31,7 @@ const page = ref('edit');
 setTitle('Edit Role');
 
 onMounted(() => {
-  getPermissions(1, false);
+  //getPermissions(1, false);
   showRole(roleId);
 });
 </script>
