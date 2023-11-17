@@ -33,11 +33,11 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Cost Center Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.name" v-model="form.name" placeholder="Cost center name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.name" v-model="form.name" placeholder="Cost Center Name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Short Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.short_name" placeholder="Short name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.short_name" placeholder="Short Name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Type <span class="text-red-500">*</span></span>
