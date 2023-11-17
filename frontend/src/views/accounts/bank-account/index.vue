@@ -126,6 +126,14 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null
     },
+    {
+      "relation_name": "",
+      "field_name": "opening_balance",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
   ]
 });
 
@@ -246,6 +254,16 @@ onMounted(() => {
                 </div>
               </div>
             </th>
+
+            <th>
+              <div class="flex justify-evenly items-center">
+                <span><nobr>Opening Balance</nobr></span>
+                <div class="flex flex-col cursor-pointer">
+                  <div v-html="icons.descIcon" @click="setSortingState(8,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[8].order_by !== 'asc' }" class=" font-semibold"></div>
+                  <div v-html="icons.ascIcon" @click="setSortingState(8,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
+                </div>
+              </div>
+            </th>            
             <th>
               <div class="flex justify-evenly items-center">
                 <span><nobr>Business Unit</nobr></span>
@@ -286,6 +304,7 @@ onMounted(() => {
             <td>{{ account?.routing_number }}</td>
             <td>{{ account?.contact_number }}</td>
             <td>{{ account?.opening_date }}</td>            
+            <td>{{ account?.opening_balance }}</td>            
             <td>
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>
