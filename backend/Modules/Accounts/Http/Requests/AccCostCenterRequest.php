@@ -14,8 +14,7 @@ class AccCostCenterRequest extends FormRequest
     public function rules(): array {
         return [
             'name'          => ['required', 'string', 'max:255'],
-            'short_name'    => ['required', 'string', 'max:255'],
-            'short_name'    => ['required', 'string', 'max:255'],
+            'short_name'    => ['required', 'string', 'max:6'],
             'type'          => ['required', 'string', 'max:255'],
             'business_unit' => ['required', 'string', 'max:255'],
         ];
@@ -31,7 +30,7 @@ class AccCostCenterRequest extends FormRequest
             'name.max'            => 'The Cost Center Name field cannot exceed 255 characters.',
             'name.required'       => 'The Cost Center Name field is required.',
 
-            'short_name.max'      => 'The Short Name field cannot exceed 255 characters.',
+            'short_name.max'      => 'The Short Name field cannot exceed 6 characters.',
             'short_name.required' => 'The Short Name field is required.',
 
             'type.max'            => 'The Type field cannot exceed 255 characters.',
