@@ -202,8 +202,8 @@ onMounted(() => {
                     <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
                   <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                 </td>
-                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTypes?.data?.length"></LoaderComponent>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTypes?.data?.length"></LoaderComponent>
           </tbody>
           
           <tfoot v-if="!cargoTypes?.data?.length" class="relative h-[250px]">
