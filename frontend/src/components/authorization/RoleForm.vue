@@ -2,6 +2,7 @@
 import Error from "../Error.vue";
 import {onMounted,watch} from "vue";
 import usePermission from "../../composables/administration/usePermission";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const { permissions, getPermissions } = usePermission();
 
 const props = defineProps({
@@ -122,7 +123,6 @@ function inputCheckedByPermission(permissionMenuKey,permissionSubjectKey,permiss
     <label class="block w-full mt-3 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Role Name <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.name" required placeholder="Role Name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" />
-      <Error v-if="errors?.name" :errors="errors.name" />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -150,6 +150,7 @@ function inputCheckedByPermission(permissionMenuKey,permissionSubjectKey,permiss
       </div>
     </div>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 <style lang="postcss" scoped>
