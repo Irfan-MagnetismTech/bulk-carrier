@@ -12,7 +12,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
 const store = useStore();
 
-const { vendor, showVendor, updateVendor,isLoading} = useVendor();
+const { vendor, showVendor, updateVendor,isLoading,errors} = useVendor();
 const { setTitle } = Title();
 const route = useRoute();
 const vendorId = route.params.vendorId;

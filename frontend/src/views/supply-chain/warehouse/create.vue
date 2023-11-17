@@ -9,8 +9,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
-
 const { warehouse, storeWarehouse, isLoading, errors } = useWarehouse();
+
 const { setTitle } = Title();
 
 setTitle('Create Warehouse');
