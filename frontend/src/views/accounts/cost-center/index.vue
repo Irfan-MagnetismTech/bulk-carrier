@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect,watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCostCenter from "../../../composables/accounts/useCostCenter";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const router = useRouter();
 
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { costCenters, getCostCenters, deleteCostCenter, isLoading } = useCostCenter();
+const { costCenters, getCostCenters, deleteCostCenter, isLoading, isTableLoading  } = useCostCenter();
 const { setTitle } = Title();
 setTitle('Cost Center List');
 
@@ -31,7 +32,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item!",
+    text: "You want to delete this item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -58,6 +59,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -86,7 +88,12 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
@@ -101,11 +108,25 @@ function clearFilter(){
   });
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
+    // filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getCostCenters(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -174,7 +195,7 @@ onMounted(() => {
           <tr class="w-full" v-if="showFilter">
             <th>
               <select v-model.trim="filterOptions.items_per_page" class="filter_input">
-                <option value="15">15</option>
+                <option value="2">15</option>
                 <option value="30">30</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -198,9 +219,9 @@ onMounted(() => {
             </th>
           </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(center,index) in costCenters?.data" :key="index">
-            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ center?.name }}</td>
             <td class="text-left">{{ center?.short_name }}</td>
             <td>{{ center?.type }}</td>
@@ -212,11 +233,18 @@ onMounted(() => {
               <action-button @click="confirmDelete(center?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && costCenters?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!costCenters?.data?.length">
+          <tfoot v-if="!costCenters?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="6">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
+
           <tr v-else-if="!costCenters?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>
