@@ -24,9 +24,18 @@ export default function useService() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getServices(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
         filterParams.value = filterOptions;
 
         try {

@@ -226,10 +226,10 @@ onMounted(() => {
             <td colspan="4">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-            <td colspan="7">
-              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-            </td>
-        </tr>
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+          </tr>
           <tr v-else-if="!warehouses?.data?.length">
             <td colspan="4">No Datas found.</td>
           </tr>
