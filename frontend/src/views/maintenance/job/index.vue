@@ -118,6 +118,13 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
@@ -234,7 +241,9 @@ onMounted(() => {
                   <span>Business Unit</span>                
                 </div>
             </th>
-            <th class="w-1/12">Action</th>
+            <th class="w-1/12">
+              <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+            </th>
           </tr>
           <tr class="w-full" v-if="showFilter">
               <th>

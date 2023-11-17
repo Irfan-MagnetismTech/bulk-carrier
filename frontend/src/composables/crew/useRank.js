@@ -8,6 +8,7 @@ export default function useRank() {
     const router = useRouter();
     const ranks = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const rank = ref( {
         name: '',
@@ -18,7 +19,6 @@ export default function useRank() {
     const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
-    const isTableLoading = ref(false);
 
     async function getRanks(filterOptions) {
 

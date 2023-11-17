@@ -85,9 +85,14 @@ class ScmMaterialCategoryController extends Controller
     public function destroy(ScmMaterialCategory $material_category): JsonResponse
     {
         try {
-                // if (count($material_category->children) > 0) {
-                //     return response()->error('Category has Children', 500);
-                // }
+            // if (count($material_category->children) > 0) {
+            //     return response()->error('Category has Children', 500);
+            // }
+            //if id is 1 then return error
+            if ($material_category->id === 1) {
+
+                return response()->error('Category cannot be deleted', 501);
+            }
             $material_category->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
