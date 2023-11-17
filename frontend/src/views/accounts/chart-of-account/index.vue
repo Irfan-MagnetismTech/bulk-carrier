@@ -55,7 +55,6 @@ function confirmDelete(id) {
 //     }
 // );
 
-use
 let isTableLoader = ref(false);
 let showFilter = ref(false);
 function swapFilter() {
