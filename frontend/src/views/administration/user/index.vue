@@ -222,7 +222,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!users?.length">
+          <tfoot v-if="!users?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
