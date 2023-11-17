@@ -9,6 +9,7 @@ export default function useWarehouse() {
     const BASE = 'scm' 
     const router = useRouter();
     const warehouses = ref([]);
+    const costCenters = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const warehouse = ref( {
@@ -153,6 +154,20 @@ export default function useWarehouse() {
         }
     }
 
+    async function getCostCenters(business_unit,name,loading) {
+        try {
+            const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
+            costCenters.value = data.value;
+            
+        } catch(error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loading(false);
+        }
+    }
+
+
     return {
         warehouses,
         warehouse,
@@ -162,6 +177,8 @@ export default function useWarehouse() {
         showWarehouse,
         updateWarehouse,
         deleteWarehouse,
+        getCostCenters,
+        costCenters,
         isLoading,
         errors,
     };
