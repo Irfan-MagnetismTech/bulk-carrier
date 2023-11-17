@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect, watchPostEffect } from 'vue'
 import ActionButton from '../../../components/buttons/ActionButton.vue'
 import DefaultButton from '../../../components/buttons/DefaultButton.vue'
 import useOpeningStock from '../../../composables/supply-chain/useOpeningStock'
@@ -10,8 +10,9 @@ import Paginate from '../../../components/utils/paginate.vue'
 import useHeroIcon from '../../../assets/heroIcon'
 import useDebouncedRef from '../../../composables/useDebouncedRef'
 import FilterWithBusinessUnit from '../../../components/searching/FilterWithBusinessUnit.vue'
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
-const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading } =
+const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading, isTableLoading } =
     useOpeningStock()
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit)
 
@@ -32,7 +33,7 @@ const icons = useHeroIcon()
 const debouncedValue = useDebouncedRef('', 800)
 
 let showFilter = ref(false)
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 function swapFilter() {
     showFilter.value = !showFilter.value
@@ -41,6 +42,7 @@ function swapFilter() {
 let filterOptions = ref({
     "business_unit": businessUnit.value,
     "items_per_page": 15,
+    "isFilter": false,
     "page": props.page,
     "filter_options": [
         {
@@ -73,23 +75,28 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 const tableScrollWidth = ref(null)
 const screenWidth = screen.width > 768 ? screen.width - 260 : screen.width
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
-    watchEffect(() => {
+    watchPostEffect(() => {
         if(currentPage.value == props.page && currentPage.value != 1) {
             filterOptions.value.page = 1;
         } else {
             filterOptions.value.page = props.page;
         }
-  currentPage.value = props.page;
+        currentPage.value = props.page;
+        if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+        filterOptions.value.isFilter = true;
+        }
         getOpeningStocks(filterOptions.value)
             .then(() => {
+                paginatedPage.value = filterOptions.value.page;
                 const customDataTable =
                     document.getElementById('customDataTable')
                 if (customDataTable) {
                     tableScrollWidth.value = customDataTable.scrollWidth
                 }
-                isTableLoader.value = true;
+                // isTableLoader.value = true;
             })
             .catch(error => {
                 console.error('Error fetching opening-stock category:', error)
@@ -271,7 +278,7 @@ function confirmDelete(id) {
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="relative">
                     <tr
                         v-for="(openingStock, index) in openingStocks?.data
                             ? openingStocks?.data
@@ -305,6 +312,7 @@ function confirmDelete(id) {
                                 :action="'delete'"
                             ></action-button>
                         </td>
+                        <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>
                     </tr>
                 </tbody>
                 <tfoot
@@ -314,8 +322,13 @@ function confirmDelete(id) {
                     <tr v-if="isLoading">
                         <td colspan="7">Loading...</td>
                     </tr>
+                    <tr v-else-if="isTableLoading">
+                        <td colspan="7">
+                        <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                        </td>
+                    </tr>
                     <tr v-else-if="!openingStocks?.data?.length">
-                        <td colspan="7">No Material Category found.</td>
+                        <td colspan="7">No Datas found.</td>
                     </tr>
                 </tfoot>
             </table>

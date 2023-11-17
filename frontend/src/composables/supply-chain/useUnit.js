@@ -10,6 +10,7 @@ export default function useUnit() {
     const BASE = 'scm' 
     const router = useRouter();
     const units = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const unit = ref( {
@@ -44,9 +45,14 @@ export default function useUnit() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -156,6 +162,7 @@ export default function useUnit() {
         showUnit,
         updateUnit,
         deleteUnit,
+        isTableLoading,
         isLoading,
         errors,
     };

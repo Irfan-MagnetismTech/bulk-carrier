@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useUser from "../../../composables/administration/useUser";
 import Title from "../../../services/title";
@@ -10,6 +10,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -18,7 +19,7 @@ const props = defineProps({
   },
 });
 
-const { users, getUsers, deleteUser, isLoading } = useUser();
+const { users, getUsers, deleteUser, isLoading, isTableLoading} = useUser();
 const { setTitle } = Title();
 setTitle('User List');
 
@@ -26,7 +27,7 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -37,6 +38,7 @@ let filterOptions = ref({
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": "roles",
@@ -74,7 +76,7 @@ function setSortingState(index, order) {
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
-
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -93,21 +95,25 @@ function confirmDelete(id) {
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getUsers(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -200,7 +206,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
              
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(user,index) in users.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ user?.roles[0].name }}</td>
@@ -213,11 +219,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
               <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
             </td>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tr>
           </tbody>
           <tfoot v-if="!users?.length">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!users?.data?.length">
             <td colspan="6">No user found.</td>

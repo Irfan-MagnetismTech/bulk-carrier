@@ -148,11 +148,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Business Unit</nobr></span>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
                   <span>Items Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -160,6 +155,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
                 </div>
               </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Business Unit</nobr></span>
+                </div>
+              </th>              
               <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -172,25 +172,25 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 </select>
               </th>
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              </th>              
             </tr>
           </thead>
           <tbody>
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
-            <td class="w-1/6">
-              <span :class="chkList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chkList?.business_unit }}</span>
-            </td>
             <td style="text-align: left !important;">
               <span v-for="(chkListLine,index) in chkList?.crwCrewChecklistLines" :key="index"
                     class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
                 {{ chkListLine?.item_name }}
               </span>
             </td>
+            <td class="w-1/6">
+              <span :class="chkList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chkList?.business_unit }}</span>
+            </td>            
             <td>
               <nobr>
                 <action-button :action="'edit'" :to="{ name: 'crw.checklists.edit', params: { checkListId: chkList?.id } }"></action-button>

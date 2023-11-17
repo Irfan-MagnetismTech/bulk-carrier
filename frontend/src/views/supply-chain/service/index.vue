@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useService from "../../../composables/supply-chain/useService";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -17,14 +18,14 @@ const props = defineProps({
   },
 });
 
-const { services, getServices, deleteService, isLoading, } = useService();
+const { services, getServices, deleteService, isLoading, isTableLoading} = useService();
 const { setTitle } = Title();
 const debouncedValue = useDebouncedRef('', 800);
 
 setTitle('Services');
 const icons = useHeroIcon();
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -34,6 +35,7 @@ function swapFilter() {
 let filterOptions = ref( {
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -67,22 +69,27 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
     getServices(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching services:", error);
@@ -163,7 +170,7 @@ function confirmDelete(id) {
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
             <tr v-for="(service,index) in services.data" :key="service.id">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ service.name }}</td>
@@ -172,14 +179,20 @@ function confirmDelete(id) {
                 <action-button :action="'edit'" :to="{ name: 'scm.service.edit', params: { serviceId: service.id } }"></action-button>
                 <action-button @click="confirmDelete(service.id)" :action="'delete'"></action-button>
               </td>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && services?.data?.length"></LoaderComponent>
             </tr>
           </tbody>
           <tfoot v-if="!services?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
+        <tr v-else-if="isTableLoading">
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
+        </tr>
         <tr v-else-if="!services?.data?.length">
-          <td colspan="7">No Material Category found.</td>
+          <td colspan="7">No Datas found.</td>
         </tr>
         </tfoot>
       </table>

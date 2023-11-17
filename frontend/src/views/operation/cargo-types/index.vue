@@ -7,14 +7,16 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { cargoTypes, getCargoTypes, deleteCargoType, isLoading, isTableLoading } = useCargoType();
+const icons = useHeroIcon();
+const debouncedValue = useDebouncedRef('', 800);
 
 const props = defineProps({
   page: {
@@ -123,6 +125,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+
+    filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
+  
 });
 
 });
