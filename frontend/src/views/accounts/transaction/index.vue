@@ -355,6 +355,9 @@ onMounted(() => {
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
           <tbody class="relative">
@@ -377,8 +380,10 @@ onMounted(() => {
                   <span :class="transactionData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ transactionData?.business_unit }}</span>
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length">
-                  <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
-                  <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
+                  <nobr>
+                    <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
+                    <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
+                  </nobr>
                 </td>
               </tr>
             </template>
