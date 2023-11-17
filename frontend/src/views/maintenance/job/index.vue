@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useJob from "../../../composables/maintenance/useJob";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { jobs, getJobs, deleteJob, isLoading } = useJob();
+const { jobs, getJobs, deleteJob, isLoading, isTableLoading  } = useJob();
 const { setTitle } = Title();
 setTitle('Job List');
 
@@ -32,7 +33,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
@@ -65,6 +66,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -106,6 +108,9 @@ let filterOptions = ref( {
     },
   ]
 });
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -117,23 +122,25 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-    
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getJobs(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching jobs:", error);
@@ -248,7 +255,7 @@ onMounted(() => {
               <th></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(job,index) in jobs?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ job?.opsVessel?.name }}</td>
@@ -261,11 +268,17 @@ onMounted(() => {
                 <action-button @click="confirmDelete(job?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && jobs?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!jobs?.data?.length">
+          <tfoot v-if="!jobs?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!jobs?.data?.length">
             <td colspan="7">No job found.</td>
           </tr>

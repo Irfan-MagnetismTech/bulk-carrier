@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
