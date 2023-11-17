@@ -25,7 +25,7 @@ class ScmUnitRequest extends FormRequest
     {
         return [
             'name' => ['required', Rule::unique('scm_units')->ignore($this->unit, 'name'), 'max:255'],
-            'short_code' => ['required', Rule::unique('scm_units')->ignore($this->unit, 'short_code', 'max:255')],
+            'short_code' => ['required', Rule::unique('scm_units')->ignore($this->unit, 'short_code'), 'max:255'],
         ];
     }
 

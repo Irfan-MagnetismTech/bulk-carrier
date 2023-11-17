@@ -11,6 +11,8 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+
 const router = useRouter();
 
 const props = defineProps({
@@ -20,7 +22,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { bankAccounts, getBankAccounts, deleteBankAccount, isLoading } = useBankAccount();
+const { bankAccounts, getBankAccounts, deleteBankAccount, isLoading ,isTableLoading} = useBankAccount();
 const { setTitle } = Title();
 setTitle('Bank Account List');
 
@@ -138,14 +140,26 @@ let filterOptions = ref( {
 });
 
 function setSortingState(index,order){
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
   watchEffect(() => {
-  filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getBankAccounts(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -313,10 +327,16 @@ onMounted(() => {
               <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bankAccounts?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!bankAccounts?.data?.length">
+          <tfoot v-if="!bankAccounts?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="11">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!bankAccounts?.data?.data?.length">
             <td colspan="11">No data found.</td>
