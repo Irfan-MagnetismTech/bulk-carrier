@@ -34,9 +34,18 @@ export default function useWarehouse() {
     const isLoading = ref(false);
 
     async function getWarehouses(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
 
         filterParams.value = filterOptions;
 
