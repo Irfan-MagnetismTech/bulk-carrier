@@ -53,10 +53,15 @@ let filterOptions = ref({
   ]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 function deleteRoleByID(roleId) {
   Swal.fire({
@@ -76,7 +81,12 @@ function deleteRoleByID(roleId) {
 
 onMounted(() => {
   watchEffect(() => {
-    filterOptions.value.page = props.page;
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
     getRoles(filterOptions.value)
         .then(() => {
           const customDataTable = document.getElementById("customDataTable");
@@ -163,7 +173,7 @@ onMounted(() => {
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr v-for="(roleData,index) in roles.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ roleData?.name }}</td>
             <td style="text-align: left !important;">
               <span v-for="(permission,index) in roleData?.permissions" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">

@@ -25,4 +25,5 @@ Route::middleware(['auth:api'])->prefix('administration')->group(function ()
 
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
+    Route::get('permissions-group-by-subject', [PermissionController::class, 'getPermissionsGroupBySubject']);
 });
