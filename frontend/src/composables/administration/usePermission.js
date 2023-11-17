@@ -10,6 +10,7 @@ export default function usePermission() {
     const router = useRouter();
     const $loading = useLoading();
     const permissions = ref([]);
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const permission = ref( {
         name: '',
@@ -21,9 +22,21 @@ export default function usePermission() {
 
     // async function getPermissions(page, isPaginate = true) {
     async function getPermissions(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
         filterParams.value = filterOptions;
         try {
             // const { data, status } = await Api.get('/administration/permissions', {
@@ -44,9 +57,14 @@ export default function usePermission() {
         } catch (error) {
             const { data, status } = error.response;
         } finally {
-            //NProgress.done();
-            loader.hide();
-            isLoading.value = false;
+             if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -160,6 +178,7 @@ export default function usePermission() {
         getPermissions,
         storePermission,
         showPermission,
+        isTableLoading,
         updatePermission,
         deletePermission,
         getPermissionWithoutPaginate,

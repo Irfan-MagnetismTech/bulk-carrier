@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect, watch} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRecruitmentApproval from "../../../composables/crew/useRecruitmentApproval";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading } = useRecruitmentApproval();
+const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading, isTableLoading  } = useRecruitmentApproval();
 const { setTitle } = Title();
 setTitle('Recruitment Approval');
 
@@ -65,6 +66,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -133,14 +135,22 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getRecruitmentApprovals(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -172,21 +182,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Applied Date</th>
-            <th>Page Title</th>
-            <th>Subject</th>
-            <th>Business Unit</th>
-            <th>Approved</th>
-            <th>Agreed to Join</th>
-            <th>Selected</th>
-            <th>Panel</th>
-            <th>Rest</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <thead>
             <tr class="w-full">
               <th class="w-16">
@@ -221,14 +216,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
                 </div>
               </th>
-               <th>
-                <div class="flex justify-evenly items-center">
-                  <span><nobr>Business Unit</nobr></span>
-                </div>
-              </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Approved</nobr></span>
+                  <span> Total <br> Approved</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -237,7 +227,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Agreed to Join</nobr></span>
+                  <span> Agreed <br> to Join </span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -246,7 +236,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Selected</nobr></span>
+                  <span>Total <br> Selected </span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -255,7 +245,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Panel</nobr></span>
+                  <span> Total <br> Panel </span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -264,13 +254,18 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Rest</nobr></span>
+                  <span> Total <br> Rest </span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Business Unit</nobr></span>
+                </div>
+              </th>              
               <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -285,40 +280,46 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th>
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ rcrApproval?.applied_date }}</td>
             <td>{{ rcrApproval?.page_title }}</td>
             <td>{{ rcrApproval?.subject }}</td>
-            <td>
-              <span :class="rcrApproval?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rcrApproval?.business_unit }}</span>
-            </td>
             <td>{{ rcrApproval?.total_approved }}</td>
             <td>{{ rcrApproval?.crew_agreed_to_join }}</td>
             <td>{{ rcrApproval?.crew_selected }}</td>
             <td>{{ rcrApproval?.crew_panel }}</td>
             <td>{{ rcrApproval?.crew_rest }}</td>
             <td>
+              <span :class="rcrApproval?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rcrApproval?.business_unit }}</span>
+            </td>            
+            <td>
               <action-button :action="'edit'" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
               <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && recruitmentApprovals?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!recruitmentApprovals?.data?.length">
           <tr v-if="isLoading">
             <td colspan="11">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="11">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!recruitmentApprovals?.data?.length">
             <td colspan="11">No data found.</td>
           </tr>

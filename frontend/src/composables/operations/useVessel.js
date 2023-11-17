@@ -69,11 +69,24 @@ export default function useVessel() {
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
     const filterParams = ref(null);
+	const isTableLoading = ref(false);
 
 	async function getVessels(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
@@ -95,8 +108,14 @@ export default function useVessel() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -290,6 +309,7 @@ export default function useVessel() {
 		getVesselsByVoyage,
 		getVesselsWithoutPaginate,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

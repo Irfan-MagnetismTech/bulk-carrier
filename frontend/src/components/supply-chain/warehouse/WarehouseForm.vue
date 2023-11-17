@@ -4,24 +4,25 @@
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import ErrorComponent from "../../utils/ErrorComponent.vue";
+    const { costCenters, getCostCenters } = useWarehouse();
     
     const props = defineProps({
         form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
         formType: { type: String, required : false },
     });
-    
-    const { warehouses, searchWarehouse } = useWarehouse();//  this code will be overriten by costcenter search
 
-    function fetchWarehouse(query, loading) {//  this code will be overriten by costcenter search
-        searchWarehouse(query, loading);
+    function fetchCostCenter(query, loading) {
+        getCostCenters(props.form.business_unit,query, loading);
         loading(true)
     }
 
-    watch(() => props.form.cost_center_no, (value) => {
-        props.form.cost_center_id = value?.id;
+    watch(() => props.form.accCostCenter, (value) => {
+        props.form.acc_cost_center_id = value?.id;
+        props.form.cost_center_name = value?.name;
     });
-    
+
+
     const store_category = ['Warehouse', 'Tank']
 </script>
 <template>
@@ -36,20 +37,21 @@
                     <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
                     <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
                 </label>
+              
                 <label class="label-group">
                     <span class="label-item-title">Cost Center</span>
-                    <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.cost_center_no" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-                    <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" />
-                    <!-- <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" /> -->
+                    <v-select :options="costCenters" placeholder="--Choose an option--" @search="fetchCostCenter" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <!-- <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" /> -->
+                    <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" />
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Address <span class="required-style">*</span></span>
+                    <span class="label-item-title">Address</span>
                     <input type="text" v-model="form.address" class="form-input" name="address" :id="'address'" />
                     <!-- <Error v-if="errors?.address" :errors="errors.address" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Warehouse Code <span class="required-style">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <input type="text" required v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
                     <!-- <Error v-if="errors?.short_code" :errors="errors.short_code" /> -->
                 </label>
             </div>
@@ -63,12 +65,12 @@
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Designation/Rank<span class="required-style">*</span></span>
-                    <input type="text" v-model="form.scmWarehouseContactPersons[0].designation" class="form-input" name="warehouse_contact_person_designation" :id="'warehouse_contact_person_designation'" />
+                    <input type="text" required v-model="form.scmWarehouseContactPersons[0].designation" class="form-input" name="warehouse_contact_person_designation" :id="'warehouse_contact_person_designation'" />
                     <!-- <Error v-if="errors?.warehouse_contact_person_designation" :errors="errors.scmWarehouseContactPersons_designation" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Contact<span class="required-style">*</span></span>
-                    <input type="text" v-model="form.scmWarehouseContactPersons[0].phone" class="form-input" name="warehouse_contact_person_contact" :id="'warehouse_contact_person_contact'" />
+                    <input type="text" required v-model="form.scmWarehouseContactPersons[0].phone" class="form-input" name="warehouse_contact_person_contact" :id="'warehouse_contact_person_contact'" />
                     <!-- <Error v-if="errors?.warehouse_contact_person_contact" :errors="errors.warehouse_contact_person_contact" /> -->
                 </label>
                 <label class="label-group">

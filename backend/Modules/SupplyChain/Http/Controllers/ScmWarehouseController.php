@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Http\Requests\ScmWarehouseRequest;
 
 class ScmWarehouseController extends Controller
 {
@@ -31,7 +32,7 @@ class ScmWarehouseController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ScmWarehouseRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -65,11 +66,11 @@ class ScmWarehouseController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param ScmWarehouseRequest $request
      * @param ScmWarehouse $warehouse
      * @return JsonResponse
      */
-    public function update(Request $request, ScmWarehouse $warehouse): JsonResponse
+    public function update(ScmWarehouseRequest $request, ScmWarehouse $warehouse): JsonResponse
     {
         try {
             $warehouse->update($request->all());
@@ -112,7 +113,7 @@ class ScmWarehouseController extends Controller
         } else {
             $warehouse = [];
         }
-
+        
         return response()->success('Search result', $warehouse, 200);
     }
 }

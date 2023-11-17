@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRank from "../../../composables/crew/useRank";
 import Title from "../../../services/title";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -17,7 +18,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading } = useRank();
+const { ranks, getRanks, deleteRank, isLoading, isTableLoading } = useRank();
 const { setTitle } = Title();
 setTitle('Rank List');
 
@@ -50,7 +51,8 @@ function swapFilter() {
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
-"page": props.page,
+  "page": props.page,
+  "isFilter": false,
 "filter_options": [
 
 			{
@@ -80,13 +82,21 @@ let filterOptions = ref( {
 	]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getRanks(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -132,7 +142,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Rank Short Name</span>
+                  <span>Short Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -168,7 +178,7 @@ onMounted(() => {
               <th></th>
               </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(rank,index) in ranks?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td class="text-left">{{ rank?.name }}</td>
@@ -181,11 +191,17 @@ onMounted(() => {
               <action-button @click="confirmDelete(rank?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ranks?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!ranks?.data?.length">
+          <tfoot v-if="!ranks?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="4">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!ranks?.data?.data?.length">
             <td colspan="4">No data found.</td>
           </tr>

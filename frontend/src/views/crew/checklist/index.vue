@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCheckList from "../../../composables/crew/useCheckList";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { checklists, getCheckLists, deleteCheckList, isLoading } = useCheckList();
+const { checklists, getCheckLists, deleteCheckList, isLoading, isTableLoading  } = useCheckList();
 const { setTitle } = Title();
 setTitle('Onboard Check List');
 
@@ -60,6 +61,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -80,15 +82,23 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getCheckLists(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -148,11 +158,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Business Unit</nobr></span>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
                   <span>Items Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -160,6 +165,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
                   </div>
                 </div>
               </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Business Unit</nobr></span>
+                </div>
+              </th>              
               <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -172,25 +182,25 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 </select>
               </th>
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              </th>              
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
-            <td class="w-1/6">
-              <span :class="chkList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chkList?.business_unit }}</span>
-            </td>
             <td style="text-align: left !important;">
               <span v-for="(chkListLine,index) in chkList?.crwCrewChecklistLines" :key="index"
                     class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
                 {{ chkListLine?.item_name }}
               </span>
             </td>
+            <td class="w-1/6">
+              <span :class="chkList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chkList?.business_unit }}</span>
+            </td>            
             <td>
               <nobr>
                 <action-button :action="'edit'" :to="{ name: 'crw.checklists.edit', params: { checkListId: chkList?.id } }"></action-button>
@@ -198,11 +208,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </nobr>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && checklists?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!checklists?.data?.length">
+          <tfoot v-if="!checklists?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="5">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="5">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!checklists?.data?.length">
             <td colspan="5">No checklist found.</td>
           </tr>

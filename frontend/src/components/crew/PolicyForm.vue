@@ -48,7 +48,7 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Policy Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.type" autocomplete="off" required>
-        <option value="" selected disabled>select</option>
+        <option value="" selected disabled>Select</option>
         <option value="Drug">Drug</option>
         <option value="Environment">Environment</option>
       </select>

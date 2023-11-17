@@ -45,14 +45,27 @@ export default function useVesselParticular() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
+
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
 
 	async function getVesselParticulars(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
@@ -72,8 +85,18 @@ export default function useVesselParticular() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			// loader.hide();
+			// isLoading.value = false;
+			// loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -271,6 +294,7 @@ export default function useVesselParticular() {
 		downloadGeneralParticular,
 		downloadChartererParticular,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

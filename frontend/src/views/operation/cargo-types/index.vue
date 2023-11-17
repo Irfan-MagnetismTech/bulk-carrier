@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect } from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -7,13 +7,16 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const { cargoTypes, getCargoTypes, deleteCargoType, isLoading } = useCargoType();
+const { cargoTypes, getCargoTypes, deleteCargoType, isLoading, isTableLoading } = useCargoType();
+const icons = useHeroIcon();
+const debouncedValue = useDebouncedRef('', 800);
 
 const props = defineProps({
   page: {
@@ -47,6 +50,7 @@ watch(
 let filterOptions = ref( {
 "items_per_page": 15,
 "page": props.page,
+"isFilter": false,
 "filter_options": [
 
 			{
@@ -67,6 +71,8 @@ let filterOptions = ref( {
 			}
 	]
 });
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
@@ -94,7 +100,7 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -103,9 +109,13 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
     getCargoTypes(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -115,6 +125,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+
+    filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
+  
 });
 
 });
@@ -177,7 +192,7 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody v-if="cargoTypes?.data?.length">
+          <tbody v-if="cargoTypes?.data?.length"  class="relative">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">
                 <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                 <td>{{ cargoType?.cargo_type }}</td>
@@ -188,12 +203,18 @@ onMounted(() => {
                   <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                 </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cargoTypes?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!cargoTypes?.length">
+          <tfoot v-if="!cargoTypes?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="6">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!cargoTypes?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>

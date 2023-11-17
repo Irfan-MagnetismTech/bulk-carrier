@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useWarehouse from "../../../composables/supply-chain/useWarehouse";
@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import Paginate from '../../../components/utils/paginate.vue';
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -20,7 +21,7 @@ const props = defineProps({
 });
 
 const icons = useHeroIcon();
-const { warehouses, getWarehouses, deleteWarehouse, isLoading } = useWarehouse();
+const { warehouses, getWarehouses, deleteWarehouse, isLoading, isTableLoading} = useWarehouse();
 
 const { setTitle } = Title();
 setTitle('Warehouses');
@@ -34,7 +35,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const debouncedValue = useDebouncedRef('', 800);
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -44,6 +45,7 @@ function swapFilter() {
 let filterOptions = ref({
   "business_unit": businessUnit.value,
   "items_per_page": 15,
+  "isFilter": false,
   "page": props.page,
   "filter_options": [
     {
@@ -81,6 +83,7 @@ function setSortingState(index, order) {
 }
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -99,21 +102,25 @@ function confirmDelete(id) {
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
     getWarehouses(filterOptions.value)
       .then(() => {
+        paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
-        isTableLoader.value = true;
+      //  isTableLoader.value = true; 
       })
       .catch((error) => {
         console.error("Error fetching warehouses:", error);
@@ -198,7 +205,7 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(warehouse, index) in warehouses?.data" :key="warehouse.id">  
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td class="px-4 py-3 text-sm">{{ warehouse.name }}</td>
@@ -212,13 +219,19 @@ onMounted(() => {
               <action-button @click="confirmDelete(warehouse?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && warehouses?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!warehouses?.data?.length">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+          </tr>
           <tr v-else-if="!warehouses?.data?.length">
-            <td colspan="4">No Warehouse found.</td>
+            <td colspan="4">No Datas found.</td>
           </tr>
           </tfoot>
       </table>

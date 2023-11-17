@@ -10,7 +10,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
-const { unit, storeUnit,errors,isLoading } = useUnit();
+const { unit, storeUnit, errors, isLoading } = useUnit();
 const { setTitle } = Title();
 
 setTitle('Create Unit');

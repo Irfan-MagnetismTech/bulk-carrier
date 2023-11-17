@@ -185,7 +185,7 @@ onMounted(() => {
       <input type="text" @input="checkWhitespace" class="label-item-input" placeholder="Cheque no." v-model="form.instrument_no" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Check Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark:text-gray-300">Cheque Date <span class="text-red-500">*</span></span>
       <input type="date" v-model="form.instrument_date" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>

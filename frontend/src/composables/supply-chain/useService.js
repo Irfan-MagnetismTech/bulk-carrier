@@ -10,6 +10,7 @@ export default function useService() {
     const router = useRouter();
     const services = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const service = ref( {
         name: '',
@@ -23,9 +24,18 @@ export default function useService() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     async function getServices(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
         filterParams.value = filterOptions;
 
         try {
@@ -42,9 +52,14 @@ export default function useService() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -152,6 +167,7 @@ export default function useService() {
         showService,
         updateService,
         deleteService,
+        isTableLoading,
         isLoading,
         errors,
     };

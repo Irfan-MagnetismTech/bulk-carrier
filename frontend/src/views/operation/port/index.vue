@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,6 +10,7 @@ import usePort from '../../../composables/operations/usePort';
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const props = defineProps({
   page: {
@@ -22,7 +23,7 @@ const { setTitle } = Title();
 setTitle('Port List');
 
 const icons = useHeroIcon();
-const { ports, getPorts, deletePort, isLoading } = usePort();
+const { ports, getPorts, deletePort, isLoading, isTableLoading } = usePort();
 const debouncedValue = useDebouncedRef('', 800);
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -65,6 +66,7 @@ watch(
 let filterOptions = ref( {
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -85,6 +87,8 @@ let filterOptions = ref( {
   ]
 });
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -94,8 +98,9 @@ function setSortingState(index, order) {
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -104,9 +109,15 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
       getPorts(filterOptions.value)
       .then(() => {
-        paginatedPage.value = props.page;
+        
+        paginatedPage.value = filterOptions.value.page;
+
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
@@ -148,7 +159,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Code</span>
+                  <span>Port/Ghat Code</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -157,7 +168,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Name</span>
+                  <span>Port/Ghat Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -195,7 +206,7 @@ onMounted(() => {
 
             </tr>
           </thead>
-          <tbody v-if="ports?.data?.length">
+          <tbody v-if="ports?.data?.length" class="relative">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
 
@@ -206,13 +217,19 @@ onMounted(() => {
                       <action-button @click="confirmDelete(port.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
-              </tr>
+                </tr>
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ports?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!ports?.length">
+          <tfoot v-if="!ports?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="6">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!ports?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>

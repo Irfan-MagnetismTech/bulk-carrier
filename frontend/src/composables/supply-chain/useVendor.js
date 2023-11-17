@@ -9,6 +9,7 @@ export default function useVendor() {
     const BASE = 'scm' 
     const router = useRouter();
     const vendors = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const vendor = ref( {
@@ -34,9 +35,18 @@ export default function useVendor() {
     const isLoading = ref(false);
 
     async function getVendors(filterOptions) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
 
         filterParams.value = filterOptions;
 
@@ -54,9 +64,14 @@ export default function useVendor() {
             const { status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -164,6 +179,7 @@ export default function useVendor() {
         showVendor,
         updateVendor,
         deleteVendor,
+        isTableLoading,
         isLoading,
         errors,
     };

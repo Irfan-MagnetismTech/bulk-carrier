@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCrewRequisition from "../../../composables/crew/useCrewRequisition";
 import Title from "../../../services/title";
@@ -12,6 +12,7 @@ import Store from "../../../store";
 const icons = useHeroIcon();
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -22,7 +23,7 @@ const props = defineProps({
   },
 });
 
-const { crewRequisitions, getCrewRequisitions, deleteCrewRequisition, isLoading } = useCrewRequisition();
+const { crewRequisitions, getCrewRequisitions, deleteCrewRequisition, isLoading, isTableLoading  } = useCrewRequisition();
 const { setTitle } = Title();
 setTitle('Crew Requisition');
 
@@ -56,6 +57,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -84,13 +86,21 @@ let filterOptions = ref( {
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getCrewRequisitions(filterOptions.value)
     .then(() => {
       const customDataTable = document.getElementById("customDataTable");
@@ -129,7 +139,16 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Requisition Date</span>
+                  <span><nobr>Vessel Name</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>              
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Applied Date</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -138,16 +157,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Vessel</nobr></span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span><nobr>Required Qty.</nobr></span>
+                  <span><nobr>Total Crew</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -183,11 +193,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody  class="relative">
           <tr v-for="(requiredCrew,index) in crewRequisitions?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ requiredCrew?.applied_date }}</td>
             <td>{{ requiredCrew?.opsVessel?.name }}</td>
+            <td>{{ requiredCrew?.applied_date }}</td>
             <td>{{ requiredCrew?.total_required_manpower }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>
@@ -198,11 +208,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!crewRequisitions?.data?.length">
+          <tfoot v-if="!crewRequisitions?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!crewRequisitions?.data?.length">
             <td colspan="7">No data found.</td>
           </tr>

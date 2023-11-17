@@ -1,11 +1,12 @@
 <script setup>
-import { onMounted,ref, watchEffect } from '@vue/runtime-core';
+import { onMounted,ref, watchEffect, watchPostEffect } from '@vue/runtime-core';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRole from "../../../composables/administration/useRole";
 import Title from "../../../services/title";
 import Swal from "sweetalert2";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useHeroIcon from "../../../assets/heroIcon";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -16,14 +17,14 @@ const props = defineProps({
 });
 
 
-const { roles, getRoles, deleteRole, isLoading } = useRole();
+const { roles, getRoles, deleteRole, isLoading, isTableLoading } = useRole();
 
 const { setTitle } = Title();
 
 setTitle('Roles');
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 
 
 function swapFilter() {
@@ -33,6 +34,7 @@ function swapFilter() {
 let filterOptions = ref({
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "relation_name": null,
@@ -62,6 +64,7 @@ function setSortingState(index, order) {
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function deleteRoleByID(roleId) {
   Swal.fire({
@@ -80,21 +83,25 @@ function deleteRoleByID(roleId) {
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
     getRoles(filterOptions.value)
         .then(() => {
+          paginatedPage.value = filterOptions.value.page;
           const customDataTable = document.getElementById("customDataTable");
 
           if (customDataTable) {
             tableScrollWidth.value = customDataTable.scrollWidth;
           }
-          isTableLoader.value = true;
+          // isTableLoader.value = true;
         })
         .catch((error) => {
           console.error("Error fetching users:", error);
@@ -171,7 +178,8 @@ onMounted(() => {
               <th></th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <!-- <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"> -->
+          <tbody class="relative">
           <tr v-for="(roleData,index) in roles.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ roleData?.name }}</td>
@@ -185,10 +193,16 @@ onMounted(() => {
               <action-button @click="deleteRoleByID(roleData?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!roles?.data?.length">
             <td colspan="4">No role list found.</td>

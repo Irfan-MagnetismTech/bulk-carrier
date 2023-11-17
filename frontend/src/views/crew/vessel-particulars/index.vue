@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useVesselParticular from "../../../composables/operations/useVesselParticular";
 import Title from "../../../services/title";
@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Store from './../../../store/index.js';
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -20,7 +21,7 @@ const props = defineProps({
   },
 });
 
-const { vesselParticulars, getVesselParticulars, downloadGeneralParticular, downloadChartererParticular, isLoading } = useVesselParticular();
+const { vesselParticulars, getVesselParticulars, downloadGeneralParticular, downloadChartererParticular, isLoading, isTableLoading  } = useVesselParticular();
 const { setTitle } = Title();
 setTitle('Vessel Particulars');
 
@@ -56,6 +57,7 @@ let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
+"isFilter": false,
 "filter_options": [
 
 			{
@@ -141,13 +143,21 @@ let filterOptions = ref( {
 	]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
   getVesselParticulars(filterOptions.value)
     .then(() => {
@@ -298,7 +308,7 @@ onMounted(() => {
 
             </tr>
           </thead>
-          <tbody v-if="vesselParticulars?.data?.length">
+          <tbody v-if="vesselParticulars?.data?.length"  class="relative">
               <tr v-for="(vesselParticular, index) in vesselParticulars.data" :key="vesselParticular?.id">
                   <td>{{ vesselParticulars.from + index }}</td>
                   <td>{{ vesselParticular?.opsVessel?.name }}</td>
@@ -326,10 +336,16 @@ onMounted(() => {
                       </button>
                 </td>
                 </tr>
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselParticulars?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!vesselParticulars?.length">
+          <tfoot v-if="!vesselParticulars?.data?.length"  class="relative h-[250px]">
             <tr v-if="isLoading">
               <td colspan="14">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+              <td colspan="14">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
             </tr>
             <tr v-else-if="!vesselParticulars?.data?.length">
               <td colspan="14">No data found.</td>
