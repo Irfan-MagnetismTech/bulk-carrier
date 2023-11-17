@@ -109,7 +109,6 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
-    filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,11 +10,12 @@ import useHeroIcon from "../../../assets/heroIcon";
 const icons = useHeroIcon();
 import useVessel from '../../../composables/operations/useVessel';
 import Store from './../../../store/index.js';
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-const { vessels, getVessels, deleteVessel, isLoading } = useVessel();
+const { vessels, getVessels, deleteVessel, isLoading, isTableLoading } = useVessel();
 
 const props = defineProps({
   page: {
@@ -67,6 +68,7 @@ let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
+"isFilter": false,
 "filter_options": [
 
 			{
@@ -136,6 +138,8 @@ let filterOptions = ref( {
 	]
 });
 
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -147,7 +151,7 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -155,6 +159,10 @@ onMounted(() => {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
     getVessels(filterOptions.value)
     .then(() => {
@@ -290,7 +298,7 @@ onMounted(() => {
 
             </tr>
           </thead>
-          <tbody v-if="vessels?.data?.length">
+          <tbody v-if="vessels?.data?.length" class="relative">
               <tr v-for="(vessel, index) in vessels.data" :key="vessel?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ vessel?.name }}</td>
@@ -310,14 +318,21 @@ onMounted(() => {
                         <action-button @click="confirmDelete(vessel.id)" :action="'delete'"></action-button>
                       </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vessels?.data?.length"></LoaderComponent>
+
                   </td>
               </tr>
           </tbody>
           
-          <tfoot v-if="!vessels?.length">
+          <tfoot v-if="!vessels?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="9">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!vessels?.data?.length">
             <td colspan="9">No data found.</td>
           </tr>
