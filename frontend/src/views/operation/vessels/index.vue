@@ -7,13 +7,15 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useVessel from '../../../composables/operations/useVessel';
 import Store from './../../../store/index.js';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const icons = useHeroIcon();
+const debouncedValue = useDebouncedRef('', 800);
 
 const { vessels, getVessels, deleteVessel, isLoading, isTableLoading } = useVessel();
 
@@ -176,6 +178,10 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+
+    filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 });
