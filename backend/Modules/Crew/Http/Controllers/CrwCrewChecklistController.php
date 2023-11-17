@@ -22,7 +22,7 @@ class CrwCrewChecklistController extends Controller
         try {
             $crwCrewChecklists = CrwCrewChecklist::with('crwCrewChecklistLines')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwCrewChecklists, 200);
+            return response()->success('Retrieved Successfully', $crwCrewChecklists, 200);
         }
         catch (QueryException $e)
         {
@@ -45,7 +45,7 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist     = CrwCrewChecklist::create($crwCrewChecklistData);
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Created Succesfully', $crwCrewChecklist, 201);
+                return response()->success('Created Successfully', $crwCrewChecklist, 201);
             });
         }
         catch (QueryException $e)
@@ -63,7 +63,7 @@ class CrwCrewChecklistController extends Controller
     public function show(CrwCrewChecklist $crwCrewChecklist)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewChecklist->load('crwCrewChecklistLines'), 200);
+            return response()->success('Retrieved Successfully', $crwCrewChecklist->load('crwCrewChecklistLines'), 200);
         }
         catch (QueryException $e)
         {
@@ -88,7 +88,7 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist->crwCrewChecklistLines()->delete();
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Updated succesfully', $crwCrewChecklist, 202);
+                return response()->success('Updated Successfully', $crwCrewChecklist, 202);
             });
         }
         catch (QueryException $e)
@@ -108,7 +108,7 @@ class CrwCrewChecklistController extends Controller
         try {
             $crwCrewChecklist->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
