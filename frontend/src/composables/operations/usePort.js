@@ -13,7 +13,10 @@ export default function usePort() {
 	const portName = ref([]);
 	const voyagePorts = ref([]);
 	const notification = useNotification();
-	const port = ref({});
+	const port = ref({
+		code : '',
+		name : '',
+	});
 	const errors = ref(null);
 	const isLoading = ref(false);
 	const indexPage = ref(null);

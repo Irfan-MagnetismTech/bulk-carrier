@@ -15,7 +15,7 @@ class OpsCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'                  => ['string', 'max:20', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
+            'code'                  => ['required', 'string', 'max:20', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
             'legal_name'            => ['required', 'string', 'max:255'],
             'name'                  => ['required', 'string', 'max:255'],
             'postal_address'        => ['nullable', 'string', 'max:255'],
@@ -26,11 +26,12 @@ class OpsCustomerRequest extends FormRequest
             'business_license_no'   => ['nullable', 'string', 'max:255'],
             'bin_gst_sst_type'      => ['nullable', 'string', 'max:255'],
             'bin_gst_sst_no'        => ['nullable', 'string', 'max:255'],
-            'phone' => ['required', 'numeric', function ($attribute, $value, $fail) {
-                if (strlen((string) $value) < 10) {
-                    $fail('The ' . $attribute . ' must be at least 10 characters.');
-                }
-            }],
+            // 'phone' => ['required', 'numeric', function ($attribute, $value, $fail) {
+            //     if (strlen((string) $value) < 10) {
+            //         $fail('Contact phone must be at least 10 characters.');
+            //     }
+            // }],
+            'phone' => ['required', 'numeric', 'digits_between:10,15'],
             'company_reg_no'        => ['nullable', 'string', 'max:255'],
             'email_general'         => ['nullable', 'email'],
             'email_agreement'       => ['nullable', 'email'],
@@ -47,7 +48,23 @@ class OpsCustomerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'code.required' => 'Customer code is required',
+            'code.unique' => 'Customer code is already taken',
+            'code.max' => 'Customer code may not be greater than :max characters.',
+            'legal_name.required' => 'Legal name is required',
+            'legal_name.max' => 'Legal name may not be greater than :max characters.',
+            'name.required' => 'Customer name is required',
+            'name.max' => 'Customer name may not be greater than :max characters.',
+            'postal_address.max' => 'Postal address may not be greater than :max characters.',
+            'post_code.max' => 'Post code may not be greater than :max characters.',
+            'country.required' => 'Country is required',
+            'country.max' => 'Country may not be greater than :max characters.',
+            'business_license_no.max' => 'Business license no may not be greater than :max characters.',
+            'bin_gst_sst_type.max' => 'BIN/GST/SST type may not be greater than :max characters.',
+            'bin_gst_sst_no.max' => 'BIN/GST/SST No. may not be greater than :max characters.',
+            'phone.required' => 'Contact phone is required',
+            'phone.digits_between' => 'Phone number must be between :min and :max characters',
+            'company_reg_no.max' => 'Company Reg. no may not be greater than :max characters.',
         ];
     }
 
