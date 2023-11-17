@@ -20,11 +20,23 @@ export default function useCostCenter() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
     async function getCostCenters(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
         indexPage.value = filterOptions.page;
         indexBusinessUnit.value = filterOptions.business_unit;
@@ -43,8 +55,16 @@ export default function useCostCenter() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -134,6 +154,7 @@ export default function useCostCenter() {
         updateCostCenter,
         deleteCostCenter,
         isLoading,
+        isTableLoading,
         errors,
     };
 }
