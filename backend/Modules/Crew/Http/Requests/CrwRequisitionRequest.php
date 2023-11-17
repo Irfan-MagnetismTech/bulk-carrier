@@ -27,9 +27,9 @@ class CrwRequisitionRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'applied_date.required'                           => 'The Applied Date Required.',
-            'total_required_manpower.max'                     => 'The Total Required Manpower field must not exceed 2000.',
-            'crwCrewRequisitionLines.*.required_manpower.max' => 'The Required Manpower[:index] field must not be greater than 2000.',
+            'applied_date.required'                           => 'The applied date Required.',
+            'total_required_manpower.max'                     => 'The total crew field must not exceed 2000.',
+            'crwCrewRequisitionLines.*.required_manpower.max' => 'The required manpower[:index] field must not exceed 2000.',
         ];
     }
 

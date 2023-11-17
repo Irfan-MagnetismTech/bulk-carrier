@@ -24,9 +24,9 @@ class CrwRecruitmentApprovalRequest extends FormRequest
             'body'                                           => ['required', 'string', 'max:2000'],
             'business_unit'                                  => ['required', 'string', 'max:255'],
 
-            'crwVesselRequiredCrewLines.*.candidate_name'    => ['required', 'string', 'max:255'],
-            'crwVesselRequiredCrewLines.*.candidate_contact' => ['required', 'string', 'max:255'],
-            'crwVesselRequiredCrewLines.*.candidate_email'   => ['required', 'string', 'max:255'],
+            'crwRecruitmentApprovalLines.*.candidate_name'    => ['required', 'string', 'max:255'],
+            'crwRecruitmentApprovalLines.*.candidate_contact' => ['required', 'string', 'max:255'],
+            'crwRecruitmentApprovalLines.*.candidate_email'   => ['max:255'],
         ];
     }
 
@@ -37,9 +37,12 @@ class CrwRecruitmentApprovalRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'crwVesselRequiredCrewLines.*.candidate_name.max'    => 'The Candidate Name field must not exceed 255 characters.',
-            'crwVesselRequiredCrewLines.*.candidate_contact.max' => 'The Candidate Contact field must not exceed 255 characters.',
-            'crwVesselRequiredCrewLines.*.candidate_email.max'   => 'The Candidate Email field must not exceed 255 characters.',
+            'crew_selected.max'                                  => 'The total selected field must not exceed 2000.',
+            'crew_panel.max'                                     => 'The total panel field must not exceed 2000.',
+            'crew_rest.max'                                      => 'The total rest field must not exceed 2000.',
+            'crwRecruitmentApprovalLines.*.candidate_name.max'    => 'The candidate name[:index] field must not exceed 255 characters.',
+            'crwRecruitmentApprovalLines.*.candidate_contact.max' => 'The candidate contact[:index] field must not exceed 255 characters.',
+            'crwRecruitmentApprovalLines.*.candidate_email.max'   => 'The candidate email[:index] field must not exceed 255 characters.',
         ];
     }
 
