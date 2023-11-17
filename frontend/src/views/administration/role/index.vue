@@ -192,8 +192,8 @@ onMounted(() => {
               <action-button :action="'edit'" :to="{ name: 'administration.user.roles.edit', params: { roleId: roleData?.id } }"></action-button>
               <action-button @click="deleteRoleByID(roleData?.id)" :action="'delete'"></action-button>
             </td>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800">
           <tr v-if="isLoading">

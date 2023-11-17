@@ -312,8 +312,8 @@ function confirmDelete(id) {
                                 :action="'delete'"
                             ></action-button>
                         </td>
-                        <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>
                     </tr>
+                    <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>
                 </tbody>
                 <tfoot
                     v-if="!openingStocks?.data?.length"
