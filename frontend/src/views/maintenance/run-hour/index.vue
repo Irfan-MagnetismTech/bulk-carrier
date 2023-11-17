@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import Title from "../../../services/title";
@@ -12,6 +12,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { runHours, getRunHours, deleteRunHour, isLoading } = useRunHour();
+const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading  } = useRunHour();
 const { setTitle } = Title();
 setTitle('Run Hour List');
 
@@ -34,7 +35,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
@@ -67,6 +68,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -111,6 +113,9 @@ let filterOptions = ref( {
 
   ]
 });
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 function setSortingState(index, order) {
   filterOptions.value.filter_options.forEach(function (t) {
     t.order_by = null;
@@ -122,7 +127,7 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
@@ -130,15 +135,19 @@ onMounted(() => {
     }
     currentPage.value = props.page;
 
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
   getRunHours(filterOptions.value)
     .then(() => {
-      paginatedPage.value = props.page;
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching run hours:", error);
@@ -256,7 +265,7 @@ onMounted(() => {
               <th></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(runHour,index) in runHours?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ runHour?.opsVessel?.name }}</td>
@@ -270,11 +279,17 @@ onMounted(() => {
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && runHours?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!runHours?.data?.length">
+          <tfoot v-if="!runHours?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!runHours?.data?.length">
             <td colspan="7">No run hour found.</td>
           </tr>
