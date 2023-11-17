@@ -15,8 +15,9 @@ export default function useCostCenter() {
         type: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    // const indexPage = ref(null);
+    // const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
@@ -38,8 +39,10 @@ export default function useCostCenter() {
             loader?.hide();
         }
 
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-cost-centers',{
@@ -135,7 +138,7 @@ export default function useCostCenter() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-cost-centers/${costCenterId}`);
             notification.showSuccess(status);
-            await getCostCenters(indexPage.value,indexBusinessUnit.value);
+            await getCostCenters(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useBalanceIncomeLine from "../../../composables/accounts/useBalanceIncomeLine";
 import Title from "../../../services/title";
@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const router = useRouter();
 
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { balanceIncomeLines, getBalanceIncomeLines, deleteBalanceIncomeLine, isLoading } = useBalanceIncomeLine();
+const { balanceIncomeLines, getBalanceIncomeLines, deleteBalanceIncomeLine, isLoading, isTableLoading   } = useBalanceIncomeLine();
 const { setTitle } = Title();
 setTitle('Balance Income List');
 
@@ -31,7 +32,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this item!",
+    text: "You want to delete this item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -52,31 +53,8 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
-    {
-      "relation_name": "",
-      "field_name": "line_text",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": "",
-      "field_name": "value_type",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": "",
-      "field_name": "line_type",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
     {
       "relation_name": "parentLine",
       "field_name": "line_text",
@@ -85,10 +63,39 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null
     },
+    {
+      "relation_name": null,
+      "field_name": "line_text",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "value_type",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "line_type",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
   ]
 });
 
-function setSortingState(index,order){
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
@@ -99,11 +106,23 @@ function clearFilter(){
   });
 }
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 onMounted(() => {
-  watchEffect(() => {
-  filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+  // filterOptions.value.page = props.page;
+  if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
   getBalanceIncomeLines(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -155,8 +174,8 @@ onMounted(() => {
               <div class="flex justify-evenly items-center">
                 <span>Parent Line</span>
                 <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
+                  <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                  <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
                 </div>
               </div>
             </th>            
@@ -164,8 +183,8 @@ onMounted(() => {
               <div class="flex justify-evenly items-center">
                 <span>Line Name</span>
                 <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
                 </div>
               </div>
             </th>
@@ -173,8 +192,8 @@ onMounted(() => {
               <div class="flex justify-evenly items-center">
               <span><nobr>Value Type</nobr></span>
               <div class="flex flex-col cursor-pointer">
-                <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
               </div>
               </div>
             </th>
@@ -182,8 +201,8 @@ onMounted(() => {
               <div class="flex justify-evenly items-center">
               <span>Line Type</span>
               <div class="flex flex-col cursor-pointer">
-                <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
-                <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
+                <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
               </div>
               </div>
             </th>
@@ -204,14 +223,15 @@ onMounted(() => {
               </select>
             </th>
             <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+            
+            <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th>
-              <select class="filter_input" v-model="filterOptions.filter_options[1].search_param" autocomplete="off">
+              <select class="filter_input" v-model="filterOptions.filter_options[2].search_param" autocomplete="off">
                 <option value="" disabled selected>Select</option>
                 <option value="D">Debit</option>
                 <option value="C">Credit</option>
               </select>
             </th>
-            <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
@@ -221,9 +241,9 @@ onMounted(() => {
             </th>
           </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(incomeLine,index) in balanceIncomeLines?.data" :key="index">
-            <td>{{ (page - 1) * filterOptions.items_per_page + index + 1 }}</td>
+            <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ incomeLine?.parentLine?.line_text ?? '---' }}</td>
             <td class="text-left">{{ incomeLine?.line_text }}</td>
             <td>{{ incomeLine?.value_type === 'D' ? 'Debit' : 'Credit' }}</td>
@@ -236,11 +256,17 @@ onMounted(() => {
               <action-button @click="confirmDelete(incomeLine?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && balanceIncomeLines?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!balanceIncomeLines?.data?.length">
+          <tfoot v-if="!balanceIncomeLines?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!balanceIncomeLines?.data?.data?.length">
             <td colspan="7">No data found.</td>
           </tr>

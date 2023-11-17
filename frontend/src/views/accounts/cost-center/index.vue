@@ -120,7 +120,7 @@ onMounted(() => {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-    filterOptions.value.page = props.page;
+    // filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
@@ -195,7 +195,7 @@ onMounted(() => {
           <tr class="w-full" v-if="showFilter">
             <th>
               <select v-model.trim="filterOptions.items_per_page" class="filter_input">
-                <option value="2">15</option>
+                <option value="15">15</option>
                 <option value="30">30</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
