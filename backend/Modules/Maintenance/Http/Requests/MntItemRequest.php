@@ -16,8 +16,8 @@ class MntItemRequest extends FormRequest
     {
         return [
             'mnt_item_group_id' => 'required',
-            'name'  => ['required', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
-            'item_code' => ['required', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'name'  => ['required','max:100', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'item_code' => ['required', 'max:10', Rule::unique('mnt_items')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }
 

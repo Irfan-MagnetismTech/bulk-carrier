@@ -42,7 +42,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this ship department!",
+    text: "You want to delete this ship department!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -124,7 +124,7 @@ onMounted(() => {
     
     getShipDepartments(filterOptions.value)
       .then(() => {
-        paginatedPage.value = props.page;
+        paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
 
         if (customDataTable) {
