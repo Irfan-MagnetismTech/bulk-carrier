@@ -179,11 +179,11 @@ onMounted(() => {
       console.error("Error fetching data.", error);
     });
 
-    filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+    
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
 });
 
 </script>
