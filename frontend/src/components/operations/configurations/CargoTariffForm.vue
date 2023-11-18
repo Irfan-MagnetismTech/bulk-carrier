@@ -13,16 +13,17 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+            <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.ops_vessel_id"
+                        :required="!form.opsVessel"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
+            <input type="hidden" name="" v-model="form.ops_vessel_id">
         </label>
        
     </div>
@@ -62,16 +63,18 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.ops_cargo_type_id" label="cargo_type" class="block form-input" :reduce="cargoType=>cargoType.id">
+              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.opsCargoType" label="cargo_type" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.ops_cargo_type_id"
+                        :required="!form.opsCargoType"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
             </v-select>
+            <input type="hidden" name="" v-model="form.ops_cargo_type_id">
+
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
@@ -250,6 +253,18 @@ watch(() => props.form.loadingPoint, (value) => {
 watch(() => props.form.unloadingPoint, (value) => {
   if(value) {
     props.form.unloading_point = value.code;
+  }
+}, {deep: true})
+
+watch(() => props.form.opsVessel, (value) => {
+  if(value) {
+    props.form.ops_vessel_id = value.id;
+  }
+}, {deep: true})
+
+watch(() => props.form.opsCargoType, (value) => {
+  if(value) {
+    props.form.ops_cargo_type_id = value.id;
   }
 }, {deep: true})
 

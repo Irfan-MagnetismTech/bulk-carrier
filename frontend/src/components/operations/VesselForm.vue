@@ -12,8 +12,8 @@
             <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
               <option value="" disabled>Select Type</option>
-              <option value="PSML">PSML</option>
-              <option value="TSLL">TSLL</option>
+              <option value="Lighter">Lighter</option>
+              <option value="Bulk">Bulk</option>
             </select>
       </label>
       <label class="block w-full mt-2 text-sm">
