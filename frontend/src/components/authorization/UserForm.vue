@@ -9,7 +9,6 @@
         <option value="TSLL">TSLL</option>
         <option value="ALL">ALL</option>
       </select>
-      <Error v-if="errors?.business_unit" :errors="errors.business_unit" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Role <span class="text-red-500">*</span></span>
@@ -17,31 +16,26 @@
         <option value="" disabled selected>Select</option>
         <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
       </select>
-      <Error v-if="errors?.role" :errors="errors.role" />
     </label>
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">User Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.name" placeholder="User Name" class="form-input" autocomplete="off" required />
-          <Error v-if="errors?.name" :errors="errors.name" />
         </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
-        <input type="email" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.email" :errors="errors.email" />
+        <input type="email" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" required />
       </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Password <span class="text-red-500">*</span></span>
-        <input type="password" v-model="form.password" placeholder="Password" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.password" :errors="errors.password" />
+        <input type="password" v-model="form.password" placeholder="Password" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Confirm Password <span class="text-red-500">*</span></span>
-        <input type="password" v-model="form.confirm_password" placeholder="Confirm Password" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.confirm_password" :errors="errors.confirm_password" />
+        <input type="password" v-model="form.confirm_password" placeholder="Confirm Password" class="form-input" autocomplete="off" required />
       </label>
     </div>
 <!--  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">-->
@@ -51,12 +45,15 @@
 <!--      <Error v-if="errors?.email_signature" :errors="errors.email_signature" />-->
 <!--    </label>-->
 <!--  </div>-->
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 import useRole from "../../composables/administration/useRole";
 import {onMounted} from "vue";
+import useAdministrationCommonApiRequest from "../../composables/administration/useAdministrationCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -66,10 +63,10 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const { roles, getRoles } = useRole();
+const { roles, getRoleList } = useAdministrationCommonApiRequest();
 
 onMounted(() => {
-  getRoles();
+  getRoleList();
 });
 
 </script>

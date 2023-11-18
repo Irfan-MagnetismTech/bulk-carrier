@@ -143,11 +143,13 @@ function setSortingState(index, order) {
   });
   filterOptions.value.filter_options[index].order_by = order;
 }
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+
+function clearFilter() {
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+    ...option,
+    search_param: null,
+    order_by: null,
+  }));
 }
 
 const currentPage = ref(1);
@@ -194,7 +196,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
+
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
@@ -279,7 +281,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 <div class="flex justify-evenly items-center">
                   <span><nobr>Business Unit</nobr></span>
                 </div>
-              </th>              
+              </th>
               <th class="">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -311,7 +313,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody  class="relative">
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ rcrApproval?.applied_date }}</td>
+            <td><nobr>{{ rcrApproval?.applied_date }}</nobr></td>
             <td>{{ rcrApproval?.page_title }}</td>
             <td>{{ rcrApproval?.subject }}</td>
             <td>{{ rcrApproval?.total_approved }}</td>
@@ -321,10 +323,12 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td>{{ rcrApproval?.crew_rest }}</td>
             <td>
               <span :class="rcrApproval?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rcrApproval?.business_unit }}</span>
-            </td>            
+            </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
-              <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
+                <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && recruitmentApprovals?.data?.length"></LoaderComponent>
@@ -335,7 +339,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="11">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
               </td>
             </tr>
           <tr v-else-if="!recruitmentApprovals?.data?.length">

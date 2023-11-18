@@ -150,7 +150,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Required Crew List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Crew Manning List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.vesselRequiredCrews.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
