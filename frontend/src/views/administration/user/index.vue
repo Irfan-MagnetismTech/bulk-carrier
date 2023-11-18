@@ -43,7 +43,7 @@ let filterOptions = ref({
     {
       "relation_name": "roles",
       "field_name": "name",
-      "search_param": null,
+      "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null
