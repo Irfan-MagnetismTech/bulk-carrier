@@ -82,11 +82,12 @@ function deleteRoleByID(roleId) {
   })
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
