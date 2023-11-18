@@ -57,6 +57,7 @@ import Error from "../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 import useRole from "../../composables/administration/useRole";
 import {onMounted} from "vue";
+import useAdministrationCommonApiRequest from "../../composables/administration/useAdministrationCommonApiRequest";
 
 const props = defineProps({
   form: {
@@ -66,10 +67,10 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const { roles, getRoles } = useRole();
+const { roles, getRoleList } = useAdministrationCommonApiRequest();
 
 onMounted(() => {
-  getRoles();
+  getRoleList();
 });
 
 </script>

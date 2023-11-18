@@ -6,7 +6,8 @@ import useNotification from '../../composables/useNotification.js';
 
 export default function useAdministrationCommonApiRequest() {
     const router = useRouter();
-    const permissions = ref([]);;
+    const permissions = ref([]);
+    const roles = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -34,9 +35,32 @@ export default function useAdministrationCommonApiRequest() {
         }
     }
 
+    async function getRoleList(name=null, businessUnit, loading=null) {
+
+        isLoading.value = true;
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+
+            const { data,status } = await Api.post('/administration/get-administration-roles', form);
+            roles.value = data.value;
+
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
     return {
         permissions,
+        roles,
         getPermissionList,
+        getRoleList,
         isLoading,
         errors,
     };
