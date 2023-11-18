@@ -24,6 +24,6 @@ class ScmWarehouse extends Model
 
     public function scmWarehouseContactPerson(): HasOne
     {
-        return $this->hasOne(ScmWarehouseContactPerson::class);
+        return $this->hasOne(ScmWarehouseContactPerson::class)->latest();
     }
 }

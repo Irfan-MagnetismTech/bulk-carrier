@@ -24,6 +24,6 @@ class ScmVendor extends Model
 
     public function scmVendorContactPerson(): HasOne
     {
-        return $this->hasOne(ScmVendorContactPerson::class);
+        return $this->hasOne(ScmVendorContactPerson::class)->latest();
     }
 }
