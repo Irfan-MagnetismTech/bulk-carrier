@@ -21,7 +21,7 @@ export default function useUnit() {
     const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
       
 
@@ -125,7 +125,7 @@ export default function useUnit() {
     }
 
     async function deleteUnit(unitId) {
-        const loader = $loading.show();
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
@@ -138,7 +138,7 @@ export default function useUnit() {
             notification.showError(status);
         } finally {
             loader.hide();
-            isLoading.value = false;
+            // isLoading.value = false;
         }
     }
 
