@@ -68,14 +68,15 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  // filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
-
-onMounted(() => {
+onMounted(() => {     
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
@@ -192,8 +193,10 @@ function confirmDelete(id) {
             <td>{{ unit?.name }}</td>
             <td>{{ unit?.short_code }}</td>
             <td>
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'scm.unit.edit', params: { unitId: unit?.id } }"></action-button>
               <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && units?.data?.length"></LoaderComponent>

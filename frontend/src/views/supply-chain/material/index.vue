@@ -98,11 +98,13 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Materials');
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  // filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
@@ -228,7 +230,7 @@ function confirmDelete(id) {
                   </div>
                 </div>
               </th>
-              <th class="">Action</th>
+              <th class=""><nobr>Action</nobr></th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -258,8 +260,10 @@ function confirmDelete(id) {
             <td>{{ material.scmMaterialCategory.name }}</td>
             <td>{{ material.minimum_stock }}</td>
             <td>
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
             
           </tr>
