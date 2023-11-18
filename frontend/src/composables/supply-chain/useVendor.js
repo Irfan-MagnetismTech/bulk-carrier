@@ -29,7 +29,7 @@ export default function useVendor() {
         
     });
 
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);

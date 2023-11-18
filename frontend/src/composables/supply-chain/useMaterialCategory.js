@@ -22,7 +22,7 @@ export default function useMaterialCategory() {
     const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
     async function getMaterialCategories(filterOptions) {
         let loader = null;

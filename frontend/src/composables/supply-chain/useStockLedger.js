@@ -28,7 +28,7 @@ export default function useStockLedger() {
         });
 
     const indexPage = ref(null);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
 

@@ -86,7 +86,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this warehouse!",
+    text: "You want to delete this warehouse!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',

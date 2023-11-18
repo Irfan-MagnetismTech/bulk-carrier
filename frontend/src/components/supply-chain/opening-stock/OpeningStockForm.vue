@@ -163,10 +163,10 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
           <input type="text" v-model="form.scmOpeningStockLines[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
-          <input type="text" required v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
         </td>
         <td>
-          <input type="text" required v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!=0" type="button" @click="removeRow(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
