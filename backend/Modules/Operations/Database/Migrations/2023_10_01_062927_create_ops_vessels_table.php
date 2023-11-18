@@ -35,10 +35,10 @@ return new class extends Migration
             $table->date('keel_laying_date');
             $table->date('launching_date');
             $table->string('mmsi');
-            $table->string('overall_length');
-            $table->string('overall_width');
+            $table->float('overall_length');
+            $table->float('overall_width');
             $table->year('year_built');
-            $table->string('capacity');
+            $table->float('capacity');
             $table->string('total_cargo_hold');
             $table->string('live_tracking_config')->nullable();
             $table->text('remarks')->nullable();  
