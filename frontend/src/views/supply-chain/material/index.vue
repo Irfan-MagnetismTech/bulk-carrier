@@ -228,7 +228,7 @@ function confirmDelete(id) {
                   </div>
                 </div>
               </th>
-              <th class="">Action</th>
+              <th class=""><nobr>Action</nobr></th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -258,8 +258,10 @@ function confirmDelete(id) {
             <td>{{ material.scmMaterialCategory.name }}</td>
             <td>{{ material.minimum_stock }}</td>
             <td>
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
             
           </tr>

@@ -192,8 +192,10 @@ function confirmDelete(id) {
             <td>{{ unit?.name }}</td>
             <td>{{ unit?.short_code }}</td>
             <td>
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'scm.unit.edit', params: { unitId: unit?.id } }"></action-button>
               <action-button @click="confirmDelete(unit?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && units?.data?.length"></LoaderComponent>
