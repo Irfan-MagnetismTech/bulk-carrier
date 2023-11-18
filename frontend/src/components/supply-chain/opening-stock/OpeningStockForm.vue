@@ -137,7 +137,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
+        <th class="px-4 py-3 align-bottom !w-3/12">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
         <th class="px-4 py-3 align-bottom">Rate</th>
@@ -148,7 +148,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
+          <v-select :options="materials" placeholder="--Search Here--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
