@@ -106,7 +106,7 @@ class OpsVesselRequest extends FormRequest
             'year_built.min' => 'Year built must be greater than or equal to :min',
             'year_built.max' => 'Year built may not be greater than :max characters.',
             'capacity.required' => 'Capacity is required',
-            'capacity.integer' => 'Capacity must be an integer',
+            // 'capacity.integer' => 'Capacity must be an integer',
             'capacity.min' => 'Capacity must be greater than or equal to :min',
             'capacity.max' => 'Capacity may not be greater than :max characters.',
             'total_cargo_hold.required' => 'Total cargo hold is required',
