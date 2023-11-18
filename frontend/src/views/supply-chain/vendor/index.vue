@@ -226,8 +226,10 @@ function confirmDelete(id) {
               <td>{{ vendor.scmVendorContactPerson.phone }}</td>
               <td>{{ vendor.scmVendorContactPerson.email }}</td>
               <td>
+              <nobr>
                 <action-button :action="'edit'" :to="{ name: 'scm.vendor.edit', params: { vendorId: vendor.id } }"></action-button>
                 <action-button @click="confirmDelete(vendor.id)" :action="'delete'"></action-button>
+              </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vendors?.data?.length"></LoaderComponent>

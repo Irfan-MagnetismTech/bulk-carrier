@@ -199,8 +199,10 @@ onMounted(() => {
               </span>
             </td>
             <td style="width: 10%" class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'administration.user.roles.edit', params: { roleId: roleData?.id } }"></action-button>
               <action-button @click="deleteRoleByID(roleData?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>

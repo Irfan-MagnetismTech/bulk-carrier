@@ -296,7 +296,7 @@ function confirmDelete(id) {
                         :key="index"
                     >
                         <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                        <td>{{ openingStock?.date }}</td>
+                        <td><nobr>{{ openingStock?.date }}</nobr></td>
                         <td>{{ openingStock?.scmWarehouse?.name }}</td>
                         <td>
                             <span
@@ -310,6 +310,7 @@ function confirmDelete(id) {
                             >
                         </td>
                         <td>
+                        <nobr>
                             <action-button
                                 :action="'edit'"
                                 :to="{
@@ -321,6 +322,7 @@ function confirmDelete(id) {
                                 @click="confirmDelete(openingStock.id)"
                                 :action="'delete'"
                             ></action-button>
+                        </nobr>
                         </td>
                     </tr>
                     <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>

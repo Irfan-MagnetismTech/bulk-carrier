@@ -214,8 +214,10 @@ function confirmDelete(id) {
               <td>{{ materialCategory?.parent?.name ?? 'N/a' }}</td>
               <td>{{ materialCategory.short_code }}</td>
               <td>
+                <nobr>
                 <action-button :action="'edit'" :to="{ name: 'scm.material-category.edit', params: { materialCategoryId: materialCategory.id } }"></action-button>
                 <action-button @click="confirmDelete(materialCategory.id)" :action="'delete'"></action-button>
+                </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialCategories?.data?.length"></LoaderComponent>
