@@ -43,7 +43,7 @@ let filterOptions = ref({
     {
       "relation_name": "roles",
       "field_name": "name",
-      "search_param": "",
+      "search_param": null,
       "action": null,
       "order_by": null,
       "date_from": null
@@ -81,7 +81,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this user!",
+    text: "You want to delete this user!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -231,12 +231,12 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!users?.length" class="relative h-[250px]">
+          <tfoot v-if="!users?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="6">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
