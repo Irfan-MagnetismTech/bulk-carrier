@@ -58,7 +58,10 @@ class ScmWarehouseController extends Controller
     public function show(ScmWarehouse $warehouse): JsonResponse
     {
         try {
-            return response()->success('data', $warehouse->load('scmWarehouseContactPersons'), 200);
+            $warehouse->load(['scmWarehouseContactPersons' => function ($query) {
+                $query->latest('created_at')->take(1);
+            }]);
+            return response()->success('data', $warehouse, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
