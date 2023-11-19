@@ -12,6 +12,7 @@ import Store from './../../../store/index.js';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
+import {useRouter} from "vue-router";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -130,11 +131,16 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
+const router = useRouter();
+
 onMounted(() => {
   watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+
+      router.push({ name: 'ops.vessels.index', query: { page: filterOptions.value.page } });
+
     } else {
       filterOptions.value.page = props.page;
     }
