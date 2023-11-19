@@ -12,6 +12,7 @@ export default function useIncidentRecord() {
     const incidentRecord = ref( {
         business_unit: '',
         ops_vessel_id: '',
+        ops_vessel_name: '',
         date_time: '',
         type: '',
         location: '',
@@ -21,6 +22,8 @@ export default function useIncidentRecord() {
         crwIncidentParticipants: [
             {
                 crw_crew_id: '',
+                crw_crew_name: '',
+                crw_crew_rank: '',
                 injury_status: '',
                 notes: '',
             }
@@ -64,8 +67,12 @@ export default function useIncidentRecord() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('data', JSON.stringify(form));
+
         try {
-            const { data, status } = await Api.post('/crw/crw-incidents', form);
+            const { data, status } = await Api.post('/crw/crw-incidents', formData);
             incidentRecord.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.incidentRecords.index" });
@@ -101,10 +108,15 @@ export default function useIncidentRecord() {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
+        let formData = new FormData();
+        formData.append('attachment', form.attachment);
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
         try {
-            const { data, status } = await Api.put(
+            const { data, status } = await Api.post(
                 `/crw/crw-incidents/${incidentRecordId}`,
-                form
+                formData
             );
             incidentRecord.value = data.value;
             notification.showSuccess(status);

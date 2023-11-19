@@ -19,12 +19,10 @@ class CrwBankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwBankAccounts = CrwBankAccount::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwBankAccounts = CrwBankAccount::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
         }
@@ -65,7 +63,7 @@ class CrwBankAccountController extends Controller
     public function show(CrwBankAccount $crwBankAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwBankAccount, 200);
+            return response()->success('Retrieved Succesfully', $crwBankAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -88,7 +86,7 @@ class CrwBankAccountController extends Controller
 
             $crwBankAccount->update($crwBankAccountData);
 
-            return response()->success('Updated succesfully', $crwBankAccount, 202);
+            return response()->success('Updated Succesfully', $crwBankAccount, 202);
         }
         catch (QueryException $e)
         {

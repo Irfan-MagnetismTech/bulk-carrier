@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('code');
             $table->string('legal_name');
             $table->string('name');
-            $table->string('postal_address');
-            $table->string('city');
+            $table->string('postal_address')->nullable();
+            $table->string('city')->nullable();
             $table->string('post_code')->nullable();
             $table->string('country');
             $table->string('tax_id')->nullable();

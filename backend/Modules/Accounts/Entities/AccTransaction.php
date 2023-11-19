@@ -4,10 +4,11 @@ namespace Modules\Accounts\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\GlobalSearchTrait;
 
 class AccTransaction extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * @var array

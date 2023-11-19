@@ -11,22 +11,22 @@ class AccBalanceAndIncomeLineRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'line_text'     => ['required', 'string', 'max:255'],
+            'business_unit' => ['required', 'string', 'max:255'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
-            //
+            'line_text.max' => 'The Line Name field is required.',
+            'line_text.max' => 'The Line Name field must not exceed 255 characters.'
         ];
     }
 

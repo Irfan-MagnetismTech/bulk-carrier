@@ -14,32 +14,45 @@ export default function useBalanceIncomeLine() {
         line_text: '',
         value_type: '',
         parent_id: '',
+        parent_id_name: '',
         visible_index: '',
         printed_no: '',
         _lft: '',
         _rgt: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getBalanceIncomeLines(page,businessUnit) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+    async function getBalanceIncomeLines(filterOptions) {
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-balance-and-income-lines',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                    page: filterOptions.page || 1,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                }
             });
             balanceIncomeLines.value = data.value;
             notification.showSuccess(status);
@@ -47,8 +60,16 @@ export default function useBalanceIncomeLine() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -119,7 +140,7 @@ export default function useBalanceIncomeLine() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-balance-and-income-lines/${balanceIncomeLineId}`);
             notification.showSuccess(status);
-            await getBalanceIncomeLines(indexPage.value,indexBusinessUnit.value);
+            await getBalanceIncomeLines(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -138,6 +159,7 @@ export default function useBalanceIncomeLine() {
         updateBalanceIncomeLine,
         deleteBalanceIncomeLine,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

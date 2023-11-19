@@ -19,7 +19,11 @@ class OpsChartererProfileRequest extends FormRequest
             'name'                  => ['required', 'string', 'max:255'],
             'owner_code'            => ['string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'country'               => ['required', 'string', 'max:255'],
-            'contact_no'            => ['required', 'string', 'max:255'],
+            'contact_no'            => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if (strlen((string) $value) < 10) {
+                    $fail('The ' . $attribute . ' must be at least 10 characters.');
+                }
+            }],
             'address'               => ['required', 'string', 'max:255'],
             'billing_address'       => ['required', 'string', 'max:255'],
             'billing_email'         => ['required', 'email', 'max:255'],

@@ -28,11 +28,11 @@ class OpsVoyageController extends Controller
     * @param Request $request
     * @return JsonResponse
     **/
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
-        // dd('voyage');
         try {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->paginate(15);
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved voyage.', $voyages, 200);
         }
@@ -161,16 +161,22 @@ class OpsVoyageController extends Controller
         }
     }
 
-    public function getVoyageByVoyageNo(Request $request){
+    public function searchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
             ->where(function ($query) use($request) {
                 $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
             })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->vessel_id != 'null', function($q) {
+                $q->where('ops_vessel_id', request()->vessel_id);
+            })
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved voyage no.', collect($voyages->pluck('route'))->unique()->values()->all(), 200);
+            return response()->success('Successfully retrieved voyages.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

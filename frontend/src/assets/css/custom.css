@@ -9,7 +9,7 @@
 }
 
 .vs--searchable .vs__dropdown-toggle {
-    height: 2.05rem !important;
+    /* height: 2.05rem !important; */
 }
 
 .vms-no-data-found{
@@ -23,7 +23,15 @@
 }
 
 .vs--searchable .vs__dropdown-toggle {
-    height: 2.30rem !important;
+    /* height: 2.30rem !important; */
+}
+
+.filter_input{
+    padding: 0 5px;
+    display: block;
+    width: 100%;
+    border-radius: 0.25rem;
+    font-size: 12px;
 }
 
 /* title-tip down */
@@ -132,6 +140,13 @@
 
 .archived_row_dot{
 
+}
+
+.custom_link{
+    color: #0038c7;
+}
+.custom_link:hover{
+    text-decoration: underline;
 }
 
 /* Qc Trading */
@@ -275,6 +290,10 @@ input.custom_date::-webkit-calendar-picker-indicator{
 }
 .icn {
     @apply w-5 h-5 transition duration-150 ease-in-out hover:translate-y-1 hover:transform;
+}
+
+.active-tab{
+    font-weight: bold;
 }
 
 .v-select {

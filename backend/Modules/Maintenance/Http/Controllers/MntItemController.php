@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
+use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Http\Requests\MntItemRequest;
 use Modules\Maintenance\Http\Requests\MntItemUpdateRequest;
 
@@ -16,15 +17,12 @@ class MntItemController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
             $item = MntItem::with(['mntItemGroup.mntShipDepartment'])
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->paginate(10);
+            ->globalSearch($request->all());
 
             return response()->success('Items retrieved successfully', $item, 200);
             
@@ -76,7 +74,7 @@ class MntItemController extends Controller
     {
         try {
             
-            $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups'])->find($id);
+            $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups','mntJobs'])->find($id);
 
             $item['description'] = json_decode($item['description']);
             
@@ -130,7 +128,17 @@ class MntItemController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {          
+            $jobs = MntJob::where('mnt_item_id', $id)->count();
+            if ($jobs > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $item = MntItem::findorfail($id);
             $item->delete();
             
@@ -151,12 +159,15 @@ class MntItemController extends Controller
     {
         
         try {
-
-            $lastItem = MntItem::where('mnt_item_group_id', $mntItemGroupId)->latest()->first();
-            $lastItemCode = $lastItem->item_code;
-            $lastItemCodeSplit = explode('-', $lastItemCode);
             $itemGroup = MntItemGroup::where('id', $mntItemGroupId)->first();
-            $itemCode = $itemGroup->short_code.'-'.str_pad($lastItemCodeSplit[1]+1, 3, '0', STR_PAD_LEFT);
+            $lastItem = MntItem::where('mnt_item_group_id', $mntItemGroupId)->latest()->first();
+            if(empty($lastItem)) {
+                $itemCode = $itemGroup->short_code.'-'.str_pad(1, 3, '0', STR_PAD_LEFT);
+            } else {
+                $lastItemCode = $lastItem->item_code;
+                $lastItemCodeSplit = explode('-', $lastItemCode);
+                $itemCode = $itemGroup->short_code.'-'.str_pad($lastItemCodeSplit[1]+1, 3, '0', STR_PAD_LEFT);
+            }
             return response()->success('Item code retrieved successfully', $itemCode, 200);
             
         }

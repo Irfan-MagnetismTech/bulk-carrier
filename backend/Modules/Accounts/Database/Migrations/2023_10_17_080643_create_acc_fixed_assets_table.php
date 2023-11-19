@@ -22,8 +22,8 @@ return new class extends Migration
 			$table->unsignedBigInteger('acc_material_id');
 
 			$table->date('received_date');
-			$table->string('asset_name')->nullable();
-			$table->string('asset_type')->nullable();
+			$table->string('asset_name');
+			$table->string('asset_type');
 
 			$table->string('tag')->nullable();
 			$table->string('mrr_no')->nullable();
@@ -35,12 +35,12 @@ return new class extends Migration
 
 			$table->float('price');
 			$table->float('acquisition_cost');
-			$table->integer('useful_life')->nullable(); // in years             
+			$table->integer('useful_life'); // in years             
 			$table->date('acquisition_date'); // use from date
 			$table->decimal('percentage');
 
 			$table->enum('business_unit', ['PSML', 'TSLL']);
-            $table->timestamps();          
+            $table->timestamps();
         });
     }
 

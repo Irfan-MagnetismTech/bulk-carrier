@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRank from "../../../composables/crew/useRank";
 import Title from "../../../services/title";
@@ -9,6 +9,8 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const props = defineProps({
   page: {
@@ -17,7 +19,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading } = useRank();
+const { ranks, getRanks, deleteRank, isLoading, isTableLoading } = useRank();
 const { setTitle } = Title();
 setTitle('Rank List');
 
@@ -41,12 +43,80 @@ function confirmDelete(id) {
   })
 }
 
-onMounted(() => {
-  watchEffect(() => {
-  getRanks(props.page, businessUnit.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+let showFilter = ref(false);
 
+function swapFilter() {
+  showFilter.value = !showFilter.value;
+}
+
+let filterOptions = ref( {
+"business_unit": businessUnit.value,
+"items_per_page": 15,
+"page": props.page,
+"isFilter": false,
+"filter_options": [
+
+			{
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "short_name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": "business_unit",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			}
+	]
+});
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
+  filterOptions.value.filter_options[index].order_by = order;
+}
+
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
+onMounted(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    filterOptions.value.page = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+  getRanks(filterOptions.value)
+    .then(() => {
+      paginatedPage.value = filterOptions.value.page;
+      const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
@@ -55,7 +125,9 @@ onMounted(() => {
       console.error("Error fetching ranks:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -66,34 +138,72 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Rank List</h2>
     <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Rank Name</th>
-            <th>Rank Short Name</th>
-            <th>Business Unit</th>
-          </tr>
+          <thead>
+            <tr class="w-full">
+              <th class="w-16">
+                  <div class="w-full flex items-center justify-between">
+                    # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                  </div>
+                </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Rank Name</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Short Name</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Business Unit</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>Action</th>
+            </tr>
+            <tr class="w-full" v-if="showFilter">
+
+              <th>
+                <select v-model="filterOptions.items_per_page" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
+              </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(rank,index) in ranks?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ rank?.name }}</td>
-            <td>{{ rank?.short_name }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+            <td class="text-left">{{ rank?.name }}</td>
+            <td class="text-left">{{ rank?.short_name }}</td>
             <td>
               <span :class="rank?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ rank?.business_unit }}</span>
             </td>
@@ -102,11 +212,17 @@ onMounted(() => {
               <action-button @click="confirmDelete(rank?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ranks?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!ranks?.data?.length">
+          <tfoot v-if="!ranks?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="4">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="4">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!ranks?.data?.data?.length">
             <td colspan="4">No data found.</td>
           </tr>

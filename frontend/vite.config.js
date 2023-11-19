@@ -5,7 +5,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   base: '/',
   // mode: 'production',
-  plugins: [vue()],
+  plugins: [
+    vue()
+  ],
   server: { 
     host: true,
   }

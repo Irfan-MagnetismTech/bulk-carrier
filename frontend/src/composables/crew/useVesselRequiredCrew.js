@@ -26,26 +26,36 @@ export default function useVesselRequiredCrew() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getVesselRequiredCrews(page,businessUnit) {
+    async function getVesselRequiredCrews(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get('/crw/crw-vessel-required-crews',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page || 1,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             vesselRequiredCrews.value = data.value;
             notification.showSuccess(status);
@@ -53,8 +63,16 @@ export default function useVesselRequiredCrew() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -125,7 +143,7 @@ export default function useVesselRequiredCrew() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`);
             notification.showSuccess(status);
-            await getVesselRequiredCrews(indexPage.value,indexBusinessUnit.value);
+            await getVesselRequiredCrews(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -144,6 +162,7 @@ export default function useVesselRequiredCrew() {
         updateVesselRequiredCrew,
         deleteVesselRequiredCrew,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

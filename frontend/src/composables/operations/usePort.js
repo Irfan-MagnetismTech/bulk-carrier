@@ -13,23 +13,44 @@ export default function usePort() {
 	const portName = ref([]);
 	const voyagePorts = ref([]);
 	const notification = useNotification();
-	const port = ref({});
+	const port = ref({
+		code : '',
+		name : '',
+	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const indexPage = ref(null);
+    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
+	const isTableLoading = ref(false);
+	async function getPorts(filterOptions) {
+		let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-	async function getPorts(page,columns = null, searchKey = null, table = null) {
-		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/ports', {
 				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			ports.value = data.value;
 			notification.showSuccess(status);
@@ -38,8 +59,14 @@ export default function usePort() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -114,7 +141,7 @@ export default function usePort() {
 		try {
 			const { data, status } = await Api.delete( `/ops/ports/${portId}`);
 			notification.showSuccess(status);
-			await getPorts();
+			await getPorts(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -195,6 +222,7 @@ export default function usePort() {
 		voyagePorts,
 		getPortsByVoyage,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

@@ -8,32 +8,43 @@ export default function useRank() {
     const router = useRouter();
     const ranks = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const rank = ref( {
         name: '',
         short_name: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getRanks(page,businessUnit) {
+    async function getRanks(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-ranks',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
             });
             ranks.value = data.value;
             notification.showSuccess(status);
@@ -41,8 +52,16 @@ export default function useRank() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -113,7 +132,7 @@ export default function useRank() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-ranks/${rankId}`);
             notification.showSuccess(status);
-            await getRanks(indexPage.value,indexBusinessUnit.value);
+            await getRanks(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -132,6 +151,7 @@ export default function useRank() {
         updateRank,
         deleteRank,
         isLoading,
+        isTableLoading,
         errors,
     };
 }
