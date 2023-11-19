@@ -39,7 +39,7 @@ class CrwCrewRankController extends Controller
             $crwCrewRankData = $request->only('crw_crew_id', 'crw_rank_id', 'rank_name', 'effective_date', 'business_unit');
             $crwCrewRank     = CrwCrewRank::create($crwCrewRankData);
 
-            return response()->success('Created Succesfully', $crwCrewRank, 201);
+            return response()->success('Created Successfully', $crwCrewRank, 201);
         }
         catch (QueryException $e)
         {
