@@ -12,8 +12,6 @@ export default function useGlobalFilter() {
     }
 
     function setSortingState(index, order, filterOptions) {
-        console.log(filterOptions)
-
         filterOptions.filter_options.forEach(function (t) {
           t.order_by = null;
         });

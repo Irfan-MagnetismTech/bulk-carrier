@@ -127,7 +127,6 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
