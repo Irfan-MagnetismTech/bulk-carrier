@@ -216,7 +216,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tbody>
           <tfoot v-if="!ranks?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="4">Loading...</td>
+            <td colspan="4"></td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="4">
