@@ -153,7 +153,7 @@ class MntJobController extends Controller
     {
         try {
             DB::beginTransaction();
-            $mntJobLineIds = MntJobLine::select('id')->where('mnt_job_id', $id)->all();
+            $mntJobLineIds = MntJobLine::where('mnt_job_id', $id)->pluck('id');
             $mntWorkRequisitionLines = MntWorkRequisitionLine::whereIn('mnt_job_line_id', $mntJobLineIds)->count();
             if ($mntWorkRequisitionLines > 0) {
                 $error = array(
