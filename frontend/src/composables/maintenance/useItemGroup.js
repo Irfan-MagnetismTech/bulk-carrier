@@ -151,7 +151,8 @@ export default function useItemGroup() {
             await getItemGroups(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;

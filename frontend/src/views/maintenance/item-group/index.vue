@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { itemGroups, getItemGroups, deleteItemGroup, isLoading,isTableLoading } = useItemGroup();
+const { itemGroups, getItemGroups, deleteItemGroup, isLoading,isTableLoading, errors  } = useItemGroup();
 const { setTitle } = Title();
 setTitle('Item Group List');
 
@@ -294,4 +295,5 @@ onMounted(() => {
     </div>
     <Paginate :data="itemGroups" to="mnt.item-groups.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

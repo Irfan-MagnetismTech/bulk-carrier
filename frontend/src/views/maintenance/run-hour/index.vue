@@ -13,6 +13,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -24,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading  } = useRunHour();
+const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading, errors  } = useRunHour();
 const { setTitle } = Title();
 setTitle('Run Hour List');
 
@@ -318,4 +319,5 @@ onMounted(() => {
     </div>
     <Paginate :data="runHours" to="mnt.run-hours.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

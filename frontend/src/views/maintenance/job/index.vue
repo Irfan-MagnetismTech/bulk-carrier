@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { jobs, getJobs, deleteJob, isLoading, isTableLoading  } = useJob();
+const { jobs, getJobs, deleteJob, isLoading, isTableLoading, errors } = useJob();
 const { setTitle } = Title();
 setTitle('Job List');
 
@@ -305,4 +306,5 @@ onMounted(() => {
     </div>
     <Paginate :data="jobs" to="mnt.jobs.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

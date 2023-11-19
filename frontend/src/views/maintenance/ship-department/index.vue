@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading, isTableLoading } = useShipDepartment();
+const { shipDepartments, getShipDepartments, deleteShipDepartment, isLoading, isTableLoading, errors } = useShipDepartment();
 const { setTitle } = Title();
 setTitle('Ship Department List');
 
@@ -277,5 +278,6 @@ onMounted(() => {
       </table>
     </div>
     <Paginate :data="shipDepartments" to="mnt.ship-departments.index" :page="page"></Paginate>
-  </div>
+      </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
