@@ -202,7 +202,7 @@ export default function useVessel() {
 	async function deleteVessel(vesselId) {
 		
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
@@ -213,7 +213,7 @@ export default function useVessel() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loader.hide();
+			// loader.hide();
 			isLoading.value = false;
 			//NProgress.done();
 		}
