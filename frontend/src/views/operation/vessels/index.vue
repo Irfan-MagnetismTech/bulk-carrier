@@ -17,7 +17,7 @@ import useGlobalFilter from "../../../composables/useGlobalFilter";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
-const { showFilter, swapFilter, setSortingState, clearFilter, setPaginationState, currentPage, paginatedPage } = useGlobalFilter();
+const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 
 const { vessels, getVessels, deleteVessel, isLoading, isTableLoading } = useVessel();
 
@@ -127,10 +127,18 @@ let filterOptions = ref( {
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
 onMounted(() => {
   watchPostEffect(() => {
   
-    setPaginationState(filterOptions, props.page)
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
 
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
