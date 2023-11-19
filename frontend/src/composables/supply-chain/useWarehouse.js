@@ -134,7 +134,7 @@ export default function useWarehouse() {
     }
 
     async function deleteWarehouse(warehouseId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
@@ -145,7 +145,7 @@ export default function useWarehouse() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
