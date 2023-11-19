@@ -33,6 +33,7 @@ export default function useItem() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isItemLoading = ref(false);
     const isTableLoading = ref(false);
 
     async function getItems(filterOptions) {
@@ -154,7 +155,8 @@ export default function useItem() {
             await getItems(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -164,6 +166,7 @@ export default function useItem() {
     async function getItemCodeByGroupId(formData, mntItemGroupId){
         // NProgress.start();
         isLoading.value = true;
+        isItemLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-item-code/${mntItemGroupId}`);
@@ -172,6 +175,7 @@ export default function useItem() {
             error.value = Error.showError(error);
         } finally {
             isLoading.value = false;
+            isItemLoading.value = false;
             // NProgress.done();
         }
     }
@@ -181,6 +185,7 @@ export default function useItem() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-items/${mntShipDepartmentId}`);
@@ -192,6 +197,7 @@ export default function useItem() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isItemLoading.value = false;
             //NProgress.done();
         }
     }
@@ -200,6 +206,7 @@ export default function useItem() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-item-group-wise-hourly-items/${mntItemGroupId}`);
@@ -211,6 +218,7 @@ export default function useItem() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isItemLoading.value = false;
             //NProgress.done();
         }
     }
@@ -219,6 +227,7 @@ export default function useItem() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-item-group-wise-items/${mntItemGroupId}`);
@@ -230,6 +239,7 @@ export default function useItem() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isItemLoading.value = false;
             //NProgress.done();
         }
     }
@@ -239,6 +249,7 @@ export default function useItem() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-vessel-wise-jobs`, {
@@ -258,6 +269,7 @@ export default function useItem() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isItemLoading.value = false;
             //NProgress.done();
         }
     }    
@@ -282,6 +294,7 @@ export default function useItem() {
         getVesselWiseJobItems,
         isLoading,
         isTableLoading,
+        isItemLoading,
         errors,
     };
 }

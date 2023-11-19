@@ -28,8 +28,8 @@ class MntShipDepartmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Ship department name on selected business unit already exists.',
-            'short_code.unique' => 'Ship department short code on selected business unit already exists.',
+            'name.unique' => 'Ship department name already exists.',
+            'short_code.unique' => 'Ship department short code already exists.',
         ];
     }
 

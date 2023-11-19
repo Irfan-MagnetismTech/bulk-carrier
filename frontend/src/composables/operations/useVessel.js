@@ -65,6 +65,7 @@ export default function useVessel() {
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isVesselLoading = ref(false);
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
@@ -276,8 +277,9 @@ export default function useVessel() {
 	}
 
 	async function getVesselsWithoutPaginate(businessUnit) {
-		NProgress.start();
+		// NProgress.start();
 		isLoading.value = true;
+		isVesselLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-vessels?business_unit=${businessUnit}`);
@@ -288,7 +290,9 @@ export default function useVessel() {
 			notification.showError(status);
 		} finally {
 			// loading(false)
-			NProgress.done();
+			// NProgress.done();
+			isLoading.value = false;
+			isVesselLoading.value = false;
 		}
 	}
 
@@ -310,6 +314,7 @@ export default function useVessel() {
 		getVesselsWithoutPaginate,
 		isLoading,
 		isTableLoading,
+		isVesselLoading,
 		errors,
 	};
 }

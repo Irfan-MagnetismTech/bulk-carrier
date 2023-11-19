@@ -163,8 +163,8 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Name</span>
+                <div class="flex justify-center items-center">
+                  <span class="mr-2">Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -172,8 +172,8 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
-                  <span><nobr>Parent Name</nobr></span>
+                <div class="flex justify-center items-center">
+                  <span class="mr-2"><nobr>Parent Name</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -181,8 +181,8 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
-                  <span><nobr>Short Code</nobr></span>
+                <div class="flex justify-center items-center">
+                  <span class="mr-2"><nobr>Short Code</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -225,7 +225,7 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!materialCategories?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <!-- <td colspan="7">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">

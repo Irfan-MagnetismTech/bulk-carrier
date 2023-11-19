@@ -162,85 +162,29 @@ function confirmDelete(id) {
                 <thead>
                     <tr class="w-full">
                         <th class="w-16">
-                            <div
-                                class="flex w-full items-center justify-between"
-                            >
-                                #
-                                <button
-                                    @click="swapFilter()"
-                                    type="button"
-                                    v-html="icons.FilterIcon"
-                                ></button>
+                            <div class="flex w-full items-center justify-between">#<button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                             </div>
                         </th>
                         <th>
-                            <div class="flex items-center justify-evenly">
-                                <span>Date</span>
+                            <div class="flex justify-center items-center">
+                                <span class="mr-2">Date</span>
                                 <div class="flex cursor-pointer flex-col">
-                                    <div
-                                        v-html="icons.descIcon"
-                                        @click="setSortingState(0, 'asc')"
-                                        :class="{
-                                            'text-gray-800':
-                                                filterOptions.filter_options[0]
-                                                    .order_by === 'asc',
-                                            'text-gray-300':
-                                                filterOptions.filter_options[0]
-                                                    .order_by !== 'asc',
-                                        }"
-                                        class="font-semibold"
-                                    ></div>
-                                    <div
-                                        v-html="icons.ascIcon"
-                                        @click="setSortingState(0, 'desc')"
-                                        :class="{
-                                            'text-gray-800':
-                                                filterOptions.filter_options[0]
-                                                    .order_by === 'desc',
-                                            'text-gray-300':
-                                                filterOptions.filter_options[0]
-                                                    .order_by !== 'desc',
-                                        }"
-                                        class="font-semibold"
-                                    ></div>
+                                    <div v-html="icons.descIcon" @click="setSortingState(0, 'asc')" :class="{'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300':filterOptions.filter_options[0].order_by !== 'asc', }" class="font-semibold"></div>
+                                    <div v-html="icons.ascIcon"  @click="setSortingState(0, 'desc')" :class="{'text-gray-800': filterOptions.filter_options[0].order_by === 'desc','text-gray-300':filterOptions.filter_options[0].order_by !== 'desc', }" class="font-semibold"></div>
                                 </div>
                             </div>
                         </th>
                         <th>
-                            <div class="flex items-center justify-evenly">
-                                <span><nobr>Warehouse</nobr></span>
+                            <div class="flex justify-center items-center">
+                                <span class="mr-2"><nobr>Warehouse</nobr></span>
                                 <div class="flex cursor-pointer flex-col">
-                                    <div
-                                        v-html="icons.descIcon"
-                                        @click="setSortingState(1, 'asc')"
-                                        :class="{
-                                            'text-gray-800':
-                                                filterOptions.filter_options[1]
-                                                    .order_by === 'asc',
-                                            'text-gray-300':
-                                                filterOptions.filter_options[1]
-                                                    .order_by !== 'asc',
-                                        }"
-                                        class="font-semibold"
-                                    ></div>
-                                    <div
-                                        v-html="icons.ascIcon"
-                                        @click="setSortingState(1, 'desc')"
-                                        :class="{
-                                            'text-gray-800':
-                                                filterOptions.filter_options[1]
-                                                    .order_by === 'desc',
-                                            'text-gray-300':
-                                                filterOptions.filter_options[1]
-                                                    .order_by !== 'desc',
-                                        }"
-                                        class="font-semibold"
-                                    ></div>
+                                    <div v-html="icons.descIcon" @click="setSortingState(1, 'asc')" :class="{'text-gray-800':filterOptions.filter_options[1].order_by === 'asc','text-gray-300':filterOptions.filter_options[1].order_by !== 'asc', }" class="font-semibold"></div>
+                                    <div v-html="icons.ascIcon"  @click="setSortingState(1, 'desc')" :class="{'text-gray-800':filterOptions.filter_options[1].order_by === 'desc','text-gray-300':filterOptions.filter_options[1].order_by !== 'desc',}" class="font-semibold"></div>
                                 </div>
                             </div>
                         </th>
                         <th>
-                            <div class="item-center flex justify-evenly">
+                            <div class="flex justify-center items-center">
                                 <span><nobr>Business Unit</nobr></span>
                             </div>
                         </th>
@@ -248,93 +192,38 @@ function confirmDelete(id) {
                     </tr>
                     <tr class="w-full" v-if="showFilter">
                         <th>
-                            <select
-                                v-model="filterOptions.items_per_page"
-                                class="filter_input"
-                            >
+                            <select v-model="filterOptions.items_per_page" class="filter_input">
                                 <option value="15">15</option>
                                 <option value="30">30</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>
                         </th>
-                        <th>
-                            <input
-                                v-model="
-                                    filterOptions.filter_options[0].search_param
-                                "
-                                type="text"
-                                placeholder=""
-                                class="filter_input"
-                                autocomplete="off"
-                            />
-                        </th>
-                        <th>
-                            <input
-                                v-model="
-                                    filterOptions.filter_options[1].search_param
-                                "
-                                type="text"
-                                placeholder=""
-                                class="filter_input"
-                                autocomplete="off"
-                            />
-                        </th>
-                        <th>
-                            <filter-with-business-unit
-                                v-model="filterOptions.business_unit"
-                            ></filter-with-business-unit>
-                        </th>
-                        <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
+                        <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"/></th>
+                        <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"/></th>
+                        <th><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
+                        <th><button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button></th>
                     </tr>
                 </thead>
                 <tbody class="relative">
-                    <tr
-                        v-for="(openingStock, index) in openingStocks?.data
-                            ? openingStocks?.data
-                            : openingStocks"
-                        :key="index"
-                    >
+                    <tr v-for="(openingStock, index) in openingStocks?.data ? openingStocks?.data : openingStocks" :key="index">
                         <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                         <td><nobr>{{ openingStock?.date }}</nobr></td>
                         <td>{{ openingStock?.scmWarehouse?.name }}</td>
+                        <td><span :class="openingStock?.business_unit === 'PSML'? 'bg-green-100 text-green-700': 'bg-orange-100 text-orange-700'" class="rounded-full px-2 py-1 font-semibold leading-tight">{{ openingStock?.business_unit }}</span></td>
                         <td>
-                            <span
-                                :class="
-                                    openingStock?.business_unit === 'PSML'
-                                        ? 'bg-green-100 text-green-700'
-                                        : 'bg-orange-100 text-orange-700'
-                                "
-                                class="rounded-full px-2 py-1 font-semibold leading-tight"
-                                >{{ openingStock?.business_unit }}</span
-                            >
-                        </td>
-                        <td>
-                        <nobr>
-                            <action-button
-                                :action="'edit'"
-                                :to="{
-                                    name: 'scm.opening-stock.edit',
-                                    params: { openingStockId: openingStock.id },
-                                }"
-                            ></action-button>
-                            <action-button
-                                @click="confirmDelete(openingStock.id)"
-                                :action="'delete'"
-                            ></action-button>
-                        </nobr>
+                            <nobr>
+                                <action-button :action="'edit'" :to="{ name: 'scm.opening-stock.edit', params: { openingStockId: openingStock.id }, }"></action-button>
+                                <action-button @click="confirmDelete(openingStock.id)" :action="'delete'" ></action-button>
+                            </nobr>
                         </td>
                     </tr>
                     <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>
                 </tbody>
                 <tfoot
-                    v-if="!openingStocks?.data?.length"
-                    class="bg-white dark:bg-gray-800 relative h-[250px]"
-                >
+                    v-if="!openingStocks?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
                     <tr v-if="isLoading">
-                        <td colspan="7">Loading...</td>
+                        <!-- <td colspan="7">Loading...</td> -->
                     </tr>
                     <tr v-else-if="isTableLoading">
                         <td colspan="7">
@@ -342,7 +231,7 @@ function confirmDelete(id) {
                         </td>
                     </tr>
                     <tr v-else-if="!openingStocks?.data?.length">
-                        <td colspan="7">No Datas found.</td>
+                        <td colspan="7">No Data found.</td>
                     </tr>
                 </tfoot>
             </table>
