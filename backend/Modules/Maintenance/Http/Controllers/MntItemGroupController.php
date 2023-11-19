@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Http\Requests\MntItemGroupRequest;
 
@@ -120,7 +121,17 @@ class MntItemGroupController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {
+            $items = MntItem::where('mnt_item_group_id', $id)->count();
+            if ($items > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $itemGroup = MntItemGroup::findorfail($id);
             $itemGroup->delete();
             

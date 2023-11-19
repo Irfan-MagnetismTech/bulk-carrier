@@ -29,8 +29,8 @@ class MntItemRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Item name on selected business unit already exists.',
-            'item_code.unique' => 'Item code on selected business unit already exists.',
+            'name.unique' => 'Item name already exists.',
+            'item_code.unique' => 'Item code already exists.',
         ];
     }
 
