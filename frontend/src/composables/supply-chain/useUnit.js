@@ -125,7 +125,7 @@ export default function useUnit() {
     }
 
     async function deleteUnit(unitId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
@@ -137,8 +137,8 @@ export default function useUnit() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            // isLoading.value = false;
+            // loader.hide();
+            isLoading.value = false;
         }
     }
 

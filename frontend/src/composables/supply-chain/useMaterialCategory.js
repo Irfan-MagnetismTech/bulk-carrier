@@ -129,7 +129,7 @@ export default function useMaterialCategory() {
     }
 
     async function deleteMaterialCategory(materialCategoryId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
@@ -139,7 +139,7 @@ export default function useMaterialCategory() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
