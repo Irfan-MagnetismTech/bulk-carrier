@@ -277,7 +277,7 @@ export default function useVessel() {
 	}
 
 	async function getVesselsWithoutPaginate(businessUnit) {
-		NProgress.start();
+		// NProgress.start();
 		isLoading.value = true;
 		isVesselLoading.value = true;
 
@@ -290,7 +290,8 @@ export default function useVessel() {
 			notification.showError(status);
 		} finally {
 			// loading(false)
-			NProgress.done();
+			// NProgress.done();
+			isLoading.value = false;
 			isVesselLoading.value = false;
 		}
 	}
