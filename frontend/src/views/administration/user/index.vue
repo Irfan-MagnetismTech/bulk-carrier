@@ -228,8 +228,8 @@ filterOptions.value.filter_options.forEach((option, index) => {
             </td>
             <td>
               <nobr>
-              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
+                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>
@@ -237,7 +237,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tbody>
           <tfoot v-if="!users?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <!-- <td colspan="6">Loading...</td> -->
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="6">
