@@ -32,7 +32,9 @@ class OpsCustomerController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $customers = OpsCustomer::latest()->paginate(15);
+
+            $customers = OpsCustomer::globalSearch($request->all());
+
             return response()->success('Successfully retrieved customers.', $customers, 200);
         }
         catch (QueryException $e)

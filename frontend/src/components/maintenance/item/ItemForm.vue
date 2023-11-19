@@ -3,7 +3,7 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select :loading="isShipDepartmentLoading"  placeholder="Select Ship Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -18,7 +18,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item Group" :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Item Group" :loading="isItemGroupLoading"  :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -33,12 +33,12 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.item_code" placeholder="Item Code" class="form-input" required />
+            <input type="text" v-model.trim="form.item_code" placeholder="Item Code" class="form-input" required />
           <Error v-if="errors?.item_code" :errors="errors.item_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.name" placeholder="Item Name" class="form-input" required />
+          <input type="text" v-model.trim="form.name" placeholder="Item Name" class="form-input" required />
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
     </div>
@@ -55,8 +55,8 @@
               </thead>
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                 <tr class="text-gray-700 dark:text-gray-400" v-for="(des, index) in form.description" :key="index">
-                  <td class="px-1 py-1"><input type="text" class="form-input"  v-model="des.key" placeholder="Key" /></td>
-                  <td class="px-1 py-1"><input type="text" class="form-input"  v-model="des.value" placeholder="Value" /></td>
+                  <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="des.key" placeholder="Key" /></td>
+                  <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="des.value" placeholder="Value" /></td>
                   <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index==0" @click="addRow"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="index!=0" @click="removeRow(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,7 +76,7 @@
         </label>        
     </div>
 
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>   
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -87,9 +87,10 @@ import {onMounted, watch, watchEffect, ref} from "vue";
 import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { getItemCodeByGroupId } = useItem();
-const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -147,7 +148,7 @@ function removeRow(index) {
 
 
 
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Administration\Http\Controllers\PermissionController;
 use Modules\Administration\Http\Controllers\RoleController;
 use Modules\Administration\Http\Controllers\UserController;
+use Modules\Administration\Http\Controllers\AdministrationCommonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,10 @@ Route::middleware(['auth:api'])->prefix('administration')->group(function ()
 
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
+    Route::get('permissions-group-by-subject', [PermissionController::class, 'getPermissionsGroupBySubject']);
+
+    //helper apis
+    Route::post('get-administration-users', [AdministrationCommonController::class, 'getUsers']);
+    Route::post('get-administration-roles', [AdministrationCommonController::class, 'getRoles']);
+    Route::post('get-administration-permissions', [AdministrationCommonController::class, 'getPermissions']);
 });

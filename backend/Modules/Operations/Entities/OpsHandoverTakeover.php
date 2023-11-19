@@ -2,13 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsHandoverTakeover extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'note_type',
@@ -17,6 +18,7 @@ class OpsHandoverTakeover extends Model
         'currency',
         'ops_vessel_id',
         'ops_charterer_profile_id',
+        'remarks',
         'business_unit'
     ];
 

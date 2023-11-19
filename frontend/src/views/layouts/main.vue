@@ -122,6 +122,9 @@ table, th,td{
 .search {
   @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none dark:border-0;
 }
+.custom_badge{
+  @apply px-2 py-1 font-semibold leading-tight rounded-full;
+}
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;

@@ -14,10 +14,11 @@ class AccFixedAssetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts')->get();
+            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name')
+            ->globalSearch($request->all());
 
             return response()->json([
                 'status' => 'success',
@@ -39,7 +40,7 @@ class AccFixedAssetController extends Controller
     public function store(Request $request)
     {
         try {
-            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'tag', 'mrr_no', 'bill_no', 'name', 'life_time', 'brand', 'asset_type', 'location', 'model', 'serial', 'price', 'percentage', 'use_date', 'business_unit');
+            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'asset_name', 'asset_type', 'tag', 'mrr_no', 'bill_no', 'brand', 'location', 'model', 'serial', 'price', 'acquisition_cost', 'useful_life', 'acquisition_date', 'percentage', 'business_unit');
             $accFixedAsset     = AccFixedAsset::create($accFixedAssetData);
             $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
 
@@ -65,7 +66,7 @@ class AccFixedAssetController extends Controller
         try {
             return response()->json([
                 'status' => 'success',
-                'value'  => $accFixedAsset->load('fixedAssetCosts'),
+                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name'),
             ], 200);
         }
         catch (\Exception $e)
@@ -84,7 +85,7 @@ class AccFixedAssetController extends Controller
     public function update(Request $request, AccFixedAsset $accFixedAsset)
     {
         try {
-            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'tag', 'mrr_no', 'bill_no', 'name', 'life_time', 'brand', 'asset_type', 'location', 'model', 'serial', 'price', 'percentage', 'use_date', 'business_unit');
+            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'asset_name', 'asset_type', 'tag', 'mrr_no', 'bill_no', 'brand', 'location', 'model', 'serial', 'price', 'acquisition_cost', 'useful_life', 'acquisition_date', 'percentage', 'business_unit');
             $accFixedAsset->update($accFixedAssetData);
             $accFixedAsset->fixedAssetCosts()->delete();
             $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);

@@ -15,25 +15,41 @@ export default function useCostCenter() {
         type: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    // const indexPage = ref(null);
+    // const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getCostCenters(page,businessUnit) {
+    async function getCostCenters(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-cost-centers',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page || 1,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             costCenters.value = data.value;
@@ -42,8 +58,16 @@ export default function useCostCenter() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -114,7 +138,7 @@ export default function useCostCenter() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-cost-centers/${costCenterId}`);
             notification.showSuccess(status);
-            await getCostCenters(indexPage.value,indexBusinessUnit.value);
+            await getCostCenters(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -133,6 +157,7 @@ export default function useCostCenter() {
         updateCostCenter,
         deleteCostCenter,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

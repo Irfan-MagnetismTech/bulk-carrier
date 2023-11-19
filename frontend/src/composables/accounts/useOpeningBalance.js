@@ -20,26 +20,41 @@ export default function useOpeningBalance() {
         user_id: '',
         business_unit: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    // const indexPage = ref(null);
+    // const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getOpeningBalances(page,businessUnit) {
+    async function getOpeningBalances(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/acc/acc-account-opening-balances',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                    page: filterOptions.page || 1,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                }
             });
             openingBalances.value = data.value;
             notification.showSuccess(status);
@@ -47,8 +62,16 @@ export default function useOpeningBalance() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -119,7 +142,7 @@ export default function useOpeningBalance() {
         try {
             const { data, status } = await Api.delete( `/acc/acc-account-opening-balances/${openingBalanceId}`);
             notification.showSuccess(status);
-            await getOpeningBalances(indexPage.value,indexBusinessUnit.value);
+            await getOpeningBalances(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -138,6 +161,7 @@ export default function useOpeningBalance() {
         updateOpeningBalance,
         deleteOpeningBalance,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

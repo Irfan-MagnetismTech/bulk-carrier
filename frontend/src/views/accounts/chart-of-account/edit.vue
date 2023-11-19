@@ -20,6 +20,13 @@ const page = 'edit';
 
 setTitle('Edit Chart of Account');
 
+watch(chartOfAccount, (value) => {
+  if(value) {
+    chartOfAccount.value.acc_balance_and_income_line_name = chartOfAccount.value.balanceIncome;
+    chartOfAccount.value.parent_account_name = chartOfAccount.value.parent;
+  }
+});
+
 onMounted(() => {
   showChartOfAccount(chartOfAccountId);
 });

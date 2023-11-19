@@ -4,8 +4,9 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
-const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists, generatedAccountCode, getGeneratedAccountCode } = useAccountCommonApiRequest();
+const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists, generatedAccountCode, getGeneratedAccountCode, isLoading } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -21,10 +22,10 @@ const props = defineProps({
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-function getCode(el, loading){
-  loading = true
-  getGeneratedAccountCode(el.target.value);
-}
+// function getCode(el, loading){
+//   loading = true;
+//   getGeneratedAccountCode(el.target.value);
+// }
 
 watch(generatedAccountCode, (value) => {
   if(value) {
@@ -32,8 +33,23 @@ watch(generatedAccountCode, (value) => {
   }
 });
 
+watch(() => props.form.acc_balance_and_income_line_name, (newEntries, oldEntries) => {
+    getGeneratedAccountCode(props.form.acc_balance_and_income_line_name.id);
+    }, { deep: true }
+);
+
+watch(() => props.form, (newEntries, oldEntries) => {
+      props.form.acc_balance_and_income_line_id = props.form?.acc_balance_and_income_line_name?.id ?? '';
+      props.form.parent_account_id = props.form?.parent_account_name?.id ?? '';
+    }, { deep: true }
+);
+
+function checkWhitespace(value) {
+  if (/^\s+$/.test(props.form.account_name)) {props.form.account_name = '';}
+}
+
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getBalanceIncomeLineLists(props.form.business_unit);
     getBalanceIncomeAccountLists(props.form.business_unit,props.form.acc_balance_and_income_line_id);
@@ -51,32 +67,40 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Balance/Income Line <span class="text-red-500">*</span></span>
-        <select class="form-input" v-model="form.acc_balance_and_income_line_id" @change="getCode($event)" autocomplete="off" required>
-          <option value="" disabled selected>Select</option>
-          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>
-        </select>
-        <Error v-if="errors?.acc_balance_and_income_line_id" :errors="errors.acc_balance_and_income_line_id" />
+        <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.acc_balance_and_income_line_name" label="line_text"  class="block w-full rounded form-input">
+          <template #search="{attributes, events}">
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_balance_and_income_line_name" v-bind="attributes" v-on="events"/>
+          </template>
+        </v-select>
+<!--        <select class="form-input" v-model="form.acc_balance_and_income_line_id" @change="getCode($event)" autocomplete="off" required>-->
+<!--          <option value="" disabled selected>Select</option>-->
+<!--          <option v-for="balanceIncomeLine in balanceIncomeLineLists" :value="balanceIncomeLine.id" :key="balanceIncomeLine.id">{{ balanceIncomeLine.line_text }}</option>-->
+<!--        </select>-->
+<!--        <Error v-if="errors?.acc_balance_and_income_line_id" :errors="errors.acc_balance_and_income_line_id" />-->
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Parent Account </span>
-        <select class="form-input" v-model="form.parent_account_id" autocomplete="off">
-          <option value="" disabled selected>Select</option>
-          <option v-for="balanceIncomeAccountLine in balanceIncomeAccountLists" :value="balanceIncomeAccountLine.id" :key="balanceIncomeAccountLine.id">{{ balanceIncomeAccountLine.account_name }}</option>
-        </select>
-        <Error v-if="errors?.parent_account_id" :errors="errors.parent_account_id" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
-        <Error v-if="errors?.account_code" :errors="errors.account_code" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_name" placeholder="A/C name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.account_name" :errors="errors.account_name" />
+        <v-select :options="balanceIncomeAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.parent_account_name" label="account_name"  class="block w-full rounded form-input">
+          <template #search="{attributes, events}">
+            <input class="vs__search w-full" style="width: 50%" :required="!form.parent_account_name" v-bind="attributes" v-on="events"/>
+          </template>
+        </v-select>
+<!--        <select class="form-input" v-model="form.parent_account_id" autocomplete="off">-->
+<!--          <option value="" disabled selected>Select</option>-->
+<!--          <option v-for="balanceIncomeAccountLine in balanceIncomeAccountLists" :value="balanceIncomeAccountLine.id" :key="balanceIncomeAccountLine.id">{{ balanceIncomeAccountLine.account_name }}</option>-->
+<!--        </select>-->
+<!--        <Error v-if="errors?.parent_account_id" :errors="errors.parent_account_id" />-->
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
+    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
@@ -85,8 +109,8 @@ onMounted(() => {
         <option value="2"> Liabilities </option>
         <option value="3"> Equity </option>
         <option value="4"> Revenues </option>
-        <option value="5"> Expenses </option>      </select>
-      <Error v-if="errors?.account_type" :errors="errors.account_type" />
+        <option value="5"> Expenses </option>
+      </select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Is Archived <span class="text-red-500">*</span></span>
@@ -95,11 +119,9 @@ onMounted(() => {
         <option value="0"> No </option>
         <option value="1"> Yes </option>
       </select>
-      <Error v-if="errors?.is_archived" :errors="errors.is_archived" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

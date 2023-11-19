@@ -19,9 +19,9 @@ class LedgerService extends Controller
      * @return mixed
      */
     public function handleLedgerService()
-    {   
-        $ledgerInfo = []; 
-        
+    {
+        $ledgerInfo = [];
+
         $account = AccAccount::with('accountOpeningBalance')->where('id', request()->acc_account_id)->first();
 
         $aob = AccAccountOpeningBalance::where('acc_account_id', request()->acc_account_id)->first();
@@ -82,21 +82,21 @@ class LedgerService extends Controller
     }
 
     public function openingBalance($account_type, $drAmount, $crAmount, $accountOpeningDrAmount = 0, $accountOpeningCrAmount = 0) {
-        $config = config('accounts.account_types'); 
+        $config = config('accounts.account_types');
         $balanceInfo = [];
 
         if(in_array($account_type, [$config['Assets'], $config['Expenses']])){
             $openingBalance = $accountOpeningDrAmount + $drAmount - $crAmount;
             $balanceInfo['dr_amount']   = 0.00;
             $balanceInfo['cr_amount']   = 0.00;
-            $openingBalance > 0 ? $balanceInfo['dr_amount'] = abs($openingBalance) : $balanceInfo['cr_amount'] = abs($openingBalance); 
+            $openingBalance > 0 ? $balanceInfo['dr_amount'] = abs($openingBalance) : $balanceInfo['cr_amount'] = abs($openingBalance);
         }
 
         if(in_array($account_type, [$config['Liabilities'], $config['Revenues']])){
             $openingBalance = $accountOpeningCrAmount + $crAmount - $drAmount;
             $balanceInfo['dr_amount']   = 0.00;
             $balanceInfo['cr_amount']   = abs($openingBalance);
-            $openingBalance > 0 ? $balanceInfo['cr_amount'] = abs($openingBalance) : $balanceInfo['dr_amount'] = abs($openingBalance); 
+            $openingBalance > 0 ? $balanceInfo['cr_amount'] = abs($openingBalance) : $balanceInfo['dr_amount'] = abs($openingBalance);
         }
 
         return $balanceInfo;

@@ -136,7 +136,6 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
-              
                     {
                         route: 'mnt.done-work-requisitions.index',
                         label: 'Done',
@@ -147,10 +146,10 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+
                 ],
             },
 
-            
             {
                 route: '',
                 label: 'Cri. Ship Function',
@@ -217,20 +216,9 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
-
-
-          ],
+                ],
             },
-
-
-            
-            
-
-
-
-
-            
-            
+                
             
         ]
     },

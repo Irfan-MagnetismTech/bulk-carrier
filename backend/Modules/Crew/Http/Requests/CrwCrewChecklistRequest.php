@@ -11,22 +11,23 @@ class CrwCrewChecklistRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'effective_date'                    => ['required'],
+            'business_unit'                     => ['required', 'string', 'max:255'],
+            'crwCrewChecklistLines.*.item_name' => ['required', 'max:255'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
-            //
+            'effective_date.required'               => 'The effective date field is required.',
+            'crwCrewChecklistLines.*.item_name.max' => "The item [:index] field cannot exceed 255 characters.",
         ];
     }
 

@@ -11,6 +11,7 @@ export default function useStockLedger() {
     const router = useRouter();
     const materials = ref([]);
     const CurrentStock = ref(0);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
         const material = ref( {
@@ -27,7 +28,7 @@ export default function useStockLedger() {
         });
 
     const indexPage = ref(null);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
 

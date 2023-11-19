@@ -15,10 +15,11 @@ class ScmMaterialCategoryController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $scm_material_categories = ScmMaterialCategory::with('parent')->latest()->paginate(10);
+            $scm_material_categories = ScmMaterialCategory::with('parent')
+                ->globalSearch($request->all());
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {
@@ -84,6 +85,14 @@ class ScmMaterialCategoryController extends Controller
     public function destroy(ScmMaterialCategory $material_category): JsonResponse
     {
         try {
+            // if (count($material_category->children) > 0) {
+            //     return response()->error('Category has Children', 500);
+            // }
+            //if id is 1 then return error
+            if ($material_category->id === 1) {
+
+                return response()->error('Category cannot be deleted', 501);
+            }
             $material_category->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);

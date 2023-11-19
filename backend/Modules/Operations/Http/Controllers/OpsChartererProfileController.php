@@ -28,10 +28,11 @@ class OpsChartererProfileController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->paginate(15);
+            $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')
+            ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved charterer profiles.', $charterer_profiles, 200);
         }
@@ -111,7 +112,7 @@ class OpsChartererProfileController extends Controller
              $charterer_profile->opsChartererBankAccounts()->delete();
              $charterer_profile->opsChartererBankAccounts()->createMany($request->opsChartererBankAccounts);
              DB::commit();
-             return response()->success('Charterer profile updated successfully.', $charterer_profile, 200);
+             return response()->success('Charterer profile updated successfully.', $charterer_profile, 202);
          }
          catch (QueryException $e)
          {            
@@ -152,6 +153,7 @@ class OpsChartererProfileController extends Controller
              })
              ->limit(10)
              ->get();
+             $charterer_profiles->load('opsChartererBankAccounts');
              return response()->success('Successfully retrieved charterer profile name.', $charterer_profiles, 200);
          } catch (QueryException $e){
              return response()->error($e->getMessage(), 500);

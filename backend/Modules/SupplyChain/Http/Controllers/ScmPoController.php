@@ -7,26 +7,33 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmVendor;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
+    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    {
+        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
+        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {
@@ -38,21 +45,22 @@ class ScmPoController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ScmPoRequest $request): JsonResponse
     {
+        $requestData = $request->except('ref_no');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
+
         try {
             DB::beginTransaction();
-
-            $scmPo = ScmPo::create($request->all());
-            $scmPo->scmPoLines()->createUpdateOrDelete($request->scmPoLines);
+            $scmPo = ScmPo::create($requestData);
+            // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $scmPo->id);
+            $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
-
             DB::commit();
-
             return response()->success('Data created successfully', $scmPo, 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -65,7 +73,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            return response()->success('data', $purchaseOrder->load('scmPoLines', 'scmPoTerms'), 200);
+            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr'), 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -77,15 +85,20 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function update(Request $request, ScmPo $purchaseOrder): JsonResponse
+    public function update(ScmPoRequest $request, ScmPo $purchaseOrder): JsonResponse
     {
-        try {
-            $purchaseOrder->update($request->all());
-            $purchaseOrder->scmPoLines()->createMany($request->scmPoLines);
-            $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
+        $requestData = $request->except('ref_no');
 
-            return response()->success('Data updated sucessfully!', $purchaseOrder, 202);
+        try {
+            DB::beginTransaction();
+            $purchaseOrder->update($requestData);
+            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $purchaseOrder->id);
+            $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
+            $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
+            DB::commit();
+            return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -125,7 +138,27 @@ class ScmPoController extends Controller
         return response()->success('Search result', $scmPo, 200);
     }
 
-    //get getPoOrPoCsWisePrData
+    /**
+     * Adds the net rate to the request data and generates the po composite key
+     *
+     * @param mixed $request
+     * @param int $po_id
+     * @return mixed
+     */
+    public function addNetRateToRequestData($request, $po_id): mixed
+    {
+        $net_amount = $request['net_amount'];
+        $sub_total = $request['sub_total'];
+        $scmPoLines = $request['scmPoLines'];
+        foreach ($scmPoLines as $key => $value) {
+            $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
+            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
+        }
+        $request['scmPoLines'] = $scmPoLines;
+
+        return $request;
+    }
+
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
 
@@ -169,14 +202,17 @@ class ScmPoController extends Controller
                     'scm_pr_id' => $scmPr->id,
                     'scmPr' => $scmPr,
                     'pr_date' => $scmPr->raised_date,
+                    'business_unit' => $scmPr->business_unit,
+                    'purchase_center' => $scmPr->purchase_center,
                     'scmPoLines' => $scmPr->scmPrLines->map(function ($item) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
-                            'brand' => $item->scmMaterial->brand,
-                            'model' => $item->scmMaterial->model,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
                             'quantity' => $item->quantity,
+                            'pr_composite_key' => $item->pr_composite_key,
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];
@@ -189,10 +225,52 @@ class ScmPoController extends Controller
                 // ->get();
             }
 
-
             return response()->success('data', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    /**
+     * Retrieves the materials associated with a given purchase requisition ID.
+     *
+     * @return JsonResponse
+     */
+    public function getMaterialByPrId(): JsonResponse
+    {
+        $prMaterials = ScmPrLine::query()
+            ->with('scmMaterial')
+            ->where('scm_pr_id', request()->pr_id)
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['brand'] = $item->brand;
+                $data['model'] = $item->model;
+                return $data;
+            });
+        return response()->success('data list', $prMaterials, 200);
+    }
+
+    /**
+     * Search for a PO based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchPo(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmPo = ScmPo::query()
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
+                ->whereBusinessUnit($request->business_unit)
+                ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
+            $scmPo = [];
+        }
+
+        return response()->success('Search result', $scmPo, 200);
     }
 }

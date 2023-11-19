@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
+use Modules\Accounts\Http\Requests\AccBalanceAndIncomeLineRequest;
 
 class AccBalanceAndIncomeLineController extends Controller
 {
@@ -17,11 +18,9 @@ class AccBalanceAndIncomeLineController extends Controller
     public function index(Request $request)
     {
         try {
-            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $balanceIncomeLines = AccBalanceAndIncomeLine::with('parentLine:id,line_text')->globalSearch($request->all());
 
-            return response()->success('Retrieved Successfully te', $balanceIncomeLines, 200);
+            return response()->success('Retrieved Successfully', $balanceIncomeLines, 200);
         }
         catch (QueryException $e)
         {
@@ -35,13 +34,13 @@ class AccBalanceAndIncomeLineController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccBalanceAndIncomeLineRequest $request)
     {
         try {
             $balanceAndIncomeLineData = $request->only('line_type','line_text','value_type','parent_id','visible_index','printed_no','business_unit');
             $accBalanceAndIncomeLine     = AccBalanceAndIncomeLine::create($balanceAndIncomeLineData);
 
-            return response()->success('Created Succesfully', $accBalanceAndIncomeLine, 201);
+            return response()->success('Created Successfully', $accBalanceAndIncomeLine, 201);
         }
         catch (QueryException $e)
         {
@@ -58,7 +57,7 @@ class AccBalanceAndIncomeLineController extends Controller
     public function show(AccBalanceAndIncomeLine $accBalanceAndIncomeLine)
     {
         try {
-            return response()->success('Retrieved successfully', $accBalanceAndIncomeLine->load('parentLine:id,line_text'), 200);
+            return response()->success('Retrieved Successfully', $accBalanceAndIncomeLine->load('parentLine:id,line_text'), 200);
         }
         catch (QueryException $e)
         {
@@ -73,13 +72,13 @@ class AccBalanceAndIncomeLineController extends Controller
      * @param  \App\Models\Accounts\AccBalanceAndIncomeLine  $accBalanceAndIncomeLine
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccBalanceAndIncomeLine $accBalanceAndIncomeLine)
+    public function update(AccBalanceAndIncomeLineRequest $request, AccBalanceAndIncomeLine $accBalanceAndIncomeLine)
     {
         try {
             $balanceAndIncomeLineData = $request->only('line_type','line_text','value_type','parent_id','visible_index','printed_no','business_unit');
             $accBalanceAndIncomeLine->update($balanceAndIncomeLineData);
 
-            return response()->success('Updated successfully', $accBalanceAndIncomeLine, 202);
+            return response()->success('Updated Successfully', $accBalanceAndIncomeLine, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +97,7 @@ class AccBalanceAndIncomeLineController extends Controller
         try {
             $accBalanceAndIncomeLine->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

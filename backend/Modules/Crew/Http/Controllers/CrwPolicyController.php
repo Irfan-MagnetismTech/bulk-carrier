@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Modules\Crew\Entities\CrwPolicy;
+use Modules\Crew\Http\Requests\CrwPolicyRequest;
 
 class CrwPolicyController extends Controller
 {
@@ -24,14 +25,12 @@ class CrwPolicyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwPolicies = CrwPolicy::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwPolicies = CrwPolicy::globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwPolicies, 200);
+            return response()->success('Retrieved Successfully', $crwPolicies, 200);
         }
         catch (QueryException $e)
         {
@@ -45,7 +44,7 @@ class CrwPolicyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwPolicyRequest $request)
     {
         try {
             $crwPolicyData               = $request->only('name', 'type', 'business_unit');
@@ -53,7 +52,7 @@ class CrwPolicyController extends Controller
 
             $crwPolicy = CrwPolicy::create($crwPolicyData);
 
-            return response()->success('Created Succesfully', $crwPolicy, 201);
+            return response()->success('Created Successfully', $crwPolicy, 201);
         }
         catch (QueryException $e)
         {
@@ -70,7 +69,7 @@ class CrwPolicyController extends Controller
     public function show(CrwPolicy $crwPolicy)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwPolicy, 200);
+            return response()->success('Retrieved Successfully', $crwPolicy, 200);
         }
         catch (QueryException $e)
         {
@@ -85,7 +84,7 @@ class CrwPolicyController extends Controller
      * @param  \App\Models\CrwPolicy  $crwPolicy
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwPolicy $crwPolicy)
+    public function update(CrwPolicyRequest $request, CrwPolicy $crwPolicy)
     {
         try {
             $crwPolicyData               = $request->only('name', 'type', 'business_unit');
@@ -93,7 +92,7 @@ class CrwPolicyController extends Controller
 
             $crwPolicy->update($crwPolicyData);
 
-            return response()->success('Updated succesfully', $crwPolicy, 202);
+            return response()->success('Updated Successfully', $crwPolicy, 202);
         }
         catch (QueryException $e)
         {

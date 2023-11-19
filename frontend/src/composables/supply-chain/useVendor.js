@@ -9,6 +9,7 @@ export default function useVendor() {
     const BASE = 'scm' 
     const router = useRouter();
     const vendors = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const vendor = ref( {
@@ -28,36 +29,49 @@ export default function useVendor() {
         
     });
 
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
-    const indexPage = ref(null);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getVendors(page,columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+    async function getVendors(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
+
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/vendors`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/vendors`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             vendors.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -121,18 +135,18 @@ export default function useVendor() {
     }
 
     async function deleteVendor(vendorId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/vendors/${vendorId}`);
             notification.showSuccess(status);
-            await getVendors(indexPage.value);
+            await getVendors(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
@@ -165,6 +179,7 @@ export default function useVendor() {
         showVendor,
         updateVendor,
         deleteVendor,
+        isTableLoading,
         isLoading,
         errors,
     };

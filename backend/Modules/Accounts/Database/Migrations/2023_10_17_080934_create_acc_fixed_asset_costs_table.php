@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('acc_fixed_asset_costs', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('fixed_asset_id')->constrained('fixed_assets', 'id')->cascadeOnDelete();
-			$table->string('particular')->nullable();
-			$table->date('amount')->nullable();
+			$table->foreignId('acc_fixed_asset_id')->constrained('acc_fixed_assets', 'id')->cascadeOnDelete();
+			$table->string('particular');
+			$table->string('remarks')->nullable();
+			$table->float('amount');
             $table->timestamps();
         });
     }

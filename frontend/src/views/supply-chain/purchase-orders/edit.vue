@@ -22,6 +22,7 @@ setTitle('Edit Purchase Order');
 
 onMounted(() => {
     showPurchaseOrder(purchaseOrderId);
+    console.log('tag', purchaseOrder);
 });
 </script>
 <template>

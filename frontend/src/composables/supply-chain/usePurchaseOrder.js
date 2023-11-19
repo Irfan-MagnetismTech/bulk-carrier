@@ -22,20 +22,22 @@ export default function usePurchaseOrder() {
         ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
-        acc_cost_center_id: '',
-        po_date: '',
+        acc_cost_center_id: null,
+        date: '',
         pr_no: null,
         scm_pr_id: null,
         scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
+        date: '',
+        cs_no: null,
+        purchase_center: null,
+        scm_cs_id: null,
         scmCs: null,
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
+        currency: '',
+        foreign_to_bdt: 0,
+        foreign_to_usd: 0,
         remarks: '',
         sub_total: 0.0,
         discount: 0.0,
@@ -44,24 +46,27 @@ export default function usePurchaseOrder() {
         net_amount: 0.0,
         business_unit: '',
         scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
+            {
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: null,
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+            }
+        ],
         scmPoTerms: [
                         {
                             description: ''
                         }
                     ],  
-        });
+    });
+    
+    const prMaterialList = ref([]);
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
@@ -77,6 +82,7 @@ export default function usePurchaseOrder() {
     const termsObject =  {
         description: ''
     }
+
     const errors = ref('');
     const isLoading = ref(false);
     const indexPage = ref(null);
@@ -141,6 +147,7 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-orders/${purchaseOrderId}`);
             purchaseOrder.value = data.value;
+            console.log('podata', purchaseOrder.value);
 
         } catch (error) {
             const { data, status } = error.response;
@@ -191,11 +198,10 @@ export default function usePurchaseOrder() {
         }
     }
 
-    async function searchPurchaseOrder(searchParam, loading) {
-        
+    async function searchPurchaseOrder(searchParam, loading, business_unit) {
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-orders`,searchParam);
+        const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
             filteredPurchaseOrders.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
@@ -204,7 +210,7 @@ export default function usePurchaseOrder() {
             loading(false)
         }
     }
-    //getPrAndCsWisePurchaseOrder data     
+
     async function getPrAndCsWisePurchaseOrder(prId, csId) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
@@ -218,8 +224,6 @@ export default function usePurchaseOrder() {
                 },
             });
             purchaseOrder.value = merge(purchaseOrder.value, data.value);
-            console.log('data', data.value);
-            console.log('po', purchaseOrders.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -231,7 +235,23 @@ export default function usePurchaseOrder() {
         }
     }
 
+    
+    async function getMaterialList(prId) {
 
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+                params: {
+                    pr_id: prId,
+                },
+            });
+            prMaterialList.value = data.value;
+            console.log('prMaterialList', prMaterialList.value);    
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+        }
+    }
 
     return {
         purchaseOrders,
@@ -244,6 +264,8 @@ export default function usePurchaseOrder() {
         updatePurchaseOrder,
         deletePurchaseOrder,
         getPrAndCsWisePurchaseOrder,
+        getMaterialList,
+        prMaterialList,
         materialObject,
         termsObject,
         isLoading,
