@@ -28,8 +28,8 @@ class MntItemGroupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Item group name on selected business unit already exists.',
-            'short_code.unique' => 'Item group short code on selected business unit already exists.',
+            'name.unique' => 'Item group name already exists.',
+            'short_code.unique' => 'Item group short code already exists.',
         ];
     }
 
