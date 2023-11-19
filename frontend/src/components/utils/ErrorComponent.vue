@@ -20,7 +20,7 @@ watch(
             rawHtml += `</ul>`;
 
             Swal.fire({
-                icon: "alert",
+                icon: "",
                 title: "Correct Please!",
                 html: `
                 ${rawHtml}
