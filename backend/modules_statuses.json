@@ -1,0 +1,8 @@
+{
+    "Administration": true,
+    "Maintenance": true,
+    "Crew": true,
+    "Operations": true,
+    "SupplyChain": true,
+    "Accounts": true
+}
