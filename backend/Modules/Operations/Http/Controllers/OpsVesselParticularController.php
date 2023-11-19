@@ -168,6 +168,7 @@ class OpsVesselParticularController extends Controller
     {
         $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
         ->first();
+
         return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
         
     }
