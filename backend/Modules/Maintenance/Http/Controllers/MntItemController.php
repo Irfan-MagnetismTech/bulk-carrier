@@ -130,11 +130,11 @@ class MntItemController extends Controller
     {
         try {          
             $jobs = MntJob::where('mnt_item_id', $id)->count();
-            if ($items > 0) {
+            if ($jobs > 0) {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
-                        "id"=>"This data could not be deleted as it has reference to other table"
+                        "id"=>["This data could not be deleted as it has reference to other table"]
                     ]
                 );
                 return response()->json($error, 422);
