@@ -17,7 +17,7 @@ import useGlobalFilter from "../../../composables/useGlobalFilter";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
-const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
+const { showFilter, swapFilter, setSortingState, clearFilter, setPaginationState, currentPage, paginatedPage } = useGlobalFilter();
 
 const { vessels, getVessels, deleteVessel, isLoading, isTableLoading } = useVessel();
 
@@ -50,17 +50,6 @@ function confirmDelete(id) {
     }
   })
 }
-
-watch(
-
-	() => businessUnit.value,
-	(newBusinessUnit, oldBusinessUnit) => {
-		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "ops.vessels.index", query: { page: 1 } })
-		}	
-	}
-
-);
 
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
@@ -138,18 +127,10 @@ let filterOptions = ref( {
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-const currentPage = ref(1);
-const paginatedPage = ref(1);
-
 onMounted(() => {
   watchPostEffect(() => {
   
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
+    setPaginationState(filterOptions, props.page)
 
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
@@ -170,7 +151,7 @@ onMounted(() => {
 
     
 });
-filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options.forEach((option, index) => {
       filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
     });
 });
@@ -340,6 +321,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="vessels" to="ops.configurations.vessels.index" :page="page"></Paginate>
+    <Paginate :data="vessels" to="ops.vessels.index" :page="page"></Paginate>
   </div>
 </template>

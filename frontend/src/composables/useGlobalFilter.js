@@ -1,9 +1,13 @@
 import { ref, customRef } from 'vue'
+import Store from '../store/index.js';
 
 
 export default function useGlobalFilter() {
 
     const showFilter = ref(false);
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+    const currentPage = ref(1);
+    const paginatedPage = ref(1);
 
     function swapFilter() {
         showFilter.value = !showFilter.value;
@@ -19,16 +23,30 @@ export default function useGlobalFilter() {
     }
 
     function clearFilter(filterOptions) {
-        filterOptions.filter_options.forEach((option, index) => {
-          filterOptions.filter_options[index].search_param = "";
-          filterOptions.filter_options[index].order_by = null;
-        });
+        filterOptions.business_unit = businessUnit.value;
+        filterOptions.filter_options = filterOptions.filter_options.map((option) => ({
+            ...option,
+            search_param: null,
+            order_by: null,
+        }));
+    }
+
+    function setPaginationState(filterOptions, page) {
+        if(currentPage.value == page && currentPage.value != 1) {
+            filterOptions.page = 1;
+          } else {
+            filterOptions.page = page;
+          }
+          currentPage.value = page;
     }
 
     return {
 		showFilter, 
         swapFilter,
         setSortingState,
-        clearFilter
+        clearFilter,
+        setPaginationState,
+        currentPage,
+        paginatedPage
 	};
 }
