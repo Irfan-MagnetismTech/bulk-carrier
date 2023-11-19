@@ -43,7 +43,7 @@ let filterOptions = ref({
     {
       "relation_name": "roles",
       "field_name": "name",
-      "search_param": null,
+      "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null
@@ -94,11 +94,13 @@ function confirmDelete(id) {
   })
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
@@ -225,15 +227,17 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <strong>{{ user?.business_unit }}</strong>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
-              <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>
+                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!users?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <!-- <td colspan="6">Loading...</td> -->
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="6">

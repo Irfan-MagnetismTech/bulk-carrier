@@ -71,11 +71,13 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  // filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
@@ -186,15 +188,17 @@ function confirmDelete(id) {
               <td>{{ service.name }}</td>
               <td>{{ service.short_code }}</td>
               <td>
+                <nobr>
                 <action-button :action="'edit'" :to="{ name: 'scm.service.edit', params: { serviceId: service.id } }"></action-button>
                 <action-button @click="confirmDelete(service.id)" :action="'delete'"></action-button>
+                </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && services?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!services?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <!-- <td colspan="7">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">

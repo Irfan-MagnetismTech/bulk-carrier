@@ -92,11 +92,13 @@ function confirmDelete(id) {
   })
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  // filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
@@ -204,7 +206,7 @@ onMounted(() => {
         </tbody>
         <tfoot v-if="!permissions?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="5">Loading...</td>
+          <!-- <td colspan="5">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">

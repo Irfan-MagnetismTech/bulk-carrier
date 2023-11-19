@@ -139,11 +139,13 @@ let filterOptions = ref( {
   ]
 });
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+    ...option,
+    search_param: null,
+    order_by: null,
+  }));
 }
 
 const currentPage = ref(1);
@@ -312,7 +314,8 @@ onMounted(() => {
             <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model="filterOptions.filter_options[7].search_param" type="date" placeholder="" class="filter_input" autocomplete="off" /></th>
+            <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+            <th><input v-model="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
             </th>
@@ -337,8 +340,10 @@ onMounted(() => {
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'acc.bank-accounts.edit', params: { bankAccountId: account?.id } }"></action-button>
-              <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'acc.bank-accounts.edit', params: { bankAccountId: account?.id } }"></action-button>
+                <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bankAccounts?.data?.length"></LoaderComponent>

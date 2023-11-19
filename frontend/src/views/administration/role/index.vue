@@ -82,11 +82,12 @@ function deleteRoleByID(roleId) {
   })
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 onMounted(() => {
@@ -199,15 +200,17 @@ onMounted(() => {
               </span>
             </td>
             <td style="width: 10%" class="items-center justify-center px-4 py-3 space-x-2 text-sm text-gray-600">
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'administration.user.roles.edit', params: { roleId: roleData?.id } }"></action-button>
               <action-button @click="deleteRoleByID(roleData?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && roles?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!roles?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="4">Loading...</td>
+            <!-- <td colspan="4">Loading...</td> -->
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="7">
