@@ -163,7 +163,7 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
+                <div class="flex justify-center items-center">
                   <span>Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -172,7 +172,7 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
+                <div class="flex justify-center items-center">
                   <span><nobr>Parent Name</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -181,7 +181,7 @@ function confirmDelete(id) {
                 </div>
               </th>
               <th>
-                <div class="flex justify-evenly items-center">
+                <div class="flex justify-center items-center">
                   <span><nobr>Short Code</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>

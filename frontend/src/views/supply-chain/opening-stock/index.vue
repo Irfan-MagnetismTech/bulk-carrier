@@ -166,7 +166,7 @@ function confirmDelete(id) {
                             </div>
                         </th>
                         <th>
-                            <div class="flex items-center justify-evenly">
+                            <div class="flex justify-center items-center">
                                 <span>Date</span>
                                 <div class="flex cursor-pointer flex-col">
                                     <div v-html="icons.descIcon" @click="setSortingState(0, 'asc')" :class="{'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300':filterOptions.filter_options[0].order_by !== 'asc', }" class="font-semibold"></div>
@@ -175,7 +175,7 @@ function confirmDelete(id) {
                             </div>
                         </th>
                         <th>
-                            <div class="flex items-center justify-evenly">
+                            <div class="flex justify-center items-center">
                                 <span><nobr>Warehouse</nobr></span>
                                 <div class="flex cursor-pointer flex-col">
                                     <div v-html="icons.descIcon" @click="setSortingState(1, 'asc')" :class="{'text-gray-800':filterOptions.filter_options[1].order_by === 'asc','text-gray-300':filterOptions.filter_options[1].order_by !== 'asc', }" class="font-semibold"></div>
@@ -184,7 +184,7 @@ function confirmDelete(id) {
                             </div>
                         </th>
                         <th>
-                            <div class="item-center flex justify-evenly">
+                            <div class="flex justify-center items-center">
                                 <span><nobr>Business Unit</nobr></span>
                             </div>
                         </th>
@@ -199,19 +199,10 @@ function confirmDelete(id) {
                                 <option value="100">100</option>
                             </select>
                         </th>
-                        <th>
-                            <input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"/>
-                        </th>
-                        <th>
-                            <input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"
-                            />
-                        </th>
-                        <th>
-                            <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-                        </th>
-                        <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
+                        <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"/></th>
+                        <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off"/></th>
+                        <th><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
+                        <th><button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button></th>
                     </tr>
                 </thead>
                 <tbody class="relative">
@@ -232,7 +223,7 @@ function confirmDelete(id) {
                 <tfoot
                     v-if="!openingStocks?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
                     <tr v-if="isLoading">
-                        <td colspan="7">Loading...</td>
+                        <!-- <td colspan="7">Loading...</td> -->
                     </tr>
                     <tr v-else-if="isTableLoading">
                         <td colspan="7">
