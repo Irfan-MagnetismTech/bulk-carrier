@@ -206,7 +206,7 @@ onMounted(() => {
         </tbody>
         <tfoot v-if="!permissions?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="5">Loading...</td>
+          <!-- <td colspan="5">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">

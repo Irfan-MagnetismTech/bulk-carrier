@@ -198,7 +198,7 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!services?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <!-- <td colspan="7">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">

@@ -271,7 +271,7 @@ function confirmDelete(id) {
           </tbody>
           <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <!-- <td colspan="7">Loading...</td> -->
         </tr>
         <tr v-else-if="isTableLoading">
             <td colspan="7">
