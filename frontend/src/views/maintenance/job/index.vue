@@ -202,7 +202,7 @@ onMounted(() => {
             </th>
             <th class="w-2/12">
               <div class="flex justify-center items-center">
-                  <span class="mr-1">Vessel Name</span>
+                  <span class="mr-1">Vessel</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>

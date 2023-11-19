@@ -3,7 +3,7 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select :loading="isShipDepartmentLoading"  placeholder="Select Ship Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -18,7 +18,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item Group" :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Item Group" :loading="isItemGroupLoading"  :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -90,7 +90,7 @@ import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { getItemCodeByGroupId } = useItem();
-const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -148,7 +148,7 @@ function removeRow(index) {
 
 
 
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;

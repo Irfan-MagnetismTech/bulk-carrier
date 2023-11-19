@@ -2,8 +2,8 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
+          <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -54,7 +54,7 @@ const props = defineProps({
 watch(() => props.form.mnt_ship_department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
 });
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;

@@ -34,6 +34,7 @@ export default function useRunHour() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isRunHourLoading = ref(false);
     const isTableLoading = ref(false);
 
     async function getRunHours(filterOptions) {
@@ -165,6 +166,7 @@ export default function useRunHour() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isRunHourLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-item-present-run-hour/${opsVesselId}/${mntItemId}`);
@@ -176,6 +178,7 @@ export default function useRunHour() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isRunHourLoading.value = false;
             //NProgress.done();
         }
     }
@@ -193,6 +196,7 @@ export default function useRunHour() {
         getItemPresentRunHour,
         isLoading,
         isTableLoading,
+        isRunHourLoading,
         errors,
     };
 }
