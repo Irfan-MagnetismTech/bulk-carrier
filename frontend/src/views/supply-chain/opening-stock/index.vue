@@ -167,7 +167,7 @@ function confirmDelete(id) {
                         </th>
                         <th>
                             <div class="flex justify-center items-center">
-                                <span>Date</span>
+                                <span class="mr-2">Date</span>
                                 <div class="flex cursor-pointer flex-col">
                                     <div v-html="icons.descIcon" @click="setSortingState(0, 'asc')" :class="{'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300':filterOptions.filter_options[0].order_by !== 'asc', }" class="font-semibold"></div>
                                     <div v-html="icons.ascIcon"  @click="setSortingState(0, 'desc')" :class="{'text-gray-800': filterOptions.filter_options[0].order_by === 'desc','text-gray-300':filterOptions.filter_options[0].order_by !== 'desc', }" class="font-semibold"></div>
@@ -176,7 +176,7 @@ function confirmDelete(id) {
                         </th>
                         <th>
                             <div class="flex justify-center items-center">
-                                <span><nobr>Warehouse</nobr></span>
+                                <span class="mr-2"><nobr>Warehouse</nobr></span>
                                 <div class="flex cursor-pointer flex-col">
                                     <div v-html="icons.descIcon" @click="setSortingState(1, 'asc')" :class="{'text-gray-800':filterOptions.filter_options[1].order_by === 'asc','text-gray-300':filterOptions.filter_options[1].order_by !== 'asc', }" class="font-semibold"></div>
                                     <div v-html="icons.ascIcon"  @click="setSortingState(1, 'desc')" :class="{'text-gray-800':filterOptions.filter_options[1].order_by === 'desc','text-gray-300':filterOptions.filter_options[1].order_by !== 'desc',}" class="font-semibold"></div>
