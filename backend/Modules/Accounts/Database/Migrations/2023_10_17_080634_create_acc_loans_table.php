@@ -22,17 +22,16 @@ return new class extends Migration
             $table->string('loan_name');
             $table->decimal('total_sanctioned', 20, 2);
             $table->decimal('sanctioned_limit', 20, 2);
-            $table->number('total_installment');
-            $table->float('interest_rate', );
+            $table->integer('total_installment');
+            $table->float('interest_rate', 5, 2);
             $table->string('opening_date');
-            $table->string('maturity_date');
-            $table->string('emi_date');
-            $table->string('emi_amount');
-            $table->string('loan_purpose');
-            $table->string('mortgage')->nullable();
-            $table->string('remarks')->nullable();
-
-			$table->enum('business_unit', ['PSML', 'TSLL']);            
+            $table->date('maturity_date');
+            $table->date('emi_date');
+            $table->decimal('emi_amount');
+            $table->text('loan_purpose');
+            $table->text('mortgage')->nullable();
+            $table->text('remarks')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }
