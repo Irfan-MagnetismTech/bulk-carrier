@@ -146,4 +146,19 @@ class OpsPortController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    public function getPortNameOrCode(Request $request){
+        try {
+            $ports = OpsPort::query()
+                ->where(function ($query) use($request) {
+                    $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                    $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+                })
+                ->get();
+
+            return response()->success('Data retrieved successfully.', $ports, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
