@@ -35,11 +35,20 @@ export default function useNotification() {
   };
 
   const showError = (status = null, data = {}, message = null) => {
-    if(errorCodeWithMessages[status] === undefined) message = 'Something went wrong.';
-    else if(parseInt(status) === 204) message = 'Sorry! No data found';
-    else if(parseInt(status) === 422 && !isEmpty(data)) return data.errors;
-    else if(message == null) message = errorCodeWithMessages[status];
-    toast.error(message, config);
+    let errorMessage = 'Something went wrong.'; // Default message
+
+    if (errorCodeWithMessages[status] !== undefined) {
+      errorMessage = errorCodeWithMessages[status];
+    } else if (parseInt(status) === 204) {
+      errorMessage = 'Sorry! No data found';
+    } else if (parseInt(status) === 401) {
+      errorMessage = 'Your session is lost';
+    } else if (parseInt(status) === 422 && !isEmpty(data)) {
+      // Assuming `isEmpty` is a valid utility function to check if an object is empty
+      return data.errors;
+    }
+
+    toast.error(message || errorMessage, config);
     return null;
   };
 
