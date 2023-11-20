@@ -31,7 +31,7 @@ axios.interceptors.response.use(
             await Store.dispatch('logout');
 
             // Redirect to login page
-            Router.push({ name: 'login' });
+            Router.go({ name: 'login' });
         }
         return Promise.reject(error);
     }
