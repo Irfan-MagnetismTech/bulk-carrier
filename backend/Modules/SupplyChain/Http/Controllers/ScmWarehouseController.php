@@ -60,7 +60,7 @@ class ScmWarehouseController extends Controller
         try {
             $warehouse->load(['scmWarehouseContactPersons' => function ($query) {
                 $query->latest('created_at')->take(1);
-            }]);
+            }, 'accCostCenter']);
             return response()->success('data', $warehouse, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
@@ -109,14 +109,14 @@ class ScmWarehouseController extends Controller
             $warehouse = ScmWarehouse::query()
                 ->with('scmWarehouseContactPersons')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('name', 'LIKE', "%$request->searchParam%")
+                // ->where('name', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('name')
-                ->limit(10)
+                // ->limit(10)
                 ->get();
         } else {
             $warehouse = [];
         }
-        
+
         return response()->success('Search result', $warehouse, 200);
     }
 }

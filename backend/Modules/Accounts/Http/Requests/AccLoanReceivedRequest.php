@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\SupplyChain\Http\Requests;
+namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ScmOpeningStockRequest extends FormRequest
+class AccLoanReceivedRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,7 @@ class ScmOpeningStockRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'scmOpeningStockLines.*.quantity' => ['required', 'numeric', 'min:1'],
-                //minimum amount validation
-        
+            //
         ];
     }
 
@@ -28,13 +26,10 @@ class ScmOpeningStockRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'scmOpeningStockLines.*.quantity.min' => 'In row :position you have given :input but minimum amount is :min'
-            
+            //
         ];
     }
-     
 
-    // [:attribute] [:index] [:rule] [:size] [:values] [:custom] [:extra] [:attribute] [:rule] [:parameters] [:size] [:values] [:custom] [:extra] [:value] [:max] [:min]',
     /**
      * Determine if the user is authorized to make this request.
      *
