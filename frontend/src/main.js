@@ -1,3 +1,4 @@
+// main.js
 import axios from 'axios';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -13,21 +14,36 @@ import Store from './store/index.js';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import VueToast from 'vue-toast-notification';
-// import 'vue-toast-notification/dist/theme-default.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import JsonExcel from "vue-json-excel3";
 
 NProgress.configure({ showSpinner: false });
 
-// baseURL(server) for axios 
+// baseURL(server) for axios
 axios.defaults.baseURL = env.BASE_API_URL;
 
-// allowing axios, auth api and store to be used in the global scope
+// Your Axios interceptor
+axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response.status === 401) {
+            // Dispatch logout action
+            await Store.dispatch('logout');
+
+            // Redirect to login page
+            Router.push({ name: 'login' });
+        }
+        return Promise.reject(error);
+    }
+);
+
+// allowing axios, auth api, and store to be used in the global scope
 window.axios = axios;
 window.Store = Store;
 
-if (Store.getters.getAccessToken)
+if (Store.getters.getAccessToken) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${Store.getters.getAccessToken}`;
+}
 
 // creating the app
 const app = createApp(App);
