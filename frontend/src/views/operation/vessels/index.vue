@@ -127,7 +127,6 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
@@ -162,7 +161,6 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-
     
 });
     filterOptions.value.filter_options.forEach((option, index) => {

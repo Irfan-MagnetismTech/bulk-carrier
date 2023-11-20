@@ -133,7 +133,7 @@ export default function useCheckList() {
 
     async function deleteCheckList(checkListId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
@@ -144,7 +144,7 @@ export default function useCheckList() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
     }

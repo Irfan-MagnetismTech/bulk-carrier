@@ -139,5 +139,19 @@ class OpsCargoTypeController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    public function getCargoTypeName(Request $request){
+        try {
+            $cargo_types = OpsCargoType::query()
+            ->where(function ($query) use($request) {
+                $query->where('cargo_type', 'like', '%' . $request->cargo_type . '%');
+            })
+            ->get();
+
+            return response()->success('Successfully retrieved cargo types name.', $cargo_types, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 }

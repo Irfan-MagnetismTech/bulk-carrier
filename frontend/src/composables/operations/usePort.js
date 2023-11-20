@@ -208,6 +208,22 @@ export default function usePort() {
 		}
 	}
 
+	async function getPortList() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-ports`);
+			ports.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		ports,
 		port,
@@ -218,6 +234,7 @@ export default function usePort() {
 		updatePort,
 		deletePort,
 		searchPorts,
+		getPortList,
 		getPortsByNameOrCode,
 		voyagePorts,
 		getPortsByVoyage,

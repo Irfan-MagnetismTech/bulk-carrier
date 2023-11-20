@@ -31,10 +31,10 @@ function removeItem(index){
   props.form.crwCrewRequisitionLines.splice(index, 1);
 }
 
-function fetchVessels(search, loading) {
-  loading(true);
-  searchVessels(search, props.form.business_unit, loading)
-}
+// function fetchVessels(search, loading) {
+//   loading(true);
+//   searchVessels(search, props.form.business_unit, loading)
+// }
 
 watch(() => props.form, (value) => {
   if(value){
@@ -44,6 +44,7 @@ watch(() => props.form, (value) => {
 
 onMounted(() => {
   watchEffect(() => {
+    searchVessels(null,props.form.business_unit);
     getCrewRankLists(props.form.business_unit);
   });
 });
@@ -59,7 +60,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -90,7 +91,7 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom w-64">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>

@@ -198,7 +198,7 @@ function fetchPresentRunHour() {
 
 watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
-  if(props.form.mnt_item_name.find(val => val.id === 'all') && props.form.mnt_item_name.length > 1 )
+  if(props.form.mnt_item_name?.find(val => val.id === 'all') && props.form.mnt_item_name?.length > 1 )
     props.form.mnt_item_name = value;
   fetchPresentRunHour();
 

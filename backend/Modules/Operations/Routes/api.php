@@ -79,6 +79,16 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     
     // end for search api route
+    
+    //start get data without limit
+    Route::get('get-search-ports', [OpsPortController::class, 'getPortNameOrCode']);
+    Route::get('get-search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeName']);
+    Route::get('get-search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffName']);
+    Route::get('get-search-vessels', [OpsVesselController::class, 'getVesselNameorCode']);
+    Route::get('get-search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationName']);
+    Route::get('get-search-customers', [OpsCustomerController::class, 'getCustomerNameorCode']);
+    //end get data without limit
+
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);

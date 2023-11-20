@@ -213,9 +213,9 @@ class ScmPrController extends Controller
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                ->limit(10)
+                // ->limit(10)
                 ->get();
         } else {
             $purchase_requisition = [];
