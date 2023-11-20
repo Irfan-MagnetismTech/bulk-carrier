@@ -106,14 +106,14 @@ class ScmMaterialCategoryController extends Controller
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')
-            ->when(request()->has('searchParam'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
-                        ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
-                });
-            })
+            // ->when(request()->has('searchParam'), function ($query) {
+            //     $query->where(function ($subquery) {
+            //         $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
+            //             ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
+            //     });
+            // })
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);
