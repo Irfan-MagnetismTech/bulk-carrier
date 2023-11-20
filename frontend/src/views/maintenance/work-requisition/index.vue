@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -11,6 +11,9 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -22,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { workRequisitions, getWorkRequisitions, deleteWorkRequisition, isLoading } = useWorkRequisition();
+const { workRequisitions, getWorkRequisitions, deleteWorkRequisition, isLoading, isTableLoading, errors } = useWorkRequisition();
 const { setTitle } = Title();
 setTitle('Work Requisition List');
 
@@ -31,7 +34,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 let showFilter = ref(false);
-let isTableLoader = ref(false);
+// let isTableLoader = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
@@ -39,7 +42,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this work requisition!",
+    text: "You want to delete this work requisition!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -64,6 +67,7 @@ let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
+  "isFilter": false,
   "filter_options": [
     {
       "rel_type": null,
@@ -115,21 +119,52 @@ let filterOptions = ref( {
 
   ]
 });
-function setSortingState(index,order){
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
+}
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
 onMounted(() => {
-  watchEffect(() => {
-    filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
+    // filterOptions.value.page = props.page;
   getWorkRequisitions(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
+
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching work requisitions:", error);
@@ -182,7 +217,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 </div>
             </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
+              <div class="flex justify-center items-center">
                   <span>Reference No</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -192,7 +227,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 </div>
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
+              <div class="flex justify-center items-center">
                   <span>Vessel</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -202,7 +237,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 </div>
               </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
+              <div class="flex justify-center items-center">
                   <span>Maintenance Type</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -253,18 +288,18 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
-                
+                <input type="text" placeholder="" value="Pending" class="filter_input vms-readonly-input " readonly  autocomplete="off" />
               </th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-              <th></th>
+              <th><button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="relative">
             
           <tr v-for="(workRequisition,index) in workRequisitions?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ workRequisition?.reference_no }}</td>
             <td>{{ workRequisition?.opsVessel?.name }}</td>
             <td>{{ workRequisition?.maintenance_type }}</td>
@@ -280,10 +315,16 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && workRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!workRequisitions?.data?.length">
+          <tfoot v-if="!workRequisitions?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
               <td colspan="7">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+              <td colspan="7">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
             </tr>
             <tr v-else-if="!workRequisitions?.data?.length">
               <td colspan="7">No work requisition found.</td>
@@ -293,4 +334,5 @@ filterOptions.value.filter_options.forEach((option, index) => {
     </div>
     <Paginate :data="workRequisitions" to="mnt.work-requisitions.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
