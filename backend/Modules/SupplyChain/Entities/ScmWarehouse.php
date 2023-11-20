@@ -23,14 +23,14 @@ class ScmWarehouse extends Model
     {
         return $this->hasMany(ScmWarehouseContactPerson::class)->latest();
     }
-
-    public function accCostCenter(): BelongsTo
-    {
-        return $this->belongsTo(AccCostCenter::class, 'cost_center_id');
-    }
     
     public function scmWarehouseContactPerson(): HasOne
     {
         return $this->hasOne(ScmWarehouseContactPerson::class)->latest();
+    }
+
+    public function accCostCenter(): BelongsTo
+    {
+        return $this->belongsTo(AccCostCenter::class, 'cost_center_id', 'id');
     }
 }

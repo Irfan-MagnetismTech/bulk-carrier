@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmOpeningStock;
 use Modules\SupplyChain\Http\Requests\ScmOpeningStockRequest;
+use Modules\SupplyChain\Services\StockLedgerData;
 
 class ScmOpeningStockController extends Controller
 {

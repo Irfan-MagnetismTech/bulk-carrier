@@ -205,11 +205,11 @@ export default function useWarehouse() {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
-
         try {
             const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
             warehouses.value = data.value;
             notification.showSuccess(status);
+            
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -219,6 +219,9 @@ export default function useWarehouse() {
             loading(false)
         }
     }
+
+
+    
 
 
     return {
