@@ -237,7 +237,24 @@ function fetchToWarehouse(search, loading) {
         loading(true);
       searchWarehouse(search, loading, props.form.business_unit);
     }
-  }
+}
+
+watch(() => props.form.scmFromWarehouse, (value) => {
+        props.form.from_warehouse_id = value?.id;
+        props.form.from_cost_center_id = value?.acc_cost_center_id;
+    // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
+    // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
+    warehouses.value = [];
+    fromWarehouseKey.value++;
+    toWarehouseKey.value++;
+    });
+  watch(() => props.form.scmToWarehouse, (value) => {
+        props.form.to_warehouse_id = value?.id;
+        props.form.to_cost_center_id = value?.acc_cost_center_id;
+    warehouses.value = [];
+    fromWarehouseKey.value++;
+    toWarehouseKey.value++;
+  });
 
  
   // watch(() => props.form.scmWarehouse, (value) => {

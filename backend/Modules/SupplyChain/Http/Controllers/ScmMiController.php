@@ -2,12 +2,13 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmMi;
 use Modules\SupplyChain\Services\UniqueId;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
@@ -26,70 +27,146 @@ class ScmMiController extends Controller
 
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        
-    }
+        try {
+            $movementOuts = ScmMi::with(
+                'scmMiLines.scmMaterial',
+                'fromWarehouse',
+                'toWarehouse',
+                'createdBy',
+            )->latest()->paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
+            return response()->success('Data list', $movementOuts, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScmMIRequest $request)
     {
-        //
+        $requestData = $request->except('ref_no', 'mi_composite_key');
+
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmMi::class, 'MI');
+
+
+        try {
+            DB::beginTransaction();
+
+            $scmMi = ScmMi::create($requestData);
+
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+
+            $scmMi->scmMiLines()->createMany($linesData);
+
+            //loop through each line and update current stock
+            $dataForStock = [];
+
+            foreach ($request->scmMiLines as $scmMoLine) {
+                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMi->scm_warehouse_id, $scmMoLine['quantity']);
+            }
+
+            $dataForStockLedger = array_merge(...$dataForStock);
+
+            $scmMi->stockable()->createMany($dataForStockLedger);
+
+            DB::commit();
+
+            return response()->success('Data created succesfully', $scmMi, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param ScmMi $movementIn
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(ScmMi $movementIn): JsonResponse
     {
-        return view('supplychain::show');
-    }
+        try {
+            $movementIn->load(
+                'scmMiLines.scmMaterial',
+                'fromWarehouse',
+                'toWarehouse',
+                'createdBy',
+                'scmMmr',
+            );
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
+            $scmMiLines = $movementIn->scmMiLines->map(function ($scmMoLine) use ($movementIn) {
+                $lines = [
+                    'scm_material_id' => $scmMoLine->scm_material_id,
+                    'scmMaterial' => $scmMoLine->scmMaterial,
+                    'unit' => $scmMoLine->unit,
+                    'quantity' => $scmMoLine->quantity,
+                    'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
+                    'max_quantity' => $scmMoLine->scmMmrLine->scmMiLines->sum('quantity') - $scmMoLine->quantity,
+                    'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
+                ];
+
+                return $lines;
+            });
+
+            data_forget($movementIn, 'scmMiLines');
+            $movementIn->scmMiLines = $scmMiLines;
+
+            return response()->success('Data updated sucessfully!', $movementIn, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param ScmMIRequest $request
+     * @param ScmMi $movementIn
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(ScmMIRequest $request, ScmMi $movementIn): JsonResponse
     {
-        //
+        $requestData = $request->except('ref_no', 'mi_composite_key');
+
+        try {
+            $movementIn->update($requestData);
+
+            $movementIn->scmMiLines()->delete();
+
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
+
+            $movementIn->scmMiLines()->createMany($linesData);
+
+            return response()->success('Data updated sucessfully!', $movementIn, 202);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param ScmMi $movementIn
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ScmMi $movementIn): JsonResponse
     {
-        //
+        try {
+            $movementIn->scmMiLines()->delete();
+            $movementIn->delete();
+
+            return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
