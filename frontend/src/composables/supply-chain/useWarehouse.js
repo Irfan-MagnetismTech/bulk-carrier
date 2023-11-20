@@ -14,7 +14,7 @@ export default function useWarehouse() {
     const $loading = useLoading();
     const notification = useNotification();
     const warehouse = ref( {
-        acc_cost_center_id: '',
+        cost_center_id: '',
         cost_center_name: '',
         accCostCenter: null,
         name: '',
@@ -166,6 +166,7 @@ export default function useWarehouse() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+            // loading(false)
         }
     }
 
@@ -177,6 +178,7 @@ export default function useWarehouse() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
+            // loading(false);
         }
     }
 
