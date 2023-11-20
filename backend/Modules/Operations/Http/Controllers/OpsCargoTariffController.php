@@ -161,4 +161,21 @@ class OpsCargoTariffController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getCargoTariffName(Request $request){
+        try {
+            $cargoTariffs = OpsCargoTariff::query()
+            ->where(function ($query) use($request) {
+                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->get();
+
+            return response()->success('Successfully retrieved cargo tariffs name.', $cargoTariffs, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
