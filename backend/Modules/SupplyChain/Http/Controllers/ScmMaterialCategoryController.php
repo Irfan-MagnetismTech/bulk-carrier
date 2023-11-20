@@ -106,6 +106,9 @@ class ScmMaterialCategoryController extends Controller
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')
+            ->when(request()->has('self_id'), function ($query) {
+                $query->where('id', '!=', request()->self_id);
+            })
             // ->when(request()->has('searchParam'), function ($query) {
             //     $query->where(function ($subquery) {
             //         $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
