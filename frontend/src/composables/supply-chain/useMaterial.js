@@ -152,7 +152,7 @@ export default function useMaterial() {
         }
     }
 
-    async function searchMaterial(searchParam, loading) {
+    async function searchMaterial(searchParam, loading = false) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -167,7 +167,6 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
         }
     }
 
