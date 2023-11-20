@@ -260,7 +260,7 @@ export default function useVessel() {
 		}
 	}
 
-	async function searchVessels(searchParam, businessUnit, loading) {
+	async function searchVessels(searchParam, businessUnit) {
 		//NProgress.start();
 
 		try {
@@ -271,7 +271,7 @@ export default function useVessel() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			//loading(false)
 			//NProgress.done();
 		}
 	}
