@@ -168,7 +168,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -222,7 +222,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -279,9 +279,9 @@ const props = defineProps({
     formType: { type: Object, required: false }
 });
 
-const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
+const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
 const { ports, getPortList } = usePort();
-const { materials, searchMaterialWithCategory } = useMaterial();
+const { materials, getBunkerList } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -305,15 +305,15 @@ function removeBunker(index){
   props.form.opsBunkers.splice(index, 1);
 }
 
-function fetchMaritimeCertificates(search, loading) {
-  loading(true);
-  searchMaritimeCertificates(search, loading)
-}
+// function fetchMaritimeCertificates(search, loading) {
+//   loading(true);
+//   searchMaritimeCertificates(search, loading)
+// }
 
-function fetchBunker(search, loading) {
-  loading(true);
-  searchMaterialWithCategory(search, 1, loading)
-}
+// function fetchBunker(search, loading) {
+//   loading(true);
+//   searchMaterialWithCategory(search, 1, loading)
+// }
 
 // function fetchPorts(search, loading) {
 //       loading(true);
@@ -322,6 +322,8 @@ function fetchBunker(search, loading) {
 
 onMounted(() => {
   getPortList();
+  getMaritimeCertificateList();
+  getBunkerList();
   // getCurrencies();
   // getCargoTypeList();
   // getVesselList(props.form.business_unit);
