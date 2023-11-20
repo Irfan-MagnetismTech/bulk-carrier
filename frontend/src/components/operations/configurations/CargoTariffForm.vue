@@ -13,7 +13,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
+            <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -31,7 +31,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input">
+            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.loadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -45,7 +45,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input">
+            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.unloadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -63,7 +63,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.opsCargoType" label="cargo_type" class="block form-input">
+              <v-select :options="cargoTypes" placeholder="--Choose an option--" v-model="form.opsCargoType" label="cargo_type" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -199,9 +199,9 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
 const { getCurrencies, currencies } = useBusinessInfo();
-const { ports, searchPorts } = usePort();
-const { vessels, searchVessels } = useVessel();
-const { cargoTypes, searchCargoTypes } = useCargoType();
+const { ports, getPortList } = usePort();
+const { vessels, getVesselList } = useVessel();
+const { cargoTypes, getCargoTypeList } = useCargoType();
 
 const props = defineProps({
     form: {
@@ -215,26 +215,27 @@ const props = defineProps({
 
 const editInitiated = ref(false);
 
-function fetchVessels(search, loading) {
-      loading(true);
-      searchVessels(search, props.form.business_unit, loading);
-}
+// function fetchVessels(search, loading) {
+//       loading(true);
+//       searchVessels(search, props.form.business_unit, loading);
+// }
 
 watch(() => props.form.business_unit, (value) => {
   if(value) {
+    getVesselList(props.form.business_unit);
     // searchVessels(null, props.form.business_unit, false);
   }
 })
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
+// function fetchPorts(search, loading) {
+//       loading(true);
+//       searchPorts(search, loading)
+// }
 
-function fetchCargoTypes(search, loading) {
-      loading(true);
-      searchCargoTypes(search, loading)
-}
+// function fetchCargoTypes(search, loading) {
+//       loading(true);
+//       searchCargoTypes(search, loading)
+// }
 
 function addItem() {
   props.form.opsCargoTariffLines.push(props.cargoTariffLineObject);
@@ -282,7 +283,10 @@ watch(() => props.form, (value) => {
   }, {deep: true});
 
 onMounted(() => {
+  getPortList();
   getCurrencies();
+  getCargoTypeList();
+  getVesselList(props.form.business_unit);
   // searchPorts(null, true);
   // searchCargoTypes(null,);
 })
