@@ -144,6 +144,22 @@ export default function useMaritimeCertificate() {
 		}
 	}
 
+	async function getMaritimeCertificateList() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-maritime-certifications`);
+			maritimeCertificates.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		maritimeCertificates,
 		maritimeCertificate,
@@ -153,6 +169,7 @@ export default function useMaritimeCertificate() {
 		updateMaritimeCertificate,
 		deleteMaritimeCertificate,
 		searchMaritimeCertificates,
+		getMaritimeCertificateList,
 		isLoading,
 		errors,
 	};
