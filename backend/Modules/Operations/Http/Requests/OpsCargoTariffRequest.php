@@ -35,7 +35,18 @@ class OpsCargoTariffRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'tariff_name.required' => 'Tariff name is required',
+            'tariff_name.max' => 'Tariff name may not be greater than :max characters.',
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_cargo_type_id.required' => 'Cargo type is required',
+            'loading_point.required' => 'Loading point is required',
+            'loading_point.max' => 'Loading point may not be greater than :max characters.',
+            'unloading_point.required' => 'Unloading point is required',
+            'unloading_point.max' => 'Unloading point may not be greater than :max characters.',
+            'currency.required' => 'Currency is required',
+            'currency.max' => 'Currency may not be greater than :max characters.',
+            'status.required' => 'Status is required',
+            'business_unit.required' => 'Business unit is required',
         ];
     }
 

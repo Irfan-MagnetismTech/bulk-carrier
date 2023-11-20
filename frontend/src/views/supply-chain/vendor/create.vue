@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { vendor, storeVendor,isLoading} = useVendor();
+const { vendor, storeVendor,isLoading,errors} = useVendor();
 const { setTitle } = Title();
 
 setTitle('Create Vendor');

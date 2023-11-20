@@ -14,12 +14,10 @@ class CrwCrewRankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrewRanks = CrwCrewRank::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwCrewRanks = CrwCrewRank::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewRanks, 200);
         }
@@ -41,7 +39,7 @@ class CrwCrewRankController extends Controller
             $crwCrewRankData = $request->only('crw_crew_id', 'crw_rank_id', 'rank_name', 'effective_date', 'business_unit');
             $crwCrewRank     = CrwCrewRank::create($crwCrewRankData);
 
-            return response()->success('Created Succesfully', $crwCrewRank, 201);
+            return response()->success('Created Successfully', $crwCrewRank, 201);
         }
         catch (QueryException $e)
         {

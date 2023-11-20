@@ -19,21 +19,35 @@ export default function usePolicy() {
     const indexBusinessUnit = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getPolicies(page,businessUnit) {
+    async function getPolicies(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+
+        indexPage.value = filterOptions.page;
+        indexBusinessUnit.value = filterOptions.business_unit;
 
         try {
             const {data, status} = await Api.get('/crw/crw-policies',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                },
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
             });
             policies.value = data.value;
             notification.showSuccess(status);
@@ -41,8 +55,16 @@ export default function usePolicy() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -146,6 +168,7 @@ export default function usePolicy() {
         updatePolicy,
         deletePolicy,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

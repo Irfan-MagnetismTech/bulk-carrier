@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccAccount;
+use Modules\Accounts\Http\Requests\AccAccountRequest;
 
 class AccAccountController extends Controller
 {
@@ -17,11 +18,10 @@ class AccAccountController extends Controller
     public function index(Request $request)
     {
         try {
-            $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accounts = AccAccount::with('balanceIncome', 'parent:id,account_name')
+            ->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $accounts, 200);
+            return response()->success('Retrieved Successfully', $accounts, 200);
         }
         catch (QueryException $e)
         {
@@ -35,7 +35,7 @@ class AccAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccAccountRequest $request)
     {
         try {
             $accAccountData = $request->only('acc_balance_and_income_line_id','parent_account_id','account_name','account_code','account_type','accountable_type','accountable_id','official_code','is_archived','business_unit');
@@ -58,7 +58,7 @@ class AccAccountController extends Controller
     public function show(AccAccount $accAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accAccount, 200);
+            return response()->success('Retrieved Successfully', $accAccount->load('balanceIncome', 'parent:id,account_name'), 200);
         }
         catch (QueryException $e)
         {
@@ -73,13 +73,13 @@ class AccAccountController extends Controller
      * @param  \App\Models\AccAccount  $accAccount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccAccount $accAccount)
+    public function update(AccAccountRequest $request, AccAccount $accAccount)
     {
         try {
             $accAccountData = $request->only('acc_balance_and_income_line_id','parent_account_id','account_name','account_code','account_type','accountable_type','accountable_id','official_code','is_archived','business_unit');
             $accAccount->update($accAccountData);
 
-            return response()->success('Updated succesfully', $accAccountData, 202);
+            return response()->success('Updated Successfully', $accAccountData, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class AccAccountController extends Controller
         try {
             $accAccount->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

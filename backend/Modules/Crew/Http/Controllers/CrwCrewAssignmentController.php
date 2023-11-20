@@ -14,13 +14,11 @@ class CrwCrewAssignmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,name')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);
         }

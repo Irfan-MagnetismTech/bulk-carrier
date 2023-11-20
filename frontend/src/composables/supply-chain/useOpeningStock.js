@@ -9,6 +9,7 @@ export default function useOpeningStock() {
     const BASE = 'scm' 
     const router = useRouter();
     const openingStocks = ref([]);
+     const isTableLoading = ref(false);
     const filteredOpeningStocks = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
@@ -41,29 +42,37 @@ export default function useOpeningStock() {
         currency: 'BDT'
       };
     
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+   
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
-    async function getOpeningStocks(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+    async function getOpeningStocks(filterOptions) {
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/opening-stocks`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             openingStocks.value = data.value;
             notification.showSuccess(status);
@@ -71,9 +80,14 @@ export default function useOpeningStock() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storeOpeningStock(form) {
@@ -141,18 +155,18 @@ export default function useOpeningStock() {
     }
 
     async function deleteOpeningStock(openingStockId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/opening-stocks/${openingStockId}`);
             notification.showSuccess(status);
-            await getOpeningStocks(indexPage.value,indexBusinessUnit.value);
+            await getOpeningStocks(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
@@ -168,6 +182,7 @@ export default function useOpeningStock() {
         updateOpeningStock,
         deleteOpeningStock,
         materialObject,
+        isTableLoading,
         isLoading,
         errors,
     };

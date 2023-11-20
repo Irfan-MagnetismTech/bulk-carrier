@@ -5,10 +5,12 @@ namespace Modules\Crew\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Operations\Entities\OpsVessel;
+use App\Traits\GlobalSearchTrait;
 
 class CrwIncident extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
 	protected $fillable = ['ops_vessel_id', 'date_time', 'type', 'location', 'attachment', 'reported_by', 'description', 'business_unit'];
 
@@ -19,5 +21,5 @@ class CrwIncident extends Model
 	public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class);
-    }	
+    }
 }

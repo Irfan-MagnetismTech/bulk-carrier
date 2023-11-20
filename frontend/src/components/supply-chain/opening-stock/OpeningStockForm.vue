@@ -6,6 +6,7 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import Store from "../../../store";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -17,6 +18,7 @@
       page: {required: false,default: {}}
     });
 
+    const warehouseKey = ref(0);
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
     function addRow() {
@@ -30,9 +32,9 @@
     }
 
     function setMaterialOtherData(datas,index){
-      console.log(datas);
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
+      materials.value = [];
     }
 
 
@@ -47,8 +49,10 @@
   }
 
   watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-        props.form.scm_cost_center_id = value?.scm_cost_center_id;
+    props.form.scm_warehouse_id = value?.id;
+    props.form.scm_cost_center_id = value?.scm_cost_center_id;
+    warehouses.value = [];
+    warehouseKey.value += 1;
     });
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
@@ -70,6 +74,7 @@ watch(() => props.form.scmOpeningStockLines, (newLines) => {
         ) {
           props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
           props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+          materials.value = [];
         }
       }
     }
@@ -108,12 +113,12 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="date" required v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Search Here --" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -123,7 +128,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
   </div> 
   <!-- CS Materials -->
@@ -132,7 +137,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
+        <th class="px-4 py-3 align-bottom !w-3/12">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
         <th class="px-4 py-3 align-bottom">Rate</th>
@@ -143,7 +148,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
+          <v-select :options="materials" placeholder="--Search Here--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -158,10 +163,10 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
           <input type="text" v-model="form.scmOpeningStockLines[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!=0" type="button" @click="removeRow(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -179,7 +184,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </tbody>
     </table>
   </fieldset>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
     .input-group {

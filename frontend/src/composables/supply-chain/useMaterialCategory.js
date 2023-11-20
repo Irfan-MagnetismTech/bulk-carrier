@@ -10,6 +10,7 @@ export default function useMaterialCategory() {
     const router = useRouter();
     const materialCategories = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const materialCategory = ref( {
         name: '',
@@ -18,35 +19,51 @@ export default function useMaterialCategory() {
         parent_id: '',
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
-    async function getMaterialCategories(page,columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+    async function getMaterialCategories(filterOptions) {
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-        indexPage.value = page;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/material-categories`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/material-categories`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+             if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -112,17 +129,17 @@ export default function useMaterialCategory() {
     }
 
     async function deleteMaterialCategory(materialCategoryId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
             notification.showSuccess(status);
-            await getMaterialCategories(indexPage.value);
+            await getMaterialCategories(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
@@ -150,6 +167,7 @@ export default function useMaterialCategory() {
         showMaterialCategory,
         updateMaterialCategory,
         deleteMaterialCategory,
+        isTableLoading,
         isLoading,
         errors,
     };

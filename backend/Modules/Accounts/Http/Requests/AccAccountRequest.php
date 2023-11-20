@@ -11,22 +11,21 @@ class AccAccountRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'account_name' => ['required', 'string', 'max:255'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
-            //
+            'account_name.required' => 'The Account Name field is required.',
+            'account_name.max'      => 'The Account Name field must not exceed 2000.',
         ];
     }
 

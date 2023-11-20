@@ -13,20 +13,18 @@ class CrwIncidentController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-    
-    }    
+
+    }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwIncidents, 200);
         }
@@ -48,12 +46,13 @@ class CrwIncidentController extends Controller
             DB::transaction(function () use ($request)
             {
                 $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
+                $crwIncidentData = json_decode($request->get('data'),true);
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident');
 
                 $crwIncident     = CrwIncident::create($crwIncidentData);
-                $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);
+                $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
 
-                return response()->success('Created Succesfully', $crwIncident, 201);
+                return response()->success('Created Successfully', $crwIncidentData, 201);
             });
         }
         catch (QueryException $e)
@@ -71,7 +70,7 @@ class CrwIncidentController extends Controller
     public function show(CrwIncident $crwIncident)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwIncident->load('crwIncidentParticipants'), 200);
+            return response()->success('Retrieved successfully', $crwIncident->load('crwIncidentParticipants.crwCrew.crwRank','opsVessel:id,name'), 200);
         }
         catch (QueryException $e)
         {
@@ -92,13 +91,14 @@ class CrwIncidentController extends Controller
             DB::transaction(function () use ($request, $crwIncident)
             {
                 $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
+                $crwIncidentData = json_decode($request->get('data'),true);
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident', $crwIncident->attachment);
 
                 $crwIncident->update($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->delete();
-                $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);
+                $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
 
-                return response()->success('Updated succesfully', $crwIncident, 202);
+                return response()->success('Updated successfully', $crwIncident, 202);
             });
         }
         catch (QueryException $e)

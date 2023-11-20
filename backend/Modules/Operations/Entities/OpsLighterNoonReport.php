@@ -2,13 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsLighterNoonReport extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -23,6 +24,7 @@ class OpsLighterNoonReport extends Model
         'next_port',
         'business_unit',
         'remarks',
+        'lat_long'
     ];
 
 
@@ -39,5 +41,13 @@ class OpsLighterNoonReport extends Model
     public function opsBunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
+
+    public function lastPort() {
+        return $this->belongsTo(OpsPort::class, 'last_port', 'code');
+    }
+
+    public function nextPort() {
+        return $this->belongsTo(OpsPort::class, 'next_port', 'code');
     }
 }

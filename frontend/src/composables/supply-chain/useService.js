@@ -10,6 +10,7 @@ export default function useService() {
     const router = useRouter();
     const services = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const service = ref( {
         name: '',
@@ -17,36 +18,48 @@ export default function useService() {
         description: ''
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
-    async function getServices(page,columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+    async function getServices(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/services`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/services`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -110,18 +123,18 @@ export default function useService() {
     }
 
     async function deleteService(serviceId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/services/${serviceId}`);
             notification.showSuccess(status);
-            await getServices(indexPage.value);
+            await getServices(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
@@ -154,6 +167,7 @@ export default function useService() {
         showService,
         updateService,
         deleteService,
+        isTableLoading,
         isLoading,
         errors,
     };

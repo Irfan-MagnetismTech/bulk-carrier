@@ -26,6 +26,7 @@ return new class extends Migration
             $table->float('requested_quantity')->nullable();
             $table->float('exchange_rate_bdt')->nullable();
             $table->float('exchange_rate_usd')->nullable();
+            $table->float('rate')->nullable();
             $table->float('amount')->nullable();
             $table->float('opening_balance')->nullable();
             $table->float('amount_usd')->nullable();

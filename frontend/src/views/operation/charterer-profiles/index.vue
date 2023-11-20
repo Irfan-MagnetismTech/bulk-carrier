@@ -92,7 +92,7 @@ onMounted(() => {
             <th>Country</th>
             <th>Email</th>
             <th>Contact</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="chartererProfiles?.data?.length">
@@ -103,7 +103,7 @@ onMounted(() => {
                   <td>{{ chartererProfile?.country }}</td>
                   <td>{{ chartererProfile?.email }}</td>
                   <td>{{ chartererProfile?.contact_no }}</td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-profiles.show', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-profiles.edit', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererProfile.id)" :action="'delete'"></action-button>

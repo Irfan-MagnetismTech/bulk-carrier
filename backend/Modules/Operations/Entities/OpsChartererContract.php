@@ -2,36 +2,36 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsChartererContract extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'contract_type',
+        'contract_name',
         'ops_vessel_id',
         'ops_charterer_profile_id',
         'country',
         'address',
         'billing_address',
         'email',
-        'billing_email',
         'contact_no',
-        'bank_branche_id',
-        'attachment',
         'bank_id',
-        'bank_account_name',
+        'bank_branch_id',
+        'bank_name',
+        'bank_branch_name',
+        'attachment',
         'bank_account_no',
+        'bank_account_name',
         'swift_code',
         'routing_no',
         'currency',
         'status',
-        'port_code',
-        'agent_name',
-        'billing_name',
         'business_unit',
     ];
 
@@ -39,6 +39,17 @@ class OpsChartererContract extends Model
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
+
+    public function opsChartererContractsFinancialTerms()
+    {
+        return $this->hasOne(OpsChartererContractsFinancialTerm::class, 'ops_charterer_contract_id', 'id');
+    }
+
+    public function opsChartererContractsLocalAgents()
+    {
+        return $this->hasMany(OpsChartererContractsLocalAgent::class, 'ops_charterer_contract_id', 'id');
+    }
+
     public function opsChartererProfile()
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');

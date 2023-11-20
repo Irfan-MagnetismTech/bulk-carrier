@@ -11,22 +11,24 @@ class CrwPolicyRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'name'          => ['required', 'string', 'max:50'],
+            'type'          => ['required', 'string'],
+            'business_unit' => ['required', 'string', 'max:255'],
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
-            //
+            'name.max'      => 'The policy name field cannot exceed 50 characters.',
+            'name.required' => 'The policy name field is required.',
+            'type.required' => 'The policy type field is required.',
         ];
     }
 

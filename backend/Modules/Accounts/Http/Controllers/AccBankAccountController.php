@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccBankAccount;
+use Modules\Accounts\Http\Requests\AccBankAccountRequest;
 use Spatie\Permission\Traits\HasRoles;
 
 class AccBankAccountController extends Controller
@@ -21,15 +22,12 @@ class AccBankAccountController extends Controller
         // $this->middleware('permission:configuration-bank-account-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $accBankAccounts = AccBankAccount::when(request()->business_unit != 'ALL', function ($q)
-            {
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accBankAccounts = AccBankAccount::globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $accBankAccounts, 200);
+            return response()->success('Retrieved Successfully', $accBankAccounts, 200);
         }
         catch (QueryException $e)
         {
@@ -40,13 +38,13 @@ class AccBankAccountController extends Controller
     /**
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(AccBankAccountRequest $request)
     {
         try {
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');
             $accBankAccount     = AccBankAccount::create($accBankAccountData);
 
-            return response()->success('Created Succesfully', $accBankAccount, 201);
+            return response()->success('Created Successfully', $accBankAccount, 201);
         }
         catch (QueryException $e)
         {
@@ -60,7 +58,7 @@ class AccBankAccountController extends Controller
     public function show(AccBankAccount $accBankAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accBankAccount, 200);
+            return response()->success('Retrieved Successfully', $accBankAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -72,13 +70,13 @@ class AccBankAccountController extends Controller
      * @param Request $request
      * @param AccBankAccount $accBankAccount
      */
-    public function update(Request $request, AccBankAccount $accBankAccount)
+    public function update(AccBankAccountRequest $request, AccBankAccount $accBankAccount)
     {
         try {
             $accBankAccountData = $request->only('bank_name', 'branch_name', 'account_type', 'account_name', 'account_number', 'routing_number', 'contact_number', 'opening_date', 'opening_balance', 'business_unit');
             $accBankAccount->update($accBankAccountData);
 
-            return response()->success('Updated succesfully', $accBankAccount, 202);
+            return response()->success('Updated Successfully', $accBankAccount, 202);
         }
         catch (QueryException $e)
         {
@@ -94,7 +92,7 @@ class AccBankAccountController extends Controller
         try {
             $accBankAccount->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

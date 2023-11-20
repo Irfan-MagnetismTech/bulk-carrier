@@ -21,12 +21,10 @@ class CrwAgencyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwAgencies = CrwAgency::with('crwAgencyContactPersons')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwAgencies = CrwAgency::with('crwAgencyContactPersons')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwAgencies, 200);
         }

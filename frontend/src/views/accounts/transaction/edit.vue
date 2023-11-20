@@ -16,7 +16,7 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 
-setTitle('Edit Transaction');
+setTitle('Edit Voucher');
 
 const page = 'edit';
 
@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Transaction</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Voucher</h2>
     <default-button :title="'Transaction List'" :to="{ name: 'acc.transactions.index' }" :icon="icons.DataBase"></default-button>
   </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800" :style="{ 'background-color': bgColor }">

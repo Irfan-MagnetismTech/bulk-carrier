@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccAccountOpeningBalance;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccAccountOpeningBalanceRequest;
 
 class AccAccountOpeningBalanceController extends Controller
 {
@@ -19,12 +20,9 @@ class AccAccountOpeningBalanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account','costCenter')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $accAccountOpeningBalances = AccAccountOpeningBalance::with('account','costCenter')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $accAccountOpeningBalances, 200);
+            return response()->success('Retrieved Successfully', $accAccountOpeningBalances, 200);
         }
         catch (QueryException $e)
         {
@@ -38,13 +36,13 @@ class AccAccountOpeningBalanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccAccountOpeningBalanceRequest $request)
     {
         try {
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
             $accAccountOpeningBalance = AccAccountOpeningBalance::create($accountsOpeningBalanceData);
 
-            return response()->success('Created Succesfully', $accAccountOpeningBalance, 201);
+            return response()->success('Created Successfully', $accAccountOpeningBalance, 201);
         }
         catch (QueryException $e)
         {
@@ -60,7 +58,7 @@ class AccAccountOpeningBalanceController extends Controller
     public function show(AccAccountOpeningBalance $accAccountOpeningBalance)
     {
         try {
-            return response()->success('Retrieved successfully', $accAccountOpeningBalance->load('account','costCenter'), 200);
+            return response()->success('Retrieved Successfully', $accAccountOpeningBalance->load('account','costCenter'), 200);
         }
         catch (QueryException $e)
         {
@@ -75,13 +73,13 @@ class AccAccountOpeningBalanceController extends Controller
      * @param  \App\Models\AccAccountOpeningBalance  $accAccountOpeningBalance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccAccountOpeningBalance $accAccountOpeningBalance) : JsonResponse
+    public function update(AccAccountOpeningBalanceRequest $request, AccAccountOpeningBalance $accAccountOpeningBalance) : JsonResponse
     {
         try {
             $accountsOpeningBalanceData = $request->only('acc_cost_center_id', 'acc_account_id', 'date', 'dr_amount', 'cr_amount', 'business_unit');
             $accAccountOpeningBalance->update($accountsOpeningBalanceData);
 
-            return response()->success('Updated succesfully', $accAccountOpeningBalance, 202);
+            return response()->success('Updated Successfully', $accAccountOpeningBalance, 202);
         }
         catch (QueryException $e)
         {
@@ -100,7 +98,7 @@ class AccAccountOpeningBalanceController extends Controller
         try {
             $accAccountOpeningBalance->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

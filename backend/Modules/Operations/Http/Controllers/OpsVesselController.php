@@ -29,7 +29,7 @@ class OpsVesselController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try
         {
@@ -43,10 +43,7 @@ class OpsVesselController extends Controller
                 },
                 'opsBunkers'
             ])
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->latest()->paginate(10);   
+            ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved vessels.', $vessels, 200);
         }
@@ -70,11 +67,11 @@ class OpsVesselController extends Controller
             $vesselInfo = $request->except(
                 '_token',
                 'opsVesselCertificates',
-                'opsBunkers',
+                'opsBunkers.scmMaterial',
             );
             $vessel = OpsVessel::create($vesselInfo);
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
-            $vessel->opsBunkers()->createMany($request->opsVesselCertificates);
+            $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
                  
             return response()->success('Successfully created vessel.', $vessel, 201);
@@ -102,9 +99,10 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers'
+            'opsBunkers.scmMaterial',
+            'portOfRegistry'
         ]);
-        
+
         $vessel->opsVesselCertificates->map(function($certificate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
@@ -114,7 +112,9 @@ class OpsVesselController extends Controller
         });
 
         $vessel->opsBunkers->map(function($bunker) {
+            $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
+            $bunker->is_readonly = true;
             return $bunker;
         });
 
