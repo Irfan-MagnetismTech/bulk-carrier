@@ -20,7 +20,7 @@ export const auth = {
 
                 axios.post('oauth/token', data)
                     .then((response) => {
-
+                        
                         //get expirention time new date gettime + 2 hours
                         // let expirationTime = new Date().getTime() + 7200000;
                         // response.data.auto_logout_at = expirationTime;
@@ -79,9 +79,9 @@ export const auth = {
         getAccessToken(state) {
             return state.tokenResponse.access_token;
         },
-        // getTokenResponse(state) {
-        //     return state.tokenResponse;
-        // },
+         getTokenResponse(state) {
+             return state.tokenResponse;
+         },
         getCurrentUser(state) {
             return state.currentUser;
         }

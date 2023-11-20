@@ -43,10 +43,11 @@ const router = createRouter({
 // guard
 router.beforeEach((to, from, next) => {
 	const USER = Store.getters.getCurrentUser;
+	const tokenResponse = Store.getters.getTokenResponse;
 	const ROLE = USER?.role ?? null;
 	const IS_LOGGED_IN = USER?.email ?? false;
     const PERMISSIONS = USER?.permissions ?? [];
-
+    console.log('tokenResponse', tokenResponse);
     // set interval and automatic token expired logout if no activity in 1 minutes even tab is closed or browser is closed
     // if (IS_LOGGED_IN) {
     //
@@ -85,7 +86,8 @@ router.beforeEach((to, from, next) => {
         const isCommon = to?.meta?.role?.includes("all");
         const currentRoutePermission = to?.meta?.permission;
         const hasPermission = PERMISSIONS.includes(currentRoutePermission);
-		//if ((IS_LOGGED_IN && hasPermission) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
+        //if ((IS_LOGGED_IN && hasPermission) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
+        
 		if ((IS_LOGGED_IN) || (IS_LOGGED_IN && ROLE == 'super-admin')) next();
 		else
             if(!IS_LOGGED_IN) {
