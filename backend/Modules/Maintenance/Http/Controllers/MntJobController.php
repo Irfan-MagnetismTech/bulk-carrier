@@ -237,6 +237,7 @@ class MntJobController extends Controller
                 $jobs = $jobs->pluck($returnField)->flatten();
             }
 
+            $jobs = ($returnField == "mntItem") ? $jobs->sortBy('name')->values()->all() : $jobs;
 
             return response()->success('Vessel wise jobs retrieved successfully', $jobs, 200);
             

@@ -166,10 +166,27 @@ export default function useCargoType() {
 		}
 	}
 
+	async function getCargoTypeList() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-cargo-types`);
+			cargoTypes.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		cargoTypes,
 		cargoType,
 		getCargoTypes,
+		getCargoTypeList,
 		storeCargoType,
 		showCargoType,
 		updateCargoType,

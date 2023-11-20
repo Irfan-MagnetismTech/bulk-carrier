@@ -55,7 +55,7 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.portOfRegistry" label="code_name" class="block form-input">
+        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -168,7 +168,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -222,7 +222,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -258,12 +258,12 @@
 
 </template>
 <script setup>
+import { ref, watch, onMounted } from 'vue';
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
 import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
-import { watch } from 'vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
@@ -279,9 +279,9 @@ const props = defineProps({
     formType: { type: Object, required: false }
 });
 
-const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
-const { ports, searchPorts } = usePort();
-const { materials, searchMaterialWithCategory } = useMaterial();
+const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
+const { ports, getPortList } = usePort();
+const { materials, getBunkerList } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -305,20 +305,31 @@ function removeBunker(index){
   props.form.opsBunkers.splice(index, 1);
 }
 
-function fetchMaritimeCertificates(search, loading) {
-  loading(true);
-  searchMaritimeCertificates(search, loading)
-}
+// function fetchMaritimeCertificates(search, loading) {
+//   loading(true);
+//   searchMaritimeCertificates(search, loading)
+// }
 
-function fetchBunker(search, loading) {
-  loading(true);
-  searchMaterialWithCategory(search, 1, loading)
-}
+// function fetchBunker(search, loading) {
+//   loading(true);
+//   searchMaterialWithCategory(search, 1, loading)
+// }
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
+// function fetchPorts(search, loading) {
+//       loading(true);
+//       searchPorts(search, loading)
+// }
+
+onMounted(() => {
+  getPortList();
+  getMaritimeCertificateList();
+  getBunkerList();
+  // getCurrencies();
+  // getCargoTypeList();
+  // getVesselList(props.form.business_unit);
+  // searchPorts(null, true);
+  // searchCargoTypes(null,);
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {

@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted, watchEffect } from 'vue';
     import Error from "../../Error.vue";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
@@ -12,18 +12,31 @@
         formType: { type: String, required : false },
     });
 
-    function fetchCostCenter(query, loading) {
-        getCostCenters(props.form.business_unit,query, loading);
-        loading(true)
-    }
+    // function fetchCostCenter(query, loading) {
+    //     getCostCenters(props.form.business_unit,query, loading);
+    //     loading(true)
+    // }
+
+    // function fetchCostCenter(query) {
+    //     getCostCenters(props.form.business_unit,query);
+    // }
 
     watch(() => props.form.accCostCenter, (value) => {
-        props.form.acc_cost_center_id = value?.id;
+        props.form.cost_center_id = value?.id;
         props.form.cost_center_name = value?.name;
     });
 
+    onMounted(() => {
+        watchEffect(() => {
+                getCostCenters(props.form.business_unit);
+        });
+    });
 
-    const store_category = ['Warehouse', 'Tank']
+    watch(() => props.form.business_unit, (newValue, oldValue) => {
+        if(newValue != oldValue &&  oldValue != '')
+            props.form.accCostCenter = null;
+        });
+
 </script>
 <template>
     <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
@@ -40,7 +53,7 @@
               
                 <label class="label-group">
                     <span class="label-item-title">Cost Center</span>
-                    <v-select :options="costCenters" placeholder="--Choose an option--" @search="fetchCostCenter" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+                    <v-select :options="costCenters" placeholder="--Choose an option--" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
                     <!-- <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" /> -->
                     <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" />
                 </label>
