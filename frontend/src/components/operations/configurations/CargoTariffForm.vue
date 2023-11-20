@@ -273,8 +273,8 @@ watch(() => props.form, (value) => {
 
     if(props?.formType == 'edit' && editInitiated.value != true) {
 
-      cargoTypes.value = [props?.form?.opsCargoType]
-      vessels.value = [props?.form?.opsVessel]
+      // cargoTypes.value = [props?.form?.opsCargoType]
+      // vessels.value = [props?.form?.opsVessel]
 
       if(cargoTypes.value.length> 0 && vessels.value.length > 0) {
         editInitiated.value = true
