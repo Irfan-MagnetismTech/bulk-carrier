@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { jobs, getJobs, deleteJob, isLoading, isTableLoading  } = useJob();
+const { jobs, getJobs, deleteJob, isLoading, isTableLoading, errors } = useJob();
 const { setTitle } = Title();
 setTitle('Job List');
 
@@ -118,11 +119,20 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+// function clearFilter(){
+//   filterOptions.value.filter_options.forEach((option, index) => {
+//     filterOptions.value.filter_options[index].search_param = "";
+//     filterOptions.value.filter_options[index].order_by = null;
+//   });
+// }
+
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 const currentPage = ref(1);
@@ -202,7 +212,7 @@ onMounted(() => {
             </th>
             <th class="w-2/12">
               <div class="flex justify-center items-center">
-                  <span class="mr-1">Vessel Name</span>
+                  <span class="mr-1">Vessel</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -296,4 +306,5 @@ onMounted(() => {
     </div>
     <Paginate :data="jobs" to="mnt.jobs.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

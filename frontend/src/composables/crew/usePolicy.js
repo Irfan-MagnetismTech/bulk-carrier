@@ -15,8 +15,8 @@ export default function usePolicy() {
         type: '',
         attachment: '',
     });
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
     const isTableLoading = ref(false);
@@ -37,9 +37,7 @@ export default function usePolicy() {
             loader?.hide();
         }
 
-
-        indexPage.value = filterOptions.page;
-        indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-policies',{
@@ -133,18 +131,18 @@ export default function usePolicy() {
 
     async function deletePolicy(policyId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/crw/crw-policies/${policyId}`);
             notification.showSuccess(status);
-            await getPolicies(indexPage.value,indexBusinessUnit.value);
+            await getPolicies(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
     }

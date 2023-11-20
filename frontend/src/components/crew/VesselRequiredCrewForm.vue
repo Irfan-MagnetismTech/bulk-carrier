@@ -54,7 +54,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
@@ -84,7 +84,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-      <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+      <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -92,7 +92,7 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom w-48">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Eligibility <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>

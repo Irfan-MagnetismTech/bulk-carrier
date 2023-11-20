@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { itemGroups, getItemGroups, deleteItemGroup, isLoading,isTableLoading } = useItemGroup();
+const { itemGroups, getItemGroups, deleteItemGroup, isLoading,isTableLoading, errors  } = useItemGroup();
 const { setTitle } = Title();
 setTitle('Item Group List');
 
@@ -111,11 +112,19 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+// function clearFilter(){
+//   filterOptions.value.filter_options.forEach((option, index) => {
+//     filterOptions.value.filter_options[index].search_param = "";
+//     filterOptions.value.filter_options[index].order_by = null;
+//   });
+// }
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 const currentPage = ref(1);
@@ -286,4 +295,5 @@ onMounted(() => {
     </div>
     <Paginate :data="itemGroups" to="mnt.item-groups.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

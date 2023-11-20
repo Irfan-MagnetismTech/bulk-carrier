@@ -26,6 +26,7 @@ export default function useItemGroup() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isItemGroupLoading = ref(false);
     const isTableLoading = ref(false);
 
     async function getItemGroups(filterOptions) {
@@ -150,7 +151,8 @@ export default function useItemGroup() {
             await getItemGroups(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -159,8 +161,9 @@ export default function useItemGroup() {
 
     async function getItemGroupsWithoutPagination() {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemGroupLoading.value = true;
 
         try {
             const {data, status} = await Api.get('/mnt/get-mnt-item-groups');
@@ -170,8 +173,9 @@ export default function useItemGroup() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
+            isItemGroupLoading.value = false;
             //NProgress.done();
         }
     }
@@ -180,6 +184,7 @@ export default function useItemGroup() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isItemGroupLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-mnt-ship-department-wise-item-groups/${mntShipDepartmentId}`);
@@ -192,6 +197,7 @@ export default function useItemGroup() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isItemGroupLoading.value = false;
             //NProgress.done();
         }
     }
@@ -210,6 +216,7 @@ export default function useItemGroup() {
         getShipDepartmentWiseItemGroups,
         isLoading,
         isTableLoading,
+        isItemGroupLoading,
         errors,
     };
 }
