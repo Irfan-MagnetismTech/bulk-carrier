@@ -14,7 +14,7 @@ class AccFixedAsset extends Model
     /**
      * @var array
      */
-    protected $fillable = ['acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'asset_name', 'asset_type', 'tag', 'mrr_no', 'bill_no', 'brand', 'location', 'model', 'serial', 'price', 'acquisition_cost', 'useful_life', 'acquisition_date', 'percentage', 'business_unit'];
+    protected $fillable = ['acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit'];
 
     /**
      * @return mixed
