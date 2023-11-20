@@ -34,7 +34,12 @@ watch(generatedAccountCode, (value) => {
 });
 
 watch(() => props.form.acc_balance_and_income_line_name, (newEntries, oldEntries) => {
-    getGeneratedAccountCode(props.form.acc_balance_and_income_line_name.id);
+  if(props.form.acc_balance_and_income_line_name?.id){
+    getGeneratedAccountCode(props.form.acc_balance_and_income_line_name?.id);
+  } else {
+    props.form.account_code = '';
+    props.form.parent_account_name = null;
+  }
     }, { deep: true }
 );
 
