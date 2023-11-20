@@ -10,7 +10,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
   page: {
@@ -44,7 +45,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Material Name",
+      "filter_type": "input" 
     },
     {
       "relation_name": null,
@@ -52,7 +55,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Material Code",
+      "filter_type": "input" 
     },
     {
       "relation_name": null,
@@ -60,7 +65,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Unit",
+      "filter_type": "input" 
     },
     {
       "relation_name": "scmMaterialCategory",
@@ -68,7 +75,14 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Category Name",
+      "filter_type": "select",
+      "select_options": [
+          { value: "", label: "Select",defaultSelected: true},
+          { value: "option1", label: "Option 1" },
+          { value: "option2", label: "Option 2" },
+        ]
     },
     {
       "relation_name": null,
@@ -76,7 +90,10 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Minimum Stock",
+      "filter_type": "component",
+      "component": FilterWithBusinessUnit,
     }
   ]
 });
@@ -178,7 +195,8 @@ function confirmDelete(id) {
             <th>Action</th>
           </tr>
           </thead> -->
-            <thead>
+            <FilterComponent :filterOptions = "filterOptions" :setSortingState="setSortingState" :clearFilter="clearFilter" :swapFilter="swapFilter" :icons="icons" :showFilter="showFilter"/>
+            <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                 <div class="w-full flex items-center justify-between">
@@ -250,7 +268,7 @@ function confirmDelete(id) {
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
-          </thead>
+          </thead> -->
           <tbody class="relative">
           <tr v-for="(material,index) in materials?.data" :key="material.id">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>

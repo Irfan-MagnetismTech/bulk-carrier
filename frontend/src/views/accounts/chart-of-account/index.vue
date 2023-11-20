@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -61,11 +62,13 @@ let showFilter = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: "",
+    order_by: null,
+   }));
 }
 
 let filterOptions = ref( {
@@ -80,7 +83,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Balance/Income Line", 
+      "filter_type": "input",
     },
     {
       "relation_name": "balanceIncome",
@@ -88,7 +93,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Balance/Income Line Type",
+      "filter_type": "input",
     },
     {
       "relation_name": "parent",
@@ -96,7 +103,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Parent Account",  
+      "filter_type": "input",
     },
     {
       "relation_name": null,
@@ -104,7 +113,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Account Code",
+      "filter_type": "input",
     },
     {
       "relation_name": null,
@@ -112,7 +123,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Account Name",
+      "filter_type": "input",
     },
     {
       "relation_name": null,
@@ -120,8 +133,32 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
-    }
+      "date_from": null,
+      "label": "Account Type",
+      "filter_type": "select",
+      "select_options": [
+          { value: "", label: "Select" ,defaultSelected: true},
+          { value: 1, label: "Assets" ,defaultSelected: false},
+          { value: 2, label: "Liabilities",defaultSelected: false},
+          { value: 3, label: "Equity",defaultSelected: false},
+          { value: 4, label: "Revenues" ,defaultSelected: false},
+          { value: 5, label: "Expenses" ,defaultSelected: false},
+        ]
+    },
+    // {
+    //   "relation_name": null,
+    //   "field_name": "account_type",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Account Type",
+    //   "filter_type": 'component',
+    //   "component": FilterWithBusinessUnit, 
+    //   "componentProps": {
+    //           prop1: 'value1',
+    //           prop2: 'value2',
+    // },
   ]
 });
 
@@ -198,7 +235,8 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
+        <FilterComponent :filterOptions = "filterOptions" :setSortingState="setSortingState" :clearFilter="clearFilter" :swapFilter="swapFilter" :icons="icons" :showFilter="showFilter"/>
+          <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                 <div class="w-full flex items-center justify-between">
@@ -295,7 +333,7 @@ onMounted(() => {
               </th>
               <th><button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button></th>
             </tr>
-          </thead>
+          </thead> -->
           <tbody  class="relative">
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
