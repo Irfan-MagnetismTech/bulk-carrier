@@ -9,13 +9,12 @@ export default function useWarehouse() {
     const BASE = 'scm' 
     const router = useRouter();
     const warehouses = ref(["Select Business Unit First"]);
-    const costCenters = ref([]);
     const isTableLoading = ref(false);
     const costCenters = ref(["Select Business Unit First"]);
     const $loading = useLoading();
     const notification = useNotification();
     const warehouse = ref( {
-        acc_cost_center_id: '',
+        cost_center_id: '',
         cost_center_name: '',
         accCostCenter: null,
         name: '',
@@ -167,6 +166,7 @@ export default function useWarehouse() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+            // loading(false)
         }
     }
 
@@ -178,6 +178,7 @@ export default function useWarehouse() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
+            // loading(false);
         }
     }
 
@@ -234,11 +235,11 @@ export default function useWarehouse() {
         showWarehouse,
         updateWarehouse,
         deleteWarehouse,
+        getCostCenters,
         searchToWarehouse,
         searchFromWarehouse,
-        costCenters,
-        getCostCenters,
         isTableLoading,
+        costCenters,
         isLoading,
         errors,
     };
