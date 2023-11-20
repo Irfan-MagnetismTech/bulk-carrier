@@ -239,7 +239,7 @@ function fetchToWarehouse(search, loading) {
     }
 }
 
-watch(() => props.form.scmFromWarehouse, (value) => {
+watch(() => props.form.fromWarehouse, (value) => {
         props.form.from_warehouse_id = value?.id;
         props.form.from_cost_center_id = value?.acc_cost_center_id;
     // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
@@ -248,7 +248,7 @@ watch(() => props.form.scmFromWarehouse, (value) => {
     fromWarehouseKey.value++;
     toWarehouseKey.value++;
     });
-  watch(() => props.form.scmToWarehouse, (value) => {
+  watch(() => props.form.toWarehouse, (value) => {
         props.form.to_warehouse_id = value?.id;
         props.form.to_cost_center_id = value?.acc_cost_center_id;
     warehouses.value = [];
