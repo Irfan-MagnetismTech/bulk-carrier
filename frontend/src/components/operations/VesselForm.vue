@@ -55,7 +55,7 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.portOfRegistry" label="code_name" class="block form-input">
+        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -258,12 +258,12 @@
 
 </template>
 <script setup>
+import { ref, watch, onMounted } from 'vue';
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
 import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
-import { watch } from 'vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
@@ -280,7 +280,7 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
-const { ports, searchPorts } = usePort();
+const { ports, getPortList } = usePort();
 const { materials, searchMaterialWithCategory } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
@@ -315,10 +315,19 @@ function fetchBunker(search, loading) {
   searchMaterialWithCategory(search, 1, loading)
 }
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
+// function fetchPorts(search, loading) {
+//       loading(true);
+//       searchPorts(search, loading)
+// }
+
+onMounted(() => {
+  getPortList();
+  // getCurrencies();
+  // getCargoTypeList();
+  // getVesselList(props.form.business_unit);
+  // searchPorts(null, true);
+  // searchCargoTypes(null,);
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {
