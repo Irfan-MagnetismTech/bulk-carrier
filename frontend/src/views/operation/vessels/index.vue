@@ -159,7 +159,6 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-
     
 });
     filterOptions.value.filter_options.forEach((option, index) => {

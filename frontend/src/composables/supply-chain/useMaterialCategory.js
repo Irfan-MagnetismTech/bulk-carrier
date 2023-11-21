@@ -129,7 +129,7 @@ export default function useMaterialCategory() {
     }
 
     async function deleteMaterialCategory(materialCategoryId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-categories/${materialCategoryId}`);
@@ -139,22 +139,21 @@ export default function useMaterialCategory() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function searchMaterialCategory(searchParam, loading) {
+    async function searchMaterialCategory(searchParam,selfId=null) {
 
         try {
-            const { data, status } = await Api.get(`${BASE}/search-material-category`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-material-category`, {params: { searchParam: searchParam ,self_id: selfId}});
             materialCategories.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false)
         }
     }
 

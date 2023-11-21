@@ -18,9 +18,9 @@ class AccCommonController extends Controller
             $costCenters = AccCostCenter::when(request()->business_unit != "ALL", function ($q) {
                 $q->where('business_unit', request()->business_unit);
             })
-            ->when(request()->name, function($q) {
-                $q->where('name', 'like', '%' . request()->name . '%');
-            })
+            // ->when(request()->name, function($q) {
+            //     $q->where('name', 'like', '%' . request()->name . '%');
+            // })
             ->get();
 
             return response()->json([
@@ -78,10 +78,11 @@ class AccCommonController extends Controller
             ->when(request()->business_unit != "ALL", function ($q) {
                 $q->where('business_unit', request()->business_unit);
             })
-            ->when(request()->account_name, function($q) {
-                $q->where('account_name', 'like', '%' . request()->account_name . '%');
-            })
-            ->limit(10)->get(['id', 'account_name', 'acc_balance_and_income_line_id']);
+            // ->when(request()->account_name, function($q) {
+            //     $q->where('account_name', 'like', '%' . request()->account_name . '%');
+            // })
+            // ->limit(10)
+            ->get(['id', 'account_name', 'acc_balance_and_income_line_id']);
 
             $response = [];
             foreach ($items as $item)

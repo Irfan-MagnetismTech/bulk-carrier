@@ -34,7 +34,7 @@ class OpsLighterNoonReportController extends Controller
             $lighterNoonReports = OpsLighterNoonReport::with('opsVessel','opsVoyage.opsCargoType','opsBunkers')
             ->globalSearch($request->all());
             
-            return response()->success('Successfully retrieved lighter noon reports.', $lighterNoonReports, 200);
+            return response()->success('Data retrieved successfully.', $lighterNoonReports, 200);
         }
         catch (QueryException $e)
         {
@@ -61,7 +61,7 @@ class OpsLighterNoonReportController extends Controller
             $lighter_noon_report = OpsLighterNoonReport::create($lighterNoonReportInfo);
             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
-            return response()->success('Lighter noon report added successfully.', $lighter_noon_report, 201);
+            return response()->success('Data added successfully.', $lighter_noon_report, 201);
         }
         catch (QueryException $e)
         {
@@ -87,7 +87,7 @@ class OpsLighterNoonReportController extends Controller
 
         try
         {
-            return response()->success('Successfully retrieved lighter noon report.', $lighter_noon_report, 200);
+            return response()->success('Data retrieved successfully.', $lighter_noon_report, 200);
         }
         catch (QueryException $e)
         {
@@ -117,7 +117,7 @@ class OpsLighterNoonReportController extends Controller
             $lighter_noon_report->opsBunkers()->delete();
             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
-            return response()->success('Lighter noon report updated successfully.', $lighter_noon_report, 202);
+            return response()->success('Data updated successfully.', $lighter_noon_report, 202);
         }
         catch (QueryException $e)
         {            
@@ -140,7 +140,7 @@ class OpsLighterNoonReportController extends Controller
             $lighter_noon_report->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted lighter noon report.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)

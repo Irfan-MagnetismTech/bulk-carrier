@@ -34,6 +34,7 @@ export default function useItemGroup() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isJobLoading = ref(false);
     const isTableLoading = ref(false);
 
     async function getJobs(filterOptions) {
@@ -157,7 +158,8 @@ export default function useItemGroup() {
             await getJobs(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -168,6 +170,7 @@ export default function useItemGroup() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isJobLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-jobs-for-requisition`,{
@@ -186,6 +189,7 @@ export default function useItemGroup() {
         } finally {
             loader.hide();
             isLoading.value = false;
+            isJobLoading.value = false;
             //NProgress.done();
         }
     }
@@ -207,6 +211,7 @@ export default function useItemGroup() {
         deleteJob,
         getJobsForRequisition,
         isLoading,
+        isJobLoading,
         isTableLoading,
         errors,
     };

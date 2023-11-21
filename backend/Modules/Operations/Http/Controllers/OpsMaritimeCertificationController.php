@@ -34,7 +34,7 @@ class OpsMaritimeCertificationController extends Controller
         try {
             $maritimeCertifications = OpsMaritimeCertification::globalSearch($request->all());
             
-            return response()->success('Successfully retrieved Maritime Certifications.', $maritimeCertifications, 200);
+            return response()->success('Data retrieved successfully.', $maritimeCertifications, 200);
         }
         catch (QueryException $e)
         {
@@ -55,7 +55,7 @@ class OpsMaritimeCertificationController extends Controller
             DB::beginTransaction();
             $maritimeCertification = OpsMaritimeCertification::create($request->all());
             DB::commit();
-            return response()->success('Maritime Certification added Successfully.', $maritimeCertification, 201);
+            return response()->success('Data added successfully.', $maritimeCertification, 201);
         }
         catch (QueryException $e)
         {
@@ -75,7 +75,7 @@ class OpsMaritimeCertificationController extends Controller
         // dd($maritime);
         try
         {
-            return response()->success('Successfully retrieved Maritime Certification.', $maritime_certification, 200);
+            return response()->success('Data retrieved successfully.', $maritime_certification, 200);
         }
         catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class OpsMaritimeCertificationController extends Controller
             DB::beginTransaction();
             $maritime_certification->update($request->all());
             DB::commit();
-            return response()->success('Maritime certification updated successfully.', $maritime_certification, 202);
+            return response()->success('Data updated successfully.', $maritime_certification, 202);
         }
         catch (QueryException $e)
         {
@@ -120,7 +120,7 @@ class OpsMaritimeCertificationController extends Controller
             $maritime_certification->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted maritime certification.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -138,7 +138,21 @@ class OpsMaritimeCertificationController extends Controller
             })
             ->limit(10)
             ->get();
-            return response()->success('Successfully retrieved maritime certifications name.', $maritime_certifications, 200);
+            return response()->success('Data retrieved successfully.', $maritime_certifications, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getMaritimeCertificationName(Request $request){
+        try {
+            $maritime_certifications = OpsMaritimeCertification::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->get();
+
+            return response()->success('Data retrieved successfully.', $maritime_certifications, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

@@ -29,7 +29,11 @@ export default function useHelper() {
       * useHelper().downloadFile(data, fileName);
       * 
       */
-        const downloadFile = (data, fileName) => {
+       
+  const downloadFile = (data, fileName,headers) => {
+        // const fileType = headers['content-type'];
+        // const fileExtension = fileTypeToExtension[fileType] || 'unknown';
+        // const fileName = `materials.${fileExtension}`;
         const url = window.URL.createObjectURL(new Blob([data]));
         const link = document.createElement('a');
         link.href = url;

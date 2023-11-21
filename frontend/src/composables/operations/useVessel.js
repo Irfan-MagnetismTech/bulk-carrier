@@ -65,6 +65,7 @@ export default function useVessel() {
 	}
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isVesselLoading = ref(false);
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
@@ -259,7 +260,7 @@ export default function useVessel() {
 		}
 	}
 
-	async function searchVessels(searchParam, businessUnit, loading) {
+	async function searchVessels(searchParam, businessUnit) {
 		//NProgress.start();
 
 		try {
@@ -270,14 +271,15 @@ export default function useVessel() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			//loading(false)
 			//NProgress.done();
 		}
 	}
 
 	async function getVesselsWithoutPaginate(businessUnit) {
-		NProgress.start();
+		// NProgress.start();
 		isLoading.value = true;
+		isVesselLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-vessels?business_unit=${businessUnit}`);
@@ -288,7 +290,26 @@ export default function useVessel() {
 			notification.showError(status);
 		} finally {
 			// loading(false)
-			NProgress.done();
+			// NProgress.done();
+			isLoading.value = false;
+			isVesselLoading.value = false;
+		}
+	}
+
+	async function getVesselList(businessUnit) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-vessels?business_unit=${businessUnit}`);
+
+			vessels.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
 		}
 	}
 
@@ -304,12 +325,14 @@ export default function useVessel() {
 		updateVessel,
 		deleteVessel,
 		searchVessels,
+		getVesselList,
 		getVesselsByNameOrCode,
 		voyageVessels,
 		getVesselsByVoyage,
 		getVesselsWithoutPaginate,
 		isLoading,
 		isTableLoading,
+		isVesselLoading,
 		errors,
 	};
 }

@@ -35,7 +35,7 @@ class OpsCustomerController extends Controller
 
             $customers = OpsCustomer::globalSearch($request->all());
 
-            return response()->success('Successfully retrieved customers.', $customers, 200);
+            return response()->success('Data retrieved successfully.', $customers, 200);
         }
         catch (QueryException $e)
         {
@@ -58,7 +58,7 @@ class OpsCustomerController extends Controller
             DB::beginTransaction();
             $customer = OpsCustomer::create($request->all());
             DB::commit();            
-            return response()->success('Customer added Successfully.', $customer, 201);
+            return response()->success('Data added successfully.', $customer, 201);
         }
         catch (QueryException $e)
         {
@@ -77,7 +77,7 @@ class OpsCustomerController extends Controller
     public function show(OpsCustomer $customer): JsonResponse
     {
         try {
-            return response()->success('Successfully retrieved customer.', $customer, 200);
+            return response()->success('Data retrieved successfully.', $customer, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -97,8 +97,8 @@ class OpsCustomerController extends Controller
         try {
             DB::beginTransaction();
             $customer->update($request->all());
-            DB::commit();            
-            return response()->success('Customer updated Successfully.', $customer, 202);
+            DB::commit();
+            return response()->success('Data updated successfully.', $customer, 202);
         }
         catch (QueryException $e)
         {
@@ -120,7 +120,7 @@ class OpsCustomerController extends Controller
 
             return response()->json([
                 'value' => '',
-                'message' => 'Customer deleted Successfully.'
+                'message' => 'Data deleted successfully.'
             ], 204);
         }
         catch (QueryException $e)
@@ -139,7 +139,22 @@ class OpsCustomerController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved customers name.', $customers, 200);
+            return response()->success('Data retrieved successfully.', $customers, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCustomerNameorCode(Request $request){
+        try {
+            $customers = OpsCustomer::query()
+            ->where(function ($query) use($request) {
+                $query->where('name', 'like', '%' . $request->name_or_code . '%');
+                $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            })
+            ->get();
+
+            return response()->success('Data retrieved successfully.', $customers, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

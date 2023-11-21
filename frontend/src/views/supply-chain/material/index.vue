@@ -10,7 +10,8 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
   page: {
@@ -25,13 +26,6 @@ const { setTitle } = Title();
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
-let showFilter = ref(false);
-// let isTableLoader = ref(false);
-
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
 
 let filterOptions = ref( {
   "items_per_page": 15,
@@ -44,7 +38,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Material Name",
+      "filter_type": "input" 
     },
     {
       "relation_name": null,
@@ -52,7 +48,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Material Code",
+      "filter_type": "input" 
     },
     {
       "relation_name": null,
@@ -60,7 +58,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Unit",
+      "filter_type": "input" 
     },
     {
       "relation_name": "scmMaterialCategory",
@@ -68,7 +68,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Material Category",
+      "filter_type": "input"
     },
     {
       "relation_name": null,
@@ -76,7 +78,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Minimum Stock",
+      "filter_type": "input"
     }
   ]
 });
@@ -85,12 +89,6 @@ const paginatedPage = ref(1);
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
 
 
 const tableScrollWidth = ref(null);
@@ -98,14 +96,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Materials');
 
-function clearFilter() {
-  // filterOptions.value.business_unit = businessUnit.value;
-  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
-     ...option,
-    search_param: null,
-    order_by: null,
-   }));
-}
+
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -139,7 +130,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -167,90 +158,7 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Name</th>
-            <th>Material Code</th>
-            <th>Unit</th>
-            <th>Category</th>
-            <th>Minimum Stock</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
-            <thead>
-            <tr class="w-full">
-              <th class="w-16">
-                <div class="w-full flex items-center justify-between">
-                  # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-center items-center">
-                  <span class="mr-2">Material Name</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-center items-center">
-                  <span class="mr-2"><nobr>Material Code</nobr></span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-center items-center">
-                  <span class="mr-2"><nobr>Unit</nobr></span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-center items-center">
-                  <span class="mr-2"><nobr>Category Name</nobr></span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-center items-center">
-                  <span class="mr-2"><nobr>Minimum Stock</nobr></span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th class=""><nobr>Action</nobr></th>
-            </tr>
-            <tr class="w-full" v-if="showFilter">
-              <th>
-                <select v-model="filterOptions.items_per_page" class="filter_input">
-                  <option value="15">15</option>
-                  <option value="30">30</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </th>
-              <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
-            </tr>
-          </thead>
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
           <tr v-for="(material,index) in materials?.data" :key="material.id">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>

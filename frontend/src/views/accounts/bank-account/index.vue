@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useBankAccount from "../../../composables/accounts/useBankAccount";
 import Title from "../../../services/title";
@@ -160,7 +160,7 @@ function setSortingState(index,order){
 }
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
     } else {
@@ -174,7 +174,6 @@ onMounted(() => {
     .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
-
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
@@ -200,7 +199,6 @@ onMounted(() => {
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap">
           <thead>
           <tr class="w-full">
@@ -350,15 +348,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!bankAccounts?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="11">Loading...</td>
+            <td colspan="12"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="12">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
           <tr v-else-if="!bankAccounts?.data?.data?.length">
-            <td colspan="11">No data found.</td>
+            <td colspan="12">No data found.</td>
           </tr>
           </tfoot>
       </table>

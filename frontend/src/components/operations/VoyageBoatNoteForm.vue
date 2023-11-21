@@ -6,23 +6,6 @@
       <label class="block w-full mt-2 text-sm"></label>
 
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Note Type</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <input type="radio" v-model="form.type" name="type" value="Boat Note" />
-            <span class="text-gray-700 dark:text-gray-300 ml-2">Boat Note </span>
-        </label>
-      <label class="block w-full mt-2 text-sm">
-          <input type="radio" v-model="form.type" name="type" value="Final Survey" />
-          <span class="text-gray-700 dark:text-gray-300 ml-2">Final Survey</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-          <input type="radio" v-model="form.type" name="type" value="Receipt Copy" />
-          <span class="text-gray-700 dark:text-gray-300 ml-2">Receipt Copy</span>
-      </label>
-    </div>
 
     <h4 class="text-md font-semibold mt-3">Basic Info</h4>
 
@@ -62,6 +45,7 @@
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
+              <th class="w-36">Type</th>
               <th class="w-72">Loading Point</th>
               <th>Unloading Point</th>
               <th>Quantity</th>
@@ -72,6 +56,9 @@
             <tr v-for="(sector, index) in form.opsVoyageBoatNoteLines">
               <td>
                 {{ index+1 }}
+              </td>
+              <td>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.type">{{ form.opsVoyageBoatNoteLines[index]?.type }}</span>
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point }}</span>
@@ -154,7 +141,20 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-    props.form.opsVoyageBoatNoteLines = value?.value?.opsVoyageSectors
+    props.form.opsVoyageBoatNoteLines = [
+    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Boat Note' })),
+    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Final Survey' })),
+    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Receipt Copy' }))
+];
+
+
+
+// return [
+//         { ...sector, type: 'Boat Note' },
+//         { ...sector, type: 'Final Survey' },
+//         { ...sector, type: 'Receipt Copy' },
+//     ];
+
   }
 }, { deep: true })
 

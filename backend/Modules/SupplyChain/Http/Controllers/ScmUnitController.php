@@ -102,9 +102,9 @@ class ScmUnitController extends Controller
     public function searchUnit(Request $request): JsonResponse
     {
         $materialCategory = ScmUnit::query()
-            ->where('name', 'like', "%{$request->searchParam}%")
+            // ->where('name', 'like', "%{$request->searchParam}%")
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);

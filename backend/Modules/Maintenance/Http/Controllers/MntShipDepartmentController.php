@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Entities\MntShipDepartment;
 use Modules\Maintenance\Http\Requests\MntShipDepartmentRequest;
 
@@ -124,7 +125,17 @@ class MntShipDepartmentController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {
+            $itemGroups = MntItemGroup::where('mnt_ship_department_id', $id)->count();
+            if ($itemGroups > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $shipDepartment = MntShipDepartment::findorfail($id);
             $shipDepartment->delete();
             

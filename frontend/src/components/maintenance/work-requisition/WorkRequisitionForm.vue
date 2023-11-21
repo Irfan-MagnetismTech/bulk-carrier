@@ -25,7 +25,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -39,8 +39,8 @@
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <span class="text-gray-700 dark:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -55,7 +55,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item Group" :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Item Group" :loading="isItemGroupLoading"  :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -70,7 +70,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Item <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item" :options="form.mnt_items" @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Item" :loading="isItemLoading"  :options="form.mnt_items" @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -94,14 +94,14 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  />
+            <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  />
           <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
+            <input type="date" :min="form.est_start_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
           <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
         </label>
 
@@ -232,12 +232,12 @@ import useRunHour from "../../../composables/maintenance/useRunHour";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import moment from 'moment';
 
-const { vessels, getVesselsWithoutPaginate } = useVessel();
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
-const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
-const { itemWiseJobLines, getJobsForRequisition } = useJob();
-const { presentRunHour, getItemPresentRunHour } = useRunHour();
+const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
+const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems, isItemLoading } = useItem();
+const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
+const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
 const { crews, getCrews } = useCrewCommonApiRequest();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');

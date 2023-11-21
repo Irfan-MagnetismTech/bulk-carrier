@@ -13,6 +13,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -24,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading  } = useRunHour();
+const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading, errors  } = useRunHour();
 const { setTitle } = Title();
 setTitle('Run Hour List');
 
@@ -123,11 +124,20 @@ function setSortingState(index, order) {
   filterOptions.value.filter_options[index].order_by = order;
 }
 
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
+// function clearFilter(){
+//   filterOptions.value.filter_options.forEach((option, index) => {
+//     filterOptions.value.filter_options[index].search_param = "";
+//     filterOptions.value.filter_options[index].order_by = null;
+//   });
+// }
+
+function clearFilter() {
+  filterOptions.value.business_unit = businessUnit.value;
+  filterOptions.value.filter_options = filterOptions.value.filter_options.map((option) => ({
+     ...option,
+    search_param: null,
+    order_by: null,
+   }));
 }
 
 const currentPage = ref(1);
@@ -286,8 +296,10 @@ onMounted(() => {
             <td><span :class="runHour?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ runHour?.business_unit }}</span></td>
             
             <td>
+              <nobr>
                 <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && runHours?.data?.length"></LoaderComponent>
@@ -309,4 +321,5 @@ onMounted(() => {
     </div>
     <Paginate :data="runHours" to="mnt.run-hours.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

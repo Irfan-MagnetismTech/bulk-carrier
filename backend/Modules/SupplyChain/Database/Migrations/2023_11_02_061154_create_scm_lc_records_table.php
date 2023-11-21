@@ -39,11 +39,11 @@ return new class extends Migration
             $table->string('bank_name')->nullable();
             $table->decimal('cfr_value')->nullable();
             $table->decimal('lc_margin')->nullable();
-            $table->decimal('total_cost')->nullable();
-            $table->decimal('cfr_margin')->nullable();
+            $table->decimal('total_cost',20,2)->nullable();
+            $table->decimal('document_value')->nullable();
             $table->decimal('exchange_rate')->nullable();
             $table->decimal('market_rate')->nullable();
-            $table->bigInteger('business_unit')->nullable();
+            $table->string('business_unit')->nullable();
             $table->string('attachment')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();
