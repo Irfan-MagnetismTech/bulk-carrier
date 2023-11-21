@@ -107,7 +107,7 @@ class OpsCargoTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  OpsCargoType  $port
+     * @param  OpsCargoType  $cargo_type
      * @return \Illuminate\Http\Response
      */
     public function destroy(OpsCargoType $cargo_type): JsonResponse

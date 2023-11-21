@@ -23,9 +23,10 @@ use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsPortRequest;
 use Modules\Operations\Entities\OpsChartererContract;
 use Modules\Operations\Entities\OpsLighterNoonReport;
-
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Entities\OpsMaritimeCertification;
+use Modules\Operations\Entities\OpsCustomerInvoice;
+use Modules\Operations\Entities\OpsCashRequisition;
 
 class OpsCommonController extends Controller
 {
@@ -56,7 +57,7 @@ class OpsCommonController extends Controller
     }
 
     // To get cargo tariff data
-    public function getCargoTariffWithoutPaginate(){
+    public function getCargoTariffWithoutPaginate(Request $request){
         try
         {
             $cargo_tariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->get();          
@@ -69,7 +70,7 @@ class OpsCommonController extends Controller
     }
 
     // To get Charterer Contract data
-    public function getChartererContractWithoutPaginate(){
+    public function getChartererContractWithoutPaginate(Request $request){
         try
         {
             $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();        
@@ -82,10 +83,13 @@ class OpsCommonController extends Controller
     }
 
     // To get Charterer Invoice data
-    public function getChartererInvoiceWithoutPaginate(){
+    public function getChartererInvoiceWithoutPaginate(Request $request){
         try
         {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->get();
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })->latest()->get();
 
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         }
@@ -97,7 +101,7 @@ class OpsCommonController extends Controller
     
 
     // To get Charterer Profile data
-     public function getCargoProfileWithoutPaginate(){
+     public function getChartererProfileWithoutPaginate(Request $request){
         try
         {
             $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->get();       
@@ -110,7 +114,7 @@ class OpsCommonController extends Controller
     }
 
     // To get Customer data
-    public function getCustomerWithoutPaginate(){
+    public function getCustomerWithoutPaginate(Request $request){
         try
         {
             $customers = OpsCustomer::all();            
@@ -123,7 +127,7 @@ class OpsCommonController extends Controller
     }
 
     // To get Handover Takeover data
-    public function getHandoverTakeoverWithoutPaginate(){
+    public function getHandoverTakeoverWithoutPaginate(Request $request){
         try
         {
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->get();        
@@ -137,7 +141,7 @@ class OpsCommonController extends Controller
 
 
     // To get Lighter Noon data
-    public function getLighterNoonReportWithoutPaginate(){
+    public function getLighterNoonReportWithoutPaginate(Request $request){
         try
         {
             $lighterNoonReports = OpsLighterNoonReport::all();            
@@ -151,7 +155,7 @@ class OpsCommonController extends Controller
 
 
     // To get Maritime Certification data
-    public function getMaritimeCertificationWithoutPaginate(){
+    public function getMaritimeCertificationWithoutPaginate(Request $request){
         try
         {
             $maritime_certifications = OpsMaritimeCertification::all();            
@@ -181,7 +185,7 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel Certificate data
-    public function getVesselCertificateWithoutPaginate(){
+    public function getVesselCertificateWithoutPaginate(Request $request){
         try
         {
             $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
@@ -195,7 +199,7 @@ class OpsCommonController extends Controller
 
 
     // To get Vessel Particular data
-    public function getVesselParticularWithoutPaginate(){
+    public function getVesselParticularWithoutPaginate(Request $request){
         try
         {
             $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();        
@@ -208,10 +212,14 @@ class OpsCommonController extends Controller
     }
 
     // To get Vessel Boat Note data
-    public function getVoyageBoatNoteWithoutPaginate()
+    public function getVoyageBoatNoteWithoutPaginate(Request $request)
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->get();
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->latest()->get();
             
             return response()->success('Data retrieved successfully.', $voyage_boat_notes, 200);
         }
@@ -222,7 +230,7 @@ class OpsCommonController extends Controller
     }
 
     // To get Voyage data
-    public function getVoyageWithoutPaginate(){
+    public function getVoyageWithoutPaginate(Request $request){
         try
         {
             $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        

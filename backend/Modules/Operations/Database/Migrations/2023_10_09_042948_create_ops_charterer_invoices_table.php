@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('discount_unit');
             $table->float('discounted_amount');
             $table->float('grand_total');
-            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'ALL']);
             $table->timestamps();
         });
     }

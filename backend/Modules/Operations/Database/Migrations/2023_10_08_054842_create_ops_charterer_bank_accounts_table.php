@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('state_division')->nullable();
             $table->string('city')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
             $table->timestamps();
         });
     }

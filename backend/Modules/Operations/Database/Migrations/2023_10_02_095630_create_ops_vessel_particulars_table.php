@@ -45,8 +45,13 @@ return new class extends Migration
             $table->string('bhp');
             $table->string('email');
             $table->string('lbc');
+<<<<<<< HEAD
             $table->text('attachment')->nullable(); 
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
+=======
+            $table->text('attachment');
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
+>>>>>>> OPS/bunker-bills
             $table->timestamps();
         });
     }

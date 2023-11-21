@@ -107,7 +107,7 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
-                       
+            
             $cargo_tariff->update($cargoTariffInfo);            
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
@@ -142,7 +142,6 @@ class OpsCargoTariffController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-    
 
     public function getCargoTariffByName(Request $request){
         try {

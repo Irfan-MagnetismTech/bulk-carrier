@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ops_maritime_certifications', function (Blueprint $table) {
+        Schema::create('ops_bunker_bill_lines', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->string('validity');
-            $table->string('authority')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
+            $table->foreignId('ops_bunker_bill_id')->constrained('ops_bunker_bills')->onDelete('cascade');
+            $table->string('pr_no');
+            $table->float('amount');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ops_maritime_certifications');
+        Schema::dropIfExists('ops_bunker_bill_lines');
     }
 };

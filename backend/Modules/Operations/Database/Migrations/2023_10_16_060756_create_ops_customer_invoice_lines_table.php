@@ -13,16 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ops_cargo_tariffs', function (Blueprint $table) {
+        Schema::create('ops_customer_invoice_lines', function (Blueprint $table) {
             $table->id();
-            $table->string('tariff_name');
+            $table->foreignId('ops_customer_invoice_id')->constrained('ops_customer_invoices')->onDelete('cascade');
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
-            $table->string('loading_point');
-            $table->string('unloading_point');
-            $table->string('currency');
-            $table->enum('status',['Active','Inactive']);
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);          
+            $table->foreignId('ops_voyage_id')->constrained('ops_vessels')->onDelete('cascade');
+            $table->float('amount');
             $table->timestamps();
         });
     }
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ops_cargo_tariffs');
+        Schema::dropIfExists('ops_customer_invoice_lines');
     }
 };

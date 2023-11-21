@@ -107,9 +107,8 @@ class OpsChartererInvoiceController extends Controller
                  'opsChartererInvoiceLines',
              );
             
-             $charterer_invoice->update($charterer_invoice_info);       
-             $charterer_invoice->opsChartererInvoiceLines()->delete();
-             $charterer_invoice->opsChartererInvoiceLines()->createMany($request->opsChartererInvoiceLines);
+             $charterer_invoice->update($charterer_invoice_info);      
+             $charterer_invoice->opsChartererInvoiceLines()->createUpdateOrDelete($request->opsChartererInvoiceLines); 
              DB::commit();
              return response()->success('Data updated successfully.', $charterer_invoice, 202);
          }

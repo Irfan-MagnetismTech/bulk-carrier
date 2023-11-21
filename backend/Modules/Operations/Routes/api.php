@@ -18,6 +18,9 @@ use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
+use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
+use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
+use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +34,7 @@ use Modules\Operations\Http\Controllers\OpsCommonController;
 */
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    Route::resources([
+    Route::apiResources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
         'cargo-types' => OpsCargoTypeController::class,
@@ -47,6 +50,9 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'handover-takeovers' => OpsHandoverTakeoverController::class,
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
+        'customer-invoices' => OpsCustomerInvoiceController::class,
+        'cash-requisitions' => OpsCashRequisitionController::class,
+        'bunker-requisitions' => OpsBunkerRequisitionController::class,
     ]);
 
     //start for without pagination
@@ -65,7 +71,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-handover-takeovers', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
     Route::get('get-charterer-invoices', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('get-lighter-noon-reports', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
-    //end for without pagination
+    Route::get('get-customer-invoices', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
+    Route::get('get-cash-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
+    Route::get('get-bunker-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
+   //end for without pagination
 
     // start for search api route
     Route::get('search-ports', [OpsPortController::class, 'getPortByNameOrCode']);
@@ -77,6 +86,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
     Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
+    Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
     
     // end for search api route
     
@@ -102,4 +112,3 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
     
 });
-Route::post('vessel-search', [OpsVesselController::class, 'search']);

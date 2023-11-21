@@ -26,7 +26,7 @@ return new class extends Migration
             $table->dateTime('date');
             $table->string('last_port')->nullable();
             $table->string('next_port')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'ALL']);
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
