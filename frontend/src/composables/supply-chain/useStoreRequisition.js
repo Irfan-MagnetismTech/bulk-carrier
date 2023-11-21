@@ -16,6 +16,7 @@ export default function useStoreRequisition() {
     const storeRequisitions = ref([]);
     const filteredStoreRequisitions = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
