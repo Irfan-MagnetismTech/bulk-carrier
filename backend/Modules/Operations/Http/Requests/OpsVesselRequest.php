@@ -92,14 +92,11 @@ class OpsVesselRequest extends FormRequest
             'port_of_registry.required' => 'Port of registry is required',
             'port_of_registry.max' => 'Port of registry may not be greater than :max characters.',
             'nrt.required' => 'NRT is required',
-            // 'nrt.max' => 'NRT may not be greater than :max characters.',
             'imo.required' => 'IMO number is required',
             'imo.digits_between' => 'IMO number must be between :min and :max characters',
             'official_number.required' => 'Official Number is required',
             'official_number.digits_between' => 'Official Number must be between :min and :max characters',
             'grt.required' => 'GRT is required',
-            // 'grt.min' => 'GRT must be greater than or equal to :min',
-            // 'grt.max' => 'GRT may not be greater than :max characters.',
             'keel_laying_date.required' => 'Keel Laying Date is required',
             'launching_date.required' => 'Launching Date is required',
             'mmsi.required' => 'MMSI is required',
@@ -110,50 +107,16 @@ class OpsVesselRequest extends FormRequest
             'year_built.min' => 'Year built must be greater than or equal to :min',
             'year_built.max' => 'Year built may not be greater than :max characters.',
             'capacity.required' => 'Capacity is required',
-            // 'capacity.min' => 'Capacity must be greater than or equal to :min',
-            // 'capacity.max' => 'Capacity may not be greater than :max characters.',
             'total_cargo_hold.required' => 'Total cargo hold is required',
-            // 'total_cargo_hold.max' => 'Total cargo hold may not be greater than :max characters.',
             'live_tracking_config.max' => 'Live tracking may not be greater than :max characters.',
             'remarks.max' => 'Remarks may not be greater than :max characters.',
 
-            // 'opsVesselCertificates.*.ops_maritime_certification_id.max' => 'Certificate name not be greater than :max characters for row is :index',
-            // 'opsBunkers.*.scm_material_id.max' => 'Bunker name not be greater than :max characters for row is key:index.',
-            // 'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is key:index.',            
-            // 'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is key:index.',
-            // 'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is key:index.',
+            // 'opsVesselCertificates.*.ops_maritime_certification_id.max' => 'Certificate name not be greater than :max characters for row is :position',
+            'opsBunkers.*.scm_material_id.max' => 'Bunker name not be greater than :max characters for row is :position.',
+            'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is :position.',            
+            'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is :position.',
+            'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is :position.',
            
         ];
     }
-
-    // public function withValidator($validator)
-    // {
-    //     $messages= $validator->errors()->messages();
-    //     foreach($messages as $field =>$messageArray){
-    //         foreach($messageArray as $key => $message){
-    //             $table= Str::before($field, '.');
-    //             $index= Str::after($field, $table.'.');
-    //             $index= Str::before($index, '.');
-    //             $messages[$field][$key]= Str::before($message, 'key'.$index) .' '. ++$index;
-    //         }        
-    //     }
-    //     // $messages = collect($messages)->map(function ($messageArray, $field) {
-    //     //     $table = Str::before($field, '.');
-    //     //     $index = Str::before(Str::after($field, $table . '.'), '.');
-    //     //     $index = Str::before($index, '.');
-        
-    //     //     return collect($messageArray)->map(function ($message) use ($index) {
-    //     //         return Str::before($message, 'key' . $index) . ' ' . ++$index;
-    //     //     })->all();
-    //     // })->all();
-        
-    //     if(count($messages)>0){
-    //         $response= new \Illuminate\Http\JsonResponse([
-    //             'message' =>'The given data was invalid',
-    //             'errors' => $messages
-    //         ], 422);
-    
-    //         throw new HttpResponseException($response);
-    //     }
-    // }
 }
