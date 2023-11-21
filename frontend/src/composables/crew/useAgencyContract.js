@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useAgencyContract() {
     const router = useRouter();
     const agencyContracts = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const agencyContract = ref( {
@@ -27,25 +28,32 @@ export default function useAgencyContract() {
         business_unit: '',
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencyContracts(page,businessUnit) {
+    async function getAgencyContracts(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-agency-contracts',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             agencyContracts.value = data.value;
@@ -54,8 +62,14 @@ export default function useAgencyContract() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -65,7 +79,9 @@ export default function useAgencyContract() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -106,7 +122,9 @@ export default function useAgencyContract() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
@@ -135,7 +153,7 @@ export default function useAgencyContract() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-agency-contracts/${agencyContractId}`);
             notification.showSuccess(status);
-            await getAgencyContracts(indexPage.value, indexBusinessUnit.value);
+            await getAgencyContracts(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -153,6 +171,7 @@ export default function useAgencyContract() {
         showAgencyContract,
         updateAgencyContract,
         deleteAgencyContract,
+        isTableLoading,
         isLoading,
         errors,
     };

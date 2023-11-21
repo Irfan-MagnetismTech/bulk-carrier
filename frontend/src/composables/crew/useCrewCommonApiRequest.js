@@ -43,7 +43,6 @@ export default function useCrewCommonApiRequest() {
 
     async function getCrewAgencyLists(businessUnit) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -57,7 +56,6 @@ export default function useCrewCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
             isLoading.value = false;
         }
     }

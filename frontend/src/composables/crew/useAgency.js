@@ -11,7 +11,7 @@ export default function useAgency() {
     const isTableLoading = ref(false);
     const notification = useNotification();
     const agency = ref( {
-        name: '',
+        agency_name: '',
         legal_name: '',
         tax_identification: '',
         business_license_no: '',
@@ -85,7 +85,9 @@ export default function useAgency() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('logo', form.logo);
+        if(form.logo){
+            formData.append('logo', form.logo);
+        }
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -126,7 +128,9 @@ export default function useAgency() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('logo', form.logo);
+        if(form.logo){
+            formData.append('logo', form.logo);
+        }
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 

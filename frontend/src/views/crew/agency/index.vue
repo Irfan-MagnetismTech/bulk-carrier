@@ -40,7 +40,7 @@ let filterOptions = ref( {
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "name",
+      "field_name": "agency_name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -108,6 +108,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'crw.agencies.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -148,8 +149,8 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(crewAgency,index) in agencies?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ crewAgency?.name }}</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+            <td>{{ crewAgency?.agency_name }}</td>
             <td>{{ crewAgency?.address }}</td>
             <td>{{ crewAgency?.phone }}</td>
             <td>{{ crewAgency?.email }}</td>

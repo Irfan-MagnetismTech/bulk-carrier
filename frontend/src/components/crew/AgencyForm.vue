@@ -54,62 +54,51 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.name" placeholder="Agency Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.name" :errors="errors.name" />
+        <input type="text" v-model.trim="form.agency_name" placeholder="Agency Name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Legal Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.legal_name" placeholder="Legal Name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.legal_name" :errors="errors.legal_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Tax Identification <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.tax_identification" placeholder="Tax Identification" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.tax_identification" :errors="errors.tax_identification" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Business License No. <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.business_license_no" placeholder="Bin No" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.business_license_no" :errors="errors.business_license_no" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Company Reg No <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.company_reg_no" placeholder="Company Reg No" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.company_reg_no" :errors="errors.company_reg_no" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.address" placeholder="Address" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.address" :errors="errors.address" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Phone <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.phone" placeholder="Phone" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.phone" :errors="errors.phone" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
       <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.email" :errors="errors.email" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Country <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.country" placeholder="Country" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.country" :errors="errors.country" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Website</span>
       <input type="text" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.website" :errors="errors.website" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Logo </span>
       <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
-      <Error v-if="errors?.logo" :errors="errors.logo" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span v-if="form.prev_logo" class="text-gray-700 dark:text-gray-300 text-sm font-medium text-gray-900 dark:text-white">Previous Logo </span>
