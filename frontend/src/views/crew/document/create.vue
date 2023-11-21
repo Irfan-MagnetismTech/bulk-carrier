@@ -17,7 +17,7 @@ setTitle('Create Crew Document');
       <default-button :title="'Crew Document List'" :to="{ name: 'crw.documents.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden">
-        <form @submit.prevent="storeCrewDocument(crewDocument)">
+        <form>
             <!-- Booking Form -->
             <document-form v-model:form="crewDocument" :errors="errors"></document-form>
             <!-- Submit button -->

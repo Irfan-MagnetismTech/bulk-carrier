@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect, watch} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useAgencyContract from "../../../composables/crew/useAgencyContract";
 import Title from "../../../services/title";
@@ -8,8 +8,12 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
@@ -21,14 +25,86 @@ const props = defineProps({
   },
 });
 
-const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading } = useAgencyContract();
+const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading, isTableLoading } = useAgencyContract();
+const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Agency Contract');
 
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+let filterOptions = ref( {
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "contract_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Contract Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": 'crwAgency',
+      "field_name": "agency_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Agency Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "validity_from",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Validity From",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "validity_till",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Validity Till",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "billing_cycle",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Billing Cycle",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "attachment",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Attachment",
+    },
+  ]
+});
+
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -46,30 +122,33 @@ function confirmDelete(id) {
   })
 }
 
-watch(
-    () => businessUnit.value,
-    (newBusinessUnit, oldBusinessUnit) => {
-      if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "crw.agencyContracts.index", query: { page: 1 } })
-      }
-    }
-);
-
 onMounted(() => {
-  watchEffect(() => {
-  getAgencyContracts(props.page,businessUnit.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
-
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching ranks:", error);
-    });
-});
-
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'crw.agencyContracts.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getAgencyContracts(filterOptions.value)
+        .then(() => {
+          const customDataTable = document.getElementById("customDataTable");
+          paginatedPage.value = filterOptions.value.page;
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching ranks:", error);
+        });
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -80,43 +159,20 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Agency Contract List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.agencyContracts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Agency Name</th>
-            <th>Validity From</th>
-            <th>Validity Till</th>
-            <th>Billing Cycle</th>
-            <th>Business Unit</th>
-            <th>Attachment</th>
-            <th>Action</th>
-          </tr>
-          </thead>
+        <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(contract,index) in agencyContracts?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ contract?.crwAgency?.name }}</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+            <td>{{ contract?.contract_name }}</td>
+            <td>{{ contract?.crwAgency?.agency_name }}</td>
             <td>{{ contract?.validity_from }}</td>
             <td>{{ contract?.validity_till }}</td>
             <td>{{ contract?.billing_cycle }}</td>
-            <td>
-              <span :class="contract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contract?.business_unit }}</span>
-            </td>
             <td>
               <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+contract?.attachment">{{
                   (typeof contract?.attachment === 'string')
@@ -125,19 +181,30 @@ onMounted(() => {
                 }}</a>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.agencyContracts.edit', params: { agencyContractId: contract?.id } }"></action-button>
-              <action-button @click="confirmDelete(contract?.id)" :action="'delete'"></action-button>
+              <span :class="contract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contract?.business_unit }}</span>
+            </td>
+            <td>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'crw.agencyContracts.edit', params: { agencyContractId: contract?.id } }"></action-button>
+                <action-button @click="confirmDelete(contract?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && agencyContracts?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!agencyContracts?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
-          </tr>
-          <tr v-else-if="!agencyContracts?.data?.length">
-            <td colspan="7">No data found.</td>
-          </tr>
-          </tfoot>
+        <tfoot v-if="!agencyContracts?.data?.length" class="relative h-[250px]">
+        <tr v-if="isLoading">
+          <td colspan="8"></td>
+        </tr>
+        <tr v-else-if="isTableLoading">
+          <td colspan="8">
+            <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+          </td>
+        </tr>
+        <tr v-else-if="!agencyContracts?.data?.data?.length">
+          <td colspan="8">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
     <Paginate :data="agencyContracts" to="crw.agencyContracts.index" :page="page"></Paginate>
