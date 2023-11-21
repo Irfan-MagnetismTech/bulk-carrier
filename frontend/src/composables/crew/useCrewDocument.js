@@ -8,6 +8,7 @@ export default function useCrewDocument() {
     const router = useRouter();
     const crewDocuments = ref([]);
     const crewRenewDocuments = ref([]);
+    const isTableLoading = ref(false);
     const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
@@ -19,11 +20,12 @@ export default function useCrewDocument() {
         business_unit: '',
         id: '',
         crw_crew_id: '',
+        crw_crew_profile_id: '',
         crw_crew_name: '',
         crw_crew_rank: '',
         crw_crew_contact: '',
         crw_crew_email: '',
-        name: '',
+        document_name: '',
         issuing_authority: '',
         validity_period: '',
         issue_date: null,
@@ -45,25 +47,32 @@ export default function useCrewDocument() {
         // ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewDocuments(page,businessUnit) {
+    async function getCrewDocuments(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-crew-documents',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             crewDocuments.value = data.value;
@@ -83,7 +92,9 @@ export default function useCrewDocument() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -135,7 +146,11 @@ export default function useCrewDocument() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
+
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
@@ -163,8 +178,8 @@ export default function useCrewDocument() {
 
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-documents/${docDataId}`);
-            crewDocuments.splice(docDataIndex, 1);
             notification.showSuccess(status);
+            await getCrewDocuments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -258,6 +273,7 @@ export default function useCrewDocument() {
         updateCrewDocument,
         deleteCrewDocument,
         deleteCrewRenewDocument,
+        isTableLoading,
         isLoading,
         errors,
     };

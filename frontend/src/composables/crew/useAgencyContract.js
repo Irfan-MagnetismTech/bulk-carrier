@@ -12,6 +12,7 @@ export default function useAgencyContract() {
     const notification = useNotification();
     const agencyContract = ref( {
         crw_agency_id: '',
+        contract_name: '',
         billing_cycle: '',
         billing_currency: '',
         validity_from: '',
