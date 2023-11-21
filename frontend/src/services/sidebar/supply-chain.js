@@ -115,15 +115,84 @@ export default [
             },
             {
                 route: `${BASE}.lc-records.index`,
-                label: 'Lc Records',
+                label: 'LC Records',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
                 permissionKey: '',
                 subSubMenu: []
-            }
-            
+            },
+            {
+                route: `${BASE}.material-receipt-reports.index`,
+                label: 'Material Receipt Reports',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+             },
+             {
+                route: `${BASE}.store-requisitions.index`,
+                label: 'Store Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+               route: `${BASE}.store-issues.index`,
+               label: 'Store Issues',
+               preIcon: icons.User,
+               postIcon: icons.DownArrow,
+               is_active: false,
+               is_open: false,
+               permissionKey: '',
+               subSubMenu: []
+           },
+           {
+              route: `${BASE}.store-issue-returns.index`,
+              label: 'Store Issue Returns',
+              preIcon: icons.User,
+              postIcon: icons.DownArrow,
+              is_active: false,
+              is_open: false,
+              permissionKey: '',
+              subSubMenu: []
+            },
+            {
+                route: `${BASE}.movement-requisitions.index`,
+                label: 'Movement Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: `${BASE}.movement-outs.index`,
+                label: 'Movement Outs',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: `${BASE}.movement-ins.index`,
+                label: 'Movement Ins',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
         ]
     },
 ];

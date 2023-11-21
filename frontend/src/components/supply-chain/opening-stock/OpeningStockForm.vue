@@ -34,25 +34,22 @@
     function setMaterialOtherData(datas,index){
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
-      materials.value = [];
     }
 
 
-  function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
+  // function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
 
-  function fetchWarehouse(search, loading) {
-    loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
+  // function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+  // }
 
   watch(() => props.form.scmWarehouse, (value) => {
     props.form.scm_warehouse_id = value?.id;
     props.form.scm_cost_center_id = value?.scm_cost_center_id;
-    warehouses.value = [];
-    warehouseKey.value += 1;
     });
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
@@ -66,7 +63,7 @@ const previousLines = ref(cloneDeep(props.form.scmOpeningStockLines));
 watch(() => props.form.scmOpeningStockLines, (newLines) => {
   newLines.forEach((line, index) => {
     const previousLine = previousLines.value[index];
-
+    console.log('a');
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
@@ -74,7 +71,6 @@ watch(() => props.form.scmOpeningStockLines, (newLines) => {
         ) {
           props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
           props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
-          materials.value = [];
         }
       }
     }
@@ -88,10 +84,11 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
-    const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
+    if (props.form.business_unit != "") {
+      searchWarehouse("", props.form.business_unit);
+      searchMaterial("")
+    }
+    
   });
 });
 
@@ -118,7 +115,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Search Here --" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Choose an Option --" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -148,7 +145,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Search Here--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
+          <v-select :options="materials" placeholder="-- Choose An Option --" label="material_name_and_code" class="block form-input" v-model="form.scmOpeningStockLines[index].scmMaterial">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

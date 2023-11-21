@@ -18,4 +18,14 @@ class ScmStockLedger extends Model
     {
         return $this->morphTo();
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(ScmStockLedger::class, 'parent_id', 'id');
+    }
+
+    public function child()
+    {
+        return $this->hasMany(ScmStockLedger::class,'parent_id');
+    }
 }

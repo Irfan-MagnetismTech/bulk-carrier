@@ -30,20 +30,22 @@ class MntJobRequest extends FormRequest
     public function withValidator($validator)
     {
         $messages= $validator->errors()->messages();
-        foreach($messages as $field =>$messageArray){
-            $table= Str::before($field, '.');
-            $index= Str::after($field, $table.'.');
-            $index= Str::before($index, '.');
-            foreach($messageArray as $key => $message){
-                $messages[$field][$key]= Str::before($message, 'key'.$index) .' '. ++$index;
-            }        
+        if ($messages) {
+            foreach($messages as $field =>$messageArray){
+                $table= Str::before($field, '.');
+                $index= Str::after($field, $table.'.');
+                $index= Str::before($index, '.');
+                foreach($messageArray as $key => $message){
+                    $messages[$field][$key]= Str::before($message, 'key'.$index) .' '. ++$index;
+                }        
+            }
+            $response= new \Illuminate\Http\JsonResponse([
+                'message' =>'The given data was invalid',
+                'errors' => $messages
+            ], 422);
+    
+            throw new HttpResponseException($response);
         }
-        $response= new \Illuminate\Http\JsonResponse([
-            'message' =>'The given data was invalid',
-            'errors' => $messages
-        ], 422);
-
-        throw new HttpResponseException($response);
     }
 
     /**

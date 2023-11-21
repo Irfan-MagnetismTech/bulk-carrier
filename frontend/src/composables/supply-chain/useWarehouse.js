@@ -8,14 +8,15 @@ import useNotification from '../useNotification.js';
 export default function useWarehouse() {
     const BASE = 'scm' 
     const router = useRouter();
-    const warehouses = ref([]);
+    const warehouses = ref(["Select Business Unit First"]);
     const isTableLoading = ref(false);
-    const costCenters = ref([]);
+    const costCenters = ref(["Select Business Unit First"]);
     const $loading = useLoading();
     const notification = useNotification();
     const warehouse = ref( {
         cost_center_id: '',
         cost_center_name: '',
+        accCostCenter: null,
         name: '',
         address: '',
         short_code: '',
@@ -150,7 +151,39 @@ export default function useWarehouse() {
         }
     }
 
-    async function searchWarehouse(searchParam, loading, business_unit) {
+    async function searchWarehouse(searchParam, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            // loading(false)
+        }
+    }
+
+    async function getCostCenters(business_unit,name,loading = false) {
+        try {
+            const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
+            costCenters.value = data.value;
+        } catch(error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loading(false);
+        }
+    }
+
+
+    async function searchFromWarehouse(searchParam, loading, business_unit) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -169,18 +202,28 @@ export default function useWarehouse() {
         }
     }
 
-    async function getCostCenters(business_unit,name,loading) {
+
+    async function searchToWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
         try {
-            const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
-            costCenters.value = data.value;
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
             
-        } catch(error) {
+        } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false);
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
         }
     }
+
+
+    
 
 
     return {
@@ -193,6 +236,8 @@ export default function useWarehouse() {
         updateWarehouse,
         deleteWarehouse,
         getCostCenters,
+        searchToWarehouse,
+        searchFromWarehouse,
         isTableLoading,
         costCenters,
         isLoading,
