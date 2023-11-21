@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import useAgency from "../../composables/crew/useAgency";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import {onMounted, ref, watchEffect} from "vue";
 import env from '../../config/env';
 import Store from "../../store";
@@ -167,40 +168,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
-#table, #table th, #table td{
-  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
-}
-
-.input-group {
-  @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
-}
-
-.label-group {
-  @apply block w-full mt-2 text-sm;
-}
-.label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
-}
-.label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
-}
-
->>> {
-  --vs-controls-color: #374151;
-  --vs-border-color: #4b5563;
-
-  --vs-dropdown-bg: #282c34;
-  --vs-dropdown-color: #eeeeee;
-  --vs-dropdown-option-color: #eeeeee;
-
-  --vs-selected-bg: #664cc3;
-  --vs-selected-color: #374151;
-
-  --vs-search-input-color: #4b5563;
-
-  --vs-dropdown-option--active-bg: #664cc3;
-  --vs-dropdown-option--active-color: #eeeeee;
-}
 </style>
