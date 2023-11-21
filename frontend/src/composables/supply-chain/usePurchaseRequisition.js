@@ -224,13 +224,13 @@ export default function usePurchaseRequisition() {
     async function getStoreCategoryWiseExcel() {
     
         try {
-            const { data, status } = await Api.get(`/${BASE}/export-materials`, {
+            const { data, status,headers} = await Api.get(`/${BASE}/export-materials`, {
                 params: {
                     store_category: excelExportData.value.store_category_name,
                 },
                 responseType: 'blob'
             });
-            downloadFile(data, 'materials.xlsx');
+            downloadFile(data, 'materials',headers);
 
         } catch (error) {
             if (error.response) {

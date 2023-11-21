@@ -131,7 +131,7 @@ class ScmMaterialController extends Controller
             //         ->orWhere('material_code', 'like', "%" . request()->searchParam . "%");
             // })
             ->orderByDesc('name')
-            // ->limit(10)
+            //->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);

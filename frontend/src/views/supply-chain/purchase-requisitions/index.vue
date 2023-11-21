@@ -74,6 +74,19 @@ const navigateToPOCreate = (purchaseRequisitionId) => {
   router.push(routeOptions);
 };  
 
+const navigateToMRRCreate = (purchaseRequisitionId) => {
+  const pr_id = purchaseRequisitionId; 
+  const po_id = null;
+  const routeOptions = {
+    name: 'scm.material-receipt-reports.create',
+    query: {
+      pr_id: pr_id,
+      po_id: po_id
+    }
+  };
+  router.push(routeOptions);
+};
+
 
 function confirmDelete(id) {
         Swal.fire({
@@ -122,7 +135,6 @@ function confirmDelete(id) {
             <th>Is Critical</th>
             <th>Purchase Center</th>
             <th>Warehouse</th>
-            <th>Create</th>
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
@@ -136,24 +148,24 @@ function confirmDelete(id) {
               <td>{{ purchaseRequisition?.purchase_center }}</td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
-                <!-- <action-button :action="'delete'" :to="{ name: 'scm.purchase-orders.create', query: { pr_id: purchaseRequisition.id, cs_id: 20 } }"></action-button> -->
-                <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-              </td>
-              <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
-                <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                <div class="grid grid-flow-col-dense gap-x-2">
+                  <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+                  <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                  <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                </div>
               </td>
             </tr>
           </tbody>
           <tfoot v-if="!purchaseRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <td colspan="8">Loading...</td>
         </tr>
         <tr v-else-if="!purchaseRequisitions?.data?.length">
-          <td colspan="7">No PR found.</td>
+          <td colspan="8">No PR found.</td>
         </tr>
         </tfoot>
       </table>

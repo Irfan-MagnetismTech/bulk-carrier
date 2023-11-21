@@ -34,7 +34,7 @@ class OpsVoyageController extends Controller
             $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
             ->globalSearch($request->all());
             
-            return response()->success('Successfully retrieved voyage.', $voyages, 200);
+            return response()->success('Data retrieved successfully.', $voyages, 200);
         }
         catch (QueryException $e)
         {
@@ -66,7 +66,7 @@ class OpsVoyageController extends Controller
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
             $voyage->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
-            return response()->success('Voyage added successfully.', $voyage, 201);
+            return response()->success('Data added successfully.', $voyage, 201);
         }
         catch (QueryException $e)
         {
@@ -87,7 +87,7 @@ class OpsVoyageController extends Controller
 
         try
         {
-            return response()->success('Successfully retrieved voyage.', $voyage, 200);
+            return response()->success('Data retrieved successfully.', $voyage, 200);
         }
         catch (QueryException $e)
         {
@@ -127,7 +127,7 @@ class OpsVoyageController extends Controller
             $voyage->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
-            return response()->success('Voyage updated successfully.', $voyage, 202);
+            return response()->success('Data updated Successfully.', $voyage, 202);
         }
         catch (QueryException $e)
         {            
@@ -152,7 +152,7 @@ class OpsVoyageController extends Controller
             $voyage->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted voyage.',
+                'message' => 'Data deleted Successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -176,7 +176,27 @@ class OpsVoyageController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved voyages.', $voyages, 200);
+            return response()->success('Data retrieved successfully.', $voyages, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getSearchVoyages(Request $request){
+        try {
+            $voyages = OpsVoyage::query()
+            ->where(function ($query) use($request) {
+                $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->vessel_id != 'null', function($q) {
+                $q->where('ops_vessel_id', request()->vessel_id);
+            })
+            ->get();
+
+            return response()->success('Data retrieved successfully.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

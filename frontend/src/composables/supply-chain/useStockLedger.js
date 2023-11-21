@@ -12,6 +12,7 @@ export default function useStockLedger() {
     const materials = ref([]);
     const CurrentStock = ref(0);
     const isTableLoading = ref(false);
+    const stockData = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
         const material = ref( {
@@ -57,6 +58,29 @@ export default function useStockLedger() {
                 //NProgress.done();
             }
         }
+    
+    async function getFromAndToWarehouseWiseCurrentStock(fromWarehouseId,toWarehouseId,materialId,index = null) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-current-stock-by-warehouse`, {
+    			params: {
+    				from_warehouse_id: fromWarehouseId,
+    				to_warehouse_id: toWarehouseId,
+    				scm_material_id: materialId,
+    			},
+            });
+            if (index != null) {
+                data.value.index = index;
+            }
+            stockData.value = data.value;
+            console.log(stockData.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+            console.log(status);
+        } finally {
+            //NProgress.done();
+        }
+    }
 
     // async function getMaterials(page,columns = null, searchKey = null, table = null) {
     //     //NProgress.start();
@@ -223,6 +247,7 @@ export default function useStockLedger() {
     return {
         materials,
         material,
+        stockData,
         // getMaterials,
         // searchMaterial,
         // storeMaterial,
@@ -230,6 +255,7 @@ export default function useStockLedger() {
         // updateMaterial,
         // deleteMaterial,
         // searchMaterialWithCategory,
+        getFromAndToWarehouseWiseCurrentStock,
         CurrentStock,
         getMaterialWiseCurrentStock,
         isLoading,

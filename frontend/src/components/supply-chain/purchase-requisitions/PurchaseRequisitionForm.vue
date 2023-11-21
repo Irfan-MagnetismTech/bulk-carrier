@@ -109,7 +109,8 @@
         props.form.acc_cost_center_id = value?.acc_cost_center_id;
     });
 
-    function setMaterialOtherData(datas,index){
+function setMaterialOtherData(datas, index) {
+      console.log('change_event');
       props.form.scmPrLines[index].unit = datas.unit;
       props.form.scmPrLines[index].scm_material_id = datas.id;
       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id);
@@ -258,15 +259,15 @@ onMounted(() => {
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
-    <div id="customDataTable" style="width: calc(100vw - 100px); margin: 0 auto;">
-    <div class="table-responsive min-w-screen overflow-x-scroll">
+    <div id="customDataTable">
+    <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
         <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap overflow-x-auto">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th style="min-width: 600px;" class="py-3 align-center">Material Name </th>
-            <th style="min-width: 600px;" class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center w-10">Material Name </th>
+            <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Brand</th>
             <th class="py-3 align-center">Model</th>
             <th class="py-3 align-center">Specification</th>
@@ -283,7 +284,7 @@ onMounted(() => {
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
-            <td class="!w-72">
+            <td class="">
               <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input

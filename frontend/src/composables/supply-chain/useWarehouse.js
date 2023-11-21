@@ -16,6 +16,7 @@ export default function useWarehouse() {
     const warehouse = ref( {
         cost_center_id: '',
         cost_center_name: '',
+        accCostCenter: null,
         name: '',
         address: '',
         short_code: '',
@@ -165,6 +166,7 @@ export default function useWarehouse() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+            // loading(false)
         }
     }
 
@@ -172,13 +174,56 @@ export default function useWarehouse() {
         try {
             const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
             costCenters.value = data.value;
-            
         } catch(error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
+            // loading(false);
         }
     }
+
+
+    async function searchFromWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+
+    async function searchToWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+            
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+
+    
 
 
     return {
@@ -191,6 +236,8 @@ export default function useWarehouse() {
         updateWarehouse,
         deleteWarehouse,
         getCostCenters,
+        searchToWarehouse,
+        searchFromWarehouse,
         isTableLoading,
         costCenters,
         isLoading,
