@@ -35,7 +35,7 @@ class OpsHandoverTakeoverController extends Controller
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers.scmMaterial')
             ->globalSearch($request->all());
 
-            return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
+            return response()->success('Data retrieved successfully.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
         {
@@ -62,7 +62,7 @@ class OpsHandoverTakeoverController extends Controller
         $handover_takeover = OpsHandoverTakeover::create($handover_takeover_info);            
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
         DB::commit();
-        return response()->success('Handover takeover added successfully.', $handover_takeover, 201);
+        return response()->success('Data added successfully.', $handover_takeover, 201);
     }
     catch (QueryException $e)
     {
@@ -86,7 +86,7 @@ class OpsHandoverTakeoverController extends Controller
         });
         try
         {
-            return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
+            return response()->success('Data retrieved successfully.', $handover_takeover, 200);
         }
         catch (QueryException $e)
         {
@@ -116,7 +116,7 @@ class OpsHandoverTakeoverController extends Controller
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
 
         DB::commit();
-        return response()->success('Handover takeover updated successfully.', $handover_takeover, 202);
+        return response()->success('Data updated successfully.', $handover_takeover, 202);
     }
     catch (QueryException $e)
     {
@@ -139,7 +139,7 @@ class OpsHandoverTakeoverController extends Controller
             $handover_takeover->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted handover takeover.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
