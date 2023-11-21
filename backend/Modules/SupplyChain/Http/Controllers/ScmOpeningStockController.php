@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmOpeningStock;
+use Modules\SupplyChain\Http\Requests\ScmOpeningStockRequest;
+use Modules\SupplyChain\Services\StockLedgerData;
 
 class ScmOpeningStockController extends Controller
 {
@@ -14,16 +16,12 @@ class ScmOpeningStockController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scm_opening_stocks = ScmOpeningStock::query()
-                ->with('scmOpeningStockLines')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($q) {
-                    $q->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);;
+                ->with('scmOpeningStockLines', 'scmWarehouse')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_opening_stocks, 200);
         } catch (\Exception $e) {
@@ -36,12 +34,14 @@ class ScmOpeningStockController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmOpeningStockRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
             $scm_opening_stock = ScmOpeningStock::create($request->all());
             $scm_opening_stock->scmOpeningStockLines()->createMany($request->scmOpeningStockLines);
+            (new StockLedgerData)->insert($scm_opening_stock, $request->scmOpeningStockLines, true);
+
             DB::commit();
 
             return response()->success('Data created succesfully', $scm_opening_stock, 201);
@@ -73,12 +73,15 @@ class ScmOpeningStockController extends Controller
      * @param ScmOpeningStock $opening_stock
      * @return JsonResponse
      */
-    public function update(Request $request, ScmOpeningStock $opening_stock)
+    public function update(ScmOpeningStockRequest $request, ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
             $opening_stock->update($request->all());
 
             $opening_stock->scmOpeningStockLines()->createUpdateOrDelete($request->scmOpeningStockLines);
+
+            $opening_stock->stockable()->delete();
+            (new StockLedgerData)->insert($opening_stock, $request->scmOpeningStockLines, true);
 
             return response()->success('Data updated sucessfully!', $opening_stock, 202);
         } catch (\Exception $e) {
@@ -105,7 +108,7 @@ class ScmOpeningStockController extends Controller
         }
     }
 
-    public function searchOpeningStock(Request $request)
+    public function searchOpeningStock(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $opening_stock = ScmOpeningStock::query()

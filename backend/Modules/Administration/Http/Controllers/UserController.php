@@ -23,29 +23,19 @@ class UserController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $users = User::get()->map(function($user) {
-                $user->roles = $user->roles()->pluck('name')->first();
-                return $user;
-            });
+            $users = User::with('roles')->globalSearch($request->all());
 
-            //$users = User::with('roles')->paginate(10);
+            return response()->success('Data list', $users, 200);
+        } catch (\Exception $e) {
 
-            return response()->json([
-                'value'   => $users,
-                'message' => 'Successfully retrieved Users',
-            ], 200);
+            return response()->error($e->getMessage(), 500);
         }
-        catch (\Exception $e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-
     }
 
-    public function store(UserRequest $request) : JsonResponse
+    public function store(UserRequest $request): JsonResponse
     {
         try {
             $input = $request->all();
@@ -58,37 +48,31 @@ class UserController extends Controller
                 'value'   => $user,
                 'message' => 'User added Successfully.',
             ], 201);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 
     public function show(User $user): JsonResponse
     {
-        try
-        {
+        try {
             $user->role = $user->roles()->pluck('id')->first();
             return response()->json([
                 'value'   => $user,
                 'message' => 'Successfully retrieved User',
             ], 200);
-        }
-        catch (\Exception$e)
-        {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
-
     }
 
     public function update(UserRequest $request, User $user)
     {
         try {
             $userData = $request->all();
-            if(!empty($userData['password'])){
+            if (!empty($userData['password'])) {
                 $userData['password'] = Hash::make($request['password']);
-            }else{
+            } else {
                 $userData['password'] = $user->password;
             }
             $user->update($userData);
@@ -97,9 +81,7 @@ class UserController extends Controller
                 'value'   => $user,
                 'message' => 'User updated Successfully.',
             ], 201);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
@@ -109,7 +91,7 @@ class UserController extends Controller
      * @param User $user
      * @return JsonResponse
      */
-    public function destroy(User $user) : JsonResponse
+    public function destroy(User $user): JsonResponse
     {
         try {
             $user->delete();
@@ -118,14 +100,13 @@ class UserController extends Controller
                 'value'   => '',
                 'message' => 'User is deleted',
             ], 204);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 
-    public function getCurrentUser(Request $request){
+    public function getCurrentUser(Request $request)
+    {
         $user = $request->user();
         $user['role'] = $request->user()->roles()->pluck('name')->first();
         $user['permissions'] = $request->user()->getPermissionsViaRoles()->pluck('name')->toArray();
@@ -134,5 +115,4 @@ class UserController extends Controller
         $user['business_unit'] = $request->user()->business_unit;
         return $user;
     }
-
 }

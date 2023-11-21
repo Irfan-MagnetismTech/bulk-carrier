@@ -91,7 +91,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationByName']);
     Route::get('search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateByReferenceNumber']);
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
-    Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByVoyageNo']);
+    Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
@@ -100,8 +100,25 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     
     // end for search api route
     
+    //start get data without limit
+    Route::get('get-search-ports', [OpsPortController::class, 'getPortNameOrCode']);
+    Route::get('get-search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeName']);
+    Route::get('get-search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffName']);
+    Route::get('get-search-vessels', [OpsVesselController::class, 'getVesselNameorCode']);
+    Route::get('get-search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationName']);
+    Route::get('get-search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateReferenceNumber']);
+    Route::get('get-search-customers', [OpsCustomerController::class, 'getCustomerNameorCode']);
+    Route::get('get-search-voyages', [OpsVoyageController::class, 'getSearchVoyages']);
+    Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
+    //end get data without limit
+
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-
+    
+        
+    // report routes
+    Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
+    Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
+    
 });

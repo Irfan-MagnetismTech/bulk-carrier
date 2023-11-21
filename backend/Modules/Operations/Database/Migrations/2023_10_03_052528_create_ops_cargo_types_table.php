@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ops_cargo_types', function (Blueprint $table) {
             $table->id();
-            $table->string('cargo_type');
-            $table->string('description')->nullable();
+            $table->string('cargo_type')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

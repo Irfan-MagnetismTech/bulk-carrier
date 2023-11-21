@@ -1,10 +1,12 @@
 <script setup>
-    import { ref, watch, onMounted } from 'vue';
+    import { ref, watch, onMounted ,watchEffect} from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
-    
+    import cloneDeep from 'lodash/cloneDeep';
+    import Store from "../../../store";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     
@@ -12,50 +14,108 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       materialObject: { type: Object, required: false },
+      formType: { type: String, required : false },
+      page: {required: false,default: {}}
     });
 
+    const warehouseKey = ref(0);
+    const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
     function addRow() {
-      props.form.scmOpeningStockLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmOpeningStockLines.push(clonedObj);
     }
 
     function removeRow(index){
       props.form.scmOpeningStockLines.splice(index, 1);
+     
     }
 
     function setMaterialOtherData(datas,index){
-      console.log(datas);
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
     }
 
 
-  function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
+  // function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
 
-  function fetchWarehouse(search, loading) {
-    loading(true);
-    console.log(props.form.business_unit);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
+  // function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+  // }
 
   watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
+    props.form.scm_warehouse_id = value?.id;
+    props.form.scm_cost_center_id = value?.scm_cost_center_id;
     });
+
+//     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
+//       props.form.scmOpeningStockLines.forEach((item, index) => {
+//       props.form.scmOpeningStockLines[index].unit = props.form.scmOpeningStockLines[index].scmMaterial.unit
+//     });
+// }, {deep: true});
+
+const previousLines = ref(cloneDeep(props.form.scmOpeningStockLines));
+
+watch(() => props.form.scmOpeningStockLines, (newLines) => {
+  newLines.forEach((line, index) => {
+    const previousLine = previousLines.value[index];
+    console.log('a');
+    if (line.scmMaterial) {
+      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+      if (selectedMaterial) {
+        if ( line.scm_material_id !== selectedMaterial.id
+        ) {
+          props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
+          props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
+        }
+      }
+    }
+  });
+  previousLines.value = cloneDeep(newLines);
+}, { deep: true });
+
+
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+onMounted(() => {
+  watchEffect(() => {
+    if (props.form.business_unit != "") {
+      searchWarehouse("", props.form.business_unit);
+      searchMaterial("")
+    }
+    
+  });
+});
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_warehouse_id = '';
+    props.form.scm_cost_center_id = '';
+    props.form.scmWarehouse = null;
+  }
+});
+
 </script>
 <template>
   <!-- Basic information -->
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+  </div>
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <input type="date" required v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Choose an Option --" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -65,16 +125,16 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
   </div> 
   <!-- CS Materials -->
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-    <table class="w-full whitespace-no-wrap" id="table">
+    <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Material <br/> <span class="text-[10px]">Material - Code</span></th>
+        <th class="px-4 py-3 align-bottom !w-3/12">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
         <th class="px-4 py-3 align-bottom">Rate</th>
@@ -85,7 +145,7 @@
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
+          <v-select :options="materials" placeholder="-- Choose An Option --" label="material_name_and_code" class="block form-input" v-model="form.scmOpeningStockLines[index].scmMaterial">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -100,10 +160,10 @@
           <input type="text" v-model="form.scmOpeningStockLines[index].unit" readonly class="vms-readonly-input block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].quantity" class="block w-full form-input">
         </td>
         <td>
-          <input type="text" v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
+          <input type="number" required v-model="form.scmOpeningStockLines[index].rate" class="block w-full form-input">
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!=0" type="button" @click="removeRow(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -121,14 +181,14 @@
       </tbody>
     </table>
   </fieldset>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
     .input-group {
         @apply flex flex-col justify-center w-full md:flex-row md:gap-2;
     }
     .label-group {
-        @apply block w-full mt-3 text-sm font-semibold;
+        @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
         @apply text-gray-700 dark:text-gray-300 text-sm;

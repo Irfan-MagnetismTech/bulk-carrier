@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
+use App\Traits\GlobalSearchTrait;
+use Modules\Crew\Http\Requests\CrwRecruitmentApprovalRequest;
 
 class CrwRecruitmentApprovalController extends Controller
 {
@@ -15,12 +17,13 @@ class CrwRecruitmentApprovalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwRecruitmentApprovals = CrwRecruitmentApproval::with('crwRecruitmentApprovalLines')->get();
 
-            return response()->success('Retrieved Succesfully', $crwRecruitmentApprovals, 200);
+            $crwRecruitmentApprovals = CrwRecruitmentApproval::globalSearch($request->all());
+
+            return response()->success('Retrieved Successfully', $crwRecruitmentApprovals, 200);
         }
         catch (QueryException $e)
         {
@@ -34,7 +37,7 @@ class CrwRecruitmentApprovalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwRecruitmentApprovalRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -43,7 +46,7 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval     = CrwRecruitmentApproval::create($crwRecruitmentApprovalData);
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Created Succesfully', $crwRecruitmentApproval, 201);
+                return response()->success('Created Successfully', $crwRecruitmentApproval, 201);
             });
         }
         catch (QueryException $e)
@@ -61,7 +64,7 @@ class CrwRecruitmentApprovalController extends Controller
     public function show(CrwRecruitmentApproval $crwRecruitmentApproval)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines'), 200);
+            return response()->success('Retrieved Successfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines'), 200);
         }
         catch (QueryException $e)
         {
@@ -76,7 +79,7 @@ class CrwRecruitmentApprovalController extends Controller
      * @param  \App\Models\CrwRecruitmentApproval  $crwRecruitmentApproval
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwRecruitmentApproval $crwRecruitmentApproval)
+    public function update(CrwRecruitmentApprovalRequest $request, CrwRecruitmentApproval $crwRecruitmentApproval)
     {
         try {
             DB::transaction(function () use ($request, $crwRecruitmentApproval)
@@ -86,7 +89,7 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->delete();
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Updated succesfully', $crwRecruitmentApproval, 202);
+                return response()->success('Updated Successfully', $crwRecruitmentApproval, 202);
             });
         }
         catch (QueryException $e)
@@ -106,7 +109,7 @@ class CrwRecruitmentApprovalController extends Controller
         try {
             $crwRecruitmentApproval->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

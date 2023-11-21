@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Entities\OpsVoyageSector;
 use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
 
 class OpsVoyageBoatNoteController extends Controller
@@ -29,12 +30,13 @@ class OpsVoyageBoatNoteController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->paginate(15);
+            $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines')
+            ->globalSearch($request->all());
             
-            return response()->success('Successfully retrieved voyage boat notes.', $voyage_boat_notes, 200);
+            return response()->success('Data retrieved successfully.', $voyage_boat_notes, 200);
         }
         catch (QueryException $e)
         {
@@ -59,11 +61,36 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
+
+            foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+                if($note_line->voyage_note_type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($note_line->voyage_note_type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($note_line->voyage_note_type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }else if($note_line->voyage_note_type == 'Draft Survey'){
+                    $data= [
+                        'initial_survey_qty'=>  $note_line['initial_survey_qty']
+                    ];
+                }
+
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
+
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
+
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines);
             $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
-            return response()->success('Voyage boat note added successfully.', $voyageBoatNote, 201);
+            return response()->success('Data added successfully.', $voyageBoatNote, 201);
         }
         catch (QueryException $e)
         {
@@ -84,7 +111,7 @@ class OpsVoyageBoatNoteController extends Controller
         $voyage_boat_note->load('opsVessel','opsVoyage','opsVoyageBoatNoteLines');
         try
         {
-            return response()->success('Successfully retrieved voyage boat note.', $voyage_boat_note, 200);
+            return response()->success('Data retrieved successfully.', $voyage_boat_note, 200);
         }
         catch (QueryException $e)
         {
@@ -108,14 +135,35 @@ class OpsVoyageBoatNoteController extends Controller
                 '_token',
                 'opsVoyageBoatNoteLines',
             );
+
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             
-            $voyage_boat_note->update($voyageBoatNoteInfo);           
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$voyage_boat_note->opsVoyageBoatNoteLines);
+            $voyage_boat_note->update($voyageBoatNoteInfo);
+            
+            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $note_line){
+                if($request->type == "Boat Note"){
+                    $data= [
+                        'boat_note_qty'=>  $note_line['boat_note_qty']
+                    ];
+                }else if($request->type == "Final Survey"){
+                    $data= [
+                        'final_survey_qty'=>  $note_line['final_survey_qty']
+                    ];
+                }else if($request->type == 'Receipt Copy'){
+                    $data= [
+                        'final_received_qty'=>  $note_line['final_received_qty']
+                    ];
+                }
+                $voyage_sector=OpsVoyageSector::find($note_line['id']);
+                $voyage_sector->update($data);
+            }
+            
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
+
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
-            return response()->success('Vessel particular updated successfully.', $voyage_boat_note, 200);
+            return response()->success('Data updated successfully.', $voyage_boat_note, 202);
         }
         catch (QueryException $e)
         {
@@ -143,7 +191,7 @@ class OpsVoyageBoatNoteController extends Controller
             $voyage_boat_note->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted voyage boat note.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)

@@ -15,10 +15,11 @@ class ScmVendorController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $scm_vendors = ScmVendor::with('scmVendorContactPersons')->latest()->paginate(10);
+            $scm_vendors = ScmVendor::with('scmVendorContactPerson')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_vendors, 200);
         } catch (\Exception $e) {
@@ -31,7 +32,7 @@ class ScmVendorController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmVendorRequest $request)
+    public function store(ScmVendorRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -55,7 +56,10 @@ class ScmVendorController extends Controller
     public function show(ScmVendor $vendor): JsonResponse
     {
         try {
-            return response()->success('data', $vendor->load('scmVendorContactPersons'), 200);
+            $vendor->load(['scmVendorContactPersons' => function ($query) {
+                $query->latest('created_at')->take(1);
+            }]);
+            return response()->success('data', $vendor, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -68,7 +72,7 @@ class ScmVendorController extends Controller
      * @param ScmVendor $vendor
      * @return JsonResponse
      */
-    public function update(ScmVendorRequest $request, ScmVendor $vendor)
+    public function update(ScmVendorRequest $request, ScmVendor $vendor): JsonResponse
     {
         try {
             $vendor->update($request->all());
@@ -100,13 +104,13 @@ class ScmVendorController extends Controller
         }
     }
 
-    public function searchVendor(Request $request)
+    public function searchVendor(Request $request): JsonResponse
     {
         $vendor = ScmVendor::query()
             ->with('scmVendorContactPersons')
-            ->where('name', 'like', "%$request->searchParam%")
+            // ->where('name', 'like', "%$request->searchParam%")
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $vendor, 200);

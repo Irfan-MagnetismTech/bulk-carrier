@@ -17,5 +17,5 @@ class ScmOpeningStockLine extends Model
     public function scmMaterial(): BelongsTo
     {
         return $this->belongsTo(ScmMaterial::class)->withDefault();
-    }
+    }    
 }

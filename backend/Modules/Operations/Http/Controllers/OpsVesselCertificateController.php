@@ -32,7 +32,7 @@ class OpsVesselCertificateController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         $currentDate = Carbon::now();
         try {
@@ -42,8 +42,7 @@ class OpsVesselCertificateController extends Controller
                     ->from('ops_vessel_certificates')
                     ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
             })
-            ->latest()
-            ->paginate(15)
+            ->globalSearch($request->all())
             ->groupBy('ops_vessel_id');
             
             // Calculate days difference using map
@@ -57,8 +56,7 @@ class OpsVesselCertificateController extends Controller
                 });
             });
 
-            // dd($vesselCertificates);
-            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
+            return response()->success('Data retrieved successfully.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -94,7 +92,7 @@ class OpsVesselCertificateController extends Controller
             }
             $vesselCertificate = OpsVesselCertificate::create($vesselCertificate);
             DB::commit();
-            return response()->success('Vessel certificate added successfully.', $vesselCertificate, 201);
+            return response()->success('Data added successfully.', $vesselCertificate, 201);
         }
         catch (QueryException $e)
         {
@@ -128,7 +126,7 @@ class OpsVesselCertificateController extends Controller
         
         try
         {
-            return response()->success('Successfully retrieved vessel certificate.', $vessel_certificate, 200);
+            return response()->success('Data retrieved successfully.', $vessel_certificate, 200);
         }
         catch (QueryException $e)
         {
@@ -169,7 +167,7 @@ class OpsVesselCertificateController extends Controller
             
             $vessel_certificate->update($vesselCertificate);
             DB::commit();
-            return response()->success('Vessel certificate updated successfully.', $vessel_certificate, 200);
+            return response()->success('Data updated Successfully.', $vessel_certificate, 202);
         }
         catch (QueryException $e)
         {
@@ -192,7 +190,7 @@ class OpsVesselCertificateController extends Controller
             $vessel_certificate->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted vessel certificate.',
+                'message' => 'Data deleted Successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -205,7 +203,7 @@ class OpsVesselCertificateController extends Controller
         try {
             $vesselCertificates = OpsVesselCertificate::where('reference_number', '=', $request->search)->get();
 
-            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
+            return response()->success('Data retrieved successfully.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -228,7 +226,27 @@ class OpsVesselCertificateController extends Controller
                 ->limit(10)
                 ->get();
 
-            return response()->success('Successfully retrieved vessel certificates.', $vesselCertificates, 200);
+            return response()->success('Data retrieved successfully.', $vesselCertificates, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    public function getVesselCertificateReferenceNumber(Request $request) {
+        try {
+            $vesselCertificates = OpsVesselCertificate::query()
+                ->where(function ($query) use($request) {
+                    $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+                })
+                // ->whereIn('id', function ($query) {
+                //     $query->select(DB::raw('MAX(id)'))
+                //         ->from('ops_vessel_certificates')
+                //         ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
+                // })
+                ->get();
+
+            return response()->success('Data retrieved successfully.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -264,7 +282,7 @@ class OpsVesselCertificateController extends Controller
                 })->values();
             })->filter();
             
-            return response()->success('Successfully retrieved vessel certificates.', $filterCertificates, 200);
+            return response()->success('Data retrieved successfully.', $filterCertificates, 200);
         }
         catch (QueryException $e)
         {

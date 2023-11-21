@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -31,21 +32,11 @@ class OpsPortController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        // dd('dfdf');
         try {
-            $ports = OpsPort::latest()->paginate(15);
-            // if($request->searchKey != null) {
-            //     // $ports = $this->globalSearch($request->all());
-            // } else {
-            //     $ports = tap(OpsPort::query()->paginate(15), function ($paginatedInstance){
-            //         return $paginatedInstance->getCollection()->transform(function ($permission){
-            //             $permission->subject_type = base64_encode(get_class($permission));
-            //             return $permission;
-            //         });
-            //     }
-            //     );
-            // }
-            return response()->success('Successfully retrieved ports.', $ports, 200);
+            // dd($request->all());
+            $ports = OpsPort::globalSearch($request->all());
+            
+            return response()->success('Data retrieved successfully.', $ports, 200);
         }
         catch (QueryException $e)
         {
@@ -68,9 +59,9 @@ class OpsPortController extends Controller
             DB::beginTransaction();
             $ports = OpsPort::create($request->all());
             DB::commit();   
-            return response()->success('Port added Successfully.', $ports, 201);
+            return response()->success('Data added successfully.', $ports, 201);
         }
-        catch (QueryException $e)
+        catch (Exception $e)
         {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
@@ -87,7 +78,7 @@ class OpsPortController extends Controller
     public function show(OpsPort $port): JsonResponse
     {
         try {            
-            return response()->success('Successfully retrieved port.', $port, 200);
+            return response()->success('Data retrieved successfully.', $port, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -108,7 +99,7 @@ class OpsPortController extends Controller
             DB::beginTransaction();
             $port->update($request->all());
             DB::commit();               
-            return response()->success('Port updated Successfully.', $port, 202);
+            return response()->success('Data updated Successfully.', $port, 202);
         }
         catch (QueryException $e)
         {
@@ -130,7 +121,7 @@ class OpsPortController extends Controller
 
             return response()->json([
                 'value' => '',
-                'message' => 'Port deleted Successfully.'
+                'message' => 'Data deleted Successfully.'
             ], 204);
         }
         catch (QueryException $e)
@@ -150,7 +141,17 @@ class OpsPortController extends Controller
                 ->limit(10)
                 ->get();
 
-            return response()->success('Successfully retrieved port code and name.', $ports, 200);
+            return response()->success('Data retrieved successfully.', $ports, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
+    public function getPortNameOrCode(Request $request){
+        try {
+            $ports = OpsPort::get();
+
+            return response()->success('Data retrieved successfully.', $ports, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

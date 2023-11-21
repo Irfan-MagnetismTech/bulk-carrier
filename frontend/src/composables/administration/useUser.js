@@ -9,6 +9,7 @@ export default function useUser() {
     const router = useRouter();
     const users = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const user = ref( {
         name: '',
@@ -20,17 +21,32 @@ export default function useUser() {
     });
     const errors = ref(null);
     const isLoading = ref(false);
+    const filterParams = ref(null);
 
-    async function getUsers(page) {
+    async function getUsers(filterOptions) {
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get('/administration/users',{
                 params: {
-                    page: page || 1,
-                },
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
             });
             users.value = data.value;
             notification.showSuccess(status);
@@ -38,8 +54,14 @@ export default function useUser() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+             if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -110,7 +132,7 @@ export default function useUser() {
         try {
             const { data, status } = await Api.delete( `/administration/users/${userId}`);
             notification.showSuccess(status);
-            await getUsers();
+            await getUsers(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -158,6 +180,7 @@ export default function useUser() {
         showUser,
         updateUserPassword,
         updateUser,
+        isTableLoading,
         deleteUser,
         isLoading,
         errors,

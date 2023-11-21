@@ -1,11 +1,13 @@
 <script setup>
 import Error from "../Error.vue";
 import useVessel from "../../composables/operations/useVessel";
-import {onMounted, watch} from "vue";
-import useCommonApiRequest from "../../composables/crew/useCommonApiRequest";
+import {onMounted, ref, watch, watchEffect} from "vue";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
-const { crwRankLists, getCrewRankLists } = useCommonApiRequest();
+const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -14,6 +16,7 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function addItem() {
   let obj = {
@@ -28,10 +31,10 @@ function removeItem(index){
   props.form.crwCrewRequisitionLines.splice(index, 1);
 }
 
-function fetchVessels(search, loading) {
-  loading(true);
-  searchVessels(search, loading)
-}
+// function fetchVessels(search, loading) {
+//   loading(true);
+//   searchVessels(search, props.form.business_unit, loading)
+// }
 
 watch(() => props.form, (value) => {
   if(value){
@@ -40,17 +43,24 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  getCrewRankLists();
+  watchEffect(() => {
+    searchVessels(null,props.form.business_unit);
+    getCrewRankLists(props.form.business_unit);
+  });
 });
 
 </script>
 
 <template>
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -60,32 +70,28 @@ onMounted(() => {
             />
           </template>
         </v-select>
-        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.total_required_manpower" placeholder="Ex: 14" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.total_required_manpower" :errors="errors.remarks" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark:text-gray-300">Remarks</span>
       <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
     <legend class="px-2 text-gray-700 dark:text-gray-300">Item List <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+        <th class="px-4 py-3 align-bottom w-64">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
@@ -96,12 +102,12 @@ onMounted(() => {
       <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwCrewRequisitionLines" :key="requiredCrewLine.id">
         <td class="px-1 py-1">
           <select class="form-input" v-model="form.crwCrewRequisitionLines[index].crw_rank_id" required>
-            <option value="" disabled>select</option>
+            <option value="" disabled>Select</option>
             <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
           </select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="number" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.crwCrewRequisitionLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -122,6 +128,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

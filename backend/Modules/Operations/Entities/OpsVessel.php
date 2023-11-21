@@ -2,13 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsPort;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\DB;
 
 class OpsVessel extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
     /**
      * The attributes that are mass assignable.
      *
@@ -63,24 +64,17 @@ class OpsVessel extends Model
         return $this->short_code . ' - ' . $this->name;
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Operations\Database\factories\OpsVesselFactory::new();
-    }
-
     public function opsVesselCertificates()
     {
-        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id')
-        ->select('ops_vessel_certificates.*')
-        ->whereIn('ops_vessel_certificates.id', function($query) {
-            $query->select(DB::raw('MAX(id)'))
-                ->from('ops_vessel_certificates')
-                ->groupBy('ops_maritime_certification_id');
-        });
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
     }
 
     public function opsBunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
+    }
+
+    public function portOfRegistry() {
+        return $this->belongsTo(OpsPort::class, 'port_of_registry', 'code');
     }
 }

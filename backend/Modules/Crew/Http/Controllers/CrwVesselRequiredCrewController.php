@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwVesselRequiredCrew;
+use Modules\Crew\Http\Requests\CrwVesselRequiredCrewRequest;
 
 class CrwVesselRequiredCrewController extends Controller
 {
@@ -15,14 +16,12 @@ class CrwVesselRequiredCrewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwVesselRequiredCrews = CrwVesselRequiredCrew::with('crwVesselRequiredCrewLines','opsVessel:id,name,vessel_type,short_code')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwVesselRequiredCrews, 200);
+            return response()->success('Retrieved Successfully', $crwVesselRequiredCrews, 200);
         }
         catch (QueryException $e)
         {
@@ -36,7 +35,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwVesselRequiredCrewRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -45,7 +44,7 @@ class CrwVesselRequiredCrewController extends Controller
                 $crwVesselRequiredCrew     = CrwVesselRequiredCrew::create($crwVesselRequiredCrewData);
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->createMany($request->crwVesselRequiredCrewLines);
 
-                return response()->success('Created Succesfully', $crwVesselRequiredCrew, 201);
+                return response()->success('Created Successfully', $crwVesselRequiredCrew, 201);
             });
         }
         catch (QueryException $e)
@@ -63,7 +62,7 @@ class CrwVesselRequiredCrewController extends Controller
     public function show(CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines','opsVessel'), 200);
+            return response()->success('Retrieved Successfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines','opsVessel'), 200);
         }
         catch (QueryException $e)
         {
@@ -78,7 +77,7 @@ class CrwVesselRequiredCrewController extends Controller
      * @param  \App\Models\CrwVesselRequiredCrew  $crwVesselRequiredCrew
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
+    public function update(CrwVesselRequiredCrewRequest $request, CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
             DB::transaction(function () use ($request, $crwVesselRequiredCrew)
@@ -88,7 +87,7 @@ class CrwVesselRequiredCrewController extends Controller
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->delete();
                 $crwVesselRequiredCrew->crwVesselRequiredCrewLines()->createMany($request->crwVesselRequiredCrewLines);
 
-                return response()->success('Updated succesfully', $crwVesselRequiredCrew, 202);
+                return response()->success('Updated Successfully', $crwVesselRequiredCrew, 202);
             });
         }
         catch (QueryException $e)
@@ -108,7 +107,7 @@ class CrwVesselRequiredCrewController extends Controller
         try {
             $crwVesselRequiredCrew->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

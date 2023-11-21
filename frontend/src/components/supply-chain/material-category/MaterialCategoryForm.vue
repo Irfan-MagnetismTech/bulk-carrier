@@ -3,28 +3,39 @@
     import Error from "../../Error.vue";
     import useMaterialCategory from "../../../composables/supply-chain/useMaterialCategory.js";
     import useBusinessInfo from "../../../composables/useBusinessInfo.js";
-
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
 
     const { materialCategories, searchMaterialCategory } = useMaterialCategory();
     const props = defineProps({
       form: { type: Object, required: true },
-        errors: { type: [Object, Array], required: false },
+      errors: { type: [Object, Array], required: false },
+      formType: { type: String, required: false },
+      selfId: { type: String, required: false },
     });
 
-    function fetchCategory(query, loading) {
-        searchMaterialCategory(query, loading);
-        loading(true)
+    // function fetchCategory(query, loading) {
+    //     searchMaterialCategory(query, loading);
+    //     loading(true)
+    // }
+
+    
+    function fetchCategory(query,selfId=null) {
+        searchMaterialCategory(query,selfId);
     }
-
-    
-
-    
+    onMounted(() => {
+          if (props.formType == 'edit' && props.selfId) {
+            fetchCategory('',props.selfId);
+          } else {
+            fetchCategory('');
+          }
+        });
     
 watch(() => props.form, (value) => {
   if(value){
     props.form.parent_id = props.form?.parent_category_name?.id ?? '';
   }
-}, {deep: true});
+}, { deep: true });
+
 </script>
 <template>
     <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
@@ -33,32 +44,32 @@ watch(() => props.form, (value) => {
             <div class="input-group">
                 <label class="label-group">
                     <span class="label-item-title">Parent Category </span>
-                    <v-select :options="materialCategories" placeholder="--Choose an option--" @search="fetchCategory" v-model="form.parent_category_name" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    <v-select :options="materialCategories" placeholder="--Choose an option--" v-model="form.parent_category_name" label="name" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                     
                       <template #search="{attributes, events}">
                         <input
                             class="vs__search"
-                            :required="!form.parent_category_name"
                             v-bind="attributes"
                             v-on="events"
                             />
                     </template>
                     </v-select>
-                    <Error v-if="errors?.parent_id" :errors="errors.parent_id" />
+                    <!-- <Error v-if="errors?.parent_id" :errors="errors.parent_id" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Name <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.name" :errors="errors.name" />
+                    <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
-                    <Error v-if="errors?.short_code" :errors="errors.short_code" />
+                    <input type="text" required v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
+                    <!-- <Error v-if="errors?.short_code" :errors="errors.short_code" /> -->
                 </label>
             </div>
         </legend>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
      #table, #table th, #table td{
@@ -78,6 +89,9 @@ watch(() => props.form, (value) => {
       }
       .label-item-input {
         @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+      }
+     .required-style{
+        @apply text-red-500;
       }
       
       >>> {

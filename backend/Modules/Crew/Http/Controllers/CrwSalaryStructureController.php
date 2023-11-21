@@ -15,12 +15,10 @@ class CrwSalaryStructureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwSalaryStructures, 200);
         }

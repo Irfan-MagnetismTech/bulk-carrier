@@ -1,0 +1,537 @@
+<script setup xmlns="http://www.w3.org/1999/html">
+import Error from "../Error.vue";
+import ActionButton from '../../components/buttons/ActionButton.vue';
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
+import Store from "../../store";
+import useCrewDocument from "../../composables/crew/useCrewDocument";
+const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewals, crewDocumentRenewals, isCrewDocumentRenewModalOpen } = useCrewCommonApiRequest();
+const { isLoading, isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal } = useCrewDocument();
+import env from '../../config/env';
+import Swal from "sweetalert2";
+
+const props = defineProps({
+  form: {
+    required: false,
+    default: {}
+  },
+  errors: { type: [Object, Array], required: false },
+});
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+let renewFormData = ref({
+  crw_crew_document_id: '',
+  issue_date: '',
+  expire_date: '',
+  reference_no: '',
+  attachment: ''
+});
+
+function closeCrewDocumentAddModal(){
+  isDocumentEditModal.value = 0;
+  isCrewDocumentAddModalOpen.value = 0;
+  resetCrewDocumentModalData();
+}
+
+function resetCrewDocumentModalData(){
+  props.form.id = '';
+  props.form.name = '';
+  props.form.issuing_authority = '';
+  props.form.validity_period = '';
+  props.form.validity_period_in_month = '';
+  props.form.issue_date = '';
+  props.form.expire_date = '';
+  props.form.reference_no = '';
+  props.form.attachment = '';
+}
+
+watch(() => props.form, (value) => {
+  if(value){
+    props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
+    props.form.crw_crew_rank = props.form.crw_crew_name?.crwRank?.name ?? '';
+    props.form.crw_crew_contact = props.form.crw_crew_name.contact ?? '';
+    props.form.crw_crew_email = props.form.crw_crew_name.email ?? '';
+    props.form.validity_period_in_month = props.form.validity_period ?? '';
+  }
+}, {deep: true});
+
+function openCrewDocumentAddModal(){
+  if(props.form.business_unit === "ALL"){
+    alert("Please select a Business Unit")
+    return;
+  }
+  if(!props.form.crw_crew_id){
+    alert("Please select a Crew")
+    return;
+  }
+  isCrewDocumentAddModalOpen.value = 1;
+}
+
+function showCrewDocumentRenewModal(crwDocumentId){
+  if(crwDocumentId){
+    getCrewDocumentRenewals(crwDocumentId);
+  }
+  renewFormData.value.crw_crew_document_id = crwDocumentId;
+
+  // isCrewDocumentRenewModalOpen.value = 1;
+  // currentCrewDocRenewData.value = crwDocumentData;
+  // renewFormData.value.crw_crew_document_id = crwDocumentData.id;
+}
+
+function closeCrewDocumentRenewModal(){
+  isCrewDocumentRenewModalOpen.value = 0;
+  currentCrewDocRenewData.value = null;
+  resetCrewDocumentRenewModalData();
+}
+
+function resetCrewDocumentRenewModalData(){
+  renewFormData.value.issue_date = '';
+  renewFormData.value.expire_date = '';
+  renewFormData.value.reference_no = '';
+  renewFormData.value.attachment = '';
+}
+
+const selectedFile = (event) => {
+  props.form.attachment = event.target.files[0];
+};
+
+const selectedRenewFile = (event) => {
+  renewFormData.value.attachment = event.target.files[0];
+};
+
+function selectedRenewUpdateFile(index,event){
+  crewDocumentRenewals.value[index].attachment = event.target.files[0];
+}
+
+function saveRenewData(){
+  storeCrewRenewDocument(renewFormData.value,crewDocumentRenewals.value);
+}
+
+function updateCrewDocumentRenewData(singleRenewData){
+  updateCrewRenewDocument(singleRenewData);
+}
+
+function deleteCrewDocumentRenewData(renewDataId,renewDataIndex){
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to change delete this item!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteCrewRenewDocument(renewDataId,renewDataIndex,crewDocumentRenewals.value);
+    }
+  })
+}
+
+//let isDocumentEditModal = ref(0);
+
+function updateDocumentBasicData(crwDocumentData){
+  props.form.id = crwDocumentData?.id;
+  props.form.name = crwDocumentData?.name;
+  props.form.issuing_authority = crwDocumentData?.issuing_authority;
+  props.form.validity_period = crwDocumentData?.validity_period_in_month;
+  props.form.validity_period_in_month = crwDocumentData?.validity_period_in_month;
+  isDocumentEditModal.value = 1;
+  isCrewDocumentAddModalOpen.value = 1;
+}
+
+function deleteDocumentBasicData(crwDocumentDataId,index){
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to change delete this item!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteCrewDocument(crwDocumentDataId,index,crewDocuments.value);
+    }
+  })
+}
+
+onMounted(() => {
+  props.form.business_unit = businessUnit.value;
+  watchEffect(() => {
+    getCrews(props.form.business_unit);
+    getCrewDocuments(props.form.business_unit,props.form.crw_crew_id);
+  });
+});
+
+</script>
+
+<template>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
+        <v-select :options="crews" placeholder="--Choose an option--" v-model="form.crw_crew_name" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+            <input
+                class="vs__search"
+                :required="!form.crw_crew_name"
+                v-bind="attributes"
+                v-on="events"
+            />
+          </template>
+        </v-select>
+        <Error v-if="errors?.crw_crew_name" :errors="errors.crw_crew_name" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Rank</span>
+        <input type="text" v-model="form.crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
+        <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Contact</span>
+        <input type="text" v-model="form.crw_crew_contact" placeholder="Crew contact" class="form-input vms-readonly-input" autocomplete="off" required />
+        <Error v-if="errors?.crw_crew_contact" :errors="errors.crw_crew_contact" />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark:text-gray-300">Email</span>
+        <input type="text" v-model="form.crw_crew_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
+        <Error v-if="errors?.crw_crew_email" :errors="errors.crw_crew_email" />
+      </label>
+    </div>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+    <legend class="px-2 text-gray-700 dark:text-gray-300">Document List</legend>
+    <table class="w-full" id="table">
+      <thead>
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+        <th class="w-1/6"><nobr>Document Name</nobr></th>
+        <th><nobr>Issuing Authority</nobr></th>
+        <th><nobr>Validity Period</nobr></th>
+        <th><nobr>Latest <br>Issue Date</nobr></th>
+        <th><nobr>Latest <br>Expire Date</nobr></th>
+        <th><nobr>Reference No.</nobr></th>
+        <th><nobr>Attachment</nobr></th>
+        <th>
+          <button type="button" @click="openCrewDocumentAddModal()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </th>
+      </tr>
+      </thead>
+
+      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(crwDocumentData, index) in crewDocuments" :key="crwDocumentData.id">
+        <td>{{ crwDocumentData?.name }}</td>
+        <td>{{ crwDocumentData?.issuing_authority }}</td>
+        <td>
+          <span class="custom_badge dark:bg-yellow-700 dark:text-yellow-100 text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
+        </td>
+        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.issue_date ?? '---'}}</td>
+        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.expire_date ?? '---'}}</td>
+        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.reference_no ?? '---'}}</td>
+        <td>
+          <template v-if="crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment">
+            <a class="custom_link" :href="env.BASE_API_URL+'/'+crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment" target="_blank">
+              Link
+            </a>
+          </template>
+          <template v-else>---</template>
+        </td>
+        <td class="px-1 py-1 text-center">
+          <nobr>
+            <a @click="showCrewDocumentRenewModal(crwDocumentData?.id)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+              <span class="tooltiptext">Renew</span>
+            </a>
+            <action-button :action="'edit'" @click="updateDocumentBasicData(crwDocumentData,index)"></action-button>
+            <action-button :action="'delete'" @click="deleteDocumentBasicData(crwDocumentData?.id,index)"></action-button>
+          </nobr>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot v-if="!crewDocuments?.length">
+      <tr v-if="isLoading">
+        <td colspan="8">Loading...</td>
+      </tr>
+      <tr v-else-if="!crewDocuments?.length">
+        <td colspan="8">No data found.</td>
+      </tr>
+      </tfoot>
+    </table>
+  </fieldset>
+  <div v-show="isCrewDocumentAddModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <form @submit.prevent="storeCrewDocument(form,crewDocuments)" style="position: absolute;top: 0;">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button type="button"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                  aria-label="close" @click="closeCrewDocumentAddModal">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+              <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
+          <thead v-once>
+          <tr style="background-color: #04AA6D;color: white"
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th colspan="5">Add Crew Document</th>
+          </tr>
+          </thead>
+        </table>
+
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Basic Info</legend>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Document Name <span class="text-red-500">*</span></span>
+              <input type="text" v-model="form.name" placeholder="Document name" class="form-input" autocomplete="off" required />
+              <Error v-if="errors?.name" :errors="errors.name" />
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Issuing Authority <span class="text-red-500">*</span></span>
+              <input type="text" v-model="form.issuing_authority" placeholder="Authority name" class="form-input" autocomplete="off" required />
+              <Error v-if="errors?.issuing_authority" :errors="errors.issuing_authority" />
+            </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
+              <select v-model="form.validity_period" class="form-input">
+                <option value="" disabled selected>Select</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">1 Year</option>
+                <option value="24">2 Years</option>
+                <option value="36">3 Years</option>
+                <option value="48">4 Years</option>
+                <option value="60">5 Years</option>
+                <option value="120">10 Years</option>
+                <option value="0">Permanent</option>
+              </select>
+              <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Validity(In Months) <span class="text-red-500">*</span></span>
+              <input type="text" v-model="form.validity_period_in_month" placeholder="Ex: 60" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+              <Error v-if="errors?.validity_period_in_month" :errors="errors.validity_period_in_month" />
+            </label>
+          </div>
+        </fieldset>
+        <fieldset v-if="!isDocumentEditModal" class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Validity Info</legend>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Issue Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
+              <input type="date" v-model="form.issue_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
+              <Error v-if="errors?.issue_date" :errors="errors.issue_date" />
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Expire Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
+              <input type="date" v-model="form.expire_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
+              <Error v-if="errors?.expire_date" :errors="errors.expire_date" />
+            </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Reference No</span>
+              <input type="text" v-model="form.reference_no" placeholder="Reference no" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark:text-gray-300">Attachment</span>
+              <input @change="selectedFile" type="file" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.attachment" :errors="errors.attachment" />
+            </label>
+          </div>
+        </fieldset>
+
+        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+          <button type="button" @click="closeCrewDocumentAddModal" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            Cancel
+          </button>
+          <button
+              class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            Submit
+          </button>
+        </footer>
+      </div>
+    </form>
+  </div>
+
+  <div v-show="isCrewDocumentRenewModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <form @submit.prevent="" style="position: absolute;top: 0;">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button type="button"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                  aria-label="close" @click="closeCrewDocumentRenewModal">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+              <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
+          <thead v-once>
+          <tr style="background-color: #04AA6D;color: white"
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th colspan="5">Renew Crew Document</th>
+          </tr>
+          </thead>
+        </table>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Add Renew Data</legend>
+          <table class="w-full whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <th class="px-4 py-3 align-bottom">Issue Date</th>
+              <th class="px-4 py-3 align-bottom">Expire Date</th>
+              <th class="px-4 py-3 align-bottom">Reference No</th>
+              <th class="px-4 py-3 align-bottom">Attachment</th>
+              <th class="px-4 py-3 text-center align-bottom">Action</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400">
+              <td class="px-1 py-1">
+                <input type="date" v-model="renewFormData.issue_date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="date" v-model="renewFormData.expire_date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model="renewFormData.reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="file" @change="selectedRenewFile" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1 text-center">
+                <button type="button" @click="saveRenewData" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  Save
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
+          <legend class="px-2 text-gray-700 dark:text-gray-300">Previous Renew Data</legend>
+          <table class="w-full whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <th class="px-4 py-3 align-bottom">Issue Date</th>
+              <th class="px-4 py-3 align-bottom">Expire Date</th>
+              <th class="px-4 py-3 align-bottom">Reference No</th>
+              <th class="px-4 py-3 align-bottom">Prev. Attachment</th>
+              <th class="px-4 py-3 align-bottom">Attachment</th>
+              <th class="px-4 py-3 text-center align-bottom">Action</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400" v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
+              <td class="px-1 py-1">
+                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model="crewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1">
+                <template v-if="crewDocumentRenewals[renewDataIndex]?.attachment">
+                  <a class="custom_link" :href="env.BASE_API_URL+'/'+crewDocumentRenewals[renewDataIndex]?.attachment" target="_blank">
+                    Link
+                  </a>
+                </template>
+                <template v-else>---</template>
+              </td>
+              <td class="px-1 py-1">
+                <input type="file" @change="selectedRenewUpdateFile(renewDataIndex,$event)" class="form-input" autocomplete="off" />
+              </td>
+              <td class="px-1 py-1 text-center">
+                <div class="flex items-center gap-1">
+                  <button type="button" @click="updateCrewDocumentRenewData(renewData)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Update
+                  </button>
+                  <button type="button" @click="deleteCrewDocumentRenewData(renewData.id,renewDataIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
+        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+          <button type="button" @click="closeCrewDocumentRenewModal" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            Cancel
+          </button>
+        </footer>
+      </div>
+    </form>
+  </div>
+
+</template>
+<style lang="postcss" scoped>
+#table, #table th, #table td{
+  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+}
+
+.input-group {
+  @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
+}
+
+.label-group {
+  @apply block w-full mt-2 text-sm;
+}
+.label-item-title {
+  @apply text-gray-700 dark:text-gray-300;
+}
+.label-item-input {
+  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+}
+
+#modal {
+  max-width: 60rem;
+}
+
+
+>>> {
+  --vs-controls-color: #374151;
+  --vs-border-color: #4b5563;
+
+  --vs-dropdown-bg: #282c34;
+  --vs-dropdown-color: #eeeeee;
+  --vs-dropdown-option-color: #eeeeee;
+
+  --vs-selected-bg: #664cc3;
+  --vs-selected-color: #374151;
+
+  --vs-search-input-color: #4b5563;
+
+  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-color: #eeeeee;
+}
+</style>

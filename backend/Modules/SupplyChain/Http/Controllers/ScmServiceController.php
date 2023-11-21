@@ -14,10 +14,11 @@ class ScmServiceController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $scm_services = ScmService::latest()->paginate(10);
+            $scm_services = ScmService::query()
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_services, 200);
         } catch (\Exception $e) {
@@ -101,9 +102,9 @@ class ScmServiceController extends Controller
     public function searchService(Request $request): JsonResponse
     {
         $materialCategory = ScmService::query()
-            ->where('name', 'like', "%{$request->searchParam}%")
+            // ->where('name', 'like', "%{$request->searchParam}%")
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);
