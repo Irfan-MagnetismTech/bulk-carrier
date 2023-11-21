@@ -86,7 +86,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffName']);
     Route::get('get-search-vessels', [OpsVesselController::class, 'getVesselNameorCode']);
     Route::get('get-search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationName']);
+    Route::get('get-search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateReferenceNumber']);
     Route::get('get-search-customers', [OpsCustomerController::class, 'getCustomerNameorCode']);
+    Route::get('get-search-voyages', [OpsVoyageController::class, 'getSearchVoyages']);
+    Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
     //end get data without limit
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);

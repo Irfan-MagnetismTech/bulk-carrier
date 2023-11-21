@@ -13,6 +13,7 @@ export default function usePurchaseOrder() {
     const purchaseOrders = ref([]);
     const filteredPurchaseOrders = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
@@ -85,26 +86,28 @@ export default function usePurchaseOrder() {
 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getPurchaseOrders(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+    async function getPurchaseOrders(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get(`/${BASE}/purchase-orders`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             purchaseOrders.value = data.value;
             notification.showSuccess(status);
@@ -112,9 +115,14 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storePurchaseOrder(form) {
@@ -182,8 +190,8 @@ export default function usePurchaseOrder() {
 
     async function deletePurchaseOrder(purchaseOrderId) {
 
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-orders/${purchaseOrderId}`);
@@ -193,8 +201,8 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
         }
     }
 
@@ -268,6 +276,7 @@ export default function usePurchaseOrder() {
         prMaterialList,
         materialObject,
         termsObject,
+        isTableLoading,
         isLoading,
         errors,
     };

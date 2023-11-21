@@ -8,7 +8,6 @@ const successCodeWithMessages = {
 };
 const errorCodeWithMessages = {
   204: 'Sorry! Data not found.',
-  422: 'Credential error.',
   404: "Can't process your request.",
   500: 'Internal server error.'
 };

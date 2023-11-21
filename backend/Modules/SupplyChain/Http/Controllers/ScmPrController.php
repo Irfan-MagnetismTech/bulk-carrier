@@ -9,11 +9,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
-use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Services\UniqueId;
-use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
@@ -52,7 +50,7 @@ class ScmPrController extends Controller
      */
     public function store(ScmPrRequest $request): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
         if (!empty($request->attachment)) {
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
@@ -137,7 +135,7 @@ class ScmPrController extends Controller
             'pr_no' => $purchaseRequisition->ref_no,
             'ref_no' => $purchaseRequisition->ref_no,
             'business_unit' => $purchaseRequisition->business_unit,
-            'scmWarehouse' => $purchaseRequisition->scmWarehouse->id,
+            'scmWarehouse' => $purchaseRequisition->scmWarehouse,
             'scm_warehouse_id' => $purchaseRequisition->scm_warehouse_id,
             'raised_date' => $purchaseRequisition->raised_date,
             'is_critical' => $purchaseRequisition->is_critical,
@@ -166,6 +164,8 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
 
+        $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+
         try {
             DB::beginTransaction();
 
@@ -174,7 +174,7 @@ class ScmPrController extends Controller
                 $requestData['attachment'] = $attachment;
             }
             $purchase_requisition->update($requestData);
-            $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+            $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 
             DB::commit();
             return response()->success('Data updated sucessfully!', $purchase_requisition, 202);
@@ -207,7 +207,7 @@ class ScmPrController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function searchOpeningStock(Request $request): JsonResponse
+    public function searchPr(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $purchase_requisition = ScmPr::query()

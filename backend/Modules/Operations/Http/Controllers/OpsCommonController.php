@@ -34,7 +34,7 @@ class OpsCommonController extends Controller
         try
         {
             $ports = OpsPort::all();            
-            return response()->success('Successfully retrieved ports for without paginate.', $ports, 200);
+            return response()->success('Data retrieved successfully.', $ports, 200);
         }
         catch (QueryException $e)
         {
@@ -47,7 +47,7 @@ class OpsCommonController extends Controller
         try
         {
             $cargo_types = OpsCargoType::all();
-            return response()->success('Successfully retrieved cargo types for without paginate.', $cargo_types, 200);
+            return response()->success('Data retrieved successfully.', $cargo_types, 200);
         }
         catch (QueryException $e)
         {
@@ -60,7 +60,7 @@ class OpsCommonController extends Controller
         try
         {
             $cargo_tariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->get();          
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $cargo_tariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargo_tariffs, 200);
         }
         catch (QueryException $e)
         {
@@ -73,7 +73,7 @@ class OpsCommonController extends Controller
         try
         {
             $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile')->latest()->get();        
-            return response()->success('Successfully retrieved charterer contracts for without paginate.', $charterer_contracts, 200);
+            return response()->success('Data retrieved successfully.', $charterer_contracts, 200);
         }
         catch (QueryException $e)
         {
@@ -87,7 +87,7 @@ class OpsCommonController extends Controller
         {
             $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->get();
 
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $charterer_invoices, 200);
+            return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         }
         catch (QueryException $e)
         {
@@ -101,7 +101,7 @@ class OpsCommonController extends Controller
         try
         {
             $charterer_profiles = OpsChartererProfile::with('opsChartererBankAccounts')->latest()->get();       
-            return response()->success('Successfully retrieved charterer profiles for without paginate.', $charterer_profiles, 200);
+            return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
         }
         catch (QueryException $e)
         {
@@ -114,7 +114,7 @@ class OpsCommonController extends Controller
         try
         {
             $customers = OpsCustomer::all();            
-            return response()->success('Successfully retrieved customers for without paginate.', $customers, 200);
+            return response()->success('Data retrieved successfully.', $customers, 200);
         }
         catch (QueryException $e)
         {
@@ -127,7 +127,7 @@ class OpsCommonController extends Controller
         try
         {
             $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->get();        
-            return response()->success('Successfully retrieved handover takeovers for without paginate.', $handover_takeovers, 200);
+            return response()->success('Data retrieved successfully.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
         {
@@ -141,7 +141,7 @@ class OpsCommonController extends Controller
         try
         {
             $lighterNoonReports = OpsLighterNoonReport::all();            
-            return response()->success('Successfully retrieved cargo tariffs for without paginate.', $lighterNoonReports, 200);
+            return response()->success('Data retrieved successfully.', $lighterNoonReports, 200);
         }
         catch (QueryException $e)
         {
@@ -155,7 +155,7 @@ class OpsCommonController extends Controller
         try
         {
             $maritime_certifications = OpsMaritimeCertification::all();            
-            return response()->success('Successfully retrieved maritime certifications for without paginate.', $maritime_certifications, 200);
+            return response()->success('Data retrieved successfully.', $maritime_certifications, 200);
         }
         catch (QueryException $e)
         {
@@ -171,7 +171,7 @@ class OpsCommonController extends Controller
             $vessels = OpsVessel::when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->latest()->get();            
-            return response()->success('Successfully retrieved vessels.', $vessels, 200);
+            return response()->success('Data retrieved successfully.', $vessels, 200);
         }
         catch (QueryException $e)
         {
@@ -185,7 +185,7 @@ class OpsCommonController extends Controller
         try
         {
             $vesselCertificates = OpsVesselCertificate::with('opsVessel','opsMaritimeCertification')->latest()->paginate(15);
-            return response()->success('Successfully retrieved vessel certificates for without paginate.', $vesselCertificates, 200);
+            return response()->success('Data retrieved successfully.', $vesselCertificates, 200);
         }
         catch (QueryException $e)
         {
@@ -199,7 +199,7 @@ class OpsCommonController extends Controller
         try
         {
             $vessel_particulars = OpsVesselParticular::with('ops_vessel')->latest()->get();        
-            return response()->success('Successfully retrieved vessel particulars for without paginate.', $vessel_particulars, 200);
+            return response()->success('Data retrieved successfully.', $vessel_particulars, 200);
         }
         catch (QueryException $e)
         {
@@ -213,7 +213,7 @@ class OpsCommonController extends Controller
         try {
             $voyage_boat_notes = OpsVoyageBoatNote::with('opsVessel','opsVoyage','opsVoyageBoatNoteLines')->latest()->get();
             
-            return response()->success('Successfully retrieved voyage boat notes for without paginate.', $voyage_boat_notes, 200);
+            return response()->success('Data retrieved successfully.', $voyage_boat_notes, 200);
         }
         catch (QueryException $e)
         {
@@ -226,7 +226,7 @@ class OpsCommonController extends Controller
         try
         {
             $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')->latest()->get();        
-            return response()->success('Successfully retrieved voyages for without paginate.', $voyages, 200);
+            return response()->success('Data retrieved successfully.', $voyages, 200);
         }
         catch (QueryException $e)
         {

@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_voyage_boat_note_id')->constrained('ops_voyage_boat_notes')->onDelete('cascade');
             $table->enum('voyage_note_type', ['Boat Note', 'Draft Survey','Receipt Copy','Final Survey']);
-            $table->date('date');
-            $table->dateTime('discharge_date');
-            $table->text('attachment');
+            $table->date('date')->nullable();
+            $table->dateTime('discharge_date')->nullable();
+            $table->float('quantity')->nullable();
+            $table->text('attachment')->nullable();
             $table->timestamps();
         });
     }

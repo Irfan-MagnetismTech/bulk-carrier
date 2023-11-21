@@ -23,7 +23,7 @@ class ScmWarehouse extends Model
     {
         return $this->hasMany(ScmWarehouseContactPerson::class)->latest();
     }
-
+    
     public function scmWarehouseContactPerson(): HasOne
     {
         return $this->hasOne(ScmWarehouseContactPerson::class)->latest();

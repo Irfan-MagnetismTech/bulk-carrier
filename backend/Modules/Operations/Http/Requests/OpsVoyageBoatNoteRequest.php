@@ -25,9 +25,11 @@ class OpsVoyageBoatNoteRequest extends FormRequest
         return [
             'ops_voyage_id'      => ['required'],
             'ops_vessel_id'      => ['required'],
-            'type'               => ['required'],
+            'type'               => ['nullable'],
             'vessel_draft'       => ['nullable', 'string'],
             'water_density'      => ['nullable', 'string'],
+            'opsVoyageBoatNoteLines.*.voyage_note_type.required' =>  ['nullable', 'string'],
+            'opsVoyageBoatNoteLines.*.quantity.required' =>  ['nullable', 'integer'],
         ];
     }
 
@@ -39,7 +41,10 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_voyage_id.required' => 'Voyage is required.',
+            'ops_vessel_id.required' => 'Vessel is required.',
+            'opsVoyageBoatNoteLines.*.voyage_note_type.required' => 'Boat note type is required for row is :position.',
+            'opsVoyageBoatNoteLines.*.quantity.required' => 'Quantity is required for row is :position.',
         ];
     }
 
