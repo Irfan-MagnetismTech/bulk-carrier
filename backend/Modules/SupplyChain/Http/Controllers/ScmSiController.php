@@ -33,7 +33,9 @@ class ScmSiController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
+            $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy')
+            ->globalSearch(request()->all());
+
 
             return response()->success('Data list', $storeIssues, 200);
         } catch (\Exception $e) {
