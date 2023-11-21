@@ -274,7 +274,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
-
             </tr>
           </thead>
           <tbody v-if="customers?.data?.length" class="relative">

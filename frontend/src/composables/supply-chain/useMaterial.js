@@ -220,7 +220,7 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
+            // loading(false)
         }
     }
 

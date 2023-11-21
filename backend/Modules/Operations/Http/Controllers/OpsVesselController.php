@@ -45,7 +45,7 @@ class OpsVesselController extends Controller
             ])
             ->globalSearch($request->all());
 
-            return response()->success('Successfully retrieved vessels.', $vessels, 200);
+            return response()->success('Data retrieved successfully.', $vessels, 200);
         }
         catch (QueryException $e)
         {
@@ -74,7 +74,7 @@ class OpsVesselController extends Controller
             $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
 
-            return response()->success('Successfully created vessel.', $vessel, 201);
+            return response()->success('Data added successfully.', $vessel, 201);
         }
         catch (QueryException $e)
         {
@@ -120,7 +120,7 @@ class OpsVesselController extends Controller
 
         try
         {
-            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+            return response()->success('Data retrieved successfully.', $vessel, 200);
         }
         catch (QueryException $e)
         {
@@ -154,7 +154,7 @@ class OpsVesselController extends Controller
             $vessel->opsBunkers()->delete();
             $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
-            return response()->success('Successfully updated vessel.', $vessel, 202);
+            return response()->success('Data updated successfully.', $vessel, 202);
         }
         catch (QueryException $e)
         {
@@ -177,7 +177,7 @@ class OpsVesselController extends Controller
             $vessel->opsBunkers()->delete();
             $vessel->delete();
             return response()->json([
-                'message' => 'Successfully deleted vessel.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -189,7 +189,7 @@ class OpsVesselController extends Controller
     public function search(Request $request) {
         try {
             $vessel = OpsVessel::where('name', 'like', '%' . $request->search . '%')->get();
-            return response()->success('Successfully retrieved vessels.', $vessel, 200);
+            return response()->success('Data retrieved successfully.', $vessel, 200);
         }
         catch (QueryException $e)
         {
@@ -211,7 +211,7 @@ class OpsVesselController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved vessels.', $vessels, 200);
+            return response()->success('Data retrieved successfully.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -229,7 +229,7 @@ class OpsVesselController extends Controller
             })
             ->get();
 
-            return response()->success('Successfully retrieved vessels.', $vessels, 200);
+            return response()->success('Data retrieved successfully.', $vessels, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -259,7 +259,7 @@ class OpsVesselController extends Controller
         });
         try
         {
-            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+            return response()->success('Data retrieved successfully.', $vessel, 200);
         }
         catch (QueryException $e)
         {
@@ -286,7 +286,7 @@ class OpsVesselController extends Controller
         });
         try
         {
-            return response()->success('Successfully retrieved vessel.', $vessel, 200);
+            return response()->success('Data retrieved successfully.', $vessel, 200);
         }
         catch (QueryException $e)
         {

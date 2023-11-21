@@ -34,7 +34,7 @@ class OpsCargoTypeController extends Controller
         try {
             $cargo_types = OpsCargoType::globalSearch($request->all());
 
-            return response()->success('Successfully retrieved cargo types.', $cargo_types, 200);
+            return response()->success('Data retrieved successfully.', $cargo_types, 200);
         }
         catch (QueryException $e)
         {
@@ -55,7 +55,7 @@ class OpsCargoTypeController extends Controller
             DB::beginTransaction();
             $cargo_type = OpsCargoType::create($request->all());
             DB::commit();
-            return response()->success('Cargo types added Successfully.', $cargo_type, 201);
+            return response()->success('Data added successfully.', $cargo_type, 201);
         }
         catch (QueryException $e)
         {
@@ -74,7 +74,7 @@ class OpsCargoTypeController extends Controller
     public function show(OpsCargoType $cargo_type): JsonResponse
     {
         try {
-            return response()->success('Successfully retrieved cargo type.', $cargo_type, 200);
+            return response()->success('Data retrieved successfully.', $cargo_type, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -95,7 +95,7 @@ class OpsCargoTypeController extends Controller
             DB::beginTransaction();
             $cargo_type->update($request->all());
             DB::commit();
-            return response()->success('Cargo type updated Successfully.', $cargo_type, 202);
+            return response()->success('Data updated successfully.', $cargo_type, 202);
         }
         catch (QueryException $e)
         {
@@ -116,7 +116,7 @@ class OpsCargoTypeController extends Controller
             $cargo_type->delete($cargo_type);
 
             return response()->json([
-                'message' => 'Port deleted Successfully.'
+                'message' => 'Data deleted successfully.'
             ], 204);
         }
         catch (QueryException $e)
@@ -134,12 +134,12 @@ class OpsCargoTypeController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved cargo types name.', $cargo_types, 200);
+            return response()->success('Data retrieved successfully.', $cargo_types, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
     public function getCargoTypeName(Request $request){
         try {
             $cargo_types = OpsCargoType::query()
@@ -148,7 +148,7 @@ class OpsCargoTypeController extends Controller
             })
             ->get();
 
-            return response()->success('Successfully retrieved cargo types name.', $cargo_types, 200);
+            return response()->success('Data retrieved successfully.', $cargo_types, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
