@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 use App\Models\User;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Entities\ScmSiLine;
@@ -13,7 +14,7 @@ use Modules\SupplyChain\Traits\StockLedger;
 
 class ScmSi extends Model
 {
-    use HasFactory, StockLedger;
+    use HasFactory, StockLedger, GlobalSearchTrait;
 
     protected $fillable = [
         'ref_no', 'scm_warehouse_id', 'acc_cost_center_id','scm_sr_id', 'department_id', 'date', 'remarks', 'business_unit', 'created_by',

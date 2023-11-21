@@ -58,29 +58,32 @@ export default function useLcRecord() {
         created_by: null,
         scmLcRecordLines: [
                     ], 
-        });
+    });
+    
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getLcRecords(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+    async function getLcRecords(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get(`/${BASE}/lc-records`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             lcRecords.value = data.value;
             notification.showSuccess(status);
@@ -88,9 +91,14 @@ export default function useLcRecord() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storeLcRecord(form) {
@@ -159,8 +167,8 @@ export default function useLcRecord() {
 
     async function deleteLcRecord(lcRecordId) {
 
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/lc-records/${lcRecordId}`);
@@ -170,8 +178,8 @@ export default function useLcRecord() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
         }
     }
 
@@ -200,6 +208,7 @@ export default function useLcRecord() {
         showLcRecord,
         updateLcRecord,
         deleteLcRecord,
+        isTableLoading,
         isLoading,
         errors,
     };

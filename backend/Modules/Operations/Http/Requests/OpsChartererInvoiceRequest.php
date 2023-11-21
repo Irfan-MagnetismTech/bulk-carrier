@@ -39,7 +39,13 @@ class OpsChartererInvoiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_charterer_profile_id.required' => 'Charterer name  is required',
+            'ops_charterer_contract_id.required' => 'Charterer owner code is required',
+            'ops_voyage_id.required' => 'Charterer owner code is required',
+            'contract_type.required' => 'Contract type is required',
+            'contract_type.max' => 'Contract type may not be greater than :max characters.',
+            'bill_from.required' => 'Contract type is required',
+            'contract_type.max' => 'Contract type may not be greater than :max characters.',
         ];
     }
 
