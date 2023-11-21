@@ -23,7 +23,7 @@ class OpsVoyageRequest extends FormRequest
             'load_port_distance'    => ['required', 'string', 'max:255'],
             'sail_date'             => 'required|date',
             'transit_date'          => 'required|date',
-            'remarks'               => ['nullable', 'string'],
+            'remarks'               => ['nullable', 'string','max:255'],
             'business_unit'         => ['required', 'string', 'max:255'],
         ];
     }
@@ -36,7 +36,17 @@ class OpsVoyageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_customer_id.required' => 'Customer Name is required',
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_cargo_type_id.required' => 'Cargo Type is required',    
+            'voyage_no.required' => 'Voyage No. is required',
+            'route.required' => 'Route is required',
+            'route.max' => 'Route may not be greater than :max characters.',
+            'load_port_distance.required' => 'Load Port Distance (NM) is required',
+            'load_port_distance.max' => 'Load Port Distance (NM) may not be greater than :max characters.',
+            'sail_date.required' => 'Sail Date is required',
+            'transit_date.required' => 'Transit Date is required',
+            'remarks.max' => 'Remarks may not be greater than :max characters.',
         ];
     }
 

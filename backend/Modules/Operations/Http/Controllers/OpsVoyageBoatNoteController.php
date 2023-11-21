@@ -141,20 +141,26 @@ class OpsVoyageBoatNoteController extends Controller
             
             $voyage_boat_note->update($voyageBoatNoteInfo);
             
-            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $note_line){
-                if($request->type == "Boat Note"){
+            foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+
+                if($note_line['voyage_note_type'] == "Boat Note"){
                     $data= [
                         'boat_note_qty'=>  $note_line['boat_note_qty']
                     ];
-                }else if($request->type == "Final Survey"){
+                }else if($note_line['voyage_note_type'] == "Final Survey"){
                     $data= [
                         'final_survey_qty'=>  $note_line['final_survey_qty']
                     ];
-                }else if($request->type == 'Receipt Copy'){
+                }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
                     $data= [
                         'final_received_qty'=>  $note_line['final_received_qty']
                     ];
+                }else if($note_line['voyage_note_type'] == 'Draft Survey'){
+                    $data= [
+                        'initial_survey_qty'=>  $note_line['initial_survey_qty']
+                    ];
                 }
+
                 $voyage_sector=OpsVoyageSector::find($note_line['id']);
                 $voyage_sector->update($data);
             }

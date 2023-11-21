@@ -44,7 +44,12 @@ class OpsVesselCertificateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_maritime_certification_id.required' => 'Vessel is required',
+            'issue_date.required' => 'Port Name is required',
+            'expire_date.required' => 'Port Name is required',
+            'reference_number.required' => 'Port Name is already taken',
+           
         ];
     }
 
