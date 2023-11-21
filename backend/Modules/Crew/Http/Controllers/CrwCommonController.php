@@ -11,6 +11,7 @@ use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwCrew;
 use Modules\Crew\Entities\CrwCrewDocument;
 use Modules\Crew\Entities\CrwCrewDocumentRenewal;
+use Modules\Crew\Entities\CrwCrewProfile;
 use Modules\Crew\Entities\CrwRank;
 use Modules\Crew\Entities\CrwRecruitmentApproval;
 
@@ -93,12 +94,14 @@ class CrwCommonController extends Controller
     {
         try {
 
-            $crwAgencies      = CrwCrew::when(request()->business_unit != "ALL", function ($q)
+            $crewProfiles      = CrwCrewProfile::when(request()->business_unit != "ALL", function ($q)
             {
                 $q->where('business_unit', request()->business_unit);
-            })->with('crwRank:id,name')->get();
+            })
+            ->with('crwRank:id,name')            
+            ->get();
 
-            return response()->success('Retrieved Successfully', $crwAgencies, 200);
+            return response()->success('Retrieved Successfully', $crewProfiles, 200);
         }
         catch (QueryException $e)
         {

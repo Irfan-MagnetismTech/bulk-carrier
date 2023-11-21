@@ -45,7 +45,7 @@ class CrwAgencyContractController extends Controller
     public function store(CrwAgencyContractRequest $request)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'contract_name', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
             $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract');
 
             $crwAgencyContract     = CrwAgencyContract::create($crwAgencyContractData);
@@ -85,7 +85,7 @@ class CrwAgencyContractController extends Controller
     public function update(CrwAgencyContractRequest $request, CrwAgencyContract $crwAgencyContract)
     {
         try {
-            $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = $request->only('crw_agency_id', 'contract_name', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
             $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract', $crwAgencyContract->attachment);
 
             $crwAgencyContract->update($crwAgencyContractData);
