@@ -294,7 +294,7 @@ class ScmMrrController extends Controller
                 });
             return response()->success('data list', $prMaterials, 200);
         }
-        
+
         if (request()->scm_po_id) {
             $prMaterials = ScmPoLine::query()
                 ->with('scmMaterial', 'scmPrLine')
