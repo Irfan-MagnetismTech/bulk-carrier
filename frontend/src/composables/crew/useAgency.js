@@ -8,6 +8,7 @@ export default function useAgency() {
     const router = useRouter();
     const agencies = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const agency = ref( {
         name: '',
@@ -33,25 +34,32 @@ export default function useAgency() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencies(page,businessUnit) {
+    async function getAgencies(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-agencies',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             agencies.value = data.value;
@@ -60,8 +68,14 @@ export default function useAgency() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -141,7 +155,7 @@ export default function useAgency() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-agencies/${agencyId}`);
             notification.showSuccess(status);
-            await getAgencies(indexPage.value,indexBusinessUnit.value);
+            await getAgencies(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -159,6 +173,7 @@ export default function useAgency() {
         showAgency,
         updateAgency,
         deleteAgency,
+        isTableLoading,
         isLoading,
         errors,
     };
