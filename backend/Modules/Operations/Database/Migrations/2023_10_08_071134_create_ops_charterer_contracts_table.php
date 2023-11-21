@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('routing_no')->nullable();
             $table->string('currency')->nullable();
             $table->string('attachment')->nullable();
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
