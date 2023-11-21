@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Http\Controllers\SupplyChainController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,6 @@
 |
 */
 
-Route::prefix('supplychain')->group(function() {
-    Route::get('/', 'SupplyChainController@index');
+Route::prefix('scm')->group(function () {
+    Route::get('stock', [SupplyChainController::class, "getCurrentStock"]);
 });

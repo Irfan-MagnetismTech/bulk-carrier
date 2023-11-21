@@ -275,6 +275,23 @@ export default function useVoyage() {
 		}
 	}
 
+	async function getVoyageList(businessUnit) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-vessels?business_unit=${businessUnit}`);
+
+			vessels.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		voyages,
 		voyage,

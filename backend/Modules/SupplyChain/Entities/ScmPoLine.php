@@ -20,4 +20,9 @@ class ScmPoLine extends Model
         return $this->belongsTo(ScmMaterial::class);
     }
 
+    public function scmPrLine(): BelongsTo
+    {
+        return $this->belongsTo(ScmPrLine::class, 'pr_composite_key', 'pr_composite_key');
+    }
+
 }
