@@ -15,6 +15,7 @@ class OpsVoyageBoatNoteLine extends Model
         'voyage_note_type',
         'date',
         'discharge_date',
+        'quantity',
         'attachment',
         'business_unit'
     ];

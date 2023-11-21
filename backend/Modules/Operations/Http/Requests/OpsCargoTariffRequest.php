@@ -65,22 +65,22 @@ class OpsCargoTariffRequest extends FormRequest
             'status.required' => 'Status is required',
             'business_unit.required' => 'Business unit is required',
 
-            // 'opsCargoTariffLines.*.particular.required' => 'Particulars is required for row is key:index',
-            // 'opsCargoTariffLines.*.particular.max' => 'Particulars may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.unit.required' => 'Unit unit is required for row is key:index',
-            // 'opsCargoTariffLines.*.unit.max' => 'Unit may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.jan.max' => 'Januery may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.feb.max' => 'February may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.mar.max' => 'March may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.apr.max' => 'April may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.may.max' => 'May may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.jun.max' => 'June may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.jul.max' => 'July may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.aug.max' => 'Augest may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.sep.max' => 'September may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.oct.max' => 'October may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.nov.max' => 'November may not be greater than :max characters for row is key:index',
-            // 'opsCargoTariffLines.*.dec.max' => 'December may not be greater than :max characters for row is key:index',
+            'opsCargoTariffLines.*.particular.required' => 'Particulars is required for row is :position',
+            'opsCargoTariffLines.*.particular.max' => 'Particulars may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.unit.required' => 'Unit unit is required for row is :position',
+            'opsCargoTariffLines.*.unit.max' => 'Unit may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.jan.max' => 'Januery may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.feb.max' => 'February may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.mar.max' => 'March may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.apr.max' => 'April may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.may.max' => 'May may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.jun.max' => 'June may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.jul.max' => 'July may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.aug.max' => 'Augest may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.sep.max' => 'September may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.oct.max' => 'October may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.nov.max' => 'November may not be greater than :max characters for row is :position',
+            'opsCargoTariffLines.*.dec.max' => 'December may not be greater than :max characters for row is :position',
         ];
     }
 
@@ -95,24 +95,4 @@ class OpsCargoTariffRequest extends FormRequest
     }
 
 
-    // public function withValidator($validator)
-    // {
-    //     $messages= $validator->errors()->messages();
-    //     $messages = collect($messages)->map(function ($messageArray, $field) {
-    //         $table = Str::before($field, '.');
-    //         $index = Str::before(Str::after($field, $table . '.'), '.');
-    //         $index = Str::before($index, '.');
-        
-    //         return collect($messageArray)->map(function ($message) use ($index) {
-    //             return Str::before($message, 'key' . $index) . ' ' . ++$index;
-    //         })->all();
-    //     })->all();
-
-    //     $response= new \Illuminate\Http\JsonResponse([
-    //         'message' =>'The given data was invalid',
-    //         'errors' => $messages
-    //     ], 422);
-
-    //     throw new HttpResponseException($response);
-    // }
 }

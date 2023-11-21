@@ -8,8 +8,13 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from './../../../store/index.js';
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+
+
 const icons = useHeroIcon();
 const router = useRouter();
 
@@ -21,8 +26,57 @@ const props = defineProps({
 });
 
 const { agencies, getAgencies, deleteAgency, isLoading } = useAgency();
+const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Agency List');
+
+let filterOptions = ref( {
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Agency Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "address",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Address",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "phone",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Contact No.",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "email",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Email",
+      "filter_type": "input"
+    },
+  ]
+});
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
