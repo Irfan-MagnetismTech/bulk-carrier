@@ -43,9 +43,9 @@ class OpsVessel extends Model
         'remarks',
         'business_unit'
     ];
-    
 
-        
+
+
 
     /**
      * The accessors to append to the model's array form.
@@ -65,14 +65,8 @@ class OpsVessel extends Model
     }
 
     public function opsVesselCertificates()
-    {
-        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id')
-        ->select('ops_vessel_certificates.*')
-        ->whereIn('ops_vessel_certificates.id', function($query) {
-            $query->select(DB::raw('MAX(id)'))
-                ->from('ops_vessel_certificates')
-                ->groupBy('ops_maritime_certification_id');
-        });
+    {        
+        return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
     }
 
     public function opsBunkers()
@@ -80,7 +74,8 @@ class OpsVessel extends Model
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
 
-    public function portOfRegistry() {
+    public function portOfRegistry()
+    {
         return $this->belongsTo(OpsPort::class, 'port_of_registry', 'code');
     }
 }
