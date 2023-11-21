@@ -150,7 +150,6 @@ class OpsChartererInvoiceController extends Controller
          } catch (QueryException $e){
              return response()->error($e->getMessage(), 500);
          }
-     }
- 
+     } 
 
 }
