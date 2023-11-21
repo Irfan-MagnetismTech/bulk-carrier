@@ -124,9 +124,9 @@ class ScmLcRecordController extends Controller
     {
         $lcRecord = ScmLcRecord::query()
             ->with('scmLcRecordLines')
-            ->where('lc_no', 'like', "%$request->searchParam%")
+            // ->where('lc_no', 'like', "%$request->searchParam%")
             ->orderByDesc('lc_no')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $lcRecord, 200);

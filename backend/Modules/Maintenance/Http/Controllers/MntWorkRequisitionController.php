@@ -84,8 +84,9 @@ class MntWorkRequisitionController extends Controller
             $wr['business_unit'] = $input['business_unit'];
 
             DB::beginTransaction();
+            // Store work requisition
             $workRequisition = MntWorkRequisition::create($wr);
-
+            // Store work requisition item information
             $workRequisitionItem = $workRequisition->mntWorkRequisitionItem()
                                                    ->create([
                                                         "mnt_item_id" => $input['mnt_item_id'],
@@ -96,7 +97,7 @@ class MntWorkRequisitionController extends Controller
                 $added_job_line['present_run_hour'] = $input['present_run_hour'];
                 $added_job_lines[] = $added_job_line;
             }
-
+            // Store work requisition jobs
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($added_job_lines);
             
             DB::commit();
@@ -182,9 +183,20 @@ class MntWorkRequisitionController extends Controller
                                     "mnt_item_id" => $input['mnt_item_id'],
                                     "present_run_hour" => $input['present_run_hour']
                                 ]);
+            $addedJobLines = $input['added_job_lines'];
             
-            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createUpdateOrDelete($input['added_job_lines']);
-            
+            $workRequisitionItem->mntWorkRequisitionLines()->delete();
+            $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($addedJobLines);
+            if ($workRequisitionLines == null) {
+                $error = array(
+                    "message" => "Data could not be updated!",
+                    "errors" => [
+                        "added_job_lines"=>["This data could not be updated!"]
+                    ]
+                );
+                // DB::rollBack();
+                return response()->json($error, 422);
+            }
             DB::commit();
             return response()->success('Work requisition updated successfully', $workRequisition, 202);
             
