@@ -59,18 +59,8 @@ export default function useVoyageBoatNote() {
 			let formData = new FormData();
 			
 			form.opsVoyageBoatNoteLines.map((element, index) => {
-				if(form.type == 'Boat Note') {
-					element.boat_note_qty = element.quantity
-				} else if(form.type == 'Final Survey') {
-					element.final_survey_qty = element.quantity
-				} else if(form.type == 'Receipt Copy') {
-					element.final_received_qty = element.quantity
-				}
-
-				element.quantity = null;
 				formData.append('attachments['+index+']', element.attachment ?? null);
 				element.attachment = null;
-
 			})
 
 
@@ -116,7 +106,13 @@ export default function useVoyageBoatNote() {
 		try {
 
 			let formData = new FormData();
-			formData.append('attachment', form.attachment);
+			
+			form.opsVoyageBoatNoteLines.map((element, index) => {
+				formData.append('attachments['+index+']', element.attachment ?? null);
+				element.attachment = null;
+			})
+
+
 			formData.append('info', JSON.stringify(form));
 			formData.append('_method', 'PUT');
 
