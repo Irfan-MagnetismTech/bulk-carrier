@@ -255,8 +255,10 @@ onMounted(() => {
             <td><span :class="shipDepartment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ shipDepartment?.business_unit }}</span></td>
             
             <td>
+              <nobr>
                 <action-button :action="'edit'" :to="{ name: 'mnt.ship-departments.edit', params: { shipDepartmentId: shipDepartment?.id } }"></action-button>
                 <action-button @click="confirmDelete(shipDepartment?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && shipDepartments?.data?.length"></LoaderComponent>

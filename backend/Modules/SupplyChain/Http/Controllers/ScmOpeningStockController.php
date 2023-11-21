@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmOpeningStock;
+use Modules\SupplyChain\Http\Requests\ScmOpeningStockRequest;
 
 class ScmOpeningStockController extends Controller
 {
@@ -32,7 +33,7 @@ class ScmOpeningStockController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ScmOpeningStockRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -88,7 +89,7 @@ class ScmOpeningStockController extends Controller
      * @param ScmOpeningStock $opening_stock
      * @return JsonResponse
      */
-    public function update(Request $request, ScmOpeningStock $opening_stock): JsonResponse
+    public function update(ScmOpeningStockRequest $request, ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
             $opening_stock->update($request->all());

@@ -61,8 +61,8 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm"></label>
 
   </div>
-    <div class="flex flex-col justify-center w-4/6 md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+    <div class="flex flex-col justify-center md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm w-1/3">
         <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
@@ -70,7 +70,7 @@ onMounted(() => {
           </template>
         </v-select>
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full mt-2 text-sm w-2/3">
         <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
         <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
