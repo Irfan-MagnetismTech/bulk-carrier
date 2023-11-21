@@ -43,9 +43,9 @@ class OpsVessel extends Model
         'remarks',
         'business_unit'
     ];
-    
 
-        
+
+
 
     /**
      * The accessors to append to the model's array form.
@@ -66,6 +66,7 @@ class OpsVessel extends Model
 
     public function opsVesselCertificates()
     {
+        
         return $this->hasMany(OpsVesselCertificate::class, 'ops_vessel_id', 'id');
     }
 
@@ -74,7 +75,8 @@ class OpsVessel extends Model
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
 
-    public function portOfRegistry() {
+    public function portOfRegistry()
+    {
         return $this->belongsTo(OpsPort::class, 'port_of_registry', 'code');
     }
 }

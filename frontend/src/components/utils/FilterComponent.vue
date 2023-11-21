@@ -45,7 +45,7 @@ function setSortState(index, order) {
               <th v-for="(option, key) in filterOptions.filter_options" :key="key">
                 <div class="flex justify-center items-center">
                   <span class="mr-2">{{ option.label }}</span>
-                  <div class="flex flex-col cursor-pointer">
+                  <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
                     <div
                       v-html="icons.descIcon"
                       @click="setSortState(key, 'asc')"
@@ -89,6 +89,8 @@ function setSortState(index, order) {
                 </template>
                 <template v-else-if="option.filter_type === 'component'">
                   <component :is="option.component" v-model="filterOptions.select_options" v-bind="option.componentProps"/>
+                </template>
+                <template v-else>
                 </template>
               </th>
               <th v-if="filterOptions.business_unit"><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>

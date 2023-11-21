@@ -58,7 +58,7 @@
                 {{ index+1 }}
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.type">{{ form.opsVoyageBoatNoteLines[index]?.type }}</span>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.voyage_note_type">{{ form.opsVoyageBoatNoteLines[index]?.voyage_note_type }}</span>
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point }}</span>
@@ -142,19 +142,10 @@ watch(() => vessel, (value) => {
 watch(() => voyage, (value) => {
   if(value?.value) {
     props.form.opsVoyageBoatNoteLines = [
-    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Boat Note' })),
-    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Final Survey' })),
-    ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, type: 'Receipt Copy' }))
-];
-
-
-
-// return [
-//         { ...sector, type: 'Boat Note' },
-//         { ...sector, type: 'Final Survey' },
-//         { ...sector, type: 'Receipt Copy' },
-//     ];
-
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
+    ];
   }
 }, { deep: true })
 

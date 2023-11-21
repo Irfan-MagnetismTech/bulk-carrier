@@ -47,26 +47,28 @@ export default function useStoreRequisition() {
 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getStoreRequisitions(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+    async function getStoreRequisitions(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get(`/${BASE}/store-requisitions`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             storeRequisitions.value = data.value;
             notification.showSuccess(status);
@@ -74,9 +76,14 @@ export default function useStoreRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storeStoreRequisition(form) {
@@ -143,8 +150,8 @@ export default function useStoreRequisition() {
 
     async function deleteStoreRequisition(storeRequisitionId) {
 
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/store-requisitions/${storeRequisitionId}`);
@@ -154,8 +161,8 @@ export default function useStoreRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
         }
     }
 
@@ -186,6 +193,7 @@ export default function useStoreRequisition() {
         updateStoreRequisition,
         deleteStoreRequisition,
         materialObject,
+        isTableLoading,
         isLoading,
         errors,
     };

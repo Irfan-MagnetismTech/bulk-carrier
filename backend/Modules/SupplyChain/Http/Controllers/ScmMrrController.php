@@ -31,16 +31,12 @@ class ScmMrrController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmLcRecords = ScmMrr::query()
                 ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmLcRecords, 200);
         } catch (\Exception $e) {
@@ -298,7 +294,7 @@ class ScmMrrController extends Controller
                 });
             return response()->success('data list', $prMaterials, 200);
         }
-        
+
         if (request()->scm_po_id) {
             $prMaterials = ScmPoLine::query()
                 ->with('scmMaterial', 'scmPrLine')

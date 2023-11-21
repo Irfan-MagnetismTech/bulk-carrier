@@ -53,7 +53,6 @@ class ScmMoController extends Controller
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmMo::class, 'MO');
 
-
         try {
             DB::beginTransaction();
 
