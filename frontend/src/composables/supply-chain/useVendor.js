@@ -151,7 +151,7 @@ export default function useVendor() {
         }
     }
 
-    async function searchVendor(searchParam, loading) {
+    async function searchVendor(searchParam, loading= false) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -166,7 +166,7 @@ export default function useVendor() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
+            // loading(false)
         }
     }
 

@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted ,watchEffect} from 'vue';
+    import { ref, watch, onMounted ,watchEffect, watchPostEffect} from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
@@ -31,10 +31,10 @@
      
     }
 
-    function setMaterialOtherData(datas,index){
-      props.form.scmOpeningStockLines[index].unit = datas.unit;
-      props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
-    }
+    // function setMaterialOtherData(datas,index){
+    //   props.form.scmOpeningStockLines[index].unit = datas.unit;
+    //   props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
+    // }
 
 
   // function fetchMaterials(search, loading) {
@@ -47,10 +47,7 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  watch(() => props.form.scmWarehouse, (value) => {
-    props.form.scm_warehouse_id = value?.id;
-    props.form.scm_cost_center_id = value?.scm_cost_center_id;
-    });
+ 
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
 //       props.form.scmOpeningStockLines.forEach((item, index) => {
@@ -83,20 +80,22 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
+  searchMaterial("")
   watchEffect(() => {
     if (props.form.business_unit != "") {
       searchWarehouse("", props.form.business_unit);
-      searchMaterial("")
     }
-    
   });
 });
 
+watch(() => props.form.scmWarehouse, (value) => {
+    props.form.scm_warehouse_id = value?.id ?? null;
+    props.form.scm_cost_center_id = value?.cost_center_id ?? null;
+});
+    
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_warehouse_id = '';
-    props.form.scm_cost_center_id = '';
     props.form.scmWarehouse = null;
   }
 });
