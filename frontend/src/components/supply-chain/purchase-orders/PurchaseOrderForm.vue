@@ -6,6 +6,7 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
@@ -25,10 +26,7 @@
       materialObject: { type: Object, required: false },
       termsObject: { type: Object, required: false },
       csVendors: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: { required: false, default: {} },
 
     });
 
@@ -145,29 +143,29 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       <label class="label-group">
           <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
     </div>
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
         <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
-        <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" />
+        <!-- <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
-          <Error v-if="errors?.pr_no" :errors="errors.pr_no"  />
+          <!-- <Error v-if="errors?.pr_no" :errors="errors.pr_no"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.pr_date" required readonly class="form-input vms-readonly-input" name="pr_date" :id="'pr_date'" />
-          <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
+          <!-- <Error v-if="errors?.pr_date" :errors="errors.pr_date"  /> -->
       </label>
       
   </div>
@@ -176,7 +174,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
         <span class="label-item-title">CS No</span>
        <!-- <input type="text" v-model="form.scmCs.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
         <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
-        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+        <!-- <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" /> -->
     </label>
     <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -184,7 +182,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             <option value="" disabled>select</option>
             <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
           </select>
-          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+          <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  /> -->
       </label>
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -198,7 +196,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               />
           </template>
           </v-select>
-          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
+          <!-- <Error v-if="errors?.approved_date" :errors="errors.approved_date"  /> -->
       </label>
       
       <label class="label-group">
@@ -213,12 +211,12 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               />
           </template>
           </v-select>
-        <Error v-if="errors?.currency" :errors="errors.currency"/>
+        <!-- <Error v-if="errors?.currency" :errors="errors.currency"/> -->
     </label>
     <label class="label-group" v-if="form.currency == 'USD'">
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
-        <Error v-if="errors?.foreign_to_usd" :errors="errors.convertion_rate"  />
+        <!-- <Error v-if="errors?.foreign_to_usd" :errors="errors.convertion_rate"  /> -->
     </label>
   </div>
 
@@ -226,7 +224,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
 
@@ -365,7 +363,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       </fieldset>
     </div>
   </div>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 

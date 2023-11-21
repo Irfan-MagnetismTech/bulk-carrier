@@ -25,10 +25,11 @@ class ScmSrController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
+            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $storeRequisitions, 200);
         } catch (\Exception $e) {

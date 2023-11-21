@@ -8,6 +8,7 @@
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
@@ -26,10 +27,7 @@
       downloadExcel: {type: Function },
       formType: { type: String, required : false },
       materialObject: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: { required: false, default: {} },
 
     });
 
@@ -187,7 +185,7 @@ onMounted(() => {
       <label class="label-group">
           <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -201,12 +199,12 @@ onMounted(() => {
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.raised" :errors="errors.raised"  />
+          <!-- <Error v-if="errors?.raised" :errors="errors.raised"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
@@ -214,24 +212,24 @@ onMounted(() => {
               <option value="1">YES</option>
               <option value="0">NO</option>
           </select>
-          <Error v-if="errors?.is_critical" :errors="errors.is_critical"  />
+          <!-- <Error v-if="errors?.is_critical" :errors="errors.is_critical"  /> -->
       </label>
   </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
         <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
         <input type="file" class="form-input" @change="handleAttachmentChange" />
-        <Error v-if="errors?.attachment" :errors="errors.attachment"  />
+        <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
     </label>
     <label class="label-group">
         <span class="label-item-title">Purchase Center</span>
         <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
-        <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" />
+        <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
           <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
           <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
-          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
+          <!-- <Error v-if="errors?.approved_date" :errors="errors.approved_date"  /> -->
       </label>
   </div>
 
@@ -239,7 +237,7 @@ onMounted(() => {
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
 
@@ -386,7 +384,7 @@ onMounted(() => {
                     <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
                     <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
                     </v-select>
-                    <Error v-if="errors?.store_category" :errors="errors.store_category" />
+                    <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
                 </label>
                 <label class="label-group">
                 <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
@@ -397,6 +395,7 @@ onMounted(() => {
 
       <DropZoneV2 :form="form" :page="page"></DropZoneV2>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
