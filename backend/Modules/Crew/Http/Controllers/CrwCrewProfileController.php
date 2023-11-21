@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewProfile;
 use App\Services\FileUploadService;
+use Modules\Crew\Http\Requests\CrwCrewProfileRequest;
 
 class CrwCrewProfileController extends Controller
 {
@@ -40,7 +41,7 @@ class CrwCrewProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwCrewProfileRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -91,7 +92,7 @@ class CrwCrewProfileController extends Controller
      * @param  \App\Models\CrwCrewProfile  $crwCrewProfile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewProfile $crwCrewProfile)
+    public function update(CrwCrewProfileRequest $request, CrwCrewProfile $crwCrewProfile)
     {
         try {
             DB::transaction(function () use ($request, $crwCrewProfile)

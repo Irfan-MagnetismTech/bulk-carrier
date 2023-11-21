@@ -20,14 +20,11 @@ return new class extends Migration
 			$table->unsignedBigInteger('agency_id')->nullable();
 			$table->unsignedBigInteger('department_id')->nullable();
 			$table->unsignedBigInteger('crw_rank_id')->nullable();
-
 			$table->string('employee_type');
 			$table->tinyInteger('is_officer');			
 			$table->string('full_name');
-
 			$table->string('first_name');
 			$table->string('last_name');
-
 			$table->string('father_name');
 			$table->string('mother_name');
 			$table->date('date_of_birth');
