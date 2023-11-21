@@ -136,7 +136,7 @@ export default function useWarehouse() {
 
     async function deleteWarehouse(warehouseId) {
         // const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/warehouses/${warehouseId}`);
@@ -147,7 +147,7 @@ export default function useWarehouse() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            isLoading.value = false;
+            // isLoading.value = false;
         }
     }
 

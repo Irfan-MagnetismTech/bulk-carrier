@@ -2,11 +2,9 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Http\Requests\ScmLcRecordRequest;
 use App\Services\FileUploadService;
@@ -24,12 +22,12 @@ class ScmLcRecordController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         try {
             $scmLcRecords = ScmLcRecord::query()
                 ->with('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo')
-                ->globalSearch($request->all());
+                ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmLcRecords, 200);
         } catch (\Exception $e) {
@@ -120,11 +118,11 @@ class ScmLcRecordController extends Controller
         }
     }
 
-    public function searchLcRecord(Request $request): JsonResponse
+    public function searchLcRecord(): JsonResponse
     {
         $lcRecord = ScmLcRecord::query()
             ->with('scmLcRecordLines')
-            ->whereBusinessUnitAndScmPoId($request->business_unit, $request->scm_po_id)
+            ->whereBusinessUnitAndScmPoId(request()->business_unit, request()->scm_po_id)
             // ->where('lc_no', 'like', "%$request->searchParam%")
             ->orderByDesc('lc_no')
             // ->limit(10)

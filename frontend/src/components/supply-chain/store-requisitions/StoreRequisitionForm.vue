@@ -8,7 +8,7 @@
       <label class="label-group">
           <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -22,7 +22,7 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Department <span class="text-red-500">*</span></span>
@@ -36,12 +36,12 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
   </div>
 
@@ -49,7 +49,7 @@
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
 
@@ -122,7 +122,7 @@
     </div>
     </div>
   </div>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 
 </template>
 
@@ -135,6 +135,7 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
@@ -150,10 +151,7 @@
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       materialObject: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: {required: false, default: {} },
 
     });
     function addMaterial() {

@@ -9,6 +9,7 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useLcRecord from '../../../composables/supply-chain/useLcRecord';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMaterialReceiptReport from '../../../composables/supply-chain/useMaterialReceiptReport';
     
@@ -25,10 +26,7 @@
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       materialObject: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: { required: false, default: {} },
 
     });
     // const {form} = toRefs(props);
@@ -160,14 +158,14 @@ function changeRate(index) {
       <label class="label-group">
           <span class="label-item-title">MRR Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group-grid">
       <label class="label-group">
           <span class="label-item-title">Received Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group" v-if="form.type == 'FOREIGN'">
           <span class="label-item-title">LC Record No<span class="text-red-500">*</span></span>
@@ -182,38 +180,38 @@ function changeRate(index) {
                         />
                 </template>
           </v-select>
-          <Error v-if="errors?.scmLcRecord" :errors="errors.scmLcRecord"  />
+          <!-- <Error v-if="errors?.scmLcRecord" :errors="errors.scmLcRecord"  /> -->
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scm_po_no" required readonly class="form-input vms-readonly-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_po_no" :errors="errors.scm_po_no"  />
+          <!-- <Error v-if="errors?.scm_po_no" :errors="errors.scm_po_no"  /> -->
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.po_date" required readonly class="form-input vms-readonly-input" name="scm_po_date" :id="'scm_po_date'" />
-          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+          <!-- <Error v-if="errors?.po_date" :errors="errors.po_date"  /> -->
       </label>
       
       <label class="label-group">
           <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scm_pr_no" required readonly class="form-input vms-readonly-input" name="scm_pr_no" :id="'scm_pr_no'" />
-          <Error v-if="errors?.scm_pr_no" :errors="errors.scm_pr_no"  />
+          <!-- <Error v-if="errors?.scm_pr_no" :errors="errors.scm_pr_no"  /> -->
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scm_cs_no" required readonly class="form-input vms-readonly-input" name="raised" :id="'raised'" />
-          <Error v-if="errors?.scm_cs_no" :errors="errors.scm_cs_no"  />
+          <!-- <Error v-if="errors?.scm_cs_no" :errors="errors.scm_cs_no"  /> -->
       </label>
       <label class="label-group" v-if="form.type == 'CASH'">
           <span class="label-item-title">IOU No<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scm_iou_no" required class="form-input" name="scm_iou_no" :id="'scm_iou_no'" />
-          <Error v-if="errors?.scm_iou_no" :errors="errors.scm_iou_no"  />
+          <!-- <Error v-if="errors?.scm_iou_no" :errors="errors.scm_iou_no"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Challan<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.challan_no" required class="form-input" name="challan_no" :id="'challan_no'" />
-          <Error v-if="errors?.challan_no" :errors="errors.challan_no"  />
+          <!-- <Error v-if="errors?.challan_no" :errors="errors.challan_no"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Status<span class="text-red-500">*</span></span>
@@ -221,7 +219,7 @@ function changeRate(index) {
               <option value="1">Settled</option>
               <option value="0">Remaining</option>
           </select>
-          <Error v-if="errors?.is_completed" :errors="errors.is_completed"  />
+          <!-- <Error v-if="errors?.is_completed" :errors="errors.is_completed"  /> -->
       </label>
   </div>
   <div class="input-group">
@@ -231,14 +229,14 @@ function changeRate(index) {
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">QC Remarks <span class="text-red-500">*</span></span>
           <textarea v-model="form.qc_remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.qc_remarks" :errors="errors.qc_remarks" />
+          <!-- <Error v-if="errors?.qc_remarks" :errors="errors.qc_remarks" /> -->
     </label>
   </div>
   <div id="">
@@ -340,7 +338,7 @@ function changeRate(index) {
     </div>
     </div>
   </div>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 <style lang="postcss" scoped>

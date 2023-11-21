@@ -5,6 +5,7 @@
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import useVendor from '../../../composables/supply-chain/useVendor';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
 
@@ -18,10 +19,7 @@
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       csVendors: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: { required: false, default: {}},
 
     });
 
@@ -120,22 +118,22 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
       <label class="label-group">
         <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.lc_no" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
-        <Error v-if="errors?.lc_no" :errors="errors.lc_no" />
+        <!-- <Error v-if="errors?.lc_no" :errors="errors.lc_no" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">LC Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.lc_date" required class="form-input" name="lc_date" :id="'lc_date'" />
-          <Error v-if="errors?.lc_date" :errors="errors.lc_date"  />
+          <!-- <Error v-if="errors?.lc_date" :errors="errors.lc_date"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">LC Expire Date<span class="text-red-500">*</span></span>
            <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" />
-          <Error v-if="errors?.expire_date" :errors="errors.expire_date"  />
+          <!-- <Error v-if="errors?.expire_date" :errors="errors.expire_date"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Weight<span class="text-red-500">*</span></span>
           <input type="text" placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
-          <Error v-if="errors?.weight" :errors="errors.weight"  />
+          <!-- <Error v-if="errors?.weight" :errors="errors.weight"  /> -->
       </label>
       
   </div>
@@ -143,7 +141,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
     <label class="label-group">
         <span class="label-item-title">No. Of Packet</span>
         <input type="text" v-model="form.no_of_packet" required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
-        <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" />
+        <!-- <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" /> -->
     </label>
     <label class="label-group">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
@@ -157,52 +155,52 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
                 />
               </template>
             </v-select>
-          <Error v-if="errors?.scm_po_id" :errors="errors.scm_po_id"  />
+          <!-- <Error v-if="errors?.scm_po_id" :errors="errors.scm_po_id"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Invoice Value</span>
         <input type="text" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
-        <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/>
+        <!-- <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/> -->
     </label>
       <label class="label-group">
           <span class="label-item-title">Assessment Value<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
-          <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  />
+          <!-- <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  /> -->
       </label>
   </div>
   <div class="input-group">    
     <label class="label-group">
         <span class="label-item-title">Issuing Bank</span>
         <input type="text" v-model="form.issue_bank_name" required class="form-input" name="issue_bank_name" :id="'issue_bank_name'" /> 
-        <Error v-if="errors?.issue_bank_name" :errors="errors.issue_bank_name" />
+        <!-- <Error v-if="errors?.issue_bank_name" :errors="errors.issue_bank_name" /> -->
     </label>
     <label class="label-group">
           <span class="label-item-title">Advising Bank<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.advising_bank_name" required class="form-input" name="advising_bank_name" :id="'advising_bank_name'" />
-          <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_name"  />
+          <!-- <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_name"  /> -->
       </label>
       
       <label class="label-group">
         <span class="label-item-title">Beneficiary Bank</span>
         <input type="text" v-model="form.beneficiary_bank_name" required class="form-input" name="beneficiary_bank_name" :id="'beneficiary_bank_name'" />
-        <Error v-if="errors?.beneficiary_bank_name" :errors="errors.beneficiary_bank_name"/>
+        <!-- <Error v-if="errors?.beneficiary_bank_name" :errors="errors.beneficiary_bank_name"/> -->
     </label>
       <label class="label-group">
           <span class="label-item-title">Discounting Bank<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.discounting_bank_name" required class="form-input" name="discounting_bank_name" :id="'discounting_bank_name'" />
-          <Error v-if="errors?.discounting_bank_name" :errors="errors.discounting_bank_name"  />
+          <!-- <Error v-if="errors?.discounting_bank_name" :errors="errors.discounting_bank_name"  /> -->
       </label>
   </div>
   <div class="input-group !w-1/2">    
     <label class="label-group">
         <span class="label-item-title">Party Name</span>
         <input type="text" readonly :value="form.scmVendor?.name" required class="form-input vms-readonly-input" name="scmVendor"/> 
-        <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" />
+        <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" /> -->
     </label>
     <label class="label-group">
           <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
           <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
-          <Error v-if="errors?.attachment" :errors="errors.attachment"  />
+          <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
       </label>
   </div>
 
@@ -277,6 +275,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
       <!-- </fieldset> -->
     </div>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
