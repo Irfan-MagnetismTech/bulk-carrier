@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -9,9 +9,13 @@ import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useChartererProfile from '../../../composables/operations/useChartererProfile';
 import Store from "../../../store";
+import useGlobalFilter from "../../../composables/useGlobalFilter";
+import {useRouter} from "vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
 
-const { chartererProfiles, getChartererProfiles, deleteChartererProfile, isLoading } = useChartererProfile();
+const { chartererProfiles, getChartererProfiles, deleteChartererProfile, isLoading, isTableLoading } = useChartererProfile();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -27,6 +31,11 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
+const router = useRouter();
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -44,10 +53,77 @@ function confirmDelete(id) {
   })
 }
 
+let filterOptions = ref( {
+	"business_unit": businessUnit.value,
+	"items_per_page": 15,
+	"page": props.page,
+	"isFilter": false,
+	"filter_options": [
+		{
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		},
+    {
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		},
+    {
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		},
+    {
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		},
+    {
+			"relation_name": null,
+			"field_name": "name",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		}
+	]
+});
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 onMounted(() => {
-  watchEffect(() => {
-    getChartererProfiles(props.page, businessUnit.value)
+  watchPostEffect(() => {
+
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'ops.vessels.index', query: { page: filterOptions.value.page } 
+      });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+
+    currentPage.value = props.page;  
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+
+    getChartererProfiles(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -58,7 +134,9 @@ onMounted(() => {
       console.error("Error fetching data.", error);
     });
 });
-
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -69,33 +147,90 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Charterer Profile List</h2>
     <default-button :title="'Create Charterer Profile'" :to="{ name: 'ops.charterer-profiles.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
 
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Charterer Name</th>
-            <th>Charterer Short Code</th>
-            <th>Country</th>
-            <th>Email</th>
-            <th>Contact</th>
-            <th>Action</th>
-          </tr>
+          <thead>
+            <tr class="w-full">
+              <th class="w-16">
+                <div class="w-full flex items-center justify-between">
+                # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Charterer Name</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Charterer Short Code</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Country</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Email</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(3,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(3,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Contact</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>Action</th>
+            </tr>
+            <tr class="w-full" v-if="showFilter">
+              <th>
+                <select v-model="filterOptions.items_per_page" class="filter_input">
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </th>
+              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th>
+                <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
+            </tr>
           </thead>
-          <tbody v-if="chartererProfiles?.data?.length">
+          <tbody v-if="chartererProfiles?.data?.length" class="relative">
               <tr v-for="(chartererProfile, index) in chartererProfiles.data" :key="chartererProfile?.id">
                   <td>{{ chartererProfiles.from + index }}</td>
                   <td>{{ chartererProfile?.name }}</td>
@@ -110,11 +245,17 @@ onMounted(() => {
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererProfiles?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!chartererProfiles?.length">
+          <tfoot v-if="!chartererProfiles?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="6">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+            <td colspan="6">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+            </td>
           </tr>
           <tr v-else-if="!chartererProfiles?.data?.length">
             <td colspan="6">No data found.</td>
