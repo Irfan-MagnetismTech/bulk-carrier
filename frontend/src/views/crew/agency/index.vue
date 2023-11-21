@@ -30,7 +30,10 @@ const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Agency List');
 
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 let filterOptions = ref( {
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -62,7 +65,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Contact No.",
+      "label": "Phone",
       "filter_type": "input"
     },
     {
