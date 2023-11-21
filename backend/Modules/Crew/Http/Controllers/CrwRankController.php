@@ -2,10 +2,12 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwRank;
+use Modules\Crew\Http\Requests\CrwRankRequest;
 
 class CrwRankController extends Controller
 {
@@ -14,12 +16,10 @@ class CrwRankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwRanks = CrwRank::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->paginate(10);
+            $crwRanks = CrwRank::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwRanks, 200);
         }
@@ -35,15 +35,15 @@ class CrwRankController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwRankRequest $request)
     {
         try {
             $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank     = CrwRank::create($crwRankData);
 
-            return response()->success('Created Succesfully', $crwRank, 201);
+            return response()->success('Created Successfully', $crwRank, 201);
         }
-        catch (QueryException $e)
+        catch (Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
@@ -58,7 +58,7 @@ class CrwRankController extends Controller
     public function show(CrwRank $crwRank)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwRank, 200);
+            return response()->success('Retrieved Succesfully', $crwRank, 200);
         }
         catch (QueryException $e)
         {
@@ -73,13 +73,13 @@ class CrwRankController extends Controller
      * @param  \App\Models\CrwRank  $crwRank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwRank $crwRank)
+    public function update(CrwRankRequest $request, CrwRank $crwRank)
     {
         try {
             $crwRankData = $request->only('name', 'short_name', 'business_unit');
             $crwRank->update($crwRankData);
 
-            return response()->success('Updated succesfully', $crwRank, 202);
+            return response()->success('Updated Successfully', $crwRank, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class CrwRankController extends Controller
         try {
             $crwRank->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('crw_recruitment_approval_id')->nullable();
 			$table->enum('hired_by', ['Agency', 'Company'])->nullable();
-			$table->unsignedBigInteger('ageny_id')->nullable();
+			$table->unsignedBigInteger('agency_id')->nullable();
 			$table->unsignedBigInteger('department_id')->nullable();
+			$table->unsignedBigInteger('rank_id')->nullable();
 			$table->string('first_name');
 			$table->string('last_name');
 			$table->string('father_name');
@@ -32,8 +33,8 @@ return new class extends Migration
 			$table->string('passport_no')->nullable();
 			$table->date('passport_issue_date')->nullable();
 			$table->string('blood_group')->nullable();
-			$table->float('height')->nullable();
-			$table->float('weight')->nullable();
+			$table->string('height')->nullable();
+			$table->string('weight')->nullable();
 			$table->string('pre_address');
 			$table->string('pre_city');
 			$table->string('pre_mobile_no');
@@ -43,7 +44,7 @@ return new class extends Migration
 			$table->string('per_mobile_no');
 			$table->string('per_email')->nullable();
 			$table->string('picture')->nullable();
-			$table->string('attachment')->nullable();            
+			$table->string('attachment')->nullable();
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });

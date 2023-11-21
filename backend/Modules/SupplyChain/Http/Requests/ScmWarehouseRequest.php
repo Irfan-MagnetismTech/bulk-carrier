@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ScmWarehouseRequest extends FormRequest
@@ -14,7 +15,9 @@ class ScmWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', Rule::unique('scm_warehouses')->ignore($this->warehouse, 'name'), 'max:255'],
+            'short_code' => ['required', Rule::unique('scm_warehouses')->ignore($this->warehouse, 'short_code'), 'max:255'],
+            'scmWarehouseContactPersons.*.email' => ['required', 'email', 'max:255'],
         ];
     }
 
@@ -26,7 +29,14 @@ class ScmWarehouseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'name.unique' => 'Name is already taken',
+            'name.max' => 'Name is too long',
+            'short_code.required' => 'Short code is required',
+            'short_code.unique' => 'Short code is already taken',
+            'short_code.max' => 'Short code is too long',
+            'scmWarehouseContactPersons.*.email.required' => 'Email is required',
+            'scmWarehouseContactPersons.*.email.email' => 'Email is not valid',
         ];
     }
 

@@ -214,5 +214,331 @@ export default [
 
     /* Opening Stock Route end */
 
+
+    /* Purchase Requisition start */
+
+    {
+        path: `/${BASE}/purchase-requisitions`,
+        name: `${BASE}.purchase-requisitions.index`,
+        component: () => import(`../views/${PATH_BASE}/purchase-requisitions/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisitions-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/purchase-requisitions/create`,
+        name: `${BASE}.purchase-requisitions.create`,
+        component: () => import(`../views/${PATH_BASE}/purchase-requisitions/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisitions-create' },
+    },
+    {
+        path: `/${BASE}/purchase-requisitions/:purchaseRequisitionId/edit`,
+        name: `${BASE}.purchase-requisitions.edit`,
+        component: () => import(`../views/${PATH_BASE}/purchase-requisitions/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisitions-edit' },
+    },
+    {
+        path: `/${BASE}/purchase-requisitions/:purchaseRequisitionId`,
+        name: `${BASE}.purchase-requisitions.show`,
+        component: () => import(`../views/${PATH_BASE}/purchase-requisitions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisitions-show'  },
+    },
+
+    /* Purchase Requisition end */
+
+    /* Purchase Order start */
+
+    {
+        path: `/${BASE}/purchase-orders`,
+        name: `${BASE}.purchase-orders.index`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    // {
+    //     path: `/${BASE}/purchase-orders/create`,
+    //     name: `${BASE}.purchase-orders.create`,
+    //     component: () => import(`../views/${PATH_BASE}/purchase-orders/create.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-create' },
+    //     props: route => ({
+    //         pr_id: route.query.pr_id,
+    //         cs_id: route.query.cs_id || null // Set to null if cs_id is not provided
+    //     })
+    // },
+    {
+        path: `/${BASE}/purchase-orders/create`,
+        name: `${BASE}.purchase-orders.create`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-create' },
+        props: (route) => ({
+            pr_id: route.query.pr_id,
+            cs_id: route.query.cs_id || null // Set to null if cs_id is not provided
+        })
+    },
+    {
+        path: `/${BASE}/purchase-orders/:purchaseOrderId/edit`,
+        name: `${BASE}.purchase-orders.edit`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-edit' },
+    },
+    {
+        path: `/${BASE}/purchase-orders/:purchaseRequisitionId`,
+        name: `${BASE}.purchase-orders.show`,
+        component: () => import(`../views/${PATH_BASE}/purchase-orders/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-show'  },
+    },
+
+    /* Purchase Requisition end */
+
+    /* LC Record start */
+
+    {
+        path: `/${BASE}/lc-records`,
+        name: `${BASE}.lc-records.index`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/lc-records/create`,
+        name: `${BASE}.lc-records.create`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-create' },
+    },
+    {
+        path: `/${BASE}/lc-records/:lcRecordId/edit`,
+        name: `${BASE}.lc-records.edit`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-edit' },
+    },
+    {
+        path: `/${BASE}/lc-records/:lcRecordId`,
+        name: `${BASE}.lc-records.show`,
+        component: () => import(`../views/${PATH_BASE}/lc-records/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'lc-records-show'  },
+    },
+
+    /* LC Record end */
+
     
+    /* LC Record end */
+    /* Material Receipt Report start */
+
+    {
+        path: `/${BASE}/material-receipt-reports`,
+        name: `${BASE}.material-receipt-reports.index`,
+        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/material-receipt-reports/create`,
+        name: `${BASE}.material-receipt-reports.create`,
+        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
+        props: (route) => ({
+            pr_id: route.query.pr_id,
+            po_id: route.query.po_id || null // Set to null if po_id is not provided
+        })
+    },
+    // {
+    //     path: `/${BASE}/material-receipt-reports/create`,
+    //     name: `${BASE}.material-receipt-reports.create`,
+    //     component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
+    // },
+    {
+        path: `/${BASE}/material-receipt-reports/:materialReceiptReportId/edit`,
+        name: `${BASE}.material-receipt-reports.edit`,
+        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-edit' },
+    },
+    {
+        path: `/${BASE}/material-receipt-reports/:materialReceiptReportId`,
+        name: `${BASE}.material-receipt-reports.show`,
+        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-show'  },
+    },
+
+    /* Material Receipt Report end */
+
+    /* Store Requisition start */
+
+    {
+        path: `/${BASE}/store-requisitions`,
+        name: `${BASE}.store-requisitions.index`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-requisitions/create`,
+        name: `${BASE}.store-requisitions.create`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-create' },
+    },
+    {
+        path: `/${BASE}/store-requisitions/:storeRequisitionId/edit`,
+        name: `${BASE}.store-requisitions.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-edit' },
+    },
+    {
+        path: `/${BASE}/store-requisitions/:storeRequisitionId`,
+        name: `${BASE}.store-requisitions.show`,
+        component: () => import(`../views/${PATH_BASE}/store-requisitions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-requisitions-show'  },
+    },
+    /* Store Requisition end */
+
+    /* Store Issue start */
+
+    {
+        path: `/${BASE}/store-issues`,
+        name: `${BASE}.store-issues.index`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-issues/create`,
+        name: `${BASE}.store-issues.create`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-create' },
+        props: (route) => ({
+            sr_id: route.query.sr_id,
+        })
+
+    },
+    {
+        path: `/${BASE}/store-issues/:storeIssueId/edit`,
+        name: `${BASE}.store-issues.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-edit' },
+    },
+    {
+        path: `/${BASE}/store-issues/:storeIssueId`,
+        name: `${BASE}.store-issues.show`,
+        component: () => import(`../views/${PATH_BASE}/store-issues/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issues-show'  },
+    },
+    /* Store Issue end */
+    
+     /* Store Issue Return start */
+
+     {
+        path: `/${BASE}/store-issue-returns`,
+        name: `${BASE}.store-issue-returns.index`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/store-issue-returns/create`,
+        name: `${BASE}.store-issue-returns.create`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-create' },
+    },
+    {
+        path: `/${BASE}/store-issue-returns/:storeIssueReturnId/edit`,
+        name: `${BASE}.store-issue-returns.edit`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-edit' },
+    },
+    {
+        path: `/${BASE}/store-issue-returns/:storeIssueReturnId`,
+        name: `${BASE}.store-issue-returns.show`,
+        component: () => import(`../views/${PATH_BASE}/store-issue-returns/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'store-issue-returns-show'  },
+    },
+    /* Store Issue Return end */
+
+
+     /* Movement Requisition start */
+
+     {
+        path: `/${BASE}/movement-requisitions`,
+        name: `${BASE}.movement-requisitions.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-requisitions/create`,
+        name: `${BASE}.movement-requisitions.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-create' },
+    },
+    {
+        path: `/${BASE}/movement-requisitions/:movementRequisitionId/edit`,
+        name: `${BASE}.movement-requisitions.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-edit' },
+    },
+    {
+        path: `/${BASE}/movement-requisitions/:movementRequisitionId`,
+        name: `${BASE}.movement-requisitions.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-requisitions/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-requisitions-show'  },
+    },
+    /* Movement Requisition end */
+
+    /* Movement Out start */
+
+    {
+        path: `/${BASE}/movement-outs`,
+        name: `${BASE}.movement-outs.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-outs/create`,
+        name: `${BASE}.movement-outs.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-create' },
+    },
+    {
+        path: `/${BASE}/movement-outs/:movementOutId/edit`,
+        name: `${BASE}.movement-outs.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-edit' },
+    },
+    {
+        path: `/${BASE}/movement-outs/:movementOutId`,
+        name: `${BASE}.movement-outs.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-outs/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-outs-show'  },
+    },
+    
+    /* Movement Out end */
+    
+    /* Movement In start */
+
+    {
+        path: `/${BASE}/movement-ins`,
+        name: `${BASE}.movement-ins.index`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/movement-ins/create`,
+        name: `${BASE}.movement-ins.create`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-create' },
+    },
+    {
+        path: `/${BASE}/movement-ins/:movementInId/edit`,
+        name: `${BASE}.movement-ins.edit`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-edit' },
+    },
+    {
+        path: `/${BASE}/movement-ins/:movementInId`,
+        name: `${BASE}.movement-ins.show`,
+        component: () => import(`../views/${PATH_BASE}/movement-ins/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'movement-ins-show'  },
+    },
+    
+    /* Movement In end */
 ];

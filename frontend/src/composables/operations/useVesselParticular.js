@@ -45,19 +45,38 @@ export default function useVesselParticular() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
 
-	async function getVesselParticulars(page, businessUnit) {
+
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+
+	async function getVesselParticulars(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
 
 		try {
 			const { data, status } = await Api.get('/ops/vessel-particulars', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit,
-
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			vesselParticulars.value = data.value;
 			notification.showSuccess(status);
@@ -66,8 +85,18 @@ export default function useVesselParticular() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			// loader.hide();
+			// isLoading.value = false;
+			// loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -184,21 +213,20 @@ export default function useVesselParticular() {
 		}
 	}
 
-	async function downloadGeneralParticular(vesselParticularId) {
+	async function downloadGeneralParticular(vesselName, vesselParticularId) {
 		axios({
-            url: '/api/v1/download-file/' + vesselParticularId,
-            data: searchParameter,
+            url: 'ops/export-particular-report?id=' + vesselParticularId,
             method: 'GET',
             responseType: 'blob', // important
         }).then((response) => {
-            let dateTime = new Date();
 
             //stream pdf file to new tab start
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.click();
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', vesselName + " - Particulars" + ".xlsx");
+            document.body.appendChild(link);
+            link.click();
             //stream pdf file to new tab end
         }).catch((error) => {
             if (error.response.status === 422) {
@@ -219,21 +247,21 @@ export default function useVesselParticular() {
         });
 	}
 
-	async function downloadChartererParticular(vesselParticularId) {
+	async function downloadChartererParticular(vesselName, vesselParticularId) {
 		axios({
-            url: '/api/v1/download-file/' + vesselParticularId,
-            data: searchParameter,
+            url: 'ops/particular-charterer-download?id=' + vesselParticularId,
             method: 'GET',
             responseType: 'blob', // important
         }).then((response) => {
             let dateTime = new Date();
 
             //stream pdf file to new tab start
-            let fileURL = URL.createObjectURL(response.data);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.target = '_blank';
-            a.click();
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', vesselName + " - Charterer Particulars" + ".xlsx");
+            document.body.appendChild(link);
+            link.click();
             //stream pdf file to new tab end
         }).catch((error) => {
             if (error.response.status === 422) {
@@ -266,6 +294,7 @@ export default function useVesselParticular() {
 		downloadGeneralParticular,
 		downloadChartererParticular,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

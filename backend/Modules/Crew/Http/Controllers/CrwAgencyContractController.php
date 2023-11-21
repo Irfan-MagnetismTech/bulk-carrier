@@ -23,12 +23,10 @@ class CrwAgencyContractController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwAgencyContracts = CrwAgencyContract::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwAgencyContracts = CrwAgencyContract::with('crwAgency:id,name')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwAgencyContracts, 200);
         }
@@ -48,11 +46,12 @@ class CrwAgencyContractController extends Controller
     {
         try {
             $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = json_decode($request->get('data'),true);
             $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract');
 
             $crwAgencyContract     = CrwAgencyContract::create($crwAgencyContractData);
 
-            return response()->success('Created Succesfully', $crwAgencyContract, 201);
+            return response()->success('Created Successfully', $crwAgencyContract, 201);
         }
         catch (QueryException $e)
         {
@@ -69,7 +68,7 @@ class CrwAgencyContractController extends Controller
     public function show(CrwAgencyContract $crwAgencyContract)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgencyContract, 200);
+            return response()->success('Retrieved successfully', $crwAgencyContract, 200);
         }
         catch (QueryException $e)
         {
@@ -88,6 +87,7 @@ class CrwAgencyContractController extends Controller
     {
         try {
             $crwAgencyContractData = $request->only('crw_agency_id', 'billing_cycle', 'billing_currency', 'validity_from', 'validity_till', 'service_offered', 'terms_and_conditions', 'remarks', 'account_holder_name', 'bank_name', 'bank_address', 'account_no', 'swift_code', 'business_unit');
+            $crwAgencyContractData = json_decode($request->get('data'),true);
             $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/agency-contract', $crwAgencyContract->attachment);
 
             $crwAgencyContract->update($crwAgencyContractData);

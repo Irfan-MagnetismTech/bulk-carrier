@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Http\Requests\ScmWarehouseRequest;
 
 class ScmWarehouseController extends Controller
 {
@@ -14,16 +15,12 @@ class ScmWarehouseController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmWarehouses = ScmWarehouse::query()
-                ->with('scmWarehouseContactPersons')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($query) {
-                    $query->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);
+                ->with('scmWarehouseContactPerson')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
         } catch (\Exception $e) {
@@ -35,7 +32,7 @@ class ScmWarehouseController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmWarehouseRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -61,7 +58,10 @@ class ScmWarehouseController extends Controller
     public function show(ScmWarehouse $warehouse): JsonResponse
     {
         try {
-            return response()->success('data', $warehouse->load('scmWarehouseContactPersons'), 200);
+            $warehouse->load(['scmWarehouseContactPersons' => function ($query) {
+                $query->latest('created_at')->take(1);
+            }, 'accCostCenter']);
+            return response()->success('data', $warehouse, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -69,11 +69,11 @@ class ScmWarehouseController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param ScmWarehouseRequest $request
      * @param ScmWarehouse $warehouse
      * @return JsonResponse
      */
-    public function update(Request $request, ScmWarehouse $warehouse)
+    public function update(ScmWarehouseRequest $request, ScmWarehouse $warehouse): JsonResponse
     {
         try {
             $warehouse->update($request->all());
@@ -103,15 +103,15 @@ class ScmWarehouseController extends Controller
         }
     }
 
-    public function searchWarehouse(Request $request)
+    public function searchWarehouse(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $warehouse = ScmWarehouse::query()
                 ->with('scmWarehouseContactPersons')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('name', 'LIKE', "%$request->searchParam%")
+                // ->where('name', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('name')
-                ->limit(10)
+                // ->limit(10)
                 ->get();
         } else {
             $warehouse = [];

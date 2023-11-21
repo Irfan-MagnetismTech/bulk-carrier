@@ -14,12 +14,11 @@ class CrwCrewAssignmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrewAssignments = CrwCrewAssignment::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,name')
+            ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);
         }
@@ -58,7 +57,7 @@ class CrwCrewAssignmentController extends Controller
     public function show(CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewAssignment, 200);
+            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrew','port'), 200);
         }
         catch (QueryException $e)
         {

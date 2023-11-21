@@ -6,9 +6,11 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 
 export default function useService() {
+    const BASE = 'scm' 
     const router = useRouter();
     const services = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const service = ref( {
         name: '',
@@ -16,48 +18,61 @@ export default function useService() {
         description: ''
     });
 
-    const indexPage = ref(null);
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
 
-    async function getServices(page,columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
-        isLoading.value = true;
+    async function getServices(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/scm/services', {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/services`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
     async function storeService(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/services', form);
+            const { data, status } = await Api.post(`/${BASE}/services`, form);
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.service.index" });
+            router.push({ name: `${BASE}.service.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -69,11 +84,11 @@ export default function useService() {
 
     async function showService(serviceId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/services/${serviceId}`);
+            const { data, status } = await Api.get(`/${BASE}/services/${serviceId}`);
             service.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -87,17 +102,17 @@ export default function useService() {
 
     async function updateService(form, serviceId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/services/${serviceId}`,
+                `/${BASE}/services/${serviceId}`,
                 form
             );
             service.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.service.index" });
+            router.push({ name: `${BASE}.service.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -108,29 +123,29 @@ export default function useService() {
     }
 
     async function deleteService(serviceId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/services/${serviceId}`);
+            const { data, status } = await Api.delete( `/${BASE}/services/${serviceId}`);
             notification.showSuccess(status);
-            await getServices(indexPage.value);
+            await getServices(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
     async function searchService(searchParam, loading) {
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-service`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-service`, {params: { searchParam: searchParam }});
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -152,6 +167,7 @@ export default function useService() {
         showService,
         updateService,
         deleteService,
+        isTableLoading,
         isLoading,
         errors,
     };

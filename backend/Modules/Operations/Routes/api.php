@@ -18,12 +18,6 @@ use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
-use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
-use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
-use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
-use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
-use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
-use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +31,7 @@ use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 */
 Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 {
-    Route::apiResources([
+    Route::resources([
         'ports' => OpsPortController::class,
         'vessels' => OpsVesselController::class,
         'cargo-types' => OpsCargoTypeController::class,
@@ -53,12 +47,6 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'handover-takeovers' => OpsHandoverTakeoverController::class,
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
-        'customer-invoices' => OpsCustomerInvoiceController::class,
-        'cash-requisitions' => OpsCashRequisitionController::class,
-        'bunker-requisitions' => OpsBunkerRequisitionController::class,
-        'expense-heads' => OpsExpenseHeadController::class,
-        'vessel-expense-heads' => OpsVesselExpenseHeadController::class,
-        'voyage-expenditures' => OpsVoyageExpenditureController::class,
     ]);
 
     //start for without pagination
@@ -77,11 +65,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-handover-takeovers', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
     Route::get('get-charterer-invoices', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('get-lighter-noon-reports', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
-    Route::get('get-customer-invoices', [OpsCommonController::class, 'getCustomerInvoiceWithoutPaginate']);
-    Route::get('get-cash-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
-    Route::get('get-bunker-requisitions', [OpsCommonController::class, 'getCashRequisitionWithoutPaginate']);
-    Route::get('get-expense-heads', [OpsCommonController::class, 'getExpenseHeadWithoutPaginate']);
-   //end for without pagination
+    //end for without pagination
 
     // start for search api route
     Route::get('search-ports', [OpsPortController::class, 'getPortByNameOrCode']);
@@ -91,17 +75,31 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationByName']);
     Route::get('search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateByReferenceNumber']);
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
-    Route::get('search-voyages', [OpsVoyageController::class, 'getVoyageByVoyageNo']);
+    Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
-    Route::get('search-cash-requisitions', [OpsCashRequisitionController::class, 'getCashRequisitionBySerial']);
-    Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
-    Route::get('search-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'getVesselExpenseHeadByVessel']);
-    Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     
     // end for search api route
     
+    //start get data without limit
+    Route::get('get-search-ports', [OpsPortController::class, 'getPortNameOrCode']);
+    Route::get('get-search-cargo-types', [OpsCargoTypeController::class, 'getCargoTypeName']);
+    Route::get('get-search-cargo-tariffs', [OpsCargoTariffController::class, 'getCargoTariffName']);
+    Route::get('get-search-vessels', [OpsVesselController::class, 'getVesselNameorCode']);
+    Route::get('get-search-maritime-certifications', [OpsMaritimeCertificationController::class, 'getMaritimeCertificationName']);
+    Route::get('get-search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateReferenceNumber']);
+    Route::get('get-search-customers', [OpsCustomerController::class, 'getCustomerNameorCode']);
+    Route::get('get-search-voyages', [OpsVoyageController::class, 'getSearchVoyages']);
+    Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
+    //end get data without limit
+
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-
+    
+        
+    // report routes
+    Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
+    Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
+    
 });
+Route::post('vessel-search', [OpsVesselController::class, 'search']);

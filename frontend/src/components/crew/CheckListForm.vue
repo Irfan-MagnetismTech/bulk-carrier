@@ -1,6 +1,9 @@
 <script setup>
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import {onMounted, ref} from "vue";
+import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -9,6 +12,7 @@ const props = defineProps({
   },
   errors: { type: [Object, Array], required: false },
 });
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function addCheckListItem() {
   let obj = {
@@ -22,20 +26,24 @@ function removeCheckListItem(index){
   props.form.crwCrewChecklistLines.splice(index, 1);
 }
 
+onMounted(() => {
+  //props.form.business_unit = businessUnit.value;
+});
 </script>
 
 <template>
-  <business-unit-input v-model="form.business_unit"></business-unit-input>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.effective_date" class="form-input" autocomplete="off" required />
-          <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
+            <input type="date" v-model.trim="form.effective_date" class="form-input" autocomplete="off" required />
         </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-        <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.remarks" :errors="errors.remarks" />
+        <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
       </label>
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
@@ -52,10 +60,10 @@ function removeCheckListItem(index){
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(chkList, index) in form.crwCrewChecklistLines" :key="chkList.id">
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwCrewChecklistLines[index].item_name" placeholder="Item Name" class="form-input" autocomplete="off" required />
+          <input type="text" v-model.trim="form.crwCrewChecklistLines[index].item_name" placeholder="Item Name" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwCrewChecklistLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwCrewChecklistLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeCheckListItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -73,6 +81,7 @@ function removeCheckListItem(index){
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

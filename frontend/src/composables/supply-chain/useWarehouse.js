@@ -6,13 +6,17 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 
 export default function useWarehouse() {
+    const BASE = 'scm' 
     const router = useRouter();
-    const warehouses = ref([]);
+    const warehouses = ref(["Select Business Unit First"]);
+    const isTableLoading = ref(false);
+    const costCenters = ref(["Select Business Unit First"]);
     const $loading = useLoading();
     const notification = useNotification();
     const warehouse = ref( {
         cost_center_id: '',
         cost_center_name: '',
+        accCostCenter: null,
         name: '',
         address: '',
         short_code: '',
@@ -25,51 +29,62 @@ export default function useWarehouse() {
         }],
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
+    const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getWarehouses(page,businessUnit,columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
-        isLoading.value = true;
+    async function getWarehouses(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/scm/warehouses', {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-                    business_unit: businessUnit,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/warehouses`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
     async function storeWarehouse(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/scm/warehouses', form);
+            const { data, status } = await Api.post(`/${BASE}/warehouses`, form);
             warehouse.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.warehouse.index" });
+            router.push({ name: `${BASE}.warehouse.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -81,11 +96,11 @@ export default function useWarehouse() {
 
     async function showWarehouse(warehouseId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/warehouses/${warehouseId}`);
+            const { data, status } = await Api.get(`/${BASE}/warehouses/${warehouseId}`);
             warehouse.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -99,17 +114,17 @@ export default function useWarehouse() {
 
     async function updateWarehouse(form, warehouseId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/scm/warehouses/${warehouseId}`,
+                `/${BASE}/warehouses/${warehouseId}`,
                 form
             );
             warehouse.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.warehouse.index" });
+            router.push({ name: `${BASE}.warehouse.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -120,29 +135,61 @@ export default function useWarehouse() {
     }
 
     async function deleteWarehouse(warehouseId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/warehouses/${warehouseId}`);
+            const { data, status } = await Api.delete( `/${BASE}/warehouses/${warehouseId}`);
             notification.showSuccess(status);
-            await getWarehouses(indexPage.value,indexBusinessUnit.value);
+            await getWarehouses(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function searchWarehouse(searchParam, loading, business_unit) {
+    async function searchWarehouse(searchParam, business_unit) {
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            // loading(false)
+        }
+    }
+
+    async function getCostCenters(business_unit,name,loading = false) {
+        try {
+            const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
+            costCenters.value = data.value;
+        } catch(error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loading(false);
+        }
+    }
+
+
+    async function searchFromWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
             warehouses.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -155,6 +202,30 @@ export default function useWarehouse() {
         }
     }
 
+
+    async function searchToWarehouse(searchParam, loading, business_unit) {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
+            warehouses.value = data.value;
+            notification.showSuccess(status);
+            
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            loading(false)
+        }
+    }
+
+
+    
+
+
     return {
         warehouses,
         warehouse,
@@ -164,6 +235,11 @@ export default function useWarehouse() {
         showWarehouse,
         updateWarehouse,
         deleteWarehouse,
+        getCostCenters,
+        searchToWarehouse,
+        searchFromWarehouse,
+        isTableLoading,
+        costCenters,
         isLoading,
         errors,
     };

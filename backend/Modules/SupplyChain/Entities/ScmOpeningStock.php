@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmOpeningStock extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'scm_warehouse_id', 'date', 'business_unit',
@@ -25,5 +26,10 @@ class ScmOpeningStock extends Model
     public function scmWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class)->withDefault();
+    }
+
+    public function stockable()
+    {
+        return $this->morphMany(ScmStockLedger::class, 'stockable');
     }
 }

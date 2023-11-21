@@ -7,9 +7,11 @@ import useNotification from '../useNotification.js';
 import useDropZone from '../../services/dropZone.js';
 
 export default function useMaterial() {
+    const BASE = 'scm' 
     const router = useRouter();
     const materials = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
         const material = ref( {
             name: '',
@@ -24,27 +26,34 @@ export default function useMaterial() {
             sample_photo: null
         });
 
-    const indexPage = ref(null);
-    
+    const filterParams = ref(null);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
 
-    async function getMaterials(page,columns = null, searchKey = null, table = null) {
+    async function getMaterials(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-
+        filterParams.value = filterOptions;
         try {
-            const {data, status} = await Api.get('/scm/materials', {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/materials`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -52,23 +61,29 @@ export default function useMaterial() {
             notification.showError(status);
             console.log(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
 
     async function storeMaterial(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         const formData = processFormData(form);
         
         try {
-            const { data, status } = await Api.post('/scm/materials', formData);
+            const { data, status } = await Api.post(`/${BASE}/materials`, formData);
             material.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.material.index" });
+            router.push({ name: `${BASE}.material.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -80,11 +95,11 @@ export default function useMaterial() {
 
     async function showMaterial(materialId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/scm/materials/${materialId}`);
+            const { data, status } = await Api.get(`/${BASE}/materials/${materialId}`);
             material.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -97,20 +112,20 @@ export default function useMaterial() {
     }
 
     async function updateMaterial(form, materialId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         const formData = processFormData(form);
         formData.append('_method', 'PUT');
         
         console.log(formData,form);
         try {
-            const { data, status } = await Api.put(
-                `/scm/materials/${materialId}`,
+            const { data, status } = await Api.post(
+                `/${BASE}/materials/${materialId}`,
                 formData
             );
             material.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "scm.material.index" });
+            router.push({ name: `${BASE}.material.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -121,29 +136,29 @@ export default function useMaterial() {
     }
 
     async function deleteMaterial(materialId) {
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/scm/materials/${materialId}`);
+            const { data, status } = await Api.delete( `/${BASE}/materials/${materialId}`);
             notification.showSuccess(status);
-            await getMaterials(indexPage.value);
+            await getMaterials(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function searchMaterial(searchParam, loading) {
+    async function searchMaterial(searchParam, loading = false) {
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam }});
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -152,17 +167,16 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
         }
     }
 
     async function searchMaterialWithCategory(searchParam,materialCategoryId, loading) {
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': 'purple'});
+        // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`scm/search-materials`, {params: { searchParam: searchParam ,materialCategoryId: materialCategoryId}});
+            const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam ,materialCategoryId: materialCategoryId}});
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -191,6 +205,25 @@ export default function useMaterial() {
         return formData;
     }
 
+    async function getBunkerList() {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { materialCategoryId: 1}});
+            materials.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            // loading(false)
+        }
+    }
+
     return {
         materials,
         material,
@@ -200,7 +233,9 @@ export default function useMaterial() {
         showMaterial,
         updateMaterial,
         deleteMaterial,
+        isTableLoading,
         searchMaterialWithCategory,
+        getBunkerList,
         isLoading,
         errors
     };

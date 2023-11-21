@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('crw_crew_id');
 			$table->string('name'); // document name
-			$table->string('reference_no')->nullable();
 			$table->string('issuing_authority');
 			$table->string('validity_period'); //permanent / 5 Years
 			$table->float('validity_period_in_month'); //60

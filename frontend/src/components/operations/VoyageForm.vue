@@ -47,11 +47,11 @@
           </label>
           <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Mother Vessel Name <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
+                <input type="text" v-model.trim="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
                 <Error v-if="errors?.mother_vessel" :errors="errors.mother_vessel" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                 <template #search="{attributes, events}">
                     <input
@@ -69,17 +69,17 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" />
+                <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" />
               <Error v-if="errors?.voyage_no" :errors="errors.voyage_no" />
             </label>
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.voyage_sequence" readonly class="form-input bg-gray-100" required autocomplete="off" />
+                <input type="text" v-model.trim="form.voyage_sequence" readonly class="form-input bg-gray-100" required autocomplete="off" />
               <Error v-if="errors?.voyage_sequence" :errors="errors.voyage_sequence" />
             </label>
             <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark:text-gray-300">Route <span class="text-red-500">*</span></span>
-                <input type="text" v-model="form.route" placeholder="Route" class="form-input" required autocomplete="off" />
+                <input type="text" v-model.trim="form.route" placeholder="Route" class="form-input" required autocomplete="off" />
               <Error v-if="errors?.route" :errors="errors.route" />
             </label>
             
@@ -102,7 +102,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Load Port Distance (NM) <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
+              <input type="text" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
               <Error v-if="errors?.load_port_distance" :errors="errors.load_port_distance" />
             </label>
           <label class="block w-full mt-2 text-sm">
@@ -122,7 +122,7 @@
 
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Remarks </span>
-            <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
             <Error v-if="errors?.remarks" :errors="errors.remarks" />
           </label>
         </div>
@@ -180,7 +180,7 @@
               </td>
               <td>
                 <label class="block w-full text-sm">
-                  <input type="text" v-model="form.opsVoyageSectors[index].initial_survey_qty" placeholder="Initial Survey Quantity" class="form-input" autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsVoyageSectors[index].initial_survey_qty" placeholder="Initial Survey Quantity" class="form-input" autocomplete="off" />
                   <Error v-if="errors?.form.opsVoyageSectors[index]?.initial_survey_qty" :errors="errors?.form.opsVoyageSectors[index]?.initial_survey_qty" />
                 </label>
               </td>
@@ -216,30 +216,32 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsBunkers[index]"
-                          v-bind="attributes"
-                          v-on="events"
-                          :reaonly="true"
-                          />
-                  </template>
-              </v-select>
+                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsBunkers[index]"
+                            v-bind="attributes"
+                            v-on="events"
+                            :reaonly="true"
+                            />
+                    </template>
+                </v-select> -->
+                <span class="show-block bg-gray-100">{{ form.opsBunkers[index].name }}</span>
+
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.opsBunkers[index].opening_balance" readonly placeholder="Present Stock" class="form-input text-right bg-gray-100" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="text" v-model.trim="form.opsBunkers[index].opening_balance" readonly placeholder="Present Stock" class="form-input text-right bg-gray-100" autocomplete="off" :disabled="formType=='edit'"/>
                   <Error v-if="errors?.opsBunkers[index]?.opening_balance" :errors="errors.opsBunkers[index]?.opening_balance" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
                   <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity" />
                 </label>
               </td>
@@ -285,7 +287,7 @@
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark:text-gray-300">ATA </span>
 
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="datetime-local" v-model.trim="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/>
                       <Error v-if="errors?.opsVoyagePortSchedules[index]?.ata" :errors="errors.opsVoyagePortSchedules[index]?.ata" />
                     </label>
 

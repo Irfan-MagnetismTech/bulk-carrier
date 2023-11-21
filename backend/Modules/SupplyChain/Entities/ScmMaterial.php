@@ -2,14 +2,17 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmStockLedger;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmMaterialCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ScmMaterial extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $appends = ['material_name_and_code'];
 
@@ -25,5 +28,10 @@ class ScmMaterial extends Model
     public function getMaterialNameAndCodeAttribute(): string
     {
         return $this->name . ' - ' . $this->material_code;
+    }
+
+    public function currentStockByMaterialAndWarehouse(): HasMany
+    {
+        return $this->hasMany(ScmStockLedger::class);
     }
 }

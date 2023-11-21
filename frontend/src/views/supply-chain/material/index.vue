@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMaterial from "../../../composables/supply-chain/useMaterial";
@@ -8,7 +8,10 @@ import { useFuse } from "@vueuse/integrations/useFuse";
 import Swal from "sweetalert2";
 import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
-
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
   page: {
@@ -18,35 +21,116 @@ const props = defineProps({
 });
 
 
-const { materials, getMaterials, deleteMaterial, isLoading } = useMaterial();
+const { materials, getMaterials, deleteMaterial, isLoading, isTableLoading } = useMaterial();
 const { setTitle } = Title();
 const icons = useHeroIcon();
+const debouncedValue = useDebouncedRef('', 800);
+
+
+let filterOptions = ref( {
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Material Name",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "material_code",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Material Code",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "unit",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Unit",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmMaterialCategory",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Material Category",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "minimum_stock",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Minimum Stock",
+      "filter_type": "input"
+    }
+  ]
+});
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Materials');
 
+
+
 onMounted(() => {
-  watchEffect(() => {
-  getMaterials(props.page)
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+  getMaterials(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
+      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching materials:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -69,48 +153,41 @@ function confirmDelete(id) {
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Name</th>
-            <th>Material Code</th>
-            <th>Category</th>
-            <th>Minimum Stock</th>
-            <th>Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody class="relative">
           <tr v-for="(material,index) in materials?.data" :key="material.id">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ material.name }}</td>
             <td>{{ material.material_code }}</td>
+            <td>{{ material.unit }}</td>
             <td>{{ material.scmMaterialCategory.name }}</td>
             <td>{{ material.minimum_stock }}</td>
-            <td>{{ material.unit }}</td>
             <td>
+              <nobr>
               <action-button :action="'edit'" :to="{ name: 'scm.material.edit', params: { materialId: material.id } }"></action-button>
               <action-button @click="confirmDelete(material.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
+            
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!materials?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="7">Loading...</td>
+          <!-- <td colspan="7">Loading...</td> -->
+        </tr>
+        <tr v-else-if="isTableLoading">
+            <td colspan="7">
+              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+            </td>
         </tr>
         <tr v-else-if="!materials?.data?.length">
-          <td colspan="7">No Materials found.</td>
+          <td colspan="7">No Datas found.</td>
         </tr>
         </tfoot>
       </table>
