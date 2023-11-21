@@ -31,14 +31,14 @@ class ScmMrrController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         try {
-            $scmLcRecords = ScmMrr::query()
+            $mrr = ScmMrr::query()
                 ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
-                ->globalSearch($request->all());
+                ->globalSearch(request()->all());
 
-            return response()->success('Data list', $scmLcRecords, 200);
+            return response()->success('Data list', $mrr, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
