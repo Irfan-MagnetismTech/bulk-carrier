@@ -23,7 +23,6 @@ class CrwAgencyController extends Controller
      */
     public function index(Request $request)
     {
-        return CrwAgency::all(); 
         try {
             $crwAgencies = CrwAgency::with('crwAgencyContactPersons')->globalSearch($request->all());
 
