@@ -12,7 +12,7 @@ class ScmMoLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_mo_id', 'scm_material_id', 'unit', 'quantity', 'remarks', 'mmr_composite_key',
+        'scm_mo_id', 'scm_material_id', 'unit', 'quantity', 'remarks', 'mmr_composite_key','mo_composite_key'
     ];
 
     public function scmMmrLine(): BelongsTo

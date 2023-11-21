@@ -19,6 +19,7 @@ use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
+use Modules\SupplyChain\Http\Controllers\ScmMiController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -55,6 +56,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-sr-wise-data', [ScmSiController::class, "getSrWiseData"])->name('getSrWiseData');
     Route::get('get-si-wise-data', [ScmSirController::class, "getSiWiseData"])->name('getSiWiseData');
     Route::get('get-mmr-wise-data', [ScmMmrController::class, "getMmrWiseData"])->name('getMmrWiseData');
+    Route::get('get-mmr-wise-mi-data', [ScmMiController::class, "getMmrWiseMiData"])->name('getMmrWiseMiData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialByPrId');

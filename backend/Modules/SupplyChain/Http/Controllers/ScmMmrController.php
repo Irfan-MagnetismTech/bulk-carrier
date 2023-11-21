@@ -91,10 +91,10 @@ class ScmMmrController extends Controller
                     'scm_material_id' => $scmMmrLine->scm_material_id,
                     'scmMaterial' => $scmMmrLine->scmMaterial,
                     'unit' => $scmMmrLine->unit,
-                    'specification' => $scmMmrLine->specification,
                     'present_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->to_warehouse_id),
                     'available_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->from_warehouse_id),
                     'quantity' => $scmMmrLine->quantity,
+                    'mmr_composite_key' => $scmMmrLine->mmr_composite_key,
                 ];
 
                 return $lines;

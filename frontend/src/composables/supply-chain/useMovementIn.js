@@ -35,8 +35,10 @@ export default function useMovementIn() {
         to_cost_center_id: '',
         scmMmr: '',
         scm_mmr_id: '',
+        scmMo: '',
+        scm_mo_id: '',
         business_unit: '',
-        scmMoLines: [
+        scmMiLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
@@ -47,6 +49,7 @@ export default function useMovementIn() {
                 quantity: 0.00
             }
         ],
+        scmMiShortages: [],
     });
     const materialObject = {
         scmMaterial: '',
@@ -185,14 +188,14 @@ console.log(movementIn.value);
             loading(false)
         }
     }
-    async function getMmrWiseMo(mmrId) {
+    async function getMmrWiseMi(mmrId) {
         try {
-            const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-data`,{
+            const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-mi-data`,{
                 params: {
                     mmr_id: mmrId,
                 },
             });
-            filteredMovementRequisitionLines.value = data.value.scmMmrLines;
+            filteredMovementRequisitionLines.value = data.value.scmMiLines;
             console.log(filteredMovementRequisitionLines.value);
         } catch (error) {
             console.log('tag', error)
@@ -214,7 +217,7 @@ console.log(movementIn.value);
         updateMovementIn,
         deleteMovementIn,
         filteredMovementRequisitionLines,
-        getMmrWiseMo,
+        getMmrWiseMi,
         materialObject,
         isLoading,
         errors,

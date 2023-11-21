@@ -60,6 +60,7 @@ class ScmMoController extends Controller
             $ScmMo = ScmMo::create($requestData);
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $ScmMo->id, 'scm_material_id', 'mo');
+            
 
             $ScmMo->scmMoLines()->createMany($linesData);
 
@@ -109,6 +110,8 @@ class ScmMoController extends Controller
                     'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
                     'max_quantity' => $scmMoLine->scmMmrLine->scmMoLines->sum('quantity') - $scmMoLine->quantity,
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
+                    'mmr_composite_key' => $scmMoLine->mmr_composite_key ?? null,
+                    
                 ];
 
                 return $lines;

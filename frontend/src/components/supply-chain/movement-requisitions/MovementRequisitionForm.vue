@@ -225,17 +225,17 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  function fetchFromWarehouse(search, loading) {
+  function fetchFromWarehouse(search) {
       if (search.length > 0) {
-        loading(true);
-        searchWarehouse(search, loading, props.form.business_unit);
+        // loading(true);
+        searchWarehouse(search, props.form.business_unit);
       }
     }
 
-function fetchToWarehouse(search, loading) {
+function fetchToWarehouse(search) {
     if (search.length > 0) {
-        loading(true);
-      searchWarehouse(search, loading, props.form.business_unit);
+        // loading(true);
+      searchWarehouse(search, props.form.business_unit);
     }
 }
 
@@ -300,10 +300,10 @@ watch(() => props.form.scmMmrLines, (newLines) => {
 }, { deep: true });
 
 
-function fetchMaterials(search, loading) {
+function fetchMaterials(search) {
   if (search.length > 0) {
-    loading(true);
-    searchMaterial(search, loading)
+    // loading(true);
+    searchMaterial(search)
   }
   }
 
