@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
+use Modules\Crew\Http\Requests\CrwCrewDocumentRequest;
 
 class CrwCrewDocumentController extends Controller
 {
@@ -42,7 +43,7 @@ class CrwCrewDocumentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwCrewDocumentRequest $request)
     {
         try {
             $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
@@ -102,7 +103,7 @@ class CrwCrewDocumentController extends Controller
      * @param  \App\Models\CrwCrewDocument  $crwCrewDocument
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewDocument $crwCrewDocument)
+    public function update(CrwCrewDocumentRequest $request, CrwCrewDocument $crwCrewDocument)
     {
         try {
 

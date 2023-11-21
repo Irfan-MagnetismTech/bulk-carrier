@@ -45,11 +45,10 @@ class CrwAgencyController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'phone', 'email', 'website', 'logo', 'country', 'business_unit');
-                $crwAgencyData = json_decode($request->get('data'),true);
+                $crwAgencyData = $request->only('agency_name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'phone', 'email', 'website', 'logo', 'country', 'business_unit');
                 $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
                 $crwAgency     = CrwAgency::create($crwAgencyData);
-                $crwAgency->crwAgencyContactPersons()->createMany($crwAgencyData['crwAgencyContactPersons']);
+                $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
 
                 return response()->success('Created Successfully', $crwAgency, 201);
             });
@@ -89,12 +88,11 @@ class CrwAgencyController extends Controller
         try {
             DB::transaction(function () use ($request, $crwAgency)
             {
-                $crwAgencyData = $request->only('name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'phone', 'email', 'website', 'logo', 'country', 'business_unit');
-                $crwAgencyData = json_decode($request->get('data'),true);
+                $crwAgencyData = $request->only('agency_name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'phone', 'email', 'website', 'logo', 'country', 'business_unit');
                 $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
                 $crwAgency->update($crwAgencyData);
                 $crwAgency->crwAgencyContactPersons()->delete();
-                $crwAgency->crwAgencyContactPersons()->createMany($crwAgencyData['crwAgencyContactPersons']);
+                $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
 
                 return response()->success('Updated successfully', $crwAgency, 202);
             });
