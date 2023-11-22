@@ -32,7 +32,7 @@
     </label>
     <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Voyage </span>
-            <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+            <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -82,7 +82,7 @@
       </label>
   </div>
 
-  <h4 class="text-md font-semibold">Upcoming Ports</h4>
+  <h4 class="text-md font-semibold my-3">Upcoming Ports</h4>
 
   <div class="dt-responsive table-responsive">
     <table id="dataTable" class="w-full table table-striped table-bordered">
@@ -145,25 +145,25 @@
 
   </div>
 
-  <h4 class="text-md font-semibold">Distance and Vessel</h4>
+  <h4 class="text-md font-semibold my-3">Distance and Vessel</h4>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">CP/Ordered Speed </span>
         <input type="text" v-model="form.model_name" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Average RPM </span>
         <input type="text" v-model="form.model_name" placeholder="Average RPM" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Reported Speed </span>
         <input type="text" v-model="form.model_name" placeholder="Reported Speed" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Fwd Draft </span>
         <input type="text" v-model="form.model_name" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
@@ -318,17 +318,17 @@
         <tr>
           <td rowspan="4">VLSFO/IFO (MT)</td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>ME</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>Unit</td>
           <td>PCO</td>
@@ -338,49 +338,49 @@
         <tr>
           <td>GE</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>1</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Blr</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>2</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Total</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>3</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
 
@@ -389,88 +389,88 @@
         <tr>
           <td rowspan="5">MGO (MT)</td>
           <td rowspan="5">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="5">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>ME</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="5">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>4</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>GE</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>5</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Blr</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>6</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>IG</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>7</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Total</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME Tc Exh. In</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
 
@@ -479,63 +479,63 @@
         <tr>
           <td rowspan="4">LSMGO (MT)</td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>Main</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td rowspan="4">
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME TC Exh. Out</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Aux</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME TC LO OUT</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Blr</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME Scv. Temp.</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>Total</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME Scv. Press</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         
@@ -543,64 +543,65 @@
         <tr>
           <td>MECC</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>Main</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME FW Out Temp.</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
 
         <tr>
           <td>LSMECYL</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>ME Cyl. Oil</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td colspan="2">ME FW In Temp.</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
         </tr>
         <tr>
           <td>LSAECC</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>GE Sys. Oil</td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input">
           </td>
           <td>
-            <input type="text" class="form-control">
+            <input type="text" class="filter_input" autocomplete="off" />
+
           </td>
           <td></td>
           <td></td>

@@ -191,14 +191,11 @@ class OpsVoyageController extends Controller
     public function getSearchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
-            ->where(function ($query) use($request) {
-                $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
-            })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })
             ->when(request()->vessel_id != 'null', function($q) {
-                $q->where('ops_vessel_id', request()->vessel_id);
+                $q->where('ops_vessel_id', request()->ops_vessel_id);
             })
             ->get();
 
