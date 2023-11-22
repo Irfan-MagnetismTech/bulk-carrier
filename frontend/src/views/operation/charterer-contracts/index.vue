@@ -286,7 +286,7 @@ onMounted(() => {
             <tr class="w-full" v-if="showFilter">
               <th>
                 <select v-model="filterOptions.items_per_page" class="filter_input">
-                  <option value="2">15</option>
+                  <option value="15">15</option>
                   <option value="30">30</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
@@ -313,10 +313,12 @@ onMounted(() => {
                   <td>{{ chartererContract?.email }}</td>
                   <td>{{ chartererContract?.contact_no }}</td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
+                    <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-contracts.show', params: { chartererContractId: chartererContract.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-contracts.edit', params: { chartererContractId: chartererContract.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererContract.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                    </nobr>
                   </td>
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererContracts?.data?.length"></LoaderComponent>
