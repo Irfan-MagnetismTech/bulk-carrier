@@ -19,6 +19,7 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'discount'              => ['required', 'string', 'max:255'],
             'grand_total'           => ['required', 'numeric'],
             'business_unit'         => ['required', 'string', 'max:255'],
+            'opsCustomerInvoiceLines.*.amount'         => ['nullable', 'numeric', 'max:255'],
         ];
     }
 
@@ -30,7 +31,12 @@ class OpsCustomerInvoiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_customer_id.required' => 'Customer is required',            
+            'sub_total.required' => 'Sub total is required',
+            'discount.required' => 'Discount is required',
+            'grand_total.required' => 'Grand total is required',
+            'opsCustomerInvoiceLines.*.amount.max' => 'Amount may not be greater than :max characters for row is :position.',
+           
         ];
     }
 

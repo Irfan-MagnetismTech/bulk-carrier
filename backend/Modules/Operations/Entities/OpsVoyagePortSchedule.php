@@ -30,4 +30,8 @@ class OpsVoyagePortSchedule extends Model
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
+
+    public function portCode() {
+        return $this->belongsTo(OpsPort::class, 'port_code', 'code');
+    }
 }
