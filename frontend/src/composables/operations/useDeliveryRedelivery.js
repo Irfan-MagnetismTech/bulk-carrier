@@ -26,17 +26,38 @@ export default function useDeliveryRedelivery() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
+	const isTableLoading = ref(false);
 
-	async function getDeliveryRedeliverys(page, businessUnit) {
+	async function getDeliveryRedeliverys(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+		let loader = null;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+		
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/handover-takeovers', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
 				}
 			});
 			deliveryRedeliveries.value = data.value;
@@ -45,9 +66,14 @@ export default function useDeliveryRedelivery() {
 			const { data, status } = error.response;
 			//notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -143,6 +169,7 @@ export default function useDeliveryRedelivery() {
 		updateDeliveryRedelivery,
 		deleteDeliveryRedelivery,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

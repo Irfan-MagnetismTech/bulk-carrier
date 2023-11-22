@@ -205,6 +205,7 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
+              <th>Business Unit</th>
               <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -238,12 +239,17 @@ onMounted(() => {
                   <td>{{ chartererProfile?.country }}</td>
                   <td>{{ chartererProfile?.email }}</td>
                   <td>{{ chartererProfile?.contact_no }}</td>
+                  <td>
+                    <span :class="chartererProfile?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererProfile?.business_unit }}</span>
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
+                    <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-profiles.show', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-profiles.edit', params: { chartererProfileId: chartererProfile.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererProfile.id)" :action="'delete'"></action-button>
-                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                  </td>
+                      <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                    </nobr>
+                    </td>
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererProfiles?.data?.length"></LoaderComponent>
           </tbody>
