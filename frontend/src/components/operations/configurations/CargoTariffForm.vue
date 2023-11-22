@@ -238,7 +238,7 @@ watch(() => props.form.business_unit, (value) => {
 // }
 
 function addItem() {
-  props.form.opsCargoTariffLines.push(props.cargoTariffLineObject);
+  props.form.opsCargoTariffLines.push({...props.cargoTariffLineObject});
 }
 
 function removeItem(index){
