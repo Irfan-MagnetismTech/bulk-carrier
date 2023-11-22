@@ -1,9 +1,9 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Delivery Redelivery</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Delivery Redelivery</h2>
     <default-button :title="'Delivery Redelivery List'" :to="{ name: 'ops.delivery-redelivery.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <form @submit.prevent="updateDeliveryRedelivery(deliveryRedelivery, deliveryRedeliveryId)">
           <!-- Port Form -->
           <delivery-redelivery-form v-model:form="deliveryRedelivery" :errors="errors" :formType="formType" :deliveryRedeliveryLineObject="deliveryRedeliveryLineObject"></delivery-redelivery-form>

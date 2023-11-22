@@ -8,7 +8,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel </span>
               <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -22,7 +22,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
               <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -41,19 +41,19 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Ship Master</span>
               <input type="text" v-model.trim="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Chief Engineer</span>
             <input type="text" v-model.trim="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
       </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Noon Position</span>
               <input type="text" v-model.trim="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Status</span>
               <input type="text" v-model.trim="form.status" placeholder="Status" class="form-input" autocomplete="off" />
         </label>
         
@@ -62,22 +62,22 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Engine Running Hours</span>
               <input type="number" step="0.001" v-model.trim="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Lat/Long</span>
               <input type="text" v-model.trim="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Date</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Date</span>
               <input type="datetime-local" v-model.trim="form.date" placeholder="Vessel" class="form-input" autocomplete="off" />
         </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Last Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Last Port <span class="text-red-500">*</span></span>
           <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -92,7 +92,7 @@
         </label>
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Next Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Next Port <span class="text-red-500">*</span></span>
           <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -111,7 +111,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
               <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
         </label>
     </div>
@@ -277,12 +277,12 @@ watch(() => props.form, (value) => {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 </style>

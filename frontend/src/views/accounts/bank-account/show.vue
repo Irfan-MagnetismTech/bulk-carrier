@@ -23,10 +23,10 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Bank Account Details</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Bank Account Details</h2>
     <default-button :title="'Bank Account List'" :to="{ name: 'acc.bank-accounts.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
           <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Bank Information</h2>

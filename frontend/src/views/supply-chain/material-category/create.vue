@@ -19,10 +19,10 @@ setTitle('Create Material Category');
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Material Category</h2>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Material Category</h2>
         <default-button :title="'Material Cattegory List'" :to="{ name: 'scm.material-category.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeMaterialCategory(materialCategory)">
             <material-category-form v-model:form="materialCategory" :errors="errors" :formType="formType"></material-category-form>
             <!-- Submit button -->

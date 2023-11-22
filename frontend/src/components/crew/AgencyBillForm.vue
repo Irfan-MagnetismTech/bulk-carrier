@@ -87,39 +87,39 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
       <select class="form-input" v-model.trim="form.crw_agency_id">
         <option value="" selected disabled>Select</option>
         <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.agency_name }}</option>
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
       <select class="form-input" v-model.trim="form.crw_agency_contract_id">
         <option value="" selected disabled>Select</option>
         <option v-for="(agencyContract,index) in crwAgencyContracts" :value="agencyContract.id" :key="index">{{ agencyContract?.contract_name }}</option>
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.applied_date" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.invoice_date" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill No <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill No <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.invoice_no" placeholder="Bill No" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Type <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Type <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.invoice_type" placeholder="Bill Type" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Billing Currency <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Billing Currency <span class="text-red-500">*</span></span>
       <select class="form-input" v-model.trim="form.invoice_currency">
         <option value="" selected disabled>Select</option>
         <option value="BDT">BDT</option>
@@ -127,22 +127,22 @@ onMounted(() => {
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
       <input type="number" step=".01" v-model.trim="form.invoice_amount" placeholder="Bill amount" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
       <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off"></textarea>
     </label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Bill Lines</legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Bill Lines</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Particular <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Description </th>
         <th class="px-4 py-3 align-bottom">Per </th>
@@ -152,8 +152,8 @@ onMounted(() => {
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(creAgencyBillLine, index) in form.crwAgencyBillLines" :key="creAgencyBillLine.id">
+      <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+      <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(creAgencyBillLine, index) in form.crwAgencyBillLines" :key="creAgencyBillLine.id">
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwAgencyBillLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
         </td>
@@ -185,21 +185,21 @@ onMounted(() => {
           </button>
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
         <td class="px-1 py-1 font-bold">Grand Total</td>
         <td class="px-1 py-1">
           <input type="number" step=".01" v-model.trim="form.grand_total" placeholder="Grand Total" class="form-input vms-readonly-input" readonly autocomplete="off" />
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
         <td class="px-1 py-1 font-bold">Discount</td>
         <td class="px-1 py-1">
           <input type="number" step=".01" v-model.trim="form.discount" placeholder="Discount" class="form-input" autocomplete="off" />
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
         <td class="px-1 py-1 font-bold">Net Amount</td>
         <td class="px-1 py-1">
