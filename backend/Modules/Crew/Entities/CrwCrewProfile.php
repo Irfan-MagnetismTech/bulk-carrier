@@ -59,5 +59,15 @@ class CrwCrewProfile extends Model
         return $this->belongsTo(CrwRank::class);
     }
 
+    public function crwCurrentRank()
+    {
+        return $this->belongsTo(CrwRank::class, 'crw_rank_id', 'id');
+    }
+
+    public function crewDocuments()
+    {
+        return $this->hasMany(CrwCrewDocument::class);
+    }
+
 
 }

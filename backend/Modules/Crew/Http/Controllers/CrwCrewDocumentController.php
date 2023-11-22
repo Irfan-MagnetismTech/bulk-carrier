@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
+use Modules\Crew\Entities\CrwCrewProfile;
 use Modules\Crew\Http\Requests\CrwCrewDocumentRequest;
 
 class CrwCrewDocumentController extends Controller
@@ -27,7 +28,7 @@ class CrwCrewDocumentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewDocuments = CrwCrewDocument::globalSearch($request->all());
+            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank', 'crwRank')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwCrewDocuments, 200);
         }
