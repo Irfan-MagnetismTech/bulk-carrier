@@ -84,7 +84,33 @@
 
   <h4 class="text-md font-semibold">Upcoming Ports</h4>
 
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+  <div class="dt-responsive table-responsive">
+    <table id="dataTable" class="w-full table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-64">Last Port</th>
+          <th class="w-64">Next Port</th>
+          <th>ETA</th>
+          <th>Distance Run</th>
+          <th>DTG</th>
+          <th>Remarks</th>
+          <th class="w-16">
+            <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="hidden flex flex-col justify-center w-full md:flex-row md:gap-2">
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Last Port <span class="text-red-500">*</span></span>
@@ -213,7 +239,30 @@
     </label>
   </div>
 
-  <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Last Day Noon ROB </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Production </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Production" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Consumption </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Consumption" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Today Noon ROB </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+  </div>
+
+  <div class="mt-5">
     <h4 class="text-md font-semibold my-3">Cargo Tank Info</h4>
 
     <table class="w-full whitespace-no-wrap" >
@@ -225,46 +274,54 @@
             <th><nobr> Vapor Temp </nobr></th>
             <th><nobr> Liq Temp </nobr></th>
             <th><nobr> Quantity (MT) </nobr></th>
-            <th><nobr> FW Last Day Noon ROB </nobr></th>
-            <th><nobr>Action</nobr></th>
+            <th class="w-16">
+              <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            
-            <td>
-              <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
-            </td>
-            <td>
-              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <span class="show-block !block !bg-gray-100 !text-right">{{ form.opsBunkers[index].opening_balance }}</span>
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
-              </label>
-            </td>
-            <td class="hidden">
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
-              </label>
-            </td>
-          </tr>
+          
         </tbody>
       </table>
+  </div>
+
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Master </span>
+      <input type="text" v-model="form.model_name" placeholder="Master" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Chief Engineer </span>
+      <input type="text" v-model="form.model_name" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+  </div>
+
+  <div class="dt-responsive table-responsive">
+    <table id="dataTable" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Previous ROB</th>
+          <th>Received</th>
+          <th colspan="2">Consumption Used For</th>
+          <th>ROB</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
   </div>
 
   <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
