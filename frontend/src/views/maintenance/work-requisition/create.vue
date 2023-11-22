@@ -23,7 +23,7 @@ setTitle('Create Work Requisition');
             <!-- Booking Form -->
             <work-requisition-form :page="page" v-model:form="workRequisition" :errors="errors"></work-requisition-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create Work Requisition</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>
     </div>
 </template>

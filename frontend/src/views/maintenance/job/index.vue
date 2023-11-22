@@ -107,6 +107,15 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null
     },
+
+    {
+			"relation_name": null,
+			"field_name": "business_unit",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+		}
   ]
 });
 
@@ -247,8 +256,13 @@ onMounted(() => {
               </div>
             </th>
             <th class="w-2/12">
-              <div class="flex justify-evenly items-center">
-                  <span>Business Unit</span>                
+              <div class="flex justify-center items-center">
+                  <span class="mr-1">Business Unit</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                
                 </div>
             </th>
             <th class="w-1/12">
