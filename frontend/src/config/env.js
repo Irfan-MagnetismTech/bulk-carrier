@@ -6,7 +6,7 @@ class env {
     static DEMO = '';
     static SUMON_URL = 'http://192.168.88.222/bulk-carrier-erp/backend/public/';
 
-    static BASE_API_URL = env.DEVELOPMENT;
+    static BASE_API_URL = env.PRODUCTION;
 
     static CLIENT_ID = 2
     static GRANT_TYPE = "password"
