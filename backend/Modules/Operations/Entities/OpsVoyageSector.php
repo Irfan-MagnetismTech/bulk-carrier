@@ -36,4 +36,12 @@ class OpsVoyageSector extends Model
         return $this->belongsTo(OpsVoyage::class, 'ops_cargo_tariff_id' , 'id');
     }
 
+    public function loadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'loading_point', 'code');
+    }
+
+    public function unloadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
+    }
+
 }

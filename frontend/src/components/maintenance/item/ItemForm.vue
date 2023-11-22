@@ -47,7 +47,7 @@
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Description</legend>
     <table class="w-full whitespace-no-wrap" id="table">
               <thead>
-                <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                   <th class="px-4 py-3 align-bottom">Key</th>
                   <th class="px-4 py-3 align-bottom">Value</th>
                   <th class="px-4 py-3 align-bottom text-center">Action</th>

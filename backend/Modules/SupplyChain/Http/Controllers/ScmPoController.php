@@ -266,9 +266,27 @@ class ScmPoController extends Controller
             $scmPo = ScmPo::query()
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                ->limit(10)
+                // ->limit(10)
+                ->get();
+        } else {
+            $scmPo = [];
+        }
+
+        return response()->success('Search result', $scmPo, 200);
+    }
+
+   public function searchPoForLc(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmPo = ScmPo::query()
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
+                ->whereBusinessUnit($request->business_unit)
+                ->where('purchase_center', 'foreign')
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
                 ->get();
         } else {
             $scmPo = [];

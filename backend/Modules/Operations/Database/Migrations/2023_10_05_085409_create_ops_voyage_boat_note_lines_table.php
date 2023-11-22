@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_voyage_boat_note_id')->constrained('ops_voyage_boat_notes')->onDelete('cascade');
             $table->enum('voyage_note_type', ['Boat Note', 'Draft Survey','Receipt Copy','Final Survey']);
+            $table->string('loading_point')->nullable();
+            $table->string('unloading_point')->nullable();
             $table->date('date')->nullable();
             $table->dateTime('discharge_date')->nullable();
             $table->float('quantity')->nullable();
