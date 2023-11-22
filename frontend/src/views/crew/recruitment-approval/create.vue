@@ -13,10 +13,10 @@ setTitle('Create Recruitment Approval');
 <template>
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3 " v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Create Recruitment Approval</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 ">Create Recruitment Approval</h2>
       <default-button :title="'Recruitment Approval List'" :to="{ name: 'crw.recruitmentApprovals.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md  overflow-hidden">
         <form @submit.prevent="storeRecruitmentApproval(recruitmentApproval)">
             <!-- Booking Form -->
             <recruitment-approval-form v-model:form="recruitmentApproval" :errors="errors"></recruitment-approval-form>

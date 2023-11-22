@@ -1,9 +1,9 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Voyage Boat Note</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 ">Update Voyage Boat Note</h2>
     <default-button :title="'Voyage Boat Note List'" :to="{ name: 'ops.voyage-boat-notes.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
       <form @submit.prevent="updateVoyageBoatNote(voyageBoatNote, voyageBoatNoteId)">
           <!-- Port Form -->
           <voyage-boat-note-form v-model:form="voyageBoatNote" :errors="errors" :formType="formType" :voyageBoatNoteLineObject="voyageBoatNoteLineObject"></voyage-boat-note-form>

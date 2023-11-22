@@ -155,47 +155,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dark:border-gray-700">
+  <div class="">
     <ul class="flex flex-wrap -mb-px border-b">
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(1)" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(1)" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Personal
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(2)" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(2)" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Education
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(3)" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(3)" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Training
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(4)" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(4)" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Experience
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(5)" v-bind:class="{'text-purple-600 bg-white': openTab !== 5, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 5}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(5)" v-bind:class="{'text-purple-600 bg-white': openTab !== 5, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 5}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Others
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(6)" v-bind:class="{'text-purple-600 bg-white': openTab !== 6, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 6}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(6)" v-bind:class="{'text-purple-600 bg-white': openTab !== 6, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 6}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>References
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark:text-gray-400 group" v-on:click="toggleTabs(7)" v-bind:class="{'text-purple-600 bg-white': openTab !== 7, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 7}">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg  group" v-on:click="toggleTabs(7)" v-bind:class="{'text-purple-600 bg-white': openTab !== 7, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 7}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Nominees
         </a>
       </li>
     </ul>
     <div v-on:click="toggleTabs(1)" v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Personal Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 uppercase ">Personal Info</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <business-unit-input v-model="form.business_unit"></business-unit-input>
           <label class="block w-full mt-2 text-sm"></label>
@@ -204,7 +204,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Recruitment Approval <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Recruitment Approval <span class="text-red-500">*</span></span>
             <v-select :options="recruitmentApprovals" placeholder="--Choose an option--"  v-model="form.crw_recruitment_approval_name" label="page_title" class="block form-input">
               <template #search="{attributes, events}">
                 <input
@@ -218,7 +218,7 @@ onMounted(() => {
             <Error v-if="errors?.crw_recruitment_approval_name" :errors="errors.crw_recruitment_approval_name" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Hired By <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Hired By <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.hired_by" required>
               <option value="" disabled selected>Select</option>
               <option value="Agency">Agency</option>
@@ -227,7 +227,7 @@ onMounted(() => {
             <Error v-if="errors?.hired_by" :errors="errors.hired_by" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Agency Name </span>
+            <span class="text-gray-700 ">Agency Name </span>
             <v-select :options="crwAgencies" placeholder="--Choose an option--"  v-model="form.agency_name" label="name" class="block form-input">
               <template #search="{attributes, events}">
                 <input
@@ -240,7 +240,7 @@ onMounted(() => {
             <Error v-if="errors?.agency_name" :errors="errors.agency_name" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Department <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.department_id" required>
               <option value="" disabled selected>Select</option>
               <option value="1">Deck</option>
@@ -254,7 +254,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Rank Name <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.rank_id" required>
               <option value="" disabled>select</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
@@ -262,29 +262,29 @@ onMounted(() => {
             <Error v-if="errors?.rank_id" :errors="errors.rank_id" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">First Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">First Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.first_name" placeholder="First name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Last Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Last Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.last_name" placeholder="Last name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Father's Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Father's Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.father_name" placeholder="Father name" class="form-input" autocomplete="off" required />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Mother's Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Mother's Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.mother_name" placeholder="Mother name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Date of Birth <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Date of Birth <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.date_of_birth" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Gender <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Gender <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.gender" required>
               <option value="" disabled>select</option>
               <option value="Male">Male</option>
@@ -292,7 +292,7 @@ onMounted(() => {
             </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Religion <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Religion <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.religion" required>
               <option value="" disabled>select</option>
               <option value="Islam">Islam</option>
@@ -305,7 +305,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Marital Status <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Marital Status <span class="text-red-500">*</span></span>
             <select class="form-input" v-model="form.marital_status" required>
               <option value="" disabled>select</option>
               <option value="Single">Single</option>
@@ -313,25 +313,25 @@ onMounted(() => {
             </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Nationality <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Nationality <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.nationality" placeholder="Ex: Bangladeshi" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">National ID <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">National ID <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.nid_no" placeholder="Ex: 0001552005" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Passport No</span>
+            <span class="text-gray-700 ">Passport No</span>
             <input type="text" v-model="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Passport Issue Date</span>
+            <span class="text-gray-700 ">Passport Issue Date</span>
             <input type="date" v-model="form.passport_issue_date" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Blood Group</span>
+            <span class="text-gray-700 ">Blood Group</span>
             <select class="form-input" v-model="form.blood_group">
               <option value="" disabled>select</option>
               <option value="A+">A+</option>
@@ -345,76 +345,76 @@ onMounted(() => {
             </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Height (Meters)</span>
+            <span class="text-gray-700 ">Height (Meters)</span>
             <input type="text" v-model="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Weight (KG)</span>
+            <span class="text-gray-700 ">Weight (KG)</span>
             <input type="text" v-model="form.weight" placeholder="65" class="form-input" autocomplete="off" required />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Profile Picture</span>
-            <input @change="profilePicture" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+            <span class="text-gray-700 ">Profile Picture</span>
+            <input @change="profilePicture" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none  " type="file">
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Attachment</span>
-            <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+            <span class="text-gray-700 ">Attachment</span>
+            <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none  " type="file">
           </label>
           <label class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
         </div>
       </fieldset>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Present Address</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 uppercase ">Present Address</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Address <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.pre_address" placeholder="Present address" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">City <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">City <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.pre_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Mobile No. <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.pre_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Email</span>
+            <span class="text-gray-700 ">Email</span>
             <input type="email" v-model="form.pre_email" placeholder="Email" class="form-input" autocomplete="off" />
           </label>
         </div>
       </fieldset>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Permanent Address</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 uppercase ">Permanent Address</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Address <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.per_address" placeholder="Present address" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">City <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">City <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.per_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">Mobile No. <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.per_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Email</span>
+            <span class="text-gray-700 ">Email</span>
             <input type="email" v-model="form.per_email" placeholder="Email" class="form-input" autocomplete="off" />
           </label>
         </div>
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(2)" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Educational Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Educational Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Name of Degree <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Major <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Institute/University <span class="text-red-500">*</span></nobr></th>
@@ -426,8 +426,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewEducation, index) in form.educations" :key="crewEducation.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewEducation, index) in form.educations" :key="crewEducation.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.educations[index].exam_title" placeholder="Ex: HSC/B.Sc" class="form-input" autocomplete="off" required />
             </td>
@@ -467,11 +467,11 @@ onMounted(() => {
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(3)" v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Training Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Training Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Training Title <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Covered Topics <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Training Year <span class="text-red-500">*</span></nobr></th>
@@ -482,8 +482,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewTraining, index) in form.trainings" :key="crewTraining.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewTraining, index) in form.trainings" :key="crewTraining.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.trainings[index].training_title" placeholder="Title" class="form-input" autocomplete="off" required />
             </td>
@@ -520,11 +520,11 @@ onMounted(() => {
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(4)" v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Experience Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Experience Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Employer Name <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>From <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>To <span class="text-red-500">*</span></nobr></th>
@@ -534,8 +534,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewExperience, index) in form.experiences" :key="crewExperience.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewExperience, index) in form.experiences" :key="crewExperience.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.experiences[index].employer_name" placeholder="Employer name" class="form-input" autocomplete="off" required />
             </td>
@@ -569,11 +569,11 @@ onMounted(() => {
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(5)" v-bind:class="{'hidden': openTab !== 5, 'block': openTab === 5}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Language Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Language Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Language <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Writing <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Reading <span class="text-red-500">*</span></nobr></th>
@@ -583,8 +583,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewLanguage, index) in form.languages" :key="crewLanguage.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewLanguage, index) in form.languages" :key="crewLanguage.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.languages[index].language_name" placeholder="Ex: Bangla" class="form-input" autocomplete="off" required />
             </td>
@@ -638,11 +638,11 @@ onMounted(() => {
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(6)" v-bind:class="{'hidden': openTab !== 6, 'block': openTab === 6}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Reference Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Reference Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Name <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Organization <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Designation <span class="text-red-500">*</span></nobr></th>
@@ -654,8 +654,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewReference, index) in form.references" :key="crewReference.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewReference, index) in form.references" :key="crewReference.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.references[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
             </td>
@@ -695,11 +695,11 @@ onMounted(() => {
       </fieldset>
     </div>
     <div v-on:click="toggleTabs(7)" v-bind:class="{'hidden': openTab !== 7, 'block': openTab === 7}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Nominee Info</legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Nominee Info</legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
             <th class="px-4 py-3 align-bottom"><nobr>Name <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Profession <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Address <span class="text-red-500">*</span></nobr></th>
@@ -711,8 +711,8 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(crewNominee, index) in form.nominees" :key="crewNominee.id">
+          <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(crewNominee, index) in form.nominees" :key="crewNominee.id">
             <td class="px-1 py-1">
               <input type="text" v-model="form.nominees[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
             </td>
@@ -786,10 +786,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

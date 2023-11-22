@@ -52,7 +52,7 @@ function fetchAllProductTypes() {
 const vendor_type = ['Foreign', 'Local'];
 </script>
 <template>
-    <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
+    <div class="border-b border-gray-200  pb-5">
         
                         
             <div class="input-group">
@@ -69,14 +69,14 @@ const vendor_type = ['Foreign', 'Local'];
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Origin<span class="required-style">*</span></span>
-                    <!-- <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select> -->
+                    <!-- <v-select :options="[]" placeholder="--Choose an option--" v-model="form.country_name" label="country_id" class="block w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input"></v-select> -->
                     <!-- <input type="hidden" v-model="form.country_id" class="label-item-input" name="country_id" :id="'country_id'" /> -->
                     <input type="text" required v-model="form.country_name" class="label-item-input" name="country_id" :id="'country_name'" />                   
                     <!-- <Error v-if="errors?.country_name" :errors="errors.country_name" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Vendor Type <span class="required-style">*</span></span>
-                    <!-- <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    <!-- <select v-model="form.vendor_type" class="block w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input">
                     <option value="0">Foreign</option>
                     <option value="1">Local</option>
                     </select> -->
@@ -85,7 +85,7 @@ const vendor_type = ['Foreign', 'Local'];
                       placeholder="--Choose an option--"
                       v-model="form.vendor_type"
                       label="Vendor Type"
-                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      class="block w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input">
                       <template #search="{attributes, events}">
                             <input
                                 class="vs__search"
@@ -108,7 +108,7 @@ const vendor_type = ['Foreign', 'Local'];
                       placeholder="--Choose an option--"
                       v-model="form.product_source_type"
                       label="Product Source Type"
-                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      class="block w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input">
                       <template #search="{attributes, events}">
                             <input
                                 class="vs__search"
@@ -128,7 +128,7 @@ const vendor_type = ['Foreign', 'Local'];
                       placeholder="--Choose an option--"
                       label="Product Type"
                       :options="product_types"
-                      class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                      class="block w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input">
                       <template #search="{attributes, events}">
                             <input
                                 class="vs__search"
@@ -143,8 +143,8 @@ const vendor_type = ['Foreign', 'Local'];
             </div>
 
             <hr class="my-5">
-            <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-            <legend class="px-2 text-gray-700 dark:text-gray-300">Contact Person <span class="text-red-500">*</span></legend>
+            <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+            <legend class="px-2 text-gray-700 ">Contact Person <span class="text-red-500">*</span></legend>
             
             <div class="input-group">
                 
@@ -189,10 +189,10 @@ const vendor_type = ['Foreign', 'Local'];
       }
 
       .label-item-title {
-        @apply text-gray-700 dark:text-gray-300;
+        @apply text-gray-700 ;
       }
       .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
       }
       .required-style {
         @apply text-red-500;

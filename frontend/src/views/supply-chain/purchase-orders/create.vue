@@ -40,10 +40,10 @@ setTitle('Create Purchase Order');
     <!-- Heading -->
     
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Purchase Order</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Create Purchase Order</h2>
         <default-button :title="'PO List'" :to="{ name: 'scm.purchase-orders.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="storePurchaseOrder(purchaseOrder)">
           <purchase-order-form v-model:form="purchaseOrder" :errors="errors" :materialObject="materialObject" :termsObject="termsObject" :page="page"></purchase-order-form>
             <!-- Submit button -->

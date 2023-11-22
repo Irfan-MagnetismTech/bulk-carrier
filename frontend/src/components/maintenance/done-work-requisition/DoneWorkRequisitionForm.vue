@@ -2,44 +2,44 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Requisition Date </span>
+            <span class="text-gray-700 ">Requisition Date </span>
             <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Reference No </span>
+            <span class="text-gray-700 ">Reference No </span>
             <input type="text" :value="form.reference_no" placeholder="Reference No" class="form-input vms-readonly-input"  />
           <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Maintenance Type</span>
+            <span class="text-gray-700 ">Maintenance Type</span>
             <input type="text" :value="form.maintenance_type" placeholder="Maintenance Type" class="form-input vms-readonly-input"  />
           <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel</span>
+            <span class="text-gray-700 ">Vessel</span>
               <input type="text" :value="form.opsVessel?.name" placeholder="Vessel Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Department </span>
+          <span class="text-gray-700 ">Department </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment?.name" placeholder="Ship Department" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Item Group </span>
+          <span class="text-gray-700 ">Item Group </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.name" placeholder="Item Group Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Item </span>
+          <span class="text-gray-700 ">Item </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <span class="text-gray-700 ">Present Run Hour </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
@@ -48,42 +48,42 @@
         
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Act. Start Date </span>
+            <span class="text-gray-700 ">Act. Start Date </span>
             <input type="date" :value="form.act_start_date" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Act. Completion Date </span>
+            <span class="text-gray-700 ">Act. Completion Date </span>
             <input type="date" :value="form.act_completion_date" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Responsible Person</span>
+            <span class="text-gray-700 ">Responsible Person</span>
             <input type="text" :value="form.responsible_person" placeholder="Responsible Person Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
     </div>
 
     <div>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Item Description </legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 ">Item Description </legend>
         <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 " v-if="form.mntWorkRequisitionItem?.MntItem?.description">
           <label class="block w-full mt-2 text-sm" v-for="(des, index) in JSON.parse(form.mntWorkRequisitionItem?.MntItem?.description)" :key="index">
-            <span class="text-gray-700 dark:text-gray-300">{{ des.key }}</span>
+            <span class="text-gray-700 ">{{ des.key }}</span>
             <input type="text" :value="des.value" :placeholder="des.key" class="form-input vms-readonly-input"  readonly/>
         </label>
         </div>
       </fieldset>
     </div>
 
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Assigned Job</legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+      <legend class="px-2 text-gray-700 ">Assigned Job</legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
@@ -95,8 +95,8 @@
             <!-- <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th> -->
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
+        <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
             <td class="px-1 py-1"> 
               <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/> 
@@ -118,11 +118,11 @@
     </fieldset>
 
     
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts Consumed </legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+      <legend class="px-2 text-gray-700 ">Spare Parts Consumed </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
             <th class="w-2/12 px-4 py-3 align-bottom">Material Name </th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
@@ -131,8 +131,8 @@
             
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
+        <tbody class="bg-white divide-y ">
+          <tr class="text-gray-700 " v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
             <td class="px-1 py-1">
               <!-- <v-select :options="materials" placeholder="Enter Material Name" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
@@ -290,10 +290,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

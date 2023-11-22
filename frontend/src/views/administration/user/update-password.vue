@@ -1,9 +1,9 @@
 <template>
-    <div class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+    <div class="my-6 text-2xl font-semibold text-gray-700  flex items-center gap-2">
         <span>Update User:</span>
-        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">#{{ userId }}</span>
+        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full  ">#{{ userId }}</span>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateUserPassword(user)">
             <!-- Booking Form -->
           <update-user-password-form v-model:form="user" :errors="errors"></update-user-password-form>

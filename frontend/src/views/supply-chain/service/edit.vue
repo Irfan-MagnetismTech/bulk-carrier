@@ -29,10 +29,10 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Edit Service</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Edit Service</h2>
         <default-button :title="'Service List'" :to="{ name: 'scm.service.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateService(service, serviceId)">
             <service-form v-model:form="service" :errors="errors"></service-form>
             <!-- Submit button -->

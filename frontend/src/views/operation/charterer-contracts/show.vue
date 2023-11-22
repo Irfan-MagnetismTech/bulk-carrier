@@ -18,26 +18,26 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Contract Name</span>
+              <span class="text-gray-700 ">Contract Name</span>
               <span class="show-block">{{ chartererContract.contract_name }}</span>
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Contract Type</span>
+              <span class="text-gray-700 ">Contract Type</span>
               <span class="show-block">{{ chartererContract.contract_type }}</span>
 
           </label>
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
               
               <span class="show-block">{{ chartererContract.opsVessel?.name }}</span>
 
           </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel Owner</span>
+              <span class="text-gray-700 ">Vessel Owner</span>
               <span class="show-block">{{ chartererContract.opsVessel?.owner_name }}</span>
 
           </label>
@@ -47,24 +47,24 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Select Charterer <span class="text-red-500">*</span></span>
               <span class="show-block">{{ chartererContract.opsChartererProfile?.name }}</span>
 
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Charterer Code</span>
+              <span class="text-gray-700 ">Charterer Code</span>
               <span class="show-block">{{ chartererContract.opsChartererProfile?.owner_code }}</span>
 
           </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Country</span>
+          <span class="text-gray-700 ">Country</span>
 
           <span class="show-block">{{ chartererContract.country }}</span>
 
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Address</span>
+            <span class="text-gray-700 ">Address</span>
             <span class="show-block">{{ chartererContract.address }}</span>
 
         </label>
@@ -72,23 +72,23 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Billing Address</span>
+              <span class="text-gray-700 ">Billing Address</span>
               <span class="show-block">{{ chartererContract.billing_address }}</span>
 
         </label>
         
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Email</span>
+              <span class="text-gray-700 ">Email</span>
               <span class="show-block">{{ chartererContract.email }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Contact No.</span>
+            <span class="text-gray-700 ">Contact No.</span>
             <span class="show-block">{{ chartererContract.contact_no }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Attachment </span>
+              <span class="text-gray-700 ">Attachment </span>
               <a download href="" class="block text-blue-500 hover:text-blue-700 ease-linear duration-200 font-semibold mt-2.5">Download Attachment</a>
 
           </label>
@@ -99,22 +99,22 @@
       <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Bank Name</span>
+              <span class="text-gray-700 ">Bank Name</span>
               <span class="show-block">{{ chartererContract.bank_name }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Bank Branch </span>
+              <span class="text-gray-700 ">Bank Branch </span>
               <span class="show-block">{{ chartererContract.bank_branch_name }}</span>
 
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Account No</span>
+            <span class="text-gray-700 ">Account No</span>
             <span class="show-block">{{ chartererContract.bank_account_no }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Account Name</span>
+              <span class="text-gray-700 ">Account Name</span>
               <span class="show-block">{{ chartererContract.bank_account_name }}</span>
 
           </label>
@@ -122,17 +122,17 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Swift Code</span>
+              <span class="text-gray-700 ">Swift Code</span>
               <span class="show-block">{{ chartererContract.swift_code }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Routing No</span>
+            <span class="text-gray-700 ">Routing No</span>
             <span class="show-block">{{ chartererContract.routing_no }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency</span>
+              <span class="text-gray-700 ">Currency</span>
               <span class="show-block">{{ chartererContract.currency }}</span>
 
         </label>
@@ -144,21 +144,21 @@
       <h4 class="text-md font-semibold mt-4">Local Agent Info</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Port <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Port <span class="text-red-500">*</span></span>
               <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].port_code }}</span>
           </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Agent Name</span>
+              <span class="text-gray-700 ">Agent Name</span>
               <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].agent_name }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Billing Name </span>
+              <span class="text-gray-700 ">Billing Name </span>
               <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].agent_billing_name }}</span>
 
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Billing Email</span>
+            <span class="text-gray-700 ">Billing Email</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].agent_billing_email }}</span>
             
         </label>
@@ -169,21 +169,21 @@
       <h4 class="text-md font-semibold mt-4">Contract Validity and Billing</h4>
       <div v-if="chartererContract.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Credit Days</span>
+              <span class="text-gray-700 ">Credit Days</span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.credit_days }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Billing Cycle </span>
+              <span class="text-gray-700 ">Billing Cycle </span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.billing_cycle }}</span>
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Valid From</span>
+            <span class="text-gray-700 ">Valid From</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.valid_from }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Valid Till</span>
+            <span class="text-gray-700 ">Valid Till</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.valid_till }}</span>
 
         </label>
@@ -191,18 +191,18 @@
       <div v-if="chartererContract.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cargo Tariff </span>
+              <span class="text-gray-700 ">Cargo Tariff </span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.opsCargoTariff?.tariff_name }}</span>
 
           </label>
         
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300"> Status</span>
+              <span class="text-gray-700 "> Status</span>
               <span class="show-block">{{ chartererContract.status }}</span>
 
           </label>
           <label v-if="chartererContract.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Approximate Load Amount</span>
+            <span class="text-gray-700 ">Approximate Load Amount</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.approximate_load_amount }}</span>
 
           </label>
@@ -215,34 +215,34 @@
       <h4 class="text-md font-semibold mt-4">Rates and Fees</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label v-if="chartererContract.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Per Day Charge</span>
+              <span class="text-gray-700 ">Per Day Charge</span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.per_day_charge }}</span>
 
         </label>
         <label v-if="chartererContract.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Per MT Charge</span>
+              <span class="text-gray-700 ">Per MT Charge</span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.per_ton_charge }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cleaning Fee </span>
+              <span class="text-gray-700 ">Cleaning Fee </span>
               <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.cleaning_fee }}</span>
 
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Cancellation Fee <small>(%)</small></span>
+            <span class="text-gray-700 ">Cancellation Fee <small>(%)</small></span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.cancellation_fee }}</span>
 
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Others Fee</span>
+            <span class="text-gray-700 ">Others Fee</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.others_fee }}</span>
 
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300 font-semibold">Bunker Provider</span>
+              <span class="text-gray-700  font-semibold">Bunker Provider</span>
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="">

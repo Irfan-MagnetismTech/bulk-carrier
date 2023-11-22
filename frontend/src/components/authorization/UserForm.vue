@@ -2,7 +2,7 @@
     <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Business Unit <span class="text-red-500">*</span></span>
       <select v-model="form.business_unit" class="form-input" required>
         <option value="" disabled selected>Select</option>
         <option value="PSML">PSML</option>
@@ -11,7 +11,7 @@
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Role <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Role <span class="text-red-500">*</span></span>
       <select v-model="form.role" class="form-input" required>
         <option value="" disabled selected>Select</option>
         <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
@@ -20,28 +20,28 @@
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">User Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 ">User Name <span class="text-red-500">*</span></span>
             <input type="text" v-model="form.name" placeholder="User Name" class="form-input" autocomplete="off" required />
         </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Email <span class="text-red-500">*</span></span>
         <input type="email" v-model="form.email" placeholder="Email" class="form-input" autocomplete="off" required />
       </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Password <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Password <span class="text-red-500">*</span></span>
         <input type="password" v-model="form.password" placeholder="Password" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Confirm Password <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Confirm Password <span class="text-red-500">*</span></span>
         <input type="password" v-model="form.confirm_password" placeholder="Confirm Password" class="form-input" autocomplete="off" required />
       </label>
     </div>
 <!--  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">-->
 <!--    <label class="block w-full mt-2 text-sm">-->
-<!--      <span class="text-gray-700 dark:text-gray-300">Email Signature</span>-->
-<!--      <editor v-model="form.email_signature" class="block w-full text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" api-key="wljvu7gtfjb8h5ou2rcxw8d5tykej98zy10x8ot83jclsm3o" />-->
+<!--      <span class="text-gray-700 ">Email Signature</span>-->
+<!--      <editor v-model="form.email_signature" class="block w-full text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input" api-key="wljvu7gtfjb8h5ou2rcxw8d5tykej98zy10x8ot83jclsm3o" />-->
 <!--      <Error v-if="errors?.email_signature" :errors="errors.email_signature" />-->
 <!--    </label>-->
 <!--  </div>-->
@@ -84,10 +84,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

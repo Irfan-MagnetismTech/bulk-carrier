@@ -158,7 +158,7 @@ function confirmDelete(id) {
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!storeIssues?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!storeIssues?.data?.length" class="bg-white ">
         <tr v-if="isLoading">
           <td colspan="8">Loading...</td>
         </tr>

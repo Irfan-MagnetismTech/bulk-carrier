@@ -19,10 +19,10 @@ setTitle('Create Purchase Requisition');
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Purchase Requisition</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Create Purchase Requisition</h2>
         <default-button :title="'PR List'" :to="{ name: 'scm.purchase-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="storePurchaseRequisition(purchaseRequisition)">
           <purchase-requisition-form v-model:form="purchaseRequisition" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></purchase-requisition-form>
             <!-- Submit button -->

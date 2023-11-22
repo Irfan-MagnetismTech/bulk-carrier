@@ -223,7 +223,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
@@ -382,19 +382,19 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700  text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
     }
     .form-fieldset {
-      @apply px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400;
+      @apply px-4 pb-4 mt-3 border border-gray-700 rounded ;
     }
     .form-legend {
-      @apply px-2 text-gray-700 dark:text-gray-300;
+      @apply px-2 text-gray-700 ;
     }
     .vs__selected{
     display: none !important;
@@ -407,13 +407,13 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
         @apply border border-gray-300
     }
     .table_tr {
-      @apply text-gray-700 dark:text-gray-400;
+      @apply text-gray-700 ;
     }
     .table_head_tr {
-      @apply text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+      @apply text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ;
     }
     .table_body {
-      @apply bg-white divide-y dark:divide-gray-700 dark:bg-gray-800;
+      @apply bg-white divide-y ;
     }
     .remove_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;

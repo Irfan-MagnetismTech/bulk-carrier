@@ -62,7 +62,7 @@ onClickOutside(select, () => hideItemList());
         <div class="select" @click="toggleItemList()">
             <!-- Placeholder -->
             <div>
-                <span v-if="propsData.modelValue.value !== null" class="text-gray-600 dark:text-gray-200">{{ selected }}</span>
+                <span v-if="propsData.modelValue.value !== null" class="text-gray-600 ">{{ selected }}</span>
                 <span v-else class="dark:text-slate-500">-- Please select an option --</span>
             </div>
             <!-- Icons -->
@@ -102,16 +102,16 @@ onClickOutside(select, () => hideItemList());
         @apply relative block overflow-hidden rounded cursor-default border;
     }
     .select {
-        @apply flex items-center justify-between p-2 text-xs text-gray-500 border rounded select-none dark:text-gray-400 cursor-default;
+        @apply flex items-center justify-between p-2 text-xs text-gray-500 border rounded select-none  cursor-default;
     }
     .select-item-wrapper {
         @apply flex flex-col max-h-64 gap-0.5 p-2 overflow-y-auto border rounded mt-1 cursor-default;
     }
     .select-search {
-        @apply w-full p-2 px-2 mb-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200 transition-colors duration-75;
+        @apply w-full p-2 px-2 mb-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 focus:ring-indigo-500   transition-colors duration-75;
     }
     .select-item {
-        @apply p-1 w-full text-gray-700 transition-colors duration-75 rounded cursor-pointer dark:text-gray-200 hover:bg-indigo-500 hover:text-white dark:hover:bg-gray-700 select-none;
+        @apply p-1 w-full text-gray-700 transition-colors duration-75 rounded cursor-pointer  hover:bg-indigo-500 hover:text-white dark:hover:bg-gray-700 select-none;
     }
 }
 </style>

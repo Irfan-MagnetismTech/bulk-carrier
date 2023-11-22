@@ -24,10 +24,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Onboard Check List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 ">Update Onboard Check List</h2>
     <default-button :title="'Onboard Check List'" :to="{ name: 'crw.checklists.index' }" :icon="icons.DataBase"></default-button>
   </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateCheckList(checkList, checkListId)">
             <!-- Booking Form -->
           <check-list-form v-model:form="checkList" :errors="errors"></check-list-form>

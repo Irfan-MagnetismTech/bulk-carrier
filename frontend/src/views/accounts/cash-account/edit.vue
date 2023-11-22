@@ -26,10 +26,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Cash Account</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 ">Update Cash Account</h2>
     <default-button :title="'Cash Account List'" :to="{ name: 'acc.cash-accounts.index' }" :icon="icons.DataBase"></default-button>
   </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateCashAccount(cashAccount, cashAccountId)">
             <!-- Booking Form -->
           <cash-account-form :page="page" v-model:form="cashAccount" :errors="errors"></cash-account-form>

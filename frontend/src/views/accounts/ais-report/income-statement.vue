@@ -79,8 +79,8 @@ function fetchAccounts(search, loading) {
   <!--  <button type="button"> Click Me </button>-->
   <form @submit.prevent="getIncomeStatement(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
-      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Search Income Statement</legend>
+      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded ">
+        <legend class="px-2 text-gray-700 uppercase ">Search Income Statement</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
           <input type="date" required v-model="searchParams.from_date" class="block w-full rounded form-input">
@@ -109,14 +109,14 @@ function fetchAccounts(search, loading) {
       <div class="w-full overflow-x-auto">
         <table class="w-full whitespace-no-wrap mb-1">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" style="background-color: #369382;color: #ffff">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  " style="background-color: #369382;color: #ffff">
             <th colspan="3"> Expenses </th>
           </tr>
           </thead>
-          <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
+          <tbody class="bg-white ">
           <template v-for="(expenseData, expenseDataIndex) in incomeStatements.expense" :key="expenseDataIndex">
             <template v-for="(expenseDataLine, expenseDataLineIndex) in expenseData.lines">
-              <tr class="text-gray-700 dark:text-gray-400" style="background-color: #DBECDB" v-if="expenseDataLineIndex === 0">
+              <tr class="text-gray-700 " style="background-color: #DBECDB" v-if="expenseDataLineIndex === 0">
                 <td class="text-sm balance_header">{{ expenseData?.line_text }}</td>
                 <td class="text-sm text-right font-bold"></td>
                 <td class="text-sm text-right font-bold">{{ expenseData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ expenseData?.closing_balance_status }}</td>
@@ -185,14 +185,14 @@ function fetchAccounts(search, loading) {
       <div class="w-full overflow-x-auto">
         <table class="w-full whitespace-no-wrap mb-1">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" style="background-color: #369382;color: #fff">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  " style="background-color: #369382;color: #fff">
             <th colspan="3"> Income </th>
           </tr>
           </thead>
-          <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
+          <tbody class="bg-white ">
           <template v-for="(incomeData, incomeDataIndex) in incomeStatements.incomes" :key="incomeDataIndex">
             <template v-for="(incomeDataLine, incomeDataLineIndex) in incomeData.lines">
-              <tr class="text-gray-700 dark:text-gray-400" style="background-color: #DBECDB" v-if="incomeDataLineIndex === 0">
+              <tr class="text-gray-700 " style="background-color: #DBECDB" v-if="incomeDataLineIndex === 0">
                 <td class="text-sm balance_header">{{ incomeData?.line_text }}</td>
                 <td class="text-sm text-right font-bold"></td>
                 <td class="text-sm text-right font-bold">{{ incomeData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ incomeData?.closing_balance_status }}</td>
@@ -287,14 +287,14 @@ function fetchAccounts(search, loading) {
     @apply p-1.5 text-xs;
   }
   thead tr {
-    @apply font-semibold tracking-wide text-left text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+    @apply font-semibold tracking-wide text-left text-gray-500 bg-gray-50  ;
   }
   th {
     @apply text-center;
   }
 
   tbody tr {
-    @apply text-gray-700 dark:text-gray-400;
+    @apply text-gray-700 ;
   }
   tbody tr td {
     @apply tab;
@@ -356,22 +356,22 @@ table tr,td,th {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
 }
 table, th,td{
   @apply border border-collapse;
 }
 .search-result {
-  @apply px-4 py-3 text-sm text-center text-gray-600 dark:text-gray-300;
+  @apply px-4 py-3 text-sm text-center text-gray-600 ;
 }
 .search {
-  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray dark:border-0;
+  @apply float-right  pr-10 text-sm border border-gray-300 rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  dark:border-0;
 }
 .transaction_col:hover{
   text-decoration: underline;

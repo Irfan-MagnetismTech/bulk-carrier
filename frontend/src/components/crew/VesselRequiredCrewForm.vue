@@ -61,7 +61,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Vessel Name <span class="text-red-500">*</span></span>
         <v-select :options="vessels" placeholder="--Choose an option--"  v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
@@ -74,25 +74,25 @@ onMounted(() => {
         </v-select>
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Effective Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.effective_date" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Total Crew <span class="text-red-500">*</span></span>
         <input type="number" v-model.trim="form.total_crew" placeholder="Ex: 14" class="form-input" autocomplete="off" required />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+      <span class="text-gray-700 ">Remarks</span>
       <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
     </label>
   </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Item List</legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Item List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
         <th class="px-4 py-3 align-bottom w-48">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Eligibility <span class="text-red-500">*</span></th>
@@ -101,8 +101,8 @@ onMounted(() => {
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(requiredCrewLine, index) in form.crwVesselRequiredCrewLines" :key="requiredCrewLine.id">
+      <tbody class="bg-white divide-y ">
+      <tr class="text-gray-700 " v-for="(requiredCrewLine, index) in form.crwVesselRequiredCrewLines" :key="requiredCrewLine.id">
         <td class="px-1 py-1">
           <select class="form-input" v-model.trim="form.crwVesselRequiredCrewLines[index].crw_rank_id" required>
             <option value="" disabled>Select</option>
@@ -149,10 +149,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

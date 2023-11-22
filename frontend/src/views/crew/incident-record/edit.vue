@@ -33,10 +33,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Incident Record</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 ">Update Incident Record</h2>
     <default-button :title="'Incident Record List'" :to="{ name: 'crw.incidentRecords.index' }" :icon="icons.DataBase"></default-button>
   </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateIncidentRecord(incidentRecord, incidentRecordId)">
             <!-- Booking Form -->
           <incident-record-form v-model:form="incidentRecord" :errors="errors"></incident-record-form>

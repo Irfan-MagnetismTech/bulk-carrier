@@ -32,8 +32,8 @@ function fetchAccounts(search, loading) {
   <!--  <button type="button"> Click Me </button>-->
   <form @submit.prevent="getDayBooks(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
-      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark:text-gray-300">Search Day Book</legend>
+      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded ">
+        <legend class="px-2 text-gray-700 uppercase ">Search Day Book</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account</label>
           <v-select :options="allAccount" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.account_id" label="account_name" :reduce="allAccount=> allAccount.account_id" class="block w-full rounded form-input"></v-select>
@@ -58,7 +58,7 @@ function fetchAccounts(search, loading) {
     <div class="w-full overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <thead v-once>
-        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
           <th class="px-4 py-3">#</th>
           <th class="px-4 py-3"> Date </th>
           <th class="px-4 py-3"> Particulars </th>
@@ -68,8 +68,8 @@ function fetchAccounts(search, loading) {
           <th class="px-4 py-3"> Credit Amount </th>
         </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400" v-for="(bookData, index) in dayBooks" :key="index"
+        <tbody class="bg-white divide-y ">
+            <tr class="text-gray-700 " v-for="(bookData, index) in dayBooks" :key="index"
                 :class="{'bg-white': index % 2 === 0, 'bg-gray-100': index % 2 !== 0}"
             >
                 <td class="text-sm"> {{ ++index }} </td>
@@ -85,7 +85,7 @@ function fetchAccounts(search, loading) {
               <td class="text-sm"> {{ bookData?.cr_amount }} </td>
               </tr>
         </tbody>
-        <tfoot v-if="!dayBooks?.length" class="bg-white dark:bg-gray-800">
+        <tfoot v-if="!dayBooks?.length" class="bg-white ">
         <tr v-if="isLoading">
           <td colspan="7">Loading...</td>
         </tr>
@@ -105,16 +105,16 @@ function fetchAccounts(search, loading) {
     @apply p-2.5 text-xs;
   }
   thead tr {
-    @apply font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+    @apply font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50  ;
   }
   th {
     @apply tab text-center;
   }
   tbody {
-    @apply bg-white divide-y dark:divide-gray-700 dark:bg-gray-800;
+    @apply bg-white divide-y ;
   }
   tbody tr {
-    @apply text-gray-700 dark:text-gray-400;
+    @apply text-gray-700 ;
   }
   tbody tr td {
     @apply tab text-center;
@@ -131,22 +131,22 @@ function fetchAccounts(search, loading) {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
 }
 table, th,td{
   @apply border border-collapse;
 }
 .search-result {
-  @apply px-4 py-3 text-sm text-center text-gray-600 dark:text-gray-300;
+  @apply px-4 py-3 text-sm text-center text-gray-600 ;
 }
 .search {
-  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray dark:border-0;
+  @apply float-right  pr-10 text-sm border border-gray-300 rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  dark:border-0;
 }
 .transaction_col:hover{
   text-decoration: underline;

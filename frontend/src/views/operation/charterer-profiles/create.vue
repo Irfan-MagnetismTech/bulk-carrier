@@ -2,10 +2,10 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add Charterer Profiles</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 ">Add Charterer Profiles</h2>
       <default-button :title="'Charterer Profiles List'" :to="{ name: 'ops.charterer-profiles.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
       <form @submit.prevent="storeChartererProfile(chartererProfile)">
           <!-- Port Form -->
           <charterer-profile-form v-model:form="chartererProfile" :errors="errors" :formType="formType"></charterer-profile-form>

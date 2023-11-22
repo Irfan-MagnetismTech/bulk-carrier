@@ -2,10 +2,10 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add Vessel Particular</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 ">Add Vessel Particular</h2>
       <default-button :title="'Vessel Particular List'" :to="{ name: 'ops.vessel-particulars.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
       <form @submit.prevent="storeVesselParticular(vesselParticular)">
           <!-- Port Form -->
           <vessel-particular-form v-model:form="vesselParticular" :errors="errors" ></vessel-particular-form>

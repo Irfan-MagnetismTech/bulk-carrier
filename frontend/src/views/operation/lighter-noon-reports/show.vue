@@ -17,11 +17,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel </span>
+              <span class="text-gray-700 ">Vessel </span>
               <span class="show-block">{{ lighterNoonReport.opsVessel?.name }}</span>
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage </span>
+              <span class="text-gray-700 ">Voyage </span>
               <span class="show-block">{{ lighterNoonReport.opsVoyage?.voyage_no }}</span>
 
       </label>
@@ -31,20 +31,20 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
+              <span class="text-gray-700 ">Ship Master</span>
               <span class="show-block">{{ lighterNoonReport.ship_master }}</span>
               
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
+            <span class="text-gray-700 ">Chief Engineer</span>
             <span class="show-block">{{ lighterNoonReport.chief_engineer }}</span>
       </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
+              <span class="text-gray-700 ">Noon Position</span>
               <span class="show-block">{{ lighterNoonReport.noon_position }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status</span>
+              <span class="text-gray-700 ">Status</span>
               <span class="show-block">{{ lighterNoonReport.status }}</span>
         </label>
         
@@ -53,15 +53,15 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
+              <span class="text-gray-700 ">Engine Running Hours</span>
               <span class="show-block">{{ lighterNoonReport.engine_running_hours }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
+              <span class="text-gray-700 ">Lat/Long</span>
               <span class="show-block">{{ lighterNoonReport.lat_long }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Date</span>
+              <span class="text-gray-700 ">Date</span>
               <span class="show-block">
                 <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
               </span>
@@ -70,13 +70,13 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Last Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 ">Last Port <span class="text-red-500">*</span></span>
           <span class="show-block">{{ lighterNoonReport.last_port }}</span>
 
         </label>
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Next Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 ">Next Port <span class="text-red-500">*</span></span>
           <span class="show-block">{{ lighterNoonReport.next_port }}</span>
 
         </label>
@@ -86,7 +86,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+              <span class="text-gray-700 ">Remarks</span>
               <span class="show-block">{{ lighterNoonReport.remarks }}</span>
         </label>
     </div>

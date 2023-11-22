@@ -33,10 +33,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Chart of Account</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 ">Update Chart of Account</h2>
     <default-button :title="'Chart of Account List'" :to="{ name: 'acc.chart-of-accounts.index' }" :icon="icons.DataBase"></default-button>
   </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="updateChartOfAccount(chartOfAccount, chartOfAccountId)">
             <!-- Booking Form -->
           <chart-of-account-form :page="page" v-model:form="chartOfAccount" :errors="errors"></chart-of-account-form>

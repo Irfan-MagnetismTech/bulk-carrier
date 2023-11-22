@@ -16,7 +16,7 @@ const isTooltipShowing = ref(false);
 </script>
 <template>
     <div v-if="action == 'delete'" class="tooltip cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-red-500 dark:text-gray-400 dark:hover:text-red-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-red-500  dark:hover:text-red-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           <span class="tooltiptext">{{ action }}</span>
         </svg>
@@ -24,7 +24,7 @@ const isTooltipShowing = ref(false);
       </div>
     <router-link v-else :to="to" class="relative px-0.5" @mouseenter="isTooltipShowing = true" @mouseleave="isTooltipShowing = false">
       <div v-if="action == 'edit'" class="tooltip">
-        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-purple-500 dark:text-gray-400 dark:hover:text-purple-500'" viewBox="0 0 20 20" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-purple-500  dark:hover:text-purple-500'" viewBox="0 0 20 20" fill="currentColor">
           <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
           <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
         </svg>
@@ -40,14 +40,14 @@ const isTooltipShowing = ref(false);
       </div>
       
       <div v-else-if="action == 'notify customer'" class="tooltip">
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="32" height="32" :class="classes ?? 'icn iconify iconify--ic text-blue-500 dark:text-gray-400 dark:hover:text-blue-500'" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="32" height="32" :class="classes ?? 'icn iconify iconify--ic text-blue-500  dark:hover:text-blue-500'" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
           <path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5l-8-5h16zm0 12H4V8l8 5l8-5v10z"></path>
           <span class="tooltiptext">{{ action }}</span>
         </svg>
         <span class="tooltiptext">{{ action }}</span>
       </div>
       <!-- <div v-else-if="action == 'notify customer'" class="tooltip">
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="icn iconify iconify--ic" width="32" height="32" :class="classes ?? 'text-blue-500 dark:text-gray-400 dark:hover:text-blue-500'" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="icn iconify iconify--ic" width="32" height="32" :class="classes ?? 'text-blue-500  dark:hover:text-blue-500'" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
           <path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5l-8-5h16zm0 12H4V8l8 5l8-5v10z"></path>
           <span class="tooltiptext">{{ action }}</span>
         </svg>

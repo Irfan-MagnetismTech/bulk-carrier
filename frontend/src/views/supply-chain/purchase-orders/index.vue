@@ -147,7 +147,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!purchaseOrders?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!purchaseOrders?.data?.length" class="bg-white ">
         <tr v-if="isLoading">
           <td colspan="9">Loading...</td>
         </tr>

@@ -119,14 +119,14 @@ onKeyStroke(['Enter', 'Escape', 'Tab'], () => {
 
 <style lang="postcss" scoped>
 .wrapper {
-    @apply relative w-full py-2 mt-1 border border-gray-500 rounded cursor-pointer dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+    @apply relative w-full py-2 mt-1 border border-gray-500 rounded cursor-pointer   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
 }
 .input {
-    @apply w-full mb-3 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+    @apply w-full mb-3 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
 }
 
 .list-wrapper {
-    @apply absolute w-full px-6 pt-4 top-9 z-50 border border-gray-500 rounded-b-lg shadow-xl bg-gray-50 dark:bg-gray-700;
+    @apply absolute w-full px-6 pt-4 top-9 z-50 border border-gray-500 rounded-b-lg shadow-xl bg-gray-50 ;
 }
 
 .list {
@@ -146,6 +146,6 @@ onKeyStroke(['Enter', 'Escape', 'Tab'], () => {
 }
 
 .selected {
-    @apply text-gray-800 dark:text-gray-200;
+    @apply text-gray-800 ;
 }
 </style>

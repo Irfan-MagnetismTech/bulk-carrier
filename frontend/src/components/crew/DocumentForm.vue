@@ -175,7 +175,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Crew Name <span class="text-red-500">*</span></span>
         <v-select :options="crews" placeholder="--Choose an option--" v-model="form.crw_crew_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
@@ -189,26 +189,26 @@ onMounted(() => {
         <Error v-if="errors?.crw_crew_name" :errors="errors.crw_crew_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Rank</span>
+        <span class="text-gray-700 ">Rank</span>
         <input type="text" v-model="form.crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
         <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Contact</span>
+        <span class="text-gray-700 ">Contact</span>
         <input type="text" v-model="form.crw_crew_contact" placeholder="Crew contact" class="form-input vms-readonly-input" autocomplete="off" required />
         <Error v-if="errors?.crw_crew_contact" :errors="errors.crw_crew_contact" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Email</span>
+        <span class="text-gray-700 ">Email</span>
         <input type="text" v-model="form.crw_crew_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
         <Error v-if="errors?.crw_crew_email" :errors="errors.crw_crew_email" />
       </label>
     </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Document List</legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Document List</legend>
     <table class="w-full" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
         <th class="w-1/6"><nobr>Document Name</nobr></th>
         <th><nobr>Issuing Authority</nobr></th>
         <th><nobr>Validity Period</nobr></th>
@@ -226,12 +226,12 @@ onMounted(() => {
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(crwDocumentData, index) in crewDocuments" :key="crwDocumentData.id">
+      <tbody class="bg-white divide-y ">
+      <tr class="text-gray-700 " v-for="(crwDocumentData, index) in crewDocuments" :key="crwDocumentData.id">
         <td>{{ crwDocumentData?.name }}</td>
         <td>{{ crwDocumentData?.issuing_authority }}</td>
         <td>
-          <span class="custom_badge dark:bg-yellow-700 dark:text-yellow-100 text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
+          <span class="custom_badge  text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
         </td>
         <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.issue_date ?? '---'}}</td>
         <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.expire_date ?? '---'}}</td>
@@ -271,11 +271,11 @@ onMounted(() => {
   <div v-show="isCrewDocumentAddModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="storeCrewDocument(form,crewDocuments)" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg  sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
-                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded  hover: hover:text-gray-700"
                   aria-label="close" @click="closeCrewDocumentAddModal">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
               <path
@@ -288,29 +288,29 @@ onMounted(() => {
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b  bg-gray-50  ">
             <th colspan="5">Add Crew Document</th>
           </tr>
           </thead>
         </table>
 
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Basic Info</legend>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+          <legend class="px-2 text-gray-700 ">Basic Info</legend>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Document Name <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Document Name <span class="text-red-500">*</span></span>
               <input type="text" v-model="form.name" placeholder="Document name" class="form-input" autocomplete="off" required />
               <Error v-if="errors?.name" :errors="errors.name" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Issuing Authority <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Issuing Authority <span class="text-red-500">*</span></span>
               <input type="text" v-model="form.issuing_authority" placeholder="Authority name" class="form-input" autocomplete="off" required />
               <Error v-if="errors?.issuing_authority" :errors="errors.issuing_authority" />
             </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Validity Period <span class="text-red-500">*</span></span>
               <select v-model="form.validity_period" class="form-input">
                 <option value="" disabled selected>Select</option>
                 <option value="3">3 Months</option>
@@ -326,43 +326,43 @@ onMounted(() => {
               <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Validity(In Months) <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Validity(In Months) <span class="text-red-500">*</span></span>
               <input type="text" v-model="form.validity_period_in_month" placeholder="Ex: 60" class="form-input vms-readonly-input" readonly autocomplete="off" required />
               <Error v-if="errors?.validity_period_in_month" :errors="errors.validity_period_in_month" />
             </label>
           </div>
         </fieldset>
-        <fieldset v-if="!isDocumentEditModal" class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Validity Info</legend>
+        <fieldset v-if="!isDocumentEditModal" class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+          <legend class="px-2 text-gray-700 ">Validity Info</legend>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Issue Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Issue Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
               <input type="date" v-model="form.issue_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
               <Error v-if="errors?.issue_date" :errors="errors.issue_date" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Expire Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Expire Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
               <input type="date" v-model="form.expire_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
               <Error v-if="errors?.expire_date" :errors="errors.expire_date" />
             </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Reference No</span>
+              <span class="text-gray-700 ">Reference No</span>
               <input type="text" v-model="form.reference_no" placeholder="Reference no" class="form-input" autocomplete="off" />
               <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Attachment</span>
+              <span class="text-gray-700 ">Attachment</span>
               <input @change="selectedFile" type="file" class="form-input" autocomplete="off" />
               <Error v-if="errors?.attachment" :errors="errors.attachment" />
             </label>
           </div>
         </fieldset>
 
-        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 ">
           <button type="button" @click="closeCrewDocumentAddModal" style="color: #1b1e21"
-                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg  sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             Cancel
           </button>
           <button
@@ -377,11 +377,11 @@ onMounted(() => {
   <div v-show="isCrewDocumentRenewModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg  sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
-                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded  hover: hover:text-gray-700"
                   aria-label="close" @click="closeCrewDocumentRenewModal">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
               <path
@@ -394,16 +394,16 @@ onMounted(() => {
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b  bg-gray-50  ">
             <th colspan="5">Renew Crew Document</th>
           </tr>
           </thead>
         </table>
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Add Renew Data</legend>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+          <legend class="px-2 text-gray-700 ">Add Renew Data</legend>
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
               <th class="px-4 py-3 align-bottom">Issue Date</th>
               <th class="px-4 py-3 align-bottom">Expire Date</th>
               <th class="px-4 py-3 align-bottom">Reference No</th>
@@ -411,8 +411,8 @@ onMounted(() => {
               <th class="px-4 py-3 text-center align-bottom">Action</th>
             </tr>
             </thead>
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400">
+            <tbody class="bg-white divide-y ">
+            <tr class="text-gray-700 ">
               <td class="px-1 py-1">
                 <input type="date" v-model="renewFormData.issue_date" class="form-input" autocomplete="off" />
               </td>
@@ -434,11 +434,11 @@ onMounted(() => {
             </tbody>
           </table>
         </fieldset>
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Previous Renew Data</legend>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+          <legend class="px-2 text-gray-700 ">Previous Renew Data</legend>
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
               <th class="px-4 py-3 align-bottom">Issue Date</th>
               <th class="px-4 py-3 align-bottom">Expire Date</th>
               <th class="px-4 py-3 align-bottom">Reference No</th>
@@ -447,8 +447,8 @@ onMounted(() => {
               <th class="px-4 py-3 text-center align-bottom">Action</th>
             </tr>
             </thead>
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400" v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
+            <tbody class="bg-white divide-y ">
+            <tr class="text-gray-700 " v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
               <td class="px-1 py-1">
                 <input type="date" v-model="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" />
               </td>
@@ -483,9 +483,9 @@ onMounted(() => {
             </tbody>
           </table>
         </fieldset>
-        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 ">
           <button type="button" @click="closeCrewDocumentRenewModal" style="color: #1b1e21"
-                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg  sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             Cancel
           </button>
         </footer>
@@ -507,10 +507,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 #modal {

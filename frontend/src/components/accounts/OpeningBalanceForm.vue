@@ -63,7 +63,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm w-1/3">
-        <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Cost Center <span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
@@ -71,7 +71,7 @@ onMounted(() => {
         </v-select>
       </label>
       <label class="block w-full mt-2 text-sm w-2/3">
-        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Account Name <span class="text-red-500">*</span></span>
         <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_account_name" v-bind="attributes" v-on="events"/>
@@ -81,15 +81,15 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.date" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Debit Amount <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Debit Amount <span class="text-red-500">*</span></span>
       <input type="number" step=".01" v-model.trim="form.dr_amount" placeholder="Debit Amount" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Credit Amount <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Credit Amount <span class="text-red-500">*</span></span>
       <input type="number" step=".01" v-model.trim="form.cr_amount" placeholder="Credit Amount" class="form-input" autocomplete="off" required />
     </label>
   </div>
@@ -108,10 +108,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

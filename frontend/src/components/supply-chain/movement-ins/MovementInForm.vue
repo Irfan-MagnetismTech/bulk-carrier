@@ -52,11 +52,11 @@
 
     <div id="">
       <div class="table-responsive min-w-screen">
-        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+          <legend class="px-2 text-gray-700 ">Materials <span class="text-red-500">*</span></legend>
           <table class="whitespace-no-wrap">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
               <th class="py-3 align-center">Material Name </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">MR Quantity</th>
@@ -67,8 +67,8 @@
             </tr>
             </thead>
 
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400" v-for="(scmMoLine, index) in form.scmMiLines" :key="index">
+            <tbody class="bg-white divide-y ">
+            <tr class="text-gray-700 " v-for="(scmMoLine, index) in form.scmMiLines" :key="index">
               <td class="!w-72">
                 <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiLines[index].scmMaterial,index)">
                   <template #search="{attributes, events}">
@@ -128,8 +128,8 @@
     <button @click.prevent="refreshData">Refresh</button>
   <hr class="w-7"/>
 <div class="mt-5" v-if="form.scmMiShortages.length">
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Shortage <span class="text-red-500">*</span></legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Shortage <span class="text-red-500">*</span></legend>
     
     <div class="input-group !w-1/2">
         <label class="label-group">
@@ -147,7 +147,7 @@
       <div class="table-responsive min-w-screen">
       <table class="whitespace-no-wrap">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
               <th class="py-3 align-center">Material Name </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Qty</th>
@@ -156,8 +156,8 @@
             </tr>
             </thead>
 
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400" v-for="(scmMiShortage, index) in form.scmMiShortages" :key="index">
+            <tbody class="bg-white divide-y ">
+            <tr class="text-gray-700 " v-for="(scmMiShortage, index) in form.scmMiShortages" :key="index">
               <td class="!w-72">
                 <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiShortages[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiShortages[index].scmMaterial,index)">
                   <template #search="{attributes, events}">
@@ -424,13 +424,13 @@ onMounted(() => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700  text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
     }
     .vs__selected{
     display: none !important;

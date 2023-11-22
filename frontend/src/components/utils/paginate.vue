@@ -49,7 +49,7 @@ const props = defineProps({
 
 @layer components {
     .wrapper {
-        @apply grid px-4 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800;
+        @apply grid px-4 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t  bg-gray-50 sm:grid-cols-9  ;
     }
     .paginate-btn {
         @apply px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple;

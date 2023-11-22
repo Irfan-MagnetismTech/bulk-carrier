@@ -19,10 +19,10 @@ setTitle('Create Movement Out');
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Movement Out</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Create Movement Out</h2>
         <default-button :title="'PR List'" :to="{ name: 'scm.movement-outs.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="storeMovementOut(movementOut)">
           <movement-out-form v-model:form="movementOut" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></movement-out-form>
             <!-- Submit button -->

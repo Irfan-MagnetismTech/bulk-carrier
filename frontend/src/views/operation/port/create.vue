@@ -2,10 +2,10 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3 " v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Create New Port</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 ">Create New Port</h2>
       <default-button :title="'Port List'" :to="{ name: 'ops.configurations.ports.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
       <form @submit.prevent="storePort(port)">
           <!-- Port Form -->
           <port-form v-model:form="port" :errors="errors"></port-form>

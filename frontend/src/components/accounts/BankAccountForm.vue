@@ -33,43 +33,43 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Bank Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Bank Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.bank_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Branch Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Branch Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.branch_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Account Type <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.account_type" placeholder="Account type" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Account Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.account_name" placeholder="Account name" class="form-input" autocomplete="off" required />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Account No <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Account No <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.account_number" placeholder="Account no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Routing No <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Routing No <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.routing_number" placeholder="Routing no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Contact No <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Contact No <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.contact_number" placeholder="Contact no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Opening Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Opening Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.opening_date" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Opening Balance <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Opening Balance <span class="text-red-500">*</span></span>
       <input type="number" step=".01" v-model.trim="form.opening_balance" placeholder="Opening balance" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -91,10 +91,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

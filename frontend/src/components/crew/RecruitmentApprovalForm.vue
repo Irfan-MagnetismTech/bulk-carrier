@@ -49,55 +49,55 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Applied Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.applied_date" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Page Title <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Page Title <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.page_title" placeholder="Page Title" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Subject <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.subject" placeholder="Subject" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Approved <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Total Approved <span class="text-red-500">*</span></span>
         <input type="number" v-model.trim="form.total_approved" placeholder="Ex: 10" class="form-input" autocomplete="off" required />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agreed To Join <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Agreed To Join <span class="text-red-500">*</span></span>
       <input type="number" v-model.trim="form.crew_agreed_to_join" placeholder="Ex: 5" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Selected <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Total Selected <span class="text-red-500">*</span></span>
       <input type="number" v-model.trim="form.crew_selected" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Panel <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Total Panel <span class="text-red-500">*</span></span>
       <input type="number" v-model.trim="form.crew_panel" placeholder="Ex: 4" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Total Rest <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Total Rest <span class="text-red-500">*</span></span>
       <input type="number" v-model.trim="form.crew_rest" placeholder="Ex: 1" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Body <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Body <span class="text-red-500">*</span></span>
       <textarea v-model.trim="form.body" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+      <span class="text-gray-700 ">Remarks</span>
       <textarea type="text" v-model.trim="form.remarks" placeholder="Type here...." class="form-input" autocomplete="off"></textarea>
     </label>
   </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Candidate List</legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Candidate List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
         <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Candidate Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Contact <span class="text-red-500">*</span></th>
@@ -106,8 +106,8 @@ onMounted(() => {
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
+      <tbody class="bg-white divide-y ">
+      <tr class="text-gray-700 " v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
         <td class="px-1 py-1">
           <select class="form-input" v-model.trim="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
             <option value="" disabled>Select</option>

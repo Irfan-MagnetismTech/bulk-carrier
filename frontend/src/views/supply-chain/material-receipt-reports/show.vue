@@ -23,7 +23,7 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Material Requisition</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Material Requisition</h2>
         <router-link :to="{ name: 'scm.material-requisitions.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  border border-transparent rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
@@ -33,7 +33,7 @@ onMounted(() => {
   <div class="w-full overflow-hidden">
     <div class="w-full overflow-x-auto">
       <table class="w-2/6 whitespace-no-wrap mb-4">
-        <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
+        <tbody class="bg-white ">
         <tr>
           <td class="px-2 w-2">Date</td>
           <td class="px-2">{{ materialRequisition.date ? moment(materialRequisition.date).format('DD-MM-YYYY') : null }}</td>
@@ -56,7 +56,7 @@ onMounted(() => {
       </table>
       <table class="w-full whitespace-no-wrap">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b  bg-gray-50  ">
             <th class="px-2">Material</th>
             <th class="px-2">Material Category</th>
             <th class="px-2">Size</th>
@@ -66,7 +66,7 @@ onMounted(() => {
             <th class="px-2">Amount</th>
           </tr>
         </thead>
-        <tbody class="bg-white dark:divide-gray-700 dark:bg-gray-800">
+        <tbody class="bg-white ">
           <tr v-for="(stockData,index) in materialRequisition?.stockable" :key="index">
             <td class="px-2">{{ stockData?.material?.name }}</td>
             <td class="px-2">{{ stockData?.material_category?.name }}</td>
@@ -89,13 +89,13 @@ onMounted(() => {
         @apply block w-full mt-3 text-sm font-semibold;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700  text-sm;
     }
     .label-item-input {
-        @apply bg-gray-100 block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply bg-gray-100 block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
     }
     .vs__selected{
     display: none !important;
@@ -105,7 +105,7 @@ onMounted(() => {
     }
 
     span.label-item-input {
-        @apply bg-gray-100 py-2 h-9 flex items-center border border-black px-3 w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray
+        @apply bg-gray-100 py-2 h-9 flex items-center border border-black px-3 w-full mt-1 text-xs rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple 
     }
 
     table th,tr,td{

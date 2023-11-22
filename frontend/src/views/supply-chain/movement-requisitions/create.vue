@@ -19,10 +19,10 @@ setTitle('Create Movement Requisition');
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Movement Requisition</h2>
+        <h2 class="text-xl font-semibold text-gray-700 ">Create Movement Requisition</h2>
         <default-button :title="'PR List'" :to="{ name: 'scm.movement-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md ">
         <form @submit.prevent="storeMovementRequisition(movementRequisition)">
           <movement-requisition-form v-model:form="movementRequisition" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></movement-requisition-form>
             <!-- Submit button -->

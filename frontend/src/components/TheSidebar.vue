@@ -58,8 +58,8 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
 
 </script>
 <template>
-    <div class="ml-2 py-2 text-gray-500 dark:text-gray-400">
-      <a v-if="userBusinessUnit !== 'BOTH'" class="business_unit text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+    <div class="ml-2 py-2 text-gray-500 ">
+      <a v-if="userBusinessUnit !== 'BOTH'" class="business_unit text-lg font-bold text-gray-800 " href="#">
         {{ userBusinessUnit }}
       </a>
         <ul class="mt-6">
@@ -82,9 +82,9 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
                       </span>
                       <div v-if="elementSubMenu?.subSubMenu?.length" v-html="element.postIcon" class="duration-200 ease-linear" :class="{ 'rotate-180': elementSubMenu.is_open }"></div>
                     </a>
-                    <ul v-if="elementSubMenu?.subSubMenu?.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" style="height: 100%" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark:text-gray-400 dark:bg-gray-900 grand-child" aria-label="submenu">
-                      <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150  dark:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
-                        <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400">
+                    <ul v-if="elementSubMenu?.subSubMenu?.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" style="height: 100%" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner  dark:bg-gray-900 grand-child" aria-label="submenu">
+                      <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150   rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
+                        <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800  ">
                           -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.is_active}">{{ elementSubSubMenu.label }}</span>
                         </router-link>
                       </li>

@@ -10,7 +10,7 @@
         </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Note Type</span>
+              <span class="text-gray-700 ">Note Type</span>
               <select v-model="form.note_type" class="form-input">
                 <option value="">Select Type</option>
                 <option>Delivery</option>
@@ -21,20 +21,20 @@
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Effective Date <span class="text-red-500">*</span></span>
               <input type="date" v-model.trim="form.effective_date" placeholder="Effective Date" class="form-input" autocomplete="off" />
               <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
 
             </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Exchange Rate</span>
+              <span class="text-gray-700 ">Exchange Rate</span>
               <input type="number" step="0.001" v-model.trim="form.exchange_rate" placeholder="Exchange Rate" class="form-input" autocomplete="off" />
             <Error v-if="errors?.exchange_rate" :errors="errors.exchange_rate" />
           </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency</span>
+              <span class="text-gray-700 ">Currency</span>
                 <select v-model="form.currency" class="form-input">
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
@@ -45,7 +45,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -59,17 +59,17 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
             </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel Code</span>
+              <span class="text-gray-700 ">Vessel Code</span>
               <input type="text" v-model.trim="form.short_code" placeholder="Vessel Code" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.short_code" :errors="errors.short_code" />
           </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel Owner Name</span>
+              <span class="text-gray-700 ">Vessel Owner Name</span>
               <input type="text" v-model.trim="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Capacity</span>
+            <span class="text-gray-700 ">Vessel Capacity</span>
             <input type="text" v-model.trim="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
           <Error v-if="errors?.capacity" :errors="errors.capacity" />
         </label>
@@ -77,7 +77,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Select Charterer <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" @search="fetchCharterers"  v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -93,17 +93,17 @@
           </label>
         
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Charterer Code</span>
+              <span class="text-gray-700 ">Charterer Code</span>
               <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.owner_code" :errors="errors.owner_code" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Charterer Email</span>
+              <span class="text-gray-700 ">Charterer Email</span>
               <input type="text" v-model.trim="form.email" placeholder="Charterer Email" class="form-input bg-gray-100" readonly autocomplete="off" />
             <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Contact No.</span>
+            <span class="text-gray-700 ">Contact No.</span>
             <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input bg-gray-100" readonly autocomplete="off" />
           <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
@@ -111,7 +111,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+          <span class="text-gray-700 ">Remarks</span>
           <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
           <Error v-if="errors?.remarks" :errors="errors.remarks" />
         </label>
@@ -315,12 +315,12 @@ onMounted(() => {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple ;
 }
 </style>

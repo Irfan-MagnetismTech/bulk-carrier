@@ -71,7 +71,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Balance/Income Line <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Balance/Income Line <span class="text-red-500">*</span></span>
         <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.acc_balance_and_income_line_name" label="line_text"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_balance_and_income_line_name" v-bind="attributes" v-on="events"/>
@@ -84,7 +84,7 @@ onMounted(() => {
 <!--        <Error v-if="errors?.acc_balance_and_income_line_id" :errors="errors.acc_balance_and_income_line_id" />-->
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Parent Account </span>
+        <span class="text-gray-700 ">Parent Account </span>
         <v-select :options="balanceIncomeAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.parent_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.parent_account_name" v-bind="attributes" v-on="events"/>
@@ -99,15 +99,15 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Account Code <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Account Code <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Account Name <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
         <option value="" disabled selected>Select</option>
         <option value="1"> Assets </option>
@@ -118,7 +118,7 @@ onMounted(() => {
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Is Archived <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Is Archived <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.is_archived" autocomplete="off" required>
         <option value="" disabled selected>Select</option>
         <option value="0"> No </option>
@@ -141,10 +141,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {

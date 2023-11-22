@@ -32,7 +32,7 @@ export default {
 <template>
   <div v-if="businessUnit === 'ALL'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Business Unit <span class="text-red-500">*</span></span>
       <select v-if="page === 'create'" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-input" required>
         <option value="" disabled selected>Select</option>
         <option value="PSML">PSML</option>

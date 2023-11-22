@@ -133,7 +133,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Cost Center <span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
@@ -142,7 +142,7 @@ onMounted(() => {
         <Error v-if="errors?.acc_cost_center_name" :errors="errors.acc_cost_center_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Voucher Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Voucher Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.voucher_type" @change="changeBgColor()" required>
           <option value="" selected disabled>Select Value</option>
           <option value="Receipt">Receipt</option>
@@ -153,12 +153,12 @@ onMounted(() => {
         <Error v-if="errors?.voucher_type" :errors="errors.voucher_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Applied Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.transaction_date" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Payment Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 ">Payment Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.instrument_type" required>
           <option value="" selected disabled>Select Value</option>
           <option value="A/C Payee">A/C Payee</option>
@@ -176,7 +176,7 @@ onMounted(() => {
       <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Cheque Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Cheque Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.instrument_date" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
@@ -189,11 +189,11 @@ onMounted(() => {
       <input type="text" class="label-item-input" placeholder="Narration" v-model.trim="form.narration" required />
     </label>
   </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Ledger Entries <span class="text-red-500">*</span></legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Ledger Entries <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50  ">
         <th class="px-4 py-3 align-bottom w-[40%]">Accounts<span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Ref Bill</th>
         <th class="px-4 py-3 align-bottom">Debit Amount <span class="text-red-500">*</span></th>
@@ -203,8 +203,8 @@ onMounted(() => {
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(ledgerEntry, index) in form.ledgerEntries" :key="ledgerEntry.id">
+      <tbody class="bg-white divide-y ">
+      <tr class="text-gray-700 " v-for="(ledgerEntry, index) in form.ledgerEntries" :key="ledgerEntry.id">
         <td class="px-1 py-1">
           <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" @search="fetchAccounts" v-model.trim="form.ledgerEntries[index].acc_account_name" label="account_name"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
@@ -237,7 +237,7 @@ onMounted(() => {
           </button>
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 ">
         <td class="px-1 py-1 font-bold text-right" colspan="2">Total Amount</td>
         <td class="px-1 py-1 font-bold text-right">
           <input type="text" v-model.trim="form.total_debit_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
@@ -264,10 +264,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 ;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 
 >>> {
