@@ -81,8 +81,14 @@ export default function useCrewDocument() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
