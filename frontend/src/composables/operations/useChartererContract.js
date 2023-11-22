@@ -89,7 +89,7 @@ export default function useChartererContract() {
             isLoading.value = false;
             loader?.hide();
         }
-		
+
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
         filterParams.value = filterOptions;
@@ -100,7 +100,7 @@ export default function useChartererContract() {
 					page: filterOptions.page,
 					items_per_page: filterOptions.items_per_page,
 					data: JSON.stringify(filterOptions)
-				 }
+				}
 			});
 			chartererContracts.value = data.value;
 			notification.showSuccess(status);
