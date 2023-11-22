@@ -105,10 +105,6 @@
           </table>
         </div>
         <div class="w-1/2">
-          <div class="h-72">
-            <!-- <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Other Information</h2> -->
-
-          </div>
           <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Other Information</h2>
           <table class="w-full">
             <tbody>
