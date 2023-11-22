@@ -143,15 +143,15 @@ class OpsChartererInvoiceController extends Controller
          }
      }
      
-     public function getChartererInvoiceName(){
-         try {
-             $charterer_invoices = OpsChartererInvoice::with('opsChartererInvoiceLines')->latest()->paginate(15);
-             
-             return response()->success('Data retrieved successfully.', collect($charterer_invoices->pluck('tariff_name'))->unique()->values()->all(), 200);
-         } catch (QueryException $e){
-             return response()->error($e->getMessage(), 500);
-         }
-     }
+    public function getChartererInvoiceName(){
+        try {
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererInvoiceLines')->latest()->get();
+            
+            return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
  
 
 }
