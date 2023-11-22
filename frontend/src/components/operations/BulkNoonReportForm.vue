@@ -303,7 +303,7 @@
   </div>
 
   <div class="dt-responsive table-responsive">
-    <table id="dataTable" class="table table-striped table-bordered">
+    <table id="dataTable" class="w-full table table-striped table-bordered">
       <thead>
         <tr>
           <th>Type</th>
@@ -311,15 +311,302 @@
           <th>Received</th>
           <th colspan="2">Consumption Used For</th>
           <th>ROB</th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
+          <th colspan="4"></th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td rowspan="4">VLSFO/IFO (MT)</td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td>ME</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td>Unit</td>
+          <td>PCO</td>
+          <td>Rack</td>
+          <td>Exh. Temp.</td>
+        </tr>
+        <tr>
+          <td>GE</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>1</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>2</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>3</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+
+
+
+        <tr>
+          <td rowspan="5">MGO (MT)</td>
+          <td rowspan="5">
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="5">
+            <input type="text" class="form-control">
+          </td>
+          <td>ME</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="5">
+            <input type="text" class="form-control">
+          </td>
+          <td>4</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>GE</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>5</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>6</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>IG</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>7</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME Tc Exh. In</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+
+
+
+        <tr>
+          <td rowspan="4">LSMGO (MT)</td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td>Main</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME TC Exh. Out</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Aux</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME TC LO OUT</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME Scv. Temp.</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME Scv. Press</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
         
+
+        <tr>
+          <td>MECC</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>Main</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME FW Out Temp.</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+
+        <tr>
+          <td>LSMECYL</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>ME Cyl. Oil</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td colspan="2">ME FW In Temp.</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>LSAECC</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>GE Sys. Oil</td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <input type="text" class="form-control">
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -333,7 +620,7 @@
             <th>SL</th>
             <th class="w-72">Bunker Name</th>
             <th>Unit</th>
-            <th><nobr> Present Stock </nobr></th>
+            <th><nobr> Bunkering </nobr></th>
             <th><nobr> FUEL - CON/24H </nobr></th>
             <th><nobr> FUEL - CON/Voyage </nobr></th>
             <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
@@ -353,7 +640,8 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <span class="show-block !block !bg-gray-100 !text-right">{{ form.opsBunkers[index].opening_balance }}</span>
+                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
+                <Error v-if="errors?.opsBunkers[index]?.bunkering" :errors="errors.opsBunkers[index]?.bunkering" />
               </label>
             </td>
             <td>
