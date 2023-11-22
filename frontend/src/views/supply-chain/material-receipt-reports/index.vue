@@ -50,7 +50,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "LC No",
+      "label": "MRR No",
       "filter_type": "input" 
     },
     {
@@ -60,7 +60,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "LC Date",
+      "label": "PO No",
       "filter_type": "input" 
     },
     {
@@ -70,7 +70,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Expire Date",
+      "label": "PR No",
       "filter_type": "input" 
     },
     {
@@ -80,7 +80,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Weight",
+      "label": "Warehouse",
       "filter_type": "input"
     },
   ]
