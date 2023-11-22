@@ -1,27 +1,26 @@
 <script setup>
-import {ref} from "vue";
-import { onMounted } from '@vue/runtime-core';
-import env from '../../../config/env';
-import Title from "../../../services/title";
-import useMaterialRequisition from "../../../composables/scm/useMaterialRequisition.js";
-import useHelper from "../../../composables/useHelper.js";
-import MaterialRequisitionForm from "../../../components/scm/material-requisition/MaterialRequisitionForm.vue";
-import { useRoute } from 'vue-router';
-import moment from 'moment';
+// import {ref} from "vue";
+// import { onMounted } from '@vue/runtime-core';
+// import env from '../../../config/env';
+// import Title from "../../../services/title";
+// import useMaterialRequisition from "../../../composables/scm/useMaterialRequisition.js";
+// import useHelper from "../../../composables/useHelper.js";
+// import MaterialRequisitionForm from "../../../components/scm/material-requisition/MaterialRequisitionForm.vue";
+// import { useRoute } from 'vue-router';
+// import moment from 'moment';
 
-const { materialRequisition, showMaterialRequisition  } = useMaterialRequisition();
-const { getAllUnit, numberFormat } = useHelper();
-const { setTitle } = Title();
-const route = useRoute();
-const materialRequisitionId = route.params.materialRequisitionId;
-setTitle('Material Requisition Details');
+// const { materialRequisition, showMaterialRequisition  } = useMaterialRequisition();
+// const { getAllUnit, numberFormat } = useHelper();
+// const { setTitle } = Title();
+// const route = useRoute();
+// const materialRequisitionId = route.params.materialRequisitionId;
+// setTitle('Material Requisition Details');
 
-onMounted(() => {
-    showMaterialRequisition(materialRequisitionId);
-});
+// onMounted(() => {
+//     showMaterialRequisition(materialRequisitionId);
+// });
 </script>
-<template>
-    <!-- Heading -->
+<!-- <template>
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Material Requisition</h2>
         <router-link :to="{ name: 'scm.material-requisitions.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  border border-transparent rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
@@ -79,7 +78,7 @@ onMounted(() => {
         </tbody>
       </table>
     </div>
-  </div>
+  </div> -->
 </template>
 <style lang="postcss" scoped>
     .input-group {
