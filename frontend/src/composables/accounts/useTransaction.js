@@ -134,23 +134,25 @@ export default function useTransaction() {
 
     async function updateTransaction(form, transactionId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if(!checkCreditAndDebitAmount(form)){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.put(
-                `/acc/acc-transactions/${transactionId}`,
-                form
-            );
-            transaction.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "acc.transactions.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.put(
+                    `/acc/acc-transactions/${transactionId}`,
+                    form
+                );
+                transaction.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "acc.transactions.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
