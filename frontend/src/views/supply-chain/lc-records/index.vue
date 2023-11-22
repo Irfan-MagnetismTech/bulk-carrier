@@ -9,9 +9,10 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getLcRecords, lcRecords, deleteLcRecord, isLoading } = useLcRecord();
+const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading } = useLcRecord();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -24,28 +25,105 @@ const props = defineProps({
 });
 
 const critical = ['No','Yes'];
-// Code for global search start
-const columns = ["date"];
-const searchKey = useDebouncedRef('', 600);
-const table = "scm_lc_records";
-
 const icons = useHeroIcon();
-
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Lc Records');
-// Code for global search starts here
 
-watch(searchKey, newQuery => {
-  getLcRecords(props.page, columns, searchKey.value, table);
+
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "lc_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "LC No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "lc_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "LC Date",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "expire_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Expire Date",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "weight",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Weight",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "invoice_value",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Invoice Value",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "assessment_value",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Assessment Value",
+      "filter_type": "input"
+    }
+  ]
 });
+
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
 
 
 onMounted(() => {
   watchEffect(() => {
-    getLcRecords(props.page,businessUnit.value)
-    .then(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getLcRecords(filterOptions.value)
+      .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -55,8 +133,10 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-
-});// Code for global search end here
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
+});
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -81,36 +161,13 @@ function confirmDelete(id) {
     <h2 class="text-2xl font-semibold text-gray-700">LC Records List</h2>
     <default-button :title="'Create LC Records'" :to="{ name: 'scm.lc-records.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
-    </div>
-  </div>
-  <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>LC No</th>
-            <th>LC Date</th>
-            <th>Expire Date</th>
-            <th>Weight</th>
-            <th>Invoice Value</th>
-            <th>Assessment Value</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody class="relative">
             <tr v-for="(lcRecord,index) in (lcRecords?.data ? lcRecords?.data : lcRecords)" :key="index">
-              <td>{{ lcRecords?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ lcRecord?.lc_no }}</td>
               <td>{{ lcRecord?.lc_date }}</td>
               <td>{{ lcRecord?.expire_date }}</td>
@@ -125,18 +182,23 @@ function confirmDelete(id) {
                 <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && lcRecords?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="9">Loading...</td>
-        </tr>
-        <tr v-else-if="!lcRecords?.data?.length">
-          <td colspan="9">No LC Record found.</td>
-        </tr>
+          <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+            <tr v-if="isLoading">
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="7">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!lcRecords?.data?.length">
+              <td colspan="7">No Data found.</td>
+            </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="lcRecord" to="scm.lc-records.index" :page="page"></Paginate>
+    <Paginate :data="lcRecords" to="scm.lc-records.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

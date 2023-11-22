@@ -252,49 +252,49 @@ onMounted(() => {
                 </div>
               </div>
             </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Routing No</nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Contact No</nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Opening Date</nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr>Routing No</nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr>Contact No</nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr>Opening Date</nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
 
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Opening Balance</nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(8,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[8].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(8,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>            
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr>Opening Balance</nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(8,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[8].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(8,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
             <th>
               <div class="flex justify-evenly items-center">
                 <span><nobr>Business Unit</nobr></span>
               </div>
             </th>
-            <th class="w-20 min-w-full">Action</th>
+            <th class="w-20">Action</th>
           </tr>
           <tr class="w-full" v-if="showFilter">
             <th>
@@ -310,10 +310,10 @@ onMounted(() => {
             <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
             <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+<!--            <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>-->
+<!--            <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>-->
+<!--            <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>-->
+<!--            <th><input v-model="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>-->
             <th>
               <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
             </th>
@@ -330,15 +330,16 @@ onMounted(() => {
             <td> {{ account?.account_type }} </td>
             <td> {{ account?.account_name }} </td>
             <td>{{ account?.account_number }}</td>
-            <td>{{ account?.routing_number }}</td>
-            <td>{{ account?.contact_number }}</td>
-            <td>{{ account?.opening_date }}</td>            
-            <td>{{ account?.opening_balance }}</td>            
+<!--            <td>{{ account?.routing_number }}</td>-->
+<!--            <td>{{ account?.contact_number }}</td>-->
+<!--            <td>{{ account?.opening_date }}</td>-->
+<!--            <td>{{ account?.opening_balance }}</td>-->
             <td>
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'acc.bank-accounts.show', params: { bankAccountId: account.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'acc.bank-accounts.edit', params: { bankAccountId: account?.id } }"></action-button>
                 <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
               </nobr>
@@ -352,7 +353,7 @@ onMounted(() => {
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="12">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
               </td>
           </tr>
           <tr v-else-if="!bankAccounts?.data?.data?.length">

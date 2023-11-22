@@ -15,6 +15,7 @@ export default function usePurchaseRequisition() {
     const router = useRouter();
     const purchaseRequisitions = ref([]);
     const filteredPurchaseRequisitions = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);

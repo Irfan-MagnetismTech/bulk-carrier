@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMaterialReceiptReport from "../../../composables/supply-chain/useMaterialReceiptReport";
@@ -9,10 +9,12 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import { useRouter } from 'vue-router';
 
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading } = useMaterialReceiptReport();
+const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading,isTableLoading } = useMaterialReceiptReport();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -27,10 +29,6 @@ const props = defineProps({
 
 const settled = ['No','Yes'];
 // Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "material_receipt_reports";
-
 const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);
@@ -39,15 +37,80 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 setTitle('Material Receipt Reports');
 // Code for global search starts here
 
-watch(searchKey, newQuery => {
-  getMaterialReceiptReports(props.page, columns, searchKey.value, table);
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "LC No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmPo",
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "LC Date",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmPr",
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Expire Date",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Weight",
+      "filter_type": "input"
+    },
+  ]
 });
 
 
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
+
+
+
 onMounted(() => {
-  watchEffect(() => {
-    getMaterialReceiptReports(props.page,businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getMaterialReceiptReports(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -57,7 +120,9 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 
@@ -86,21 +151,11 @@ function confirmDelete(id) {
     <h2 class="text-2xl font-semibold text-gray-700">Material Receipt Report List</h2>
     <!-- <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button> -->
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
-    </div>
-  </div>
   <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>MRR No</th>
@@ -111,10 +166,11 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(materialReceiptReport,index) in (materialReceiptReports?.data ? materialReceiptReports?.data : materialReceiptReports)" :key="index">
-              <td>{{ materialReceiptReports?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ materialReceiptReport?.ref_no }}</td>
               <td>{{ materialReceiptReport?.scmPo?.ref_no }}</td>
               <td>{{ materialReceiptReport?.scmPr?.ref_no }}</td>
@@ -129,13 +185,17 @@ function confirmDelete(id) {
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!materialReceiptReports?.data?.length" class="bg-white dark:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="8">Loading...</td>
-        </tr>
-        <tr v-else-if="!materialReceiptReports?.data?.length">
-          <td colspan="8">No MRR found.</td>
-        </tr>
+          <tfoot v-if="!materialReceiptReports?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+            <tr v-if="isLoading">
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="7">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!materialReceiptReports?.data?.length">
+              <td colspan="7">No Data found.</td>
+            </tr>
         </tfoot>
       </table>
     </div>

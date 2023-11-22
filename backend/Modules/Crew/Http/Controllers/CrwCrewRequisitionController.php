@@ -34,8 +34,8 @@ class CrwCrewRequisitionController extends Controller
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
 
-                return response()->success('Created Successfully', $crwCrewRequisition, 201);
             });
+            return response()->success('Created Successfully', '', 201);
         }
         catch (QueryException $e)
         {
@@ -63,9 +63,8 @@ class CrwCrewRequisitionController extends Controller
                 $crwRequisition->update($crwRequisitionData);
                 $crwRequisition->crwCrewRequisitionLines()->delete();
                 $crwRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
-
-                return response()->success('Updated Successfully', $crwRequisition, 202);
             });
+            return response()->success('Updated Successfully', '', 202);
         }
         catch (QueryException $e)
         {

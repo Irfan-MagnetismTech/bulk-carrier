@@ -15,7 +15,7 @@ class MntShipDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'max:100', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'name'  => ['required', 'max:30', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
             'short_code' => ['required', 'max:5', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }

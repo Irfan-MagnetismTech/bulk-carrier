@@ -18,7 +18,7 @@
         </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Note Type</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Note Type</span>
               <span class="show-block">
                 {{ deliveryRedelivery.note_type }}
               </span>
@@ -26,7 +26,7 @@
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Effective Date </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date </span>
               <span class="show-block">
                 <nobr>{{ deliveryRedelivery?.effective_date ? moment(deliveryRedelivery?.effective_date).format('DD-MM-YYYY') : null }}</nobr>
               </span>
@@ -34,14 +34,14 @@
             </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Exchange Rate</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate</span>
               <span class="show-block">
                 {{ deliveryRedelivery.exchange_rate }}
               </span>
           </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
               <span class="show-block">
                 {{ deliveryRedelivery.currency }}
               </span>
@@ -50,25 +50,25 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsVessel?.name }}
               </span>
             </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel Code</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Code</span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsVessel?.short_code }}
               </span>
           </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel Owner Name</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner Name</span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsVessel?.owner_name }}
               </span>
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Capacity</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Capacity</span>
             <span class="show-block">
                 {{ deliveryRedelivery.opsVessel?.capacity }}
               </span>
@@ -77,7 +77,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.name }}
               </span>
@@ -85,19 +85,19 @@
           </label>
         
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Charterer Code</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.owner_code }}
               </span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Charterer Email</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Email</span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.email }}
               </span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Contact No.</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No.</span>
             <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.contact_no }}
               </span>
@@ -106,7 +106,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
           <span class="show-block">
                 {{ deliveryRedelivery.remarks }}
               </span>

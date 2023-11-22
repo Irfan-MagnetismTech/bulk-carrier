@@ -35,6 +35,9 @@ class MntWorkRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'ops_vessel_id.required' => 'Please select vessel.',
+            'reference_no.required' => 'Reference no. is required',
+            'mnt_item_id.required' => 'Item is required',
             "added_job_lines.required" => "Please add at least one job."
         ];
     }
