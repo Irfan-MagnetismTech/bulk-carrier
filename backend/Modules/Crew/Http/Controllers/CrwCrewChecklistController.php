@@ -45,8 +45,8 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist     = CrwCrewChecklist::create($crwCrewChecklistData);
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Created Successfully', $crwCrewChecklist, 201);
             });
+            return response()->success('Created Successfully', '', 201);
         }
         catch (QueryException $e)
         {
@@ -88,8 +88,8 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist->crwCrewChecklistLines()->delete();
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Updated Successfully', $crwCrewChecklist, 202);
             });
+            return response()->success('Updated Successfully', '', 202);
         }
         catch (QueryException $e)
         {

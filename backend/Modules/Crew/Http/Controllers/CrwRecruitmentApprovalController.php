@@ -46,8 +46,8 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval     = CrwRecruitmentApproval::create($crwRecruitmentApprovalData);
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Created Successfully', $crwRecruitmentApproval, 201);
             });
+            return response()->success('Created Successfully', '', 201);
         }
         catch (QueryException $e)
         {
@@ -89,8 +89,8 @@ class CrwRecruitmentApprovalController extends Controller
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->delete();
                 $crwRecruitmentApproval->crwRecruitmentApprovalLines()->createMany($request->crwRecruitmentApprovalLines);
 
-                return response()->success('Updated Successfully', $crwRecruitmentApproval, 202);
             });
+            return response()->success('Updated Successfully', '', 202);
         }
         catch (QueryException $e)
         {

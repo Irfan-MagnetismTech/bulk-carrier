@@ -93,39 +93,6 @@ export default function useTransaction() {
         }
     }
 
-    function checkCreditAndDebitAmount(form){
-        const messages = ref([]);
-        let isHasError = false;
-        form.ledgerEntries?.forEach((item,index) => {
-            if((parseFloat(item.cr_amount) === 0 && parseFloat(item.dr_amount) === 0) || parseFloat(item.cr_amount) > 0 && parseFloat(item.dr_amount) > 0){
-                let data = `Ledger Entries [line :${index + 1}] Either Credit Amount or Debit Amount must be non-zero and can't be zero at once.`;
-                messages.value.push(data);
-            }
-            if((parseFloat(form.total_credit_amount) !== parseFloat(form.total_debit_amount)) && index === (form.ledgerEntries.length - 1)){
-                let data = `The total debit amount must match the total credit amount.`;
-                messages.value.push(data);
-            }
-            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
-            if (Object.keys(messages.value).length) {
-                for (const property in messages.value) {
-                    rawHtml += `<li> ${messages.value[property]} </li>`
-                }
-                rawHtml += `</ul>`;
-
-                Swal.fire({
-                    icon: "",
-                    title: "Correct Please!",
-                    html: `
-                ${rawHtml}
-                        `,
-                    customClass: "swal-width error-message-text",
-                });
-                isHasError = true;
-            }
-        });
-        return isHasError;
-    }
-
     async function storeTransaction(form) {
 
         if(!checkCreditAndDebitAmount(form)){
@@ -203,6 +170,39 @@ export default function useTransaction() {
             loader.hide();
             isLoading.value = false;
         }
+    }
+
+    function checkCreditAndDebitAmount(form){
+        const messages = ref([]);
+        let isHasError = false;
+        form.ledgerEntries?.forEach((item,index) => {
+            if((parseFloat(item.cr_amount) === 0 && parseFloat(item.dr_amount) === 0) || parseFloat(item.cr_amount) > 0 && parseFloat(item.dr_amount) > 0){
+                let data = `Ledger Entries [line :${index + 1}] Either Credit Amount or Debit Amount must be non-zero and can't be zero at once.`;
+                messages.value.push(data);
+            }
+            if((parseFloat(form.total_credit_amount) !== parseFloat(form.total_debit_amount)) && index === (form.ledgerEntries.length - 1)){
+                let data = `The total debit amount must match the total credit amount.`;
+                messages.value.push(data);
+            }
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width error-message-text",
+                });
+                isHasError = true;
+            }
+        });
+        return isHasError;
     }
 
     return {
