@@ -11,14 +11,14 @@ class CrwCrewDocument extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-	protected $fillable = ['crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit'];
+	protected $fillable = ['crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit'];
 
 	public function crwCrewDocumentRenewals(){
 		return $this->hasMany(CrwCrewDocumentRenewal::class);
 	}
 
-    public function crwCrew()
+    public function crwCrewProfile()
     {
-        return $this->belongsTo(CrwCrew::class);
+        return $this->belongsTo(CrwCrewProfile::class);
     }
 }
