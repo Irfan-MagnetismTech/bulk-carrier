@@ -83,7 +83,13 @@ class OpsVoyageController extends Controller
       */
      public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers');
+
+        $voyage->opsVoyageSectors->map(function($sector) {
+            $sector->loading_point_name_code = $sector->loadingPoint->name.'-'.$sector->loadingPoint->code;
+            $sector->unloading_point_name_code = $sector->unloadingPoint->name.'-'.$sector->unloadingPoint->code;
+            return $sector;
+        });
 
         try
         {

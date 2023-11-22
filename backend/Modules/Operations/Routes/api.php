@@ -17,6 +17,7 @@ use Modules\Operations\Http\Controllers\OpsChartererContractController;
 use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
+use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsCommonController;
 
 /*
@@ -47,6 +48,8 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'handover-takeovers' => OpsHandoverTakeoverController::class,
         'charterer-invoices' => OpsChartererInvoiceController::class,
         'lighter-noon-reports' => OpsLighterNoonReportController::class,
+        'bulk-noon-reports' => OpsBulkNoonReportController::class,
+        'customer-invoices' => OpsCustomerInvoiceController::class,
     ]);
 
     //start for without pagination
@@ -77,6 +80,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-customers', [OpsCustomerController::class, 'getCustomerByNameorCode']);
     Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
+    Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
     
     // end for search api route
     
@@ -101,5 +105,5 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
     
+    Route::post('vessel-search', [OpsVesselController::class, 'search']);
 });
-Route::post('vessel-search', [OpsVesselController::class, 'search']);

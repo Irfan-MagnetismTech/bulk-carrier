@@ -109,7 +109,14 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function show(OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-        $voyage_boat_note->load('opsVessel','opsVoyage','opsVoyageBoatNoteLines');
+        $voyage_boat_note->load('opsVessel','opsVoyage','opsVoyageBoatNoteLines.loadingPoint','opsVoyageBoatNoteLines.unloadingPoint');
+
+        $voyage_boat_note->opsVoyageBoatNoteLines->map(function($line) {
+            $line->loading_point_name_code = $line->loadingPoint->name.'-'.$line->loadingPoint->code;
+            $line->unloading_point_name_code = $line->unloadingPoint->name.'-'.$line->unloadingPoint->code;
+            return $line;
+        });
+
         try
         {
             return response()->success('Data retrieved successfully.', $voyage_boat_note, 200);
