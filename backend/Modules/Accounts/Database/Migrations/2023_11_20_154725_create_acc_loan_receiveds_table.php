@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('instrument_no');
             $table->date('instrument_date');
             $table->decimal('received_amount', 20, 2);
-            $table->float('interest_rate', 5, 2);                
+            $table->float('interest_rate', 5, 2);
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

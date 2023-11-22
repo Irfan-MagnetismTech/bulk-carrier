@@ -14,7 +14,10 @@ class AccBankReconciliationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'acc_transaction_id' => 'required|integer',
+            'date'               => 'required|date',
+            'status'             => 'required|string|max:255',
+            'business_unit'      => 'required|in:PSML,TSLL',
         ];
     }
 

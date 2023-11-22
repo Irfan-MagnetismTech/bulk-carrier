@@ -178,17 +178,17 @@ function confirmDelete(id) {
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materials?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!materials?.data?.length" class="relative h-[250px]">
-        <tr v-if="isLoading">
-          <!-- <td colspan="7">Loading...</td> -->
-        </tr>
-        <tr v-else-if="isTableLoading">
-            <td colspan="7">
-              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-            </td>
-        </tr>
-        <tr v-else-if="!materials?.data?.length">
-          <td colspan="7">No Datas found.</td>
-        </tr>
+            <tr v-if="isLoading">
+              <!-- <td colspan="7">Loading...</td> -->
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="7">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!materials?.data?.length">
+              <td colspan="7">No Datas found.</td>
+            </tr>
         </tfoot>
       </table>
     </div>

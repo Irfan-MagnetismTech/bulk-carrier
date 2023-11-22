@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
+use Modules\Crew\Http\Requests\CrwCrewDocumentRequest;
 
 class CrwCrewDocumentController extends Controller
 {
@@ -42,16 +43,13 @@ class CrwCrewDocumentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwCrewDocumentRequest $request)
     {
         try {
-            $documentData      = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+            $documentData      = $request->only('crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
             $renewData         = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment');
 
-            $documentData = json_decode($request->get('data'),true);
-            $renewData = json_decode($request->get('data'),true);
-
-            DB::transaction(function () use ($request,$documentData,$renewData)
+            DB::transaction(function () use ($request, $documentData,$renewData)
             {
                 $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
 
@@ -65,7 +63,7 @@ class CrwCrewDocumentController extends Controller
                 $crewDocumentRenew = $crewDocument->crwCrewDocumentRenewals()->createMany([$renewData]);
             });
 
-            $crwDocuments = CrwCrewDocument::with('crwCrewDocumentRenewals')->where('crw_crew_id', $documentData['crw_crew_id'])
+            $crwDocuments = CrwCrewDocument::with('crwCrewDocumentRenewals')->where('crw_crew_profile_id', $documentData['crw_crew_profile_id'])
                 ->where('business_unit', $documentData['business_unit'])
                 ->latest()->first();
 
@@ -102,11 +100,11 @@ class CrwCrewDocumentController extends Controller
      * @param  \App\Models\CrwCrewDocument  $crwCrewDocument
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewDocument $crwCrewDocument)
+    public function update(CrwCrewDocumentRequest $request, CrwCrewDocument $crwCrewDocument)
     {
         try {
 
-            $crwCrewDocumentData = $request->only('crw_crew_id', 'name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+            $crwCrewDocumentData = $request->only('crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
 
             $configData = Config::get('crew.crew_document_validity_period');
             if (array_key_exists($crwCrewDocumentData['validity_period_in_month'], $configData)) {

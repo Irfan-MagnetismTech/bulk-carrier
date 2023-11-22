@@ -2,78 +2,93 @@
 
 namespace Modules\Accounts\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Accounts\Entities\AccLoan;
+use Modules\Accounts\Entities\AccLoanReceived;
+use Modules\Accounts\Http\Requests\AccLoanReceivedRequest;
 
 class AccLoanReceivedController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('accounts::index');
-    }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('accounts::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
      */
-    public function store(Request $request)
+    public function index(Request $request)
     {
-        //
+        try {
+            return AccLoanReceived::all(); 
+            $accLoanReceiveds = AccLoanReceived::globalSearch($request->all());
+
+            return response()->success('Retrieved Successfully', $accLoanReceiveds, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('accounts::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('accounts::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
      * @param Request $request
-     * @param int $id
-     * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function store(AccLoanReceivedRequest $request)
     {
-        //
+        try {
+            $accLoanReceived = AccLoanReceived::create($request->all());
+
+            return response()->success('Created Successfully', $accLoanReceived, 201);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param AccLoanReceived $accLoanReceived
      */
-    public function destroy($id)
+    public function show(AccLoanReceived $accLoanReceived)
     {
-        //
+        try {
+            return response()->success('Retrieved Successfully', $accLoanReceived, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param AccLoanReceived $accLoanReceived
+     */
+    public function update(AccLoanReceivedRequest $request, AccLoanReceived $accLoanReceived)
+    {
+        try {
+            $accLoanReceived->update($request->all());
+
+            return response()->success('Updated Successfully', $accLoanReceived, 202);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param AccLoanReceived $accLoanReceived
+     */
+    public function destroy(AccLoanReceived $accLoanReceived)
+    {
+        try {
+            $accLoanReceived->delete();
+
+            return response()->success('Deleted Successfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

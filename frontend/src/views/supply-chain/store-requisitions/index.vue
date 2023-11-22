@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useStoreRequisition from "../../../composables/supply-chain/useStoreRequisition";
@@ -9,10 +9,12 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import { useRouter } from 'vue-router';
-
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getStoreRequisitions, storeRequisitions, deleteStoreRequisition, isLoading } = useStoreRequisition();
+
+import { useRouter } from 'vue-router';
+const { getStoreRequisitions, storeRequisitions, deleteStoreRequisition, isLoading,isTableLoading } = useStoreRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -27,9 +29,6 @@ const props = defineProps({
 
 const critical = ['No','Yes'];
 // Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "store_requisitions";
 
 const icons = useHeroIcon();
 
@@ -39,15 +38,75 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 setTitle('Store Requisitions');
 // Code for global search starts here
 
-watch(searchKey, newQuery => {
-  getStoreRequisitions(props.page, columns, searchKey.value, table);
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Ref No",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Raised Date",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input"
+    }
+  ]
 });
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 onMounted(() => {
-  watchEffect(() => {
-    getStoreRequisitions(props.page,businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getStoreRequisitions(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -57,7 +116,9 @@ onMounted(() => {
       console.error("Error fetching SR:", error);
     });
 });
-
+filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 // Code for global search end here
 
@@ -123,22 +184,12 @@ function confirmDelete(id) {
     <h2 class="text-2xl font-semibold text-gray-700">Store Requisition List</h2>
     <default-button :title="'Create Store Requisition'" :to="{ name: 'scm.store-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ storeRequisitions?.from }}-{{ storeRequisitions?.to }} of {{ storeRequisitions?.total }}</span> -->
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
-    </div>
-  </div>
+
   <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Ref No</th>
@@ -148,10 +199,11 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(storeRequisition,index) in (storeRequisitions?.data ? storeRequisitions?.data : storeRequisitions)" :key="index">
-              <td>{{ storeRequisitions?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeRequisition?.ref_no }}</td>
               <td>{{ storeRequisition?.date }}</td>
               <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
@@ -170,13 +222,17 @@ function confirmDelete(id) {
               </td>
             </tr>
           </tbody>
-          <tfoot v-if="!storeRequisitions?.data?.length" class="bg-white dark:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="8">Loading...</td>
-        </tr>
-        <tr v-else-if="!storeRequisitions?.data?.length">
-          <td colspan="8">No SR found.</td>
-        </tr>
+          <tfoot v-if="!storeRequisitions?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+            <tr v-if="isLoading">
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="7">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!storeRequisitions?.data?.length">
+              <td colspan="7">No Data found.</td>
+            </tr>
         </tfoot>
       </table>
     </div>

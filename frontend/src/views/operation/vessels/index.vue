@@ -175,7 +175,6 @@ onMounted(() => {
     <default-button :title="'Create Vessel'" :to="{ name: 'ops.vessels.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
-
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwAgencyBill;
+use Modules\Crew\Http\Requests\CrwAgencyBillRequest;
 
 class CrwAgencyBillController extends Controller
 {
@@ -34,7 +35,7 @@ class CrwAgencyBillController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwAgencyBillRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -76,7 +77,7 @@ class CrwAgencyBillController extends Controller
      * @param  \App\Models\CrwAgencyBill  $crwAgencyBill
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwAgencyBill $crwAgencyBill)
+    public function update(CrwAgencyBillRequest $request, CrwAgencyBill $crwAgencyBill)
     {
         try {
             DB::transaction(function () use ($request, $crwAgencyBill)

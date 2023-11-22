@@ -18,13 +18,15 @@ class ScmMaterialCategoryRequest extends FormRequest
             'name' => [
                 'required',
                 Rule::unique('scm_material_categories')->ignore($this->material_category, 'name'), 
-                'max:255'
+                'max:255',
+                'string'                
             ],
 
             'short_code' => [
                 'required',
                 Rule::unique('scm_material_categories')->ignore($this->material_category, 'short_code'), 
-                'max:255'
+                'max:255',
+                'string'
             ],
         ];
     }
@@ -40,10 +42,12 @@ class ScmMaterialCategoryRequest extends FormRequest
             'name.required' => 'Name is required',
             'name.unique' => 'Name is already taken',
             'name.max' => 'Name is too long',
+            'name.string' => 'Name must be a string',
 
             'short_code.required' => 'Short code is required',
             'short_code.unique' => 'Short code is already taken',
             'short_code.max' => 'Short code is too long',
+            'short_code.string' => 'Short code must be a string',
         ];
     }
 

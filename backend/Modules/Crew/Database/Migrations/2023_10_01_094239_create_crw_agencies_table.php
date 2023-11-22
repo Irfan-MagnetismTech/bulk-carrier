@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('crw_agencies', function (Blueprint $table) {
             $table->id();
-			$table->string('name');
+			$table->string('agency_name');
 			$table->string('legal_name');
 			$table->string('tax_identification')->nullable();
 			$table->string('business_license_no')->nullable();

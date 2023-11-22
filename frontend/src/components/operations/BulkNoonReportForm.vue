@@ -32,7 +32,7 @@
     </label>
     <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Voyage </span>
-            <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+            <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -82,9 +82,35 @@
       </label>
   </div>
 
-  <h4 class="text-md font-semibold">Upcoming Ports</h4>
+  <h4 class="text-md font-semibold my-3">Upcoming Ports</h4>
 
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+  <div class="dt-responsive table-responsive">
+    <table id="dataTable" class="w-full table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-64">Last Port</th>
+          <th class="w-64">Next Port</th>
+          <th>ETA</th>
+          <th>Distance Run</th>
+          <th>DTG</th>
+          <th>Remarks</th>
+          <th class="w-16">
+            <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="hidden flex flex-col justify-center w-full md:flex-row md:gap-2">
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Last Port <span class="text-red-500">*</span></span>
@@ -119,25 +145,25 @@
 
   </div>
 
-  <h4 class="text-md font-semibold">Distance and Vessel</h4>
+  <h4 class="text-md font-semibold my-3">Distance and Vessel</h4>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">CP/Ordered Speed </span>
         <input type="text" v-model="form.model_name" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Average RPM </span>
         <input type="text" v-model="form.model_name" placeholder="Average RPM" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Reported Speed </span>
         <input type="text" v-model="form.model_name" placeholder="Reported Speed" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-full text-sm">
         <span class="text-gray-700 ">Fwd Draft </span>
         <input type="text" v-model="form.model_name" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
         <Error v-if="errors?.model_name" :errors="errors.model_name" />
@@ -213,7 +239,30 @@
     </label>
   </div>
 
-  <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Last Day Noon ROB </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Production </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Production" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Consumption </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Consumption" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">FW Today Noon ROB </span>
+      <input type="text" v-model="form.model_name" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+  </div>
+
+  <div class="mt-5">
     <h4 class="text-md font-semibold my-3">Cargo Tank Info</h4>
 
     <table class="w-full whitespace-no-wrap" >
@@ -225,46 +274,342 @@
             <th><nobr> Vapor Temp </nobr></th>
             <th><nobr> Liq Temp </nobr></th>
             <th><nobr> Quantity (MT) </nobr></th>
-            <th><nobr> FW Last Day Noon ROB </nobr></th>
-            <th><nobr>Action</nobr></th>
+            <th class="w-16">
+              <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            
-            <td>
-              <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
-            </td>
-            <td>
-              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <span class="show-block !block !bg-gray-100 !text-right">{{ form.opsBunkers[index].opening_balance }}</span>
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
-              </label>
-            </td>
-            <td class="hidden">
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
-              </label>
-            </td>
-          </tr>
+          
         </tbody>
       </table>
+  </div>
+
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Master </span>
+      <input type="text" v-model="form.model_name" placeholder="Master" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Chief Engineer </span>
+      <input type="text" v-model="form.model_name" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+    </label>
+  </div>
+
+  <div class="dt-responsive table-responsive">
+    <table id="dataTable" class="w-full table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Previous ROB</th>
+          <th>Received</th>
+          <th colspan="2">Consumption Used For</th>
+          <th>ROB</th>
+          <th colspan="4"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="4">VLSFO/IFO (MT)</td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td>ME</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td>Unit</td>
+          <td>PCO</td>
+          <td>Rack</td>
+          <td>Exh. Temp.</td>
+        </tr>
+        <tr>
+          <td>GE</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>1</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>2</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>3</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+
+
+
+        <tr>
+          <td rowspan="5">MGO (MT)</td>
+          <td rowspan="5">
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="5">
+            <input type="text" class="filter_input">
+          </td>
+          <td>ME</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="5">
+            <input type="text" class="filter_input">
+          </td>
+          <td>4</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>GE</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>5</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>6</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>IG</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>7</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME Tc Exh. In</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+
+
+
+        <tr>
+          <td rowspan="4">LSMGO (MT)</td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td>Main</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td rowspan="4">
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME TC Exh. Out</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Aux</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME TC LO OUT</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Blr</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME Scv. Temp.</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME Scv. Press</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td>MECC</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>Main</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME FW Out Temp.</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+
+        <tr>
+          <td>LSMECYL</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>ME Cyl. Oil</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td colspan="2">ME FW In Temp.</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+        </tr>
+        <tr>
+          <td>LSAECC</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>GE Sys. Oil</td>
+          <td>
+            <input type="text" class="filter_input">
+          </td>
+          <td>
+            <input type="text" class="filter_input" autocomplete="off" />
+
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
@@ -276,7 +621,7 @@
             <th>SL</th>
             <th class="w-72">Bunker Name</th>
             <th>Unit</th>
-            <th><nobr> Present Stock </nobr></th>
+            <th><nobr> Bunkering </nobr></th>
             <th><nobr> FUEL - CON/24H </nobr></th>
             <th><nobr> FUEL - CON/Voyage </nobr></th>
             <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
@@ -296,7 +641,8 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <span class="show-block !block !bg-gray-100 !text-right">{{ form.opsBunkers[index].opening_balance }}</span>
+                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
+                <Error v-if="errors?.opsBunkers[index]?.bunkering" :errors="errors.opsBunkers[index]?.bunkering" />
               </label>
             </td>
             <td>

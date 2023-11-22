@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useAgencyBill() {
     const router = useRouter();
     const agencyBills = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const agencyBill = ref( {
@@ -18,42 +19,49 @@ export default function useAgencyBill() {
         invoice_no: '',
         invoice_type: '',
         invoice_currency: '',
-        invoice_amount: 0.0,
-        grand_total: 0.0,
-        discount: 0.0,
-        net_amount: 0.0,
+        invoice_amount: '',
+        grand_total: '',
+        discount: '',
+        net_amount: '',
         remarks: '',
         crwAgencyBillLines: [
             {
                 particular: '',
                 description: '',
                 per: '',
-                quantity: 0.0,
-                rate: 0.0,
-                amount: 0.0,
+                quantity: '',
+                rate: '',
+                amount: '',
             }
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getAgencyBills(page,businessUnit) {
+    async function getAgencyBills(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-agency-bills',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             agencyBills.value = data.value;
@@ -62,8 +70,14 @@ export default function useAgencyBill() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -134,7 +148,7 @@ export default function useAgencyBill() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-agency-bills/${agencyBillId}`);
             notification.showSuccess(status);
-            await getAgencyBills(indexPage.value, indexBusinessUnit.value);
+            await getAgencyBills(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -152,6 +166,7 @@ export default function useAgencyBill() {
         showAgencyBill,
         updateAgencyBill,
         deleteAgencyBill,
+        isTableLoading,
         isLoading,
         errors,
     };
