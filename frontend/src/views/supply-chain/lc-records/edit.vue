@@ -27,10 +27,10 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Update LC Records</h2>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update LC Records</h2>
         <default-button :title="'Opening Stock List'" :to="{ name: 'scm.lc-records.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateLcRecord(lcRecord, lcRecordId)">
             <lc-record-form :form="lcRecord" :errors="errors" :formType="formType" :page="formType"></lc-record-form>
             <!-- Submit button -->

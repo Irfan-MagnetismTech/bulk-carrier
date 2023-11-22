@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('crw_crew_documents', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('crw_crew_id');
-			$table->string('name'); // document name
+			$table->unsignedBigInteger('crw_crew_profile_id');
+			$table->string('document_name'); // document name
 			$table->string('issuing_authority');
 			$table->string('validity_period'); //permanent / 5 Years
 			$table->float('validity_period_in_month'); //60

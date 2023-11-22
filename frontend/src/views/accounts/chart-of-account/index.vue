@@ -264,7 +264,7 @@ onMounted(() => {
                   <span><nobr>Business Unit</nobr></span>
                 </div>
               </th>
-              <th class="w-20 min-w-full">Action</th>
+              <th class="w-20">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -305,18 +305,20 @@ onMounted(() => {
             <td>{{ chartAccountData?.account_code }}</td>
             <td class="text-left">{{ chartAccountData?.account_name }}</td>
             <td>
-              <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Assets</span>
-              <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Liabilities</span>
-              <span v-if="chartAccountData?.account_type===3" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-orange-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Equity</span>
-              <span v-if="chartAccountData?.account_type===4" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Revenues</span>
-              <span v-if="chartAccountData?.account_type===5" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-pink-200 rounded-full dark:text-gray-100 dark:bg-gray-700">Expenses</span>
+              <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Assets</span>
+              <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Liabilities</span>
+              <span v-if="chartAccountData?.account_type===3" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-orange-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Equity</span>
+              <span v-if="chartAccountData?.account_type===4" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Revenues</span>
+              <span v-if="chartAccountData?.account_type===5" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-pink-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Expenses</span>
             </td>
             <td>
               <span :class="chartAccountData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartAccountData?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'acc.chart-of-accounts.edit', params: { chartOfAccountId: chartAccountData?.id } }"></action-button>
-              <action-button @click="confirmDelete(chartAccountData?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'acc.chart-of-accounts.edit', params: { chartOfAccountId: chartAccountData?.id } }"></action-button>
+                <action-button @click="confirmDelete(chartAccountData?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartOfAccounts?.data?.length"></LoaderComponent>

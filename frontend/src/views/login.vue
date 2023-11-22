@@ -1,6 +1,6 @@
 <template>
-  <div id="login_page_body" class="flex items-center justify-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
-    <div class="overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800 w-full md:w-1/3" style="z-index: 999;">
+  <div id="login_page_body" class="flex items-center justify-center min-h-screen p-6 bg-gray-50 dark-disabled:bg-gray-900">
+    <div class="overflow-hidden bg-white rounded-lg shadow-xl dark-disabled:bg-gray-800 w-full md:w-1/3" style="z-index: 999;">
       <div class="flex items-center justify-center">
         <img aria-hidden="true" class="object-cover align-middle py-4 w-2/4" src="/torony-small-logo.png" alt="Torony">
       </div>
@@ -9,12 +9,12 @@
           <div class="w-full">
             <form class="" @submit.prevent="login(user)">
               <div>
-                <label class="block mb-1 text-sm leading-relaxed tracking-tight text-gray-700 dark:text-gray-100">Email Address</label>
-                <input type="email" v-model="user.email" required placeholder="Your Email" class="w-full px-4 py-2 transition duration-300 ease-in-out transform bg-gray-100 border-transparent rounded-md dark:text-gray-100 dark:bg-gray-600 dark:focus:border-gray-600 dark:focus:bg-gray-500 focus:ring-blue-600 focus:outline-none" />
+                <label class="block mb-1 text-sm leading-relaxed tracking-tight text-gray-700 dark-disabled:text-gray-100">Email Address</label>
+                <input type="email" v-model="user.email" required placeholder="Your Email" class="w-full px-4 py-2 transition duration-300 ease-in-out transform bg-gray-100 border-transparent rounded-md dark-disabled:text-gray-100 dark-disabled:bg-gray-600 dark-disabled:focus:border-gray-600 dark-disabled:focus:bg-gray-500 focus:ring-blue-600 focus:outline-none" />
               </div>
               <div class="mt-4">
-                <label class="block mb-1 text-sm leading-relaxed tracking-tight text-gray-700 dark:text-gray-100">Password</label>
-                <input type="password" v-model="user.password" required minlength="6" placeholder="Your Password" class="w-full px-4 py-2 transition duration-300 ease-in-out transform bg-gray-100 border-transparent rounded-md dark:text-gray-100 dark:bg-gray-600 dark:focus:border-gray-600 dark:focus:bg-gray-500 focus:ring-blue-600 focus:outline-none" />
+                <label class="block mb-1 text-sm leading-relaxed tracking-tight text-gray-700 dark-disabled:text-gray-100">Password</label>
+                <input type="password" v-model="user.password" required minlength="6" placeholder="Your Password" class="w-full px-4 py-2 transition duration-300 ease-in-out transform bg-gray-100 border-transparent rounded-md dark-disabled:text-gray-100 dark-disabled:bg-gray-600 dark-disabled:focus:border-gray-600 dark-disabled:focus:bg-gray-500 focus:ring-blue-600 focus:outline-none" />
               </div>
               <button type="submit" :disabled="isLoading" class="inline-flex items-center justify-center flex-none w-full px-4 py-2 mt-6 text-sm font-semibold leading-6 text-gray-100 transition-colors duration-300 bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-600 focus:outline-none">
                 <span v-if="!isLoading">Login</span>

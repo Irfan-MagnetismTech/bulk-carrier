@@ -11,20 +11,25 @@ class AccLoanReceivedRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'acc_loan_id'             => 'required|numeric',
+            'received_date'           => 'required|date',
+            'payment_method'          => 'required|string',
+            'received_acc_account_id' => 'required|numeric',
+            'instrument_no'           => 'required|string',
+            'instrument_date'         => 'required|date',
+            'received_amount'         => 'required|numeric',
+            'interest_rate'           => 'required|numeric|min:0|max:100',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

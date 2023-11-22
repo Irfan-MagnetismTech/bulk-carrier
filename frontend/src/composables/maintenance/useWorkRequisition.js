@@ -97,6 +97,10 @@ export default function useWorkRequisition() {
     }
 
     async function storeWorkRequisition(form) {
+        if (form.added_job_lines.length === 0) {
+            Swal.fire("Please add at least one job.");
+            return null;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -135,6 +139,10 @@ export default function useWorkRequisition() {
     }
 
     async function updateWorkRequisition(form, workRequisitionId) {
+        if (form.added_job_lines.length === 0) {
+            Swal.fire("Please add at least one job.");
+            return null;
+        }
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;

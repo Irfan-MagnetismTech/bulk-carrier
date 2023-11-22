@@ -270,8 +270,7 @@ class MntWorkRequisitionController extends Controller
             }
 
             $wr['start_date'] = $input['start_date'];
-            $wr['completion_date'] = $job['last_done'] = $input['completion_date'];
-            $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
+            $wr['completion_date'] = $input['completion_date'];
             $wr['checking'] = $input['checking'] ?? 0;
             $wr['replace'] = $input['replace'] ?? 0;
             $wr['cleaning'] = $input['cleaning'] ?? 0;
@@ -288,6 +287,8 @@ class MntWorkRequisitionController extends Controller
             $workRequisition->update($wr);
 
             $jobLine = MntJobLine::findorfail($input['mnt_job_line_id']);
+            $job['last_done'] = $input['completion_date']; // Update job line information
+            $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
             $jobLine->update($job);
             
             DB::commit();
@@ -326,7 +327,7 @@ class MntWorkRequisitionController extends Controller
                 $wr->delete();
                 
                 DB::commit();
-                return response()->success('Job deleted successfully', $wr, 204);
+                return response()->success('Work requisition is deleted successfully', $wr, 204);
             }
             
         }

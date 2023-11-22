@@ -184,7 +184,7 @@ function confirmDelete(id) {
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && lcRecords?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark:bg-gray-800">
+          <tfoot v-if="!lcRecords?.data?.length" class="bg-white dark-disabled:bg-gray-800">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
