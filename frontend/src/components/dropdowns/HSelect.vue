@@ -63,7 +63,7 @@ onClickOutside(select, () => hideItemList());
             <!-- Placeholder -->
             <div>
                 <span v-if="propsData.modelValue.value !== null" class="text-gray-600 ">{{ selected }}</span>
-                <span v-else class="dark:text-slate-500">-- Please select an option --</span>
+                <span v-else class="">-- Please select an option --</span>
             </div>
             <!-- Icons -->
             <div class="ml-2 flex items-center justify-center">
@@ -108,10 +108,10 @@ onClickOutside(select, () => hideItemList());
         @apply flex flex-col max-h-64 gap-0.5 p-2 overflow-y-auto border rounded mt-1 cursor-default;
     }
     .select-search {
-        @apply w-full p-2 px-2 mb-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 focus:ring-indigo-500   transition-colors duration-75;
+        @apply w-full p-2 px-2 mb-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500   transition-colors duration-75;
     }
     .select-item {
-        @apply p-1 w-full text-gray-700 transition-colors duration-75 rounded cursor-pointer  hover:bg-indigo-500 hover:text-white dark:hover:bg-gray-700 select-none;
+        @apply p-1 w-full text-gray-700 transition-colors duration-75 rounded cursor-pointer  hover:bg-indigo-500 hover:text-white select-none;
     }
 }
 </style>

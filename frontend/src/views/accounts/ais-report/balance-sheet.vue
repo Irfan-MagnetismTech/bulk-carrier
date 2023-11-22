@@ -336,7 +336,7 @@ table, th,td{
   @apply px-4 py-3 text-sm text-center text-gray-600 ;
 }
 .search {
-  @apply float-right  pr-10 text-sm border border-gray-300 rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  dark:border-0;
+  @apply float-right  pr-10 text-sm border border-gray-300 rounded   focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  ;
 }
 .transaction_col:hover{
   text-decoration: underline;

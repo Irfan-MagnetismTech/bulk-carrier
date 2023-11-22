@@ -1,6 +1,6 @@
 <template>
   <header class="z-10 py-1 bg-white shadow-md ">
-    <div class="flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+    <div class="flex items-center justify-between h-full px-6 mx-auto text-purple-600 ">
       <svg @click="toggleSidebar" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sidebar-open-close-toggle inline-flex float-right mr-2 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
@@ -12,7 +12,7 @@
 
       <!-- Search input -->
       <div class="HeaderLogoWrapper">
-        <img aria-hidden="true" class="object-cover align-middle dark:block" style="width: 100px" src="/torony-small-logo.png" alt="Torony Logo">
+        <img aria-hidden="true" class="object-cover align-middle " style="width: 100px" src="/torony-small-logo.png" alt="Torony Logo">
       </div>
 
       <div class="flex items-center mr-2">

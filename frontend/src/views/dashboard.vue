@@ -8,7 +8,8 @@ setTitle('Dashboard');
 
 <template>
 
-<!--    <h2 class="my-6 text-2xl font-semibold text-gray-700 ">Dashboard</h2>-->
+<div>
+    <!--    <h2 class="my-6 text-2xl font-semibold text-gray-700 ">Dashboard</h2>-->
 <!--    &lt;!&ndash; Cards &ndash;&gt;-->
 <!--    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">-->
 <!--        &lt;!&ndash; Card &ndash;&gt;-->
@@ -60,4 +61,5 @@ setTitle('Dashboard');
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
+</div>
 </template>

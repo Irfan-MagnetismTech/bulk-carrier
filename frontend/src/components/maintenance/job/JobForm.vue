@@ -87,7 +87,7 @@
           <tr class="text-gray-700 " v-for="(job_line, index) in form.mntJobLines" :key="index">
             <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="job_line.job_description" placeholder="Job Description" /></td>
             <td class="px-1 py-1">
-              <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2    dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <select v-model="job_line.cycle_unit" required class="form-input bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2    ">
                         <option value="" disabled selected>Select Cycle Unit</option>
                         <option value="Hours" v-show="form.mnt_item_name?.has_run_hour">Hours</option>
                         <option value="Days">Days</option>
