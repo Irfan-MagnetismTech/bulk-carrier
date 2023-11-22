@@ -20,7 +20,7 @@
 //     showMaterialRequisition(materialRequisitionId);
 // });
 </script>
-<!-- <template>
+<template>
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Material Requisition</h2>
         <router-link :to="{ name: 'scm.material-requisitions.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  border border-transparent rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
