@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Cargo Tariff Details</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Cargo Tariff Details</h2>
     <default-button :title="'Cargo Tariff List'" :to="{ name: 'ops.configurations.cargo-tariffs.index' }" :icon="icons.DataBase"></default-button>
   </div>
   
@@ -8,35 +8,35 @@
   <div class="bg-white rounded-md p-2">
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
             <span class="show-block">{{ cargoTariff?.tariff_name }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <span class="show-block">{{ cargoTariff?.opsVessel?.name }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
             <span class="show-block">{{ cargoTariff?.loading_point }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
             <span class="show-block">{{ cargoTariff?.unloading_point }}</span>
         </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
               <span class="show-block">{{ cargoTariff?.opsCargoType?.cargo_type }}</span>
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
               <span class="show-block">{{ cargoTariff?.currency }}</span>
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
               <span class="show-block">{{ cargoTariff?.status }}</span>
           </label>
           <label class="block w-full mt-2 text-sm"></label>
