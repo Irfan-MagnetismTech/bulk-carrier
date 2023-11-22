@@ -12,6 +12,7 @@ export default function useLcRecord() {
     const router = useRouter();
     const lcRecords = ref([]);
     const filteredLcRecords = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };

@@ -14,7 +14,8 @@ export default function useMaterialReceiptReport() {
     const router = useRouter();
     const materialReceiptReports = ref([]);
     const materialList = ref([]);
-    const filteredMaterialRreceiptReports = ref([]);
+    const filteredMaterialReceiptReports = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -268,7 +269,7 @@ export default function useMaterialReceiptReport() {
 
     return {
         materialReceiptReports,
-        filteredMaterialRreceiptReports,
+        filteredMaterialReceiptReports,
         materialReceiptReport,
         getMaterialReceiptReports,
         storeMaterialReceiptReport,

@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
@@ -13,11 +14,10 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use League\Event\GeneratorTrait;
 
 class ScmMrr extends Model
 {
-    use HasFactory, GeneratorTrait;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ref_no', 'type', 'date', 'scm_po_id', 'scm_pr_id', 'scm_warehouse_id', 'scm_lc_record_id', 'scm_cs_id', 'acc_cost_center_id', 'remarks', 'challan_no', 'is_qc_passed', 'qc_remarks', 'business_unit', 'created_by', 'is_completed', 'iou_id', 'purchase_center', 'iou_no',

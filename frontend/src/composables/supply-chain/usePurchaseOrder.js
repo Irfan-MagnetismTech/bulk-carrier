@@ -13,6 +13,7 @@ export default function usePurchaseOrder() {
     const purchaseOrders = ref([]);
     const filteredPurchaseOrders = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
