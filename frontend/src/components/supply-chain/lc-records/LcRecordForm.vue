@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
@@ -12,7 +12,7 @@
     const { vendors, searchVendor } = useVendor();
     const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
 
-    const { filteredPurchaseOrders, searchPurchaseOrder } = usePurchaseOrder();
+    const { filteredPurchaseOrders, searchPurchaseOrderForLc } = usePurchaseOrder();
 
     const props = defineProps({
       form: { type: Object, required: true },
@@ -39,8 +39,7 @@
 // });// Code for global search end here
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
-    if (newValue !== oldValue && oldValue != '') {
-      filteredPurchaseOrders.value = [];
+    if (newValue !== oldValue && oldValue != '' && oldValue != null && oldValue != undefined) {
       props.form.scm_po_id = null;
       props.form.scmPo = null;
       props.form.scmVendor = null;
@@ -55,9 +54,11 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
 onMounted(() => {
   getLcCostHeads();
+  watchEffect(() => {
+    fetchPo('');
+  });
 });
 watch(lc_cost_heads, (newVal, oldVal) => {
-  console.log(newVal);
   newVal.forEach((lc_cost_head, index) => {
     console.log(lc_cost_head,index);
     props.form.scmLcRecordLines.push({
@@ -85,9 +86,9 @@ function handleAttachmentChange(e) {
     
 
 //fetchPo by using searchPurchaseOrder()
-function fetchPo(search, loading) {
-  loading(true);
-  searchPurchaseOrder(search, loading,props.form.business_unit);
+function fetchPo(search, loading = false) {
+  // loading(true);
+  searchPurchaseOrderForLc(search, props.form.business_unit);
 }
 
 //watch scmPo
@@ -101,10 +102,14 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
     if (newVal.scmWarehouse) {
       props.form.scmWarehouse = newVal.scmWarehouse;
       props.form.scm_warehouse_id = newVal.scm_warehouse_id;
+      props.form.acc_cost_center_id = newVal.scmWarehouse.acc_cost_center_id;
+      }
     }
-  }
- });
+  });
 
+  watchPostEffect(() => {
+      props.form.document_value = props.form.cfr_value - props.form.lc_margin;
+  });
 
 </script>
 <template>
@@ -145,7 +150,8 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
     </label>
     <label class="label-group">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
-            <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input">
+            <!-- <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input"> -->
+            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input">
               <template #search="{attributes,events}">
                 <input
                   class="vs__search"
@@ -252,7 +258,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Documents Value (CFR - Margin) (BDT)</td>
               <td class="align-center">
-                <input type="text" v-model="form.document_value" required class="form-input text-center" name="document_value" :id="'document_value'" />
+                <input type="text" v-model="form.document_value" readonly required class="form-input text-center vms-readonly-input" name="document_value" :id="'document_value'" />
 
               </td>
             </tr>

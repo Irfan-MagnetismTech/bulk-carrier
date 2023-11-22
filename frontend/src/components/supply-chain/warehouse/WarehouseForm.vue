@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted, watchEffect } from 'vue';
+    import { ref, watch, onMounted, watchEffect, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
@@ -22,8 +22,8 @@
     // }
 
     watch(() => props.form.accCostCenter, (value) => {
-        props.form.cost_center_id = value?.id;
-        props.form.cost_center_name = value?.name;
+        props.form.cost_center_id = value?.id ?? null;
+        props.form.cost_center_name = value?.name ?? null;
     });
 
     onMounted(() => {
@@ -33,7 +33,7 @@
     });
 
     watch(() => props.form.business_unit, (newValue, oldValue) => {
-        if(newValue != oldValue &&  oldValue != '')
+        if (newValue != oldValue && oldValue != '')
             props.form.accCostCenter = null;
         });
 
