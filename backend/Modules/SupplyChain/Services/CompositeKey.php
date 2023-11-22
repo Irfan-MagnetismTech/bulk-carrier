@@ -12,9 +12,9 @@ class CompositeKey
      * @param int $column_id
      * @return string
      */
-    public function generate(int $model_id, string $infix, int $column_id): string
+    public function generate(int $index, int $model_id, string $infix, int $column_id): string
     {
-        return $model_id . '-' . strtoupper($infix) . '-' . $column_id;
+        return $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
     }
 
     /**
@@ -28,15 +28,15 @@ class CompositeKey
      */
     public function generateArrayWithCompositeKey(array $lines, int $parentModelId, string $columnName, string $infix)
     {
-        foreach ($lines as &$line) {
+        foreach ($lines as $index => &$line) {
             if (isset($line[$columnName])) {
                 $parentModelId = $parentModelId;
                 $infix = $infix;
                 $line[$infix . '_composite_key'] = $parentModelId . '-' . strtoupper($infix) . '-' . $line[$columnName];
+                $line[$infix . '_composite_key'] =  $this->generate($index, $parentModelId, $infix, $line[$columnName]);
             }
         }
 
         return $lines;
     }
 }
-

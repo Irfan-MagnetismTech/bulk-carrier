@@ -37,7 +37,7 @@ class OpsChartererContractController extends Controller
             'opsChartererContractsLocalAgents.opsPort')
             ->globalSearch($request->all());
             
-            return response()->success('Successfully retrieved charterer contract.', $charterer_contracts, 200);
+            return response()->success('Data retrieved successfully.', $charterer_contracts, 200);
         }
         catch (QueryException $e)
         {
@@ -73,7 +73,7 @@ class OpsChartererContractController extends Controller
             $charterer_contract->opsChartererContractsFinancialTerms()->create($request->opsChartererContractsFinancialTerms);
             $charterer_contract->opsChartererContractsLocalAgents()->createMany($request->opsChartererContractsLocalAgents);
             DB::commit();
-            return response()->success('Charterer contract added successfully.', $charterer_contract, 201);
+            return response()->success('Data added successfully.', $charterer_contract, 201);
         }
         catch (QueryException $e)
         {
@@ -94,7 +94,7 @@ class OpsChartererContractController extends Controller
         'opsChartererContractsLocalAgents.opsPort');
         try
         {
-            return response()->success('Successfully retrieved charterer contract.', $charterer_contract, 200);
+            return response()->success('Data retrieved successfully.', $charterer_contract, 200);
         }
         catch (QueryException $e)
         {
@@ -132,7 +132,7 @@ class OpsChartererContractController extends Controller
             $charterer_contract->opsChartererContractsFinancialTerms()->create($request->opsChartererContractsFinancialTerms);
             $charterer_contract->opsChartererContractsLocalAgents()->createUpdateOrDelete($request->opsChartererContractsLocalAgents);
             DB::commit();
-            return response()->success('Charterer contract updated successfully.', $charterer_contract, 202);
+            return response()->success('Data updated successfully.', $charterer_contract, 202);
         }
         catch (QueryException $e)
         {
@@ -148,8 +148,7 @@ class OpsChartererContractController extends Controller
         * @return \Illuminate\Http\JsonResponse
         */
     public function destroy(OpsChartererContract $charterer_contract): JsonResponse
-    {
-        
+    {        
         try
         {
             $charterer_contract->opsChartererContractsFinancialTerms()->delete();
@@ -158,7 +157,7 @@ class OpsChartererContractController extends Controller
             $charterer_contract->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted charterer contract.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -172,7 +171,7 @@ class OpsChartererContractController extends Controller
             $charterer_contracts = OpsChartererContract::with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff',
             'opsChartererContractsLocalAgents.opsPort')->latest()->get();
             
-            return response()->success('Successfully retrieved charterer contracts contract type.', $charterer_contracts, 200);
+            return response()->success('Data retrieved successfully.', $charterer_contracts, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

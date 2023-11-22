@@ -34,21 +34,25 @@
     });
        
 
-    function fetchCategory(query, loading) {
-        searchMaterialCategory(query, loading);
-        loading(true)
-    }
+    // function fetchCategory(query, loading) {
+    //     searchMaterialCategory(query, loading);
+    //     loading(true)
+// }
+
+        function fetchCategory(query) {
+            searchMaterialCategory(query);
+        }
 
     watch(() => props.form.scm_material_category_name, (value) => {
         props.form.scm_material_category_id = value?.id;
-        materialCategories.value = [];
-        categoryKey.value++;
+        // materialCategories.value = [];
+        // categoryKey.value++;
     });
 
-    watch(() => props.form.unit, (value) => {
-        units.value = [];
-        unitKey.value++;
-    });
+    // watch(() => props.form.unit, (value) => {
+    //     units.value = [];
+    //     unitKey.value++;
+    // });
 
     const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 
@@ -58,11 +62,14 @@
         }
     });
 
-    function fetchUnit(query, loading) {
-        searchUnit(query, loading);
-        loading(true)
-    }
+    // function fetchUnit(query, loading) {
+    //     searchUnit(query, loading);
+    //     loading(true)
+// }
     
+    function fetchUnit(query) {
+        searchUnit(query);
+    }
     function fetchAllStoreCategories() {
       getAllStoreCategories().then(AllStoreCategories => {
         store_category.value = Object.values(AllStoreCategories);
@@ -73,7 +80,9 @@
     }
 
     onMounted(() => {
-      fetchAllStoreCategories();
+        fetchAllStoreCategories();
+        fetchCategory('');
+        fetchUnit('');
     });
 
 </script>
@@ -95,8 +104,7 @@
                     <v-select
                       :key="categoryKey"
                       :options="materialCategories"
-                      placeholder="-- Search Here --"
-                      @search="fetchCategory"
+                      placeholder="-- Choose An Option --"
                       v-model="form.scm_material_category_name"
                       label="name"
                       class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
@@ -117,8 +125,7 @@
                     <v-select
                       :key="unitKey"
                       :options="units"
-                      placeholder="-- Search Here --"
-                      @search="fetchUnit"
+                      placeholder="-- Choose An Option --"
                       v-model="form.unit"
                       label="name"
                       :reduce="units => units.name"

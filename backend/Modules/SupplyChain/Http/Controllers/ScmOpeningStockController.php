@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmOpeningStock;
+use Modules\SupplyChain\Http\Requests\ScmOpeningStockRequest;
+use Modules\SupplyChain\Services\StockLedgerData;
 
 class ScmOpeningStockController extends Controller
 {
@@ -32,30 +34,13 @@ class ScmOpeningStockController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ScmOpeningStockRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
             $scm_opening_stock = ScmOpeningStock::create($request->all());
             $scm_opening_stock->scmOpeningStockLines()->createMany($request->scmOpeningStockLines);
-
-            $stock_ledger_data = [];
-            collect($request->scmOpeningStockLines)->map(function ($scm_opening_stock_line) use ($scm_opening_stock, &$stock_ledger_data) {
-                $stock_ledger_data[] = [
-                    'scm_material_id' => $scm_opening_stock_line['scm_material_id'],
-                    'scm_warehouse_id' => $scm_opening_stock->scm_warehouse_id,
-                    'acc_cost_center_id' => null,
-                    'parent_id' => null,
-                    'quantity' => $scm_opening_stock_line['quantity'],
-                    'gross_unit_price' => $scm_opening_stock_line['rate'],
-                    'net_unit_price' => $scm_opening_stock_line['rate'],
-                    'currency' => 'BDT',
-                    'received_date' => now(),
-                    'business_unit' => $scm_opening_stock->business_unit,
-                ];
-            });
-
-            $scm_opening_stock->stockable()->createMany($stock_ledger_data);
+            (new StockLedgerData)->insert($scm_opening_stock, $request->scmOpeningStockLines, true);
 
             DB::commit();
 
@@ -88,12 +73,15 @@ class ScmOpeningStockController extends Controller
      * @param ScmOpeningStock $opening_stock
      * @return JsonResponse
      */
-    public function update(Request $request, ScmOpeningStock $opening_stock): JsonResponse
+    public function update(ScmOpeningStockRequest $request, ScmOpeningStock $opening_stock): JsonResponse
     {
         try {
             $opening_stock->update($request->all());
 
             $opening_stock->scmOpeningStockLines()->createUpdateOrDelete($request->scmOpeningStockLines);
+
+            $opening_stock->stockable()->delete();
+            (new StockLedgerData)->insert($opening_stock, $request->scmOpeningStockLines, true);
 
             return response()->success('Data updated sucessfully!', $opening_stock, 202);
         } catch (\Exception $e) {

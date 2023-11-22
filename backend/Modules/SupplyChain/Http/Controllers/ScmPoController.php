@@ -54,8 +54,8 @@ class ScmPoController extends Controller
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
             // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            $addNetRateToRequestData = $this->addNetRateToRequestData($request, $scmPo->id);
-            $scmPo->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
+            $data = $this->addNetRateToRequestData($request, $scmPo->id);
+            $scmPo->scmPoLines()->createUpdateOrDelete($data->scmPoLines);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
             DB::commit();
             return response()->success('Data created successfully', $scmPo, 201);
@@ -91,14 +91,17 @@ class ScmPoController extends Controller
 
         try {
             DB::beginTransaction();
+
             $purchaseOrder->update($requestData);
             $addNetRateToRequestData = $this->addNetRateToRequestData($request, $purchaseOrder->id);
             $purchaseOrder->scmPoLines()->createUpdateOrDelete($addNetRateToRequestData->scmPoLines);
             $purchaseOrder->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
+
             DB::commit();
             return response()->success('Data updated sucessfully!',  $purchaseOrder, 202);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -152,7 +155,7 @@ class ScmPoController extends Controller
         $scmPoLines = $request['scmPoLines'];
         foreach ($scmPoLines as $key => $value) {
             $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
-            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($po_id, 'po', $value['scm_material_id']);
+            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($key, $po_id, 'po', $value['scm_material_id']);
         }
         $request['scmPoLines'] = $scmPoLines;
 

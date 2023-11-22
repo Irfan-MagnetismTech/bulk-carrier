@@ -158,7 +158,7 @@ onMounted(() => {
                 <span><nobr>Business Unit</nobr></span>
               </div>
             </th>
-            <th class="w-20 min-w-full">Action</th>
+            <th class="w-20">Action</th>
           </tr>
           <tr class="w-full" v-if="showFilter">
             <th>
@@ -184,8 +184,10 @@ onMounted(() => {
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'acc.cash-accounts.edit', params: { cashAccountId: account?.id } }"></action-button>
-              <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'acc.cash-accounts.edit', params: { cashAccountId: account?.id } }"></action-button>
+                <action-button @click="confirmDelete(account?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cashAccounts?.data?.length"></LoaderComponent>

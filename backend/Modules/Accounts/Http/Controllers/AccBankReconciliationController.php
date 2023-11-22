@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccBankReconciliation;
 use Modules\Accounts\Entities\AccTransaction;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccBankReconciliationRequest;
 
 class AccBankReconciliationController extends Controller
 {
@@ -46,7 +47,7 @@ class AccBankReconciliationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccBankReconciliationRequest $request)
     {
         try {
             $bankReconciliationData            = $request->only('date', 'acc_transaction_id', 'business_unit');

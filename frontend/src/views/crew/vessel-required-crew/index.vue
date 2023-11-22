@@ -113,7 +113,6 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching ranks:", error);

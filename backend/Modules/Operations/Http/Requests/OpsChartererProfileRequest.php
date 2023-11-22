@@ -73,15 +73,15 @@ class OpsChartererProfileRequest extends FormRequest
             'email.email' => 'Please enter a valid email',
             'email.max' => 'Email may not be greater than :max characters.',
             'website.max' => 'Website may not be greater than :max characters.',
-            'opsChartererBankAccounts.*.bank_id.max' => 'Bank not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.bank_branch_id.max' => 'Bank branch not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.bank_name.max' => 'Bank Name may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.bank_branch_name.max' => 'Bank Branch may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.account_name.max' => 'Account Name may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.account_no.max' => 'Account No may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.swift_code.max' => 'Swift code may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.routing_no.max' => 'Routing No. may not be greater than :max characters for row is key:index',
-            'opsChartererBankAccounts.*.currency.max' => 'Currency may not be greater than :max characters for row is key:index',
+            'opsChartererBankAccounts.*.bank_id.max' => 'Bank not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.bank_branch_id.max' => 'Bank branch not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.bank_name.max' => 'Bank Name may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.bank_branch_name.max' => 'Bank Branch may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.account_name.max' => 'Account Name may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.account_no.max' => 'Account No may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.swift_code.max' => 'Swift code may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.routing_no.max' => 'Routing No. may not be greater than :max characters for row is :position.',
+            'opsChartererBankAccounts.*.currency.max' => 'Currency may not be greater than :max characters for row is :position.',
         ];
     }
 
@@ -95,24 +95,4 @@ class OpsChartererProfileRequest extends FormRequest
         return true;
     }
 
-    public function withValidator($validator)
-    {
-        $messages= $validator->errors()->messages();
-        $messages = collect($messages)->map(function ($messageArray, $field) {
-            $table = Str::before($field, '.');
-            $index = Str::before(Str::after($field, $table . '.'), '.');
-            $index = Str::before($index, '.');
-        
-            return collect($messageArray)->map(function ($message) use ($index) {
-                return Str::before($message, 'key' . $index) . ' ' . ++$index;
-            })->all();
-        })->all();
-        
-        $response= new \Illuminate\Http\JsonResponse([
-            'message' =>'The given data was invalid',
-            'errors' => $messages
-        ], 422);
-
-        throw new HttpResponseException($response);
-    }
 }

@@ -1,13 +1,14 @@
-<script setup xmlns="http://www.w3.org/1999/html">
+<script setup>
 import Error from "../Error.vue";
 import ActionButton from '../../components/buttons/ActionButton.vue';
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useCrewDocument from "../../composables/crew/useCrewDocument";
-const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewals, crewDocumentRenewals, isCrewDocumentRenewModalOpen } = useCrewCommonApiRequest();
-const { isLoading, isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal } = useCrewDocument();
+const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewals, crewDocumentRenewals, isCrewDocumentRenewModalOpen, isLoading } = useCrewCommonApiRequest();
+const { isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal, errors } = useCrewDocument();
 import env from '../../config/env';
 import Swal from "sweetalert2";
 
@@ -16,7 +17,6 @@ const props = defineProps({
     required: false,
     default: {}
   },
-  errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -49,6 +49,7 @@ function resetCrewDocumentModalData(){
 watch(() => props.form, (value) => {
   if(value){
     props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
+    props.form.crw_crew_profile_id = props.form?.crw_crew_name?.id ?? '';
     props.form.crw_crew_rank = props.form.crw_crew_name?.crwRank?.name ?? '';
     props.form.crw_crew_contact = props.form.crw_crew_name.contact ?? '';
     props.form.crw_crew_email = props.form.crw_crew_name.email ?? '';
@@ -157,10 +158,9 @@ function deleteDocumentBasicData(crwDocumentDataId,index){
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCrews(props.form.business_unit);
-    getCrewDocuments(props.form.business_unit,props.form.crw_crew_id);
+    //getCrewDocuments(props.form.business_unit,props.form?.crw_crew_id);
   });
 });
 
@@ -176,7 +176,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
-        <v-select :options="crews" placeholder="--Choose an option--" v-model="form.crw_crew_name" label="name" class="block form-input">
+        <v-select :loading="isLoading" :options="crews" placeholder="--Choose an option--" v-model="form.crw_crew_name" label="full_name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -195,12 +195,12 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Contact</span>
-        <input type="text" v-model="form.crw_crew_contact" placeholder="Crew contact" class="form-input vms-readonly-input" autocomplete="off" required />
+        <input type="text" v-model="form.crw_crew_name.pre_mobile_no" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" required />
         <Error v-if="errors?.crw_crew_contact" :errors="errors.crw_crew_contact" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Email</span>
-        <input type="text" v-model="form.crw_crew_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
+        <input type="text" v-model="form.crw_crew_name.pre_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
         <Error v-if="errors?.crw_crew_email" :errors="errors.crw_crew_email" />
       </label>
     </div>
@@ -228,7 +228,7 @@ onMounted(() => {
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
       <tr class="text-gray-700 dark:text-gray-400" v-for="(crwDocumentData, index) in crewDocuments" :key="crwDocumentData.id">
-        <td>{{ crwDocumentData?.name }}</td>
+        <td>{{ crwDocumentData?.document_name }}</td>
         <td>{{ crwDocumentData?.issuing_authority }}</td>
         <td>
           <span class="custom_badge dark:bg-yellow-700 dark:text-yellow-100 text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
@@ -299,19 +299,17 @@ onMounted(() => {
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Document Name <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.name" placeholder="Document name" class="form-input" autocomplete="off" required />
-              <Error v-if="errors?.name" :errors="errors.name" />
+              <input type="text" v-model.trim="form.document_name" placeholder="Document Name" class="form-input" autocomplete="off" required />
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Issuing Authority <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.issuing_authority" placeholder="Authority name" class="form-input" autocomplete="off" required />
-              <Error v-if="errors?.issuing_authority" :errors="errors.issuing_authority" />
+              <input type="text" v-model.trim="form.issuing_authority" placeholder="Issuing Authority" class="form-input" autocomplete="off" required />
             </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
-              <select v-model="form.validity_period" class="form-input">
+              <select v-model.trim="form.validity_period" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="3">3 Months</option>
                 <option value="6">6 Months</option>
@@ -323,12 +321,10 @@ onMounted(() => {
                 <option value="120">10 Years</option>
                 <option value="0">Permanent</option>
               </select>
-              <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Validity(In Months) <span class="text-red-500">*</span></span>
-              <input type="text" v-model="form.validity_period_in_month" placeholder="Ex: 60" class="form-input vms-readonly-input" readonly autocomplete="off" required />
-              <Error v-if="errors?.validity_period_in_month" :errors="errors.validity_period_in_month" />
+              <input type="text" v-model.trim="form.validity_period_in_month" placeholder="Ex: 60" class="form-input vms-readonly-input" readonly autocomplete="off" required />
             </label>
           </div>
         </fieldset>
@@ -337,25 +333,21 @@ onMounted(() => {
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Issue Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
-              <input type="date" v-model="form.issue_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
-              <Error v-if="errors?.issue_date" :errors="errors.issue_date" />
+              <input type="date" v-model.trim="form.issue_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Expire Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
-              <input type="date" v-model="form.expire_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
-              <Error v-if="errors?.expire_date" :errors="errors.expire_date" />
+              <input type="date" v-model.trim="form.expire_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
             </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Reference No</span>
-              <input type="text" v-model="form.reference_no" placeholder="Reference no" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+              <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" autocomplete="off" />
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark:text-gray-300">Attachment</span>
               <input @change="selectedFile" type="file" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.attachment" :errors="errors.attachment" />
             </label>
           </div>
         </fieldset>
@@ -492,7 +484,7 @@ onMounted(() => {
       </div>
     </form>
   </div>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
@@ -517,21 +509,4 @@ onMounted(() => {
   max-width: 60rem;
 }
 
-
->>> {
-  --vs-controls-color: #374151;
-  --vs-border-color: #4b5563;
-
-  --vs-dropdown-bg: #282c34;
-  --vs-dropdown-color: #eeeeee;
-  --vs-dropdown-option-color: #eeeeee;
-
-  --vs-selected-bg: #664cc3;
-  --vs-selected-color: #374151;
-
-  --vs-search-input-color: #4b5563;
-
-  --vs-dropdown-option--active-bg: #664cc3;
-  --vs-dropdown-option--active-color: #eeeeee;
-}
 </style>

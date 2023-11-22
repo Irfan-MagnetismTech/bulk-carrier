@@ -32,10 +32,10 @@ function removeItem(index){
   props.form.crwVesselRequiredCrewLines.splice(index, 1);
 }
 
-function fetchVessels(search, loading) {
-  loading(true);
-  searchVessels(search, props.form.business_unit, loading)
-}
+// function fetchVessels(search, loading) {
+//   loading(true);
+//   searchVessels(search, props.form.business_unit, loading)
+// }
 
 watch(() => props.form, (value) => {
   if(value){
@@ -46,6 +46,7 @@ watch(() => props.form, (value) => {
 onMounted(() => {
   //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
+    searchVessels(null,props.form.business_unit)
     getCrewRankLists(props.form.business_unit);
   });
 });
@@ -61,7 +62,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" placeholder="--Choose an option--"  v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"

@@ -19,7 +19,7 @@ const route = useRoute();
 const page = 'edit';
 const openingStockId = route.params.openingStockId;
 
-setTitle('Edit Opening Stock');
+setTitle('Update Opening Stock');
 
 onMounted(() => {
     showOpeningStock(openingStockId);

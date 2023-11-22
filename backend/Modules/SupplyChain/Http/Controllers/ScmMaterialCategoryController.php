@@ -2,7 +2,6 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Database\QueryException;
@@ -15,11 +14,11 @@ class ScmMaterialCategoryController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         try {
             $scm_material_categories = ScmMaterialCategory::with('parent')
-                ->globalSearch($request->all());
+                ->globalSearch(request()->all());
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {
@@ -106,14 +105,17 @@ class ScmMaterialCategoryController extends Controller
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')
-            ->when(request()->has('searchParam'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
-                        ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
-                });
+            ->when(request()->has('self_id'), function ($query) {
+                $query->where('id', '!=', request()->self_id);
             })
+            // ->when(request()->has('searchParam'), function ($query) {
+            //     $query->where(function ($subquery) {
+            //         $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
+            //             ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
+            //     });
+            // })
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);
