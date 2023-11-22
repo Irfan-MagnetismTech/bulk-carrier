@@ -37,4 +37,10 @@ input[type='search'] {
 	color: brown;
 }
 
-.swal-width{width: 50%;}
+.swal-width{width: 55%;font-size: 12px}
+
+.swal2-html-container li{
+	font-size: 13px !important;
+}
+
+/*.error-message-text{font-size: 13px !important;}*/

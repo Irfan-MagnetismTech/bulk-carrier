@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useTransaction() {
     const router = useRouter();
@@ -92,22 +93,57 @@ export default function useTransaction() {
         }
     }
 
+    function checkCreditAndDebitAmount(form){
+        const messages = ref([]);
+        let isHasError = false;
+        form.ledgerEntries?.forEach((item,index) => {
+            if((parseFloat(item.cr_amount) === 0 && parseFloat(item.dr_amount) === 0) || parseFloat(item.cr_amount) > 0 && parseFloat(item.dr_amount) > 0){
+                let data = `Ledger Entries [line :${index + 1}] Either Credit Amount or Debit Amount must be non-zero and can't be zero at once.`;
+                messages.value.push(data);
+            }
+            if((parseFloat(form.total_credit_amount) !== parseFloat(form.total_debit_amount)) && index === (form.ledgerEntries.length - 1)){
+                let data = `The total debit amount must match the total credit amount.`;
+                messages.value.push(data);
+            }
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width error-message-text",
+                });
+                isHasError = true;
+            }
+        });
+        return isHasError;
+    }
+
     async function storeTransaction(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if(!checkCreditAndDebitAmount(form)){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post('/acc/acc-transactions', form);
-            transaction.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "acc.transactions.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.post('/acc/acc-transactions', form);
+                transaction.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "acc.transactions.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 

@@ -109,6 +109,12 @@ export default [
         component: () => import(`../views/${VIEW_BASE}/bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/bank-accounts/:bankAccountId/show`,
+        name: `${BASE}.bank-accounts.show`,
+        component: () => import (`../views/${VIEW_BASE}/bank-account/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Salary head Routes */
     {
