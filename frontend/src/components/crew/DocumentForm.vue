@@ -157,10 +157,12 @@ function deleteDocumentBasicData(crwDocumentDataId,index){
   })
 }
 
+
+
 onMounted(() => {
   watchEffect(() => {
     getCrews(props.form.business_unit);
-    getCrewDocuments(props.form.business_unit,props.form?.crw_crew_id);
+    getCrewDocuments(props.form.business_unit,props.form.crw_crew_profile_id);
   });
 });
 
