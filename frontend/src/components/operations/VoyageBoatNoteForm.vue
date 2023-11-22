@@ -45,9 +45,9 @@
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
-              <th class="w-36">Type</th>
-              <th class="w-72">Loading Point</th>
-              <th>Unloading Point</th>
+              <th class="w-32">Type</th>
+              <th class="w-56">Loading Point</th>
+              <th class="w-56">Unloading Point</th>
               <th>Quantity</th>
               <th>Attachment</th>
             </tr>
@@ -141,25 +141,22 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-    props.form.opsVoyageBoatNoteLines = [
+
+  if(props?.formType == 'edit' && editInitiated.value != true) {
+    console.log("Voyage Watched by Defalt 1")
+    editInitiated.value = true
+
+  } else {
+      props.form.opsVoyageBoatNoteLines = [
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
     ];
   }
+    
+  }
 }, { deep: true })
 
-
-watch(() => props.form, (value) => {
-
-  if(props?.formType == 'edit' && editInitiated.value != true) {
-
-  
-    if(vessels.value.length > 0) {
-        editInitiated.value = true
-      }
-  }
-}, {deep: true});
 
 function attachFile(event, index) {
     let fileData = event.target.files[0];
