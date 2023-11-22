@@ -18,7 +18,8 @@
     const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
     const { getAllStoreCategories } = useBusinessInfo();
     const store_category = ref([]);
-
+    const store = useStore();
+    const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
 
     const props = defineProps({
       form: { type: Object, required: true },
@@ -60,6 +61,11 @@
 
     onMounted(() => {
       fetchAllStoreCategories();
+      fetchMaterials('');
+      watchEffect(() => {
+        console.log('sdfsd');
+        fetchWarehouse('');
+      });
     });
 
     function fetchAllStoreCategories() {
@@ -97,30 +103,26 @@
         };
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
+  //   function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+// }
+    function fetchWarehouse(search) {
+    searchWarehouse(search, props.form.business_unit);
   }
 
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-        props.form.acc_cost_center_id = value?.acc_cost_center_id;
-    });
-
-function setMaterialOtherData(datas, index) {
-      console.log('change_event');
-      props.form.scmPrLines[index].unit = datas.unit;
-      props.form.scmPrLines[index].scm_material_id = datas.id;
-      getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id);
-      props.form.scmPrLines[index].rob = CurrentStock ?? 0;
-}
+  
+// function setMaterialOtherData(datas, index) {
+//       props.form.scmPrLines[index].unit = datas.unit;
+//       props.form.scmPrLines[index].scm_material_id = datas.id;
+//       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id);
+//       props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+// }
 
 // const previousLines = ref(cloneDeep(props.form.scmPrLines));
 
 watch(() => props.form.scmPrLines, (newLines) => {
   newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
@@ -138,42 +140,48 @@ watch(() => props.form.scmPrLines, (newLines) => {
 }, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
+//   function fetchMaterials(search, loading) {
+//   loading(true);
+//   searchMaterial(search, loading)
+// }
+  function fetchMaterials(search) {
+  searchMaterial(search)
+}
 
-  const store = useStore();
-const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
+
 
   watch(dropZoneFile, (value) => {
     if (value !== null && value !== undefined) {
       props.form.excel = value;
     }
   });
+
+  watch(() => props.form.scmWarehouse, (value) => {
+        props.form.scm_warehouse_id = value?.id ?? null;
+        props.form.acc_cost_center_id = value?.cost_center_id;
+  });
+    
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_warehouse_id = '';
-    props.form.acc_cost_center_id = '';
     props.form.scmWarehouse = null;
   }
 });
 
-function tableWidth() {
-  setTimeout(function() {
-    const customDataTable = document.getElementById("customDataTable");
+// function tableWidth() {
+//   setTimeout(function() {
+//     const customDataTable = document.getElementById("customDataTable");
 
-    if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
+//     if (customDataTable) {
+//         tableScrollWidth.value = customDataTable.scrollWidth;
       
-      }
+//       }
       
-    }, 10000);
-}
+//     }, 10000);
+// }
 //after mount
-onMounted(() => {
-  tableWidth();
-});
+// onMounted(() => {
+//   tableWidth();
+// });
 </script>
 <template>
 
@@ -189,7 +197,8 @@ onMounted(() => {
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
+          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -208,7 +217,7 @@ onMounted(() => {
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
-          <select v-model="form.is_critical" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <select v-model="form.is_critical" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <option value="1">YES</option>
               <option value="0">NO</option>
           </select>
@@ -223,7 +232,7 @@ onMounted(() => {
     </label>
     <label class="label-group">
         <span class="label-item-title">Purchase Center</span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></v-select>
+        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></v-select>
         <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
@@ -236,7 +245,7 @@ onMounted(() => {
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
@@ -259,11 +268,11 @@ onMounted(() => {
 
     <div id="customDataTable">
     <div class="table-responsive min-w-screen">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="whitespace-no-wrap overflow-x-auto">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center w-10">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Brand</th>
@@ -280,10 +289,11 @@ onMounted(() => {
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)">
+              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
+             <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -377,12 +387,12 @@ onMounted(() => {
 
 
   <div v-else>
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
         <div class="input-group !w-1/2">
                 <label class="label-group">
                     <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
-                    <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+                    <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                     </v-select>
                     <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
                 </label>
@@ -414,13 +424,13 @@ onMounted(() => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700 dark-disabled:text-gray-300 text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .vs__selected{
     display: none !important;

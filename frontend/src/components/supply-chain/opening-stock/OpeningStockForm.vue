@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted ,watchEffect} from 'vue';
+    import { ref, watch, onMounted ,watchEffect, watchPostEffect} from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
@@ -31,10 +31,10 @@
      
     }
 
-    function setMaterialOtherData(datas,index){
-      props.form.scmOpeningStockLines[index].unit = datas.unit;
-      props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
-    }
+    // function setMaterialOtherData(datas,index){
+    //   props.form.scmOpeningStockLines[index].unit = datas.unit;
+    //   props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
+    // }
 
 
   // function fetchMaterials(search, loading) {
@@ -47,10 +47,7 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  watch(() => props.form.scmWarehouse, (value) => {
-    props.form.scm_warehouse_id = value?.id;
-    props.form.scm_cost_center_id = value?.scm_cost_center_id;
-    });
+ 
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
 //       props.form.scmOpeningStockLines.forEach((item, index) => {
@@ -83,20 +80,22 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
+  searchMaterial("")
   watchEffect(() => {
     if (props.form.business_unit != "") {
       searchWarehouse("", props.form.business_unit);
-      searchMaterial("")
     }
-    
   });
 });
 
+watch(() => props.form.scmWarehouse, (value) => {
+    props.form.scm_warehouse_id = value?.id ?? null;
+    props.form.scm_cost_center_id = value?.cost_center_id ?? null;
+});
+    
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_warehouse_id = '';
-    props.form.scm_cost_center_id = '';
     props.form.scmWarehouse = null;
   }
 });
@@ -129,11 +128,11 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </label>
   </div> 
   <!-- CS Materials -->
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom !w-3/12">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
@@ -142,8 +141,8 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
+      <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+      <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
           <v-select :options="materials" placeholder="-- Choose An Option --" label="material_name_and_code" class="block form-input" v-model="form.scmOpeningStockLines[index].scmMaterial">
                 <template #search="{attributes, events}">
@@ -191,13 +190,13 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700 dark-disabled:text-gray-300 text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .vs__selected{
     display: none !important;

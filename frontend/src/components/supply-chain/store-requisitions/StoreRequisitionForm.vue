@@ -12,7 +12,8 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input"> -->
+          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -26,7 +27,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -48,7 +49,7 @@
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
+          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
@@ -58,11 +59,11 @@
 
     <div id="">
     <div class="table-responsive min-w-screen">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <table class="whitespace-no-wrap">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Specification</th>
@@ -71,10 +72,11 @@
           </tr>
           </thead>
 
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)">
+              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
+              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -129,7 +131,7 @@
 
 
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -141,8 +143,8 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     
-    const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
+    const { materials, searchMaterial } = useMaterial();
+    const { warehouses, searchWarehouse } = useWarehouse();
    
 
 
@@ -178,20 +180,24 @@
 
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
+  //   function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+  // }
+    function fetchWarehouse(search, loading = false) {
+    // loading(true);
+    searchWarehouse(search, props.form.business_unit);
   }
 
   watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-        props.form.acc_cost_center_id = value?.acc_cost_center_id;
+        props.form.scm_warehouse_id = value?.id ?? null;
+        props.form.acc_cost_center_id = value?.acc_cost_center_id ?? null;
     });
 
-function setMaterialOtherData(datas, index) {
-      props.form.scmSrLines[index].unit = datas.unit;
-      props.form.scmSrLines[index].scm_material_id = datas.id;
-}
+// function setMaterialOtherData(datas, index) {
+//       props.form.scmSrLines[index].unit = datas.unit;
+//       props.form.scmSrLines[index].scm_material_id = datas.id;
+// }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
@@ -214,34 +220,43 @@ watch(() => props.form.scmSrLines, (newLines) => {
 }, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
+  //   function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
+    function fetchMaterials(search, loading = false) {
+    // loading(true);
+    searchMaterial(search)
   }
 
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
-   if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_warehouse_id = '';
-    props.form.acc_cost_center_id = '';
+   if(newValue !== oldValue && oldValue != '' && oldValue != null){
     props.form.scmWarehouse = null;
   }
 });
 
-function tableWidth() {
-  setTimeout(function() {
-    const customDataTable = document.getElementById("customDataTable");
+// function tableWidth() {
+//   setTimeout(function() {
+//     const customDataTable = document.getElementById("customDataTable");
 
-    if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      
-      }
-      
-    }, 10000);
-}
+//     if (customDataTable) {
+//         tableScrollWidth.value = customDataTable.scrollWidth;
+
+//       }
+
+//     }, 10000);
+// }
 //after mount
+// onMounted(() => {
+//   tableWidth();
+// });
+
 onMounted(() => {
-  tableWidth();
+  fetchMaterials("");
+  watchPostEffect(() => {
+    fetchWarehouse("");
+  });
 });
 </script>
 
@@ -257,13 +272,13 @@ onMounted(() => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700 dark-disabled:text-gray-300 text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .vs__selected{
     display: none !important;

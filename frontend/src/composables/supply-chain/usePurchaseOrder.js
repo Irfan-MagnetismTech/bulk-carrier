@@ -206,7 +206,7 @@ export default function usePurchaseOrder() {
         }
     }
 
-    async function searchPurchaseOrder(searchParam, loading, business_unit) {
+    async function searchPurchaseOrder(searchParam, business_unit) {
 
         try {
         const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
@@ -215,10 +215,24 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false)
+            // loading(false)
         }
     }
 
+    async function searchPurchaseOrderForLc(searchParam, business_unit) {
+            
+            try {
+            const { data, status } = await Api.get(`${BASE}/search-po-for-lc`, {params: {searchParam: searchParam, business_unit: business_unit}});
+                filteredPurchaseOrders.value = data.value;
+            } catch (error) {
+                const { data, status } = error.response;
+                notification.showError(status);
+            } finally {
+                // loading(false)
+            }
+    }
+    
+    
     async function getPrAndCsWisePurchaseOrder(prId, csId) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
@@ -272,6 +286,7 @@ export default function usePurchaseOrder() {
         updatePurchaseOrder,
         deletePurchaseOrder,
         getPrAndCsWisePurchaseOrder,
+        searchPurchaseOrderForLc,
         getMaterialList,
         prMaterialList,
         materialObject,

@@ -52,6 +52,7 @@ class FileUploadService
             }
 
             foreach ($newData as $key => $data) {
+
                 if (isset($attachments[$key])) {
                     if ($key < $oldLength) {
                         $this->deleteFile($oldData[$key]->attachment);

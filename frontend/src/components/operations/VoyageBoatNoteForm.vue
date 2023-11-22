@@ -11,7 +11,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
               <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -25,15 +25,15 @@
               <input type="hidden" v-model="form.ops_voyage_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Draft</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Draft</span>
               <input type="number" step="0.001" v-model.trim="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Density</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Density</span>
               <input type="number" step="0.001" v-model.trim="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
         </label>
     </div>
@@ -45,9 +45,9 @@
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
-              <th class="w-36">Type</th>
-              <th class="w-72">Loading Point</th>
-              <th>Unloading Point</th>
+              <th class="w-32">Type</th>
+              <th class="w-56">Loading Point</th>
+              <th class="w-56">Unloading Point</th>
               <th>Quantity</th>
               <th>Attachment</th>
             </tr>
@@ -141,25 +141,22 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-    props.form.opsVoyageBoatNoteLines = [
+
+  if(props?.formType == 'edit' && editInitiated.value != true) {
+    console.log("Voyage Watched by Defalt 1")
+    editInitiated.value = true
+
+  } else {
+      props.form.opsVoyageBoatNoteLines = [
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
         ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
     ];
   }
+    
+  }
 }, { deep: true })
 
-
-watch(() => props.form, (value) => {
-
-  if(props?.formType == 'edit' && editInitiated.value != true) {
-
-  
-    if(vessels.value.length > 0) {
-        editInitiated.value = true
-      }
-  }
-}, {deep: true});
 
 function attachFile(event, index) {
     let fileData = event.target.files[0];
@@ -175,12 +172,12 @@ function attachFile(event, index) {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 </style>

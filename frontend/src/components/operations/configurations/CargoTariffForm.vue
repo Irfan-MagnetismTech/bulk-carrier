@@ -8,11 +8,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -30,7 +30,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
             <v-select :options="ports" placeholder="--Choose an option--" v-model="form.loadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -44,7 +44,7 @@
             <input type="hidden" v-model="form.loading_point" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
             <v-select :options="ports" placeholder="--Choose an option--" v-model="form.unloadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -62,7 +62,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
               <v-select :options="cargoTypes" placeholder="--Choose an option--" v-model="form.opsCargoType" label="cargo_type" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -77,14 +77,14 @@
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.currency">
                   <option value="" disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
               </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.status">
                 <option value="" disabled>Select Status</option>
                 <option value="Active">Active</option>
@@ -115,11 +115,7 @@
                   <th>Nov</th>
                   <th>Dec</th>
                   <th>
-                    <button type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                      </svg>
-                    </button>
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -174,6 +170,11 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                         </svg>
                       </button> 
+                      <button v-else type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
                     </td>
                   </tr>
               </tbody>
@@ -238,7 +239,7 @@ watch(() => props.form.business_unit, (value) => {
 // }
 
 function addItem() {
-  props.form.opsCargoTariffLines.push(props.cargoTariffLineObject);
+  props.form.opsCargoTariffLines.push({...props.cargoTariffLineObject});
 }
 
 function removeItem(index){
@@ -299,13 +300,13 @@ onMounted(() => {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 
 input::-webkit-outer-spin-button,
