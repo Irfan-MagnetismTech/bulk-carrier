@@ -73,98 +73,98 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-            {
-                route: 'ops.charterer-profiles.index',
-                label: 'Charterer Profiles',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.charterer-contracts.index',
-                label: 'Charterer Contracts',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.delivery-redelivery.index',
-                label: 'Delivery & Re-delivery',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.vessel-particulars.index',
-                label: 'Vessel Particulars',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.voyages.index',
-                label: 'Voyages',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
-                route: 'ops.voyage-boat-notes.index',
-                label: 'Voyage Boat Note',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
+            // {
+            //     route: 'ops.charterer-profiles.index',
+            //     label: 'Charterer Profiles',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.charterer-contracts.index',
+            //     label: 'Charterer Contracts',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.delivery-redelivery.index',
+            //     label: 'Delivery & Re-delivery',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.vessel-particulars.index',
+            //     label: 'Vessel Particulars',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.voyages.index',
+            //     label: 'Voyages',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
+            // {
+            //     route: 'ops.voyage-boat-notes.index',
+            //     label: 'Voyage Boat Note',
+            //     preIcon: '',
+            //     postIcon: '',
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
 
-            {
-                route: '',
-                label: 'Voyage Reports',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [
-                    {
-                        route: 'ops.lighter-noon-reports.index',
-                        label: 'Noon Reports (L)',
-                        preIcon: '',
-                        postIcon: '',
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.bulk-noon-reports.index',
-                        label: 'Noon Reports (B)',
-                        preIcon: '',
-                        postIcon: '',
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                ],
-            },
+            // {
+            //     route: '',
+            //     label: 'Voyage Reports',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: [
+            //         {
+            //             route: 'ops.lighter-noon-reports.index',
+            //             label: 'Noon Reports (L)',
+            //             preIcon: '',
+            //             postIcon: '',
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //         {
+            //             route: 'ops.bulk-noon-reports.index',
+            //             label: 'Noon Reports (B)',
+            //             preIcon: '',
+            //             postIcon: '',
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //     ],
+            // },
            
             // {
             //     route: '',
@@ -216,47 +216,47 @@ export default [
             //     permissionKey: '',
             //     subSubMenu: []
             // },
-            {
-                route: '',
-                label: 'Certification',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [
-                    {
-                        route: 'ops.maritime-certifications.index',
-                        label: 'All Certificates',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.vessel-certificates.index',
-                        label: 'Vessel Wise Certificate',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.vessel-certificates.renew-list',
-                        label: 'Renew Schedule',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                ]
-            },
+            // {
+            //     route: '',
+            //     label: 'Certification',
+            //     preIcon: '',
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: [
+            //         {
+            //             route: 'ops.maritime-certifications.index',
+            //             label: 'All Certificates',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //         {
+            //             route: 'ops.vessel-certificates.index',
+            //             label: 'Vessel Wise Certificate',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //         {
+            //             route: 'ops.vessel-certificates.renew-list',
+            //             label: 'Renew Schedule',
+            //             preIcon: '',
+            //             postIcon: icons.DownArrow,
+            //             is_active: false,
+            //             is_open: false,
+            //             permissionKey: '',
+            //             subSubMenu: []
+            //         },
+            //     ]
+            // },
                     // {
                     //     route: 'ops.configurations.cargo-types.index',
                     //     label: 'Cargo Types',
