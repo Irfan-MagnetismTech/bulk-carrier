@@ -185,6 +185,34 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    
+    /* Transaction Routes */
+    {
+        path: `/${BASE}/loans`,
+        name: `${BASE}.loans.index`,
+        component: () => import(`../views/${VIEW_BASE}/loan/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/loans/create`,
+        name: `${BASE}.loans.create`,
+        component: () => import(`../views/${VIEW_BASE}/loan/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loans/:loanId/edit`,
+        name: `${BASE}.loans.edit`,
+        component: () => import(`../views/${VIEW_BASE}/loan/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loans/:loanId`,
+        name: `${BASE}.loans.show`,
+        component: () => import(`../views/${BASE}/loan/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* AIS Report Routes */
     {
         path: `/${BASE}/ais-reports/balance-sheet`,
