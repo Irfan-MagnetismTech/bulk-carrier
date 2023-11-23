@@ -32,7 +32,7 @@ export default function useChartererInvoice() {
 		grand_total: '',
 		opsChartererInvoiceServices: [
 			{
-				charge_or_deduct: 'service',
+				charge_or_deduct: 'deduct',
 				particular: '',
 				cost_unit: '',
 				currency: '',
@@ -48,7 +48,7 @@ export default function useChartererInvoice() {
 		],
 		opsChartererInvoiceOthers: [
 			{
-				charge_or_deduct: 'other',
+				charge_or_deduct: 'charge',
 				particular: '',
 				cost_unit: '',
 				currency: '',

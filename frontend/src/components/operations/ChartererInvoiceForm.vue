@@ -11,8 +11,22 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer Owner</span>
+              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.opsVoyage"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+              <input type="hidden" v-model="form.ops_voyage_id" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Select Contract</span>
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -28,28 +42,163 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Draft</span>
-              <input type="number" step="0.001" v-model.trim="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Bill From</span>
+              <input type="text" readonly v-model.trim="form.bill_from" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Density</span>
-              <input type="number" step="0.001" v-model.trim="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till</span>
+              <input type="text" readonly v-model.trim="form.bill_till" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
+              <input type="text" readonly v-model.trim="form.total_days" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charge Per Day</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
     </div>
 
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Quantity</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Initial Loading Point</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Final Loading Point</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Rate Per MT</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+    </div>
+
+
     <div id="sectors" class="mt-5">
-      <h4 class="text-md font-semibold my-3">Sector Info</h4>
+      <h4 class="text-md font-semibold my-3">Other</h4>
+
+      <table class="w-full whitespace-no-wrap" >
+        <thead v-once>
+            <tr class="w-full">
+              <th>SL</th>
+              <th class="">Particulars</th>
+              <th class="">Currency</th>
+              <th class="">Unit</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Exchange Rate (To USD)</th>
+              <th>Exchange Rate (To BDT)</th>
+              <th>Amount USD</th>
+              <th>Amount BDT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sector, index) in form.opsChartererInvoiceOthers">
+              <td>
+                {{ index+1 }}
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" />
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>     
+      
+    </div>
+    
+
+    <div id="sectors" class="mt-5">
+      <h4 class="text-md font-semibold my-3">Services Taken From Charterer</h4>
 
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
-              <th class="w-32">Type</th>
-              <th class="w-56">Loading Point</th>
-              <th class="w-56">Unloading Point</th>
+              <th class="w-32">Particulars</th>
+              <th class="w-56">Currency</th>
+              <th class="w-56">Unit</th>
               <th>Quantity</th>
-              <th>Attachment</th>
+              <th>Rate</th>
+              <th>Exchange Rate (To USD)</th>
+              <th>Exchange Rate (To BDT)</th>
+              <th>Amount USD</th>
+              <th>Amount BDT</th>
             </tr>
           </thead>
           <tbody>
@@ -58,13 +207,10 @@
                 {{ index+1 }}
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsChartererInvoiceServices[index]?.voyage_note_type">{{ form.opsChartererInvoiceServices[index]?.voyage_note_type }}</span>
-              </td>
-              <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsChartererInvoiceServices[index]?.loading_point">{{ form.opsChartererInvoiceServices[index]?.loading_point_name_code }}</span>
-              </td>
-              <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsChartererInvoiceServices[index]?.unloading_point">{{ form.opsChartererInvoiceServices[index]?.unloading_point_name_code }}</span>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
@@ -73,7 +219,47 @@
                 </label>
               </td>
               <td>
-                <input type="file" @change="attachFile($event, index)" class="form-input text-right" autocomplete="off"/>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" />
+                </label>
               </td>
             </tr>
           </tbody>
@@ -88,12 +274,15 @@ import Error from "../Error.vue";
 import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import useChartererProfile from "../../composables/operations/useChartererProfile";
+import useChartererContract from "../../composables/operations/useChartererContract";
 
 const editInitiated = ref(false);
 
+const { searchChartererProfiles, chartererProfiles } = useChartererProfile();
+
 const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
-
 const props = defineProps({
     form: {
         required: false,
@@ -140,27 +329,17 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-
-  if(props?.formType == 'edit' && editInitiated.value != true) {
-    console.log("Voyage Watched by Defalt 1")
-    editInitiated.value = true
-
-  } else {
-      // props.form.opsVoyageBoatNoteLines = [
-      //   ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
-      //   ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
-      //   ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
-    // ];
-  }
     
   }
 }, { deep: true })
 
-
-function attachFile(event, index) {
-    let fileData = event.target.files[0];
-    props.form.opsVoyageBoatNoteLines[index].attachment = fileData;
-}
+onMounted(() => {
+  searchChartererProfiles();
+})
+// function attachFile(event, index) {
+//     let fileData = event.target.files[0];
+//     props.form.opsVoyageBoatNoteLines[index].attachment = fileData;
+// }
 
 </script>
 <style lang="postcss" scoped>

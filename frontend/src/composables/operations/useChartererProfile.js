@@ -171,7 +171,7 @@ export default function useChartererProfile() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-charterer-profiles?name_or_code=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-charterer-profiles`);
 			chartererProfiles.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
