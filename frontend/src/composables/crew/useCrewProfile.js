@@ -44,6 +44,8 @@ export default function useCrewProfile() {
         per_email: '',
         picture: '',
         attachment: '',
+        employee_type: 'Crew',
+        is_officer: 0,
         educations: [
             {
                 exam_title: '',
@@ -241,6 +243,22 @@ export default function useCrewProfile() {
         }
     }
 
+    function checkValidation(openTab, tabNumber, props,requiredFields){
+        //const requiredFields = ['first_name'];
+        for (const field of requiredFields) {
+            const element = document.getElementById(field);
+            if (!props.form[field]) {
+                element.classList.add('vms-required-input-border');
+                notification.showError(422, '', 'Please fill all required fields');
+                return false;
+            } else {
+                element.classList.remove('vms-required-input-border');
+            }
+        }
+
+        return true;
+    }
+
     return {
         crewProfiles,
         crewProfile,
@@ -249,6 +267,7 @@ export default function useCrewProfile() {
         showCrewProfile,
         updateCrewProfile,
         deleteCrewProfile,
+        checkValidation,
         isTableLoading,
         isLoading,
         errors,
