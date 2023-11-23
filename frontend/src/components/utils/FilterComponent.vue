@@ -61,7 +61,7 @@ function setSortState(index, order) {
                   </div>
                 </div>
               </th>
-              <th v-if="filterOptions.business_unit">Business Unit</th>
+              <th v-if="filterOptions.business_unit"><nobr>Business Unit</nobr></th>
               <th class=""><nobr>Action</nobr></th>
             </tr>
             <tr class="w-full" v-if="showFilter">

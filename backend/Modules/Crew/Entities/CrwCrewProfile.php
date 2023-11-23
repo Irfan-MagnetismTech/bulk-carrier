@@ -19,7 +19,7 @@ class CrwCrewProfile extends Model
     }
 
     public function crewRank(){
-        return $this->hasOne(CrwRank::class, 'id', 'rank_id');
+        return $this->hasOne(CrwRank::class, 'id', 'crw_rank_id');
     }
 
     public function crewRecruitmentApproval(){

@@ -6,7 +6,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate } = useVessel();
-const { recruitmentApprovals, getRecruitmentApprovals, crwRankLists, getCrewRankLists, crwAgencies, getCrewAgencyLists } = useCrewCommonApiRequest();
+const { recruitmentApprovals, getRecruitmentApprovals, crwRankLists, getCrewRankLists, crwAgencies, getCrewAgencyLists, isLoading } = useCrewCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -28,6 +28,14 @@ const selectedFile = (event) => {
 const profilePicture = (event) => {
   props.form.picture = event.target.files[0];
 };
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_recruitment_approval_name = null;
+    props.form.agency_name = null;
+  }
+});
 
 watch(() => props.form, (value) => {
   if(value){
@@ -144,7 +152,6 @@ const toggleTabs = (tabNumber, buttonType = null) => {
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCrewRankLists(props.form.business_unit);
     getRecruitmentApprovals(props.form.business_unit);
@@ -197,7 +204,7 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Personal Info</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          <business-unit-input v-model="form.business_unit"></business-unit-input>
+          <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
           <label class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
@@ -205,7 +212,7 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Recruitment Approval <span class="text-red-500">*</span></span>
-            <v-select :options="recruitmentApprovals" placeholder="--Choose an option--"  v-model="form.crw_recruitment_approval_name" label="page_title" class="block form-input">
+            <v-select :loading="isLoading" :options="recruitmentApprovals" placeholder="--Choose an option--"  v-model.trim="form.crw_recruitment_approval_name" label="page_title" class="block form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -219,7 +226,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Hired By <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.hired_by" required>
+            <select class="form-input" v-model.trim="form.hired_by" required>
               <option value="" disabled selected>Select</option>
               <option value="Agency">Agency</option>
               <option value="Company">Company</option>
@@ -228,7 +235,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name </span>
-            <v-select :options="crwAgencies" placeholder="--Choose an option--"  v-model="form.agency_name" label="name" class="block form-input">
+            <v-select :loading="isLoading" :options="crwAgencies" placeholder="--Choose an option--"  v-model.trim="form.agency_name" label="agency_name" class="block form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -241,7 +248,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Department <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.department_id" required>
+            <select class="form-input" v-model.trim="form.department_id" required>
               <option value="" disabled selected>Select</option>
               <option value="1">Deck</option>
               <option value="2">Engine</option>
@@ -255,7 +262,7 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.rank_id" required>
+            <select class="form-input" v-model.trim="form.rank_id" required>
               <option value="" disabled>select</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
             </select>
@@ -263,29 +270,29 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">First Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.first_name" placeholder="First name" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.first_name" placeholder="First name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Last Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.last_name" placeholder="Last name" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.last_name" placeholder="Last name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Father's Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.father_name" placeholder="Father name" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.father_name" placeholder="Father name" class="form-input" autocomplete="off" required />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Mother's Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.mother_name" placeholder="Mother name" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.mother_name" placeholder="Mother name" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Date of Birth <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.date_of_birth" class="form-input" autocomplete="off" required />
+            <input type="date" v-model.trim="form.date_of_birth" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Gender <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.gender" required>
+            <select class="form-input" v-model.trim="form.gender" required>
               <option value="" disabled>select</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -293,7 +300,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Religion <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.religion" required>
+            <select class="form-input" v-model.trim="form.religion" required>
               <option value="" disabled>select</option>
               <option value="Islam">Islam</option>
               <option value="Hinduism">Hinduism</option>
@@ -306,7 +313,7 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Marital Status <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model="form.marital_status" required>
+            <select class="form-input" v-model.trim="form.marital_status" required>
               <option value="" disabled>select</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
@@ -314,25 +321,25 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Nationality <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.nationality" placeholder="Ex: Bangladeshi" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.nationality" placeholder="Ex: Bangladeshi" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">National ID <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.nid_no" placeholder="Ex: 0001552005" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.nid_no" placeholder="Ex: 0001552005" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Passport No</span>
-            <input type="text" v-model="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.passport_no" placeholder="Ex: 01522025" class="form-input" autocomplete="off" />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Passport Issue Date</span>
-            <input type="date" v-model="form.passport_issue_date" class="form-input" autocomplete="off" />
+            <input type="date" v-model.trim="form.passport_issue_date" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Blood Group</span>
-            <select class="form-input" v-model="form.blood_group">
+            <select class="form-input" v-model.trim="form.blood_group">
               <option value="" disabled>select</option>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
@@ -346,11 +353,11 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Height (Meters)</span>
-            <input type="text" v-model="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" />
+            <input type="text" v-model.trim="form.height" placeholder="Ex: 69" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Weight (KG)</span>
-            <input type="text" v-model="form.weight" placeholder="65" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.weight" placeholder="65" class="form-input" autocomplete="off" required />
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -371,19 +378,19 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Address <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.pre_address" placeholder="Present address" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.pre_address" placeholder="Present address" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">City <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.pre_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.pre_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.pre_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.pre_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="email" v-model="form.pre_email" placeholder="Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.pre_email" placeholder="Email" class="form-input" autocomplete="off" />
           </label>
         </div>
       </fieldset>
@@ -392,19 +399,19 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Address <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.per_address" placeholder="Present address" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.per_address" placeholder="Present address" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">City <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.per_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.per_city" placeholder="Ex: Chattogram" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Mobile No. <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.per_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
+            <input type="text" v-model.trim="form.per_mobile_no" placeholder="Ex: 018-XXXXXXXX" class="form-input" autocomplete="off" required />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="email" v-model="form.per_email" placeholder="Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.per_email" placeholder="Email" class="form-input" autocomplete="off" />
           </label>
         </div>
       </fieldset>
@@ -429,25 +436,25 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewEducation, index) in form.educations" :key="crewEducation.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].exam_title" placeholder="Ex: HSC/B.Sc" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].exam_title" placeholder="Ex: HSC/B.Sc" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].major" placeholder="Ex: Science" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].major" placeholder="Ex: Science" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].result" placeholder="Ex: 3.50" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].result" placeholder="Ex: 3.50" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].passing_year" placeholder="Ex: 2013" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].passing_year" placeholder="Ex: 2013" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].duration" placeholder="Ex: 4 years" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.educations[index].duration" placeholder="Ex: 4 years" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.educations[index].achievement" placeholder="Achievement" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.educations[index].achievement" placeholder="Achievement" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeEducationItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -485,22 +492,22 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewTraining, index) in form.trainings" :key="crewTraining.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].training_title" placeholder="Title" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].training_title" placeholder="Title" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].covered_topic" placeholder="Covered topic" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].covered_topic" placeholder="Covered topic" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].year" placeholder="Ex: 2018" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].year" placeholder="Ex: 2018" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].institute" placeholder="Institute name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].location" placeholder="Institute address" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].location" placeholder="Institute address" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.trainings[index].duration" placeholder="Ex: 2 month" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.trainings[index].duration" placeholder="Ex: 2 month" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeTrainingItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -537,19 +544,19 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewExperience, index) in form.experiences" :key="crewExperience.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.experiences[index].employer_name" placeholder="Employer name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.experiences[index].employer_name" placeholder="Employer name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="date" v-model="form.experiences[index].from_date" class="form-input" autocomplete="off" required />
+              <input type="date" v-model.trim="form.experiences[index].from_date" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="date" v-model="form.experiences[index].till_date" class="form-input" autocomplete="off" required />
+              <input type="date" v-model.trim="form.experiences[index].till_date" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.experiences[index].last_designation" placeholder="Ex: Master" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.experiences[index].last_designation" placeholder="Ex: Master" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.experiences[index].reason_for_leave" placeholder="Leave reason" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.experiences[index].reason_for_leave" placeholder="Leave reason" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeExperienceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -586,10 +593,10 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewLanguage, index) in form.languages" :key="crewLanguage.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.languages[index].language_name" placeholder="Ex: Bangla" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.languages[index].language_name" placeholder="Ex: Bangla" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].writing" class="form-input" required>
+              <select v-model.trim="form.languages[index].writing" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -597,7 +604,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].reading" class="form-input" required>
+              <select v-model.trim="form.languages[index].reading" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -605,7 +612,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].speaking" class="form-input" required>
+              <select v-model.trim="form.languages[index].speaking" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -613,7 +620,7 @@ onMounted(() => {
               </select>
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.languages[index].listening" class="form-input" required>
+              <select v-model.trim="form.languages[index].listening" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="Average">Average</option>
                 <option value="Good">Good</option>
@@ -657,25 +664,25 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewReference, index) in form.references" :key="crewReference.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].organization" placeholder="Organization Name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].organization" placeholder="Organization Name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].designation" placeholder="Ex: Sukani" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].designation" placeholder="Ex: Sukani" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].address" placeholder="Address" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].address" placeholder="Address" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].contact_personal" placeholder="Contact no" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].contact_personal" placeholder="Contact no" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="email" v-model="form.references[index].email" placeholder="Email" class="form-input" autocomplete="off" />
+              <input type="email" v-model.trim="form.references[index].email" placeholder="Email" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.references[index].relation" placeholder="Relation" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.references[index].relation" placeholder="Relation" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeReferenceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -714,25 +721,25 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewNominee, index) in form.nominees" :key="crewNominee.id">
             <td class="px-1 py-1">
-              <input type="text" v-model="form.nominees[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.nominees[index].name" placeholder="Name" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.nominees[index].profession" placeholder="profession" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.nominees[index].profession" placeholder="profession" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.nominees[index].address" placeholder="address" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.nominees[index].address" placeholder="address" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.nominees[index].relationship" placeholder="relationship" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.nominees[index].relationship" placeholder="relationship" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model="form.nominees[index].contact_no" placeholder="Contact no." class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.nominees[index].contact_no" placeholder="Contact no." class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="email" v-model="form.nominees[index].email" placeholder="Email" class="form-input" autocomplete="off" />
+              <input type="email" v-model.trim="form.nominees[index].email" placeholder="Email" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1">
-              <select v-model="form.nominees[index].is_relative" class="form-input" required>
+              <select v-model.trim="form.nominees[index].is_relative" class="form-input" required>
                 <option value="" disabled selected>Select</option>
                 <option value="0">No</option>
                 <option value="1">Yes</option>

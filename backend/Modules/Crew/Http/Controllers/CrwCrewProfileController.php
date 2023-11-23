@@ -24,7 +24,7 @@ class CrwCrewProfileController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees')
+            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees', 'crewRank')
             ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
