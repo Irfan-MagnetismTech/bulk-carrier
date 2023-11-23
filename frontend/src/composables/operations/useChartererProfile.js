@@ -184,7 +184,7 @@ export default function useChartererProfile() {
 	}
 
 
-	async function getAllChartererProfiles(searchParam, loading) {
+	async function getAllChartererProfiles() {
 		//NProgress.start();
 
 		try {
@@ -195,7 +195,6 @@ export default function useChartererProfile() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
 			//NProgress.done();
 		}
 	}

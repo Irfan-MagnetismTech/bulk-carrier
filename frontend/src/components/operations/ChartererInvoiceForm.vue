@@ -26,7 +26,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Select Contract</span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="chartererContracts" placeholder="--Choose an option--" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -280,7 +280,7 @@ import useChartererContract from "../../composables/operations/useChartererContr
 const editInitiated = ref(false);
 
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
-const { getChartererContractsByCharterOwner, chartererContracts } = useChartererProfile();
+const { getChartererContractsByCharterOwner, chartererContracts } = useChartererContract();
 useChartererContract();
 const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
@@ -310,6 +310,14 @@ watch(() => props.form.business_unit, (value) => {
   
 
 }, { deep : true })
+
+
+//watch props.form.opsChartererProfile
+
+watch(() => props.form.opsChartererProfile, (value) => {
+  
+    props.form.ops_charterer_profile_id = value?.id;
+})
 
 
 
