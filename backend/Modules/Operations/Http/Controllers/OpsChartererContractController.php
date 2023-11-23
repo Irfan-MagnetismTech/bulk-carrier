@@ -177,7 +177,7 @@ class OpsChartererContractController extends Controller
         }
     }
 
-    public function getChartererProfileWiseContract(Request $request){
+    public function getChartererContractByProfile(Request $request){
         try {
             $charterer = OpsChartererContract::with('opsChartererProfile')->where('ops_charterer_profile_id',request()->charterer_profile_id)->first();
 
