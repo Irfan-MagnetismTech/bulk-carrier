@@ -98,7 +98,7 @@ class CrwCommonController extends Controller
             {
                 $q->where('business_unit', request()->business_unit);
             })
-            ->with('crwRank:id,name')            
+            ->with('crwRank:id,name')
             ->get();
 
             return response()->success('Retrieved Successfully', $crewProfiles, 200);
@@ -115,7 +115,7 @@ class CrwCommonController extends Controller
             $crwAgencies      = CrwCrewDocument::with(['crwCrewDocumentRenewals' => function($q){
                 $q->orderBy('issue_date', 'DESC');
             }])
-            ->where('crw_crew_id', $request->crw_crew_id)
+            ->where('crw_crew_profile_id', $request->crw_crew_profile_id)
             ->when(request()->business_unit != "ALL", function ($q)
             {
                 $q->where('business_unit', request()->business_unit);

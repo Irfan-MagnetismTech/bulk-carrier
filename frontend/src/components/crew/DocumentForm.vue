@@ -25,7 +25,7 @@ let renewFormData = ref({
   issue_date: '',
   expire_date: '',
   reference_no: '',
-  attachment: ''
+  attachment: null,
 });
 
 function closeCrewDocumentAddModal(){
@@ -34,26 +34,40 @@ function closeCrewDocumentAddModal(){
   resetCrewDocumentModalData();
 }
 
+watch(() => isCrewDocumentAddModalOpen.value, () => {
+  if(!isCrewDocumentAddModalOpen.value){
+    resetCrewDocumentModalData();
+  }
+});
+
+
 function resetCrewDocumentModalData(){
   props.form.id = '';
-  props.form.name = '';
+  props.form.document_name = '';
   props.form.issuing_authority = '';
   props.form.validity_period = '';
   props.form.validity_period_in_month = '';
-  props.form.issue_date = '';
-  props.form.expire_date = '';
+  props.form.issue_date = null;
+  props.form.expire_date = null;
   props.form.reference_no = '';
-  props.form.attachment = '';
+  props.form.attachment = null;
 }
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_crew_name = null;
+  }
+});
 
 watch(() => props.form, (value) => {
   if(value){
     props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
     props.form.crw_crew_profile_id = props.form?.crw_crew_name?.id ?? '';
-    props.form.crw_crew_rank = props.form.crw_crew_name?.crwRank?.name ?? '';
-    props.form.crw_crew_contact = props.form.crw_crew_name.contact ?? '';
-    props.form.crw_crew_email = props.form.crw_crew_name.email ?? '';
-    props.form.validity_period_in_month = props.form.validity_period ?? '';
+    props.form.crw_crew_rank = props.form?.crw_crew_name?.crwRank?.name ?? '';
+    props.form.crw_crew_contact = props.form?.crw_crew_name?.contact ?? '';
+    props.form.crw_crew_email = props.form?.crw_crew_name?.email ?? '';
+    props.form.validity_period_in_month = props.form?.validity_period ?? '';
   }
 }, {deep: true});
 
@@ -90,7 +104,7 @@ function resetCrewDocumentRenewModalData(){
   renewFormData.value.issue_date = '';
   renewFormData.value.expire_date = '';
   renewFormData.value.reference_no = '';
-  renewFormData.value.attachment = '';
+  renewFormData.value.attachment = null;
 }
 
 const selectedFile = (event) => {
@@ -133,7 +147,7 @@ function deleteCrewDocumentRenewData(renewDataId,renewDataIndex){
 
 function updateDocumentBasicData(crwDocumentData){
   props.form.id = crwDocumentData?.id;
-  props.form.name = crwDocumentData?.name;
+  props.form.document_name = crwDocumentData?.document_name;
   props.form.issuing_authority = crwDocumentData?.issuing_authority;
   props.form.validity_period = crwDocumentData?.validity_period_in_month;
   props.form.validity_period_in_month = crwDocumentData?.validity_period_in_month;
@@ -160,7 +174,7 @@ function deleteDocumentBasicData(crwDocumentDataId,index){
 onMounted(() => {
   watchEffect(() => {
     getCrews(props.form.business_unit);
-    //getCrewDocuments(props.form.business_unit,props.form?.crw_crew_id);
+    getCrewDocuments(props.form.business_unit,props.form.crw_crew_profile_id);
   });
 });
 
@@ -168,7 +182,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -176,7 +190,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
-        <v-select :loading="isLoading" :options="crews" placeholder="--Choose an option--" v-model="form.crw_crew_name" label="full_name" class="block form-input">
+        <v-select :loading="isLoading" :options="crews" placeholder="--Choose an option--" v-model.trim="form.crw_crew_name" label="full_name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -186,22 +200,18 @@ onMounted(() => {
             />
           </template>
         </v-select>
-        <Error v-if="errors?.crw_crew_name" :errors="errors.crw_crew_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-        <input type="text" v-model="form.crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
-        <Error v-if="errors?.crw_crew_rank" :errors="errors.crw_crew_rank" />
+        <input type="text" v-model.trim="form.crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Contact</span>
-        <input type="text" v-model="form.crw_crew_name.pre_mobile_no" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" required />
-        <Error v-if="errors?.crw_crew_contact" :errors="errors.crw_crew_contact" />
+        <input type="text" :value="form?.crw_crew_name?.pre_mobile_no" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-        <input type="text" v-model="form.crw_crew_name.pre_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
-        <Error v-if="errors?.crw_crew_email" :errors="errors.crw_crew_email" />
+        <input type="text" :value="form?.crw_crew_name?.pre_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -246,7 +256,7 @@ onMounted(() => {
         </td>
         <td class="px-1 py-1 text-center">
           <nobr>
-            <a @click="showCrewDocumentRenewModal(crwDocumentData?.id)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+            <a @click="showCrewDocumentRenewModal(crwDocumentData?.id)" :class="{'custom_renew_active_button': crwDocumentData?.validity_period_in_month,'custom_renew_disable_button': !crwDocumentData?.validity_period_in_month}" class="relative tooltip">
               <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
               </svg>
@@ -288,7 +298,7 @@ onMounted(() => {
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              class="text-xs font-semibold tracking-wide text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th colspan="5">Add Crew Document</th>
           </tr>
           </thead>
@@ -306,7 +316,7 @@ onMounted(() => {
               <input type="text" v-model.trim="form.issuing_authority" placeholder="Issuing Authority" class="form-input" autocomplete="off" required />
             </label>
           </div>
-          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <div v-if="!isDocumentEditModal" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
               <select v-model.trim="form.validity_period" class="form-input" required>
@@ -386,7 +396,7 @@ onMounted(() => {
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              class="text-xs font-semibold tracking-wide text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th colspan="5">Renew Crew Document</th>
           </tr>
           </thead>
@@ -395,9 +405,9 @@ onMounted(() => {
           <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Add Renew Data</legend>
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="px-4 py-3 align-bottom">Issue Date</th>
-              <th class="px-4 py-3 align-bottom">Expire Date</th>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom">Issue Date <span class="text-red-500">*</span></th>
+              <th class="px-4 py-3 align-bottom">Expire Date <span class="text-red-500">*</span></th>
               <th class="px-4 py-3 align-bottom">Reference No</th>
               <th class="px-4 py-3 align-bottom">Attachment</th>
               <th class="px-4 py-3 text-center align-bottom">Action</th>
@@ -406,13 +416,13 @@ onMounted(() => {
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400">
               <td class="px-1 py-1">
-                <input type="date" v-model="renewFormData.issue_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model.trim="renewFormData.issue_date" class="form-input" autocomplete="off" required/>
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model="renewFormData.expire_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model.trim="renewFormData.expire_date" class="form-input" autocomplete="off" required/>
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model="renewFormData.reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
+                <input type="text" v-model.trim="renewFormData.reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1">
                 <input type="file" @change="selectedRenewFile" class="form-input" autocomplete="off" />
@@ -430,11 +440,11 @@ onMounted(() => {
           <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Previous Renew Data</legend>
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
-            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="px-4 py-3 align-bottom">Issue Date</th>
-              <th class="px-4 py-3 align-bottom">Expire Date</th>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom">Issue Date <span class="text-red-500">*</span></th>
+              <th class="px-4 py-3 align-bottom">Expire Date <span class="text-red-500">*</span></th>
               <th class="px-4 py-3 align-bottom">Reference No</th>
-              <th class="px-4 py-3 align-bottom">Prev. Attachment</th>
+              <th class="px-4 py-3 align-bottom"><nobr>Prev. Attachment</nobr></th>
               <th class="px-4 py-3 align-bottom">Attachment</th>
               <th class="px-4 py-3 text-center align-bottom">Action</th>
             </tr>
@@ -442,13 +452,13 @@ onMounted(() => {
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
               <td class="px-1 py-1">
-                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model.trim="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" />
+                <input type="date" v-model.trim="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model="crewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
+                <input type="text" v-model.trim="crewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1">
                 <template v-if="crewDocumentRenewals[renewDataIndex]?.attachment">

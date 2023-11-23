@@ -296,6 +296,17 @@ input.custom_date::-webkit-calendar-picker-indicator{
     font-weight: bold;
 }
 
+.custom_renew_active_button{
+    display: inline-block;
+    cursor: pointer
+}
+
+.custom_renew_disable_button{
+    display: inline-block;
+    opacity: .4;
+    pointer-events: none;
+}
+
 .v-select {
     --vs-controls-color: #374151;
     --vs-border-color: #4b5563;

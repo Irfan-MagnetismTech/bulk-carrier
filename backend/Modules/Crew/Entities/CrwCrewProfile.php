@@ -19,7 +19,7 @@ class CrwCrewProfile extends Model
     }
 
     public function crewRank(){
-        return $this->hasOne(CrwRank::class, 'id', 'rank_id');
+        return $this->hasOne(CrwRank::class, 'id', 'crw_rank_id');
     }
 
     public function crewRecruitmentApproval(){
@@ -57,6 +57,16 @@ class CrwCrewProfile extends Model
     public function crwRank()
     {
         return $this->belongsTo(CrwRank::class);
+    }
+
+    public function crwCurrentRank()
+    {
+        return $this->belongsTo(CrwRank::class, 'crw_rank_id', 'id');
+    }
+
+    public function crewDocuments()
+    {
+        return $this->hasMany(CrwCrewDocument::class);
     }
 
 

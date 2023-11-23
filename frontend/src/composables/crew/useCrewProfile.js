@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewProfile() {
     const router = useRouter();
     const crewProfiles = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const crewProfile = ref( {
@@ -107,25 +108,32 @@ export default function useCrewProfile() {
         ],
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewProfiles(page,businessUnit) {
+    async function getCrewProfiles(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-crew-profiles',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             crewProfiles.value = data.value;
@@ -134,8 +142,14 @@ export default function useCrewProfile() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -217,7 +231,7 @@ export default function useCrewProfile() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-profiles/${profileId}`);
             notification.showSuccess(status);
-            await getCrewProfiles(indexPage.value, indexBusinessUnit.value);
+            await getCrewProfiles(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -235,6 +249,7 @@ export default function useCrewProfile() {
         showCrewProfile,
         updateCrewProfile,
         deleteCrewProfile,
+        isTableLoading,
         isLoading,
         errors,
     };
