@@ -519,12 +519,13 @@
                 <td>
                   <select v-model.trim="form.validity_period" class="form-input" required>
                     <option value="" disabled selected>Select</option>
+                    <option v-for="(item, index) in bunkerConsumptionHeads" :key="index">{{ item }}</option>
                   </select>
                 </td>
                 <td>
                   <input type="number" step="0.001" class="form-input" placeholder="Amount" />
                 </td>
-                td
+                
               </tr>
             </tbody>
           </table>
@@ -552,12 +553,14 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import usePort from '../../composables/operations/usePort';
+import useBulkNoonReport from "../../composables/operations/useBulkNoonReport";
 
 const editInitiated = ref(false);
 
 const { ports, getPortList } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes } = useBulkNoonReport();
 
 const props = defineProps({
   form: {
@@ -655,6 +658,8 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
 onMounted(() => {
 getVesselList(props.form.business_unit);
 getPortList();
+getBunkerConsumptionHeadList();
+getEngineTemparatureTypeList();
 });
 </script>
 <style lang="postcss" scoped>
