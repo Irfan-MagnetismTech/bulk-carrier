@@ -118,13 +118,14 @@
         </label>
 
         
-        <!-- <label class="block w-full mt-2 text-sm">
+        <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Responsible Person" :options="crews" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Responsible Person" :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
+            :reduce="crewsWithRank => crewsWithRank.displayName" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.responsible_person_name"
+                    :required="!form.responsible_person"
                     v-bind="attributes"
                     v-on="events"
                 />
@@ -132,9 +133,10 @@
             </v-select>
             <input type="hidden" v-model="form.responsible_person">
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
-        </label> -->
+        </label>
+       
 
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
             <select v-model="form.responsible_person" class="form-input" required>
               <option value="" disabled selected>Select</option>
@@ -142,7 +144,7 @@
               <option value="Karim" > Karim</option>
             </select>
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
-        </label>
+        </label> -->
 
         
         <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
@@ -223,7 +225,7 @@ import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, computed} from "vue";
 // import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
@@ -363,6 +365,13 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   }
 });
 
+const crewsWithRank = computed(() => {
+  if(crews.value.length)
+    return crews.value.map(crew => ({
+      displayName: `${crew?.crwRank?.name} - ${crew.full_name}`
+      }));
+  return [];
+});
 function addJobLine(jobLine){
   props.form.added_job_lines.push(jobLine);
 }
@@ -386,6 +395,7 @@ onMounted(() => {
       if(businessUnit.value && businessUnit.value != 'ALL'){
         // getShipDepartmentsWithoutPagination(businessUnit.value);
         getVesselsWithoutPaginate(businessUnit.value);
+        getCrews(businessUnit.value);
       }
   });
   
