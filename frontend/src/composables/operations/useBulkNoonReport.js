@@ -11,7 +11,9 @@ export default function useBulkNoonReport() {
 	const bulkNoonReports = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
-
+	const bunkerConsumptionHeads = ref([]);
+	const engineTemparatureTypes = ref([]);
+	
 	const portObject = {
 		last_port: null,
 		next_port: null,
@@ -218,12 +220,48 @@ export default function useBulkNoonReport() {
 		}
 	}
 
+	async function getBunkerConsumptionHeadList() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/bunker-consumption-heads`);
+			bunkerConsumptionHeads.value = data;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
+	async function getEngineTemparatureTypeList() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/engine-temparature-types`);
+			engineTemparatureTypes.value = data;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		bulkNoonReports,
 		bulkNoonReport,
 		portObject,
 		cargoTankObject,
 		engineObject,
+		getBunkerConsumptionHeadList,
+		getEngineTemparatureTypeList,
+		bunkerConsumptionHeads,
+		engineTemparatureTypes,
 		getBulkNoonReports,
 		storeBulkNoonReport,
 		showBulkNoonReport,

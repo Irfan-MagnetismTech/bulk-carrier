@@ -107,7 +107,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     
 
     //Business Info Apis
-    Route::get('bunker-consumptions', fn () => config('businessinfo.bunker_consumption_used_heads'));
+    Route::get('bunker-consumption-heads', fn () => config('businessinfo.bunker_consumption_used_heads'));
     Route::get('engine-temparature-types', fn () => config('businessinfo.engine_temparature_types'));
 
     Route::post('vessel-search', [OpsVesselController::class, 'search']);

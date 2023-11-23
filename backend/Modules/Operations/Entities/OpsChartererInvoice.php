@@ -43,6 +43,7 @@ class OpsChartererInvoice extends Model
     {
         return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','charge');
     }
+    
     public function opsChartererInvoiceServices()
     {
         return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','deduct');

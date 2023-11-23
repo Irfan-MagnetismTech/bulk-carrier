@@ -9,8 +9,6 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
-import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
