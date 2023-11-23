@@ -3,13 +3,13 @@
     <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Report Type </span>
-        <select v-model="form.report_type" class="form-input">
+        <select v-model="form.type" class="form-input">
           <option value="" disabled>Select Option</option>
           <option value="Noon Report">Noon Report</option>
           <option value="Arrival Report">Arrival Report</option>
           <option value="Departure Report">Departure Report</option>
         </select>
-        <Error v-if="errors?.report_type" :errors="errors.report_type" />
+        <Error v-if="errors?.type" :errors="errors.type" />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -49,36 +49,36 @@
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Date/Time </span>
-      <input type="text" v-model="form.model_name" placeholder="Date/Time" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.date_time" :errors="errors.date_time" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">GMT Time </span>
-      <input type="text" v-model="form.model_name" placeholder="GMT Time" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.gmt_time" :errors="errors.gmt_time" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Location </span>
-      <input type="text" v-model="form.model_name" placeholder="Location" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.location" placeholder="Location" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.location" :errors="errors.location" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Latitude </span>
-      <input type="text" v-model="form.model_name" placeholder="Latitude" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.latitude" placeholder="Latitude" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.latitude" :errors="errors.latitude" />
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Longitude </span>
-        <input type="text" v-model="form.model_name" placeholder="Longitude" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.longitude" placeholder="Longitude" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.longitude" :errors="errors.longitude" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Fuel Figures From </span>
-        <input type="text" v-model="form.model_name" placeholder="Fuel Figures From" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.fuel_figures_from" placeholder="Fuel Figures From" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.fuel_figures_from" :errors="errors.fuel_figures_from" />
       </label>
   </div>
 
@@ -95,170 +95,182 @@
           <th>DTG</th>
           <th>Remarks</th>
           <th class="w-16">
-            <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-            </button>
+            Action
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-
+        <tr v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
+          <td>
+            <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.opsBulkNoonReportPorts[index].lastPort"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+            </v-select>
+            <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
+          </td>
+          <td>
+            <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.opsBulkNoonReportPorts[index].nextPort"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+            </v-select>
+            <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
+          </td>
+          <td>
+            <input type="datetime-local" class="form-input" v-model="form.opsBulkNoonReportPorts[index].eta">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].distance_run">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].dtg">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].remarks">
+          </td>
+          <td>
+            <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+              </svg>
+            </button> 
+            <button v-else type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="hidden flex flex-col justify-center w-full md:flex-row md:gap-2">
 
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Last Port <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="Search Port" v-model="form.lastPort" label="code_name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.lastPort"
-                  v-bind="attributes"
-                  v-on="events"
-                  />
-          </template>
-        </v-select>
-        <input type="hidden" v-model="form.last_port" />
-      </label>
-
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Next Port <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="Search Port" v-model="form.nextPort" label="code_name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.nextPort"
-                  v-bind="attributes"
-                  v-on="events"
-                  />
-          </template>
-        </v-select>
-        <input type="hidden" v-model="form.next_port" />
-      </label>
-
-
-  </div>
 
   <h4 class="text-md font-semibold my-3">Distance and Vessel</h4>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full text-sm">
         <span class="text-gray-700 ">CP/Ordered Speed </span>
-        <input type="text" v-model="form.model_name" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.opsBulkNoonReportDistance.cp_ordered_speed" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.opsBulkNoonReportDistance.cp_ordered_speed" :errors="errors.opsBulkNoonReportDistance.cp_ordered_speed" />
       </label>
       <label class="block w-full text-sm">
         <span class="text-gray-700 ">Average RPM </span>
-        <input type="text" v-model="form.model_name" placeholder="Average RPM" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.opsBulkNoonReportDistance.average_rpm" placeholder="Average RPM" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.opsBulkNoonReportDistance.average_rpm" :errors="errors.opsBulkNoonReportDistance.average_rpm" />
       </label>
       <label class="block w-full text-sm">
         <span class="text-gray-700 ">Reported Speed </span>
-        <input type="text" v-model="form.model_name" placeholder="Reported Speed" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.opsBulkNoonReportDistance.reported_speed" placeholder="Reported Speed" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.opsBulkNoonReportDistance.reported_speed" :errors="errors.opsBulkNoonReportDistance.reported_speed" />
       </label>
       <label class="block w-full text-sm">
         <span class="text-gray-700 ">Fwd Draft </span>
-        <input type="text" v-model="form.model_name" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.model_name" :errors="errors.model_name" />
+        <input type="text" v-model="form.opsBulkNoonReportDistance.fwd_draft" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
+        <Error v-if="errors?.opsBulkNoonReportDistance.fwd_draft" :errors="errors.opsBulkNoonReportDistance.fwd_draft" />
       </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Observed Distance </span>
-      <input type="text" v-model="form.model_name" placeholder="Observed Distance" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.observed_distance" placeholder="Observed Distance" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.observed_distance" :errors="errors.opsBulkNoonReportDistance.observed_distance" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Mild Draft </span>
-      <input type="text" v-model="form.model_name" placeholder="Mild Draft" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.mild_draft" placeholder="Mild Draft" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.mild_draft" :errors="errors.opsBulkNoonReportDistance.mild_draft" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Engine Distance </span>
-      <input type="text" v-model="form.model_name" placeholder="Engine Distance" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.engine_distance" placeholder="Engine Distance" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.engine_distance" :errors="errors.opsBulkNoonReportDistance.engine_distance" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Aft Draft </span>
-      <input type="text" v-model="form.model_name" placeholder="Aft Draft" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.aft_draft" placeholder="Aft Draft" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.aft_draft" :errors="errors.opsBulkNoonReportDistance.aft_draft" />
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Main Engine Revs </span>
-      <input type="text" v-model="form.model_name" placeholder="Main Engine Revs" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.main_engine_revs" placeholder="Main Engine Revs" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.main_engine_revs" :errors="errors.opsBulkNoonReportDistance.main_engine_revs" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Heading </span>
-      <input type="text" v-model="form.model_name" placeholder="Heading" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.heading" placeholder="Heading" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.heading" :errors="errors.opsBulkNoonReportDistance.heading" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Slip % </span>
-      <input type="text" v-model="form.model_name" placeholder="Slip %" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.slip_percent" :errors="errors.opsBulkNoonReportDistance.slip_percent" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Steaming Hours </span>
-      <input type="text" v-model="form.model_name" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.steaming_hours" :errors="errors.opsBulkNoonReportDistance.steaming_hours" />
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Salinity </span>
-      <input type="text" v-model="form.model_name" placeholder="Salinity" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.salinity" placeholder="Salinity" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.salinity" :errors="errors.opsBulkNoonReportDistance.salinity" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">S. DWT </span>
-      <input type="text" v-model="form.model_name" placeholder="S. DWT" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.s_dwt" placeholder="S. DWT" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.s_dwt" :errors="errors.opsBulkNoonReportDistance.s_dwt" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Ballast </span>
-      <input type="text" v-model="form.model_name" placeholder="Ballast" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.ballast" placeholder="Ballast" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.ballast" :errors="errors.opsBulkNoonReportDistance.ballast" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">S. Displacement </span>
-      <input type="text" v-model="form.model_name" placeholder="S. Displacement" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.opsBulkNoonReportDistance.s_displacement" placeholder="S. Displacement" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.opsBulkNoonReportDistance.s_displacement" :errors="errors.opsBulkNoonReportDistance.s_displacement" />
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">FW Last Day Noon ROB </span>
-      <input type="text" v-model="form.model_name" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.fw_last_day_noon_rob" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.fw_last_day_noon_rob" :errors="errors.fw_last_day_noon_rob" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">FW Production </span>
-      <input type="text" v-model="form.model_name" placeholder="FW Production" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.fw_production" placeholder="FW Production" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.fw_production" :errors="errors.fw_production" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">FW Consumption </span>
-      <input type="text" v-model="form.model_name" placeholder="FW Consumption" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.fw_consumption" placeholder="FW Consumption" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.fw_consumption" :errors="errors.fw_consumption" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">FW Today Noon ROB </span>
-      <input type="text" v-model="form.model_name" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.fw_today_noon_rob" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.fw_today_noon_rob" :errors="errors.fw_today_noon_rob" />
     </label>
   </div>
 
@@ -284,7 +296,39 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-for="(tank, index) in form.opsBulkNoonReportCargoTanks" :key="index">
           
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].cargo_tanks">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_level">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].pressure">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].vapor_temp">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_temp">
+          </td>
+          <td>
+            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].quantity_mt">
+          </td>
+          <td>
+            <button type="button" v-if="index>0" @click="removeTank(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+              </svg>
+            </button> 
+            <button v-else type="button" @click="addTank()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </td>
+        </tr> 
         </tbody>
       </table>
   </div>
@@ -292,13 +336,13 @@
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Master </span>
-      <input type="text" v-model="form.model_name" placeholder="Master" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.ship_master" placeholder="Master" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.ship_master" :errors="errors.ship_master" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Chief Engineer </span>
-      <input type="text" v-model="form.model_name" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.model_name" :errors="errors.model_name" />
+      <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+      <Error v-if="errors?.chief_engineer" :errors="errors.chief_engineer" />
     </label>
   </div>
 
@@ -311,362 +355,110 @@
           <th>Received</th>
           <th colspan="2">Consumption Used For</th>
           <th>ROB</th>
-          <th colspan="4"></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td rowspan="4">VLSFO/IFO (MT)</td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td>ME</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td>Unit</td>
-          <td>PCO</td>
-          <td>Rack</td>
-          <td>Exh. Temp.</td>
-        </tr>
-        <tr>
-          <td>GE</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>1</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>2</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>3</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-
-
-
-        <tr>
-          <td rowspan="5">MGO (MT)</td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          <td>ME</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          <td>4</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>GE</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>5</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>6</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>IG</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>7</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME Tc Exh. In</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-
-
-
-        <tr>
-          <td rowspan="4">LSMGO (MT)</td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td>Main</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME TC Exh. Out</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Aux</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME TC LO OUT</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME Scv. Temp.</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME Scv. Press</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        
-
-        <tr>
-          <td>MECC</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>Main</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME FW Out Temp.</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-
-        <tr>
-          <td>LSMECYL</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>ME Cyl. Oil</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td colspan="2">ME FW In Temp.</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-        <tr>
-          <td>LSAECC</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>GE Sys. Oil</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input" autocomplete="off" />
-
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+        <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
+            <td>
+              <span class="show-block">
+                {{ bunker?.name }}
+              </span>
+            </td>
+            <td>
+              <input type="text" class="form-input">
+            </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
-    <h4 class="text-md font-semibold my-3">Bunker Info</h4>
+  <div class="mt-5">
+    <h4 class="text-md font-semibold my-3">Engine Info</h4>
 
-    <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
-          <tr class="w-full">
-            <th>SL</th>
-            <th class="w-72">Bunker Name</th>
+    <div class="dt-responsive table-responsive">
+      <table id="dataTable" class="w-full table table-striped table-bordered">
+        <thead>
             <th>Unit</th>
-            <th><nobr> Bunkering </nobr></th>
-            <th><nobr> FUEL - CON/24H </nobr></th>
-            <th><nobr> FUEL - CON/Voyage </nobr></th>
-            <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
-          </tr>
+            <th>PCO</th>
+            <th>Rack</th>
+            <th>Exh. Temp.</th>
         </thead>
         <tbody>
-          <tr v-for="(certificate, index) in form.opsBunkers">
+
+          <tr >
+
+          
+          </tr>
+
+          <tr>
+            <td colspan="2">ME Tc Exh. In</td>
             <td>
-              {{ index+1 }}
+              <input type="text" class="filter_input">
             </td>
             <td>
-              
-              <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
+              <input type="text" class="filter_input">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">ME TC Exh. Out</td>
+            <td>
+              <input type="text" class="filter_input">
             </td>
             <td>
-              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
+              <input type="text" class="filter_input">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">ME TC LO OUT</td>
+            <td>
+              <input type="text" class="filter_input">
             </td>
             <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.bunkering" :errors="errors.opsBunkers[index]?.bunkering" />
-              </label>
+              <input type="text" class="filter_input">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">ME Scv. Temp.</td>
+            <td>
+              <input type="text" class="filter_input">
             </td>
             <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
-              </label>
+              <input type="text" class="filter_input">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">ME Scv. Press</td>
+            <td>
+              <input type="text" class="filter_input">
             </td>
             <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
-              </label>
+              <input type="text" class="filter_input">
             </td>
-            <td class="hidden">
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
-              </label>
+          </tr>
+          <tr>
+            <td colspan="2">ME FW Out Temp.</td>
+            <td>
+              <input type="text" class="filter_input">
+            </td>
+            <td>
+              <input type="text" class="filter_input">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">ME FW In Temp.</td>
+            <td>
+              <input type="text" class="filter_input">
+            </td>
+            <td>
+              <input type="text" class="filter_input">
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
   </div>
+
+ 
   
 </template>
 <script setup>
@@ -689,7 +481,10 @@ const props = defineProps({
       default: {},
   },
   errors: { type: [Object, Array], required: false },
-  formType: { type: String, required : false }
+  formType: { type: String, required : false },
+  portObject: { type: Object, required: true },
+  cargoTankObject: { type: Object, required: true },
+  engineObject: { type: Object, required: true },
 });
 
 // function fetchPorts(search, loading) {
@@ -706,6 +501,21 @@ const props = defineProps({
 //       loading(true);
 //       searchVessels(search, props.form.business_unit, loading);
 // }
+function addPort() {
+  props.form.opsBulkNoonReportPorts.push({...props.portObject});
+}
+
+function removePort(index) {
+  props.form.opsBulkNoonReportPorts.splice(index, 1);
+}
+
+function addTank() {
+  props.form.opsBulkNoonReportCargoTanks.push({...props.cargoTankObject});
+}
+
+function removeTank(index) {
+  props.form.opsBulkNoonReportCargoTanks.splice(index, 1);
+}
 
 watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
