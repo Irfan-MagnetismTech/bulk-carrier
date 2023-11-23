@@ -61,10 +61,10 @@
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.voyage_note_type">{{ form.opsVoyageBoatNoteLines[index]?.voyage_note_type }}</span>
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point }}</span>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point_name_code }}</span>
               </td>
               <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.unloading_point">{{ form.opsVoyageBoatNoteLines[index]?.unloading_point }}</span>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.unloading_point">{{ form.opsVoyageBoatNoteLines[index]?.unloading_point_name_code }}</span>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
@@ -77,8 +77,7 @@
               </td>
             </tr>
           </tbody>
-        </table>
-      
+        </table>     
       
     </div>
     

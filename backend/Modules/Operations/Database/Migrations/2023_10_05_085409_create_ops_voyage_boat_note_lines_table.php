@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('ops_voyage_boat_note_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ops_voyage_boat_note_id')->constrained('ops_voyage_boat_notes')->onDelete('cascade');
+            $table->bigInteger('voyage_sector_id');
             $table->enum('voyage_note_type', ['Boat Note', 'Draft Survey','Receipt Copy','Final Survey']);
             $table->string('loading_point')->nullable();
             $table->string('unloading_point')->nullable();
