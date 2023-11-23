@@ -70,7 +70,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Material Category",
-      "input_value": "asdasdsda"
+      "filter_type": "input"
     },
     {
       "relation_name": null,
