@@ -188,9 +188,9 @@ class OpsChartererContractController extends Controller
             //         $subquery->where('ops_charterer_profile_id',request()->charterer_profile_id);
             //     });
             // })
-            // ->get();            
+            // ->get();
             // $charterer->load('opsChartererProfile');
-            
+
             return response()->success('Data retrieved successfully.', $charterer, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
