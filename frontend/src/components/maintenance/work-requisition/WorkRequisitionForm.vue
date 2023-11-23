@@ -216,7 +216,7 @@
         
       </div>
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -234,6 +234,7 @@ import useRunHour from "../../../composables/maintenance/useRunHour";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import moment from 'moment';
 import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();

@@ -187,7 +187,7 @@
 
 
     
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -210,6 +210,7 @@ import useMaterial from "../../../composables/supply-chain/useMaterial";
 import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
 import moment from 'moment';
 import useHeroIcon from "../../../assets/heroIcon";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 
 const { updateWipWorkRequisitionLine } = useWipWorkRequisition();
