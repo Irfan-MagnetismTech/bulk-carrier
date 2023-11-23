@@ -186,7 +186,7 @@
                 <span class="label-item-title">
                     Sample Photo
                     <template v-if="form.sample_photo">
-                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.sample_photo">{{
+                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.sample_photo">{{
                         (typeof $props.form?.sample_photo === 'string')
                             ? '('+$props.form?.sample_photo.split('/').pop()+')'
                             : ''
