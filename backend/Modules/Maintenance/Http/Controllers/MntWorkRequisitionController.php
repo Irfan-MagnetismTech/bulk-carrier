@@ -11,6 +11,7 @@ use Modules\Maintenance\Entities\MntWorkRequisition;
 use Modules\Maintenance\Entities\MntWorkRequisitionItem;
 use Modules\Maintenance\Entities\MntWorkRequisitionLine;
 use Modules\Maintenance\Http\Requests\MntWorkRequisitionRequest;
+use Modules\Maintenance\Http\Requests\MntWorkRequisitionWipRequest;
 
 class MntWorkRequisitionController extends Controller
 {
@@ -214,7 +215,7 @@ class MntWorkRequisitionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function updateWip(Request $request, $id)
+    public function updateWip(MntWorkRequisitionWipRequest $request, $id)
     {
         try {
             $input = $request->all();
@@ -228,7 +229,34 @@ class MntWorkRequisitionController extends Controller
             $workRequisition = MntWorkRequisition::findorfail($id);
             $workRequisition->update($wr);
             
-            $workRequisitionLines = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
+            $workRequisitionMaterials = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
+            $workRequisitionLines = $input['mntWorkRequisitionLines'];
+            $row = 1;
+            foreach($workRequisitionLines as $wrLine) {
+                // if ($wrLine['start_date'] == '' || $wrLine['start_date'] == null) {
+                //     $error = array(
+                //         "message" => "Start date is a required field at row no. $row",
+                //         "errors" => [
+                //             "start_date" => ["Start date is a required field at row no. $row"]
+                //         ]
+                //     );
+                //     DB::rollBack();
+                //     return response()->json($error, 422);
+                // }
+                $updateWipLine = $this->updateWipLine($wrLine, $wrLine['id']);
+                if (!$updateWipLine) {
+                    $error = array(
+                        "message" => "Completion date should be after start date at row no. $row",
+                        "errors" => [
+                            "completion_date" => ["Completion date should be after start date at row no. $row"]
+                        ]
+                    );
+                    DB::rollBack();
+                    return response()->json($error, 422);
+                }
+                $row++;
+            }
+
             
             DB::commit();
             return response()->success('Work requisition updated successfully', $workRequisition, 202);
@@ -247,25 +275,22 @@ class MntWorkRequisitionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function updateWipLine(Request $request, $id)
+    public function updateWipLine(Array $input, $id)
     {
         try {
-            $validated = $request->validate( [
-                'start_date' => ['required']
-            ]);
-            $input = $request->all();
 
             if (isset($input['completion_date']) && $input['completion_date'] != "") {
                 $startDate = strtotime($input['start_date']);
                 $completionDate = strtotime($input['completion_date']);
                 if ($startDate > $completionDate) {
-                    $error = array(
-                        "message" => "Completion date should be after start date.",
-                        "errors" => [
-                            "completion_date" => ["Completion date should be after start date."]
-                        ]
-                    );
-                    return response()->json($error, 422);
+                    // $error = array(
+                    //     "message" => "Completion date should be after start date.",
+                    //     "errors" => [
+                    //         "completion_date" => ["Completion date should be after start date."]
+                    //     ]
+                    // );
+                    // return response()->json($error, 422);
+                    return 0;
                 }
             }
 
@@ -281,7 +306,7 @@ class MntWorkRequisitionController extends Controller
                                         ? 1 : 2
                                     );
 
-            DB::beginTransaction();
+            // DB::beginTransaction();
 
             $workRequisition = MntWorkRequisitionLine::findorfail($id);
             $workRequisition->update($wr);
@@ -291,8 +316,9 @@ class MntWorkRequisitionController extends Controller
             $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
             $jobLine->update($job);
             
-            DB::commit();
-            return response()->success('Work requisition updated successfully', $workRequisition, 202);
+            // DB::commit();
+            // return response()->success('Work requisition updated successfully', $workRequisition, 202);
+            return 1;
             
         }
         catch (\Exception $e)
