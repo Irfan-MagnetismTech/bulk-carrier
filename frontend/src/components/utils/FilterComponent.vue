@@ -77,7 +77,7 @@ function setSortState(index, order) {
                 <template v-if="option.filter_type === 'input'">
                   <input v-model="option.search_param" type="text" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
-                <template v-if="option.filter_type === 'date'">
+                <template v-else-if="option.filter_type === 'date'">
                   <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
                 <template v-else-if="option.filter_type === 'select'">
