@@ -77,7 +77,7 @@ function setSortState(index, order) {
                 <template v-if="option.filter_type === 'input'">
                   <input v-model="option.search_param" type="text" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
-                <template v-if="option.filter_type === 'date'">
+                <template v-else-if="option.filter_type === 'date'">
                   <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
                 <template v-else-if="option.filter_type === 'select'">
@@ -88,10 +88,10 @@ function setSortState(index, order) {
                   </select>
                 </template>
                 <template v-else-if="option.filter_type === 'component'">
-                  <component :is="option.component" v-model="filterOptions.select_options" v-bind="option.componentProps"/>
+                  <component :is="option.component" v-model="option.search_param" v-bind="option.componentProps"/>
                 </template>
                 <template v-else>
-                  <input type="text" readonly placeholder="" class="filter_input vms-readonly-input" autocomplete="off" />
+                  <input type="text" readonly placeholder="" :value="option.input_value" class="filter_input vms-readonly-input text-center" autocomplete="off" />
                 </template>
               </th>
               <th v-if="filterOptions.business_unit"><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
