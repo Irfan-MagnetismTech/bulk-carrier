@@ -1,6 +1,6 @@
 <script setup>
 // import UserForm from '../../../components/authorization/UserForm.vue';
-import JobForm from '../../../components/maintenance/job/JbForm.vue';
+import JobForm from '../../../components/maintenance/job/JobForm.vue';
 import useJob from '../../../composables/maintenance/useJob';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";

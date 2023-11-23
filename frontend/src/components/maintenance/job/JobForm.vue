@@ -73,7 +73,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Job List <span class="text-red-500">*</span></legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-2/12 px-4 py-3 align-bottom">Job Description <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Cycle Unit <span class="text-red-500">*</span></th>
             <th class="w-1/12 px-4 py-3 align-bottom">Cycle <span class="text-red-500">*</span></th>

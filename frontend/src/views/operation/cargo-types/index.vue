@@ -224,7 +224,7 @@ onMounted(() => {
               <td colspan="6">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
-            </tr>
+          </tr>
           <tr v-else-if="!cargoTypes?.data?.length">
             <td colspan="6">No data found.</td>
           </tr>
