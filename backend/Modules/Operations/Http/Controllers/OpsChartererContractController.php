@@ -177,4 +177,14 @@ class OpsChartererContractController extends Controller
         }
     }
 
+    public function getChartererContractByProfile(Request $request){
+        try {
+            $charterer = OpsChartererContract::with('opsChartererProfile')->where('ops_charterer_profile_id',request()->charterer_profile_id)->first();
+
+            return response()->success('Data retrieved successfully.', $charterer, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }

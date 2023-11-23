@@ -127,6 +127,14 @@ let filterOptions = ref( {
 			"order_by": null,
 			"date_from": null
 			},
+      // {
+			// "relation_name": null,
+			// "field_name": "business_unit",
+			// "search_param": "",
+			// "action": null,
+			// "order_by": null,
+			// "date_from": null
+			// },
 	]
 });
 
@@ -340,6 +348,10 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <!-- <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th> -->
+
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
@@ -359,6 +371,9 @@ onMounted(() => {
                   <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.chief_engineer }}</nobr></td>
+                  <!-- <td>
+                    <span :class="lighterNoonReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lighterNoonReport?.business_unit }}</span>
+                  </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'copy'" :to="{ name: 'ops.lighter-noon-reports.copy', params: { lighterNoonReportId: lighterNoonReport.id } }"></action-button>
