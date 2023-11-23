@@ -161,18 +161,21 @@ class OpsChartererProfileController extends Controller
      }
      
      public function getChartererProfileNameorCode(Request $request){
-         try {
-             $charterer_profiles = OpsChartererProfile::query()
-             ->where(function ($query) use($request) {
-                 $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                 $query->orWhere('owner_code', 'like', '%' . $request->name_or_code . '%');
-             })
-             ->get();
-             $charterer_profiles->load('opsChartererBankAccounts');
-             return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
-         } catch (QueryException $e){
-             return response()->error($e->getMessage(), 500);
-         }
+        try {
+            $charterer_profiles = OpsChartererProfile::query()
+            ->when(request()->has('name_or_code'), function ($query) {
+                $query->where(function ($subquery) {
+                    $subquery->where('name', 'like', '%' . request()->name_or_code . '%')
+                            ->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
+                });
+            })
+            ->get();
+            
+            $charterer_profiles->load('opsChartererBankAccounts');
+            return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
      }
  
 }

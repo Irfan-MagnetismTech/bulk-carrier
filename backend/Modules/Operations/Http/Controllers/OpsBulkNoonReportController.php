@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsBulkNoonReport;
+use Modules\Operations\Http\Exports\BulkNoonReportExport;
 use Modules\Operations\Http\Requests\OpsBulkNoonReportRequest;
 
 class OpsBulkNoonReportController extends Controller
@@ -202,5 +204,18 @@ class OpsBulkNoonReportController extends Controller
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function exportBulkNoonReport(Request $request){
+            $bulk_noon_report = OpsBulkNoonReport::query()
+            ->where(function ($query) use($request) {
+                $query->where('type', 'like', '%' . $request->type . '%');                
+            })
+            ->when(request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->first();
+
+            return Excel::download(new BulkNoonReportExport($bulk_noon_report), 'vessel_particular_report.xlsx');
     }
 }
