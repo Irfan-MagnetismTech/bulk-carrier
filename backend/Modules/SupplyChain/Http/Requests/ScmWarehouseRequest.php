@@ -37,19 +37,26 @@ class ScmWarehouseRequest extends FormRequest
             'name.required' => 'Name is required',
             'name.unique' => 'Name is already taken',
             'name.max' => 'Name is too long',
+
             'cost_center_id.required' => 'Cost center is required',
             'cost_center_id.exists' => 'Cost center is not found',
             'cost_center_id.integer' => 'Cost center must be an integer',
+
             'address.max' => 'Address is too long',
+
             'short_code.required' => 'Short code is required',
             'short_code.unique' => 'Short code is already taken',
             'short_code.max' => 'Short code is too long',
+
             'scmWarehouseContactPersons.*.name.required' => 'Name is required',
             'scmWarehouseContactPersons.*.name.max' => 'Name is too long',
+
             'scmWarehouseContactPersons.*.designation.required' => 'Designation is required',
             'scmWarehouseContactPersons.*.designation.max' => 'Designation is too long',
+
             'scmWarehouseContactPersons.*.phone.required' => 'Phone is required',
             'scmWarehouseContactPersons.*.phone.max' => 'Phone is too long',
+
             'scmWarehouseContactPersons.*.email.required' => 'Email is required',
             'scmWarehouseContactPersons.*.email.email' => 'Email is not valid',
         ];

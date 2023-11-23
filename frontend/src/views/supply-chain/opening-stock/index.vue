@@ -11,6 +11,8 @@ import useHeroIcon from '../../../assets/heroIcon'
 import useDebouncedRef from '../../../composables/useDebouncedRef'
 import FilterWithBusinessUnit from '../../../components/searching/FilterWithBusinessUnit.vue'
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading, isTableLoading } =
     useOpeningStock()
