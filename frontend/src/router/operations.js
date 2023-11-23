@@ -292,6 +292,33 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/charterer-contracts/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
+	/* Charterer Invoice */
+	{
+		path: `/${BASE}/charterer-invoices`,
+		name: `${BASE}.charterer-invoices.index`,
+		component: () => import(`../views/${ViEWBASE}/charterer-invoices/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/charterer-invoices/create`,
+		name: `${BASE}.charterer-invoices.create`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-invoices/:chartererInvoiceId/edit`,
+		name: `${BASE}.charterer-invoices.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-invoices/:chartererInvoiceId/show`,
+		name: `${BASE}.charterer-invoices.show`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Delivery and Re-delivery Note */
 	{
 		path: `/${BASE}/delivery-redelivery`,
@@ -402,4 +429,5 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	}
+		
 ];
