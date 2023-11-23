@@ -12,7 +12,10 @@ class CrwCrewProfileRequest extends FormRequest
         $data      = request('data');
         $dataArray = json_decode($data, true);
     
-        $mergeData = array_merge($dataArray, ['logo' => request('logo')]);
+        $mergeData = array_merge($dataArray, [
+            'picture' => request('picture'),
+            'attachment' => request('attachment')
+        ]);
     
         $this->replace($mergeData);
     }
@@ -24,16 +27,14 @@ class CrwCrewProfileRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'crw_recruitment_approval_id'    => 'nullable|numeric',
-            'hired_by'                       => 'nullable',
-            'agency_id'                      => 'nullable|numeric',
-            'department_id'                  => 'nullable|numeric',
-            'crw_rank_id'                    => 'nullable|numeric',
+            'crw_recruitment_approval_id'    => 'numeric',
+            'agency_id'                      => 'numeric',
+            'department_id'                  => 'numeric',
+            'crw_rank_id'                    => 'numeric',
             'employee_type'                  => 'required|string|max:255',
             'is_officer'                     => 'required|boolean',
             'first_name'                     => 'required|string|max:100',
             'last_name'                      => 'required|string|max:100',
-            'full_name'                      => 'required|string|max:200',
             'father_name'                    => 'required|string|max:255',
             'mother_name'                    => 'required|string|max:255',
             'date_of_birth'                  => 'required|date',
@@ -42,11 +43,11 @@ class CrwCrewProfileRequest extends FormRequest
             'marital_status'                 => 'required|string|max:255',
             'nationality'                    => 'required|string|max:255',
             'nid_no'                         => 'nullable|string|max:255',
-            'passport_no'                    => 'nullable|string|max:255',
-            'passport_issue_date'            => 'nullable|date',
-            'blood_group'                    => 'nullable|string|max:255',
-            'height'                         => 'nullable|string|max:255',
-            'weight'                         => 'nullable|string|max:255',
+            'passport_no'                    => 'string|max:255',
+            'passport_issue_date'            => 'date',
+            'blood_group'                    => 'string|max:255',
+            'height'                         => 'string|max:255',
+            'weight'                         => 'string|max:255',
             'pre_address'                    => 'required|string|max:255',
             'pre_city'                       => 'required|string|max:255',
             'pre_mobile_no'                  => 'required|string|max:255',
@@ -54,9 +55,9 @@ class CrwCrewProfileRequest extends FormRequest
             'per_address'                    => 'required|string|max:255',
             'per_city'                       => 'required|string|max:255',
             'per_mobile_no'                  => 'required|string|max:255',
-            'per_email'                      => 'nullable|email|max:255',
-            'picture'                        => 'nullable|image|mimes:jpeg,png,gif,svg|max:2048',
-            'attachment'                     => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
+            'per_email'                      => 'email|max:255',
+            'picture'                        => 'image|mimes:jpeg,png,gif,svg|max:2048',
+            'attachment'                     => 'mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
             'business_unit'                  => 'required|in:PSML,TSLL',
 
             // Validation rules for educations_array
@@ -73,8 +74,8 @@ class CrwCrewProfileRequest extends FormRequest
             'trainings.*.covered_topic'      => 'required|string|max:255',
             'trainings.*.year'               => 'required|date_format:Y',
             'trainings.*.institute'          => 'required|string|max:255',
-            'trainings.*.duration'           => 'nullable|string|max:255',
-            'trainings.*.location'           => 'nullable|string|max:255',
+            'trainings.*.duration'           => 'string|max:255',
+            'trainings.*.location'           => 'string|max:255',
 
             // Validation rules for experiences_array
             'experiences.*.employer_name'    => 'required|string|max:255',

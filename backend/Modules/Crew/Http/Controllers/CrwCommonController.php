@@ -98,7 +98,7 @@ class CrwCommonController extends Controller
             {
                 $q->where('business_unit', request()->business_unit);
             })
-            ->with('crwRank:id,name')
+            ->with('crwCurrentRank')
             ->get();
 
             return response()->success('Retrieved Successfully', $crewProfiles, 200);
