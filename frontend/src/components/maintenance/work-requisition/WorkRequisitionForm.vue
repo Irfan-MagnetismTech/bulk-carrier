@@ -199,7 +199,7 @@
                     <button type="button" :class="{
                       'bg-yellow-600': jobLine.mnt_work_requisition_status === 0,
                       'bg-blue-600': jobLine.mnt_work_requisition_status === 1,
-                      'bg-green-600': jobLine.mnt_work_requisition_status === 2,
+                      'bg-green-600': jobLine.mnt_work_requisition_status === 2 || jobLine.mnt_work_requisition_status === null,
                   }" class="text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>

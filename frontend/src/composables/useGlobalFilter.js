@@ -25,7 +25,7 @@ export default function useGlobalFilter() {
        
         filterOptions.filter_options = filterOptions.filter_options.map((option) => ({
             ...option,
-            search_param: null,
+            search_param: "",
             order_by: null,
         }));
     }
