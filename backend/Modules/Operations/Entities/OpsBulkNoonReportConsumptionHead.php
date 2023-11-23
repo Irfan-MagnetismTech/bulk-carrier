@@ -9,5 +9,15 @@ class OpsBulkNoonReportConsumptionHead extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'ops_bulk_noon_report_consumption_id',
+        'scm_material_id',
+        'type',
+        'amount',
+    ];
+
+    public function scmMaterial()
+    {
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
+    }
 }
