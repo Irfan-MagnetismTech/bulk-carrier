@@ -78,18 +78,18 @@ class ScmPrRequest extends FormRequest
             'approved_date.required' => 'Approved date is required',
             'approved_date.date' => 'Approved date must be a date',
 
-            'scmPrLines.*.scm_material_id.required' => 'Material is required',
-            'scmPrLines.*.scm_material_id.integer' => 'Material must be an integer',
-            'scmPrLines.*.scm_material_id.exists' => 'Material is not found',
+            'scmPrLines.*.scm_material_id.required' => 'In row no :position Material is required',
+            'scmPrLines.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
+            'scmPrLines.*.scm_material_id.exists' => 'In row no :position Material is not found',
 
-            'scmPrLines.*.unit.required' => 'Unit is required',
-            'scmPrLines.*.unit.max' => 'Unit must be less than 255 characters',
+            'scmPrLines.*.unit.required' => 'In row no :position Unit is required',
+            'scmPrLines.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
 
-            'scmPrLines.*.quantity.required' => 'Quantity is required',
-            'scmPrLines.*.quantity.numeric' => 'Quantity must be a number',
+            'scmPrLines.*.quantity.required' => 'In row no :position Quantity is required',
+            'scmPrLines.*.quantity.numeric' => 'In row no :position Quantity must be a number',
 
-            'scmPrLines.*.required_date.required' => 'Required date is required',
-            'scmPrLines.*.required_date.date' => 'Required date must be a date',
+            'scmPrLines.*.required_date.required' => 'In row no :position Required date is required',
+            'scmPrLines.*.required_date.date' => 'In row no :position Required date must be a date',
         ];
     }
 

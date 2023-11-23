@@ -15,6 +15,8 @@ use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Modules\SupplyChain\Entities\ScmPo;
+use Modules\SupplyChain\Entities\ScmPrLine;
 
 class ScmPrController extends Controller
 {
@@ -192,6 +194,17 @@ class ScmPrController extends Controller
     public function destroy(ScmPr $purchase_requisition): JsonResponse
     {
         try {
+            $poLines = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
+            if ($poLines > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id" => ["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
+
             $purchase_requisition->scmPrLines()->delete();
             $purchase_requisition->delete();
 
