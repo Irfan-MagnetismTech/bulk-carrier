@@ -12,7 +12,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer Owner</span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -279,8 +279,9 @@ import useChartererContract from "../../composables/operations/useChartererContr
 
 const editInitiated = ref(false);
 
-const { searchChartererProfiles, chartererProfiles } = useChartererProfile();
-
+const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
+const { getChartererContractsByCharterOwner, chartererContracts } = useChartererProfile();
+useChartererContract();
 const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
 const props = defineProps({
@@ -310,31 +311,18 @@ watch(() => props.form.business_unit, (value) => {
 
 }, { deep : true })
 
-watch(() => props.form.opsVoyage, (value) => {
-  
-  if(value) {
-    props.form.ops_voyage_id = value?.id
-    props.form.ops_vessel_id = value?.ops_vessel_id
-    showVoyage(value?.id)
-    showVessel(value?.ops_vessel_id)
-  }
 
-}, { deep: true })
 
-watch(() => vessel, (value) => {
-  if(value?.value) {
-    props.form.vessel_name = value?.value?.name
-  }
-}, { deep: true })
 
-watch(() => voyage, (value) => {
-  if(value?.value) {
-    
-  }
-}, { deep: true })
+
+watch(() => props.form.ops_charterer_profile_id, (value) => {
+  getChartererContractsByCharterOwner(value);
+
+})
+
 
 onMounted(() => {
-  searchChartererProfiles();
+  getAllChartererProfiles();
 })
 // function attachFile(event, index) {
 //     let fileData = event.target.files[0];

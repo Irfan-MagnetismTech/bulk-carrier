@@ -236,6 +236,21 @@ export default function useChartererContract() {
 		}
 	}
 
+	async function getChartererContractsByCharterOwner(chartererProfileId) {
+		try {
+			const { data, status } = await Api.get('/ops/get-charterer-contracts-by-charter-profile?chartererProfileId=${charterer_profile_id}');
+			chartererContracts.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			//notification.showError(status);
+		} finally {
+			//loader.hide();
+			//isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		chartererContracts,
 		chartererContract,
@@ -246,6 +261,7 @@ export default function useChartererContract() {
 		updateChartererContract,
 		deleteChartererContract,
 		searchChartererContracts,
+		getChartererContractsByCharterOwner,
 		isLoading,		
 		isTableLoading,
 		errors,

@@ -24,8 +24,16 @@ class OpsChartererProfile extends Model
         'business_unit'
     ];
 
+    protected $appends = ['name_and_code'];
+
     public function opsChartererBankAccounts()
     {
         return $this->hasMany(OpsChartererBankAccount::class, 'ops_charterer_profile_id', 'id');
+    }
+
+    
+    public function getNameAndCodeAttribute(): string
+    {
+        return $this->name . ' - ' . $this->owner_code;
     }
 }
