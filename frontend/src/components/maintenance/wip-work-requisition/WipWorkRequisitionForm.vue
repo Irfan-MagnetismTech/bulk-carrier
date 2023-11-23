@@ -60,10 +60,22 @@
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person</span>
             <input type="text" :value="form.responsible_person" placeholder="Responsible Person Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+        </label>
+
+        <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Status </span>
+            <select v-model="form.status" class="form-input" >
+              <option value="" disabled selected>Select</option>
+              <option value="0" > Pending</option>
+              <option value="1" > WIP</option>
+              <!-- <option value="2" > Done</option> -->
+            </select>
+          <Error v-if="errors?.status" :errors="errors.status" />
         </label>
     </div>
 
@@ -106,11 +118,13 @@
                 </select>
             </td>
             <td class="px-1 py-1">
-              <input type="date" class="form-input" :min="form.act_start_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status == 0  }"  :disabled="mntWorkRequisitionLine.status == 0" :required="mntWorkRequisitionLine.status != 0" /> 
+              <input type="date" class="form-input" :min="form.act_start_date"  
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status == 0  }"  :disabled="mntWorkRequisitionLine.status == 0" :required="mntWorkRequisitionLine.status != 0" /> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
             <td class="px-1 py-1"> 
-              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" /> 
+              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" /> 
               <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" /> -->
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" />
             </td>
@@ -132,7 +146,7 @@
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
+            <th class="w-4/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
@@ -146,7 +160,7 @@
         </thead>
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
-            <td class="px-1 py-1">
+            <td class="px-1 py-1 flex items-center">
               <v-select :options="materials" placeholder="Enter Material Name" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
@@ -156,11 +170,11 @@
                         v-on="events"
                         />
                 </template>
-            </v-select>
+            </v-select> <span v-show="mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
             </td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.specification" placeholder="Specification" /></td>
             <td class="px-1 py-1"><input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionMaterial.unit" placeholder="Unit" readonly /></td>
-            <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" placeholder="Quantity" required /></td>
+            <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" :min="1"  placeholder="Quantity" required /></td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.remarks" placeholder="Remarks" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md"  @click="removeConsumedSparePart(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
@@ -195,6 +209,8 @@ import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiR
 import useMaterial from "../../../composables/supply-chain/useMaterial";
 import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
 import moment from 'moment';
+import useHeroIcon from "../../../assets/heroIcon";
+
 
 const { updateWipWorkRequisitionLine } = useWipWorkRequisition();
 const { vessels, getVesselsWithoutPaginate } = useVessel();
@@ -206,6 +222,7 @@ const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const { crews, getCrews } = useCrewCommonApiRequest();
 const { material, materials, getMaterials, searchMaterial } = useMaterial();
 const { workRequisitionStatus } = useMaintenanceHelper();
+const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
@@ -228,16 +245,18 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
 
-watch(() => props.form.mntWorkRequisitionMaterials, (value) => {
-  value?.forEach(val => {
-    if (!val.material_name_and_code) {
-      val.specification = '';
-      val.unit = '';
-      val.quantity = 0;
-      val.remarks = '';
+watch(() => props.form.mntWorkRequisitionMaterials, (mntWorkRequisitionMaterials) => {
+  mntWorkRequisitionMaterials?.forEach(mntWorkRequisitionMaterial => {
+    if (!mntWorkRequisitionMaterial.material_name_and_code) {
+      mntWorkRequisitionMaterial.specification = '';
+      mntWorkRequisitionMaterial.unit = '';
+      mntWorkRequisitionMaterial.quantity = 0;
+      mntWorkRequisitionMaterial.remarks = '';
+      mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate = false;
     }
     else {
-      val.unit = materials.value.find(mat => mat.material_name_and_code === val.material_name_and_code)?.unit;
+      mntWorkRequisitionMaterial.unit = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code)?.unit;
+      mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate = mntWorkRequisitionMaterials.filter(val => val.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code)?.length > 1;
     }
   });
 }, { deep: true });
@@ -278,6 +297,9 @@ function setStartAndCompletionDate(mntWorkRequisitionLine) {
   else if (mntWorkRequisitionLine.status == 1) {
     mntWorkRequisitionLine.completion_date = '';
     props.form.act_completion_date = '';
+  }
+  else if (mntWorkRequisitionLine.status == 2) {
+    props.form.status = 1;
   }
 }
 
