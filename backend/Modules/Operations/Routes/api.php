@@ -105,5 +105,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
     
+
+    //Business Info Apis
+    Route::get('bunker-consumptions', fn () => config('businessinfo.bunker_consumption_used_heads'));
+    Route::get('engine-temparature-types', fn () => config('businessinfo.engine_temparature_types'));
+
     Route::post('vessel-search', [OpsVesselController::class, 'search']);
 });
