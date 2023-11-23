@@ -182,14 +182,15 @@ class OpsChartererContractController extends Controller
             $charterer = OpsChartererContract::with('opsChartererProfile')
             ->where('ops_charterer_profile_id',request()->charterer_profile_id)
             ->first();
-            // $charterer = OpsChartererContract::with('opsChartererProfile')->query()
+            // $charterer = OpsChartererContract::query()
             // ->when(request()->has('charterer_profile_id'), function ($query) {
             //     $query->where(function ($subquery) {
             //         $subquery->where('ops_charterer_profile_id',request()->charterer_profile_id);
             //     });
             // })
-            // ->get();
-
+            // ->get();            
+            // $charterer->load('opsChartererProfile');
+            
             return response()->success('Data retrieved successfully.', $charterer, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
