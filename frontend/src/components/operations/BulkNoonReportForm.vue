@@ -358,184 +358,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td rowspan="4">VLSFO/IFO (MT)</td>
-          <td rowspan="4">
-            <input type="text" class="filter_input" v-model="form.opsBulkNoonReportConsumptions[0].previous_rob" placeholder="Previous ROB">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input" v-model="form.opsBulkNoonReportConsumptions[0].received" placeholder="Received">
-          </td>
-          <td>ME</td>
-          <td>
-            <input type="text" class="filter_input" v-model="form.opsBulkNoonReportConsumptions[0].me" placeholder="ME">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input" v-model="form.opsBulkNoonReportConsumptions[0].rob" placeholder="ROB">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>GE</td>
-          <td>
-            <input type="text" class="filter_input"  v-model="form.opsBulkNoonReportConsumptions[0].ge" placeholder="GE">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-
-
-
-        <tr>
-          <td rowspan="5">MGO (MT)</td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          <td>ME</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="5">
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>GE</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>IG</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-
-
-
-        <tr>
-          <td rowspan="4">LSMGO (MT)</td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-          <td>Main</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td rowspan="4">
-            <input type="text" class="filter_input">
-          </td>
-         
-        </tr>
-        <tr>
-          <td>Aux</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Blr</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          
-        </tr>
-        
-
-        <tr>
-          <td>MECC</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>Main</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-        </tr>
-
-        <tr>
-          <td>LSMECYL</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>ME Cyl. Oil</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-         
-        </tr>
-        <tr>
-          <td>LSAECC</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>GE Sys. Oil</td>
-          <td>
-            <input type="text" class="filter_input">
-          </td>
-          <td>
-            <input type="text" class="filter_input" autocomplete="off" />
-          </td>
+        <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
+            <td>
+              <span class="show-block">
+                {{ bunker?.name }}
+              </span>
+            </td>
+            <td>
+              <input type="text" class="form-input">
+            </td>
         </tr>
       </tbody>
     </table>
@@ -554,7 +385,7 @@
         </thead>
         <tbody>
 
-          <tr v-for="(certificate, index) in form.opsBunkers">
+          <tr >
 
           
           </tr>
@@ -627,61 +458,7 @@
     </div>
   </div>
 
-  <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
-    <h4 class="text-md font-semibold my-3">Bunker Info</h4>
-
-    <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
-          <tr class="w-full">
-            <th>SL</th>
-            <th class="w-72">Bunker Name</th>
-            <th>Unit</th>
-            <th><nobr> Bunkering </nobr></th>
-            <th><nobr> FUEL - CON/24H </nobr></th>
-            <th><nobr> FUEL - CON/Voyage </nobr></th>
-            <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(certificate, index) in form.opsBunkers">
-            <td>
-              {{ index+1 }}
-            </td>
-            <td>
-              
-              <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
-            </td>
-            <td>
-              <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.bunkering" :errors="errors.opsBunkers[index]?.bunkering" />
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
-              </label>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
-              </label>
-            </td>
-            <td class="hidden">
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
-                <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
-              </label>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  </div>
+ 
   
 </template>
 <script setup>
