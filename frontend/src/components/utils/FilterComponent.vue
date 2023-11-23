@@ -91,6 +91,7 @@ function setSortState(index, order) {
                   <component :is="option.component" v-model="filterOptions.select_options" v-bind="option.componentProps"/>
                 </template>
                 <template v-else>
+                  <input type="text" readonly placeholder="" class="filter_input vms-readonly-input" autocomplete="off" />
                 </template>
               </th>
               <th v-if="filterOptions.business_unit"><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
