@@ -21,14 +21,6 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('previous_rob')->nullable();
             $table->string('received')->nullable();
-            $table->float('me')->nullable();
-            $table->float('ge')->nullable();
-            $table->float('blr')->nullable();
-            $table->float('ig')->nullable();
-            $table->float('aux')->nullable();
-            $table->float('main')->nullable();
-            $table->float('me_cyl_oil')->nullable();
-            $table->float('ge_sys_oil')->nullable();
             $table->string('rob')->nullable();
             $table->timestamps();
         });
