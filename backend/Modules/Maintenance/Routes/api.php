@@ -61,9 +61,5 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-work-requisitions-wip', [MntWorkRequisitionController::class, 'indexWip']);
     // updateWip
     Route::put('update-work-requisition-wip/{id}', [MntWorkRequisitionController::class, 'updateWip']);
-    // updateWipLine
-    Route::put('update-work-requisition-line-wip/{id}', [MntWorkRequisitionController::class, 'updateWipLine']);
-
-
 
 });
