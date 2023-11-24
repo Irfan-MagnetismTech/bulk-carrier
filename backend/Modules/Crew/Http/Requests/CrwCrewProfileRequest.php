@@ -12,10 +12,7 @@ class CrwCrewProfileRequest extends FormRequest
         $data      = request('data');
         $dataArray = json_decode($data, true);
     
-        $mergeData = array_merge($dataArray, [
-            'picture' => request('picture'),
-            'attachment' => request('attachment')
-        ]);
+        $mergeData = array_merge($dataArray, ['logo' => request('logo')]);
     
         $this->replace($mergeData);
     }
@@ -42,7 +39,7 @@ class CrwCrewProfileRequest extends FormRequest
             'religion'                       => 'required|string|max:255',
             'marital_status'                 => 'required|string|max:255',
             'nationality'                    => 'required|string|max:255',
-            'nid_no'                         => 'nullable|string|max:255',
+            'nid_no'                         => 'string|max:255',
             'passport_no'                    => 'string|max:255',
             'passport_issue_date'            => 'date',
             'blood_group'                    => 'string|max:255',
@@ -51,7 +48,7 @@ class CrwCrewProfileRequest extends FormRequest
             'pre_address'                    => 'required|string|max:255',
             'pre_city'                       => 'required|string|max:255',
             'pre_mobile_no'                  => 'required|string|max:255',
-            'pre_email'                      => 'nullable|email|max:255',
+            'pre_email'                      => 'email|max:255',
             'per_address'                    => 'required|string|max:255',
             'per_city'                       => 'required|string|max:255',
             'per_mobile_no'                  => 'required|string|max:255',
@@ -66,8 +63,8 @@ class CrwCrewProfileRequest extends FormRequest
             'educations.*.institute'         => 'required|string|max:255',
             'educations.*.result'            => 'required|string|max:255',
             'educations.*.passing_year'      => 'required|date_format:Y',
-            'educations.*.duration'          => 'nullable|string|max:255',
-            'educations.*.achievement'       => 'nullable|string|max:255',
+            'educations.*.duration'          => 'string|max:255',
+            'educations.*.achievement'       => 'string|max:255',
 
             // Validation rules for trainings_array
             'trainings.*.training_title'     => 'required|string|max:255',
@@ -97,8 +94,8 @@ class CrwCrewProfileRequest extends FormRequest
             'references.*.designation'       => 'required|string|max:255',
             'references.*.address'           => 'required|string|max:255',
             'references.*.contact_personal'  => 'required|string|max:255',
-            'references.*.contact_office'    => 'nullable|string|max:255',
-            'references.*.email'             => 'nullable|email|max:255',
+            'references.*.contact_office'    => 'string|max:255',
+            'references.*.email'             => 'email|max:255',
             'references.*.relation'          => 'required|string|max:255',
 
             // Validation rules for nominees_array
@@ -106,8 +103,8 @@ class CrwCrewProfileRequest extends FormRequest
             'nominees.*.profession'          => 'required|string|max:255',
             'nominees.*.address'             => 'required|string|max:255',
             'nominees.*.relationship'        => 'required|string|max:255',
-            'nominees.*.contact_no'          => 'nullable|string|max:255',
-            'nominees.*.email'               => 'nullable|email|max:255',
+            'nominees.*.contact_no'          => 'string|max:255',
+            'nominees.*.email'               => 'email|max:255',
             'nominees.*.is_relative'         => 'required|string|max:255',
         ];
     }
