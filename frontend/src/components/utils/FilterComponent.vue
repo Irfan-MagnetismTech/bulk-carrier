@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRefs } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
 import FilterWithBusinessUnit from '../searching/FilterWithBusinessUnit.vue'
 import { itemsPerPageOptions } from '../../config/setting.js';
 import useGlobalFilter from '../../composables/useGlobalFilter';
