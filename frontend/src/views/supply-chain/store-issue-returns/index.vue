@@ -35,6 +35,59 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Store Issue Returns');
+
+
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Ref No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input" 
+    }
+  ]
+});
+
+
+
 // Code for global search starts here
 const currentPage = ref(1);
 const paginatedPage = ref(1);

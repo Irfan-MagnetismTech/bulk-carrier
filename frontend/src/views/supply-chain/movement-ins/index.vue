@@ -29,10 +29,6 @@ const props = defineProps({
 });
 
 const critical = ['No','Yes'];
-// Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "store_requisitions";
 
 const icons = useHeroIcon();
 
@@ -41,10 +37,62 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 setTitle('Movement Ins');
 // Code for global search starts here
-
-watch(searchKey, newQuery => {
-  getMovementIns(props.page, columns, searchKey.value, table);
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "MRR No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmPo",
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "PO No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmPr",
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "PR No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input"
+    },
+  ]
 });
+
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
+
 
 
 onMounted(() => {
@@ -61,7 +109,7 @@ onMounted(() => {
     }
     getMovementIns(filterOptions.value)
       .then(() => {
-        paginatedPage.value = filterOptions.value.page;
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
