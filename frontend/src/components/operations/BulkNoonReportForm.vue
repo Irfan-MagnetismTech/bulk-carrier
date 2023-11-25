@@ -287,11 +287,7 @@
             <th><nobr> Liq Temp </nobr></th>
             <th><nobr> Quantity (MT) </nobr></th>
             <th class="w-16">
-              <button type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
+              Action
             </th>
           </tr>
         </thead>
@@ -355,7 +351,7 @@
             <th>Type</th>
             <th>Previous ROB</th>
             <th>Received</th>
-            <th>Consumption Used For</th>
+            <th>Consumption</th>
             <th>ROB</th>
             <th>Action</th>
           </tr>
@@ -380,7 +376,7 @@
                 <input type="text" class="form-input">
               </td>
               <td>
-                <a @click="showBunkerConsumptionModal(bunker?.id)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+                <a @click="showBunkerConsumptionModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
                   <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                   </svg>
@@ -487,7 +483,7 @@
         <header class="flex justify-end">
           <button type="button"
                   class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark-disabled:hover:text-gray-200 hover: hover:text-gray-700"
-                  aria-label="close" @click="closeCrewDocumentAddModal">
+                  aria-label="close" @click="closeBunkerConsumptionModel">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
               <path
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -506,7 +502,7 @@
         </table>
 
         <div class="dt-responsive table-responsive">
-          <table id="dataTable" class="table table-striped table-bordered">
+          <table id="dataTable" class="w-full table table-striped table-bordered">
             <thead>
               <tr>
                 <th>Head</th>
@@ -515,28 +511,39 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="(details, index) in bunkerConsumptionDetails" :key="index">
                 <td>
-                  <select v-model.trim="form.validity_period" class="form-input" required>
+                  <select v-model.trim="details.type" class="form-input" required>
                     <option value="" disabled selected>Select</option>
-                    <option v-for="(item, index) in bunkerConsumptionHeads" :key="index">{{ item }}</option>
+                    <option v-for="(item, index2) in bunkerConsumptionHeads" :key="index2">{{ item }}</option>
                   </select>
                 </td>
                 <td>
-                  <input type="number" step="0.001" class="form-input" placeholder="Amount" />
+                  <input type="number" step="0.001" v-model.trim="details.amount" class="form-input text-right" placeholder="Amount" />
                 </td>
-                
+                <td>
+                  <button type="button" v-if="index>0" @click="removeConsumptionHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                  </button> 
+                  <button v-else type="button" @click="addConsumptionHead()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
-          <button type="button" @click="closeCrewDocumentAddModal" style="color: #1b1e21"
-                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+          <button type="button" @click="closeBunkerConsumptionModel" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             Cancel
           </button>
-          <button type="button"
+          <button type="button" @click="pushBunkerConsumption"
               class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             Submit
           </button>
@@ -575,10 +582,30 @@ const props = defineProps({
 });
 
 const isBunkerConsumptionModalOpen = ref(0);
+const bunkerConsumptionDetails = ref([{type: ''}]);
+const currentConsumptionIndex = ref(null);
 
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
+  currentConsumptionIndex.value = opsBunkerIndex
+  if(props.form.opsBunkers[opsBunkerIndex]?.bunkerConsumptionDetails) {
+    bunkerConsumptionDetails.value = props.form.opsBunkers[opsBunkerIndex]?.bunkerConsumptionDetails
+  } else {
+    bunkerConsumptionDetails.value = [{type: ''}]
+  }
 }
+
+function closeBunkerConsumptionModel() {
+  isBunkerConsumptionModalOpen.value = 0
+  bunkerConsumptionDetails.value = [{type: ''}]
+}
+
+function pushBunkerConsumption() {
+  props.form.opsBunkers[currentConsumptionIndex.value].bunkerConsumptionDetails = bunkerConsumptionDetails.value
+  bunkerConsumptionDetails.value = [{type: ''}]
+  isBunkerConsumptionModalOpen.value = 0
+}
+
 function addPort() {
   props.form.opsBulkNoonReportPorts.push({...props.portObject});
 }
@@ -594,6 +621,16 @@ function addTank() {
 function removeTank(index) {
   props.form.opsBulkNoonReportCargoTanks.splice(index, 1);
 }
+
+function addConsumptionHead() {
+  bunkerConsumptionDetails.value.push({type: ''});
+}
+
+function removeConsumptionHead(index) {
+  bunkerConsumptionDetails.value.splice(index, 1);
+}
+
+
 
 watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
