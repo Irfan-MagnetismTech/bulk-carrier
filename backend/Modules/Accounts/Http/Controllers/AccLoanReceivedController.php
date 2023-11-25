@@ -18,8 +18,7 @@ class AccLoanReceivedController extends Controller
     public function index(Request $request)
     {
         try {
-            return AccLoanReceived::all(); 
-            $accLoanReceiveds = AccLoanReceived::globalSearch($request->all());
+            $accLoanReceiveds = AccLoanReceived::with('loan')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accLoanReceiveds, 200);
         }
@@ -51,7 +50,7 @@ class AccLoanReceivedController extends Controller
     public function show(AccLoanReceived $accLoanReceived)
     {
         try {
-            return response()->success('Retrieved Successfully', $accLoanReceived, 200);
+            return response()->success('Retrieved Successfully', $accLoanReceived->load('loan', 'bank'), 200);
         }
         catch (QueryException $e)
         {

@@ -44,7 +44,7 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::apiResource('acc-transactions', AccTransactionController::class);
     Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class);
     Route::apiResource('acc-loans', AccLoanController::class);
-    Route::apiResource('acc-loan-receiveds', AccLoanReceivedController::class);
+    Route::apiResource('acc-loan-received', AccLoanReceivedController::class);
     Route::apiResource('acc-fixed-assets', AccFixedAssetController::class);
     Route::apiResource('acc-depreciations', AccDepreciationController::class);
     Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class);
@@ -59,6 +59,8 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('get-balance-income-accounts', [AccCommonController::class, 'getBalanceIncomeAccounts']);
     Route::post('get-accounts', [AccCommonController::class, 'getAccounts']);
     Route::post('generate-account-code', [AccCommonController::class, 'generateAccountCode']);
+    Route::post('get-loans', [AccCommonController::class, 'getLoans']);
+    Route::post('get-banks', [AccCommonController::class, 'getBanks']);
 
 
 //    //Common routes

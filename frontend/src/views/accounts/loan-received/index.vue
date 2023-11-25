@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useLoan from "../../../composables/accounts/useLoan";
+import useLoanReceived from "../../../composables/accounts/useLoanReceived";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -20,9 +20,9 @@ const props = defineProps({
   },
 });
 
-const { loans, getLoans, deleteLoan, isLoading, isTableLoading} = useLoan();
+const { loansReceived, getLoansReceived, deleteLoanReceived, isLoading, isTableLoading} = useLoanReceived();
 const { setTitle } = Title();
-setTitle('Loan');
+setTitle('Loan Received');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -44,39 +44,7 @@ let filterOptions = ref({
   "page": props.page,
   "filter_options": [
     {
-      "relation_name": null,
-      "field_name": "sanctioned_limit",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": null,
-      "field_name": "sanctioned_limit",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": null,
-      "field_name": "loan_type",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": null,
-      "field_name": "loan_number",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    },
-    {
-      "relation_name": null,
+      "relation_name": 'loan',
       "field_name": "loan_name",
       "search_param": "",
       "action": null,
@@ -85,7 +53,7 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "total_sanctioned",
+      "field_name": "received_date",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -93,12 +61,44 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "sanctioned_limit",
+      "field_name": "payment_method",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null
     },
+    {
+      "relation_name": 'receivedAccount',
+      "field_name": "account_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": 'instrument_no',
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },    
+    {
+      "relation_name": null,
+      "field_name": "received_amount",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "interest_rate",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    }
   ]
 });
 
@@ -124,7 +124,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteLoan(id);
+      deleteLoanReceived(id);
     }
   })
 }
@@ -148,7 +148,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getLoans(filterOptions.value)
+    getLoansReceived(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
@@ -175,13 +175,12 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Loan List</h2>
-    <default-button :title="'Create Loan'" :to="{ name: 'acc.loans.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Loan Received List</h2>
+    <default-button :title="'Create Loan Received'" :to="{ name: 'acc.loan-received.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
@@ -192,7 +191,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Source Type</span>
+                  <span>Loan Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -201,7 +200,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Source Name</span>
+                  <span>Received Date</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -210,7 +209,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Loan Type</nobr></span>
+                  <span><nobr>Payment Method</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -219,41 +218,42 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Loan Number</span>
+                  <span>Received Account Name</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
+
                <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Loan Name</span>
+                  <span>Instrument No </span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
+              
                <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Total Sanctioned</span>
+                  <span>Received Amount</span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
                <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Sanctioned Limit</span>
+                  <span>Interest Rate (%)</span>
                   <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
+                    <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
-
              <th>
               <div class="flex justify-evenly item-center">
                 <span><nobr>Business Unit</nobr></span>
@@ -277,8 +277,6 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-                            
                <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -288,31 +286,30 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody class="relative">
-                <tr v-for="(loan,index) in loans?.data" :key="index">
-                  <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ loan?.loanable_type }}</td>
-                  <td>{{ loan?.loanable_id }}</td>
-                  <td>{{ loan?.loan_type }}</td>
-                  <td>{{ loan?.loan_number }}</td>
-                  <td>{{ loan?.loan_name }}</td>
-                  <td>{{ loan?.total_sanctioned }}</td>
-                  <td>{{ loan?.sanctioned_limit }}</td>
-                <td>
-                  <span :class="loan?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
-                    {{ loan?.business_unit }}
-                  </span>
-                </td>
-                <td>
-                  <nobr>
-                    <action-button :action="'edit'" :to="{ name: 'acc.loans.edit', params: { loanId: loan?.id } }"></action-button>
-                    <action-button @click="confirmDelete(loan?.id)" :action="'delete'"></action-button>
-                  </nobr>
-                </td>
-              </tr>
-
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && loans?.data?.length"></LoaderComponent>
+            <tr v-for="(loanReceived,index) in loansReceived?.data" :key="index">
+              <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
+              <td>{{ loanReceived?.loan?.loan_name }}</td>
+              <td>{{ loanReceived?.received_date }}</td>
+              <td>{{ loanReceived?.payment_method }}</td>
+              <td>{{ loanReceived?.received_acc_account_id }}</td>
+              <td>{{ loanReceived?.instrument_no }}</td>
+              <td>{{ loanReceived?.received_amount }}</td>
+              <td>{{ loanReceived?.interest_rate }}</td>
+            <td>
+              <span :class="loanReceived?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
+                {{ loanReceived?.business_unit }}
+              </span>
+            </td>
+            <td>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'acc.loan-received.edit', params: { loanReceivedId: loanReceived?.id } }"></action-button>
+                <action-button @click="confirmDelete(loanReceived?.id)" :action="'delete'"></action-button>
+              </nobr>
+            </td>
+          </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && loansReceived?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!loans?.data?.length">
+          <tfoot v-if="!loansReceived?.data?.length">
           <tr v-if="isLoading">
             <td colspan="13">Loading...</td>
           </tr>
@@ -321,12 +318,12 @@ onMounted(() => {
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
-          <tr v-else-if="!loans?.data?.length">
+          <tr v-else-if="!loansReceived?.data?.length">
             <td colspan="13">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="loans" to="acc.loans.index" :page="page"></Paginate>
+    <Paginate :data="loansReceived" to="acc.loan-received.index" :page="page"></Paginate>
   </div>
 </template>
