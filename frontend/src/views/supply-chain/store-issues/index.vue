@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useStoreIssue from "../../../composables/supply-chain/useStoreIssue";
@@ -10,9 +10,12 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import { useRouter } from 'vue-router';
-
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getStoreIssues, storeIssues, deleteStoreIssue, isLoading } = useStoreIssue();
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
+const { getStoreIssues, storeIssues, deleteStoreIssue, isLoading ,errors,isTableLoading} = useStoreIssue();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -26,10 +29,6 @@ const props = defineProps({
 });
 
 const critical = ['No','Yes'];
-// Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "store_requisitions";
 
 const icons = useHeroIcon();
 
@@ -39,15 +38,28 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 setTitle('Store Issues');
 // Code for global search starts here
 
-watch(searchKey, newQuery => {
-  getStoreIssues(props.page, columns, searchKey.value, table);
-});
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 onMounted(() => {
-  watchEffect(() => {
-    getStoreIssues(props.page,businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'scm.store-issues.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getStoreIssues(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -127,7 +139,7 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Ref No</th>
@@ -137,10 +149,11 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(storeIssue,index) in (storeIssues?.data ? storeIssues?.data : storeIssues)" :key="index">
-              <td>{{ storeIssues?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeIssue?.ref_no }}</td>
               <td>{{ storeIssue?.date }}</td>
               <td>{{ storeIssue?.scmWarehouse?.name?? '' }}</td>
@@ -157,15 +170,20 @@ function confirmDelete(id) {
                 </div>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && storeIssues?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!storeIssues?.data?.length" class="bg-white dark-disabled:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="8">Loading...</td>
-        </tr>
-        <tr v-else-if="!storeIssues?.data?.length">
-          <td colspan="8">No SI found.</td>
-        </tr>
-        </tfoot>
+          <tfoot v-if="!storeIssues?.data?.length" class="relative h-[250px]">
+              <tr v-if="isLoading">
+              </tr>
+              <tr v-else-if="isTableLoading">
+                  <td colspan="7">
+                    <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                  </td>
+              </tr>
+              <tr v-else-if="!storeIssues?.data?.length">
+                <td colspan="7">No Data found.</td>
+              </tr>
+          </tfoot>
       </table>
     </div>
     <Paginate :data="storeIssues" to="scm.store-issues.index" :page="page"></Paginate>
@@ -174,5 +192,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

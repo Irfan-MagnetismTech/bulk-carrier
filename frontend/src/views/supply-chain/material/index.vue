@@ -11,6 +11,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
@@ -41,7 +42,6 @@ let filterOptions = ref( {
       "date_from": null,
       "label": "Material Name",
       "filter_type": "input",
-      "class": "w-1/2"
     },
     {
       "relation_name": null,
@@ -193,4 +193,5 @@ function confirmDelete(id) {
     </div>
     <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

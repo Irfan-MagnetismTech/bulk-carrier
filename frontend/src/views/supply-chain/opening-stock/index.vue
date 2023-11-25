@@ -11,10 +11,12 @@ import useHeroIcon from '../../../assets/heroIcon'
 import useDebouncedRef from '../../../composables/useDebouncedRef'
 import FilterWithBusinessUnit from '../../../components/searching/FilterWithBusinessUnit.vue'
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading, isTableLoading } =
+const { getOpeningStocks, openingStocks, deleteOpeningStock, isLoading, isTableLoading ,errors} =
     useOpeningStock()
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit)
 
@@ -245,4 +247,5 @@ function confirmDelete(id) {
             :page="page"
         ></Paginate>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

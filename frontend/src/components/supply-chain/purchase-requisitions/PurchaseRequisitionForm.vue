@@ -63,10 +63,12 @@
       fetchAllStoreCategories();
       fetchMaterials('');
       watchEffect(() => {
-        console.log('sdfsd');
         fetchWarehouse('');
       });
     });
+
+
+    
 
     function fetchAllStoreCategories() {
       getAllStoreCategories().then(AllStoreCategories => {
@@ -136,6 +138,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
       }
     }
   });
+  
+  if (props.form.scmPrLines.length === 0) {
+        addMaterial();
+  }
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
@@ -226,13 +232,22 @@ watch(() => props.form.scmPrLines, (newLines) => {
   </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
-        <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Attachment</span>
         <input type="file" class="form-input" @change="handleAttachmentChange" />
         <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
     </label>
     <label class="label-group">
-        <span class="label-item-title">Purchase Center</span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></v-select>
+        <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.purchase_center"
+                  v-bind="attributes"
+                  v-on="events"
+              />  
+          </template>        
+        </v-select>
         <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
@@ -244,7 +259,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks </span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
@@ -266,26 +281,26 @@ watch(() => props.form.scmPrLines, (newLines) => {
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
-    <div id="customDataTable">
-    <div class="table-responsive min-w-screen">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <div id="customDataTable" class="!max-w-screen overflow-scroll"> 
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 !max-w-screen">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap overflow-x-auto">
+        <div class="overflow-x-auto !w-100px"> 
+        <table class="table-auto">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="py-3 align-center w-10">Material Name </th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Brand</th>
-            <th class="py-3 align-center">Model</th>
-            <th class="py-3 align-center">Specification</th>
-            <th class="py-3 align-center">Origin</th>
-            <th class="py-3 align-center">Sample</th>
-            <th class="py-3 align-center">Drawing No</th>
-            <th class="py-3 align-center">Part No</th>
-            <th class="py-3 align-center">ROB</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 text-center align-center">Action</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name </th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Unit</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Brand</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Model</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Specification</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Origin</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Sample</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Drawing No</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Part No</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">ROB</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Qty</th>
+            <th class="whitespace-no-wrap py-3 align-center min-w-[100px] md:min-w-[125px] lg:min-w-[150px]">Required Date</th>
+            <th class="whitespace-no-wrap py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
@@ -302,6 +317,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
                         v-on="events"
                         />
                 </template>
+                  <template #option="{ option, onOptionClick }">
+                   
+
+                 </template>
             </v-select>
             </td>
             <td>
@@ -352,12 +371,12 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmPrLines[index].rob" class="form-input">
+                 <input type="text" readonly v-model="form.scmPrLines[index].rob" class="form-input vms-readonly-input">
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmPrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmPrLines[index].quantity" class="form-input">
               </label>
             </td>
             <td>
@@ -380,8 +399,8 @@ watch(() => props.form.scmPrLines, (newLines) => {
           </tr>
           </tbody>
         </table>
+      </div>
       </fieldset>
-    </div>
     </div>
   </div>
 
@@ -441,4 +460,27 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
  
 
+ 
+    #customDataTable::-webkit-scrollbar:horizontal {
+      height: 0.3rem!important; 
+    }
+  
+    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgba(126, 58, 242); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-button:horizontal {
+      background-color: rgb(0, 0, 0); 
+    }   
+
+  
 </style>

@@ -30,11 +30,11 @@ setTitle('Create Store Issue');
 </script>
 <template>
     <!-- Heading -->
-    <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
+    <div class="flex items-center justify-between w-full my-3" v-once>
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Store Issue</h2>
         <default-button :title="'PR List'" :to="{ name: 'scm.store-issues.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeStoreIssue(storeIssue)">
           <store-issue-form v-model:form="storeIssue" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></store-issue-form>
             <!-- Submit button -->

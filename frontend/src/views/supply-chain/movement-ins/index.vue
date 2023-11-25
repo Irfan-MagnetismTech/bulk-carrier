@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMovementIn from "../../../composables/supply-chain/useMovementIn";
@@ -10,9 +10,12 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import { useRouter } from 'vue-router';
-
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getMovementIns, movementIns, deleteMovementIn, isLoading } = useMovementIn();
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
+const { getMovementIns, movementIns, deleteMovementIn, isLoading,isTableLoading } = useMovementIn();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -45,9 +48,20 @@ watch(searchKey, newQuery => {
 
 
 onMounted(() => {
-  watchEffect(() => {
-    getMovementIns(props.page,businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'scm.movement-ins.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getMovementIns(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -138,7 +152,7 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Ref No</th>
@@ -149,10 +163,11 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(movementIn,index) in (movementIns?.data ? movementIns?.data : movementIns)" :key="index">
-              <td>{{ movementIns?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ movementIn?.ref_no }}</td>
               <td>{{ movementIn?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.toWarehouse?.name?? '' }}</td>
@@ -171,15 +186,20 @@ function confirmDelete(id) {
                 </div>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && movementIns?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!movementIns?.data?.length" class="bg-white dark-disabled:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="8">Loading...</td>
-        </tr>
-        <tr v-else-if="!movementIns?.data?.length">
-          <td colspan="8">No MI found.</td>
-        </tr>
-        </tfoot>
+          <tfoot v-if="!movementIns?.data?.length" class="relative h-[250px]">
+              <tr v-if="isLoading">
+              </tr>
+              <tr v-else-if="isTableLoading">
+                  <td colspan="7">
+                    <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                  </td>
+              </tr>
+              <tr v-else-if="!movementIns?.data?.length">
+                <td colspan="7">No Data found.</td>
+              </tr>
+          </tfoot>
       </table>
     </div>
     <Paginate :data="movementIns" to="scm.movement-ins.index" :page="page"></Paginate>
@@ -188,5 +208,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

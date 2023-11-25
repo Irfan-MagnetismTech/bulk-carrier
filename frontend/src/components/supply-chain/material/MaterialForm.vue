@@ -100,7 +100,7 @@
                     <!-- <Error v-if="errors?.material_code" :errors="errors.material_code" /> -->
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Category Name <span class="required-style">*</span></span>
+                    <span class="label-item-title">Material Category <span class="required-style">*</span></span>
                     <v-select
                       :key="categoryKey"
                       :options="materialCategories"

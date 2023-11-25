@@ -18,6 +18,7 @@ export default function useMovementIn() {
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
     const filteredMovementRequisitionLines = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -79,26 +80,28 @@ export default function useMovementIn() {
 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getMovementIns(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+    async function getMovementIns(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions; //NProgress.start();
         try {
             const {data, status} = await Api.get(`/${BASE}/movement-ins`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             movementIns.value = data.value;
             notification.showSuccess(status);
@@ -106,9 +109,14 @@ export default function useMovementIn() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storeMovementIn(form) {
@@ -181,10 +189,10 @@ console.log(movementIn.value);
         try {
             const { data, status } = await Api.delete( `/${BASE}/movement-ins/${movementInId}`);
             notification.showSuccess(status);
-            await getMovementIns(indexPage.value,indexBusinessUnit.value);
+            await getMovementIns(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -235,6 +243,7 @@ console.log(movementIn.value);
         filteredMovementRequisitionLines,
         getMmrWiseMi,
         materialObject,
+        isTableLoading,
         isLoading,
         errors,
     };
