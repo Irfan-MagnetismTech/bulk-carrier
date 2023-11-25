@@ -1,9 +1,11 @@
 <script setup>
-import { ref, toRefs } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
 import FilterWithBusinessUnit from '../searching/FilterWithBusinessUnit.vue'
 import { itemsPerPageOptions } from '../../config/setting.js';
 import useGlobalFilter from '../../composables/useGlobalFilter';
 import useHeroIcon from '../../assets/heroIcon';
+import useDebouncedRef from "../../composables/useDebouncedRef";
+
 
 
 const props = defineProps({
@@ -24,7 +26,13 @@ const itemsPerPage = [
   { label: '100', value: 100 },
 ];
 
-;
+onMounted(() => {
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
+
+});
+
 
 function clear(){
   clearFilter(filterOptions.value);
