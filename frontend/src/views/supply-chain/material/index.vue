@@ -40,7 +40,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Material Name",
-      "filter_type": "input" 
+      "filter_type": "input",
+      "class": "w-1/2"
     },
     {
       "relation_name": null,

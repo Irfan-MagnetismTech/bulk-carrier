@@ -12,9 +12,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 import { useRouter } from 'vue-router';
-const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading ,isTableLoading} = usePurchaseRequisition();
+const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading ,isTableLoading, errors} = usePurchaseRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -246,6 +247,6 @@ function confirmDelete(id) {
   <!-- Heading -->
   
   
-
+  <ErrorComponent :errors="errors"></ErrorComponent> 
   
 </template>
