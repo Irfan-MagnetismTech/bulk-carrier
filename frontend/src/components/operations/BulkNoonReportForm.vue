@@ -86,79 +86,77 @@
     </div>
 </div>
 
-<!-- Ports -->
-  <h4 class="text-md font-semibold my-3">Upcoming Ports</h4>
-  <div class="dt-responsive table-responsive">
-    <table id="dataTable" class="w-full table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th class="w-64">Last Port</th>
-          <th class="w-64">Next Port</th>
-          <th>ETA</th>
-          <th>Distance Run</th>
-          <th>DTG</th>
-          <th>Remarks</th>
-          <th class="w-16">
-            Action
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
-          <td>
-            <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
-              <template #search="{attributes, events}">
-                  <input
-                      class="vs__search"
-                      :required="!form.opsBulkNoonReportPorts[index].lastPort"
-                      v-bind="attributes"
-                      v-on="events"
-                      />
-              </template>
-            </v-select>
-            <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
-          </td>
-          <td>
-            <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
-              <template #search="{attributes, events}">
-                  <input
-                      class="vs__search"
-                      :required="!form.opsBulkNoonReportPorts[index].nextPort"
-                      v-bind="attributes"
-                      v-on="events"
-                      />
-              </template>
-            </v-select>
-            <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
-          </td>
-          <td>
-            <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].remarks">
-          </td>
-          <td>
-            <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-              </svg>
-            </button> 
-            <button v-else type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<!-- Upcoming Ports -->
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Upcoming Ports</legend>
+    <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700">Last Port </span>
+                <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.opsBulkNoonReportPorts[index].lastPort"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+                </v-select>
+                <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Last Port </span>
+          <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.opsBulkNoonReportPorts[index].nextPort"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+          </v-select>
+          <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
+        </label>
+
+      </div>
+
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">ETA </span>
+          <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Distance Run </span>
+          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Distance Run </span>
+          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">DTG </span>
+          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg">
+        </label>
+      </div>
+
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
+        <button type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+          </svg>
+        </button> 
+        
+      </div>
+    </div>
+  </fieldset>
+
 
 <!-- Distance and Vessel -->
   <div>
