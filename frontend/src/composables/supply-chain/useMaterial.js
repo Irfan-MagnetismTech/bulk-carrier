@@ -117,8 +117,6 @@ export default function useMaterial() {
         isLoading.value = true;
         const formData = processFormData(form);
         formData.append('_method', 'PUT');
-        
-        console.log(formData,form);
         try {
             const { data, status } = await Api.post(
                 `/${BASE}/materials/${materialId}`,
@@ -146,7 +144,7 @@ export default function useMaterial() {
             await getMaterials(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             isLoading.value = false;

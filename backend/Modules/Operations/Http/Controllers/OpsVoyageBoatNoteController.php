@@ -53,7 +53,7 @@ class OpsVoyageBoatNoteController extends Controller
     */
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
-        // dd($request);
+        // dd($request->opsVoyageBoatNoteLines);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -63,19 +63,20 @@ class OpsVoyageBoatNoteController extends Controller
 
 
             foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
-                if($note_line->voyage_note_type == "Boat Note"){
+                // dd();
+                if($note_line['voyage_note_type'] == "Boat Note"){
                     $data= [
                         'boat_note_qty'=>  $note_line['boat_note_qty']
                     ];
-                }else if($note_line->voyage_note_type == "Final Survey"){
+                }else if($note_line['voyage_note_type'] == "Final Survey"){
                     $data= [
                         'final_survey_qty'=>  $note_line['final_survey_qty']
                     ];
-                }else if($note_line->voyage_note_type == 'Receipt Copy'){
+                }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
                     $data= [
                         'final_received_qty'=>  $note_line['final_received_qty']
                     ];
-                }else if($note_line->voyage_note_type == 'Draft Survey'){
+                }else if($note_line['voyage_note_type'] == 'Draft Survey'){
                     $data= [
                         'initial_survey_qty'=>  $note_line['initial_survey_qty']
                     ];
@@ -86,7 +87,7 @@ class OpsVoyageBoatNoteController extends Controller
             }
 
             $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
-
+            // dd($boat_note_lines);
             $voyageBoatNote = OpsVoyageBoatNote::create($voyageBoatNoteInfo);
             $voyageBoatNote->opsVoyageBoatNoteLines()->createMany($boat_note_lines);
             DB::commit();
@@ -108,7 +109,14 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function show(OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-        $voyage_boat_note->load('opsVessel','opsVoyage','opsVoyageBoatNoteLines');
+        $voyage_boat_note->load('opsVessel','opsVoyage.opsVoyageSectors','opsVoyageBoatNoteLines.loadingPoint','opsVoyageBoatNoteLines.unloadingPoint');
+
+        $voyage_boat_note->opsVoyageBoatNoteLines->map(function($line) {
+            $line->loading_point_name_code = $line->loadingPoint->name.'-'.$line->loadingPoint->code;
+            $line->unloading_point_name_code = $line->unloadingPoint->name.'-'.$line->unloadingPoint->code;
+            return $line;
+        });
+
         try
         {
             return response()->success('Data retrieved successfully.', $voyage_boat_note, 200);
@@ -129,6 +137,8 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
+
+        // dd($request);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -140,25 +150,22 @@ class OpsVoyageBoatNoteController extends Controller
             
             $voyage_boat_note->update($voyageBoatNoteInfo);
             
-            foreach($voyage_boat_note->opsVoyageBoatNoteLines as $note_line){
-                if($request->type == "Boat Note"){
-                    $data= [
-                        'boat_note_qty'=>  $note_line['boat_note_qty']
-                    ];
-                }else if($request->type == "Final Survey"){
-                    $data= [
-                        'final_survey_qty'=>  $note_line['final_survey_qty']
-                    ];
-                }else if($request->type == 'Receipt Copy'){
-                    $data= [
-                        'final_received_qty'=>  $note_line['final_received_qty']
-                    ];
+            foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+                $voyage_sector=OpsVoyageSector::find($note_line['voyage_sector_id']);          
+                if($note_line['voyage_note_type'] == "Boat Note"){                    
+                    $voyage_sector->boat_note_qty=$note_line['quantity'];
+                }else if($note_line['voyage_note_type'] == "Final Survey"){
+                    $voyage_sector->final_survey_qty=$note_line['quantity'];                    
+                }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
+                    $voyage_sector->final_received_qty=$note_line['quantity'];
+                }else if($note_line['voyage_note_type'] == 'Draft Survey'){
+                    $voyage_sector->initial_survey_qty=$note_line['quantity'];
                 }
-                $voyage_sector=OpsVoyageSector::find($note_line['id']);
-                $voyage_sector->update($data);
+                $voyage_sector->save();
             }
             
-            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment ,$voyage_boat_note->opsVoyageBoatNoteLines);
+            // dd($voyage_boat_note->opsVoyageBoatNoteLines);
+            $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines, $request->attachment , $voyage_boat_note->opsVoyageBoatNoteLines);
 
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->opsVoyageBoatNoteLines()->createMany($boat_note_lines);

@@ -69,18 +69,37 @@ export default function useChartererContract() {
 		}]
 	});
 	const errors = ref(null);
-	const isLoading = ref(false);
+	const isLoading = ref(false);	
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
+	const isTableLoading = ref(false);
 
-	async function getChartererContracts(page, businessUnit) {
+	async function getChartererContracts(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		let loader = null;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/charterer-contracts', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
 				}
 			});
 			chartererContracts.value = data.value;
@@ -89,9 +108,14 @@ export default function useChartererContract() {
 			const { data, status } = error.response;
 			//notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -212,6 +236,21 @@ export default function useChartererContract() {
 		}
 	}
 
+	async function getChartererContractsByCharterOwner(chartererProfileId) {
+		try {
+			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?charterer_profile_id=${chartererProfileId}`);
+			chartererContracts.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			//notification.showError(status);
+		} finally {
+			//loader.hide();
+			//isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		chartererContracts,
 		chartererContract,
@@ -222,7 +261,9 @@ export default function useChartererContract() {
 		updateChartererContract,
 		deleteChartererContract,
 		searchChartererContracts,
-		isLoading,
+		getChartererContractsByCharterOwner,
+		isLoading,		
+		isTableLoading,
 		errors,
 	};
 }

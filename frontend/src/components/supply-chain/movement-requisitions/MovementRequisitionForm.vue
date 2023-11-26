@@ -96,7 +96,7 @@
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMmrLine, index) in form.scmMmrLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMmrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMmrLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmMmrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -225,35 +225,27 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  function fetchFromWarehouse(search) {
-      if (search.length > 0) {
-        // loading(true);
-        searchWarehouse(search, props.form.business_unit);
-      }
-    }
-
-function fetchToWarehouse(search) {
-    if (search.length > 0) {
-        // loading(true);
-      searchWarehouse(search, props.form.business_unit);
-    }
+  function fetchWarehouse(search){
+  searchWarehouse(search,props.form.business_unit);
 }
+
+
 
 watch(() => props.form.fromWarehouse, (value) => {
         props.form.from_warehouse_id = value?.id;
         props.form.from_cost_center_id = value?.acc_cost_center_id;
     // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
     // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
-    warehouses.value = [];
-    fromWarehouseKey.value++;
-    toWarehouseKey.value++;
+    // warehouses.value = [];
+    // fromWarehouseKey.value++;
+    // toWarehouseKey.value++;
     });
   watch(() => props.form.toWarehouse, (value) => {
         props.form.to_warehouse_id = value?.id;
         props.form.to_cost_center_id = value?.acc_cost_center_id;
-    warehouses.value = [];
-    fromWarehouseKey.value++;
-    toWarehouseKey.value++;
+    // warehouses.value = [];
+    // fromWarehouseKey.value++;
+    // toWarehouseKey.value++;
   });
 
  
@@ -262,12 +254,12 @@ watch(() => props.form.fromWarehouse, (value) => {
   //       props.form.acc_cost_center_id = value?.acc_cost_center_id;
   //   });
 
-function setMaterialOtherData(datas, index) {
-      props.form.scmMmrLines[index].unit = datas.unit;
-      props.form.scmMmrLines[index].scm_material_id = datas.id;
-      getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
-      materials.value = [];
-}
+// function setMaterialOtherData(datas, index) {
+//       props.form.scmMmrLines[index].unit = datas.unit;
+//       props.form.scmMmrLines[index].scm_material_id = datas.id;
+//       getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
+//       materials.value = [];
+// }
 
 watch(() => stockData.value, (newValue) => {
   console.log(newValue);
@@ -292,6 +284,7 @@ watch(() => props.form.scmMmrLines, (newLines) => {
         ) {
           props.form.scmMmrLines[index].unit = selectedMaterial.unit;
           props.form.scmMmrLines[index].scm_material_id = selectedMaterial.id;
+          getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, selectedMaterial.id, index);
         }
       }
     }
@@ -301,10 +294,7 @@ watch(() => props.form.scmMmrLines, (newLines) => {
 
 
 function fetchMaterials(search) {
-  if (search.length > 0) {
-    // loading(true);
     searchMaterial(search)
-  }
   }
 
 
@@ -337,6 +327,10 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
+  fetchMaterials('');
+  watchEffect(() => {
+    fetchWarehouse('');
+    });
 });
 </script>
 

@@ -134,23 +134,25 @@ export default function useTransaction() {
 
     async function updateTransaction(form, transactionId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if(!checkCreditAndDebitAmount(form)){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.put(
-                `/acc/acc-transactions/${transactionId}`,
-                form
-            );
-            transaction.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "acc.transactions.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.put(
+                    `/acc/acc-transactions/${transactionId}`,
+                    form
+                );
+                transaction.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "acc.transactions.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -177,7 +179,7 @@ export default function useTransaction() {
         let isHasError = false;
         form.ledgerEntries?.forEach((item,index) => {
             if((parseFloat(item.cr_amount) === 0 && parseFloat(item.dr_amount) === 0) || parseFloat(item.cr_amount) > 0 && parseFloat(item.dr_amount) > 0){
-                let data = `Ledger Entries [line :${index + 1}] Either Credit Amount or Debit Amount must be non-zero and can't be zero at once.`;
+                let data = `Ledger Entries [line :${index + 1}] Either credit amount or debit amount must be non-zero and can't be zero at once.`;
                 messages.value.push(data);
             }
             if((parseFloat(form.total_credit_amount) !== parseFloat(form.total_debit_amount)) && index === (form.ledgerEntries.length - 1)){
@@ -197,7 +199,7 @@ export default function useTransaction() {
                     html: `
                 ${rawHtml}
                         `,
-                    customClass: "swal-width error-message-text",
+                    customClass: "swal-width",
                 });
                 isHasError = true;
             }

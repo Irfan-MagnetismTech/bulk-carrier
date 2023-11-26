@@ -183,6 +183,22 @@ export default function useChartererProfile() {
 		}
 	}
 
+
+	async function getAllChartererProfiles() {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/search-charterer-profiles`);
+			chartererProfiles.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//NProgress.done();
+		}
+	}
+
 	return {
 		chartererProfiles,
 		chartererProfile,
@@ -193,6 +209,7 @@ export default function useChartererProfile() {
 		updateChartererProfile,
 		deleteChartererProfile,
 		searchChartererProfiles,
+		getAllChartererProfiles,
 		isLoading,
 		isTableLoading,
 		errors,

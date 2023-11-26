@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMovementRequisition from "../../../composables/supply-chain/useMovementRequisition";
@@ -10,9 +10,12 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import { useRouter } from 'vue-router';
-
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-const { getMovementRequisitions, movementRequisitions, deleteMovementRequisition, isLoading } = useMovementRequisition();
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
+const { getMovementRequisitions, movementRequisitions, deleteMovementRequisition, isLoading,isTableLoading } = useMovementRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -26,10 +29,6 @@ const props = defineProps({
 });
 
 const critical = ['No','Yes'];
-// Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "store_requisitions";
 
 const icons = useHeroIcon();
 
@@ -39,15 +38,88 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 setTitle('Movement Requisitions');
 // Code for global search starts here
 
-watch(searchKey, newQuery => {
-  getMovementRequisitions(props.page, columns, searchKey.value, table);
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "ref_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Ref No",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "fromWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "From Warehouse",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "toWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "To Warehouse",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "required_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Required Date",
+      "filter_type": "input"
+    },
+  ]
 });
 
 
+
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 onMounted(() => {
-  watchEffect(() => {
-    getMovementRequisitions(props.page,businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'scm.movement-requisitions.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getMovementRequisitions(filterOptions.value)
+      .then(() => {
+        paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
@@ -138,7 +210,7 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Ref No</th>
@@ -149,10 +221,11 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(movementRequisition,index) in (movementRequisitions?.data ? movementRequisitions?.data : movementRequisitions)" :key="index">
-              <td>{{ movementRequisitions?.from + index }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ movementRequisition?.ref_no }}</td>
               <td>{{ movementRequisition?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementRequisition?.toWarehouse?.name?? '' }}</td>
@@ -171,15 +244,20 @@ function confirmDelete(id) {
                 </div>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && movementRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!movementRequisitions?.data?.length" class="bg-white dark-disabled:bg-gray-800">
-        <tr v-if="isLoading">
-          <td colspan="8">Loading...</td>
-        </tr>
-        <tr v-else-if="!movementRequisitions?.data?.length">
-          <td colspan="8">No SR found.</td>
-        </tr>
-        </tfoot>
+          <tfoot v-if="!movementRequisitions?.data?.length" class="relative h-[250px]">
+              <tr v-if="isLoading">
+              </tr>
+              <tr v-else-if="isTableLoading">
+                  <td colspan="7">
+                    <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                  </td>
+              </tr>
+              <tr v-else-if="!movementRequisitions?.data?.length">
+                <td colspan="7">No Data found.</td>
+              </tr>
+          </tfoot>
       </table>
     </div>
     <Paginate :data="movementRequisitions" to="scm.movement-requisitions.index" :page="page"></Paginate>
@@ -188,5 +266,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

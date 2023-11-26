@@ -28,7 +28,7 @@ const { permissions, getPermissions } = usePermission();
 const { setTitle } = Title();
 const page = ref('edit');
 
-setTitle('Edit Role');
+setTitle('Update Role');
 
 onMounted(() => {
   //getPermissions(1, false);

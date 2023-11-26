@@ -30,4 +30,22 @@ class OpsCustomer extends Model
         'email_invoice',
         'business_unit'
     ];
+
+    
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['name_code'];
+
+    /**
+     * Concatenate the code and name of the port.
+     *
+     * @return string
+     */
+    public function getNameCodeAttribute()
+    {
+        return  $this->name. ' - '.$this->code;
+    }
 }

@@ -69,10 +69,13 @@
     // }, { deep: true });
 
     // });// Code for global search end here
-    
-    function fetchVendor(search, loading) {
-      loading(true);
-      searchVendor(search, loading);
+    // function fetchVendor(search, loading) {
+    //   loading(true);
+    //   searchVendor(search, loading);
+// }
+
+ function fetchVendor(search) {
+      searchVendor(search);
     }
 
 function setMaterialOtherData(line, index) {
@@ -119,6 +122,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
     watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
       getMaterialList(props.form.scm_pr_id);
     });
+    fetchVendor('');
   }); 
 
 //watch scmVendor to change scm_vendor_id
@@ -134,6 +138,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
 });
 </script>
 <template>
+<!-- &Get@Well@Soon100& -->
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
@@ -186,7 +191,8 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       </label>
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input">
+          <!-- <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input"> -->
+          <v-select :options="vendors" placeholder="--Choose an option--" v-model="form.scmVendor" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -274,13 +280,13 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
+              <input type="number" v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="number" v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].total_price" class="form-input">
+              <input type="number" readonly v-model="form.scmPoLines[index].total_price" class="form-input vms-readonly-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">

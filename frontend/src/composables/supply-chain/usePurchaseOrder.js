@@ -58,6 +58,7 @@ export default function usePurchaseOrder() {
                 rate: 0.0,
                 total_price: 0.0,
                 pr_composite_key: '',
+                max_quantity: 0.0,
             }
         ],
         scmPoTerms: [
@@ -69,15 +70,17 @@ export default function usePurchaseOrder() {
     
     const prMaterialList = ref([]);
     const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: null,
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+                max_quantity: 0.0,
     }
 
     const termsObject =  {
@@ -196,17 +199,17 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-orders/${purchaseOrderId}`);
             notification.showSuccess(status);
-            await getPurchaseOrders(indexPage.value,indexBusinessUnit.value);
+            await getPurchaseOrders(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             // isLoading.value = false;
         }
     }
 
-    async function searchPurchaseOrder(searchParam, loading, business_unit) {
+    async function searchPurchaseOrder(searchParam, business_unit) {
 
         try {
         const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
@@ -215,10 +218,24 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false)
+            // loading(false)
         }
     }
 
+    async function searchPurchaseOrderForLc(searchParam, business_unit) {
+            
+            try {
+            const { data, status } = await Api.get(`${BASE}/search-po-for-lc`, {params: {searchParam: searchParam, business_unit: business_unit}});
+                filteredPurchaseOrders.value = data.value;
+            } catch (error) {
+                const { data, status } = error.response;
+                notification.showError(status);
+            } finally {
+                // loading(false)
+            }
+    }
+    
+    
     async function getPrAndCsWisePurchaseOrder(prId, csId) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
@@ -272,6 +289,7 @@ export default function usePurchaseOrder() {
         updatePurchaseOrder,
         deletePurchaseOrder,
         getPrAndCsWisePurchaseOrder,
+        searchPurchaseOrderForLc,
         getMaterialList,
         prMaterialList,
         materialObject,

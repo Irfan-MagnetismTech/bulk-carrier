@@ -26,7 +26,7 @@ const { permission, showPermission, updatePermission, errors } = usePermission()
 
 const { setTitle } = Title();
 
-setTitle('Edit Permission');
+setTitle('Update Permission');
 
 onMounted(() => {
     showPermission(permissionId);

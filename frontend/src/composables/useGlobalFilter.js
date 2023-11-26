@@ -1,5 +1,6 @@
 import { ref, customRef } from 'vue'
 import Store from '../store/index.js';
+import useDebouncedRef from "./useDebouncedRef";
 
 
 export default function useGlobalFilter() {
@@ -25,7 +26,7 @@ export default function useGlobalFilter() {
        
         filterOptions.filter_options = filterOptions.filter_options.map((option) => ({
             ...option,
-            search_param: "",
+            search_param: useDebouncedRef('', 800),
             order_by: null,
         }));
     }

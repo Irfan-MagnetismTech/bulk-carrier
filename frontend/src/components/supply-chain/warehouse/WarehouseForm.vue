@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted, watchEffect } from 'vue';
+    import { ref, watch, onMounted, watchEffect, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
@@ -22,8 +22,8 @@
     // }
 
     watch(() => props.form.accCostCenter, (value) => {
-        props.form.cost_center_id = value?.id;
-        props.form.cost_center_name = value?.name;
+        props.form.cost_center_id = value?.id ?? null;
+        props.form.cost_center_name = value?.name ?? null;
     });
 
     onMounted(() => {
@@ -33,7 +33,7 @@
     });
 
     watch(() => props.form.business_unit, (newValue, oldValue) => {
-        if(newValue != oldValue &&  oldValue != '')
+        if (newValue != oldValue && oldValue != '')
             props.form.accCostCenter = null;
         });
 
@@ -52,8 +52,23 @@
                 </label>
               
                 <label class="label-group">
-                    <span class="label-item-title">Cost Center</span>
-                    <v-select :options="costCenters" placeholder="--Choose an option--" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></v-select>
+                    <span class="label-item-title">Cost Center<span class="required-style">*</span></span>
+                    <v-select :options="costCenters" placeholder="--Choose an option--" v-model="form.accCostCenter" label="name" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+                        <!-- <input
+                            slot="no-options"
+                            class="form-input"
+                            :value="form.accCostCenter"
+                            @input="form.accCostCenter = $event.target.value"
+                        /> -->
+                        <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.accCostCenter"
+                                v-bind="attributes"
+                                v-on="events"
+                            />
+                        </template>
+                    </v-select>
                     <!-- <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" /> -->
                     <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" />
                 </label>
