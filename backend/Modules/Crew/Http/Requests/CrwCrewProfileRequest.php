@@ -11,15 +11,15 @@ class CrwCrewProfileRequest extends FormRequest
     {
         $data      = request('data');
         $dataArray = json_decode($data, true);
-    
+
         $mergeData = array_merge($dataArray, [
-            'picture' => request('picture'), 
-            'attachment' => request('attachment')    
+            'picture' => request('picture'),
+            'attachment' => request('attachment')
         ]);
-    
+
         $this->replace($mergeData);
     }
-        
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,8 +28,8 @@ class CrwCrewProfileRequest extends FormRequest
     public function rules(): array {
         return [
             'crw_recruitment_approval_id'    => 'numeric',
-            'agency_id'                      => 'numeric',
-            'department_id'                  => 'numeric',
+            'agency_id'                      => 'nullable|numeric',
+            'department_name'                => 'required|string|max:50',
             'crw_rank_id'                    => 'numeric',
             'employee_type'                  => 'required|string|max:255',
             'is_officer'                     => 'required|boolean',
@@ -56,8 +56,8 @@ class CrwCrewProfileRequest extends FormRequest
             'per_city'                       => 'required|string|max:255',
             'per_mobile_no'                  => 'required|string|max:255',
             'per_email'                      => 'email|max:255',
-            'picture'                        => 'image|mimes:jpeg,png,gif,svg|max:2048',
-            'attachment'                     => 'mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
+            'picture'                        => 'nullable|image|mimes:jpeg,png,gif,svg|max:2048',
+            'attachment'                     => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
             'business_unit'                  => 'required|in:PSML,TSLL',
 
             // Validation rules for educations_array

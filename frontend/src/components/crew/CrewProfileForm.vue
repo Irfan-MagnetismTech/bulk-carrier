@@ -34,21 +34,21 @@ const profilePicture = (event) => {
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
   if(newValue !== oldValue && oldValue != ''){
-    props.form.crw_recruitment_approval_id = '';
+    props.form.crw_recruitment_approval_id = null;
     props.form.crw_recruitment_approval_name = null;
-    props.form.agency_id = '';
+    props.form.agency_id = null;
     props.form.agency_name = null;
   }
 });
 
 watch(() => props.form, (value) => {
   if(value){
-    props.form.crw_recruitment_approval_id = props.form?.crw_recruitment_approval_name?.id ?? '';
-    props.form.agency_id = props.form?.agency_name?.id ?? '';
+    props.form.crw_recruitment_approval_id = props.form?.crw_recruitment_approval_name?.id ?? null;
+    props.form.agency_id = props.form?.agency_name?.id ?? null;
 
     if(props.form.hired_by === 'Company'){
       props.form.agency_name = null;
-      props.form.agency_id = '';
+      props.form.agency_id = null;
     }
   }
 }, {deep: true});
@@ -159,7 +159,7 @@ function changeTab(tabNumber, buttonType = null){
   } else {
     if(buttonType !== null){
       if (openTab.value === 1) {
-        let tab1Fields = ['business_unit','crw_recruitment_approval_name','hired_by','department_id','rank_id','first_name','last_name','father_name','mother_name',
+        let tab1Fields = ['business_unit','crw_recruitment_approval_name','hired_by','department_name','crw_rank_id','first_name','last_name','father_name','mother_name',
         'date_of_birth','gender','religion','marital_status','nationality','nid_no','pre_address','pre_city','pre_mobile_no','per_address','per_city','per_mobile_no'];
         console.log(tab1Fields);
         if(!checkValidation(openTab, tabNumber, props,tab1Fields)){
@@ -304,20 +304,18 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Department <span class="text-red-500">*</span></span>
-            <select class="form-input" v-model.trim="form.department_id" id="department_id" required>
+            <select class="form-input" v-model.trim="form.department_name" id="department_name" required>
               <option value="" disabled selected>Select</option>
-              <option value="1">Deck</option>
-              <option value="2">Engine</option>
-              <option value="3">Steward</option>
-              <option value="4">Technical</option>
-              <option value="5">Medical</option>
+              <option value="Engine">Engine</option>
+              <option value="Deck">Deck</option>
+              <option value="Electrical">Electrical</option>
             </select>
           </label>
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
-            <select class="form-input" id="rank_id" v-model.trim="form.rank_id" required>
+            <select class="form-input" id="crw_rank_id" v-model.trim="form.crw_rank_id" required>
               <option value="" disabled>select</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
             </select>

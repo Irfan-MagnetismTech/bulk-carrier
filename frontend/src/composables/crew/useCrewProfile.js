@@ -12,13 +12,14 @@ export default function useCrewProfile() {
     const notification = useNotification();
     const crewProfile = ref( {
         business_unit: '',
-        crw_recruitment_approval_id: '',
-        crw_recruitment_approval_name: '',
+        crw_recruitment_approval_id: null,
+        crw_recruitment_approval_name: null,
         hired_by: '',
-        agency_id: '',
-        agency_name: '',
+        agency_id: null,
+        agency_name: null,
         rank_id: '',
-        department_id: '',
+        crw_rank_id: '',
+        department_name: '',
         first_name: '',
         last_name: '',
         father_name: '',
@@ -161,8 +162,14 @@ export default function useCrewProfile() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('picture', form.picture);
+
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        if(form.picture){
+            formData.append('picture', form.picture);
+        }
+
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -203,8 +210,12 @@ export default function useCrewProfile() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('picture', form.picture);
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        if(form.picture){
+            formData.append('picture', form.picture);
+        }
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
