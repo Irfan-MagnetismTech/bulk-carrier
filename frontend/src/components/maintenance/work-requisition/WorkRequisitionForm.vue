@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
@@ -120,7 +120,7 @@
         
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Responsible Person" :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
+            <v-select placeholder="Select Responsible Person" :loading="isCommonCrewLoading"  :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
             :reduce="crewsWithRank => crewsWithRank.displayName" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -244,7 +244,7 @@ const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGro
 const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems, isItemLoading } = useItem();
 const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
 const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
-const { crews, getCrews } = useCrewCommonApiRequest();
+const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
 const { maintenanceTypes  } = useMaintenanceHelper();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');

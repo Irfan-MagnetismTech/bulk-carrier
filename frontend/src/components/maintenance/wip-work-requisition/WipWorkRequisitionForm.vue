@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
@@ -48,8 +48,8 @@
         
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.requisition_date"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span v-show="form.status != 0"  class="text-red-500">*</span></span>
+            <input type="date" :min="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  />
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
@@ -215,13 +215,13 @@ import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { updateWipWorkRequisitionLine } = useWipWorkRequisition();
 const { vessels, getVesselsWithoutPaginate } = useVessel();
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
-const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems } = useItem();
-const { itemWiseJobLines, getJobsForRequisition } = useJob();
-const { presentRunHour, getItemPresentRunHour } = useRunHour();
-const { crews, getCrews } = useCrewCommonApiRequest();
-const { material, materials, getMaterials, searchMaterial } = useMaterial();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
+const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems, isItemLoading } = useItem();
+const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
+const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
+const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
+const { material, materials, getMaterials, searchMaterial, isMaterialLoading } = useMaterial();
 const { workRequisitionStatus } = useMaintenanceHelper();
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);

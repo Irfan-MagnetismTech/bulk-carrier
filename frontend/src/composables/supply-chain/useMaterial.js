@@ -30,6 +30,7 @@ export default function useMaterial() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
+    const isMaterialLoading = ref(false);
 
     async function getMaterials(filterOptions) {
         //NProgress.start();
@@ -156,6 +157,7 @@ export default function useMaterial() {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
+        isMaterialLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam }});
@@ -167,6 +169,7 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+            isMaterialLoading.value = false;
         }
     }
 
@@ -237,6 +240,7 @@ export default function useMaterial() {
         searchMaterialWithCategory,
         getBunkerList,
         isLoading,
+        isMaterialLoading,
         errors
     };
 }
