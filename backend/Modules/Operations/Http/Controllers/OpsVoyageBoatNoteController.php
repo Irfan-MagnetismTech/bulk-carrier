@@ -137,7 +137,6 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-
         // dd($request);
         try {
             DB::beginTransaction();

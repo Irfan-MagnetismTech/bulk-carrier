@@ -171,7 +171,7 @@ class OpsCargoTariffController extends Controller
             ->when(request()->has('tariff_name'), function ($query) {
                     $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');
             })
-            ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
+            ->when(request()->has('business_unit') && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->get();
