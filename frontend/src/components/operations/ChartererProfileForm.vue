@@ -39,29 +39,29 @@
         <Error v-if="errors?.address" :errors="errors.address" />
       </label>
       <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
+            <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.email" :errors="errors.email" />
+      </label>
+      
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
             <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
           <Error v-if="errors?.billing_address" :errors="errors.billing_address" />
         </label>
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
-            <input type="text" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
           <Error v-if="errors?.billing_email" :errors="errors.billing_email" />
         </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.email" :errors="errors.email" />
-      </label>
+      
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          <input type="text" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
+          <input type="url" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
         <Error v-if="errors?.website" :errors="errors.website" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
     </div>
     
     <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>

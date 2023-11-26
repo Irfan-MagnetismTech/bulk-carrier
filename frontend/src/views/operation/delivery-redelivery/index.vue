@@ -197,7 +197,7 @@ onMounted(() => {
                     </div>
                   </div>
               </th>
-              <th>
+              <!-- <th>
                 <div class="flex justify-evenly items-center">
                     <span>Date</span>
                     <div class="flex flex-col cursor-pointer">
@@ -205,8 +205,8 @@ onMounted(() => {
                       <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
                     </div>
                   </div>
-              </th>
-              <th>
+              </th> -->
+              <th class="w-28">
                 <div class="flex justify-evenly items-center">
                     <span>Type</span>
                     <div class="flex flex-col cursor-pointer">
@@ -248,8 +248,13 @@ onMounted(() => {
               </th>
               <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <!-- <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th> -->
+              <th>
+                <select v-model="filterOptions.filter_options[3].search_param" class="filter_input">
+                  <option value="Delivery">Delivery</option>
+                  <option value="Re-delivery">Re-delivery</option>
+                </select>
+              </th>
               <th></th>
               <th></th>
               <th>
