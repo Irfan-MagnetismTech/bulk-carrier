@@ -129,15 +129,11 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Distance Run </span>
-          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
-        </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Distance Run </span>
-          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
+          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run" placeholder="Distance Run ">
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">DTG </span>
-          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg">
+          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg" placeholder="DTG">
         </label>
       </div>
 
@@ -429,13 +425,13 @@
               </div>
             </td>
             <td>
-              <input type="text" class="form-input" v-model.trim="item.rack">
+              <input type="text" class="form-input" v-model.trim="item.rack" placeholder="PCO">
             </td>
             <td>
-              <input type="text" class="form-input" v-model.trim="item.rack">
+              <input type="text" class="form-input" v-model.trim="item.rack" placeholder="Rack">
             </td>
             <td>
-              <input type="text" class="form-input" v-model.trim="item.exh_temp">
+              <input type="text" class="form-input" v-model.trim="item.exh_temp" placeholder="Exh. Temp">
             </td>
             <td>
               <button type="button" v-if="index>0" @click="removeEngineType(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
