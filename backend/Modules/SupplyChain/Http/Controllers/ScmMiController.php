@@ -50,7 +50,7 @@ class ScmMiController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ScmMIRequest $request)
+    public function store(ScmMiRequest $request)
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
@@ -66,20 +66,29 @@ class ScmMiController extends Controller
 
             $scmMi->scmMiLines()->createMany($linesData);
 
+           $shortage = $scmMi->scmShortage()->create($request->scmMiShortage);
+return response()->json($request->scmMiShortage,422);
+
+            $shortage->scmMiShortageLines()->createMany($request['scmMiShortag']['scmMiShortageLines']);
+
+        //    return response()->success('Data created succesfully', $id, 422);
+
             //loop through each line and update current stock
-            $dataForStock = [];
+            // $dataForStock = [];
 
-            foreach ($request->scmMiLines as $scmMoLine) {
-                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMi->scm_warehouse_id, $scmMoLine['quantity']);
-            }
+            // foreach ($request->scmMiLines as $scmMoLine) {
+            //     $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMi->scm_warehouse_id, $scmMoLine['quantity']);
+            // }
 
-            $dataForStockLedger = array_merge(...$dataForStock);
+            // $dataForStockLedger = array_merge(...$dataForStock);
 
-            $scmMi->stockable()->createMany($dataForStockLedger);
+            // $scmMi->stockable()->createMany($dataForStockLedger);
+
+
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $scmMi, 201);
+            return response()->success('Data created succesfully', $shortage, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 

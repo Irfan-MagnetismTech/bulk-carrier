@@ -16,7 +16,7 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 
-setTitle('Edit User');
+setTitle('Update User');
 
 onMounted(() => {
   showUser(userId);

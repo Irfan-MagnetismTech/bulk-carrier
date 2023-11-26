@@ -13,6 +13,7 @@ class OpsBulkNoonReportRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this);
         return [
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
@@ -20,8 +21,8 @@ class OpsBulkNoonReportRequest extends FormRequest
             'chief_engineer'    => ['required', 'string'],
             'wind_condition'    => ['required', 'string'],
             'type'              => ['required', 'string'],
-            'date_time'         => ['required', 'datetime'],
-            'gtm_time'          => ['required', 'datetime'],
+            'date_time'         => ['required', 'date_format:Y-m-d H:i:s'],
+            'gtm_time'          => ['required', 'date_format:Y-m-d H:i:s'],
             'location'          => ['required', 'string'],
             'latitude'          => ['required', 'string'],
             'longitude'         => ['required', 'string'],

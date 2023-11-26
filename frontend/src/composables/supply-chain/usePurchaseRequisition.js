@@ -192,10 +192,10 @@ export default function usePurchaseRequisition() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
             notification.showSuccess(status);
-            await getPurchaseRequisitions(indexPage.value,indexBusinessUnit.value);
+            await getPurchaseRequisitions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             // isLoading.value = false;

@@ -78,8 +78,8 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
-			"relation_name": null,
-			"field_name": "contract_name",
+			"relation_name": "opsChartererProfile",
+			"field_name": "name",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -181,31 +181,9 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Charterer Contract List</h2>
     <default-button :title="'Create Charterer Contract'" :to="{ name: 'ops.charterer-contracts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div> -->
-  </div>
-
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap" >
-          <!-- <tr class="w-full">
-            <th>#</th>
-            <th>Contract Type</th>
-            <th>Charterer Name</th>
-            <th>Charterer Short Code</th>
-            <th>Country</th>
-            <th>Email</th>
-            <th>Contact</th>
-            <th>Action</th>
-          </tr> -->
           <thead>
             <tr class="w-full">
               <th class="w-16">
@@ -213,71 +191,62 @@ onMounted(() => {
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
                 </th>
-              <th>
+              <th class="w-36">
                 <div class="flex justify-evenly items-center">
-                    <span>Contract Type</span>
+                    <nobr>Contract Type</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
               </th>
-              <th>
+              <th class="w-48">
                 <div class="flex justify-evenly items-center">
-                    <span>Charterer Name</span>
+                    <nobr>Charterer Name</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Charterer Short Code</span>
+                    <nobr>Charterer Short Code</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Country</span>
+                    <nobr>Country</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Email</span>
+                    <nobr>Email</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Contact</span>
+                    <nobr>Contact</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
-                      <!-- <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div> -->
                     </div>
                   </div>
+              </th>
+              <th>
+                <nobr>Business Unit</nobr>
               </th>
               <th>
                 Action
@@ -292,18 +261,24 @@ onMounted(() => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <select v-model="filterOptions.filter_options[0].search_param" class="filter_input">
+                  <option value="Voyage Wise">Voyage Wise</option>
+                  <option value="Day Wise">Day Wise</option>
+                </select>
+              </th>
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
           </thead>
-          <tbody v-if="chartererContracts?.data?.length"  class="relative">
+          <tbody v-if="chartererContracts?.data?.length" class="relative">
               <tr v-for="(chartererContract, index) in chartererContracts.data" :key="chartererContract?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ chartererContract?.contract_type }}</td>
@@ -312,6 +287,10 @@ onMounted(() => {
                   <td>{{ chartererContract?.country }}</td>
                   <td>{{ chartererContract?.email }}</td>
                   <td>{{ chartererContract?.contact_no }}</td>
+                  <td>
+                    <span :class="chartererContract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererContract?.business_unit }}</span>
+
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-contracts.show', params: { chartererContractId: chartererContract.id } }"></action-button>
@@ -324,13 +303,13 @@ onMounted(() => {
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererContracts?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!chartererContracts?.data?.length">
+          <tfoot v-if="!chartererContracts?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="8">
-                <!-- <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                 -->
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
           <tr v-else-if="!chartererContracts?.data?.length">

@@ -12,9 +12,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 import { useRouter } from 'vue-router';
-const { getStoreRequisitions, storeRequisitions, deleteStoreRequisition, isLoading,isTableLoading } = useStoreRequisition();
+const { getStoreRequisitions, storeRequisitions, deleteStoreRequisition, isLoading,isTableLoading ,errors} = useStoreRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -97,6 +98,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -221,8 +223,9 @@ function confirmDelete(id) {
                 </div>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && storeRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!storeRequisitions?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+          <tfoot v-if="!storeRequisitions?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -242,5 +245,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

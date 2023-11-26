@@ -12,6 +12,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
 const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading } = useLcRecord();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
@@ -114,6 +116,7 @@ onMounted(() => {
   watchEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.lc-records.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -204,5 +207,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

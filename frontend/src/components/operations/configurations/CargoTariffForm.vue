@@ -119,7 +119,6 @@
                   </th>
                 </tr>
               </thead>
-
               <tbody>
                   <tr v-for="(cargoTariff, index) in form.opsCargoTariffLines">
                     <td>
