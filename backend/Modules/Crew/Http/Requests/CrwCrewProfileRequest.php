@@ -12,9 +12,12 @@ class CrwCrewProfileRequest extends FormRequest
         $data      = request('data');
         $dataArray = json_decode($data, true);
 
+        $picture = is_object(request('picture')) ? request('picture') : null;
+        $attachment = is_object(request('attachment')) ? request('attachment') : null;
+
         $mergeData = array_merge($dataArray, [
-            'picture' => request('picture'),
-            'attachment' => request('attachment')
+            'picture' => $picture,
+            'attachment' => $attachment
         ]);
 
         $this->replace($mergeData);

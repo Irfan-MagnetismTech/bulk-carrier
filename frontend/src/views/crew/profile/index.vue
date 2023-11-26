@@ -170,7 +170,7 @@ onMounted(() => {
           <tr v-for="(crwProfileData,index) in crewProfiles?.data" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ crwProfileData?.full_name }}</td>
-            <td>{{ crwProfileData?.department_id }}</td>
+            <td>{{ crwProfileData?.department_name }}</td>
             <td>{{ crwProfileData?.crewRank?.name }}</td>
             <td>{{ crwProfileData?.pre_mobile_no }}</td>
             <td>{{ crwProfileData?.pre_email }}</td>

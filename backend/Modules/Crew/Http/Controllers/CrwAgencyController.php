@@ -68,7 +68,7 @@ class CrwAgencyController extends Controller
     public function show(CrwAgency $crwAgency)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgency->load('crwAgencyContactPersons'), 200);
+            return response()->success('Retrieved successfully', $crwAgency->load('crwAgencyContactPersons'), 200);
         }
         catch (QueryException $e)
         {
