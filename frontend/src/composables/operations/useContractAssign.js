@@ -65,13 +65,6 @@ export default function useContractAssign() {
 
 		try {
 			let formData = new FormData();
-			
-			form.opsContractAssignLines.map((element, index) => {
-				formData.append('attachments['+index+']', element.attachment ?? null);
-				element.attachment = null;
-			})
-
-
 			formData.append('info', JSON.stringify(form));
 
 			const { data, status } = await Api.post('/ops/contract-assigns', formData);
