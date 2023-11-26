@@ -15,7 +15,8 @@ class MntWorkRequisitionWipRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'act_start_date' => 'required|date|after_or_equal:requisition_date',
+        'status' => 'required',
+        'act_start_date' => 'required_if:status,1|date|after_or_equal:requisition_date',
         'act_completion_date' => 'nullable|date|after_or_equal:act_start_date',
         ];
     }
