@@ -141,6 +141,9 @@
         </label>
       </div>
 
+      <RemarksComponet v-model="form.opsBulkNoonReportPorts[index].remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+
+
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
         <button type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
