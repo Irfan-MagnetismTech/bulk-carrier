@@ -247,12 +247,83 @@ export default function useCrewProfile() {
         //const requiredFields = ['first_name'];
         for (const field of requiredFields) {
             const element = document.getElementById(field);
-            if (!props.form[field]) {
-                element.classList.add('vms-required-input-border');
-                notification.showError(422, '', 'Please fill all required fields');
-                return false;
-            } else {
-                element.classList.remove('vms-required-input-border');
+            if (openTab.value === 1) {
+                if(!props.form[field]){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 2){
+                let educationFieldStatus = true;
+                props.form.educations.forEach((value, index) => {
+                    if(!props.form.educations[index][field]){
+                        educationFieldStatus = false;
+                    }
+                });
+                if(!educationFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 3){
+                let trainingFieldStatus = true;
+                props.form.trainings.forEach((value, index) => {
+                    if(!props.form.trainings[index][field]){
+                        trainingFieldStatus = false;
+                    }
+                });
+                if(!trainingFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 4){
+                let experienceFieldStatus = true;
+                props.form.experiences.forEach((value, index) => {
+                    if(!props.form.experiences[index][field]){
+                        experienceFieldStatus = false;
+                    }
+                });
+                if(!experienceFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 5){
+                let otherFieldStatus = true;
+                props.form.languages.forEach((value, index) => {
+                    if(!props.form.languages[index][field]){
+                        otherFieldStatus = false;
+                    }
+                });
+                if(!otherFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 6){
+                let referenceFieldStatus = true;
+                props.form.references.forEach((value, index) => {
+                    if(!props.form.references[index][field]){
+                        referenceFieldStatus = false;
+                    }
+                });
+                if(!referenceFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 7){
+                let nomineesFieldStatus = true;
+                props.form.nominees.forEach((value, index) => {
+                    if(!props.form.nominees[index][field]){
+                        nomineesFieldStatus = false;
+                    }
+                });
+                if(!nomineesFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
             }
         }
 
