@@ -53,7 +53,7 @@ class OpsBulkNoonReportController extends Controller
     */
     public function store(OpsBulkNoonReportRequest $request): JsonResponse
     {
-        dd($request);
+        // dd($request);
         try {
             DB::beginTransaction();
             $bulk_noon_report_info = $request->except(
@@ -67,10 +67,16 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportEngineInputTypes'
             );
 
-            $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);
+            $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);           
             $bulk_noon_report->opsBulkNoonReportPorts()->createMany($request->opsBulkNoonReportPorts);
             $bulk_noon_report->opsBulkNoonReportCargoTanks()->createMany($request->opsBulkNoonReportCargoTanks);
-            $bulk_noon_report->opsBulkNoonReportConsumptions()->createMany($request->opsBulkNoonReportConsumptions);
+
+            foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
+                $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
+                $consumptionHeadsData = $consumptionData['opsBulkNoonReportConsumptionHeads'];
+                $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionHeadsData);
+            }
+            
             $bulk_noon_report->opsBulkNoonReportDistance()->create($request->opsBulkNoonReportDistance);
             $bulk_noon_report->opsBulkNoonReportEngineInputs()->createMany($request->opsBulkNoonReportEngineInputs);
             $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
