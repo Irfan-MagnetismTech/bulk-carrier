@@ -220,7 +220,7 @@ export default function useCargoTariff() {
 
 		try {
 			const { data } = await Api.get(
-				`ops/search-cargo-tariffs?vessel_id=${vesselId}`,
+				`ops/get-search-cargo-tariffs?vessel_id=${vesselId}`,
 			);
 			cargoTariffs.value = data.value;
 		} catch (error) {
