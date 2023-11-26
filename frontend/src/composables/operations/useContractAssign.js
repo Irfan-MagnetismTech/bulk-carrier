@@ -8,112 +8,45 @@ import useNotification from '../useNotification.js';
 
 export default function useContractAssign() {
 	const router = useRouter();
-	const chartererInvoices = ref([]);
+	const contractAssigns = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
 
-	const chartererInvoice = ref({
-		business_unit: '',
-		ops_charterer_profile_id: '',
-		opsChartererProfile: null,
-		ops_charterer_contract_id: '',
-		opsChartererContract: null,
-		ops_voyage_id: '',
+	const contractAssign = ref({
+		ops_vessel_id: null,
+		opsVessel : null,
+		ops_voyage_id: null,
 		opsVoyage: null,
-		contract_type: '',
-		cargo_quantity: 0,
-        bill_from: '',
-        bill_till: '',
-        total_days: '',
-        total_amount: '',
-        others_billable_amount: '',
-		others_billable_amount_usd: '',
-		sub_total_amount: '',
-		sub_total_amount_usd: '',
-		service_fee_deduction_amount: '',
-		service_fee_deduction_amount_usd: '',
-		discount_unit: '',
-		discounted_amount: '',
-		discounted_amount_usd: '',
-		grand_total: '',
-		grand_total_usd: '',
-		opsChartererInvoiceServices: [
-			{
-				charge_or_deduct: 'deduct',
-				particular: '',
-				cost_unit: '',
-				currency: '',
-				quantity: 0,
-				rate: 0,
-				exchange_rate_bdt: 0,
-				exchange_rate_usd: 0,
-				amount: 0,
-				amount_bdt: 0,
-				amount_usd: 0,
-			},
-		],
-		opsChartererInvoiceOthers: [
-			{
-				charge_or_deduct: 'charge',
-				particular: '',
-				cost_unit: '',
-				currency: '',
-				quantity: 0,
-				rate: 0,
-				exchange_rate_bdt: 0,
-				exchange_rate_usd: 0,
-				amount: 0,
-				amount_bdt: 0,
-				amount_usd: 0,
-			},
-		],
+		ops_tariff_id: null,
+		opsTariff: null,
+		ops_customer_id: null,
+		opsCustomer: null,
+		ops_charterer_profile_id: null,
+		opsChartererProfile: null,
+		ops_charterer_contract_id: null,
+		opsChartererContract: null,
+        remarks: null,
+        business_unit: null, 
 	});
 
-	const serviceObject = {
-		charge_or_deduct: 'deduct',
-		particular: '',
-		cost_unit: '',
-		currency: '',
-		quantity: 0,
-		rate: 0,
-		exchange_rate_bdt: 0,
-		exchange_rate_usd: 0,
-		amount: 0,
-		amount_bdt: 0,
-		amount_usd: 0,
-	};
-
-	const otherObject = {
-		charge_or_deduct: 'charge',
-		particular: '',
-		cost_unit: '',
-		currency: '',
-		quantity: 0,
-		rate: 0,
-		exchange_rate_bdt: 0,
-		exchange_rate_usd: 0,
-		amount: 0,
-		amount_bdt: 0,
-		amount_usd: 0,
-	};
 
 
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getChartererInvoices(page, businessUnit) {
+	async function getContractAssigns(page, businessUnit) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get('/ops/charterer-invoices', {
+			const { data, status } = await Api.get('/ops/contract-assigns', {
 				params: {
 					page: page || 1,
 					business_unit: businessUnit
 				}
 			});
-			chartererInvoices.value = data.value;
+			contractAssigns.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -125,7 +58,7 @@ export default function useContractAssign() {
 		}
 	}
 
-	async function storeChartererInvoice(form) {
+	async function storeContractAssign(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -133,7 +66,7 @@ export default function useContractAssign() {
 		try {
 			let formData = new FormData();
 			
-			form.opsChartererInvoiceLines.map((element, index) => {
+			form.opsContractAssignLines.map((element, index) => {
 				formData.append('attachments['+index+']', element.attachment ?? null);
 				element.attachment = null;
 			})
@@ -141,9 +74,9 @@ export default function useContractAssign() {
 
 			formData.append('info', JSON.stringify(form));
 
-			const { data, status } = await Api.post('/ops/charterer-invoices', formData);
+			const { data, status } = await Api.post('/ops/contract-assigns', formData);
 			notification.showSuccess(status);
-			// router.push({ name: 'ops.charterer-invoices.index' });
+			// router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -154,14 +87,14 @@ export default function useContractAssign() {
 		}
 	}
 
-	async function showChartererInvoice(chartererInvoiceId) {
+	async function showContractAssign(contractAssignId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/charterer-invoices/${chartererInvoiceId}`);
-			chartererInvoice.value = data.value;
+			const { data, status } = await Api.get(`/ops/contract-assigns/${contractAssignId}`);
+			contractAssign.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -173,7 +106,7 @@ export default function useContractAssign() {
 		}
 	}
 
-	async function updateChartererInvoice(form, chartererInvoiceId) {
+	async function updateContractAssign(form, contractAssignId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -182,7 +115,7 @@ export default function useContractAssign() {
 
 			let formData = new FormData();
 			
-			form.opsChartererInvoiceLines.map((element, index) => {
+			form.opsContractAssignLines.map((element, index) => {
 				formData.append('attachments['+index+']', element.attachment ?? null);
 				element.attachment = null;
 			})
@@ -192,12 +125,12 @@ export default function useContractAssign() {
 			formData.append('_method', 'PUT');
 
 			const { data, status } = await Api.post(
-				`/ops/charterer-invoices/${chartererInvoiceId}`,
+				`/ops/contract-assigns/${contractAssignId}`,
 				formData
 			);
-			// chartererInvoice.value = data.value;
+			// contractAssign.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.charterer-invoices.index' });
+			router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -208,16 +141,16 @@ export default function useContractAssign() {
 		}
 	}
 
-	async function deleteChartererInvoice(chartererInvoiceId) {
+	async function deleteContractAssign(contractAssignId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/charterer-invoices/${chartererInvoiceId}`);
+			const { data, status } = await Api.delete( `/ops/contract-assigns/${contractAssignId}`);
 			notification.showSuccess(status);
-			await getChartererInvoices();
+			await getContractAssigns();
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -228,12 +161,12 @@ export default function useContractAssign() {
 		}
 	}
 
-	async function searchChartererInvoices(searchParam, loading) {
+	async function searchContractAssigns(searchParam, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-charterer-invoices?name=${searchParam}`);
-			chartererInvoices.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-contract-assigns?name=${searchParam}`);
+			contractAssigns.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -245,16 +178,14 @@ export default function useContractAssign() {
 	}
 
 	return {
-		chartererInvoices,
-		chartererInvoice,
-		getChartererInvoices,
-		storeChartererInvoice,
-		showChartererInvoice,
-		updateChartererInvoice,
-		deleteChartererInvoice,
-		searchChartererInvoices,
-		serviceObject,
-		otherObject,
+		contractAssigns,
+		contractAssign,
+		getContractAssigns,
+		storeContractAssign,
+		showContractAssign,
+		updateContractAssign,
+		deleteContractAssign,
+		searchContractAssigns,
 		isLoading,
 		errors,
 	};

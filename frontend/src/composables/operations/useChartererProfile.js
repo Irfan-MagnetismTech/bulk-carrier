@@ -199,6 +199,28 @@ export default function useChartererProfile() {
 		}
 	}
 
+	//get charterer by buisness unit
+		async function getChartererByBusinessUnit(business_unit) {
+			//NProgress.start();
+
+			try {
+				// const { data, status } = await Api.get(`/ops/charterer-profiles-by-business-unit/${businessUnitId}`);
+				const { data, status } = await Api.get(`/ops/get-search-charterer-profiles`, {
+					params: {
+						business_unit: business_unit,
+					},
+				}
+				);
+				chartererProfiles.value = data.value;
+				notification.showSuccess(status);
+			} catch (error) {
+				const { data, status } = error.response;
+				notification.showError(status);
+			} finally {
+				//NProgress.done();
+			}
+		}
+
 	return {
 		chartererProfiles,
 		chartererProfile,
@@ -210,6 +232,7 @@ export default function useChartererProfile() {
 		deleteChartererProfile,
 		searchChartererProfiles,
 		getAllChartererProfiles,
+		getChartererByBusinessUnit,
 		isLoading,
 		isTableLoading,
 		errors,
