@@ -43,7 +43,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif </span>
-              <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsTariff" label="name" class="block form-input">
+              <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -211,6 +211,9 @@ watch(() => props.form.opsCustomer, (value) => {
   props.form.ops_customer_id = value?.id;
 })
 
+watch(() => props.form.opsTariff, (value) => {
+  props.form.ops_tariff_id = value?.id;
+})
 
 </script>
 <style lang="postcss" scoped>
