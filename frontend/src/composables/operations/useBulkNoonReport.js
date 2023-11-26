@@ -87,7 +87,8 @@ export default function useBulkNoonReport() {
 			business_unit: null
 		},
 		opsBulkNoonReportEngineInputs: [{...engineObject}],
-		opsBunkers: []
+		opsBunkers: [],
+		opsBulkNoonReportConsumptions: []
 
 	});
 	const errors = ref(null);

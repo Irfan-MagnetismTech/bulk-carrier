@@ -196,11 +196,27 @@ export default function useCargoTariff() {
 		}
 	}
 
+	async function getAllCargoTariffs(businessUnit = null) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-cargo-tariffs?business_unit=${businessUnit}`);
+			cargoTariffs.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//NProgress.done();
+		}
+	}
+
 	return {
 		cargoTariffLineObject,
 		cargoTariffs,
 		cargoTariff,
 		getCargoTariffs,
+		getAllCargoTariffs,
 		storeCargoTariff,
 		showCargoTariff,
 		updateCargoTariff,

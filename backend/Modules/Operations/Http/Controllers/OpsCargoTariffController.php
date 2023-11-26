@@ -165,12 +165,6 @@ class OpsCargoTariffController extends Controller
     public function getCargoTariffName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()
-            ->when(request()->has('vessel_id'), function ($query) {
-                    $query->where('ops_vessel_id', request()->vessel_id); 
-            })
-            ->when(request()->has('tariff_name'), function ($query) {
-                    $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');
-            })
             ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })

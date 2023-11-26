@@ -187,10 +187,6 @@ const props = defineProps({
 });
 
 
-function fetchCharterers(search, loading) {
-      loading(true);
-      searchChartererProfiles(search, loading)
-}
 
 watch(() => props.form.opsVessel, (value) => {
   if(value) {
@@ -223,7 +219,8 @@ watch(() => props.form.business_unit, (value) => {
   }
 
   getVesselList(props.form.business_unit);
-  getAllChartererProfiles(props.form.business_unit)
+  getAllChartererProfiles(props.form.business_unit);
+  
 
 }, { deep : true })
 

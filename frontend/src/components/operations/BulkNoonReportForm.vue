@@ -365,23 +365,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
+          <tr v-for="(bunker, index) in form.opsBulkNoonReportConsumptions" :key="index">
               <td>
                 <span class="show-block">
                   {{ bunker?.name }}
                 </span>
               </td>
               <td>
-                <input type="text" class="form-input">
+                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].previous_rob">
               </td>
               <td>
-                <input type="text" class="form-input">
+                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].received">
               </td>
               <td>
-                <input type="text" class="form-input">
+                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].consumption">
               </td>
               <td>
-                <input type="text" class="form-input">
+                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].rob">
               </td>
               <td>
                 <a @click="showBunkerConsumptionModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
@@ -579,8 +579,8 @@ const currentConsumptionIndex = ref(null);
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
   currentConsumptionIndex.value = opsBunkerIndex
-  if(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptions) {
-    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptions)
+  if(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads) {
+    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads)
   } else {
     bunkerConsumptionDetails.value = [{type: ''}]
   }
@@ -592,7 +592,7 @@ function closeBunkerConsumptionModel() {
 }
 
 function pushBunkerConsumption() {
-  props.form.opsBunkers[currentConsumptionIndex.value].opsBulkNoonReportConsumptions = bunkerConsumptionDetails.value
+  props.form.opsBunkers[currentConsumptionIndex.value].opsBulkNoonReportConsumptionHeads = bunkerConsumptionDetails.value
   bunkerConsumptionDetails.value = [{type: ''}]
   isBunkerConsumptionModalOpen.value = 0
 }
@@ -674,7 +674,7 @@ if(value) {
 watch(() => vessel, (value) => {
 if(value?.value) {
   if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
-    props.form.opsBunkers = value?.value?.opsBunkers
+    props.form.opsBulkNoonReportConsumptions = value?.value?.opsBunkers
   }
 }
 }, { deep: true })
