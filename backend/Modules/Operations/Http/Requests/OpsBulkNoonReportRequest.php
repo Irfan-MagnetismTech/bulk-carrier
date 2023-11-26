@@ -13,6 +13,7 @@ class OpsBulkNoonReportRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this);
         return [
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
