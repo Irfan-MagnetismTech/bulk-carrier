@@ -140,6 +140,15 @@ class MntCriticalFunctionController extends Controller
     {
         try {            
             $criticalFunction = MntCriticalFunction::findorfail($id);
+            if ($criticalFunction->mntCriticalItemCats()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $criticalFunction->delete();
             
             return response()->success('Critical function deleted successfully', $criticalFunction, 204);
