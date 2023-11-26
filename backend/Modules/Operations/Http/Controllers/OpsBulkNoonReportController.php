@@ -53,7 +53,7 @@ class OpsBulkNoonReportController extends Controller
     */
     public function store(OpsBulkNoonReportRequest $request): JsonResponse
     {
-        // dd($request);
+        dd($request);
         try {
             DB::beginTransaction();
             $bulk_noon_report_info = $request->except(
