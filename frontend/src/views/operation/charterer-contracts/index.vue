@@ -246,6 +246,9 @@ onMounted(() => {
                   </div>
               </th>
               <th>
+                <nobr>Business Unit</nobr>
+              </th>
+              <th>
                 Action
               </th>
             </tr>
@@ -269,6 +272,7 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
@@ -283,6 +287,10 @@ onMounted(() => {
                   <td>{{ chartererContract?.country }}</td>
                   <td>{{ chartererContract?.email }}</td>
                   <td>{{ chartererContract?.contact_no }}</td>
+                  <td>
+                    <span :class="chartererContract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererContract?.business_unit }}</span>
+
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-contracts.show', params: { chartererContractId: chartererContract.id } }"></action-button>
