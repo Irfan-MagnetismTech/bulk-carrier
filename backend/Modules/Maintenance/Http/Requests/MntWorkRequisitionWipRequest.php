@@ -16,7 +16,7 @@ class MntWorkRequisitionWipRequest extends FormRequest
     {
         return [
         'status' => 'required',
-        'act_start_date' => 'required_if:status,1|date|after_or_equal:requisition_date',
+        'act_start_date' => ($this->status == 1) ? 'date|after_or_equal:requisition_date' : '',
         'act_completion_date' => 'nullable|date|after_or_equal:act_start_date',
         ];
     }
