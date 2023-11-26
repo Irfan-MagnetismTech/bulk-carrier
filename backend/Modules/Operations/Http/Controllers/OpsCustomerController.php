@@ -148,9 +148,18 @@ class OpsCustomerController extends Controller
     public function getCustomerNameorCode(Request $request){
         try {
             $customers = OpsCustomer::query()
-            ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            // ->where(function ($query) use($request) {
+            //     $query->where('name', 'like', '%' . $request->name_or_code . '%');
+            //     $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            // })
+            ->when(request()->has('name_or_code'), function ($query) {
+                $query->where(function ($subquery) {
+                    $subquery->where('name', 'like', '%' . request()->name_or_code . '%');
+                    $subquery->orWhere('code', 'like', '%' . request()->name_or_code . '%');
+                });
+            })            
+            ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })
             ->get();
 
