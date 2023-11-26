@@ -78,8 +78,8 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
-			"relation_name": null,
-			"field_name": "contract_name",
+			"relation_name": "opsChartererProfile",
+			"field_name": "name",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -191,7 +191,7 @@ onMounted(() => {
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
                 </th>
-              <th>
+              <th class="w-36">
                 <div class="flex justify-evenly items-center">
                     <nobr>Contract Type</nobr>
                     <div class="flex flex-col cursor-pointer">
@@ -200,7 +200,7 @@ onMounted(() => {
                     </div>
                   </div>
               </th>
-              <th>
+              <th class="w-48">
                 <div class="flex justify-evenly items-center">
                     <nobr>Charterer Name</nobr>
                     <div class="flex flex-col cursor-pointer">
@@ -258,7 +258,12 @@ onMounted(() => {
                   <option value="100">100</option>
                 </select>
               </th>
-              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <select v-model="filterOptions.filter_options[0].search_param" class="filter_input">
+                  <option value="Voyage Wise">Voyage Wise</option>
+                  <option value="Day Wise">Day Wise</option>
+                </select>
+              </th>
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
