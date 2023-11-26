@@ -184,11 +184,11 @@ export default function useChartererProfile() {
 	}
 
 
-	async function getAllChartererProfiles() {
+	async function getAllChartererProfiles(businessUnit = null) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-charterer-profiles`);
+			const { data, status } = await Api.get(`/ops/get-search-charterer-profiles?business_unit=${businessUnit}`);
 			chartererProfiles.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
