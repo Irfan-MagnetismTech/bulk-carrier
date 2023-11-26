@@ -538,6 +538,7 @@
       </div>
     </form>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
   
 </template>
 <script setup>
@@ -550,6 +551,7 @@ import usePort from '../../composables/operations/usePort';
 import useBulkNoonReport from "../../composables/operations/useBulkNoonReport";
 import cloneDeep from 'lodash/cloneDeep';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const editInitiated = ref(false);
 

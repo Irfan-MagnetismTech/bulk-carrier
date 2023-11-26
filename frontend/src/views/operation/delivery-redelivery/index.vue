@@ -217,7 +217,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">                  
-                  <span>Total Amount <small>(USD)</small></span>
+                  <nobr>Total Amount <small>(USD)</small></nobr>
                   <!-- <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -226,12 +226,15 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Total Amount <small>(BDT)</small></span>
+                    <nobr>Total Amount <small>(BDT)</small></nobr>
                     <!-- <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
                     </div> -->
                   </div>
+              </th>
+              <th>
+                <nobr>Business Unit</nobr>
               </th>
               <th>
                 Action
@@ -250,13 +253,21 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <!-- <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th> -->
               <th>
-                <select v-model="filterOptions.filter_options[3].search_param" class="filter_input">
+                <select v-model="filterOptions.filter_options[2].search_param" class="filter_input">
                   <option value="Delivery">Delivery</option>
                   <option value="Re-delivery">Re-delivery</option>
                 </select>
               </th>
-              <th></th>
-              <th></th>
+              <th>
+                <input type="text" disabled placeholder="" class="filter_input bg-gray-100" autocomplete="off" />
+              </th>
+              <th>
+                <input type="text" disabled placeholder="" class="filter_input bg-gray-100" autocomplete="off" />
+
+              </th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
@@ -267,9 +278,7 @@ onMounted(() => {
                 <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ deliveryRedelivery?.opsChartererProfile?.name }}</td>
                   <td>{{ deliveryRedelivery?.opsVessel?.name }}</td>
-                  <td>
-                    <nobr>{{ deliveryRedelivery?.effective_date ? moment(deliveryRedelivery?.effective_date).format('DD-MM-YYYY') : null }}</nobr>
-                  </td>
+                  
                   <td>{{ deliveryRedelivery?.note_type }}</td>
                   <td>
                     {{ numberFormat(deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
@@ -283,6 +292,11 @@ onMounted(() => {
 }, 0)) }}
 
                   </td>
+                  <td>
+                    <span :class="deliveryRedelivery?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ deliveryRedelivery?.business_unit }}</span>
+
+                  </td>
+
                   <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
