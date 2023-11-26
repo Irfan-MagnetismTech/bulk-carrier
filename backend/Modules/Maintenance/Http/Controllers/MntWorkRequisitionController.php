@@ -222,7 +222,7 @@ class MntWorkRequisitionController extends Controller
 
             $wr['act_start_date'] = $input['act_start_date'];
             $wr['act_completion_date'] = $input['act_completion_date'];
-            $wr['status'] = ($input['act_completion_date'] == '') ? 1: 2;
+            $wr['status'] = ($input['act_completion_date'] == '') ? $input['status'] : 2;
 
             DB::beginTransaction();
 
