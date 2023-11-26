@@ -124,7 +124,16 @@
 // const previousLines = ref(cloneDeep(props.form.scmPrLines));
 
 watch(() => props.form.scmPrLines, (newLines) => {
+  let materialArray = [];
   newLines.forEach((line, index) => {
+    let material_key = line.scm_material_id + "-" + line.brand + "-" + line.model;
+    if (materialArray.indexOf(material_key) === -1) {
+      materialArray.push(material_key);
+    } else {
+      alert("Duplicate Material Found");
+      props.form.scmPrLines.splice(index, 1);
+    }
+
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
@@ -132,8 +141,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
         ) {
           props.form.scmPrLines[index].unit = selectedMaterial.unit;
           props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
-          getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id);
-          props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+          getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id).then(() => {
+        
+            props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+          });
         }
       }
     }
@@ -317,10 +328,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
                         v-on="events"
                         />
                 </template>
-                  <template #option="{ option, onOptionClick }">
+                  <!-- <template #option="{ option, onOptionClick }">
                    
 
-                 </template>
+                 </template> -->
             </v-select>
             </td>
             <td>

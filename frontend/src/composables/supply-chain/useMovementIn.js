@@ -34,10 +34,10 @@ export default function useMovementIn() {
         to_warehouse_name: '',
         from_cost_center_id: '',
         to_cost_center_id: '',
-        scmMmr: '',
-        scm_mmr_id: '',
-        scmMo: '',
-        scm_mo_id: '',
+        scmMmr: null,
+        scm_mmr_id: null,
+        scmMo: null,
+        scm_mo_id: null,
         business_unit: '',
         scmMiLines: [
             {
@@ -54,17 +54,9 @@ export default function useMovementIn() {
         scmMiShortage: {
             shortage_type: '',
             scmWarehouse: '',
-            scm_warehouse_id: '',
-            acc_cost_center_id: '',
+            scm_warehouse_id: null,
+            acc_cost_center_id: null,
             scmMiShortageLines: [
-                {
-                    scmMaterial: '',
-                    scm_material_id: '',
-                    unit: '',
-                    quantity: 0.00,
-                    remarks: '',
-                    mi_composite_key: ''
-                }
             ]
         },
     });
