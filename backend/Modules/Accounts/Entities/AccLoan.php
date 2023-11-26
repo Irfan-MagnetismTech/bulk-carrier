@@ -23,4 +23,9 @@ class AccLoan extends Model
     public function getTotalReceivedAmountAttribute(){
         return $this->accLoansReceived()->sum('received_amount'); 
     }
+
+    public function bank()
+    {
+        return $this->belongsTo(AccBankAccount::class, 'loanable_id', 'id')->withDefault();
+    }
 }

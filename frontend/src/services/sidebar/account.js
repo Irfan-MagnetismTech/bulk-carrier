@@ -96,7 +96,7 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'crw.policies.index',
+                route: 'acc.bank-reconciliation.index',
                 label: 'Bank Reconciliation',
                 preIcon: '',
                 postIcon: icons.DownArrow,
@@ -115,7 +115,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.loans.index',
                         label: 'Loans',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -125,8 +125,8 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
-                        label: 'Loan Receipts',
+                        route: 'acc.loan-received.index',
+                        label: 'Loan Received',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,

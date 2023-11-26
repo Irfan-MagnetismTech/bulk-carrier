@@ -51,7 +51,7 @@ class AccLoanController extends Controller
     public function show(AccLoan $accLoan)
     {
         try {
-            return response()->success('Retrieved Successfully', $accLoan, 200);
+            return response()->success('Retrieved Successfully', $accLoan->load('bank'), 200);
         }
         catch (QueryException $e)
         {

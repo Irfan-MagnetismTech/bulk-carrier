@@ -8,7 +8,7 @@ import useAccountCommonApiRequest from "../../composables/accounts/useAccountCom
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
 
-const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
+const { allAccountLists, allBankLists, getAccount, allCostCenterLists, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
 
 const { emit } = getCurrentInstance();
 
@@ -33,12 +33,20 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
+// v-select for change unit depend on material start
+watch(() => props.form.bank, (value) => {
+  if(value){
+    props.form.loanable_id = value?.id ?? '';
+  }
+}, {deep: true});
+
 
 onMounted(() => {
   //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
     getAccount(null,props.form.business_unit);
+    getBank(null,props.form.business_unit);
   });
 });
 
@@ -53,30 +61,28 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm"></label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Source Type <span class="text-red-500">*</span></span>
-        <input type="text" class="label-item-input" placeholder="Source Name" v-model.trim="form.loanable_type" required />
-
-        <!-- <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.loanable_type" label="name"  class="block w-full rounded form-input">
-          <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.loanable_type" v-bind="attributes" v-on="events"/>
-          </template>
-        </v-select> -->
+        <select class="label-item-input" v-model.trim="form.loanable_type" required>
+          <option disabled> Select </option>
+          <option value="Bank" selected> Bank </option>
+        </select>
       </label>
+      
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Source Name <span class="text-red-500">*</span></span>
-        <input type="number" class="label-item-input" placeholder="Source Name" v-model.trim="form.loanable_id" required />
-
-        <!-- <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.loanable_id" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allBankLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.bank" label="bank_name_type"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.loanable_id" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.bank" v-bind="attributes" v-on="events"/>
           </template>
-        </v-select> -->
+        </v-select>
       </label>
+      
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Loan Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.loan_type" required>
-          <option selected disabled> Select </option>
+          <option value="" selected disabled> Select </option>
           <option value="AC Payee">AC Payee</option>
           <option value="Pay Order">Pay Order</option>
           <option value="Draft">Draft</option>

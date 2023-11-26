@@ -296,7 +296,7 @@ onMounted(() => {
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length">
                   <nobr>
-                    <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: bankReconciliation?.id } }"></action-button>
+                    <!-- <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: bankReconciliation?.id } }"></action-button> -->
                   </nobr>
                 </td>
               </tr>

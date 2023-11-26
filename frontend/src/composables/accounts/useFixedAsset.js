@@ -4,32 +4,37 @@ import { useRouter } from "vue-router";
 import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
 
-export default function useLoan() {
+export default function useFixedAsset() {
     const router = useRouter();
     const loans = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const loan = ref( {
-        bank : '',
-        bank_name : '',        
-        loanable_type : 'Bank', 
-        loanable_id : '', 
-        loan_type : '', 
-        loan_number : '', 
-        loan_name : '', 
-        total_sanctioned : '', 
-        sanctioned_limit : '', 
-        total_installment : '', 
-        interest_rate : '', 
-        opening_date : '', 
-        maturity_date : '', 
-        emi_date : '',
-        emi_amount : '',
-        loan_purpose : '',
-        mortgage : '',
-        remarks : '', 
-        business_unit : '', 
+
+    const fixedAsset = ref( {
+        acc_cost_center_id : '',
+        scm_mrr_id : '',
+        scm_material_id : '',
+        brand : '',
+        model : '',
+        serial : '',
+        acc_parent_account_id : '',
+        acc_account_id : '',
+        asset_tag : '',
+        useful_life : '',
+        depreciation_rate : '',
+        location : '',
+        acquisition_date : '',
+        acquisition_cost : '',
+        business_unit : '',
+        fixedAssetCosts: [
+            {
+                particular: '',
+                remarks: '',
+                amount: '',
+            }
+        ]
     });
+
     // const indexPage = ref(null);
     // const indexBusinessUnit = ref(null);
     const filterParams = ref(null);

@@ -19,6 +19,6 @@ class AccLoanReceived extends Model
 
     public function bank()
     {
-        return $this->belongsTo(AccAccount::class, 'received_acc_account_id', 'id')->withDefault();
+        return $this->belongsTo(AccBankAccount::class, 'received_acc_account_id', 'id')->withDefault();
     }
 }

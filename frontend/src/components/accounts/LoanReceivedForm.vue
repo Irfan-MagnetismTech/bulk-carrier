@@ -70,7 +70,7 @@ onMounted(() => {
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Loans Name <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Loan Name <span class="text-red-500">*</span></span>
         <v-select :options="allLoanLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.loan" label="loan_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.loan" v-bind="attributes" v-on="events"/>
@@ -101,7 +101,6 @@ onMounted(() => {
           <option value="" selected disabled>Select Value</option>
           <option value="A/C Payee">A/C Payee</option>
           <option value="Cheque">Cheque</option>
-          <option value="Cash">Cash</option>
           <option value="Pay Order">Pay Order</option>
           <option value="Draft">Draft</option>
           <option value="Same / Inter Bank">Same / Inter Bank</option></select>
@@ -109,7 +108,7 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Received Account Name <span class="text-red-500">*</span></span>
-        <v-select :options="allBankLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.bank" label="bank_name"  class="block w-full rounded form-input">
+        <v-select :options="allBankLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.bank" label="bank_name_type"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.bank" v-bind="attributes" v-on="events"/>
           </template>

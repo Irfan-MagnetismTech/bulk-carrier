@@ -25,10 +25,10 @@ return new class extends Migration
             $table->unsignedBigInteger('acc_parent_account_id'); // Asset Category (In Front End)
             $table->unsignedBigInteger('acc_account_id');
             $table->string('asset_tag')->nullable();
-            $table->string('location')->nullable();
-            $table->date('acquisition_date'); // use from date
             $table->float('useful_life'); // in years
             $table->float('depreciation_rate'); // in percentage
+            $table->string('location')->nullable();
+            $table->date('acquisition_date'); // use from date
             $table->float('acquisition_cost');
             $table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();

@@ -239,6 +239,35 @@ export default [
         component: () => import(`../views/${BASE}/loan-received/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    
+    /* Fixed Assets */
+    {
+        path: `/${BASE}/fixed-assets`,
+        name: `${BASE}.fixed-assets.index`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/fixed-assets/create`,
+        name: `${BASE}.fixed-assets.create`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/fixed-assets/:fixedAssetId/edit`,
+        name: `${BASE}.fixed-assets.edit`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/fixed-assets/:fixedAssetId`,
+        name: `${BASE}.fixed-assets.show`,
+        component: () => import(`../views/${BASE}/fixed-asset/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
+
 
     /* Bank Reconciliation Routes */
     {
