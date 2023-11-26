@@ -17,25 +17,40 @@ export default function useCriticalFunction() {
         // business_unit: '',
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isCriticalFunctionLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getCriticalFunctions(page, businessUnit) {
+    async function getCriticalFunctions(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        // indexPage.value = page;
+        // indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/critical-functions',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             criticalFunctions.value = data.value;
@@ -44,8 +59,16 @@ export default function useCriticalFunction() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -59,7 +82,7 @@ export default function useCriticalFunction() {
             const { data, status } = await Api.post('/mnt/critical-functions', form);
             criticalFunction.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-functions.index" });
+            await router.push({ name: "mnt.critical-functions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -100,7 +123,7 @@ export default function useCriticalFunction() {
             );
             criticalFunction.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-functions.index" });
+            await router.push({ name: "mnt.critical-functions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -119,10 +142,11 @@ export default function useCriticalFunction() {
         try {
             const { data, status } = await Api.delete( `/mnt/critical-functions/${criticalFunctionId}`);
             notification.showSuccess(status);
-            await getCriticalFunctions(indexPage.value, indexBusinessUnit.value);
+            await getCriticalFunctions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -133,6 +157,7 @@ export default function useCriticalFunction() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isCriticalFunctionLoading.value = true;
 
         try {
             const {data, status} = await Api.get('/mnt/get-critical-functions');
@@ -144,6 +169,7 @@ export default function useCriticalFunction() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isCriticalFunctionLoading.value = false;
             //NProgress.done();
         }
     }
@@ -159,6 +185,8 @@ export default function useCriticalFunction() {
         deleteCriticalFunction,
         getCriticalFunctionsWithoutPagination,
         isLoading,
+        isTableLoading,
+        isCriticalFunctionLoading,
         errors,
     };
 }
