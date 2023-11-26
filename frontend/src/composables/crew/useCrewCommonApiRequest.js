@@ -19,6 +19,7 @@ export default function useCrewCommonApiRequest() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isCommonCrewLoading = ref(false);
 
     async function getCrewRankLists(businessUnit) {
 
@@ -84,6 +85,7 @@ export default function useCrewCommonApiRequest() {
 
         //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isCommonCrewLoading.value = true;
 
         let form = {
             'business_unit': businessUnit,
@@ -98,6 +100,7 @@ export default function useCrewCommonApiRequest() {
         } finally {
             //loader.hide();
             isLoading.value = false;
+            isCommonCrewLoading.value = false;
         }
     }
 
@@ -183,6 +186,7 @@ export default function useCrewCommonApiRequest() {
         getCrewDocuments,
         getCrewDocumentRenewals,
         isLoading,
+        isCommonCrewLoading,
         errors,
     };
 }
