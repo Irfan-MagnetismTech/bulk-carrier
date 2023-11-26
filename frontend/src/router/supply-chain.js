@@ -541,4 +541,33 @@ export default [
     },
     
     /* Movement In end */
+
+    /* Movement Requisition start */
+
+    {
+        path: `/${BASE}/material-adjustments`,
+        name: `${BASE}.material-adjustments.index`,
+        component: () => import(`../views/${PATH_BASE}/material-adjustments/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/material-adjustments/create`,
+        name: `${BASE}.material-adjustments.create`,
+        component: () => import(`../views/${PATH_BASE}/material-adjustments/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-create' },
+    },
+    {
+        path: `/${BASE}/material-adjustments/:materialAdjustmentId/edit`,
+        name: `${BASE}.material-adjustments.edit`,
+        component: () => import(`../views/${PATH_BASE}/material-adjustments/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-edit' },
+    },
+    {
+        path: `/${BASE}/material-adjustments/:materialAdjustmentId`,
+        name: `${BASE}.material-adjustments.show`,
+        component: () => import(`../views/${PATH_BASE}/material-adjustments/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-show'  },
+    },
+    /* Movement Requisition end */
 ];

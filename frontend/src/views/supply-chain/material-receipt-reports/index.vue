@@ -12,6 +12,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
 import { useRouter } from 'vue-router';
 
 const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading,isTableLoading } = useMaterialReceiptReport();
@@ -50,7 +52,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "LC No",
+      "label": "MRR No",
       "filter_type": "input" 
     },
     {
@@ -60,7 +62,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "LC Date",
+      "label": "PO No",
       "filter_type": "input" 
     },
     {
@@ -70,7 +72,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Expire Date",
+      "label": "PR No",
       "filter_type": "input" 
     },
     {
@@ -80,7 +82,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Weight",
+      "label": "Warehouse",
       "filter_type": "input"
     },
   ]
@@ -101,6 +103,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.material-receipt-reports.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -184,8 +187,9 @@ function confirmDelete(id) {
                 <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialReceiptReports?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!materialReceiptReports?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+          <tfoot v-if="!materialReceiptReports?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -205,5 +209,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

@@ -191,10 +191,10 @@ export default function useMaterialReceiptReport() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-receipt-reports/${materialReceiptReportId}`);
             notification.showSuccess(status);
-            await getMaterialReceiptReports(indexPage.value,indexBusinessUnit.value);
+            await getMaterialReceiptReports(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             // isLoading.value = false;

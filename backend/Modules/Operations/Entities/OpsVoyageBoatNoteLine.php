@@ -12,7 +12,10 @@ class OpsVoyageBoatNoteLine extends Model
 
     protected $fillable = [
         'ops_voyage_boat_note_id',
+        'voyage_sector_id',
         'voyage_note_type',
+        'loading_point',
+        'unloading_point',
         'date',
         'discharge_date',
         'quantity',
@@ -23,5 +26,12 @@ class OpsVoyageBoatNoteLine extends Model
     public function opsVoyageBoatNote()
     {
         return $this->belongsTo(OpsVoyageBoatNote::class, 'ops_voyage_boat_note_id' , 'id');
+    }
+    public function loadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'loading_point', 'code');
+    }
+
+    public function unloadingPoint() {
+        return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
     }
 }

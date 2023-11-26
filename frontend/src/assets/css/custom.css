@@ -324,3 +324,22 @@ input.custom_date::-webkit-calendar-picker-indicator{
         max-width: calc(100vw - 36px);
     }
 }
+
+/* #customDataTable::-webkit-scrollbar:horizontal {
+    height: 0.3rem!important; 
+  }
+
+  #customDataTable::-webkit-scrollbar-thumb:horizontal{
+    background-color: rgba(126, 58, 242); 
+    border-radius: 12rem!important;
+    width: 2rem!important;
+  }
+
+  #customDataTable::-webkit-scrollbar-track:horizontal{
+    background: rgb(148, 144, 155)!important; 
+    border-radius: 12rem!important;
+  }
+
+  #customDataTable::-webkit-scrollbar-button:horizontal {
+    background-color: rgb(0, 0, 0); 
+  }    */

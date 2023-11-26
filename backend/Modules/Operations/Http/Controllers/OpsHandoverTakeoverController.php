@@ -84,6 +84,7 @@ class OpsHandoverTakeoverController extends Controller
             $bunker->name = $bunker->scmMaterial->name;
             return $bunker;
         });
+        
         try
         {
             return response()->success('Data retrieved successfully.', $handover_takeover, 200);

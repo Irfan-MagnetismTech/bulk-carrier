@@ -7,17 +7,14 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.name" placeholder="Charterer Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Company Legal Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.company_legal_name" placeholder="Company Legal Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.company_legal_name" :errors="errors.company_legal_name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Owner Code" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.owner_code" :errors="errors.owner_code" />
         </label>
         
         
@@ -26,42 +23,35 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Contact No</span>
             <input type="text" v-model.trim="form.contact_no" placeholder="Contact No" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
       </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
             <input type="text" v-model.trim="form.country" placeholder="Country" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.country" :errors="errors.country" />
         </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
           <input type="text" v-model.trim="form.address" placeholder="Address" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.address" :errors="errors.address" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
-            <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.billing_address" :errors="errors.billing_address" />
-        </label>
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
-            <input type="text" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.billing_email" :errors="errors.billing_email" />
-        </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.email" :errors="errors.email" />
+            <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
       </label>
+      
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-1/2 mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
+            <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
+        </label>
+      <label class="block w-1/2 mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
+            <input type="email" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
+        </label>
+      
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          <input type="text" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.website" :errors="errors.website" />
+          <input type="url" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
     </div>
     
     <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>
@@ -99,11 +89,10 @@
                 <option value="">Select Currency</option>
                 <option v-for="currency in currencies">{{ currency }}</option>
               </select>
-              <Error v-if="errors?.model_name" :errors="errors.model_name" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
     </div>
-
+<ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted } from "vue";
@@ -111,6 +100,7 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {useStore} from "vuex";
 import useBusinessInfo from "../../composables/useBusinessInfo"
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const store = useStore();
 const editInitiated = ref(false);

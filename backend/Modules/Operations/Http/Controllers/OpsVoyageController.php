@@ -83,7 +83,14 @@ class OpsVoyageController extends Controller
       */
      public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers');
+
+        $voyage->opsVoyageSectors->map(function($sector) {
+            $sector->voyage_sector_id = $sector->id;
+            $sector->loading_point_name_code = $sector->loadingPoint->name.'-'.$sector->loadingPoint->code;
+            $sector->unloading_point_name_code = $sector->unloadingPoint->name.'-'.$sector->unloadingPoint->code;
+            return $sector;
+        });
 
         try
         {
@@ -185,14 +192,11 @@ class OpsVoyageController extends Controller
     public function getSearchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
-            ->where(function ($query) use($request) {
-                $query->where('voyage_no', 'like', '%' . $request->voyage_no . '%');                
-            })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })
             ->when(request()->vessel_id != 'null', function($q) {
-                $q->where('ops_vessel_id', request()->vessel_id);
+                $q->where('ops_vessel_id', request()->ops_vessel_id);
             })
             ->get();
 

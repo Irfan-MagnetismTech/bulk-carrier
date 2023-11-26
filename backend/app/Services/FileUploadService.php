@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class FileUploadService
@@ -13,14 +14,14 @@ class FileUploadService
         try {
             if (is_string($file)) return $file;
 
-            $fileName = null;
+            $fileName = $previousFile;
             if ($file) {
                 $myRandomString = Str::random(10);
                 $fileName = $path . '/' . $myRandomString . time() . '.' . $file->getClientOriginalExtension();
                 $file->move($path, $fileName);
             }
 
-            if ($previousFile) {
+            if ($file && $previousFile) {
                 $this->deleteFile($previousFile);
             }
 
@@ -42,18 +43,18 @@ class FileUploadService
     }
 
     // note : new data, new attachment filse, file storing path, previous data which is get from database and, field name if it's not attachment
-    public function handleMultipleFiles(string $path, array $newData, array $attachments, array $oldData = null, string $field = 'attachment'): array|null
+    public function handleMultipleFiles(string $path, array $newData, array $attachments, $oldData= null, string $field = 'attachment'): array|null
     {
+        if ($oldData instanceof Collection) {
+            $oldData = $oldData->toArray();
+        }        
         try {
             $results = [];
             $oldLength =0;
-            if($oldData != null){
-                $oldLength = count($oldData);
-            }
 
             foreach ($newData as $key => $data) {
                 if (isset($attachments[$key])) {
-                    if ($key < $oldLength) {
+                    if (isset($oldData[$key]->attachment)) {
                         $this->deleteFile($oldData[$key]->attachment);
                     }
                     $attachment = $this->handleFile($attachments[$key], $path);

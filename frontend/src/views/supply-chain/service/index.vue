@@ -10,6 +10,7 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 const props = defineProps({
   page: {
@@ -18,7 +19,7 @@ const props = defineProps({
   },
 });
 
-const { services, getServices, deleteService, isLoading, isTableLoading} = useService();
+const { services, getServices, deleteService, isLoading, isTableLoading,errors} = useService();
 const { setTitle } = Title();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -84,6 +85,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.service.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -213,4 +215,5 @@ function confirmDelete(id) {
     </div>
     <Paginate :data="services" to="scm.service.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
@@ -102,7 +102,7 @@
               <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" readonly /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" readonly/> </td>

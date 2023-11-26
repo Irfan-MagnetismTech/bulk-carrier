@@ -13,7 +13,6 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name</span>
               <input type="text" v-model.trim="form.contract_name" placeholder="Contract Name" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.contract_name" :errors="errors.contract_name" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract Type</span>
@@ -21,7 +20,6 @@
                 <option>Voyage Wise</option>
                 <option>Day Wise</option>
               </select>
-              <Error v-if="errors?.contract_type" :errors="errors.contract_type" />
           </label>
 
 
@@ -43,7 +41,6 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner</span>
               <input type="text" readonly v-model="form.vessel_owner" placeholder="Vessel Owner" class="form-input bg-gray-100" autocomplete="off" />
-            <Error v-if="errors?.vessel_owner" :errors="errors.vessel_owner" />
           </label>
 
           
@@ -68,17 +65,14 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
               <input type="text" v-model.trim="form.charterer_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
-            <Error v-if="errors?.charterer_code" :errors="errors.charterer_code" />
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
               <input type="text" v-model.trim="form.country" placeholder="Country" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.country" :errors="errors.country" />
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
             <input type="text" v-model.trim="form.address" placeholder="Address" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.address" :errors="errors.address" />
         </label>
         
       </div>
@@ -86,18 +80,15 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
               <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.billing_address" :errors="errors.billing_address" />
           </label>
         
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
               <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Contact No.</span>
             <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input" autocomplete="off" />
-          <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Attachment </span>
@@ -142,7 +133,6 @@
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
-                <Error v-if="errors?.model_name" :errors="errors.model_name" />
         </label>
         <label class="block w-full mt-2 text-sm"></label>
       </div>
@@ -274,6 +264,7 @@
         <label class="block w-full mt-2 text-sm"></label>
       </div>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted } from "vue";
@@ -283,6 +274,7 @@ import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
 import usePort from "../../composables/operations/usePort";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useCargoTariff from "../../composables/operations/useCargoTariff";
 
 const editInitiated = ref(false);

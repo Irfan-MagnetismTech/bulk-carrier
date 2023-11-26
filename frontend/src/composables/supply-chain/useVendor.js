@@ -144,14 +144,14 @@ export default function useVendor() {
             await getVendors(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function searchVendor(searchParam, loading) {
+    async function searchVendor(searchParam, loading= false) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -166,7 +166,7 @@ export default function useVendor() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
+            // loading(false)
         }
     }
 
