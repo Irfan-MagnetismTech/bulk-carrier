@@ -28,10 +28,10 @@ class AccFixedAssetRequest extends FormRequest
             'depreciation_rate'            => 'required|numeric|min:0|max:100',
             'acquisition_cost'             => 'required|numeric|min:0',
             'business_unit'                => 'required|in:PSML,TSLL',
-            // 'fixedAssetCosts'              => 'required|array|min:1',
-            // 'fixedAssetCosts.*.particular' => 'required|string|max:255',
-            // 'fixedAssetCosts.*.remarks'    => 'nullable|string|max:255',
-            // 'fixedAssetCosts.*.amount'     => 'required|numeric|min:0',
+            'fixedAssetCosts'              => 'required|array|min:1',
+            'fixedAssetCosts.*.particular' => 'required|string|max:255',
+            'fixedAssetCosts.*.remarks'    => 'nullable|string|max:255',
+            'fixedAssetCosts.*.amount'     => 'required|numeric|min:0',
         ];
     }
 

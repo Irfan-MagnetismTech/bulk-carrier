@@ -10,6 +10,7 @@ const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, allBankLists, allCostCenterLists,  allFixedAssetCategoryList, getFixedAssetCategory, getAccount, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
 
+
 const { emit } = getCurrentInstance();
 
 const props = defineProps({
@@ -26,14 +27,6 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 // v-select for change unit depend on material start
-// watch(() => props.form, (value) => {
-//   if(value){
-//     props.form.acc_account_id = props.form?.acc_account_name?.id ?? '';
-//     props.form.acc_cost_center_id = props.form?.acc_cost_center_name?.id ?? '';
-//   }
-// }, {deep: true});
-
-// v-select for change unit depend on material start
 watch(() => props.form.costCenter, (value) => {
   if(value){
     props.form.acc_cost_center_id = value?.id ?? '';
@@ -47,8 +40,21 @@ watch(() => props.form.fixedAssetCategory, (value) => {
   }
 });
 
+function fixedAssetCosts() {
+  let obj = {
+    particular: '',
+    amount: '',
+    remarks: '',
+  };
+  props.form.fixedAssetCosts.push(obj);
+}
+
+function removefixedAssetCosts(index){
+  props.form.fixedAssetCosts.splice(index, 1);
+}
 
 onMounted(() => {
+  console.log(props.form); 
   //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
@@ -160,6 +166,47 @@ onMounted(() => {
       </label>
     </div>
 
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Fixed Asset Costs <span class="text-red-500">*</span></legend>
+        <table class="w-full whitespace-no-wrap" id="table">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th class="px-4 py-3 align-bottom"> Particular <span class="text-red-500">*</span></th>
+            <th class="px-4 py-3 align-bottom"> Amount <span class="text-red-500">*</span></th>
+            <th class="px-4 py-3 align-bottom"> Remarks</th>
+            <th class="px-4 py-3 text-center align-bottom">Action</th>
+          </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetCost, index) in form.fixedAssetCosts" :key="fixedAssetCost.id">
+            <td class="px-1 py-1">
+              <input type="text" v-model.trim="form.fixedAssetCosts[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="number" step=".01" v-model.trim="form.fixedAssetCosts[index].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+            </td>
+            <td class="px-1 py-1">
+              <input type="text" v-model.trim="form.fixedAssetCosts[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!==0" type="button" @click="removefixedAssetCosts(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="fixedAssetCosts()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+    </fieldset>
+
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

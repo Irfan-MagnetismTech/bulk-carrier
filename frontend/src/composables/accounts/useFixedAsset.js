@@ -32,12 +32,12 @@ export default function useFixedAsset() {
         acquisition_date : '',
         acquisition_cost : 0,
         business_unit : '',
-        
+
         fixedAssetCosts: [
             {
                 particular: '',
-                remarks: '',
                 amount: '',
+                remarks: '',
             }
         ]
     });
@@ -123,7 +123,7 @@ export default function useFixedAsset() {
 
         try {
             const { data, status } = await Api.get(`/acc/acc-fixed-assets/${fixedAssetId}`);
-            fixedAssets.value = data.value;
+            fixedAsset.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;

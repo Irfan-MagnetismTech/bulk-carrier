@@ -5,6 +5,7 @@ namespace Modules\Accounts\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Accounts\Entities\AccFixedAsset;
 use Modules\Accounts\Http\Requests\AccFixedAssetRequest;
 
@@ -18,7 +19,7 @@ class AccFixedAssetController extends Controller
     public function index(Request $request)
     {
         try {
-            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter', 'scmMaterial:id,name')
+            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter', 'scmMaterial:id,name', 'fixedAssetCategory')
             ->globalSearch($request->all());
 
             return response()->json([
@@ -42,13 +43,14 @@ class AccFixedAssetController extends Controller
     {
         try {
             $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
-            $accFixedAsset     = AccFixedAsset::create($accFixedAssetData);
-            $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
 
-            return response()->json([
-                'status' => 'success',
-                'value'  => $accFixedAsset,
-            ], 200);
+            DB::transaction(function () use ($request, $accFixedAssetData)
+            {
+                $accFixedAsset     = AccFixedAsset::create($accFixedAssetData);
+                $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
+            });
+
+            return response()->success('Created Successfully', '', 201);
         }
         catch (\Exception $e)
         {
@@ -67,7 +69,7 @@ class AccFixedAssetController extends Controller
         try {
             return response()->json([
                 'status' => 'success',
-                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name'),
+                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMaterial', 'fixedAssetCategory'),
             ], 200);
         }
         catch (\Exception $e)
@@ -87,14 +89,15 @@ class AccFixedAssetController extends Controller
     {
         try {
             $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
-            $accFixedAsset->update($accFixedAssetData);
-            $accFixedAsset->fixedAssetCosts()->delete();
-            $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
 
-            return response()->json([
-                'status' => 'success',
-                'value'  => $accFixedAsset,
-            ], 200);
+            DB::transaction(function () use ($request, $accFixedAssetData, $accFixedAsset)
+            {
+                $accFixedAsset->update($accFixedAssetData);
+                $accFixedAsset->fixedAssetCosts()->delete();
+                $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
+            });
+
+            return response()->success('Updated Successfully', '', 202);
         }
         catch (\Exception $e)
         {
