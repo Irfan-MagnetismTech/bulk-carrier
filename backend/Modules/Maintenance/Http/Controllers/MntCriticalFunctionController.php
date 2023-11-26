@@ -14,11 +14,11 @@ class MntCriticalFunctionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalFunctions = MntCriticalFunction::select('*')->paginate(10);
+            $criticalFunctions = MntCriticalFunction::select('*')->globalSearch($request->all());;
 
             return response()->success('Critical functions are retrieved successfully', $criticalFunctions, 200);
             
