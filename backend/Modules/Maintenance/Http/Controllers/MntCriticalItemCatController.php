@@ -14,11 +14,11 @@ class MntCriticalItemCatController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalItemCats = MntCriticalItemCat::with(['mntCriticalFunction'])->paginate(10);
+            $criticalItemCats = MntCriticalItemCat::with(['mntCriticalFunction'])->globalSearch($request->all());
 
             return response()->success('Critical item categories are retrieved successfully', $criticalItemCats, 200);
             
