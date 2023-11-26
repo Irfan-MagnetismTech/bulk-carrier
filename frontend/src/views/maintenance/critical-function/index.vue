@@ -108,7 +108,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-  getCriticalFunctions(props.page, businessUnit.value)
+  getCriticalFunctions(filterOptions.value)
     .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
