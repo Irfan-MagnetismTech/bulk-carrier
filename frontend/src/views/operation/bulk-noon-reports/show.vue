@@ -17,11 +17,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel </span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Vessel </span>
               <span class="show-block">{{ bulkNoonReport.opsVessel?.name }}</span>
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage </span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Voyage </span>
               <span class="show-block">{{ bulkNoonReport.opsVoyage?.voyage_no }}</span>
 
       </label>
@@ -31,20 +31,20 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Ship Master</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Ship Master</span>
               <span class="show-block">{{ bulkNoonReport.ship_master }}</span>
               
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Chief Engineer</span>
+            <span class="text-gray-700 dark-dsiabled:text-gray-300">Chief Engineer</span>
             <span class="show-block">{{ bulkNoonReport.chief_engineer }}</span>
       </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Noon Position</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Noon Position</span>
               <span class="show-block">{{ bulkNoonReport.noon_position }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Status</span>
               <span class="show-block">{{ bulkNoonReport.status }}</span>
         </label>
         
@@ -53,15 +53,15 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Engine Running Hours</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Engine Running Hours</span>
               <span class="show-block">{{ bulkNoonReport.engine_running_hours }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Lat/Long</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Lat/Long</span>
               <span class="show-block">{{ bulkNoonReport.lat_long }}</span>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Date</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Date</span>
               <span class="show-block">
                 <nobr>{{ bulkNoonReport?.date ? moment(bulkNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
               </span>
@@ -70,13 +70,13 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Last Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-dsiabled:text-gray-300">Last Port <span class="text-red-500">*</span></span>
           <span class="show-block">{{ bulkNoonReport.last_port }}</span>
 
         </label>
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Next Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-dsiabled:text-gray-300">Next Port <span class="text-red-500">*</span></span>
           <span class="show-block">{{ bulkNoonReport.next_port }}</span>
 
         </label>
@@ -86,7 +86,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Remarks</span>
+              <span class="text-gray-700 dark-dsiabled:text-gray-300">Remarks</span>
               <span class="show-block">{{ bulkNoonReport.remarks }}</span>
         </label>
     </div>

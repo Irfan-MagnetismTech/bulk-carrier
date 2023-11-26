@@ -86,6 +86,7 @@ class OpsVoyageController extends Controller
         $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers');
 
         $voyage->opsVoyageSectors->map(function($sector) {
+            $sector->voyage_sector_id = $sector->id;
             $sector->loading_point_name_code = $sector->loadingPoint->name.'-'.$sector->loadingPoint->code;
             $sector->unloading_point_name_code = $sector->unloadingPoint->name.'-'.$sector->unloadingPoint->code;
             return $sector;

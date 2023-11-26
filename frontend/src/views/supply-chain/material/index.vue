@@ -191,7 +191,7 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
+        <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

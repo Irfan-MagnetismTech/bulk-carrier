@@ -9,8 +9,6 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
-import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -201,15 +199,17 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody v-if="cargoTypes?.data?.length"  class="relative">
+          <tbody v-if="cargoTypes?.data?.length" class="relative">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">
                 <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                 <td>{{ cargoType?.cargo_type }}</td>
                 <td>{{ cargoType?.description }}</td>
                 <td class="items-center justify-center space-x-1 text-gray-600">
+                  <nobr>
                     <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
                     <action-button @click="confirmDelete(cargoType.id)" :action="'delete'"></action-button>
-                  <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                  </nobr>
                 </td>
 
               </tr>

@@ -281,11 +281,13 @@ export default function useVoyage() {
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-voyages?business_unit=${businessUnit}&ops_vessel_id=${opsVesselId}`);
 
-			vessels.value = data?.value;
+			voyages.value = data?.value;
+
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
+			console.log(error)
 		} finally {
 			// loading(false)
 			//NProgress.done();
