@@ -6,26 +6,33 @@ import useNotification from '../useNotification.js';
 
 export default function useFixedAsset() {
     const router = useRouter();
-    const loans = ref([]);
+    const fixedAssets = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
     const fixedAsset = ref( {
+        costCenter : '', 
+        acc_cost_center_name : '', 
         acc_cost_center_id : '',
-        scm_mrr_id : '',
-        scm_material_id : '',
+
+        scm_mrr_id : 1,
+        scm_material_id : 1,
         brand : '',
         model : '',
         serial : '',
-        acc_parent_account_id : '',
-        acc_account_id : '',
+        acc_account_id : 1,
+        
+        fixedAssetCategory : '',
+        acc_parent_account_id : '',        
         asset_tag : '',
+
         useful_life : '',
         depreciation_rate : '',
         location : '',
         acquisition_date : '',
-        acquisition_cost : '',
+        acquisition_cost : 0,
         business_unit : '',
+        
         fixedAssetCosts: [
             {
                 particular: '',
@@ -43,7 +50,7 @@ export default function useFixedAsset() {
     const isLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getLoans(filterOptions) {
+    async function getFixedAssets(filterOptions) {
 
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         // isLoading.value = true;
@@ -64,14 +71,14 @@ export default function useFixedAsset() {
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/acc/acc-loans',{
+            const {data, status} = await Api.get('/acc/acc-fixed-assets',{
                 params: {
                     page: filterOptions.page || 1,
                     items_per_page: filterOptions.items_per_page,
                     data: JSON.stringify(filterOptions)
                 }
             });
-            loans.value = data.value;
+            fixedAssets.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -90,16 +97,16 @@ export default function useFixedAsset() {
         }
     }
 
-    async function storeLoan(form) {
+    async function storeFixedAsset(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/acc/acc-loans', form);
-            loan.value = data.value;
+            const { data, status } = await Api.post('/acc/acc-fixed-assets', form);
+            fixedAsset.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.loans.index" });
+            await router.push({ name: "acc.fixed-assets.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -109,14 +116,14 @@ export default function useFixedAsset() {
         }
     }
 
-    async function showLoan(loanId) {
+    async function showFixedAsset(fixedAssetId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-loans/${loanId}`);
-            loan.value = data.value;
+            const { data, status } = await Api.get(`/acc/acc-fixed-assets/${fixedAssetId}`);
+            fixedAssets.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -127,16 +134,16 @@ export default function useFixedAsset() {
         }
     }
 
-    async function updateLoan(form, loanId) {
+    async function updateFixedAsset(form, fixedAssetId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.put(`/acc/acc-loans/${loanId}`, form);
-            loan.value = data.value;
+            const { data, status } = await Api.put(`/acc/acc-fixed-assets/${fixedAssetId}`, form);
+            fixedAsset.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.loans.index" });
+            await router.push({ name: "acc.fixed-assets.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -146,15 +153,15 @@ export default function useFixedAsset() {
         }
     }
 
-    async function deleteLoan(loanId) {
+    async function deleteFixedAsset(fixedAssetId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-loans/${loanId}`);
+            const { data, status } = await Api.delete( `/acc/acc-fixed-assets/${fixedAssetId}`);
             notification.showSuccess(status);
-            await getLoans(filterParams.value);
+            await getFixedAssets(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -165,13 +172,13 @@ export default function useFixedAsset() {
     }
 
     return {
-        loans,
-        loan,
-        getLoans,
-        storeLoan,
-        showLoan,
-        updateLoan,
-        deleteLoan,
+        fixedAssets,
+        fixedAsset,
+        getFixedAssets,
+        storeFixedAsset,
+        showFixedAsset,
+        updateFixedAsset,
+        deleteFixedAsset,
         isLoading,
         isTableLoading,
         errors,

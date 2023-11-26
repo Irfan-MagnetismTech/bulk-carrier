@@ -18,8 +18,7 @@ class AccFixedAssetController extends Controller
     public function index(Request $request)
     {
         try {
-            return AccFixedAsset::all(); 
-            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name')
+            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter', 'scmMaterial:id,name')
             ->globalSearch($request->all());
 
             return response()->json([

@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
-import LoanForm from '../../../components/accounts/LoanForm.vue';
+import FixedAssetForm from '../../../components/accounts/FixedAssetForm.vue';
 import useFixedAsset from '../../../composables/accounts/useFixedAsset';
 import Title from "../../../services/title";
 
@@ -10,8 +10,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const route = useRoute();
-const loanId = route.params.loanId;
-const { loan, showLoan, updateLoan, bgColor, errors } = useFixedAsset();
+const fixedAssetId = route.params.fixedAssetId;
+const { fixedAsset, showFixedAsset, updateFixedAsset, bgColor, errors } = useFixedAsset();
 const icons = useHeroIcon();
 
 const { setTitle } = Title();
@@ -28,7 +28,7 @@ watch(loan, (value) => {
 
 
 onMounted(() => {
-  showLoan(fixedAssetId);
+  showFixedAsset(fixedAssetId);
 });
 
 </script>
@@ -38,9 +38,9 @@ onMounted(() => {
     <default-button :title="'Fixed Asset'" :to="{ name: 'acc.fixed-assets.index' }" :icon="icons.DataBase"></default-button>
   </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800" :style="{ 'background-color': bgColor }">
-        <form @submit.prevent="updateLoan(fixedAsset, fixedAssetId)">
+        <form @submit.prevent="updateFixedAsset(fixedAsset, fixedAssetId)">
             <!-- Booking Form -->
-          <loan-form @bgColor="handleColorSelected" :page="page" v-model:form="fixedAsset" :errors="errors"></loan-form>
+          <fixed-asset-form @bgColor="handleColorSelected" :page="page" v-model:form="fixedAsset" :errors="errors"></fixed-asset-form>
             <!-- Submit button -->
             <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>

@@ -179,4 +179,31 @@ class AccCommonController extends Controller
         }
     }
 
+    public function getFixedAssetCategories(Request $request)
+    {
+
+        try {
+            $fixedAssetLine = config('accounts.balance_income_line.fixed_assets_at_cost'); 
+
+            $loans = AccAccount::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->where('acc_balance_and_income_line_id', $fixedAssetLine)
+            ->whereDoesntHave('parent')
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $loans,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    
+
+
 }
