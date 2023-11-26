@@ -11,8 +11,8 @@ class CrwAgencyRequest extends FormRequest
     {
         $data      = request('data');
         $dataArray = json_decode($data, true);
-
-        $mergeData = array_merge($dataArray, ['logo' => request('logo')]);
+        $logo = is_object(request('logo')) ? request('logo') : null;
+        $mergeData = array_merge($dataArray, ['logo' => $logo]);
 
         $this->replace($mergeData);
     }

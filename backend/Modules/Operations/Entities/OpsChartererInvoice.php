@@ -39,8 +39,13 @@ class OpsChartererInvoice extends Model
         return $this->belongsTo(OpsChartererContract::class, 'ops_charterer_contract_id' , 'id');
     }
 
-    public function opsChartererInvoiceLines()
+    public function opsChartererInvoiceOthers()
     {
-        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id');
+        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','charge');
+    }
+    
+    public function opsChartererInvoiceServices()
+    {
+        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','deduct');
     }
 }

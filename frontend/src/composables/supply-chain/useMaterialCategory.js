@@ -137,7 +137,7 @@ export default function useMaterialCategory() {
             await getMaterialCategories(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data , data);
         } finally {
             // loader.hide();
             isLoading.value = false;

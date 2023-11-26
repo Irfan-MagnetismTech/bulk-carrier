@@ -125,21 +125,20 @@
         </fieldset>
       </div>
     </div>
-    <button @click.prevent="refreshData">Refresh</button>
   <hr class="w-7"/>
-<div class="mt-5" v-if="form.scmMiShortages.length">
+<div class="mt-5" v-if="form.scmMiShortage.scmMiShortageLines.length">
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Shortage <span class="text-red-500">*</span></legend>
     
     <div class="input-group !w-1/2">
         <label class="label-group">
           <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.to_warehouse_name" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
+          <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
             <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
         </label>
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" />
+          <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" />
             <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
         </label>
     </div>
@@ -152,52 +151,40 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Qty</th>
               <th class="py-3 align-center">Remarks</th>
-              <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMiShortage, index) in form.scmMiShortages" :key="index">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMiShortageLine, index) in form.scmMiShortage.scmMiShortageLines" :key="index">
               <td class="!w-72">
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiShortages[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiShortages[index].scmMaterial,index)">
+                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiShortage.scmMiShortageLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiShortage.scmMiShortageLines[index].scmMaterial,index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.scmMiShortages[index].scmMaterial"
-                          :readonly = "form.scmMiShortages[index].scmMaterial"
+                          :required="!form.scmMiShortage.scmMiShortageLines[index].scmMaterial"
+                          :readonly = "form.scmMiShortage.scmMiShortageLines[index].scmMaterial"
                           v-bind="attributes"
                           v-on="events"
                           />
                   </template>
-              </v-select>
+              </v-select> -->
+                <input type="text" readonly :value="form.scmMiShortage.scmMiShortageLines[index].scmMaterial.name" class="vms-readonly-input form-input">
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmMiShortages[index].unit" class="vms-readonly-input form-input">
+                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].unit" class="vms-readonly-input form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortages[index].quantity" class="form-input">
+                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortages[index].available_stock" class="form-input">
+                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].available_stock" class="form-input">
                 </label>
                 
-              </td>
-              <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
               </td>
             </tr>
             </tbody>
@@ -281,7 +268,7 @@
   function fetchMovementRequisitions(search, loading) {
       if (search.length > 0) {
         loading(true);
-        props.form.scmMiShortages = [];
+        props.form.scmMiShortage.scmMiShortageLines= [];
         props.form.scmMiLines = [];
         searchMovementRequisition(search, loading, props.form.business_unit);
       }
@@ -344,11 +331,11 @@ function setMaterialOtherData(datas, index) {
 
 
 watch(() => props.form.scmMiLines, (newLines) => {
-  props.form.scmMiShortages = [];
+  props.form.scmMiShortage.scmMiShortageLines = [];
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
     if (Number(line.quantity) < Number(line.mo_quantity)) {
-      props.form.scmMiShortages.push({
+      props.form.scmMiShortage.scmMiShortageLines.push({
         scm_material_id: line.scm_material_id,
         scmMaterial: line.scmMaterial,
         unit: line.unit,

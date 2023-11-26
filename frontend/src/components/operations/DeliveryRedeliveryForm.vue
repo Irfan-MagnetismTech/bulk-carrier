@@ -16,21 +16,18 @@
                 <option>Delivery</option>
                 <option>Re-delivery</option>
               </select>
-              <Error v-if="errors?.note_type" :errors="errors.note_type" />
           </label>
 
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
               <input type="date" v-model.trim="form.effective_date" placeholder="Effective Date" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.effective_date" :errors="errors.effective_date" />
 
             </label>
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate</span>
               <input type="number" step="0.001" v-model.trim="form.exchange_rate" placeholder="Exchange Rate" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.exchange_rate" :errors="errors.exchange_rate" />
           </label>
 
           <label class="block w-full mt-2 text-sm">
@@ -39,14 +36,13 @@
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
-                <Error v-if="errors?.currency" :errors="errors.currency" />
-        </label>
+          </label>
           
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -57,28 +53,28 @@
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
-            </label>
+            </label>        
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Code</span>
               <input type="text" v-model.trim="form.short_code" placeholder="Vessel Code" class="form-input bg-gray-100" readonly autocomplete="off" />
-            <Error v-if="errors?.short_code" :errors="errors.short_code" />
           </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner Name</span>
-              <input type="text" v-model.trim="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
-            <Error v-if="errors?.owner_name" :errors="errors.owner_name" />
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Capacity</span>
-            <input type="text" v-model.trim="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
-          <Error v-if="errors?.capacity" :errors="errors.capacity" />
-        </label>
+        
         
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner Name</span>
+              <input type="text" v-model.trim="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
+          </label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Capacity</span>
+            <input type="text" v-model.trim="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
+        </label>
+      </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" @search="fetchCharterers"  v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -95,31 +91,24 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
               <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
-            <Error v-if="errors?.owner_code" :errors="errors.owner_code" />
         </label>
+      </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Email</span>
               <input type="text" v-model.trim="form.email" placeholder="Charterer Email" class="form-input bg-gray-100" readonly autocomplete="off" />
-            <Error v-if="errors?.email" :errors="errors.email" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Contact No.</span>
             <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input bg-gray-100" readonly autocomplete="off" />
-          <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
       </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-          <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input w-full" autocomplete="off"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
-
-
-      </div>
+      <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+      
     </div>
+
+
     <div v-if="form.opsBunkers?.length" id="bunker-info" class="mt-5">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
         <table class="w-full whitespace-no-wrap" >
@@ -148,31 +137,28 @@
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off"/>
-                  <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].rate" placeholder="Rate" @keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
-                  <Error v-if="errors?.opsBunkers[index]?.rate" :errors="errors.opsBunkers[index]?.rate"/>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model.trim="form.opsBunkers[index].amount_usd" placeholder="USD Amount" class="form-input text-right" autocomplete="off" readonly/>
-                  <Error v-if="errors?.opsBunkers[index]?.amount_usd" :errors="errors.opsBunkers[index]?.amount_usd" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model.trim="form.opsBunkers[index].amount_bdt" placeholder="BDT Amount" class="form-input text-right" autocomplete="off" readonly/>
-                  <Error v-if="errors?.opsBunkers[index]?.amount_bdt" :errors="errors.opsBunkers[index]?.amount_bdt" />
                 </label>
               </td>
             </tr>
           </tbody>
         </table>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>
     
 </template>
 <script setup>
@@ -181,13 +167,16 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
+import useVoyage from "../../composables/operations/useVoyage";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
+import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
-const { searchChartererProfiles, chartererProfiles } = useChartererProfile();
-
+const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
+const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const props = defineProps({
     form: {
         required: false,
@@ -197,15 +186,7 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-function fetchVessels(search, loading) {
-      loading(true);
-      searchVessels(search, props.form.business_unit, loading);
-}
 
-function fetchCharterers(search, loading) {
-      loading(true);
-      searchChartererProfiles(search, loading)
-}
 
 watch(() => props.form.opsVessel, (value) => {
   if(value) {
@@ -213,10 +194,35 @@ watch(() => props.form.opsVessel, (value) => {
     props.form.short_code = value?.short_code
     props.form.owner_name = value?.owner_name
     props.form.capacity = value?.capacity
-    
-    showVessel(value?.id)
+  
+    let loadStatus = false;
+    showVessel(value?.id, loadStatus);
   }
 }, { deep: true})
+
+watch(() => props.form.business_unit, (value) => {
+
+  if(props?.formType != 'edit') {
+    props.form.opsVoyage = null;
+    props.form.ops_voyage_id = null;
+    props.form.opsVessel = null;
+    props.form.ops_vessel_id = null;
+    props.form.opsChartererProfile = null;
+    props.form.ops_charterer_profile_id = null;
+    props.form.short_code = null;
+    props.form.owner_name = null;
+    props.form.capacity = null;
+    props.form.owner_code = null;
+    props.form.email = null;
+    props.form.contact_no = null;
+    props.form.opsBunkers = null;
+  }
+
+  getVesselList(props.form.business_unit);
+  getAllChartererProfiles(props.form.business_unit);
+  
+
+}, { deep : true })
 
 watch(() => vessel, (value) => {
   console.log("vessel change ")
@@ -304,6 +310,7 @@ function calculatePrice(index) {
 
 onMounted(() => {
   getCurrencies();
+  getVesselList(props.form.business_unit);
 })
 
 </script>

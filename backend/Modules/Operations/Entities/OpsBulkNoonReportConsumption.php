@@ -10,23 +10,21 @@ class OpsBulkNoonReportConsumption extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ops_bunker_id',
         'ops_bulk_noon_report_id',
         'type',
         'previous_rob',
         'received',
-        'me',
-        'ge',
-        'blr',
-        'ig',
-        'aux',
-        'main',
-        'me_cyl_oil',
-        'ge_sys_oil',
         'rob',
     ];
 
     public function opsBulkNoonReport()
     {
         return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
+    }
+
+    public function opsBulkNoonReportConsumptionHeads()
+    {
+        return $this->hasMany(OpsBulkNoonReport::class, 'ops_bulk_noon_report_consumption_id' , 'id');
     }
 }

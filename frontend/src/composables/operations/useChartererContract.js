@@ -60,9 +60,7 @@ export default function useChartererContract() {
 			loading_point: '',
 			final_unloading_point: '',
 			approximate_load_amount: null,
-			opsCargoTariff: {
-				id: null
-			}
+			opsCargoTariff: null
 		},
 		opsChartererContractsLocalAgents: [{
 			...opsChartererLocalAgentObject
@@ -89,7 +87,7 @@ export default function useChartererContract() {
             isLoading.value = false;
             loader?.hide();
         }
-		
+
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
         filterParams.value = filterOptions;
@@ -100,7 +98,7 @@ export default function useChartererContract() {
 					page: filterOptions.page,
 					items_per_page: filterOptions.items_per_page,
 					data: JSON.stringify(filterOptions)
-				 }
+				}
 			});
 			chartererContracts.value = data.value;
 			notification.showSuccess(status);
@@ -236,6 +234,21 @@ export default function useChartererContract() {
 		}
 	}
 
+	async function getChartererContractsByCharterOwner(chartererProfileId) {
+		try {
+			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?charterer_profile_id=${chartererProfileId}`);
+			chartererContracts.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			//notification.showError(status);
+		} finally {
+			//loader.hide();
+			//isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		chartererContracts,
 		chartererContract,
@@ -246,6 +259,7 @@ export default function useChartererContract() {
 		updateChartererContract,
 		deleteChartererContract,
 		searchChartererContracts,
+		getChartererContractsByCharterOwner,
 		isLoading,		
 		isTableLoading,
 		errors,

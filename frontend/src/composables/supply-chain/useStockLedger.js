@@ -60,6 +60,7 @@ export default function useStockLedger() {
         }
     
     async function getFromAndToWarehouseWiseCurrentStock(fromWarehouseId,toWarehouseId,materialId,index = null) {
+        const loader = $loading.show(LoaderConfig);
         try {
             const {data, status} = await Api.get(`/${BASE}/get-current-stock-by-warehouse`, {
     			params: {
@@ -78,6 +79,7 @@ export default function useStockLedger() {
             notification.showError(status);
             console.log(status);
         } finally {
+            loader.hide();
             //NProgress.done();
         }
     }

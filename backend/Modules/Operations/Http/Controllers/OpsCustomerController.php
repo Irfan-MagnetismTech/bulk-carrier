@@ -132,9 +132,9 @@ class OpsCustomerController extends Controller
     public function getCustomerByNameorCode(Request $request){
         try {
             $customers = OpsCustomer::query()
-            ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            ->when(request()->has('name_or_code'), function ($query) {
+                $query->where('name', 'like', '%' . request()->name_or_code . '%');
+                $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
             })
             ->limit(10)
             ->get();
@@ -148,9 +148,16 @@ class OpsCustomerController extends Controller
     public function getCustomerNameorCode(Request $request){
         try {
             $customers = OpsCustomer::query()
-            ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            // ->where(function ($query) use($request) {
+            //     $query->where('name', 'like', '%' . $request->name_or_code . '%');
+            //     $query->orWhere('code', 'like', '%' . $request->name_or_code . '%');
+            // })
+            ->when(request()->has('name_or_code'), function ($query) {
+                    $query->where('name', 'like', '%' . request()->name_or_code . '%');
+                    $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
+            })
+            ->when(request()->has('business_unit') && request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);
             })
             ->get();
 

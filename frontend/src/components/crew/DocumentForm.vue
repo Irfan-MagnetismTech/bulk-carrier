@@ -64,7 +64,7 @@ watch(() => props.form, (value) => {
   if(value){
     props.form.crw_crew_id = props.form?.crw_crew_name?.id ?? '';
     props.form.crw_crew_profile_id = props.form?.crw_crew_name?.id ?? '';
-    props.form.crw_crew_rank = props.form?.crw_crew_name?.crwRank?.name ?? '';
+    props.form.crw_crew_rank = props.form?.crw_crew_name?.crwCurrentRank?.name ?? '';
     props.form.crw_crew_contact = props.form?.crw_crew_name?.contact ?? '';
     props.form.crw_crew_email = props.form?.crw_crew_name?.email ?? '';
     props.form.validity_period_in_month = props.form?.validity_period ?? '';
@@ -203,7 +203,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-        <input type="text" v-model.trim="form.crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.crw_crew_rank" placeholder="Rank" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Contact</span>
@@ -211,7 +211,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-        <input type="text" :value="form?.crw_crew_name?.pre_email" placeholder="Crew email" class="form-input vms-readonly-input" autocomplete="off" required />
+        <input type="text" :value="form?.crw_crew_name?.pre_email" placeholder="Email" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">

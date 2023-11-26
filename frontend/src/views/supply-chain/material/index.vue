@@ -11,6 +11,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const props = defineProps({
@@ -40,7 +41,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Material Name",
-      "filter_type": "input" 
+      "filter_type": "input",
     },
     {
       "relation_name": null,
@@ -102,6 +103,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.material.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -122,9 +124,6 @@ onMounted(() => {
       console.error("Error fetching materials:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 
 function confirmDelete(id) {
@@ -192,6 +191,7 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
+        <Paginate :data="materials" to="scm.material.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

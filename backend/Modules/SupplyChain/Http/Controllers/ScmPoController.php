@@ -216,6 +216,7 @@ class ScmPoController extends Controller
                             'model' => $item->model,
                             'quantity' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
+                            'max_quantity' => $item->quantity - $item->scmPoLines->sum('quantity'),
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];

@@ -12,6 +12,7 @@ class OpsVoyageBoatNoteLine extends Model
 
     protected $fillable = [
         'ops_voyage_boat_note_id',
+        'voyage_sector_id',
         'voyage_note_type',
         'loading_point',
         'unloading_point',

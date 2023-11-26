@@ -149,10 +149,14 @@ export default function useVessel() {
 		}
 	}
 
-	async function showVessel(vesselId) {
+	async function showVessel(vesselId, LoadingStatus = true) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		var loader = {};
+		if(LoadingStatus) {
+			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+			isLoading.value = LoadingStatus;
+		}
+		
 
 		try {
 			const { data, status } = await Api.get(`/ops/vessels/${vesselId}`);
@@ -162,8 +166,10 @@ export default function useVessel() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loader.hide();
-			isLoading.value = false;
+			if(LoadingStatus) {
+				loader.hide();
+				isLoading.value = false;
+			}
 			//NProgress.done();
 		}
 	}

@@ -147,8 +147,8 @@ class OpsCargoTariffController extends Controller
     public function getCargoTariffByName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()
-            ->where(function ($query) use($request) {
-                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
+            ->when(request()->has('tariff_name'), function ($query) {
+                    $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');                
             })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
@@ -156,7 +156,7 @@ class OpsCargoTariffController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Data updated successfully.', $cargoTariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -165,15 +165,12 @@ class OpsCargoTariffController extends Controller
     public function getCargoTariffName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()
-            ->where(function ($query) use($request) {
-                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
-            })
-            ->when(request()->business_unit != "ALL", function($q){
+            ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->get();
 
-            return response()->success('Data updated successfully.', $cargoTariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

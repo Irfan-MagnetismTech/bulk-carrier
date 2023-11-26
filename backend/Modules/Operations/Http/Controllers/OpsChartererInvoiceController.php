@@ -31,7 +31,7 @@ class OpsChartererInvoiceController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
@@ -55,11 +55,13 @@ class OpsChartererInvoiceController extends Controller
              DB::beginTransaction();
              $charterer_invoice_info = $request->except(
                  '_token',
-                 'opsChartererInvoiceLines',
+                 'opsChartererInvoiceOthers',
+                 'opsChartererInvoiceServices'
              );
  
              $charterer_invoice = OpsChartererInvoice::create($charterer_invoice_info);
-             $charterer_invoice->opsChartererInvoiceLines()->createMany($request->opsChartererInvoiceLines);
+             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
+             $charterer_invoice->opsChartererInvoiceServices()->createMany($request->opsChartererInvoiceServices);
              DB::commit();
              return response()->success('Data added successfully.', $charterer_invoice, 201);
          }
@@ -78,7 +80,7 @@ class OpsChartererInvoiceController extends Controller
       */
      public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
      {
-         $charterer_invoice->load('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines');
+         $charterer_invoice->load('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices');
          try
          {
              return response()->success('Data retrieved successfully.', $charterer_invoice, 200);
@@ -104,12 +106,14 @@ class OpsChartererInvoiceController extends Controller
              DB::beginTransaction();
              $charterer_invoice_info = $request->except(
                  '_token',
-                 'opsChartererInvoiceLines',
+                 'opsChartererInvoiceOthers',
              );
             
              $charterer_invoice->update($charterer_invoice_info);       
-             $charterer_invoice->opsChartererInvoiceLines()->delete();
-             $charterer_invoice->opsChartererInvoiceLines()->createMany($request->opsChartererInvoiceLines);
+             $charterer_invoice->opsChartererInvoiceOthers()->delete();
+             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
+             $charterer_invoice->opsChartererInvoiceServices()->delete();
+             $charterer_invoice->opsChartererInvoiceServices()->createMany($request->opsChartererInvoiceServices);
              DB::commit();
              return response()->success('Data updated successfully.', $charterer_invoice, 202);
          }
@@ -130,7 +134,8 @@ class OpsChartererInvoiceController extends Controller
      {
          try
          {
-             $charterer_invoice->opsChartererInvoiceLines()->delete();
+            $charterer_invoice->opsChartererInvoiceOthers()->delete();
+            $charterer_invoice->opsChartererInvoiceServices()->delete();
              $charterer_invoice->delete();
  
              return response()->json([
@@ -145,7 +150,7 @@ class OpsChartererInvoiceController extends Controller
      
     public function getChartererInvoiceName(){
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererInvoiceLines')->latest()->get();
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')->latest()->get();
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         } catch (QueryException $e){

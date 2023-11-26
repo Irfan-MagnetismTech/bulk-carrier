@@ -100,7 +100,7 @@
                     <!-- <Error v-if="errors?.material_code" :errors="errors.material_code" /> -->
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Category Name <span class="required-style">*</span></span>
+                    <span class="label-item-title">Material Category <span class="required-style">*</span></span>
                     <v-select
                       :key="categoryKey"
                       :options="materialCategories"
@@ -186,7 +186,7 @@
                 <span class="label-item-title">
                     Sample Photo
                     <template v-if="form.sample_photo">
-                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+form?.sample_photo">{{
+                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.sample_photo">{{
                         (typeof $props.form?.sample_photo === 'string')
                             ? '('+$props.form?.sample_photo.split('/').pop()+')'
                             : ''

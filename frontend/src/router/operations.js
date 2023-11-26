@@ -292,6 +292,33 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/charterer-contracts/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
+	/* Charterer Invoice */
+	{
+		path: `/${BASE}/charterer-invoices`,
+		name: `${BASE}.charterer-invoices.index`,
+		component: () => import(`../views/${ViEWBASE}/charterer-invoices/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/charterer-invoices/create`,
+		name: `${BASE}.charterer-invoices.create`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-invoices/:chartererInvoiceId/edit`,
+		name: `${BASE}.charterer-invoices.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/charterer-invoices/:chartererInvoiceId/show`,
+		name: `${BASE}.charterer-invoices.show`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Delivery and Re-delivery Note */
 	{
 		path: `/${BASE}/delivery-redelivery`,
@@ -400,6 +427,32 @@ export default [
 		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/show`,
 		name: `${BASE}.bulk-noon-reports.show`,
 		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+		/*Contract Assign */
+	{
+		path: `/${BASE}/contract-assigns`,
+		name: `${BASE}.contract-assigns.index`,
+		component: () => import(`../views/${ViEWBASE}/contract-assigns/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/contract-assigns/create`,
+		name: `${BASE}.contract-assigns.create`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/contract-assigns/:contractAssignId/edit`,
+		name: `${BASE}.contract-assigns.edit`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/contract-assigns/:contractAssignId/show`,
+		name: `${BASE}.contract-assigns.show`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	}
 ];

@@ -63,13 +63,18 @@ class OpsBulkNoonReport extends Model
         return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportDistances()
+    public function opsBulkNoonReportDistance()
     {
-        return $this->hasMany(OpsBulkNoonReportDistance::class, 'ops_bulk_noon_report_id', 'id');
+        return $this->hasOne(OpsBulkNoonReportDistance::class, 'ops_bulk_noon_report_id', 'id');
     }
 
     public function opsBulkNoonReportEngineInputs()
     {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNull('type');
+    }
+
+    public function opsBulkNoonReportEngineInputTypes()
+    {
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
     }
 }
