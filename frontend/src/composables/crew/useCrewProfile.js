@@ -7,17 +7,19 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewProfile() {
     const router = useRouter();
     const crewProfiles = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const crewProfile = ref( {
         business_unit: '',
-        crw_recruitment_approval_id: '',
-        crw_recruitment_approval_name: '',
+        crw_recruitment_approval_id: null,
+        crw_recruitment_approval_name: null,
         hired_by: '',
-        agency_id: '',
-        agency_name: '',
+        agency_id: null,
+        agency_name: null,
         rank_id: '',
-        department_id: '',
+        crw_rank_id: '',
+        department_name: '',
         first_name: '',
         last_name: '',
         father_name: '',
@@ -43,6 +45,8 @@ export default function useCrewProfile() {
         per_email: '',
         picture: '',
         attachment: '',
+        employee_type: 'Crew',
+        is_officer: 0,
         educations: [
             {
                 exam_title: '',
@@ -107,25 +111,32 @@ export default function useCrewProfile() {
         ],
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewProfiles(page,businessUnit) {
+    async function getCrewProfiles(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-crew-profiles',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             crewProfiles.value = data.value;
@@ -134,8 +145,14 @@ export default function useCrewProfile() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -145,8 +162,14 @@ export default function useCrewProfile() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('picture', form.picture);
+
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        if(form.picture){
+            formData.append('picture', form.picture);
+        }
+
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -187,8 +210,12 @@ export default function useCrewProfile() {
         isLoading.value = true;
 
         let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('picture', form.picture);
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        if(form.picture){
+            formData.append('picture', form.picture);
+        }
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
@@ -217,7 +244,7 @@ export default function useCrewProfile() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-profiles/${profileId}`);
             notification.showSuccess(status);
-            await getCrewProfiles(indexPage.value, indexBusinessUnit.value);
+            await getCrewProfiles(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -225,6 +252,93 @@ export default function useCrewProfile() {
             loader.hide();
             isLoading.value = false;
         }
+    }
+
+    function checkValidation(openTab, tabNumber, props,requiredFields){
+        //const requiredFields = ['first_name'];
+        for (const field of requiredFields) {
+            const element = document.getElementById(field);
+            if (openTab.value === 1) {
+                if(!props.form[field]){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 2){
+                let educationFieldStatus = true;
+                props.form.educations.forEach((value, index) => {
+                    if(!props.form.educations[index][field]){
+                        educationFieldStatus = false;
+                    }
+                });
+                if(!educationFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 3){
+                let trainingFieldStatus = true;
+                props.form.trainings.forEach((value, index) => {
+                    if(!props.form.trainings[index][field]){
+                        trainingFieldStatus = false;
+                    }
+                });
+                if(!trainingFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 4){
+                let experienceFieldStatus = true;
+                props.form.experiences.forEach((value, index) => {
+                    if(!props.form.experiences[index][field]){
+                        experienceFieldStatus = false;
+                    }
+                });
+                if(!experienceFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 5){
+                let otherFieldStatus = true;
+                props.form.languages.forEach((value, index) => {
+                    if(!props.form.languages[index][field]){
+                        otherFieldStatus = false;
+                    }
+                });
+                if(!otherFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 6){
+                let referenceFieldStatus = true;
+                props.form.references.forEach((value, index) => {
+                    if(!props.form.references[index][field]){
+                        referenceFieldStatus = false;
+                    }
+                });
+                if(!referenceFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            if(openTab.value === 7){
+                let nomineesFieldStatus = true;
+                props.form.nominees.forEach((value, index) => {
+                    if(!props.form.nominees[index][field]){
+                        nomineesFieldStatus = false;
+                    }
+                });
+                if(!nomineesFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     return {
@@ -235,6 +349,8 @@ export default function useCrewProfile() {
         showCrewProfile,
         updateCrewProfile,
         deleteCrewProfile,
+        checkValidation,
+        isTableLoading,
         isLoading,
         errors,
     };
