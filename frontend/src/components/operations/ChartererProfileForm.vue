@@ -48,17 +48,17 @@
 
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
-            <input type="text" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
           <Error v-if="errors?.billing_email" :errors="errors.billing_email" />
         </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
           <Error v-if="errors?.email" :errors="errors.email" />
       </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          <input type="text" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
+          <input type="url" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
         <Error v-if="errors?.website" :errors="errors.website" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>

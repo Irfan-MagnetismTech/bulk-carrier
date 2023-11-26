@@ -69,7 +69,7 @@ let filterOptions = ref( {
 		},
     {
 			"relation_name": null,
-			"field_name": "name",
+			"field_name": "owner_code",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -77,7 +77,7 @@ let filterOptions = ref( {
 		},
     {
 			"relation_name": null,
-			"field_name": "name",
+			"field_name": "country",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -85,7 +85,7 @@ let filterOptions = ref( {
 		},
     {
 			"relation_name": null,
-			"field_name": "name",
+			"field_name": "email",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -93,7 +93,7 @@ let filterOptions = ref( {
 		},
     {
 			"relation_name": null,
-			"field_name": "name",
+			"field_name": "contact_no",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -162,7 +162,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Charterer Name</span>
+                  <nobr>Charterer Name</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -171,7 +171,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Charterer Short Code</span>
+                  <nobr>Charterer Short Code</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -180,7 +180,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Country</span>
+                  <nobr>Country</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -189,7 +189,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Email</span>
+                  <nobr>Email</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -198,14 +198,16 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Contact</span>
+                  <nobr>Contact</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
-              <th>Business Unit</th>
+              <th>
+                <nobr>Business Unit</nobr>
+              </th>
               <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -256,15 +258,15 @@ onMounted(() => {
           
           <tfoot v-if="!chartererProfiles?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-            <td colspan="6">
+            <td colspan="7">
               <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
             </td>
           </tr>
           <tr v-else-if="!chartererProfiles?.data?.length">
-            <td colspan="6">No data found.</td>
+            <td colspan="7">No data found.</td>
           </tr>
           </tfoot>
       </table>

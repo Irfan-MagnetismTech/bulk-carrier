@@ -2,10 +2,10 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add Bulk Noon Reports</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-dsiabled:text-gray-200">Add Bulk Noon Reports</h2>
       <default-button :title="'Bulk Noon Reports List'" :to="{ name: 'ops.bulk-noon-reports.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-dsiabled:bg-gray-800">
       <form @submit.prevent="storeBulkNoonReport(bulkNoonReport)">
           <!-- Port Form -->
           <bulk-noon-report-form v-model:form="bulkNoonReport" :errors="errors" :formType="formType" :engineObject="engineObject" :cargoTankObject="cargoTankObject" :portObject="portObject"></bulk-noon-report-form>
