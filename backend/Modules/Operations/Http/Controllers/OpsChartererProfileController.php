@@ -162,13 +162,7 @@ class OpsChartererProfileController extends Controller
      
      public function getChartererProfileNameorCode(Request $request){
         try {
-            $charterer_profiles = OpsChartererProfile::query()
-            ->when(request()->has('name_or_code'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('name', 'like', '%' . request()->name_or_code . '%')
-                            ->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
-                });
-            })    
+            $charterer_profiles = OpsChartererProfile::query()   
             ->when(request()->business_unit && request()->business_unit != 'ALL', function($q){
                 $q->where('business_unit', request()->business_unit);  
             })

@@ -652,7 +652,7 @@ watch(() => props.form.opsVessel, (value) => {
 
 if(value) {
   props.form.ops_vessel_id = value?.id
-  let loadStatus = true;
+  let loadStatus = false;
   showVessel(value?.id, loadStatus);
   getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
 }
