@@ -102,7 +102,7 @@
               <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> </td>
+            <td class="px-1 py-1"> <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" readonly /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" readonly/> </td>
