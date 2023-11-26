@@ -10,8 +10,9 @@ import Paginate from '../../../components/utils/paginate.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
-const { vendors, getVendors, deleteVendor, isLoading, isTableLoading} = useVendor();
+const { vendors, getVendors, deleteVendor, isLoading, isTableLoading,errors} = useVendor();
 
 const { setTitle } = Title();
 const debouncedValue = useDebouncedRef('', 800);
@@ -254,4 +255,5 @@ function confirmDelete(id) {
     </div>
     <Paginate :data="vendors" to="scm.vendor.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

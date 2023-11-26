@@ -199,10 +199,10 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-orders/${purchaseOrderId}`);
             notification.showSuccess(status);
-            await getPurchaseOrders(indexPage.value,indexBusinessUnit.value);
+            await getPurchaseOrders(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             // loader.hide();
             // isLoading.value = false;

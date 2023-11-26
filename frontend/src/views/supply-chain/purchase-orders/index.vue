@@ -11,10 +11,11 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 import { useRouter } from 'vue-router';
-const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading } = usePurchaseOrder();
+const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading,errors} = usePurchaseOrder();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -220,8 +221,9 @@ const navigateToMRRCreate = (purchaseOrderId) => {
                 </div>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseOrders?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!purchaseOrders?.data?.length" class="bg-white dark-disabled:bg-gray-800">
+          <tfoot v-if="!purchaseOrders?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -241,5 +243,5 @@ const navigateToMRRCreate = (purchaseOrderId) => {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

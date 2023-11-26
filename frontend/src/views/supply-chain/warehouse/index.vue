@@ -12,6 +12,8 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import Paginate from '../../../components/utils/paginate.vue';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+
 
 const props = defineProps({
   page: {
@@ -21,7 +23,7 @@ const props = defineProps({
 });
 
 const icons = useHeroIcon();
-const { warehouses, getWarehouses, deleteWarehouse, isLoading, isTableLoading} = useWarehouse();
+const { warehouses, getWarehouses, deleteWarehouse, isLoading, isTableLoading,errors} = useWarehouse();
 
 const { setTitle } = Title();
 setTitle('Warehouses');
@@ -251,4 +253,5 @@ onMounted(() => {
     </div>
     <Paginate :data="warehouses" to="scm.warehouse.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

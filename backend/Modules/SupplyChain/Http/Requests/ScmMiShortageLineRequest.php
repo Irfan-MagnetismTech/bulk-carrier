@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Crew\Http\Requests;
+namespace Modules\SupplyChain\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CrwCrewRequest extends FormRequest
+class ScmMiShortageLineRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

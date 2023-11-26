@@ -157,14 +157,36 @@ class ScmMrrController extends Controller
 
     public function searchMrr(Request $request): JsonResponse
     {
-        $materialReceiptReport = ScmMrr::query()
-            ->with('scmMrrLines')
-            ->where('lc_no', 'like', "%$request->searchParam%")
-            ->orderByDesc('lc_no')
+        if($request->has('searchParam')) { 
+            $materialReceiptReport = ScmMrr::query()
+            ->with('scmMrrLines.scmMaterial')
+            ->where(function($query) use ($request) {
+                $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
+                ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+            })
+            ->orderByDesc('ref_no')
             ->limit(10)
             ->get();
+            
+        }else{
+            $materialReceiptReport = ScmMrr::query()
+            ->with('scmMrrLines.scmMaterial')
+            ->where(function($query) use ($request) {
+                $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
+                ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+            })
+            ->orderByDesc('ref_no')
+            ->limit(10)
+            ->get();
+        }
+       
+        $scmMaterials = $materialReceiptReport->scmMrrLines->map(function ($scmMrrLine)  {
+            return $scmMrrLine->scmMaterial;
+        });
 
-        return response()->success('Search result', $materialReceiptReport, 200);
+        $materialReceiptReport->scmMaterials = $scmMaterials;
+        return response()->success('Search Result', $materialReceiptReport, 200);
     }
 
     /**

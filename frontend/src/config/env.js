@@ -4,8 +4,7 @@ class env {
     static DEVELOPMENT = 'http://bulk-carrier-erp.test/';
     static MOBILEURL = 'http://192.168.88.173:1223/';
     static DEMO = '';
-    static SUMON_URL_OFFICE_LAN = 'http://192.168.88.222/bulk-carrier-erp/backend/public/';
-    static SUMON_URL_TEMP = 'http://192.168.43.252/bulk-carrier-erp/backend/public/';
+    static SUMON_URL = 'http://192.168.88.222/bulk-carrier-erp/backend/public/';
 
     static BASE_API_URL = env.DEVELOPMENT;
 

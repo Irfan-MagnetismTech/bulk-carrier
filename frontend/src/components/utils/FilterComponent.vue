@@ -50,7 +50,7 @@ function setSortState(index, order) {
                   # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                 </div>
               </th>
-              <th v-for="(option, key) in filterOptions.filter_options" :key="key">
+              <th v-for="(option, key) in filterOptions.filter_options" :key="key" :class="option?.class">
                 <div class="flex justify-center items-center">
                   <span class="mr-2">{{ option.label }}</span>
                   <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
@@ -69,7 +69,7 @@ function setSortState(index, order) {
                   </div>
                 </div>
               </th>
-              <th v-if="filterOptions.business_unit">Business Unit</th>
+              <th v-if="filterOptions.business_unit"><nobr>Business Unit</nobr></th>
               <th class=""><nobr>Action</nobr></th>
             </tr>
             <tr class="w-full" v-if="showFilter">
@@ -99,7 +99,7 @@ function setSortState(index, order) {
                   <component :is="option.component" v-model="option.search_param" v-bind="option.componentProps"/>
                 </template>
                 <template v-else>
-                  <input type="text" readonly placeholder="" :value="option.input_value" class="filter_input vms-readonly-input text-center" autocomplete="off" />
+                  <input type="text" readonly placeholder="" :value="option?.input_value" class="filter_input vms-readonly-input text-center" autocomplete="off" />
                 </template>
               </th>
               <th v-if="filterOptions.business_unit"><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
