@@ -144,35 +144,42 @@ class OpsChartererProfileController extends Controller
          }
      }
  
-     public function getChartererProfileByNameorCode(Request $request){
-         try {
-             $charterer_profiles = OpsChartererProfile::query()
-             ->where(function ($query) use($request) {
-                 $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                 $query->orWhere('owner_code', 'like', '%' . $request->name_or_code . '%');
-             })
-             ->limit(10)
-             ->get();
-             $charterer_profiles->load('opsChartererBankAccounts');
-             return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
-         } catch (QueryException $e){
-             return response()->error($e->getMessage(), 500);
-         }
-     }
-     
-     public function getChartererProfileNameorCode(Request $request){
+    public function getChartererProfileByNameorCode(Request $request){
         try {
-            $charterer_profiles = OpsChartererProfile::query()   
-            ->when(request()->business_unit && request()->business_unit != 'ALL', function($q){
-                $q->where('business_unit', request()->business_unit);  
+            $charterer_profiles = OpsChartererProfile::query()
+            ->when(request()->has('name_or_code'), function ($query) {
+            $query->where('name', 'like', '%' . request()->name_or_code . '%');
+            $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
+            })    
+            ->when(request()->business_unit && request()->business_unit != 'ALL', function($query){
+                $query->where('business_unit', request()->business_unit);  
             })
+            ->limit(10)
             ->get();
-            
             $charterer_profiles->load('opsChartererBankAccounts');
             return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
-     }
+    }
+     
+    public function getChartererProfileNameorCode(Request $request){
+    try {
+        $charterer_profiles = OpsChartererProfile::query()
+        ->when(request()->has('name_or_code'), function ($query) {
+                $query->where('name', 'like', '%' . request()->name_or_code . '%');
+                $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
+        })    
+        ->when(request()->business_unit && request()->business_unit != 'ALL', function($query){
+            $query->where('business_unit', request()->business_unit);  
+        })
+        ->get();
+        
+        $charterer_profiles->load('opsChartererBankAccounts');
+        return response()->success('Data retrieved successfully.', $charterer_profiles, 200);
+    } catch (QueryException $e){
+        return response()->error($e->getMessage(), 500);
+    }
+    }
  
 }
