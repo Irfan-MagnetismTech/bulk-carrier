@@ -213,7 +213,7 @@
             </label>
           </div>
         
-            <label class="block mt-2 text-sm" :class="{ 'w-1/2': form.contract_type == 'Day Wise', 'w-full': form.contract_type == 'Voyage Wise' }">
+            <label class="block mt-2 text-sm w-1/2">
 
               <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
                 <select v-model="form.status" class="form-input">
@@ -226,7 +226,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
             <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
           </label>
-          <label v-else class="block w-full mt-2 text-sm"></label>
+          <label v-else class="block w-1/2 mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
         </div>
     </div>
