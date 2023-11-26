@@ -44,7 +44,7 @@ class OpsCustomer extends Model
      *
      * @return string
      */
-    public function getCodeNameAttribute()
+    public function getNameCodeAttribute()
     {
         return  $this->name. ' - '.$this->code;
     }
