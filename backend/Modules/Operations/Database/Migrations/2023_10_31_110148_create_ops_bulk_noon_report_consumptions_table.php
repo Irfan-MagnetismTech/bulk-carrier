@@ -20,6 +20,7 @@ return new class extends Migration
             // $table->unsignedBigInteger('ops_bulk_noon_report_id');
             // $table->foreign('ops_bulk_noon_report_id')->references('id')->on('ops_bulk_noon_reports');
             $table->string('type')->nullable();
+            $table->string('consumption')->nullable();
             $table->string('previous_rob')->nullable();
             $table->string('received')->nullable();
             $table->string('rob')->nullable();
