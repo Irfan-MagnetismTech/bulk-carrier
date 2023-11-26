@@ -12,7 +12,7 @@ const props = defineProps({
 watch(
     () => props.errors,
     (value) => {
-        let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+        let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-2 px-2 text-base"> `;
         if (Object.keys(value).length) {
             for (const property in value) {
                 rawHtml += `<li> ${value[property]} </li>`
@@ -25,7 +25,7 @@ watch(
                 html: `
                 ${rawHtml}
                         `,
-                customClass: "swal-width",
+                customClass: "swal-width error-message-text",
             });
         }
     }

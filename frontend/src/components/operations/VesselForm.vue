@@ -9,7 +9,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
               <option value="" disabled>Select Type</option>
               <option value="Lighter">Lighter</option>
@@ -17,7 +17,7 @@
             </select>
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Flag <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Flag <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.flag" placeholder="Flag" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -26,36 +26,36 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.name" placeholder="Vessel Name" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Short Code <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Short Code <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.short_code" placeholder="Vessel Short Code" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Call Sign <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Call Sign <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.call_sign" placeholder="Call Sign" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Owner Name <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Owner Name <span class="text-red-500">*</span></span>
           <input type="text" v-model.trim="form.owner_name" placeholder="Owner Name" class="form-input" required autocomplete="off" />
         </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-1/2 mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Manager/Operator <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Manager/Operator <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.manager" placeholder="Manager/Operator" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-1/2 mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Classification <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Classification <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.classification" placeholder="Classification" class="form-input" required autocomplete="off" />
       </label>
       
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.portOfRegistry" label="code_name" class="block form-input">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
+        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -71,68 +71,68 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Delivery Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Delivery Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.delivery_date" placeholder="Delivery Date" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">NRT <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">NRT <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.nrt" placeholder="NRT" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">DWT <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">DWT <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.dwt" placeholder="DWT" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">IMO Number <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">IMO Number <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.imo" placeholder="IMO Number" class="form-input" required autocomplete="off" />
       </label>
     </div>
     
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">GRT <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">GRT <span class="text-red-500">*</span></span>
         <input type="number" stpe="0.001" v-model="form.grt" placeholder="GRT" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Official Number <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Official Number <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.official_number" placeholder="Official Number" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Keel Laying Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Keel Laying Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.keel_laying_date" placeholder="Keel Laying Date" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Launching Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Launching Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.launching_date" placeholder="Launching Date" class="form-input" required autocomplete="off" />
       </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">MMSI <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">MMSI <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.mmsi" placeholder="MMSI" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Length Overall <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Length Overall <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.overall_length" placeholder="Length Overall" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Width Overall <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Width Overall <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.overall_width" placeholder="Width Overall" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Year Built <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Year Built <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.year_built" placeholder="Year Built" class="form-input" required autocomplete="off" />
       </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Total Cargo Hold <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Total Cargo Hold <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Capacity <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Capacity <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -168,7 +168,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" @search="fetchMaritimeCertificates" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -222,7 +222,7 @@
               {{ index+1 }}
             </td>
             <td>
-              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -258,12 +258,12 @@
 
 </template>
 <script setup>
+import { ref, watch, onMounted } from 'vue';
 import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useMaritimeCertificates from "../../composables/operations/useMaritimeCertificate";
 import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
-import { watch } from 'vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
@@ -279,9 +279,9 @@ const props = defineProps({
     formType: { type: Object, required: false }
 });
 
-const { maritimeCertificates, searchMaritimeCertificates } = useMaritimeCertificates();
-const { ports, searchPorts } = usePort();
-const { materials, searchMaterialWithCategory } = useMaterial();
+const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
+const { ports, getPortList } = usePort();
+const { materials, getBunkerList } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -305,20 +305,31 @@ function removeBunker(index){
   props.form.opsBunkers.splice(index, 1);
 }
 
-function fetchMaritimeCertificates(search, loading) {
-  loading(true);
-  searchMaritimeCertificates(search, loading)
-}
+// function fetchMaritimeCertificates(search, loading) {
+//   loading(true);
+//   searchMaritimeCertificates(search, loading)
+// }
 
-function fetchBunker(search, loading) {
-  loading(true);
-  searchMaterialWithCategory(search, 1, loading)
-}
+// function fetchBunker(search, loading) {
+//   loading(true);
+//   searchMaterialWithCategory(search, 1, loading)
+// }
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
+// function fetchPorts(search, loading) {
+//       loading(true);
+//       searchPorts(search, loading)
+// }
+
+onMounted(() => {
+  getPortList();
+  getMaritimeCertificateList();
+  getBunkerList();
+  // getCurrencies();
+  // getCargoTypeList();
+  // getVesselList(props.form.business_unit);
+  // searchPorts(null, true);
+  // searchCargoTypes(null,);
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {
@@ -328,12 +339,12 @@ function fetchPorts(search, loading) {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 </style>

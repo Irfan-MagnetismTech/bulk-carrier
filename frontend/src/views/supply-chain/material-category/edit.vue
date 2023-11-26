@@ -18,8 +18,9 @@ const { setTitle } = Title();
 const { materialCategory, showMaterialCategory, updateMaterialCategory,isLoading,errors } = useMaterialCategory();
 
 const materialCategoryId = route.params.materialCategoryId;
+const formType = ref('edit');
 
-setTitle('Edit Material Category');
+setTitle('Update Material Category');
 
 watch(materialCategory, (value) => {
   if(value) {
@@ -36,14 +37,14 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Edit Material Category</h2>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Material Category</h2>
         <default-button :title="'Material Category List'" :to="{ name: 'scm.material-category.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateMaterialCategory(materialCategory, materialCategoryId)">
-            <material-category-form v-model:form="materialCategory" :errors="errors"></material-category-form>
+            <material-category-form v-model:form="materialCategory" :errors="errors" :formType="formType" :selfId="materialCategoryId"></material-category-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update Material Category</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>
     </div>
 </template>

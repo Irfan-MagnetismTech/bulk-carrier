@@ -14,7 +14,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 
-
+const router = useRouter();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
@@ -32,6 +32,8 @@ const props = defineProps({
 const { setTitle } = Title();
 setTitle('Vessel List');
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
@@ -127,10 +129,6 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-const currentPage = ref(1);
-const paginatedPage = ref(1);
-
-const router = useRouter();
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -177,7 +175,6 @@ onMounted(() => {
     <default-button :title="'Create Vessel'" :to="{ name: 'ops.vessels.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
-
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
@@ -188,7 +185,7 @@ onMounted(() => {
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
-                </th>
+              </th>
               <th>
                 <div class="flex justify-evenly items-center">
                   <span>Vessel Name</span>
@@ -326,7 +323,7 @@ onMounted(() => {
               <td colspan="8">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
-            </tr>
+          </tr>
           <tr v-else-if="!vessels?.data?.length">
             <td colspan="9">No data found.</td>
           </tr>

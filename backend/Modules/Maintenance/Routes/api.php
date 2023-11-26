@@ -82,4 +82,5 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-critical-items', [MntCriticalItemController::class, 'getCriticalItems']);
     // getCriticalVesselItems
     Route::get('get-critical-vessel-items', [MntCriticalVesselItemController::class, 'getCriticalVesselItems']);
+
 });

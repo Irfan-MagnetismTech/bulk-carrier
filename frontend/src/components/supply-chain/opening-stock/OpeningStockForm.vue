@@ -34,25 +34,22 @@
     function setMaterialOtherData(datas,index){
       props.form.scmOpeningStockLines[index].unit = datas.unit;
       props.form.scmOpeningStockLines[index].scm_material_id = datas.id;
-      materials.value = [];
     }
 
 
-  function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
+  // function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
 
-  function fetchWarehouse(search, loading) {
-    loading(true);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
+  // function fetchWarehouse(search, loading) {
+  //   loading(true);
+  //   searchWarehouse(search, loading,props.form.business_unit);
+  // }
 
   watch(() => props.form.scmWarehouse, (value) => {
     props.form.scm_warehouse_id = value?.id;
     props.form.scm_cost_center_id = value?.scm_cost_center_id;
-    warehouses.value = [];
-    warehouseKey.value += 1;
     });
 
 //     watch(() => props.form.scmOpeningStockLines, (newScmOpeningStockLines) => {
@@ -66,7 +63,7 @@ const previousLines = ref(cloneDeep(props.form.scmOpeningStockLines));
 watch(() => props.form.scmOpeningStockLines, (newLines) => {
   newLines.forEach((line, index) => {
     const previousLine = previousLines.value[index];
-
+    console.log('a');
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
@@ -74,7 +71,6 @@ watch(() => props.form.scmOpeningStockLines, (newLines) => {
         ) {
           props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
           props.form.scmOpeningStockLines[index].scm_material_id = selectedMaterial.id;
-          materials.value = [];
         }
       }
     }
@@ -88,10 +84,11 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 onMounted(() => {
   watchEffect(() => {
-    const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
+    if (props.form.business_unit != "") {
+      searchWarehouse("", props.form.business_unit);
+      searchMaterial("")
+    }
+    
   });
 });
 
@@ -118,7 +115,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Search Here --" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="warehouseKey" placeholder="-- Choose an Option --" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -132,11 +129,11 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </label>
   </div> 
   <!-- CS Materials -->
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="customDataTable" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom !w-3/12">Material <br/> <span class="text-[10px]">Material - Code</span></th>
         <th class="px-4 py-3 align-bottom">Unit</th>
         <th class="px-4 py-3 align-bottom">Quantity</th>
@@ -145,10 +142,10 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
+      <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+      <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmOpeningStockLine, index) in form.scmOpeningStockLines" :key="index">
         <td>
-          <v-select :options="materials" placeholder="--Search Here--" @search="fetchMaterials" v-model="form.scmOpeningStockLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmOpeningStockLines[index].scmMaterial,index)">
+          <v-select :options="materials" placeholder="-- Choose An Option --" label="material_name_and_code" class="block form-input" v-model="form.scmOpeningStockLines[index].scmMaterial">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -194,13 +191,13 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700 dark-disabled:text-gray-300 text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .vs__selected{
     display: none !important;

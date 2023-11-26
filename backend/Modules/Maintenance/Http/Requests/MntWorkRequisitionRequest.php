@@ -17,11 +17,12 @@ class MntWorkRequisitionRequest extends FormRequest
         return [
         'ops_vessel_id' => 'required',
         'reference_no' => ['required', Rule::unique('mnt_work_requisitions')->ignore($this->id)],
-        'est_start_date' => 'required',
+        'requisition_date' => 'required|date',
+        'est_start_date' => 'required|date|after_or_equal:requisition_date',
+        'est_completion_date' => 'required|date|after_or_equal:est_start_date',
         'responsible_person' => 'required',
         'assigned_to' => 'required',
         'mnt_item_id' => 'required',
-        'requisition_date' => ['required'],
         "added_job_lines"    => "required|array|min:1",
         ];
     }
@@ -34,7 +35,10 @@ class MntWorkRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Please select vessel.',
+            'reference_no.required' => 'Reference no. is required',
+            'mnt_item_id.required' => 'Item is required',
+            "added_job_lines.required" => "Please add at least one job."
         ];
     }
 

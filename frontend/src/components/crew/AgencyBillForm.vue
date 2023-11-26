@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {computed, onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import Store from "../../store";
 
 const { crwAgencies, getCrewAgencyLists, crwAgencyContracts, getCrewAgencyContracts } = useCrewCommonApiRequest();
@@ -20,9 +21,9 @@ function addItem() {
     particular: '',
     description: '',
     per: '',
-    quantity: 0.0,
-    rate: 0.0,
-    amount: 0.0,
+    quantity: '',
+    rate: '',
+    amount: '',
   };
   props.form.crwAgencyBillLines.push(obj);
 }
@@ -68,7 +69,6 @@ watch(() => netAmount, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCrewAgencyLists(props.form.business_unit);
     getCrewAgencyContracts(props.form.business_unit,props.form.crw_agency_id);
@@ -79,7 +79,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -87,69 +87,62 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
-      <select class="form-input" v-model="form.crw_agency_id">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model.trim="form.crw_agency_id">
         <option value="" selected disabled>Select</option>
-        <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.name }}</option>
+        <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.agency_name }}</option>
       </select>
-      <Error v-if="errors?.crw_agency_id" :errors="errors.crw_agency_id" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
-      <select class="form-input" v-model="form.crw_agency_contract_id">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model.trim="form.crw_agency_contract_id">
         <option value="" selected disabled>Select</option>
-        <option v-for="(agencyContract,index) in crwAgencyContracts" :value="agencyContract.id" :key="index">{{ agencyContract?.crw_agency_id }}</option>
+        <option v-for="(agencyContract,index) in crwAgencyContracts" :value="agencyContract.id" :key="index">{{ agencyContract?.contract_name }}</option>
       </select>
-      <Error v-if="errors?.crw_agency_contract_id" :errors="errors.crw_agency_contract_id" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.applied_date" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.applied_date" :errors="errors.applied_date" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model.trim="form.applied_date" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.invoice_date" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.invoice_date" :errors="errors.invoice_date" />
-    </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.invoice_no" placeholder="Invoice no" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.invoice_no" :errors="errors.invoice_no" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model.trim="form.invoice_date" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Type <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.invoice_type" placeholder="Invoice type" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.invoice_type" :errors="errors.invoice_type" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill No <span class="text-red-500">*</span></span>
+      <input type="text" v-model.trim="form.invoice_no" placeholder="Bill No" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Billing Currency <span class="text-red-500">*</span></span>
-      <select class="form-input" v-model="form.invoice_currency">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Type <span class="text-red-500">*</span></span>
+      <input type="text" v-model.trim="form.invoice_type" placeholder="Bill Type" class="form-input" autocomplete="off" required />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Billing Currency <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model.trim="form.invoice_currency">
         <option value="" selected disabled>Select</option>
         <option value="BDT">BDT</option>
         <option value="USD">USD</option>
       </select>
-      <Error v-if="errors?.invoice_currency" :errors="errors.invoice_currency" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model="form.invoice_amount" placeholder="Bill amount" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.invoice_amount" :errors="errors.invoice_amount" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.invoice_amount" placeholder="Bill amount" class="form-input" autocomplete="off" required />
     </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Remarks</span>
-      <input type="text" v-model="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.remarks" :errors="errors.remarks" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
+      <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off"></textarea>
     </label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Billing Info</legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Bill Lines</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom">Particular <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Description </th>
         <th class="px-4 py-3 align-bottom">Per </th>
@@ -159,25 +152,25 @@ onMounted(() => {
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
       </thead>
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(creAgencyBillLine, index) in form.crwAgencyBillLines" :key="creAgencyBillLine.id">
+      <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+      <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(creAgencyBillLine, index) in form.crwAgencyBillLines" :key="creAgencyBillLine.id">
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyBillLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwAgencyBillLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyBillLines[index].description" placeholder="Description" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwAgencyBillLines[index].description" placeholder="Description" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwAgencyBillLines[index].per" placeholder="Per" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwAgencyBillLines[index].per" placeholder="Per" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].quantity" @input="calculateAmount($event,index)" placeholder="Quantity" class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.crwAgencyBillLines[index].quantity" @input="calculateAmount($event,index)" placeholder="Quantity" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].rate" @input="calculateAmount($event,index)" placeholder="Rate" class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.crwAgencyBillLines[index].rate" @input="calculateAmount($event,index)" placeholder="Rate" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.crwAgencyBillLines[index].amount" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.crwAgencyBillLines[index].amount" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" required />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -192,64 +185,34 @@ onMounted(() => {
           </button>
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
-        <td class="px-1 py-1 font-bold uppercase">Grand Total</td>
+        <td class="px-1 py-1 font-bold">Grand Total</td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.grand_total" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.grand_total" placeholder="Grand Total" class="form-input vms-readonly-input" readonly autocomplete="off" />
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
-        <td class="px-1 py-1 font-bold uppercase">Discount</td>
+        <td class="px-1 py-1 font-bold">Discount</td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.discount" placeholder="Amount" class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.discount" placeholder="Discount" class="form-input" autocomplete="off" />
         </td>
       </tr>
-      <tr class="text-gray-700 dark:text-gray-400">
+      <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1" colspan="4"></td>
-        <td class="px-1 py-1 font-bold uppercase">Net Amount</td>
+        <td class="px-1 py-1 font-bold">Net Amount</td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model="form.net_amount" placeholder="Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.net_amount" placeholder="Net Amount" class="form-input vms-readonly-input" readonly autocomplete="off" />
         </td>
       </tr>
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
   @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
-}
-
-.input-group {
-  @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
-}
-
-.label-group {
-  @apply block w-full mt-2 text-sm;
-}
-.label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
-}
-.label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
-}
-
->>> {
-  --vs-controls-color: #374151;
-  --vs-border-color: #4b5563;
-
-  --vs-dropdown-bg: #282c34;
-  --vs-dropdown-color: #eeeeee;
-  --vs-dropdown-option-color: #eeeeee;
-
-  --vs-selected-bg: #664cc3;
-  --vs-selected-color: #374151;
-
-  --vs-search-input-color: #4b5563;
-
-  --vs-dropdown-option--active-bg: #664cc3;
-  --vs-dropdown-option--active-color: #eeeeee;
 }
 </style>

@@ -11,20 +11,33 @@ class AccLoanRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'loanable_type'     => 'required|string',
+            'loanable_id'       => 'required|integer',
+            'loan_type'         => 'required|string',
+            'loan_number'       => 'required|string',
+            'loan_name'         => 'required|string',
+            'total_sanctioned'  => 'required|numeric|min:0',
+            'sanctioned_limit'  => 'required|numeric|min:0',
+            'total_installment' => 'required|integer|min:1',
+            'interest_rate'     => 'required|numeric|min:0|max:100',
+            'opening_date'      => 'required|date',
+            'maturity_date'     => 'required|date|after_or_equal:opening_date',
+            'emi_date'          => 'required|date',
+            'emi_amount'        => 'required|numeric|min:0',
+            'loan_purpose'      => 'required|string',
+            'mortgage'          => 'nullable|string',
+            'remarks'           => 'nullable|string',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

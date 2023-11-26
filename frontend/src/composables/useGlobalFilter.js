@@ -19,10 +19,13 @@ export default function useGlobalFilter() {
     }
 
     function clearFilter(filterOptions) {
-        filterOptions.business_unit = businessUnit.value;
+        if (filterOptions.business_unit) {
+            filterOptions.business_unit = businessUnit.value;
+        }
+       
         filterOptions.filter_options = filterOptions.filter_options.map((option) => ({
             ...option,
-            search_param: null,
+            search_param: "",
             order_by: null,
         }));
     }

@@ -8,12 +8,12 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -30,8 +30,8 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.loadingPoint" label="code_name" class="block form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
+            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.loadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -44,8 +44,8 @@
             <input type="hidden" v-model="form.loading_point" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.unloadingPoint" label="code_name" class="block form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
+            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.unloadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -62,8 +62,8 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.opsCargoType" label="cargo_type" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
+              <v-select :options="cargoTypes" placeholder="--Choose an option--" v-model="form.opsCargoType" label="cargo_type" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -77,14 +77,14 @@
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Currency <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.currency">
                   <option value="" disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
               </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Status <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.status">
                 <option value="" disabled>Select Status</option>
                 <option value="Active">Active</option>
@@ -199,9 +199,9 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
 const { getCurrencies, currencies } = useBusinessInfo();
-const { ports, searchPorts } = usePort();
-const { vessels, searchVessels } = useVessel();
-const { cargoTypes, searchCargoTypes } = useCargoType();
+const { ports, getPortList } = usePort();
+const { vessels, getVesselList } = useVessel();
+const { cargoTypes, getCargoTypeList } = useCargoType();
 
 const props = defineProps({
     form: {
@@ -215,26 +215,27 @@ const props = defineProps({
 
 const editInitiated = ref(false);
 
-function fetchVessels(search, loading) {
-      loading(true);
-      searchVessels(search, props.form.business_unit, loading);
-}
+// function fetchVessels(search, loading) {
+//       loading(true);
+//       searchVessels(search, props.form.business_unit, loading);
+// }
 
 watch(() => props.form.business_unit, (value) => {
   if(value) {
+    getVesselList(props.form.business_unit);
     // searchVessels(null, props.form.business_unit, false);
   }
 })
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
+// function fetchPorts(search, loading) {
+//       loading(true);
+//       searchPorts(search, loading)
+// }
 
-function fetchCargoTypes(search, loading) {
-      loading(true);
-      searchCargoTypes(search, loading)
-}
+// function fetchCargoTypes(search, loading) {
+//       loading(true);
+//       searchCargoTypes(search, loading)
+// }
 
 function addItem() {
   props.form.opsCargoTariffLines.push(props.cargoTariffLineObject);
@@ -272,8 +273,8 @@ watch(() => props.form, (value) => {
 
     if(props?.formType == 'edit' && editInitiated.value != true) {
 
-      cargoTypes.value = [props?.form?.opsCargoType]
-      vessels.value = [props?.form?.opsVessel]
+      // cargoTypes.value = [props?.form?.opsCargoType]
+      // vessels.value = [props?.form?.opsVessel]
 
       if(cargoTypes.value.length> 0 && vessels.value.length > 0) {
         editInitiated.value = true
@@ -282,7 +283,10 @@ watch(() => props.form, (value) => {
   }, {deep: true});
 
 onMounted(() => {
+  getPortList();
   getCurrencies();
+  getCargoTypeList();
+  getVesselList(props.form.business_unit);
   // searchPorts(null, true);
   // searchCargoTypes(null,);
 })
@@ -295,13 +299,13 @@ onMounted(() => {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 
 input::-webkit-outer-spin-button,

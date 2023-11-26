@@ -37,7 +37,7 @@ class OpsVesselParticularController extends Controller
             $vesselParticular = OpsVesselParticular::with('opsVessel')
             ->globalSearch($request->all());
 
-            return response()->success('Successfully retrieved vessel particular.', $vesselParticular, 200);
+            return response()->success('Data retrieved successfully.', $vesselParticular, 200);
         }
         catch (QueryException $e)
         {
@@ -68,7 +68,7 @@ class OpsVesselParticularController extends Controller
             }
             $vesselParticular = OpsVesselParticular::create($vesselParticular);
             DB::commit();
-            return response()->success('Vessel particular added successfully.', $vesselParticular, 201);
+            return response()->success('Data added successfully.', $vesselParticular, 201);
         }
         catch (QueryException $e)
         {
@@ -89,7 +89,7 @@ class OpsVesselParticularController extends Controller
         $vessel_particular->load('opsVessel.opsBunkers');
         try
         {
-            return response()->success('Successfully retrieved vessel particular.', $vessel_particular, 200);
+            return response()->success('Data retrieved successfully.', $vessel_particular, 200);
         }
         catch (QueryException $e)
         {
@@ -122,7 +122,7 @@ class OpsVesselParticularController extends Controller
             
             $vessel_particular->update($vesselParticular);
             DB::commit();
-            return response()->success('Vessel particular updated successfully.', $vessel_particular, 202);
+            return response()->success('Data updated successfully.', $vessel_particular, 202);
         }
         catch (QueryException $e)
         {
@@ -145,7 +145,7 @@ class OpsVesselParticularController extends Controller
             $vessel_particular->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted vessel certificate.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -157,7 +157,7 @@ class OpsVesselParticularController extends Controller
     public function getVesselParticularName(){
         try {
             $vessel_particulars = OpsVesselParticular::with('opsVessel')->latest()->get();
-            return response()->success('Successfully retrieved vessel particulars name.', collect($vessel_particulars->pluck('name'))->unique()->values()->all(), 200);
+            return response()->success('Data retrieved successfully.', $vessel_particulars, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -168,6 +168,7 @@ class OpsVesselParticularController extends Controller
     {
         $vessel_particular = OpsVesselParticular::with('opsVessel')->where('id', $request->id)
         ->first();
+
         return Excel::download(new VesselParticularExport($vessel_particular), 'vessel_particular_report.xlsx');
         
     }

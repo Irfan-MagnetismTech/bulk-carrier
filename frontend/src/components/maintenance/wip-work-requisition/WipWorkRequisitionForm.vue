@@ -2,44 +2,44 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Requisition Date </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
             <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Reference No </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Reference No </span>
             <input type="text" :value="form.reference_no" placeholder="Reference No" class="form-input vms-readonly-input"  />
           <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Maintenance Type</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type</span>
             <input type="text" :value="form.maintenance_type" placeholder="Maintenance Type" class="form-input vms-readonly-input"  />
           <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" :value="form.opsVessel?.name" placeholder="Vessel Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Department </span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Department </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment?.name" placeholder="Ship Department" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Item Group </span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Item Group </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.name" placeholder="Item Group Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Item </span>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Item </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm"> 
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
@@ -48,84 +48,105 @@
         
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Act. Start Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span class="text-red-500">*</span></span>
+            <input type="date" :min="form.requisition_date"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  />
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Act. Completion Date </span>
-            <input type="date" v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input"   />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Act. Completion Date <span v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" class="text-red-500">*</span></span>
+            <input type="date" :min="form.act_start_date"  v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"  />
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
+
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Responsible Person</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person</span>
             <input type="text" :value="form.responsible_person" placeholder="Responsible Person Name" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+        </label>
+
+        <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Status </span>
+            <select v-model="form.status" class="form-input" >
+              <option value="" disabled selected>Select</option>
+              <option value="0" > Pending</option>
+              <option value="1" > WIP</option>
+              <!-- <option value="2" > Done</option> -->
+            </select>
+          <Error v-if="errors?.status" :errors="errors.status" />
         </label>
     </div>
 
     <div>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-        <legend class="px-2 text-gray-700 dark:text-gray-300">Item Description </legend>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Item Description </legend>
         <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 " v-if="form.mntWorkRequisitionItem?.MntItem?.description">
           <label class="block w-full mt-2 text-sm" v-for="(des, index) in JSON.parse(form.mntWorkRequisitionItem?.MntItem?.description)" :key="index">
-            <span class="text-gray-700 dark:text-gray-300">{{ des.key }}</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">{{ des.key }}</span>
             <input type="text" :value="des.value" :placeholder="des.key" class="form-input vms-readonly-input"  readonly/>
         </label>
         </div>
       </fieldset>
     </div>
 
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Assigned Job</legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Assigned Job</legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Status</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Replace</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Cleaning</th>
             <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Remarks</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Status</th>
-            <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th>
+            <!-- <th class="w-1/12 px-4 py-3 align-bottom text-center">Action</th> -->
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
+        <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
+            <td class="px-1 py-1"> 
+              <!-- <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span> -->
+                <select v-model="mntWorkRequisitionLine.status" @change="setStartAndCompletionDate(mntWorkRequisitionLine)"  class="form-input" required :disabled="page != 'edit'">
+                  <option value="" disabled selected>Select</option>
+                  <option :value="index" v-for="(status, index) in workRequisitionStatus" :key="index"  > {{ status }}</option>
+                </select>
+            </td>
             <td class="px-1 py-1">
-              <input type="date" class="form-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" /> 
+              <input type="date" class="form-input" :min="form.act_start_date"  
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status == 0  }"  :disabled="mntWorkRequisitionLine.status == 0" :required="mntWorkRequisitionLine.status != 0" /> 
+              <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
             <td class="px-1 py-1"> 
-              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date"  /> 
-              <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" />
+              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" /> 
+              <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" /> -->
+              <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" />
             </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" /> </td>
             <td class="px-1 py-1" > <input type="text" class="form-input"  v-model="mntWorkRequisitionLine.remarks" placeholder="Remarks"  /> </td>
-            <td class="px-1 py-1"> 
-              <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span>
-            </td>
-            <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="submitWipWorkRequisitionLine(mntWorkRequisitionLine)">Submit</button> 
-            </td>
+            
+            <!-- <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="submitWipWorkRequisitionLine(mntWorkRequisitionLine)">Submit</button> 
+            </td> -->
           </tr>
         </tbody>
       </table>
     </fieldset>
 
     
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts Consumed </legend>
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts Consumed </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-2/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th class="w-4/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Quantity <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
@@ -137,10 +158,10 @@
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
-            <td class="px-1 py-1">
-              <v-select :options="materials" placeholder="Enter Material Name" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
+        <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
+            <td class="px-1 py-1 flex items-center">
+              <v-select :options="materials" placeholder="Enter Material Name" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -149,11 +170,11 @@
                         v-on="events"
                         />
                 </template>
-            </v-select>
+            </v-select> <span v-show="mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
             </td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.specification" placeholder="Specification" /></td>
             <td class="px-1 py-1"><input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionMaterial.unit" placeholder="Unit" readonly /></td>
-            <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" placeholder="Quantity" required /></td>
+            <td class="px-1 py-1"><input type="number" class="form-input"  v-model="mntWorkRequisitionMaterial.quantity" :min="1"  placeholder="Quantity" required /></td>
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model="mntWorkRequisitionMaterial.remarks" placeholder="Remarks" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md"  @click="removeConsumedSparePart(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
@@ -166,7 +187,7 @@
 
 
     
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -186,7 +207,11 @@ import useJob from "../../../composables/maintenance/useJob";
 import useRunHour from "../../../composables/maintenance/useRunHour";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import useMaterial from "../../../composables/supply-chain/useMaterial";
+import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
 import moment from 'moment';
+import useHeroIcon from "../../../assets/heroIcon";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
+
 
 const { updateWipWorkRequisitionLine } = useWipWorkRequisition();
 const { vessels, getVesselsWithoutPaginate } = useVessel();
@@ -196,7 +221,9 @@ const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVessel
 const { itemWiseJobLines, getJobsForRequisition } = useJob();
 const { presentRunHour, getItemPresentRunHour } = useRunHour();
 const { crews, getCrews } = useCrewCommonApiRequest();
-const { material, materials, getMaterials,searchMaterial } = useMaterial();
+const { material, materials, getMaterials, searchMaterial } = useMaterial();
+const { workRequisitionStatus } = useMaintenanceHelper();
+const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
@@ -219,30 +246,35 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
 
-watch(() => props.form.mntWorkRequisitionMaterials, (value) => {
-  value?.forEach(val => {
-    if (!val.material_name_and_code) {
-      val.specification = '';
-      val.unit = '';
-      val.quantity = 0;
-      val.remarks = '';
+watch(() => props.form.mntWorkRequisitionMaterials, (mntWorkRequisitionMaterials) => {
+  mntWorkRequisitionMaterials?.forEach(mntWorkRequisitionMaterial => {
+    if (!mntWorkRequisitionMaterial.material_name_and_code) {
+      mntWorkRequisitionMaterial.specification = '';
+      mntWorkRequisitionMaterial.unit = '';
+      mntWorkRequisitionMaterial.quantity = 0;
+      mntWorkRequisitionMaterial.remarks = '';
+      mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate = false;
+    }
+    else {
+      mntWorkRequisitionMaterial.unit = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code)?.unit;
+      mntWorkRequisitionMaterial.isMaterialNameAndCodeDuplicate = mntWorkRequisitionMaterials.filter(val => val.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code)?.length > 1;
     }
   });
 }, { deep: true });
 
-function fetchMaterials(search, loading) {
-    if (search?.length > 1) {
-      loading(true);
-      searchMaterial(search, loading)
-    }
-  }
+// function fetchMaterials(search, loading) {
+//     if (search?.length > 1) {
+//       loading(true);
+//       searchMaterial(search, loading)
+//     }
+//   }
 
 
-function setMaterialUnit(mntWorkRequisitionMaterial) {
-  let material = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code);
-  mntWorkRequisitionMaterial.unit = material?.unit;
-  materials.value = [];
-}
+// function setMaterialUnit(mntWorkRequisitionMaterial) {
+//   let material = materials.value.find(mat => mat.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code);
+//   mntWorkRequisitionMaterial.unit = material?.unit;
+//   materials.value = [];
+// }
 
 function addConsumedSparePart() {
   props.form.mntWorkRequisitionMaterials.push({
@@ -257,27 +289,45 @@ function removeConsumedSparePart(index) {
   props.form.mntWorkRequisitionMaterials.splice(index, 1);
 }
 
-function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
-  // console.log(mntWorkRequisitionLine);
-  mntWorkRequisitionLine.start_date_error = [''];
-  if (!mntWorkRequisitionLine.start_date) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Something went wrong!",
-    }).then((result)=>{
-      if (result.isConfirmed) {
-        mntWorkRequisitionLine.start_date_error = ["Start date field is required."]
-      }
-    });
+function setStartAndCompletionDate(mntWorkRequisitionLine) {
+  if (mntWorkRequisitionLine.status == 0) {
+    mntWorkRequisitionLine.start_date = '';
+    mntWorkRequisitionLine.completion_date = '';
+    props.form.act_completion_date = '';
   }
-  else
-    updateWipWorkRequisitionLine(mntWorkRequisitionLine, mntWorkRequisitionLine.id);
+  else if (mntWorkRequisitionLine.status == 1) {
+    mntWorkRequisitionLine.completion_date = '';
+    props.form.act_completion_date = '';
+  }
+  else if (mntWorkRequisitionLine.status == 2) {
+    props.form.status = 1;
+  }
 }
+
+// function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
+//   mntWorkRequisitionLine.start_date_error = [''];
+//   mntWorkRequisitionLine.completion_date_error = [''];
+//   if (!mntWorkRequisitionLine.start_date || (mntWorkRequisitionLine.completion_date && mntWorkRequisitionLine.completion_date < mntWorkRequisitionLine.start_date)) {
+//     Swal.fire({
+//       icon: "",
+//       title: "",
+//       text: "Something went wrong!",
+//     }).then((result)=>{
+//       if (result.isConfirmed) {
+//         if(!mntWorkRequisitionLine.start_date)
+//           mntWorkRequisitionLine.start_date_error = ["Start date field is required."]
+//         if(mntWorkRequisitionLine.completion_date && mntWorkRequisitionLine.completion_date < mntWorkRequisitionLine.start_date)
+//           mntWorkRequisitionLine.completion_date_error = ["Completion date should be after start date."];
+//       }
+//     });
+//   }
+//   else
+//     updateWipWorkRequisitionLine(mntWorkRequisitionLine, mntWorkRequisitionLine.id);
+// }
 
 
 onMounted(() => {
-  
+  searchMaterial("");
 });
 
 </script>
@@ -295,10 +345,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 >>> {

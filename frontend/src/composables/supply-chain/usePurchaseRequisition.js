@@ -15,6 +15,7 @@ export default function usePurchaseRequisition() {
     const router = useRouter();
     const purchaseRequisitions = ref([]);
     const filteredPurchaseRequisitions = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -71,26 +72,29 @@ export default function usePurchaseRequisition() {
 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getPurchaseRequisitions(page, businessUnit, columns = null, searchKey = null, table = null) {
+    async function getPurchaseRequisitions(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get(`/${BASE}/purchase-requisitions`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             purchaseRequisitions.value = data.value;
             notification.showSuccess(status);
@@ -98,9 +102,14 @@ export default function usePurchaseRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storePurchaseRequisition(form) {
@@ -177,8 +186,8 @@ export default function usePurchaseRequisition() {
 
     async function deletePurchaseRequisition(purchaseRequisitionId) {
 
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-requisitions/${purchaseRequisitionId}`);
@@ -188,8 +197,8 @@ export default function usePurchaseRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
         }
     }
 
@@ -224,13 +233,13 @@ export default function usePurchaseRequisition() {
     async function getStoreCategoryWiseExcel() {
     
         try {
-            const { data, status } = await Api.get(`/${BASE}/export-materials`, {
+            const { data, status,headers} = await Api.get(`/${BASE}/export-materials`, {
                 params: {
                     store_category: excelExportData.value.store_category_name,
                 },
                 responseType: 'blob'
             });
-            downloadFile(data, 'materials.xlsx');
+            downloadFile(data, 'materials',headers);
 
         } catch (error) {
             if (error.response) {
@@ -260,6 +269,7 @@ export default function usePurchaseRequisition() {
         searchWarehouseWisePurchaseRequisition,
         materialObject,
         excelExportData,
+        isTableLoading,
         isLoading,
         errors,
     };

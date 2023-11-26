@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccFixedAsset;
+use Modules\Accounts\Http\Requests\AccFixedAssetRequest;
 
 class AccFixedAssetController extends Controller
 {
@@ -17,6 +18,7 @@ class AccFixedAssetController extends Controller
     public function index(Request $request)
     {
         try {
+            return AccFixedAsset::all(); 
             $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter:id,name', 'scmMaterial:id,name')
             ->globalSearch($request->all());
 
@@ -37,10 +39,10 @@ class AccFixedAssetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccFixedAssetRequest $request)
     {
         try {
-            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'asset_name', 'asset_type', 'tag', 'mrr_no', 'bill_no', 'brand', 'location', 'model', 'serial', 'price', 'acquisition_cost', 'useful_life', 'acquisition_date', 'percentage', 'business_unit');
+            $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
             $accFixedAsset     = AccFixedAsset::create($accFixedAssetData);
             $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
 
@@ -82,10 +84,10 @@ class AccFixedAssetController extends Controller
      * @param  \App\Models\AccFixedAsset  $accFixedAsset
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccFixedAsset $accFixedAsset)
+    public function update(AccFixedAssetRequest $request, AccFixedAsset $accFixedAsset)
     {
         try {
-            $accFixedAssetData = $request->only('acc_cost_center_id', 'department_id', 'acc_account_id', 'cr_account_id', 'acc_material_id', 'received_date', 'asset_name', 'asset_type', 'tag', 'mrr_no', 'bill_no', 'brand', 'location', 'model', 'serial', 'price', 'acquisition_cost', 'useful_life', 'acquisition_date', 'percentage', 'business_unit');
+            $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
             $accFixedAsset->update($accFixedAssetData);
             $accFixedAsset->fixedAssetCosts()->delete();
             $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);

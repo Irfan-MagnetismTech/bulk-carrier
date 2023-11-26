@@ -215,8 +215,8 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody  class="relative">
           <tr v-for="(requiredCrew,index) in crewRequisitions?.data" :key="index">
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ requiredCrew?.opsVessel?.name }}</td>
-            <td>{{ requiredCrew?.applied_date }}</td>
+            <td class="text-left">{{ requiredCrew?.opsVessel?.name }}</td>
+            <td class="text-left">{{ requiredCrew?.applied_date }}</td>
             <td>{{ requiredCrew?.total_required_manpower }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>
@@ -231,7 +231,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tbody>
           <tfoot v-if="!crewRequisitions?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="7"></td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="7">

@@ -6,29 +6,12 @@
       <label class="block w-full mt-2 text-sm"></label>
 
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Note Type</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <input type="radio" v-model="form.type" name="type" value="Boat Note" />
-            <span class="text-gray-700 dark:text-gray-300 ml-2">Boat Note </span>
-        </label>
-      <label class="block w-full mt-2 text-sm">
-          <input type="radio" v-model="form.type" name="type" value="Final Survey" />
-          <span class="text-gray-700 dark:text-gray-300 ml-2">Final Survey</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-          <input type="radio" v-model="form.type" name="type" value="Receipt Copy" />
-          <span class="text-gray-700 dark:text-gray-300 ml-2">Receipt Copy</span>
-      </label>
-    </div>
 
     <h4 class="text-md font-semibold mt-3">Basic Info</h4>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Voyage </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
               <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -42,15 +25,15 @@
               <input type="hidden" v-model="form.ops_voyage_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Vessel</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Draft</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Draft</span>
               <input type="number" step="0.001" v-model.trim="form.vessel_draft" placeholder="Draft" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark:text-gray-300">Density</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Density</span>
               <input type="number" step="0.001" v-model.trim="form.water_density" placeholder="Density" class="form-input" autocomplete="off" />
         </label>
     </div>
@@ -62,6 +45,7 @@
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
+              <th class="w-36">Type</th>
               <th class="w-72">Loading Point</th>
               <th>Unloading Point</th>
               <th>Quantity</th>
@@ -72,6 +56,9 @@
             <tr v-for="(sector, index) in form.opsVoyageBoatNoteLines">
               <td>
                 {{ index+1 }}
+              </td>
+              <td>
+                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.voyage_note_type">{{ form.opsVoyageBoatNoteLines[index]?.voyage_note_type }}</span>
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsVoyageBoatNoteLines[index]?.loading_point">{{ form.opsVoyageBoatNoteLines[index]?.loading_point }}</span>
@@ -154,7 +141,11 @@ watch(() => vessel, (value) => {
 
 watch(() => voyage, (value) => {
   if(value?.value) {
-    props.form.opsVoyageBoatNoteLines = value?.value?.opsVoyageSectors
+    props.form.opsVoyageBoatNoteLines = [
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
+    ];
   }
 }, { deep: true })
 
@@ -184,12 +175,12 @@ function attachFile(event, index) {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 </style>

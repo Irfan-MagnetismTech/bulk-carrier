@@ -152,7 +152,7 @@ export default function useMaterial() {
         }
     }
 
-    async function searchMaterial(searchParam, loading) {
+    async function searchMaterial(searchParam, loading = false) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -167,7 +167,6 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
         }
     }
 
@@ -206,6 +205,25 @@ export default function useMaterial() {
         return formData;
     }
 
+    async function getBunkerList() {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { materialCategoryId: 1}});
+            materials.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            // loading(false)
+        }
+    }
+
     return {
         materials,
         material,
@@ -217,6 +235,7 @@ export default function useMaterial() {
         deleteMaterial,
         isTableLoading,
         searchMaterialWithCategory,
+        getBunkerList,
         isLoading,
         errors
     };

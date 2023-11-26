@@ -102,9 +102,9 @@ class ScmServiceController extends Controller
     public function searchService(Request $request): JsonResponse
     {
         $materialCategory = ScmService::query()
-            ->where('name', 'like', "%{$request->searchParam}%")
+            // ->where('name', 'like', "%{$request->searchParam}%")
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);

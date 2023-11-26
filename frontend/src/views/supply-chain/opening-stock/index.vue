@@ -119,7 +119,7 @@ onMounted(() => {
 function confirmDelete(id) {
     Swal.fire({
         title: 'Are you sure?',
-        text: 'You want to delete this Unit!',
+        text: 'You want to delete this data!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -221,7 +221,7 @@ function confirmDelete(id) {
                     <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && openingStocks?.data?.length"></LoaderComponent>
                 </tbody>
                 <tfoot
-                    v-if="!openingStocks?.data?.length" class="bg-white dark:bg-gray-800 relative h-[250px]">
+                    v-if="!openingStocks?.data?.length" class="bg-white dark-disabled:bg-gray-800 relative h-[250px]">
                     <tr v-if="isLoading">
                         <!-- <td colspan="7">Loading...</td> -->
                     </tr>

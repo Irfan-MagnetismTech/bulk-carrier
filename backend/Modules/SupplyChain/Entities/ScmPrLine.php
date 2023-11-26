@@ -32,4 +32,9 @@ class ScmPrLine extends Model
     {
         return $this->hasMany(ScmStockLedger::class, 'scm_material_id', 'scm_material_id');
     }
+
+    public function scmPoLines(): HasMany
+    {
+        return $this->hasMany(ScmPoLine::class, 'pr_composite_key', 'pr_composite_key');
+    }
 }
