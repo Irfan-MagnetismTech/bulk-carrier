@@ -12,7 +12,10 @@ class CrwCrewProfileRequest extends FormRequest
         $data      = request('data');
         $dataArray = json_decode($data, true);
     
-        $mergeData = array_merge($dataArray, ['logo' => request('logo')]);
+        $mergeData = array_merge($dataArray, [
+            'picture' => request('picture'), 
+            'attachment' => request('attachment')    
+        ]);
     
         $this->replace($mergeData);
     }
@@ -79,7 +82,7 @@ class CrwCrewProfileRequest extends FormRequest
             'experiences.*.from_date'        => 'required|date',
             'experiences.*.till_date'        => 'required|date',
             'experiences.*.last_designation' => 'required|string|max:255',
-            'experiences.*.reason_for_leave' => 'required|string|max:255',
+            'experiences.*.reason_for_leave' => 'string|max:255',
 
             // Validation rules for languages_array
             'languages.*.language_name'      => 'required|string|max:255',
