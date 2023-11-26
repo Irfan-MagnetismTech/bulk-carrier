@@ -147,18 +147,16 @@ class OpsCargoTariffController extends Controller
     public function getCargoTariffByName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()
-            ->when(request()->has('name_or_code'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('tariff_name', 'like', '%' . request()->tariff_name . '%');                
-                });
-            })    
+            ->when(request()->has('tariff_name'), function ($query) {
+                    $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');                
+            })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->limit(10)
             ->get();
 
-            return response()->success('Data updated successfully.', $cargoTariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -168,21 +166,17 @@ class OpsCargoTariffController extends Controller
         try {
             $cargoTariffs = OpsCargoTariff::query()
             ->when(request()->has('vessel_id'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('ops_vessel_id', request()->vessel_id);                
-                });
-            })  
-            ->when(request()->has('name_or_code'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('tariff_name', 'like', '%' . request()->tariff_name . '%');                
-                });
-            })  
+                    $query->where('ops_vessel_id', request()->vessel_id); 
+            })
+            ->when(request()->has('tariff_name'), function ($query) {
+                    $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');
+            })
             ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->get();
 
-            return response()->success('Data updated successfully.', $cargoTariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
