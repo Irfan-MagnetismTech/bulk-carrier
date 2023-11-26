@@ -54,10 +54,9 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
 
-        if (!empty($request->attachment)) {
+       
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
             $requestData['attachment'] = $attachment;
-        }
         $requestData['created_by'] = auth()->user()->id;
         $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
 
@@ -171,10 +170,10 @@ class ScmPrController extends Controller
         try {
             DB::beginTransaction();
 
-            if (isset($request->attachment)) {
+          
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
                 $requestData['attachment'] = $attachment;
-            }
+         
             $purchase_requisition->update($requestData);
             $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 

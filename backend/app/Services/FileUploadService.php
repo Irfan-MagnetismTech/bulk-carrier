@@ -13,14 +13,14 @@ class FileUploadService
         try {
             if (is_string($file)) return $file;
 
-            $fileName = null;
+            $fileName = $previousFile;
             if ($file) {
                 $myRandomString = Str::random(10);
                 $fileName = $path . '/' . $myRandomString . time() . '.' . $file->getClientOriginalExtension();
                 $file->move($path, $fileName);
             }
 
-            if ($previousFile) {
+            if ($file && $previousFile) {
                 $this->deleteFile($previousFile);
             }
 

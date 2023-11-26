@@ -10,8 +10,8 @@ class ScmPrRequest extends FormRequest
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
-
-        $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $imgData, 'excel' => request('excel')]);
 
         $this->replace($mergeData);
     }
@@ -26,7 +26,7 @@ class ScmPrRequest extends FormRequest
         return [
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
             'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
-            'attachment' => 'required|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
+            'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'raised_date' => 'required|date',
             'remarks' => 'max:255',
             'purchase_center' => 'required|max:255',
