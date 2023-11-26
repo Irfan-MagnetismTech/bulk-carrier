@@ -93,56 +93,56 @@ export default [
                     },
                 ]
             },
-        //     {
-        //         route: `${BASE}.purchase-requisitions.index`,
-        //         label: 'Purchase Requisition',
-        //         preIcon: icons.User,
-        //         postIcon: icons.DownArrow,
-        //         is_active: false,
-        //         is_open: false,
-        //         permissionKey: '',
-        //         subSubMenu: []
-        //     },
-        //     {
-        //         route: `${BASE}.purchase-orders.index`,
-        //         label: 'Purchase Order',
-        //         preIcon: icons.User,
-        //         postIcon: icons.DownArrow,
-        //         is_active: false,
-        //         is_open: false,
-        //         permissionKey: '',
-        //         subSubMenu: []
-        //     },
-        //     {
-        //         route: `${BASE}.lc-records.index`,
-        //         label: 'LC Records',
-        //         preIcon: icons.User,
-        //         postIcon: icons.DownArrow,
-        //         is_active: false,
-        //         is_open: false,
-        //         permissionKey: '',
-        //         subSubMenu: []
-        //     },
-        //     {
-        //         route: `${BASE}.material-receipt-reports.index`,
-        //         label: 'Material Receipt Reports',
-        //         preIcon: icons.User,
-        //         postIcon: icons.DownArrow,
-        //         is_active: false,
-        //         is_open: false,
-        //         permissionKey: '',
-        //         subSubMenu: []
-        //      },
-        //      {
-        //         route: `${BASE}.store-requisitions.index`,
-        //         label: 'Store Requisitions',
-        //         preIcon: icons.User,
-        //         postIcon: icons.DownArrow,
-        //         is_active: false,
-        //         is_open: false,
-        //         permissionKey: '',
-        //         subSubMenu: []
-        //     },
+            {
+                route: `${BASE}.purchase-requisitions.index`,
+                label: 'Purchase Requisition',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: `${BASE}.purchase-orders.index`,
+                label: 'Purchase Order',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: `${BASE}.lc-records.index`,
+                label: 'LC Records',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: `${BASE}.material-receipt-reports.index`,
+                label: 'Material Receipt Reports',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+             },
+             {
+                route: `${BASE}.store-requisitions.index`,
+                label: 'Store Requisitions',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
         //     {
         //        route: `${BASE}.store-issues.index`,
         //        label: 'Store Issues',
@@ -184,8 +184,8 @@ export default [
         //         subSubMenu: []
         //     },
         //     {
-        //         route: `${BASE}.movement-ins.index`,
-        //         label: 'Movement Ins',
+        //         route: `${BASE}.material-adjustments.index`,
+        //         label: 'Material Adjustment',
         //         preIcon: icons.User,
         //         postIcon: icons.DownArrow,
         //         is_active: false,

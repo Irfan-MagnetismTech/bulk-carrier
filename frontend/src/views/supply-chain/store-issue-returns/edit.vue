@@ -18,7 +18,7 @@ const route = useRoute();
 const storeIssueReturnId = route.params.storeIssueReturnId;
 const formType = 'edit';
 
-setTitle('Edit Store Issue Return');
+setTitle('Update Store Issue Return');
 
 onMounted(() => {
     showStoreIssueReturn(storeIssueReturnId);
@@ -34,7 +34,7 @@ onMounted(() => {
         <form @submit.prevent="updateStoreIssueReturn(storeIssueReturn, storeIssueReturnId)">
             <store-issue-return-form :form="storeIssueReturn" :page="formType" :errors="errors" :formType="formType" :materialObject="materialObject"></store-issue-return-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>
     </div>
 </template>

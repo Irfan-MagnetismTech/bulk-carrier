@@ -39,6 +39,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'store-issue-returns' => ScmSirController::class,
         'movement-requisitions' => ScmMmrController::class,
         'movement-outs' => ScmMoController::class,
+        'movement-ins' => ScmMiController::class,
     ]);
 
     //Search Apis

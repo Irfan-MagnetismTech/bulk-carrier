@@ -70,7 +70,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Material Category",
-      "filter_type": "input"
+      "input_value": "asdasdsda"
     },
     {
       "relation_name": null,
@@ -102,6 +102,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.material.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -122,9 +123,6 @@ onMounted(() => {
       console.error("Error fetching materials:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 
 function confirmDelete(id) {
