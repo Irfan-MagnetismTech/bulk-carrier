@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('ops_contract_assigns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_vessel_id')->constrained('scm_materials')->onDelete('cascade');
-            $table->foreignId('ops_voyage_id')->constrained('scm_materials')->onDelete('cascade');
-            $table->foreignId('ops_tariff_id')->constrained('scm_materials')->onDelete('cascade');
-            $table->foreignId('ops_customer_id')->constrained('scm_materials')->onDelete('cascade');
-            $table->foreignId('ops_charterer_id')->constrained('scm_materials')->onDelete('cascade');
-            $table->foreignId('ops_charterer_contract_id')->constrained('scm_materials')->onDelete('cascade');
+            $table->unsignedBigInteger('ops_vessel_id')->nullable();
+            $table->unsignedBigInteger('ops_voyage_id')->nullable();
+            $table->unsignedBigInteger('ops_tariff_id')->nullable();
+            $table->unsignedBigInteger('ops_customer_id')->nullable();
+            $table->unsignedBigInteger('ops_charterer_profile_id')->nullable();
+            $table->unsignedBigInteger('ops_charterer_contract_id')->nullable();
             $table->text('remarks')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });
     }

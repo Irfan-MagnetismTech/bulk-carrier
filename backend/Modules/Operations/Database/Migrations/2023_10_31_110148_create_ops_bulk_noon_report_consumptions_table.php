@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_bulk_noon_report_consumptions', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('ops_bunker_id')->nullable();
             $table->bigInteger('ops_bulk_noon_report_id');
             // $table->unsignedBigInteger('ops_bulk_noon_report_id');
             // $table->foreign('ops_bulk_noon_report_id')->references('id')->on('ops_bulk_noon_reports');

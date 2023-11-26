@@ -6,6 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsContractAssignRequest extends FormRequest
 {
+    protected function prepareForValidation(){
+        $data=  request('info');        
+        $this->replace(json_decode($data, true));
+    }
     /**
      * Get the validation rules that apply to the request.
      *

@@ -13,16 +13,16 @@ class OpsBulkNoonReportRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this);
+        // dd($this);
         return [
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
             'ship_master'       => ['required', 'string'],
             'chief_engineer'    => ['required', 'string'],
-            'wind_condition'    => ['required', 'string'],
+            'wind_condition'    => ['nullable', 'string'],
             'type'              => ['required', 'string'],
-            'date_time'         => ['required', 'date_format:Y-m-d H:i:s'],
-            'gtm_time'          => ['required', 'date_format:Y-m-d H:i:s'],
+            'date_time'         => ['required'],
+            'gtm_time'          => ['required'],
             'location'          => ['required', 'string'],
             'latitude'          => ['required', 'string'],
             'longitude'         => ['required', 'string'],
@@ -50,7 +50,7 @@ class OpsBulkNoonReportRequest extends FormRequest
             'ops_voyage_id.required' => 'Voyage is required',
             'ship_master.required' => 'Ship master is required',
             'chief_engineer.required' => 'Chief engineer is required',
-            'wind_condition.required' => 'Wind condition is required',
+            // 'wind_condition.required' => 'Wind condition is required',
             'type.required' => 'Type is required',
             'date_time.required' => 'Date and Time is required',
             'gtm_time.required' => 'GTM Time is required',
