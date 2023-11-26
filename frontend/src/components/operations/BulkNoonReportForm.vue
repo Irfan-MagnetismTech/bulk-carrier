@@ -52,12 +52,12 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">Date/Time </span>
-        <input type="text" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
+        <input type="datetime-local" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
         <Error v-if="errors?.date_time" :errors="errors.date_time" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 ">GMT Time </span>
-        <input type="text" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
+        <input type="datetime-local" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
         <Error v-if="errors?.gmt_time" :errors="errors.gmt_time" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -132,16 +132,16 @@
             <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
           </td>
           <td>
-            <input type="datetime-local" class="form-input" v-model="form.opsBulkNoonReportPorts[index].eta">
+            <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
           </td>
           <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].distance_run">
+            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run">
           </td>
           <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].dtg">
+            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg">
           </td>
           <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportPorts[index].remarks">
+            <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].remarks">
           </td>
           <td>
             <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -302,7 +302,6 @@
           <tr v-for="(tank, index) in form.opsBulkNoonReportCargoTanks" :key="index">
           
           <td>
-            <!-- <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].cargo_tanks"> -->
             <span class="show-block">
               CT {{ index+1 }}
             </span>
@@ -392,7 +391,7 @@
                   <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                   </svg>
-                  <span class="tooltiptext">Renew</span>
+                  <span class="tooltiptext">Consumption Details</span>
                 </a>
               </td>
           </tr>
@@ -408,7 +407,7 @@
     <div class="dt-responsive table-responsive">
       <table id="dataTable" class="w-full table table-striped table-bordered">
         <thead>
-            <th>Unit</th>
+            <th class="w-72">Unit</th>
             <th>PCO</th>
             <th>Rack</th>
             <th>Exh. Temp.</th>
@@ -581,8 +580,8 @@ const currentConsumptionIndex = ref(null);
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
   currentConsumptionIndex.value = opsBunkerIndex
-  if(props.form.opsBunkers[opsBunkerIndex]?.bunkerConsumptionDetails) {
-    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBunkers[opsBunkerIndex]?.bunkerConsumptionDetails)
+  if(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptions) {
+    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptions)
   } else {
     bunkerConsumptionDetails.value = [{type: ''}]
   }
@@ -594,7 +593,7 @@ function closeBunkerConsumptionModel() {
 }
 
 function pushBunkerConsumption() {
-  props.form.opsBunkers[currentConsumptionIndex.value].bunkerConsumptionDetails = bunkerConsumptionDetails.value
+  props.form.opsBunkers[currentConsumptionIndex.value].opsBulkNoonReportConsumptions = bunkerConsumptionDetails.value
   bunkerConsumptionDetails.value = [{type: ''}]
   isBunkerConsumptionModalOpen.value = 0
 }
@@ -654,7 +653,8 @@ watch(() => props.form.opsVessel, (value) => {
 
 if(value) {
   props.form.ops_vessel_id = value?.id
-  showVessel(value?.id);
+  let loadStatus = true;
+  showVessel(value?.id, loadStatus);
   getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
 }
 }, { deep: true })
