@@ -143,7 +143,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].currency" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                  
                 </label>
@@ -174,13 +174,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceOthers,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isNotBDTCurrency(form.opsChartererInvoiceOthers,index)" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -277,13 +277,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceServices,index)" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isNotBDTCurrency(form.opsChartererInvoiceServices,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>

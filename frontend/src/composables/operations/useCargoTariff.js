@@ -196,6 +196,38 @@ export default function useCargoTariff() {
 		}
 	}
 
+
+	async function GetCargoTariffByBusinessunit(business_unit) {
+		// NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data } = await Api.get(
+				`ops/search-cargo-tariffs?business_unit=${business_unit}`,
+			);
+			cargoTariffs.value = data.value;
+		} catch (error) {
+			error.value = Error.showError(error);
+		} finally {
+		}
+	}
+
+	async function getCargoTariffsByVessel(vesselId) {
+		// NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data } = await Api.get(
+				`ops/get-search-cargo-tariffs?vessel_id=${vesselId}`,
+			);
+			cargoTariffs.value = data.value;
+		} catch (error) {
+			error.value = Error.showError(error);
+		} finally {
+		}
+	}
 	return {
 		cargoTariffLineObject,
 		cargoTariffs,
@@ -206,6 +238,8 @@ export default function useCargoTariff() {
 		updateCargoTariff,
 		deleteCargoTariff,
 		searchCargoTariffs,
+		GetCargoTariffByBusinessunit,
+		getCargoTariffsByVessel,
 		isLoading,
 		isTableLoading,
 		errors,
