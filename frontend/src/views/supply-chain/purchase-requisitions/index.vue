@@ -112,6 +112,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'scm.purchase-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }

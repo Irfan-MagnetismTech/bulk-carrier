@@ -9,72 +9,53 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 
 
-export default function useMovementIn() {
+export default function useMaterialAdjustment() {
     const BASE = 'scm' 
     const { downloadFile } = useHelper();
     const router = useRouter();
-    const movementIns = ref([]);
-    const filteredMovementIns = ref([]);
+    const materialAdjustments = ref([]);
+    const filteredMaterialAdjustments = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
-    const filteredMovementRequisitionLines = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const movementIn = ref( {
+    const materialAdjustment = ref( {
         ref_no: '',
         date: '',
+        delivery_date: '',
         fromWarehouse: '',
         from_warehouse_id: '',
-        from_warehouse_name: '',
         toWarehouse: '',
         to_warehouse_id: '',
-        to_warehouse_name: '',
+        scm_warehouse_id: '',
         from_cost_center_id: '',
         to_cost_center_id: '',
-        scmMmr: '',
-        scm_mmr_id: '',
-        scmMo: '',
-        scm_mo_id: '',
+        requested_by: '',
+        required_for: '',
+        remarks: '',
         business_unit: '',
-        scmMiLines: [
+        scmMmrLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                remarks: '',
-                mi_composite_key: '',
-                mmr_quantity: 0.00,
-                mo_quantity: 0.00,
-                quantity: 0.00
+                specification: '',
+                available_stock: '',
+                present_stock: '',
+                quantity: 0.0
             }
         ],
-        scmMiShortage: {
-            shortage_type: '',
-            scmWarehouse: '',
-            scm_warehouse_id: '',
-            acc_cost_center_id: '',
-            scmMiShortageLines: [
-                {
-                    scmMaterial: '',
-                    scm_material_id: '',
-                    unit: '',
-                    quantity: 0.00,
-                    remarks: '',
-                    mi_composite_key: ''
-                }
-            ]
-        },
     });
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
         unit: '',
-        remarks: '',
-        mmr_quantity: 0.00,
-        mo_quantity: 0.00,
-        quantity: 0.00
+        specification: '',
+        available_stock: '',
+        present_stock: '',
+        quantity: 0.0
     }
 
     const errors = ref('');
@@ -82,7 +63,7 @@ export default function useMovementIn() {
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
 
-    async function getMovementIns(page, businessUnit, columns = null, searchKey = null, table = null) {
+    async function getMaterialAdjustments(page, businessUnit, columns = null, searchKey = null, table = null) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -91,7 +72,7 @@ export default function useMovementIn() {
         indexBusinessUnit.value = businessUnit;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/movement-ins`,{
+            const {data, status} = await Api.get(`/${BASE}/material-adjustments`,{
                 params: {
                     page: page || 1,
                     columns: columns || null,
@@ -100,7 +81,7 @@ export default function useMovementIn() {
                     business_unit: businessUnit,
                 },
             });
-            movementIns.value = data.value;
+            materialAdjustments.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -111,7 +92,7 @@ export default function useMovementIn() {
             //NProgress.done();
         }
     }
-    async function storeMovementIn(form) {
+    async function storeMaterialAdjustment(form) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -120,10 +101,10 @@ export default function useMovementIn() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-ins`, formData);
-            movementIn.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-adjustments`, formData);
+            materialAdjustment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-ins.index` });
+            router.push({ name: `${BASE}.material-adjustments.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -133,15 +114,15 @@ export default function useMovementIn() {
         }
     }
 
-    async function showMovementIn(movementInId) {
+    async function showMaterialAdjustment(materialAdjustmentId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/movement-ins/${movementInId}`);
-            movementIn.value = data.value;
-console.log(movementIn.value);
+            const { data, status } = await Api.get(`/${BASE}/material-adjustments/${materialAdjustmentId}`);
+            materialAdjustment.value = data.value;
+
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -151,7 +132,7 @@ console.log(movementIn.value);
         }
     }
 
-    async function updateMovementIn(form, movementInId) {
+    async function updateMaterialAdjustment(form, materialAdjustmentId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -160,10 +141,10 @@ console.log(movementIn.value);
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/movement-ins/${movementInId}`, formData);
-            movementIn.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-adjustments/${materialAdjustmentId}`, formData);
+            materialAdjustment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.movement-ins.index` });
+            router.push({ name: `${BASE}.material-adjustments.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -173,15 +154,15 @@ console.log(movementIn.value);
         }
     }
 
-    async function deleteMovementIn(movementInId) {
+    async function deleteMaterialAdjustment(materialAdjustmentId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/movement-ins/${movementInId}`);
+            const { data, status } = await Api.delete( `/${BASE}/material-adjustments/${materialAdjustmentId}`);
             notification.showSuccess(status);
-            await getMovementIns(indexPage.value,indexBusinessUnit.value);
+            await getMaterialAdjustments(indexPage.value,indexBusinessUnit.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -191,49 +172,38 @@ console.log(movementIn.value);
         }
     }
 
-    async function searchMovementIn(searchParam, loading) {
-        
-
+    async function searchMaterialAdjustment(searchParam, loading, business_unit) {
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
-            filteredMovementIns.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/search-mmr`, {
+                params: {
+                    searchParam: searchParam,
+                    business_unit: business_unit,
+                },
+            }
+            );
+            console.log('tag', data)
+            filteredMaterialAdjustments.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
+            console.log('tag', data)
         } finally {
             loading(false)
-        }
-    }
-    async function getMmrWiseMi(mmrId) {
-        try {
-            const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-mi-data`,{
-                params: {
-                    mmr_id: mmrId,
-                },
-            });
-            filteredMovementRequisitionLines.value = data.value.scmMiLines;
-            console.log(filteredMovementRequisitionLines.value);
-        } catch (error) {
-            console.log('tag', error)
-        } finally {
-            //NProgress.done();
         }
     }
 
  
 
     return {
-        movementIns,
-        movementIn,
-        filteredMovementIns,
-        searchMovementIn,
-        getMovementIns,
-        storeMovementIn,
-        showMovementIn,
-        updateMovementIn,
-        deleteMovementIn,
-        filteredMovementRequisitionLines,
-        getMmrWiseMi,
+        materialAdjustments,
+        materialAdjustment,
+        filteredMaterialAdjustments,
+        searchMaterialAdjustment,
+        getMaterialAdjustments,
+        storeMaterialAdjustment,
+        showMaterialAdjustment,
+        updateMaterialAdjustment,
+        deleteMaterialAdjustment,
         materialObject,
         isLoading,
         errors,

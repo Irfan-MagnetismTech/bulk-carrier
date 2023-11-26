@@ -18,7 +18,7 @@ const route = useRoute();
 const movementRequisitionId = route.params.movementRequisitionId;
 const formType = 'edit';
 
-setTitle('Edit Movement Requisition');
+setTitle('Update Movement Requisition');
 
 onMounted(() => {
     showMovementRequisition(movementRequisitionId);
@@ -34,7 +34,7 @@ onMounted(() => {
         <form @submit.prevent="updateMovementRequisition(movementRequisition, movementRequisitionId)">
             <movement-requisition-form :form="movementRequisition" :page="formType" :errors="errors" :formType="formType" :materialObject="materialObject"></movement-requisition-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>
     </div>
 </template>
