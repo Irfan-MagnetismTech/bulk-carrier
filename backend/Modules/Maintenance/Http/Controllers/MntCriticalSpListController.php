@@ -14,16 +14,11 @@ class MntCriticalSpListController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalSps = MntCriticalSpList::with(['opsVessel:id,name'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+            $criticalSps = MntCriticalSpList::with(['opsVessel:id,name'])->globalSearch($request->all());
 
             return response()->success('Critical spare list for vessels are retrieved successfully', $criticalSps, 200);
             
