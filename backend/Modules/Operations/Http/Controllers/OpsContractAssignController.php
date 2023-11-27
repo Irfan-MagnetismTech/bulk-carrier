@@ -139,23 +139,22 @@ class OpsContractAssignController extends Controller
         ->get();   
 
 
-        if(isset($voyages->opsVoyageSectors)){
+        if(count($voyages->opsVoyageSectors)>0){
             $voyages->opsVoyageSectors->map(function($sector) use ($voyages){    
-                if(isset($sector->sum('final_received_qty'))){
-                    $voyages['cargo_quantity'] = $sector->sum('final_received_qty');
+                $cargo_quantity = 0;
+
+                if ($sector->sum('final_received_qty') != 0) {
+                    $cargo_quantity = $sector->sum('final_received_qty');
+                } elseif ($sector->sum('final_survey_qty') != 0) {
+                    $cargo_quantity = $sector->sum('final_survey_qty');
+                } elseif ($sector->sum('boat_note_qty') != 0) {
+                    $cargo_quantity = $sector->sum('boat_note_qty');
+                } elseif ($sector->sum('initial_survey_qty') != 0) {
+                    $cargo_quantity = $sector->sum('initial_survey_qty');
                 }
-                else if(isset($sector->sum('final_survey_qty'))){
-                    $voyages['cargo_quantity'] = $sector->sum('final_survey_qty');
-                }
-                else if(isset($sector->sum('boat_note_qty'))){
-                    $voyages['cargo_quantity'] = $sector->sum('boat_note_qty');
-                }
-                else if(isset($sector->sum('initial_survey_qty'))){
-                    $voyages['cargo_quantity'] = $sector->sum('initial_survey_qty');
-                }else{
-                    $voyages['cargo_quantity'] =0;
-                }
-    
+            
+                $voyages['cargo_quantity'] = $cargo_quantity;
+            
                 return $voyages;
             });
         }
