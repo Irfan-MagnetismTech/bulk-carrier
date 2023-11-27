@@ -146,7 +146,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.fixed-assets.index',
                         label: 'Assets',
                         preIcon: '',
                         postIcon: icons.DownArrow,
