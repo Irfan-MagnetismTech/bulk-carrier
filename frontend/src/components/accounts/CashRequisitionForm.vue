@@ -9,7 +9,7 @@ import useMaterialReceiptReport from "../../composables/supply-chain/useMaterial
 import ErrorComponent from '../utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
 
-const { allAccountLists, allBankLists, allCostCenterLists,  allFixedAssetCategoryList, getFixedAssetCategory, getAccount, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
+const { allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
 
 
@@ -36,13 +36,6 @@ watch(() => props.form.costCenter, (value) => {
   }
 });
 
-// v-select for change unit depend on material start
-watch(() => props.form.fixedAssetCategory, (value) => {
-  if(value){
-    props.form.acc_parent_account_id = value?.id ?? '';
-  }
-});
-
 function accCashRequisitionLines() {
   let obj = {
     particular: '',
@@ -61,9 +54,6 @@ onMounted(() => {
   //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
-    getAccount(null,props.form.business_unit);
-    getBank(null,props.form.business_unit);
-    getFixedAssetCategory(null,props.form.business_unit);
   });
 });
 
@@ -123,7 +113,7 @@ onMounted(() => {
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetCost, index) in form.accCashRequisitionLines" :key="fixedAssetCost.id">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(accCashRequisitionLine, index) in form.accCashRequisitionLines" :key="accCashRequisitionLine.id">
             <td class="px-1 py-1">
               <input type="text" v-model.trim="form.accCashRequisitionLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
             </td>

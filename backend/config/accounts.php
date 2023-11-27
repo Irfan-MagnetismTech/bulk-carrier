@@ -20,6 +20,7 @@ return [
         'expense_for_sales'         => 75, //@ranks = Direct Expenses
         'expense_for_service'       => 83, //@ranks = Expenses of Service
         'fixed_assets_at_cost'      => 3, //Fixed Assets at Cost (balance_income_line_id:3)
+        'inventory'                 => 11, //Fixed Assets at Cost (balance_income_line_id:3)
     ],
 
     'account_types'       => [

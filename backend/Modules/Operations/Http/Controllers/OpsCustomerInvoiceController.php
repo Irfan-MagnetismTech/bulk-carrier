@@ -31,7 +31,7 @@ class OpsCustomerInvoiceController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceLines.opsVoyage','opsCustomerInvoiceLines.opsVessel')
+            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsChartererInvoiceVoyages.opsVoyage','opsCustomerInvoiceLines','opsCustomerInvoiceLines.opsVessel')
            ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $customerInvoices, 200);
