@@ -292,9 +292,7 @@ const { vesselParticular, showVesselParticular, errors } = useVesselParticular()
 
 const { setTitle } = Title();
 
-setTitle('Edit Vessel Particular');
-
-const formType = 'edit';
+setTitle('Vessel Particular');
 
 onMounted(() => {
   showVesselParticular(vesselParticularId);
