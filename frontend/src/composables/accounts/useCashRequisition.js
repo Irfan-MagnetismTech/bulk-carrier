@@ -19,12 +19,8 @@ export default function useCashRequisition() {
         scm_pr_ref_no : '', 
         scm_pr_id : '',
 
-        requisitor : '', 
-        requisitor_name : '', 
-        requisitor_id : '',
-
         applied_date : '',
-        total_amount : '',
+        total_amount : 0,
         purpose : '',
         business_unit : '',
 
@@ -101,7 +97,7 @@ export default function useCashRequisition() {
             const { data, status } = await Api.post('/acc/acc-cash-requisitions', form);
             cashRequisition.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.fixed-assets.index" });
+            await router.push({ name: "acc.cash-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -138,7 +134,7 @@ export default function useCashRequisition() {
             const { data, status } = await Api.put(`/acc/acc-cash-requisitions/${cashRequisitionId}`, form);
             cashRequisition.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "acc.fixed-assets.index" });
+            await router.push({ name: "acc.cash-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
