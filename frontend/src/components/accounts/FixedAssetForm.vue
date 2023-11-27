@@ -90,7 +90,7 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> MRR No <span class="text-red-500">*</span></span>
-        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scmMrr" label="name"  class="block w-full rounded form-input">
+        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scmMrr" label="ref_no"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.scmMrr" v-bind="attributes" v-on="events"/>
           </template>
