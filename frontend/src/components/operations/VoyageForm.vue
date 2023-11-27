@@ -23,7 +23,7 @@
       </li>
     </ul>
 
-    <div v-on:click="toggleTabs(1)" v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
+    <div v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
 
       <div class="border border-gray-200 rounded-md my-3 p-2">
         <h4 class="text-md font-semibold">Voyage Info</h4>
@@ -33,7 +33,7 @@
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
-            <v-select :options="customers" placeholder="--Choose an option--" @search="fetchCustomers"  v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="customer=>customer.id">
+            <v-select :options="customers" placeholder="--Choose an option--" :loading="isCustomerLoading"   v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="customer=>customer.id">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -52,7 +52,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -89,7 +89,7 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" @search="fetchCargoTypes"  v-model="form.ops_cargo_type_id" label="cargo_type" class="block form-input" :reduce="vessel=>vessel.id">
+              <v-select :options="cargoTypes" placeholder="--Choose an option--" :loading="isCargoTypeLoading"  v-model="form.ops_cargo_type_id" label="cargo_type" class="block form-input" :reduce="vessel=>vessel.id">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -102,7 +102,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Load Port Distance (NM) <span class="text-red-500">*</span></span>
-              <input type="text" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
+              <input type="number" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
               <Error v-if="errors?.load_port_distance" :errors="errors.load_port_distance" />
             </label>
           <label class="block w-full mt-2 text-sm">
@@ -120,32 +120,29 @@
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
-          <label class="block w-full mt-2 text-sm">
+          <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Remarks </span>
             <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
             <Error v-if="errors?.remarks" :errors="errors.remarks" />
-          </label>
+          </label> -->
+          <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
         </div>
       </div>
     </div>
 
     
-    <div v-on:click="toggleTabs(2)" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}" class="border border-gray-200 rounded-md my-3 p-2">
+    <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}" class="border border-gray-200 rounded-md my-3 p-2">
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Sectors</h4>
         <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
-              <th class="!w-80">Loading Point</th>
-              <th class="!w-80">Unloading Point</th>
-              <th>Tonnage (Initial Survey)</th>
+              <th class="!w-80">Loading Point <span class="text-red-500">*</span></th>
+              <th class="!w-80">Unloading Point <span class="text-red-500">*</span></th>
+              <th>Tonnage (Initial Survey) <span class="text-red-500">*</span></th>
               <th class="w-16">
-                <button type="button" @click="addVoyageSector()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                Action
               </th>
             </tr>
           </thead>
@@ -155,7 +152,7 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -167,7 +164,7 @@
               </v-select>
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -180,13 +177,18 @@
               </td>
               <td>
                 <label class="block w-full text-sm">
-                  <input type="text" v-model.trim="form.opsVoyageSectors[index].initial_survey_qty" placeholder="Initial Survey Quantity" class="form-input" autocomplete="off" />
-                  <Error v-if="errors?.form.opsVoyageSectors[index]?.initial_survey_qty" :errors="errors?.form.opsVoyageSectors[index]?.initial_survey_qty" />
+                  <input type="number" v-model.trim="form.opsVoyageSectors[index].initial_survey_qty" placeholder="Initial Survey Quantity" class="form-input" autocomplete="off" required />
+                  <Error v-if="errors?.form?.opsVoyageSectors[index]?.initial_survey_qty" :errors="errors?.form.opsVoyageSectors[index]?.initial_survey_qty" />
                 </label>
               </td>
               <td>
-                <button type="button" @click="removeVoyageSector(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button v-if="index == 0" type="button" @click="addVoyageSector()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <button v-else type="button" @click="removeVoyageSector(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button> 
@@ -197,10 +199,10 @@
       </div>
     </div>
 
-    <div v-on:click="toggleTabs(3)" v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}" class="border border-gray-200 rounded-md my-3 p-2">
-      <div class="">
+    <div v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}" class="border border-gray-200 rounded-md my-3 p-2">
+      <div class="min-h-[200px]" >
         <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
-        <table class="w-full whitespace-no-wrap" >
+        <table class="w-full whitespace-no-wrap" v-show="form.ops_vessel_id">
           <thead v-once>
             <tr class="w-full">
               <th>SL</th>
@@ -241,7 +243,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
                   <Error v-if="errors?.opsBunkers[index]?.quantity" :errors="errors.opsBunkers[index]?.quantity" />
                 </label>
               </td>
@@ -251,15 +253,15 @@
       </div>
     </div>
 
-    <div v-on:click="toggleTabs(4)" v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}" class="border border-gray-200 rounded-md my-3 p-2">
+    <div v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}" class="border border-gray-200 rounded-md my-3 p-2">
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
         <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 bg-gray-100 shadow-md">
           <label class="block w-1/4 mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type <span class="text-red-500">*</span></span>
 
-            <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input">
+            <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input" required>
               <option value="">Select Type</option>
               <option value="Loading">Loading</option>
               <option value="Discharge">Discharge</option>
@@ -271,7 +273,7 @@
 
                       <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
 
-                      <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
+                      <v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
                         <template #search="{attributes, events}">
                             <input
                                 class="vs__search"
@@ -374,14 +376,17 @@ import useMaterial from '../../composables/supply-chain/useMaterial';
 import useCustomer from '../../composables/operations/useCustomer';
 import useVessel from '../../composables/operations/useVessel';
 import useCargoType from '../../composables/operations/useCargoType';
-import { ref, watch } from "vue";
+import useVoyage from '../../composables/operations/useVoyage';
+import { ref, watch, onMounted, watchEffect } from "vue";
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 
-const { ports, searchPorts } = usePort();
-const { customers, getCustomersByNameOrCode } = useCustomer();
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
-const { cargoTypes, searchCargoTypes } = useCargoType();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { customers, getCustomersByNameOrCode, isCustomerLoading } = useCustomer();
+const { vessel, vessels, searchVessels, showVessel, isVesselLoading } = useVessel();
+const { cargoTypes, searchCargoTypes, isCargoTypeLoading } = useCargoType();
 const { materials, searchMaterialWithCategory } = useMaterial();
+const { checkValidation } = useVoyage();
 
 const props = defineProps({
     form: {
@@ -397,22 +402,42 @@ const props = defineProps({
 
 const openTab = ref(1);
 const toggleTabs = (tabNumber) => {
+  console.log("object "+ tabNumber);
+  if (openTab.value === 1) {
+    let tab1RequiredFields = ['business_unit', 'ops_customer_id', 'mother_vessel', 'ops_vessel_id', 'voyage_no', 'voyage_sequence', 'route', 'ops_cargo_type_id', 'load_port_distance',
+      'sail_date', 'transit_date'];
+    if (!checkValidation(openTab, tabNumber, props, tab1RequiredFields)) {
+      return;
+    }
+  }
+  else if (openTab.value === 2) {
+    let tab2RequiredFields = ['loading_point', 'unloading_point', 'initial_survey_qty'];
+    if (!checkValidation(openTab, tabNumber, props, tab2RequiredFields)) {
+      return;
+    }
+  }
+  else if (openTab.value === 4) {
+    let tab4RequiredFields = ['operation_type', 'port_code'];
+    if (!checkValidation(openTab, tabNumber, props, tab4RequiredFields)) {
+      return;
+    }
+  }
   openTab.value = tabNumber;
 }
 const editInitiated = ref(false);
 
 const fetchCustomers = (search, loading) => {
-  loading(true);
+  // loading(true);
   getCustomersByNameOrCode(search, props.form.business_unit, loading);
 }
 
 function fetchVessels(search, loading) {
-      loading(true);
+      // loading(true);
       searchVessels(search, props.form.business_unit, loading);
 }
 
 function fetchCargoTypes(search, loading) {
-      loading(true);
+      // loading(true);
       searchCargoTypes(search, loading)
 }
 
@@ -423,6 +448,13 @@ watch(() => props.form.voyage_no, (value) => {
     props.form.voyage_sequence = value+'B'
   }
 }, { deep: true })
+
+watch(() => props.form.business_unit, (value) => {
+  if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')){
+    props.form.ops_customer_id = null;
+    props.form.ops_vessel_id = null;
+  }
+})
 
 watch(() => props.form.ops_vessel_id, (value) => {
   if(value) {
@@ -490,9 +522,20 @@ function fetchBunker(search, loading) {
 }
 
 function fetchPorts(search, loading) {
-      loading(true);
+      // loading(true);
       searchPorts(search, loading)
 }
+
+onMounted(() => {
+  fetchCargoTypes("", false);
+  fetchPorts("", false);
+    watchEffect(() => {
+      if(props.form.business_unit && props.form.business_unit != 'ALL'){
+        fetchCustomers("", false);
+        fetchVessels("", false);
+      }
+    });
+});
 </script>
 <style lang="postcss" scoped>
 .input-group {
