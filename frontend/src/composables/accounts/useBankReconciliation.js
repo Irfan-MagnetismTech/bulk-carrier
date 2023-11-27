@@ -121,12 +121,10 @@ export default function useBankReconciliation() {
             let singleData = bankReconciliations.find(doc => doc.id === form.acc_transaction_id);
 
             if (!singleData.bankReconciliation) {
-                singleData.bankReconciliation = {};
-            }
-
-            if (singleData && singleData.bankReconciliation) {
-                singleData.bankReconciliation.reconciliation_date = data.value.reconciliation_date;
-                singleData.bankReconciliation.status = data.value.status;
+                singleData.bankReconciliation = {
+                    reconciliation_date: data.value.reconciliation_date,
+                    status: data.value.status,
+                };
             }
             notification.showSuccess(status);
             isOpenReconciliationDateModal.value = 0;

@@ -105,20 +105,17 @@ const paginatedPage = ref(1);
 
 const formParams = ref( {
   reconciliation_date: null,
-  page: props.page,
   acc_transaction_id: null,
   business_unit: null,
-  bankReconciliations: null,
 });
 
-function updateBankReconciliationDate(event,transactionId,businessUnit,bankReconciliations){
+function updateBankReconciliationDate(event,transactionId,businessUnit){
   // if (!confirm('Are you sure you want to posting?')) {
   //   return;
   // }
   isOpenReconciliationDateModal.value = 1;
   formParams.value.acc_transaction_id = transactionId;
   formParams.value.business_unit = businessUnit;
-  formParams.value.bankReconciliations = bankReconciliations;
 }
 
 function closeReconciliationDateModal(){
@@ -344,7 +341,10 @@ onMounted(() => {
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length">
                   <nobr>
-                    <action-button :action="'posting'" :class="{'custom_opacity': bankReconciliation?.bankReconciliation}" @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit,bankReconciliations?.data)"></action-button>
+<!--                    <svg @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit)" xmlns="http://www.w3.org/2000/svg" class="icn text-green-600 dark:text-gray-600 dark:hover:text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">-->
+<!--                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--                    </svg>-->
+                    <action-button :action="'posting'" :class="{'custom_opacity': bankReconciliation?.bankReconciliation}" @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit)"></action-button>
                     <!-- <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: bankReconciliation?.id } }"></action-button> -->
                   </nobr>
                 </td>
