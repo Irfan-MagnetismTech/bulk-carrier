@@ -67,7 +67,7 @@ export default function useChartererInvoice() {
 				amount_usd: 0,
 			},
 		],
-		opsChartereInvoiceVoyages: [{
+		opsChartererInvoiceVoyages: [{
 			'ops_voyage_id': '',
 			'opsVoyage': null,
 			'cargo_quantity': 0,
