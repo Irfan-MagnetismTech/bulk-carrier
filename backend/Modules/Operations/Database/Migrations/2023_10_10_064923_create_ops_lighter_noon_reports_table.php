@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ops_lighter_noon_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->onDelete('cascade');
+            $table->foreignId('ops_vessel_id');
+            $table->foreignId('ops_voyage_id')->nullable();
             $table->string('ship_master')->nullable();
             $table->string('chief_engineer');
             $table->string('noon_position')->nullable();
