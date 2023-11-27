@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import moment from "moment";
 const router = useRouter();
 
 const props = defineProps({
@@ -21,7 +22,7 @@ const props = defineProps({
   },
 });
 const icons = useHeroIcon();
-const { bankReconciliations, getBankReconciliations, deleteBankReconciliation, isLoading, isTableLoading  } = useBankReconciliation();
+const { bankReconciliations, getBankReconciliations, updateBankReconciliation, deleteBankReconciliation, isOpenReconciliationDateModal, isLoading, isTableLoading  } = useBankReconciliation();
 const { setTitle } = Title();
 setTitle('Bank Reconciliation');
 
@@ -101,6 +102,29 @@ function clearFilter(){
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+
+const formParams = ref( {
+  reconciliation_date: null,
+  page: props.page,
+  acc_transaction_id: null,
+  business_unit: null,
+  bankReconciliations: null,
+});
+
+function updateBankReconciliationDate(event,transactionId,businessUnit,bankReconciliations){
+  // if (!confirm('Are you sure you want to posting?')) {
+  //   return;
+  // }
+  isOpenReconciliationDateModal.value = 1;
+  formParams.value.acc_transaction_id = transactionId;
+  formParams.value.business_unit = businessUnit;
+  formParams.value.bankReconciliations = bankReconciliations;
+}
+
+function closeReconciliationDateModal(){
+  isOpenReconciliationDateModal.value = 0;
+  formParams.value.reconciliation_date = null;
+}
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -198,9 +222,36 @@ onMounted(() => {
                 </div>
               </div>
             </th>
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr> Account Name </nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr> Debit Amount </nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
+<!--            <th>-->
+<!--              <div class="flex justify-evenly items-center">-->
+<!--                <span><nobr> Credit Amount </nobr></span>-->
+<!--                <div class="flex flex-col cursor-pointer">-->
+<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
+<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </th>-->
             <th>
               <div class="flex justify-evenly items-center">
-                <span><nobr> Account Name </nobr></span>
+                <span><nobr>Reconciliation Date </nobr></span>
                 <div class="flex flex-col cursor-pointer">
                   <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                   <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -209,25 +260,7 @@ onMounted(() => {
             </th>
             <th>
               <div class="flex justify-evenly items-center">
-                <span><nobr> Debit Amount </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr> Credit Amount </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr> Transaction Date </nobr></span>
+                <span><nobr>Status </nobr></span>
                 <div class="flex flex-col cursor-pointer">
                   <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                   <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -280,14 +313,29 @@ onMounted(() => {
 
                 <!-- <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.bill_no }} </td> -->
 
-                <td class="text-left"> <no-br>{{ ledger?.account.account_name }} </no-br></td>
-                <td class="text-right"> {{ ledger.dr_amount }} </td>
-                <td class="text-right"> {{ ledger.cr_amount }} </td>
+<!--                <td class="text-left"> <nobr>{{ ledger?.account.account_name }} </nobr></td>-->
+<!--                <td class="text-right"> {{ ledger.dr_amount }} </td>-->
+<!--                <td class="text-right"> {{ ledger.cr_amount }} </td>-->
 
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> 
-                  
-                  <button class="btn"> - - - </button>
-                
+<!--                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> -->
+<!--                  -->
+<!--                  <button class="btn"> - - - </button>-->
+<!--                -->
+<!--                </td>-->
+
+                <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
+                  <nobr>
+<!--                    <input v-if="!bankReconciliation?.bank_reconciliation" type="date" class="transaction_date form-input">-->
+                    <span> {{ (bankReconciliation?.bankReconciliation?.reconciliation_date) ? moment(bankReconciliation?.bankReconciliation?.reconciliation_date).format('DD-MM-YYYY') : '---' }} </span>
+                  </nobr>
+                </td>
+                <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
+                  <span v-if="bankReconciliation?.bankReconciliation?.status" class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                          {{ bankReconciliation?.bankReconciliation?.status }}
+                  </span>
+                  <span v-else class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-300 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                    <nobr>Not Posted</nobr>
+                  </span>
                 </td>
 
 
@@ -296,6 +344,7 @@ onMounted(() => {
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length">
                   <nobr>
+                    <action-button :action="'posting'" :class="{'custom_opacity': bankReconciliation?.bankReconciliation}" @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit,bankReconciliations?.data)"></action-button>
                     <!-- <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: bankReconciliation?.id } }"></action-button> -->
                   </nobr>
                 </td>
@@ -323,4 +372,55 @@ onMounted(() => {
     </div>
     <Paginate :data="bankReconciliations" to="acc.bank-reconciliation.index" :page="page"></Paginate>
   </div>
+  <div v-show="isOpenReconciliationDateModal" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <form @submit.prevent="updateBankReconciliation(formParams,bankReconciliations?.data)" style="position: absolute;top: 0;">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button type="button"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark-disabled:hover:text-gray-200 hover: hover:text-gray-700"
+                  aria-label="close" @click="closeReconciliationDateModal">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+              <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
+          <thead v-once>
+          <tr style="background-color: #04AA6D;color: white"
+              class="text-xs font-semibold tracking-wide text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th colspan="5">Update Reconciliation Date</th>
+          </tr>
+          </thead>
+        </table>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Reconciliation Date<span class="text-red-500">*</span></span>
+            <input type="date" v-model.trim="formParams.reconciliation_date" class="form-input" autocomplete="off" required />
+          </label>
+        </div>
+        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
+          <button type="button" @click="closeReconciliationDateModal" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            Cancel
+          </button>
+          <button
+              class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            Submit
+          </button>
+        </footer>
+      </div>
+    </form>
+  </div>
 </template>
+
+<style lang="postcss" scoped>
+#modal {
+  min-width: 25rem;
+}
+
+</style>

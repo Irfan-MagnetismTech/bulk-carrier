@@ -7,6 +7,7 @@ import useNotification from '../useNotification.js';
 export default function useBankReconciliation() {
     const router = useRouter();
     const bankReconciliations = ref([]);
+    const isOpenReconciliationDateModal = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
     const bankReconciliation = ref( {
@@ -80,6 +81,7 @@ export default function useBankReconciliation() {
             const { data, status } = await Api.post('/acc/acc-cost-centers', form);
             bankReconciliation.value = data.value;
             notification.showSuccess(status);
+            isOpenReconciliationDateModal.value = false;
             await router.push({ name: "acc.cost-centers.index" });
         } catch (error) {
             const { data, status } = error.response;
@@ -108,19 +110,26 @@ export default function useBankReconciliation() {
         }
     }
 
-    async function updateBankReconciliation(form, bankReconciliationId) {
+    async function updateBankReconciliation(form,bankReconciliations) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.put(
-                `/acc/acc-cost-centers/${bankReconciliationId}`,
-                form
-            );
+            const { data, status } = await Api.post('/acc/acc-bank-reconciliations', form);
             bankReconciliation.value = data.value;
+            let singleData = bankReconciliations.find(doc => doc.id === form.acc_transaction_id);
+
+            if (!singleData.bankReconciliation) {
+                singleData.bankReconciliation = {};
+            }
+
+            if (singleData && singleData.bankReconciliation) {
+                singleData.bankReconciliation.reconciliation_date = data.value.reconciliation_date;
+                singleData.bankReconciliation.status = data.value.status;
+            }
             notification.showSuccess(status);
-            await router.push({ name: "acc.cost-centers.index" });
+            isOpenReconciliationDateModal.value = 0;
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -152,6 +161,7 @@ export default function useBankReconciliation() {
         bankReconciliations,
         bankReconciliation,
         getBankReconciliations,
+        isOpenReconciliationDateModal,
         storeBankReconciliation,
         showBankReconciliation,
         updateBankReconciliation,
