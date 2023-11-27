@@ -221,13 +221,13 @@ class ScmPrController extends Controller
      */
     public function searchPr(Request $request): JsonResponse
     {
-        if ($request->business_unit != 'ALL') {
+        if (isset($request->searchParam)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where(function($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                    ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
-                    ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+                    ->where('business_unit',$request->business_unit)
+                    ->where('acc_cost_center_id',$request->cost_center_id);
                 })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
@@ -237,8 +237,8 @@ class ScmPrController extends Controller
             $purchase_requisition = ScmPr::query()
                     ->with('scmPrLines')
                     ->where(function($query) use ($request) {
-                        $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
-                        ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+                        $query->where('business_unit',$request->business_unit)
+                        ->where('acc_cost_center_id',$request->cost_center_id);
                     })
                     ->orderByDesc('ref_no')
                     ->limit(10)

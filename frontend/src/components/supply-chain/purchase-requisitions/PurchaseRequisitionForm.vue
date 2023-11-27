@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed, onUpdated } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, onUpdated, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -66,7 +66,7 @@
     onMounted(() => {
       fetchAllStoreCategories();
       fetchMaterials('');
-      watchEffect(() => {
+      watchPostEffect(() => {
         fetchWarehouse('');
       });
     });
@@ -126,13 +126,14 @@
   }
   const dynamicMinHeight = ref(0);
 
-const setMinHeight = () => {
-  dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
-};
+  const setMinHeight = () => {
+    dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+  
+  };
 
-onMounted(() => {
-  setMinHeight();
-});
+  onMounted(() => {
+    setMinHeight();
+  });
 
 // Use onUpdated to adjust min-height after the component updates
 // onUpdated(() => {
@@ -152,12 +153,12 @@ onMounted(() => {
 watch(() => props.form.scmPrLines, (newLines) => {
   let materialArray = [];
   newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line.brand + "-" + line.model;
+    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
     if (materialArray.indexOf(material_key) === -1) {
       materialArray.push(material_key);
     } else {
       alert("Duplicate Material Found");
-      // props.form.scmPrLines.splice(index, 1);
+      props.form.scmPrLines.splice(index, 1);
     }
 
     if (line.scmMaterial) {
@@ -413,7 +414,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmPrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmPrLines[index].quantity" min=1 required class="form-input">
               </label>
             </td>
             <td>

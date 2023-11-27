@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function usePurchaseRequisition() {
@@ -19,7 +20,7 @@ export default function usePurchaseRequisition() {
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseRequisition = ref( {
         raised_date: '',

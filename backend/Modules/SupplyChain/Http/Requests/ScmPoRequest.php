@@ -27,7 +27,7 @@ class ScmPoRequest extends FormRequest
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
             'scm_vendor_id' => 'required|integer|exists:scm_vendors,id',
             'currency' => 'required|max:255',
-            'exchange_rate' => 'required|numeric',
+            // 'exchange_rate' => 'required|numeric',
             'foreign_to_bdt' => 'required_if:currency,!=,BDT|numeric',
             'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
             'discount' => 'numeric',

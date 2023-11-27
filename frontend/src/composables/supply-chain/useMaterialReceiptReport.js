@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
@@ -19,7 +19,7 @@ export default function useMaterialReceiptReport() {
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialReceiptReport = ref( {
         ref_no: null,
