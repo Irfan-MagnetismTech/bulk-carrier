@@ -57,9 +57,11 @@ class OpsCustomerInvoiceController extends Controller
              $customerInvoiceInfo = $request->except(
                  '_token',
                  'opsCustomerInvoiceLines',
+                 'opsChartererInvoiceVoyages'
              );
  
              $customerInvoice = OpsCustomerInvoice::create($customerInvoiceInfo);
+             $customerInvoice->opsChartererInvoiceVoyages()->createMany($request->opsChartererInvoiceVoyages);
              $customerInvoice->opsCustomerInvoiceLines()->createMany($request->opsCustomerInvoiceLines);
              DB::commit();
              return response()->success('Data added successfully.', $customerInvoice, 201);
@@ -79,7 +81,7 @@ class OpsCustomerInvoiceController extends Controller
       */
      public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
      {
-         $customer_invoice->load('opsCustomer','opsCustomerInvoiceLines.opsVoyage','opsCustomerInvoiceLines.opsVessel');
+         $customer_invoice->load('opsCustomer','opsChartererInvoiceVoyages','opsCustomerInvoiceLines.opsVoyage','opsCustomerInvoiceLines.opsVessel');
          try
          {
             return response()->success('Data retrieved successfully.', $customer_invoice, 200);
@@ -109,6 +111,7 @@ class OpsCustomerInvoiceController extends Controller
             );
         
             $customer_invoice->update($customerInvoiceInfo);        
+            $customer_invoice->opsChartererInvoiceVoyages()->createUpdateOrDelete($request->opsChartererInvoiceVoyages);
             $customer_invoice->opsCustomerInvoiceLines()->createUpdateOrDelete($request->opsCustomerInvoiceLines);
             DB::commit();
             return response()->success('Data updated successfully.', $customer_invoice, 200);
@@ -130,6 +133,7 @@ class OpsCustomerInvoiceController extends Controller
      {
         try
         {
+            $customer_invoice->opsChartererInvoiceVoyages()->delete();
             $customer_invoice->opsCustomerInvoiceLines()->delete();
             $customer_invoice->delete();
 
