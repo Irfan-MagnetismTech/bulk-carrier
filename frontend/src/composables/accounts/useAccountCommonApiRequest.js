@@ -10,6 +10,9 @@ export default function useAccountCommonApiRequest() {
     const balanceIncomeAccountLists = ref([]);
     const allAccountLists = ref([]);
     const allCostCenterLists = ref([]);
+    const allLoanLists = ref([]);
+    const allBankLists = ref([]);
+    const allFixedAssetCategoryList = ref([]);
     const generatedAccountCode = ref('');
     const $loading = useLoading();
     const notification = useNotification();
@@ -128,16 +131,79 @@ export default function useAccountCommonApiRequest() {
 
     }
 
+    async function getLoan(name=null, businessUnit, loading=null) {
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-loans', form);
+            allLoanLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function getBank(name=null, businessUnit, loading=null) {
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-banks', form);
+            allBankLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function getFixedAssetCategory(name=null, businessUnit, loading=null) {
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-fixed-asset-categories', form);
+            allFixedAssetCategoryList.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
         allAccountLists,
         allCostCenterLists,
+        allLoanLists,
+        allBankLists,
+        allFixedAssetCategoryList, 
         generatedAccountCode,
         getBalanceIncomeLineLists,
         getBalanceIncomeAccountLists,
         getAccount,
         getCostCenter,
+        getLoan,
+        getBank,
+        getFixedAssetCategory,     
         getGeneratedAccountCode,
         isLoading,
         errors,
