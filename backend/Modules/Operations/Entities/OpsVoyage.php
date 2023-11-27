@@ -17,6 +17,7 @@ class OpsVoyage extends Model
         'mother_vessel',
         'ops_cargo_type_id',
         'voyage_no',
+        'voyage_sequence',
         'route',
         'load_port_distance',
         'sail_date',

@@ -130,23 +130,23 @@ class OpsContractAssignController extends Controller
         }
     }
 
-    public function getVoyageByContract(Request $request){
-        // return response()->json($request->all(),422);
+    public function getVoyageByContract(Request $request): JsonResponse
+    {
+
         $voyages= OpsVoyage::with('opsVoyageSectors')->whereHas('opsContractAssign',function($item){
             return $item->where('ops_charterer_contract_id', 22);
         })
         ->get();        
 
         $voyages->opsVoyageSectors->map(function($sector) use ($voyages){
-            
-            $cargo_quantity =($sector->sum('final_received_qty') != 0 ? $sector->sum('final_received_qty') :$sector->sum('final_survey_qty') != 0 ? $sector->sum('final_survey_qty') :$sector->sum('boat_note_qty') != 0 ? $sector->sum('boat_note_qty') :$sector->sum('initial_survey_qty') != 0 ? $sector->sum('initial_survey_qty') :0);
-            
-            $voyages['cargo_quantity']=$cargo_quantity;
-            
+
+            $voyages['cargo_quantity'] = (($sector->sum('final_received_qty') != 0) ? $sector->sum('final_received_qty') :($sector->sum('final_survey_qty') != 0) ? $sector->sum('final_survey_qty') :($sector->sum('boat_note_qty') != 0) ? $sector->sum('boat_note_qty') :($sector->sum('initial_survey_qty') != 0) ? $sector->sum('initial_survey_qty') :0);
+
             $voyages['sum_initial_survey_qty'] = $sector->sum('initial_survey_qty');
             $voyages['sum_final_survey_qty'] = $sector->sum('final_survey_qty');
             $voyages['sum_final_received_qty'] = $sector->sum('final_received_qty');
             $voyages['sum_boat_note_qty'] = $sector->sum('boat_note_qty');
+            
             return $voyages;
         });
        
