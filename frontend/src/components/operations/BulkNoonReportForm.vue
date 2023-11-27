@@ -579,8 +579,8 @@ const currentConsumptionIndex = ref(null);
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
   currentConsumptionIndex.value = opsBunkerIndex
-  if(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads) {
-    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBunkers[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads)
+  if(props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads) {
+    bunkerConsumptionDetails.value = cloneDeep(props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads)
   } else {
     bunkerConsumptionDetails.value = [{type: ''}]
   }
@@ -592,7 +592,7 @@ function closeBunkerConsumptionModel() {
 }
 
 function pushBunkerConsumption() {
-  props.form.opsBunkers[currentConsumptionIndex.value].opsBulkNoonReportConsumptionHeads = bunkerConsumptionDetails.value
+  props.form.opsBulkNoonReportConsumptions[currentConsumptionIndex.value].opsBulkNoonReportConsumptionHeads = bunkerConsumptionDetails.value
   bunkerConsumptionDetails.value = [{type: ''}]
   isBunkerConsumptionModalOpen.value = 0
 }

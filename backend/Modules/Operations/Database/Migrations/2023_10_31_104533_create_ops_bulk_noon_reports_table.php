@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('wind_condition')->nullable();
             $table->string('type')->nullable();
             $table->string('date_time')->nullable();
-            $table->string('gtm_time')->nullable();
+            $table->string('gmt_time')->nullable();
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->string('status')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);  
-            $table->string('sea_condition')->nullable();
+            $table->string('sea_condition')->nullable()->nullable();
             $table->timestamps();
         });
     }

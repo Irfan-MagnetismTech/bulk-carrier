@@ -17,10 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('ops_vessel_id')->nullable();
             $table->unsignedBigInteger('ops_voyage_id')->nullable();
-            $table->unsignedBigInteger('ops_tariff_id')->nullable();
+            $table->unsignedBigInteger('ops_cargo_tariff_id')->nullable();
             $table->unsignedBigInteger('ops_customer_id')->nullable();
             $table->unsignedBigInteger('ops_charterer_profile_id')->nullable();
             $table->unsignedBigInteger('ops_charterer_contract_id')->nullable();
+            $table->date('assign_date')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
