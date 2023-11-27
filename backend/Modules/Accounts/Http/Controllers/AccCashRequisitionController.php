@@ -17,7 +17,7 @@ class AccCashRequisitionController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCashRequisitions = AccCashRequisition::with('accCashRequisitionLines', 'costCenter')
+            $accCashRequisitions = AccCashRequisition::with('accCashRequisitionLines', 'costCenter', 'scmPr', 'requisitor')
                 ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $accCashRequisitions, 200);
@@ -34,7 +34,7 @@ class AccCashRequisitionController extends Controller
     public function store(AccCashRequisitionRequest $request)
     {
         try {
-            $accCashRequisitionData = $request->only('acc_cost_center_id', 'applied_date', 'requisitor_id', 'mpr_id', 'total_amount', 'purpose', 'business_unit');
+            $accCashRequisitionData = $request->only('acc_cost_center_id', 'applied_date', 'requisitor_id', 'scm_pr_id', 'total_amount', 'purpose', 'business_unit');
             $accCashRequisitionData['requisitor_id'] = auth()->id();
 
             DB::transaction(function () use ($request, $accCashRequisitionData)
@@ -57,7 +57,7 @@ class AccCashRequisitionController extends Controller
     public function show(AccCashRequisition $accCashRequisition)
     {
         try {
-            return response()->success('Retrieved Succesfully', $accCashRequisition->load('accCashRequisitionLines', 'costCenter'), 200);
+            return response()->success('Retrieved Succesfully', $accCashRequisition->load('accCashRequisitionLines', 'costCenter', 'scmPr', 'requisitor'), 200);
         }
         catch (\Exception $e)
         {
@@ -72,7 +72,7 @@ class AccCashRequisitionController extends Controller
     public function update(AccCashRequisitionRequest $request, AccCashRequisition $accCashRequisition)
     {
         try {
-            $accCashRequisitionData = $request->only('acc_cost_center_id', 'applied_date', 'requisitor_id', 'mpr_id', 'total_amount', 'purpose', 'business_unit');
+            $accCashRequisitionData = $request->only('acc_cost_center_id', 'applied_date', 'requisitor_id', 'scm_pr_id', 'total_amount', 'purpose', 'business_unit');
 
             DB::transaction(function () use ($request, $accCashRequisitionData, $accCashRequisition)
             {

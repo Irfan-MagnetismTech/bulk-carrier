@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('acc_cost_center_id');
             $table->date('applied_date');
             $table->unsignedBigInteger('requisitor_id');
-            $table->unsignedBigInteger('mpr_id')->nullable();
+            $table->unsignedBigInteger('scm_pr_id')->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->text('purpose');
 			$table->enum('business_unit', ['PSML', 'TSLL']);

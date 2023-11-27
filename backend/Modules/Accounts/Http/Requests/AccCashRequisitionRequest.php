@@ -15,7 +15,7 @@ class AccCashRequisitionRequest extends FormRequest
         return [
             'acc_cost_center_id'                   => 'required|integer',
             'applied_date'                         => 'required|date',
-            // 'mpr_id'                               => 'nullable|integer',
+            // 'scm_pr_id'                               => 'nullable|integer',
             'total_amount'                         => 'required|numeric',
             'purpose'                              => 'required|string|max:700',
             'business_unit'                        => 'required|in:PSML,TSLL',

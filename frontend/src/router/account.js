@@ -267,6 +267,33 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
     
+    /* Cash Requisitions */
+    {
+        path: `/${BASE}/cash-requisitions`,
+        name: `${BASE}.cash-requisitions.index`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/cash-requisitions/create`,
+        name: `${BASE}.cash-requisitions.create`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/cash-requisitions/:cashRequisitionId/edit`,
+        name: `${BASE}.cash-requisitions.edit`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/cash-requisitions/:cashRequisitionId`,
+        name: `${BASE}.cash-requisitions.show`,
+        component: () => import(`../views/${BASE}/cash-requisition/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
 
 
     /* Bank Reconciliation Routes */
