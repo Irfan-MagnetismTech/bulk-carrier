@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsContractAssign;
 use Illuminate\Contracts\Supcontract_assign\Renderable;
 use Modules\Operations\Http\Requests\OpsContractAssignRequest;
@@ -126,6 +127,43 @@ class OpsContractAssignController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);        
+        }
+    }
+
+    public function getVoyageByContract(Request $request): JsonResponse
+    {
+
+        $voyages= OpsVoyage::with('opsVoyageSectors')->whereHas('opsContractAssign',function($item){
+            return $item->where('ops_charterer_contract_id', request()->contract_id);
+        })
+        ->get();   
+
+
+        if(isset($voyages->opsVoyageSectors)){
+            $voyages->opsVoyageSectors->map(function($sector) use ($voyages){    
+                if(isset($sector->sum('final_received_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('final_received_qty');
+                }
+                else if(isset($sector->sum('final_survey_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('final_survey_qty');
+                }
+                else if(isset($sector->sum('boat_note_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('boat_note_qty');
+                }
+                else if(isset($sector->sum('initial_survey_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('initial_survey_qty');
+                }else{
+                    $voyages['cargo_quantity'] =0;
+                }
+    
+                return $voyages;
+            });
+        }
+       
+        try {            
+            return response()->success('Data retrieved successfully.', $voyages, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
         }
     }
 }

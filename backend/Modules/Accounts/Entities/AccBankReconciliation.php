@@ -10,6 +10,6 @@ class AccBankReconciliation extends Model
 {
     use HasFactory;
     
-	protected $fillable = ['acc_transaction_id', 'date', 'status', 'business_unit'];
+	protected $fillable = ['acc_transaction_id', 'reconciliation_date', 'status', 'business_unit'];
 
 }

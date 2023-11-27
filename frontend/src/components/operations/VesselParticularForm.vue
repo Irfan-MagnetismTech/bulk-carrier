@@ -91,14 +91,14 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">IMO Number </span>
-        <input type="text" v-model.trim="form.imo" placeholder="IMO Number" class="form-input" autocomplete="off" />
+        <input type="number" v-model.trim="form.imo" placeholder="IMO Number" class="form-input" autocomplete="off" />
       </label>
     </div>
     
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Class No </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Class No</span>
             <input type="text" v-model.trim="form.class_no" placeholder="Class No" class="form-input" autocomplete="off" />
         </label>
       <label class="block w-full mt-2 text-sm">
@@ -122,11 +122,11 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Length Overall </span>
-        <input type="text" v-model.trim="form.overall_length" placeholder="Length Overall" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.overall_length" placeholder="Length Overall" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Width Overall </span>
-        <input type="text" v-model.trim="form.overall_width" placeholder="Width Overall" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.overall_width" placeholder="Width Overall" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Year Built </span>
@@ -137,11 +137,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Breadth </span>
-        <input type="text" v-model.trim="form.breadth" placeholder="Breadth" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.breadth" placeholder="Breadth" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Depth (Moulded) </span>
-        <input type="text" v-model.trim="form.depth_moulded" placeholder="Depth (Moulded)" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.depth_moulded" placeholder="Depth (Moulded)" class="form-input" autocomplete="off" />
       </label>
       
       <label class="block w-full mt-2 text-sm">
@@ -170,7 +170,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Depth </span>
-            <input type="text" v-model.trim="form.depth" placeholder="Depth" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model.trim="form.depth" placeholder="Depth" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">ECDIS Type </span>
@@ -186,7 +186,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Email </span>
-            <input type="text" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+            <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">LBC </span>
@@ -202,15 +202,15 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Total Cargo Hold </span>
-        <input type="text" v-model.trim="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" autocomplete="off" />
+        <input type="number" v-model.trim="form.total_cargo_hold" placeholder="Total Cargo Hold" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Capacity </span>
-        <input type="text" v-model.trim="form.capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Tues Capacity </span>
-        <input type="text" v-model.trim="form.tues_capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
+        <input type="number" step="0.001" v-model.trim="form.tues_capacity" placeholder="Capacity" class="form-input" autocomplete="off" />
       </label>
       
       <label class="block w-full mt-2 text-sm"></label>
@@ -280,18 +280,14 @@ watch(() => props.form.business_unit, (value) => {
 }, { deep : true })
 
 
-watch(() => props.form, (value) => {
+// watch(() => props.form, (value) => {
 
-  if(props?.formType == 'edit' && editInitiated.value != true) {
+//   if(props?.formType == 'edit' && editInitiated.value != true) {
 
-    vessels.value = [props?.form?.opsVessel]
+//     vessels.value = [props?.form?.opsVessel]
 
-    if(vessels.value.length > 0) {
-        console.log("Changing editInitatedValue ")
-        editInitiated.value = true
-      }
-  }
-}, {deep: true});
+//   }
+// }, {deep: true});
 
 watch(() => props.form.ops_vessel_id, (value) => {
   if(value) {
@@ -300,10 +296,13 @@ watch(() => props.form.ops_vessel_id, (value) => {
       let loadStatus = false;
       showVessel(value, loadStatus);
     }
+    
+    editInitiated.value = true
   }
 }, {deep: true})
 
 watch(() => vessel, (value) => {
+  if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
           props.form.business_unit = value.value?.business_unit;
           props.form.vessel_type = value.value?.vessel_type;
           props.form.owner_name = value.value?.owner_name;
@@ -329,7 +328,8 @@ watch(() => vessel, (value) => {
           props.form.port_of_registry = value.value?.port_of_registry;
           props.form.total_cargo_hold = value.value?.total_cargo_hold;
           props.form.capacity = value.value?.capacity;
-  
+          props.form.tues_capacity = value.value?.capacity;
+  }
 
 }, {deep: true})
 
