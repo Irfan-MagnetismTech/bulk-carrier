@@ -32,13 +32,13 @@
     // const {form} = toRefs(props);
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
-      form.scmPrLines.push(clonedObj);
+      props.form.scmMrrLines.push(clonedObj);
       // const index = props.form.scmMrrLines.length - 1;
       // watchQuantity(index);
     }
 
     function removeMaterial(index){
-      props.form.scmPrLines.splice(index, 1);
+      props.form.scmMrrLines.splice(index, 1);
     }
   
     const tableScrollWidth = ref(null);
