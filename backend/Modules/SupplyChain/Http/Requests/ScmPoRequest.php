@@ -29,7 +29,7 @@ class ScmPoRequest extends FormRequest
             'currency' => 'required|max:255',
             'exchange_rate' => 'required|numeric',
             'foreign_to_bdt' => 'required_if:currency,!=,BDT|numeric',
-            'freign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
+            'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
             'discount' => 'numeric',
             'vat' => 'numeric',
             'sub_total' => 'required|numeric',
