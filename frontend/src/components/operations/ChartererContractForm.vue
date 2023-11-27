@@ -323,6 +323,7 @@ watch(() => props.form.business_unit, (value) => {
   
 }, { deep : true })
 
+
 watch(() => props.form.contract_type, (value) => {
       if(props?.formType != 'edit') {
           props.form.opsChartererContractsFinancialTerms.credit_days = null;
@@ -337,6 +338,10 @@ watch(() => props.form.contract_type, (value) => {
           props.form.opsChartererContractsFinancialTerms.loading_point = '';
           props.form.opsChartererContractsFinancialTerms.final_unloading_point = '';
           props.form.opsChartererContractsFinancialTerms.approximate_load_amount = null;
+
+          
+          props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
+          props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
       }
 }, { deep : true })
 
