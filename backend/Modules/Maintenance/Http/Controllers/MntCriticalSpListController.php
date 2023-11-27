@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntCriticalSpList;
+use Modules\Maintenance\Http\Requests\MntCriticalSpListRequest;
 
 class MntCriticalSpListController extends Controller
 {
@@ -43,7 +44,7 @@ class MntCriticalSpListController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalSpListRequest $request)
     {
         try {
             $criticalSp['ops_vessel_id'] = $request->get('ops_vessel_id');
@@ -110,7 +111,6 @@ class MntCriticalSpListController extends Controller
             $criticalSp['ops_vessel_id'] = $request->get('ops_vessel_id');
             $criticalSp['reference_no'] = $request->get('reference_no');
             $criticalSp['record_date'] = $request->get('record_date') ?? '';
-            // $criticalSp['business_unit'] = $request->get('business_unit');
 
             $mntCriticalSpListLines = $request->get('mntCriticalSpListLines');
 
