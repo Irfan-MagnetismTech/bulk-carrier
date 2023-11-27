@@ -181,11 +181,13 @@ class ScmMrrController extends Controller
             ->get();
         }
        
-        $scmMaterials = $materialReceiptReport->scmMrrLines->map(function ($scmMrrLine)  {
-            return $scmMrrLine->scmMaterial;
-        });
+        $materialReceiptReport = $materialReceiptReport->map(function($item) {
+            $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
+                     return $item1->scmMaterial;
+                });
+             return $item;             
+            });
 
-        $materialReceiptReport->scmMaterials = $scmMaterials;
         return response()->success('Search Result', $materialReceiptReport, 200);
     }
 

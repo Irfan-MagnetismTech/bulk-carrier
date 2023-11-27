@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, onUpdated } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -32,14 +32,18 @@
 
     });
 
+    const customDataTableirf = ref(null);
+    
     const purchase_center = ['Local', 'Foreign', 'Plant'];
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmPrLines.push(clonedObj);
+      setMinHeight();
     }
 
     function removeMaterial(index){
       props.form.scmPrLines.splice(index, 1);
+      setMinHeight();
     }
 
     // function setMaterialOtherData(index){
@@ -68,8 +72,16 @@
     });
 
 
-    
+    // const setMinHeight = () => {
+    //   const newMinHeight = customDataTableirf.value.offsetHeight + 10;
+    //   console.log(newMinHeight);
+    //   customDataTableirf.value.style.minHeight = newMinHeight + 'px' + '!important' + ';';
+    // };
 
+    // Use onUpdated to adjust min-height after the component updates
+    // onUpdated(() => {
+    //   setMinHeight();
+    // });
     function fetchAllStoreCategories() {
       getAllStoreCategories().then(AllStoreCategories => {
         store_category.value = Object.values(AllStoreCategories);
@@ -112,6 +124,20 @@
     function fetchWarehouse(search) {
     searchWarehouse(search, props.form.business_unit);
   }
+  const dynamicMinHeight = ref(0);
+
+const setMinHeight = () => {
+  dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+};
+
+onMounted(() => {
+  setMinHeight();
+});
+
+// Use onUpdated to adjust min-height after the component updates
+// onUpdated(() => {
+//   setMinHeight();
+// });
 
   
 // function setMaterialOtherData(datas, index) {
@@ -131,7 +157,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
       materialArray.push(material_key);
     } else {
       alert("Duplicate Material Found");
-      props.form.scmPrLines.splice(index, 1);
+      // props.form.scmPrLines.splice(index, 1);
     }
 
     if (line.scmMaterial) {
@@ -292,10 +318,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
-    <div id="customDataTable" class="!max-w-screen overflow-scroll"> 
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 !max-w-screen">
+    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <div class="overflow-x-auto !w-100px"> 
+        <div class=""> 
         <table class="table-auto">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -447,6 +473,14 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
 
 <style lang="postcss" scoped>
+.custom-v-select .vs__dropdown-menu {
+  z-index: 9999!important;
+  position: absoluteimportant; /* or fixed */
+}
+
+.your-parent-container {
+  z-index: 1002; /* or any value higher than the z-index of other elements */
+}
     .input-group {
         @apply flex flex-col justify-center w-full md:flex-row md:gap-2;
     }
@@ -473,11 +507,11 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
  
     #customDataTable::-webkit-scrollbar:horizontal {
-      height: 0.3rem!important; 
+      height: 1rem!important; 
     }
   
     #customDataTable::-webkit-scrollbar-thumb:horizontal{
-      background-color: rgba(126, 58, 242); 
+      background-color: rgb(132, 109, 175); 
       border-radius: 12rem!important;
       width: 0.5rem!important;
       height: 0.5rem!important;
@@ -491,6 +525,8 @@ watch(() => props.form.scmPrLines, (newLines) => {
   
     #customDataTable::-webkit-scrollbar-button:horizontal {
       background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
     }   
 
   
