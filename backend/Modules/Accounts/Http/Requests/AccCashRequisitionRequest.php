@@ -11,20 +11,26 @@ class AccCashRequisitionRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'acc_cost_center_id'                   => 'required|integer',
+            'applied_date'                         => 'required|date',
+            // 'scm_pr_id'                               => 'nullable|integer',
+            'total_amount'                         => 'required|numeric',
+            'purpose'                              => 'required|string|max:700',
+            'business_unit'                        => 'required|in:PSML,TSLL',
+            'accCashRequisitionLines.*.particular' => 'required|string',
+            'accCashRequisitionLines.*.amount'     => 'required|numeric',
+            'accCashRequisitionLines.*.remarks'    => 'max:700',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

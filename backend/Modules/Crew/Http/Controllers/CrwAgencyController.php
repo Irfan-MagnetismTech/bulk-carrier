@@ -50,8 +50,8 @@ class CrwAgencyController extends Controller
                 $crwAgency     = CrwAgency::create($crwAgencyData);
                 $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
 
-                return response()->success('Created Successfully', $crwAgency, 201);
             });
+            return response()->success('Created Successfully', null, 201);
         }
         catch (QueryException $e)
         {
@@ -68,7 +68,7 @@ class CrwAgencyController extends Controller
     public function show(CrwAgency $crwAgency)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgency->load('crwAgencyContactPersons'), 200);
+            return response()->success('Retrieved successfully', $crwAgency->load('crwAgencyContactPersons'), 200);
         }
         catch (QueryException $e)
         {
@@ -89,13 +89,13 @@ class CrwAgencyController extends Controller
             DB::transaction(function () use ($request, $crwAgency)
             {
                 $crwAgencyData = $request->only('agency_name', 'legal_name', 'tax_identification', 'business_license_no', 'company_reg_no', 'address', 'phone', 'email', 'website', 'logo', 'country', 'business_unit');
-                $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency');
+                $crwAgencyData['logo'] = $this->fileUpload->handleFile($request->logo, 'crw/agency',$crwAgency->logo);
                 $crwAgency->update($crwAgencyData);
                 $crwAgency->crwAgencyContactPersons()->delete();
                 $crwAgency->crwAgencyContactPersons()->createMany($request->crwAgencyContactPersons);
 
-                return response()->success('Updated successfully', $crwAgency, 202);
             });
+            return response()->success('Updated successfully', $crwAgency, 202);
         }
         catch (QueryException $e)
         {

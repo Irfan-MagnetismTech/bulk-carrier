@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect, watch} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCrewProfile from "../../../composables/crew/useCrewProfile";
 import Title from "../../../services/title";
@@ -10,6 +10,10 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
@@ -21,13 +25,87 @@ const props = defineProps({
   },
 });
 
-const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading } = useCrewProfile();
+const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading, isTableLoading } = useCrewProfile();
+const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Crew Profiles');
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+let filterOptions = ref( {
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "full_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Crew Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "department_id",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Department Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": 'crewRank',
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Rank Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "pre_mobile_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Contact",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "pre_mobile_email",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Email",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "hired_by",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Hired By",
+      "filter_type": "input"
+    },
+  ]
+});
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 function confirmDelete(id) {
@@ -46,30 +124,33 @@ function confirmDelete(id) {
   })
 }
 
-watch(
-    () => businessUnit.value,
-    (newBusinessUnit, oldBusinessUnit) => {
-      if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "crw.profiles.index", query: { page: 1 } })
-      }
-    }
-);
-
 onMounted(() => {
-  watchEffect(() => {
-  getCrewProfiles(props.page,businessUnit.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
-
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching ranks:", error);
-    });
-});
-
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'crw.profiles.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getCrewProfiles(filterOptions.value)
+        .then(() => {
+          const customDataTable = document.getElementById("customDataTable");
+          paginatedPage.value = filterOptions.value.page;
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching ranks:", error);
+        });
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -80,60 +161,45 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Crew Profile List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.profiles.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
-      <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Crew Name</th>
-            <th>Department</th>
-            <th>Rank/Designation</th>
-            <th>Contact No.</th>
-            <th>Email</th>
-            <th>Hired By</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead>
+      <table class="w-full whitespace-no-wrap">
+        <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(crwProfileData,index) in crewProfiles?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwProfileData?.crewBasicInfo?.name }}</td>
-            <td>{{ crwProfileData?.department_id }}</td>
+            <td>{{ crwProfileData?.full_name }}</td>
+            <td>{{ crwProfileData?.department_name }}</td>
             <td>{{ crwProfileData?.crewRank?.name }}</td>
-            <td>{{ crwProfileData?.crewBasicInfo?.contact }}</td>
-            <td>{{ crwProfileData?.crewBasicInfo?.email }}</td>
+            <td>{{ crwProfileData?.pre_mobile_no }}</td>
+            <td>{{ crwProfileData?.pre_email }}</td>
             <td>{{ crwProfileData?.hired_by }}</td>
             <td>
               <span :class="crwProfileData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwProfileData?.business_unit }}</span>
             </td>
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwProfileData?.id } }"></action-button>
-              <action-button @click="confirmDelete(crwProfileData?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwProfileData?.id } }"></action-button>
+                <action-button @click="confirmDelete(crwProfileData?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewProfiles?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!crewProfiles?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
-          </tr>
-          <tr v-else-if="!crewProfiles?.data?.length">
-            <td colspan="8">No data found.</td>
-          </tr>
-          </tfoot>
+        <tfoot v-if="!crewProfiles?.data?.length" class="relative h-[250px]">
+        <tr v-if="isLoading">
+          <td colspan="8"></td>
+        </tr>
+        <tr v-else-if="isTableLoading">
+          <td colspan="8">
+            <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+          </td>
+        </tr>
+        <tr v-else-if="!crewProfiles?.data?.data?.length">
+          <td colspan="8">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
     <Paginate :data="crewProfiles" to="crw.profiles.index" :page="page"></Paginate>

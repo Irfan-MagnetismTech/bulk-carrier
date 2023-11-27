@@ -12,6 +12,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import { useRouter } from 'vue-router';
 
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading } = useMaterialAdjustment();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
@@ -188,5 +189,5 @@ function confirmDelete(id) {
   
   
 
-  
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

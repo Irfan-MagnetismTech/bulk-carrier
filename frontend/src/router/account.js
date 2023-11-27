@@ -185,6 +185,126 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    
+    /* Loan Routes */
+    {
+        path: `/${BASE}/loans`,
+        name: `${BASE}.loans.index`,
+        component: () => import(`../views/${VIEW_BASE}/loan/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/loans/create`,
+        name: `${BASE}.loans.create`,
+        component: () => import(`../views/${VIEW_BASE}/loan/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loans/:loanId/edit`,
+        name: `${BASE}.loans.edit`,
+        component: () => import(`../views/${VIEW_BASE}/loan/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loans/:loanId`,
+        name: `${BASE}.loans.show`,
+        component: () => import(`../views/${BASE}/loan/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
+    /* Loan Received Routes */
+    {
+        path: `/${BASE}/loan-received`,
+        name: `${BASE}.loan-received.index`,
+        component: () => import(`../views/${VIEW_BASE}/loan-received/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/loan-received/create`,
+        name: `${BASE}.loan-received.create`,
+        component: () => import(`../views/${VIEW_BASE}/loan-received/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loan-received/:loanReceivedId/edit`,
+        name: `${BASE}.loan-received.edit`,
+        component: () => import(`../views/${VIEW_BASE}/loan-received/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/loan-received/:loanReceivedId`,
+        name: `${BASE}.loan-received.show`,
+        component: () => import(`../views/${BASE}/loan-received/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
+    /* Fixed Assets */
+    {
+        path: `/${BASE}/fixed-assets`,
+        name: `${BASE}.fixed-assets.index`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/fixed-assets/create`,
+        name: `${BASE}.fixed-assets.create`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/fixed-assets/:fixedAssetId/edit`,
+        name: `${BASE}.fixed-assets.edit`,
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/fixed-assets/:fixedAssetId`,
+        name: `${BASE}.fixed-assets.show`,
+        component: () => import(`../views/${BASE}/fixed-asset/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
+    /* Cash Requisitions */
+    {
+        path: `/${BASE}/cash-requisitions`,
+        name: `${BASE}.cash-requisitions.index`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/cash-requisitions/create`,
+        name: `${BASE}.cash-requisitions.create`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/cash-requisitions/:cashRequisitionId/edit`,
+        name: `${BASE}.cash-requisitions.edit`,
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/cash-requisitions/:cashRequisitionId`,
+        name: `${BASE}.cash-requisitions.show`,
+        component: () => import(`../views/${BASE}/cash-requisition/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    
+
+
+    /* Bank Reconciliation Routes */
+    {
+        path: `/${BASE}/bank-reconciliation`,
+        name: `${BASE}.bank-reconciliation.index`,
+        component: () => import(`../views/${VIEW_BASE}/bank-reconciliation/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },    
+
     /* AIS Report Routes */
     {
         path: `/${BASE}/ais-reports/balance-sheet`,

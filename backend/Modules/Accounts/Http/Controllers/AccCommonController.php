@@ -8,7 +8,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Modules\Accounts\Entities\AccAccount;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
+use Modules\Accounts\Entities\AccBankAccount;
 use Modules\Accounts\Entities\AccCostCenter;
+use Modules\Accounts\Entities\AccLoan;
 
 class AccCommonController extends Controller
 {
@@ -138,5 +140,70 @@ class AccCommonController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+    public function getLoans(Request $request)
+    {
+        try {
+            $loans = AccLoan::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $loans,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getBanks(Request $request)
+    {
+        try {
+            $loans = AccBankAccount::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $loans,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getFixedAssetCategories(Request $request)
+    {
+
+        try {
+            $fixedAssetLine = config('accounts.balance_income_line.fixed_assets_at_cost'); 
+
+            $loans = AccAccount::when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->where('acc_balance_and_income_line_id', $fixedAssetLine)
+            ->whereDoesntHave('parent')
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $loans,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    
+
 
 }
