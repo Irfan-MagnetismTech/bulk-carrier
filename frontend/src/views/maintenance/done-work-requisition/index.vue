@@ -38,7 +38,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this Done work requisition!",
+    text: "You want to delete this done work requisition!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -146,7 +146,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'mnt.wip-work-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'mnt.done-work-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -251,7 +251,7 @@ onMounted(() => {
               </td>
             </tr>
             <tr v-else-if="!doneWorkRequisitions?.data?.length">
-              <td colspan="7">No work requisition found.</td>
+              <td colspan="7">No done work requisition found.</td>
             </tr>
           </tfoot>
       </table>

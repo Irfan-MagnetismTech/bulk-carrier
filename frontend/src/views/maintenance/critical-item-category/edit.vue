@@ -9,7 +9,7 @@
               <!-- Booking Form -->
             <critical-item-category-form :page="page" v-model:form="criticalItemCategory" :errors="errors"></critical-item-category-form>
               <!-- Submit button -->
-              <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update Critical Item Category</button>
+              <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
           </form>
       </div>
   </template>

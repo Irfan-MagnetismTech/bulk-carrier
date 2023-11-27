@@ -174,15 +174,16 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
           <tr v-for="(criticalItemCategory,index) in criticalItemCategories?.data" :key="index">
-            <!-- <td>{{ index + 1 }}</td> -->
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ criticalItemCategory?.mntCriticalFunction?.function_name }}</td>
             <td>{{ criticalItemCategory?.category_name }}</td>
             <td>{{ criticalItemCategory?.notes }}</td>
             <!-- <td><span :class="criticalItemCategory?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalItemCategory?.business_unit }}</span></td> -->
             <td>
+              <nobr>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-item-categories.edit', params: { criticalItemCategoryId: criticalItemCategory?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalItemCategory?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && criticalItemCategories?.data?.length"></LoaderComponent>
@@ -192,12 +193,12 @@ onMounted(() => {
             <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="4">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!criticalItemCategories?.data?.length">
-            <td colspan="5">No item category found.</td>
+            <td colspan="5">No critical item category found.</td>
           </tr>
           </tfoot>
       </table>

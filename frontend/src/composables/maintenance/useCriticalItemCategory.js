@@ -24,7 +24,7 @@ export default function useCriticalItemCategory() {
 
     const errors = ref(null);
     const isLoading = ref(false);
-    const isCriticalItemcategoryLoading = ref(false);
+    const isCriticalItemCategoryLoading = ref(false);
     const isTableLoading = ref(false);
 
     async function getCriticalItemCategories(filterOptions) {
@@ -163,7 +163,7 @@ export default function useCriticalItemCategory() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
-        isCriticalItemcategoryLoading.value = true;
+        isCriticalItemCategoryLoading.value = true;
 
         try {
             const {data, status} = await Api.get('/mnt/get-critical-item-cats',{
@@ -179,7 +179,7 @@ export default function useCriticalItemCategory() {
         } finally {
             // loader.hide();
             isLoading.value = false;
-            isCriticalItemcategoryLoading.value = false;
+            isCriticalItemCategoryLoading.value = false;
             //NProgress.done();
         }
     }
@@ -199,7 +199,7 @@ export default function useCriticalItemCategory() {
         getCriticalFunctionWiseItemCategories,
         isLoading,
         isTableLoading,
-        isCriticalItemcategoryLoading,
+        isCriticalItemCategoryLoading,
         errors,
     };
 }

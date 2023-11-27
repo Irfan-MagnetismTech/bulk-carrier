@@ -38,7 +38,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to change delete this critical function!",
+    text: "You want to delete this critical function!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -55,7 +55,7 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "mnt.wip-work-requisitions.index", query: { page: 1 } })
+        router.push({ name: "mnt.critical-functions.index", query: { page: 1 } })
       }
     }
 );
@@ -100,7 +100,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'mnt.wip-work-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'mnt.critical-functions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -172,8 +172,10 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td>{{ criticalFunction?.notes }}</td>
             <!-- <td><span :class="criticalFunction?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalFunction?.business_unit }}</span></td> -->
             <td>
+              <nobr>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-functions.edit', params: { criticalFunctionId: criticalFunction?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalFunction?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && criticalFunctions?.data?.length"></LoaderComponent>
@@ -188,7 +190,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </td>
             </tr>
           <tr v-else-if="!criticalFunctions?.data?.length">
-            <td colspan="4">No item group found.</td>
+            <td colspan="4">No critical function found.</td>
           </tr>
           </tfoot>
       </table>

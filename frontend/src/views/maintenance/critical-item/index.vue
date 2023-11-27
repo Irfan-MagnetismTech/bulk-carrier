@@ -92,30 +92,30 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "specification",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Specification",
-      "filter_type": "input"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "specification",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Specification",
+    //   "filter_type": "input"
+    // },
 
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "notes",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Notes",
-      "filter_type": "input"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "notes",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Notes",
+    //   "filter_type": "input"
+    // },
 
     
     
@@ -203,13 +203,12 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
           <tr v-for="(criticalItem,index) in criticalItems?.data" :key="index">
-            <!-- <td>{{ index + 1 }}</td> -->
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ criticalItem?.mntCriticalItemCat?.mntCriticalFunction?.function_name }}</td>
             <td>{{  criticalItem?.mntCriticalItemCat?.category_name }}</td>
             <td>{{ criticalItem?.item_name }}</td>
-            <td>{{ criticalItem?.specification }}</td>
-            <td>{{ criticalItem?.notes }}</td>
+            <!-- <td>{{ criticalItem?.specification }}</td>
+            <td>{{ criticalItem?.notes }}</td> -->
             <!-- <td><span :class="criticalItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalItem?.business_unit }}</span></td> -->
             <td>
               <nobr>
@@ -222,15 +221,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!criticalItems?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!criticalItems?.data?.length">
-            <td colspan="7">No item found.</td>
+            <td colspan="5">No critical item found.</td>
           </tr>
           </tfoot>
       </table>

@@ -249,7 +249,7 @@ onMounted(() => {
               </td>
             </tr>
             <tr v-else-if="!wipWorkRequisitions?.data?.length">
-              <td colspan="7">No work requisition found.</td>
+              <td colspan="7">No wip work requisition found.</td>
             </tr>
           </tfoot>
       </table>

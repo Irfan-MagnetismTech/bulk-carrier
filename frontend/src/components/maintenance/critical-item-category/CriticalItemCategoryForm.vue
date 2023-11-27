@@ -3,7 +3,7 @@
       <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Critical Function <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Critical Function" :options="criticalFunctions" @search="" v-model="form.mnt_critical_function_name" label="function_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <v-select placeholder="Select Critical Function" :loading="isCriticalFunctionLoading"  :options="criticalFunctions" @search="" v-model="form.mnt_critical_function_name" label="function_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -55,7 +55,7 @@ const props = defineProps({
 watch(() => props.form.mnt_critical_function_name, (value) => {
   props.form.mnt_critical_function_id = value?.id;
 });
-const { criticalFunctions, getCriticalFunctionsWithoutPagination } = useCriticalFunction();
+const { criticalFunctions, getCriticalFunctionsWithoutPagination, isCriticalFunctionLoading } = useCriticalFunction();
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
