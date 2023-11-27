@@ -23,14 +23,14 @@ export default function useFixedAsset() {
         acc_parent_account_name : null,
         acc_parent_account_id : '',
         acc_account_name : null,
-        acc_account_id : '',
+        acc_account_id : 1,
         asset_tag : '',
         useful_life : '',
         depreciation_rate : '',
         acquisition_date : '',
         location : '',
         business_unit : '',
-        total_amount: '',
+        acquisition_cost: '',
         fixedAssetCosts: [
             {
                 particular: '',

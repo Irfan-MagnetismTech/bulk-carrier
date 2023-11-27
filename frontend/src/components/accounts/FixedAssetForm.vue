@@ -85,7 +85,7 @@ watch(
           }
         });
         if(!isNaN(total_grand_amount)) {
-          props.form.total_amount = total_grand_amount;
+          props.form.acquisition_cost = total_grand_amount;
         }
       }
     },
@@ -221,7 +221,7 @@ onMounted(() => {
               <input type="text" v-model.trim="form.fixedAssetCosts[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="number" step=".01" v-model.trim="form.fixedAssetCosts[index].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <input type="number" step=".01" v-model.trim="form.fixedAssetCosts[index].amount" class="form-input !text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
               <input type="text" v-model.trim="form.fixedAssetCosts[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -240,9 +240,9 @@ onMounted(() => {
             </td>
           </tr>
           <tr class="text-gray-700 dark-disabled:text-gray-400">
-            <td class="px-1 py-1 font-bold text-right">Total Amount</td>
+            <td class="px-1 py-1 font-bold !text-right">Acquisition Cost</td>
             <td class="px-1 py-1 font-bold text-right">
-              <input type="text" v-model.trim="form.total_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+              <input type="number" v-model.trim="form.acquisition_cost" class="block w-full rounded form-input vms-readonly-input !text-right" readonly>
             </td>
             <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
