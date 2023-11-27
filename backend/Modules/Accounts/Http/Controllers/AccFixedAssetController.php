@@ -116,10 +116,8 @@ class AccFixedAssetController extends Controller
         try {
             $accFixedAsset->delete();
 
-            return response()->json([
-                'status' => 'success',
-                'value'  => null,
-            ], 200);
+            return response()->success('Deleted Successfully', null, 204);
+
         }
         catch (\Exception $e)
         {

@@ -11,13 +11,11 @@ class AccBankReconciliationRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            'acc_transaction_id' => 'required|integer',
-            'date'               => 'required|date',
-            'status'             => 'required|string|max:255',
-            'business_unit'      => 'required|in:PSML,TSLL',
+            'acc_transaction_id'  => 'required|integer',
+            'reconciliation_date' => 'required|date',
+            'business_unit'       => 'required|in:PSML,TSLL',
         ];
     }
 
@@ -26,8 +24,7 @@ class AccBankReconciliationRequest extends FormRequest
      *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

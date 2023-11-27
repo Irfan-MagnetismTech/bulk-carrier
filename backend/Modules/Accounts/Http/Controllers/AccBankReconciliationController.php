@@ -52,7 +52,7 @@ class AccBankReconciliationController extends Controller
     public function store(AccBankReconciliationRequest $request)
     {
         try {
-            $bankReconciliationData            = $request->only('date', 'acc_transaction_id', 'business_unit');
+            $bankReconciliationData            = $request->only('reconciliation_date', 'acc_transaction_id', 'business_unit');
             $bankReconciliationData['status']  = 'Complete';
             $accBankReconciliation             = AccBankReconciliation::create($bankReconciliationData);
 
