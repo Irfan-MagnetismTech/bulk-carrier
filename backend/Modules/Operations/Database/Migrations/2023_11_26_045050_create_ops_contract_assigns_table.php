@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ops_customer_id')->nullable();
             $table->unsignedBigInteger('ops_charterer_profile_id')->nullable();
             $table->unsignedBigInteger('ops_charterer_contract_id')->nullable();
+            $table->date('assign_date')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();

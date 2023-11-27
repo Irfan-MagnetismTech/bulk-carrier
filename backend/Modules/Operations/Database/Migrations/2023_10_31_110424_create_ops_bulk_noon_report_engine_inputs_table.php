@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('pco')->nullable();
             $table->string('rack')->nullable();
             $table->string('exh_temp')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });
     }

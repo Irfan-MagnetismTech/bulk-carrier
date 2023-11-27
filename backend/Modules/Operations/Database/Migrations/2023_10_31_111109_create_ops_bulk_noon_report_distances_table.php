@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('s_dwt')->nullable();
             $table->string('s_displacement')->nullable();
             $table->tinyInteger('status')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL']); 
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }

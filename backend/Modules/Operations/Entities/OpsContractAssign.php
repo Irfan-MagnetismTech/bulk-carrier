@@ -16,6 +16,7 @@ class OpsContractAssign extends Model
         'ops_customer_id',
         'ops_charterer_profile_id',
         'ops_charterer_contract_id',
+        'assign_date',
         'remarks',
         'business_unit',
     ];

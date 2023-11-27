@@ -17,7 +17,7 @@ class OpsBulkNoonReport extends Model
         'wind_condition',
         'type',
         'date_time',
-        'gtm_time',
+        'gmt_time',
         'location',
         'latitude',
         'longitude',
