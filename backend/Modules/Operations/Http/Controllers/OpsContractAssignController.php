@@ -134,21 +134,31 @@ class OpsContractAssignController extends Controller
     {
 
         $voyages= OpsVoyage::with('opsVoyageSectors')->whereHas('opsContractAssign',function($item){
-            return $item->where('ops_charterer_contract_id', 22);
+            return $item->where('ops_charterer_contract_id', request()->contract_id);
         })
-        ->get();        
+        ->get();   
 
-        $voyages->opsVoyageSectors->map(function($sector) use ($voyages){
 
-            $voyages['cargo_quantity'] = (($sector->sum('final_received_qty') != 0) ? $sector->sum('final_received_qty') :($sector->sum('final_survey_qty') != 0) ? $sector->sum('final_survey_qty') :($sector->sum('boat_note_qty') != 0) ? $sector->sum('boat_note_qty') :($sector->sum('initial_survey_qty') != 0) ? $sector->sum('initial_survey_qty') :0);
-
-            $voyages['sum_initial_survey_qty'] = $sector->sum('initial_survey_qty');
-            $voyages['sum_final_survey_qty'] = $sector->sum('final_survey_qty');
-            $voyages['sum_final_received_qty'] = $sector->sum('final_received_qty');
-            $voyages['sum_boat_note_qty'] = $sector->sum('boat_note_qty');
-            
-            return $voyages;
-        });
+        if(isset($voyages->opsVoyageSectors)){
+            $voyages->opsVoyageSectors->map(function($sector) use ($voyages){    
+                if(isset($sector->sum('final_received_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('final_received_qty');
+                }
+                else if(isset($sector->sum('final_survey_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('final_survey_qty');
+                }
+                else if(isset($sector->sum('boat_note_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('boat_note_qty');
+                }
+                else if(isset($sector->sum('initial_survey_qty'))){
+                    $voyages['cargo_quantity'] = $sector->sum('initial_survey_qty');
+                }else{
+                    $voyages['cargo_quantity'] =0;
+                }
+    
+                return $voyages;
+            });
+        }
        
         try {            
             return response()->success('Data retrieved successfully.', $voyages, 200);

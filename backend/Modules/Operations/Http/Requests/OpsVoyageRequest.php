@@ -16,16 +16,16 @@ class OpsVoyageRequest extends FormRequest
         return [
             'ops_customer_id'       => ['required'],
             'ops_vessel_id'         => ['required'],
-            'mother_vessel'      => ['nullable'],
+            'mother_vessel'         => ['nullable'],
             'ops_cargo_type_id'     => ['required'],
             'voyage_no' 	        => ['required'],
             'voyage_sequence' 	    => ['required'],
-            'route'                 => ['required', 'string', 'max:255'],
-            'load_port_distance'    => ['required', 'string', 'max:255'],
+            'route'                 => ['required'],
+            'load_port_distance'    => ['nullable'],
             'sail_date'             => 'required|date',
             'transit_date'          => 'required|date',
-            'remarks'               => ['nullable', 'string','max:255'],
-            'business_unit'         => ['required', 'string', 'max:255'],
+            'remarks'               => ['nullable'],
+            'business_unit'         => ['required'],
         ];
     }
 
