@@ -80,8 +80,7 @@ class OpsBulkNoonReportController extends Controller
             if(isset($request->opsBulkNoonReportConsumptions)){
                 foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
                     $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
-                    $consumptionHeadsData = $consumptionData['opsBulkNoonReportConsumptionHeads'];
-                    $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionHeadsData);
+                    $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
                 }
             }
 
@@ -96,7 +95,7 @@ class OpsBulkNoonReportController extends Controller
             if(isset($request->opsBulkNoonReportEngineInputTypes)){
                 $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
             }
-            
+
             if(isset($request->opsBunkers)){
                 $bulk_noon_report->opsBunkers()->createMany($request->opsBunkers);
             }
@@ -156,12 +155,50 @@ class OpsBulkNoonReportController extends Controller
             );
             
             $bulk_noon_report->update($bulk_noon_report_info);
-
+            
             $bulk_noon_report->opsBulkNoonReportPorts()->delete();
-            $bulk_noon_report->opsBulkNoonReportPorts()->createMany($request->opsBulkNoonReportPorts);
+            if(isset($request->opsBulkNoonReportPorts)){
+                $bulk_noon_report->opsBulkNoonReportPorts()->createMany($request->opsBulkNoonReportPorts);
+            }
 
             $bulk_noon_report->opsBulkNoonReportCargoTanks()->delete();
-            $bulk_noon_report->opsBulkNoonReportCargoTanks()->createMany($request->opsBulkNoonReportCargoTanks);
+            if(isset($request->opsBulkNoonReportCargoTanks)){
+                $bulk_noon_report->opsBulkNoonReportCargoTanks()->createMany($request->opsBulkNoonReportCargoTanks);
+            }
+
+            $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
+            foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
+                $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
+                
+                $consumptionData->opsBulkNoonReportConsumptions()->delete();
+                $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
+            }
+            if(isset($request->opsBulkNoonReportConsumptions)){
+                foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
+                    $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
+
+                    $consumptionData->opsBulkNoonReportConsumptions()->delete();
+                    $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
+                }
+            }
+
+            if(isset($request->opsBulkNoonReportDistance)){
+                $bulk_noon_report->opsBulkNoonReportDistance()->create($request->opsBulkNoonReportDistance);
+            }
+
+            if(isset($request->opsBulkNoonReportEngineInputs)){
+                $bulk_noon_report->opsBulkNoonReportEngineInputs()->createMany($request->opsBulkNoonReportEngineInputs);
+            }
+
+            if(isset($request->opsBulkNoonReportEngineInputTypes)){
+                $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
+            }
+
+            if(isset($request->opsBunkers)){
+                $bulk_noon_report->opsBunkers()->createMany($request->opsBunkers);
+            }
+
+
 
             $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
             $bulk_noon_report->opsBulkNoonReportConsumptions()->createMany($request->opsBulkNoonReportConsumptions);

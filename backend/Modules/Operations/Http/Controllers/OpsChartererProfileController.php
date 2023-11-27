@@ -169,10 +169,10 @@ class OpsChartererProfileController extends Controller
         ->when(request()->has('name_or_code'), function ($query) {
                 $query->where('name', 'like', '%' . request()->name_or_code . '%');
                 $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
-        })    
-        ->when(request()->business_unit && request()->business_unit != 'ALL', function($query){
-            $query->where('business_unit', request()->business_unit);  
         })
+        // ->when(request()->has('business_unit') && request()->business_unit != 'ALL', function($query){
+        //     $query->where('business_unit', request()->business_unit);  
+        // })
         ->get();
         
         $charterer_profiles->load('opsChartererBankAccounts');
