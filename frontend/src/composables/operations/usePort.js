@@ -19,6 +19,7 @@ export default function usePort() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isPortLoading = ref(false);
 	const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
     const filterParams = ref(null);
@@ -194,7 +195,7 @@ export default function usePort() {
 
 	async function searchPorts(searchParam, loading) {
 		//NProgress.start();
-
+		isPortLoading.value = true;
 		try {
 			const { data, status } = await Api.get(`/ops/search-ports?name_or_code=${searchParam}`);
 			ports.value = data.value;
@@ -203,7 +204,8 @@ export default function usePort() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
+			isPortLoading.value = false;
 			//NProgress.done();
 		}
 	}
@@ -239,6 +241,7 @@ export default function usePort() {
 		voyagePorts,
 		getPortsByVoyage,
 		isLoading,
+		isPortLoading,
 		isTableLoading,
 		errors,
 	};
