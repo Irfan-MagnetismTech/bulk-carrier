@@ -25,6 +25,7 @@ export default function useStoreRequisition() {
         date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        department_id: '',
         acc_cost_center_id: '',
         remarks: '',
         business_unit: '',

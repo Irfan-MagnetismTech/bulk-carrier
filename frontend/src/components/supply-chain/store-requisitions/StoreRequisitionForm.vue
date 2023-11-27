@@ -27,7 +27,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <!-- <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -36,7 +36,13 @@
                   v-on="events"
               />
           </template>
-          </v-select>
+          </v-select> -->
+          <select class="form-input" v-model.trim="form.department_id" autocomplete="off" required >
+            <option value="" disabled selected>Select</option>
+            <option value="1">Store Department</option>
+            <option value="2">Engine Department</option>
+            <option value="3">Provision Department</option>
+          </select>
           <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
