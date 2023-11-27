@@ -283,7 +283,7 @@ class ScmPoController extends Controller
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
-                ->whereBusinessUnit($request->business_unit)
+                ->whereBusinessUnit("PSML")
                 ->where('purchase_center', 'foreign')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
