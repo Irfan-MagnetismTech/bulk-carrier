@@ -67,7 +67,23 @@ export default function useChartererInvoice() {
 				amount_usd: 0,
 			},
 		],
+		opsChartereInvoiceVoyages: [{
+			'ops_voyage_id': '',
+			'opsVoyage': null,
+			'cargo_quantity': 0,
+			'rate_per_mt': 0,
+			'total_amount': 0,
+		}],
 	});
+
+
+	const chartererInvoiceVoyageObject = {
+		'ops_voyage_id': '',
+		'opsVoyage': null,
+		'cargo_quantity': 0,
+		'rate_per_mt': 0,
+		'total_amount': 0,
+	};
 
 	const serviceObject = {
 		charge_or_deduct: 'deduct',
@@ -252,6 +268,7 @@ export default function useChartererInvoice() {
 		showChartererInvoice,
 		updateChartererInvoice,
 		deleteChartererInvoice,
+		chartererInvoiceVoyageObject,
 		searchChartererInvoices,
 		serviceObject,
 		otherObject,
