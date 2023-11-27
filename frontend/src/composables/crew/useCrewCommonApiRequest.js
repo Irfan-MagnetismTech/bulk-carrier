@@ -106,7 +106,7 @@ export default function useCrewCommonApiRequest() {
 
     async function getRecruitmentApprovals(businessUnit = null) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
@@ -120,19 +120,19 @@ export default function useCrewCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
         }
     }
 
     async function getCrewDocuments(businessUnit = null,crewId = null) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         let form = {
             'business_unit': businessUnit,
-            'crw_crew_id': crewId,
+            'crw_crew_profile_id': crewId,
         }
 
         try {
@@ -142,7 +142,7 @@ export default function useCrewCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+           //loader.hide();
             isLoading.value = false;
         }
     }

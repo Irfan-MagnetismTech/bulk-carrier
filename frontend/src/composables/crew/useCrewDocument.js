@@ -21,7 +21,7 @@ export default function useCrewDocument() {
         id: '',
         crw_crew_id: '',
         crw_crew_profile_id: '',
-        crw_crew_name: '',
+        crw_crew_name: null,
         crw_crew_rank: '',
         crw_crew_contact: '',
         crw_crew_email: '',
@@ -32,19 +32,7 @@ export default function useCrewDocument() {
         expire_date: null,
         reference_no: null,
         validity_period_in_month: '',
-        attachment: '',
-        // crwCrewDocumentRenewals: [
-        //     {
-        //         crw_crew_id: '',
-        //         name: '',
-        //         issuing_authority: '',
-        //         validity_period: '',
-        //         issue_date: '',
-        //         reference_no: '',
-        //         validity_period_in_month: '',
-        //         attachment: '',
-        //     }
-        // ]
+        attachment: null,
     });
 
     const filterParams = ref(null);
@@ -81,8 +69,14 @@ export default function useCrewDocument() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -99,11 +93,17 @@ export default function useCrewDocument() {
 
         try {
             if(form.id){
-                const { data, status } = await Api.put(`/crw/crw-crew-documents/${form.id}`, form);
+                // for edit
+                let editData = {
+                    id: form.id,
+                    document_name: form.document_name,
+                    issuing_authority: form.issuing_authority,
+                }
+                // for edit
+                const { data, status } = await Api.put(`/crw/crw-crew-documents/${form.id}`, editData);
                 let crewDoc = crewDocuments.find(doc => doc.id === form.id);
-                crewDoc.name = data.value.name;
+                crewDoc.document_name = data.value.document_name;
                 crewDoc.issuing_authority = data.value.issuing_authority;
-                crewDoc.validity_period = data.value.validity_period;
                 isDocumentEditModal.value = 0;
             } else {
                 const { data, status } = await Api.post('/crw/crw-crew-documents', formData);
@@ -179,6 +179,8 @@ export default function useCrewDocument() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-crew-documents/${docDataId}`);
             notification.showSuccess(status);
+            crewDocuments.splice(docDataIndex, 1);
+            //props.form.crwRecruitmentApprovalLines.splice(index, 1);
             await getCrewDocuments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;

@@ -38,7 +38,7 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": 'crwCrewProfile',
+      "relation_name": null,
       "field_name": "full_name",
       "search_param": "",
       "action": null,
@@ -48,8 +48,8 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": 'crwCrewProfile',
-      "field_name": "rank_name",
+      "relation_name": 'crwCurrentRank',
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -68,14 +68,13 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": 'crwCrewProfile',
-      "field_name": "pre_email",
+      "relation_name": 'crewDocuments',
+      "field_name": "document_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Email",
-      "filter_type": "input"
+      "label": "Documents",
     },
   ]
 });
@@ -147,11 +146,15 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(crwDocument,index) in crewDocuments?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>Crew name</td>
-            <td>Rank</td>
-            <td>contact</td>
-            <td>email</td>
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+            <td class="text-left">{{ crwDocument?.full_name }}</td>
+            <td class="text-left">{{ crwDocument?.crwCurrentRank?.name }}</td>
+            <td>{{ crwDocument?.pre_mobile_no }}</td>
+            <td style="text-align: left !important;">
+              <span v-for="(document,index) in crwDocument?.crewDocuments" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+                {{ document?.document_name }}
+              </span>
+            </td>
             <td>
               <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>
             </td>
@@ -162,6 +165,7 @@ onMounted(() => {
               </nobr>
             </td>
           </tr>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewDocuments?.data?.length"></LoaderComponent>
           </tbody>
         <tfoot v-if="!crewDocuments?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">

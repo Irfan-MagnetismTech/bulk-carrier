@@ -36,13 +36,13 @@
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
-        </label>
+          </label>
           
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -53,11 +53,15 @@
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
-            </label>
+            </label>        
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Code</span>
               <input type="text" v-model.trim="form.short_code" placeholder="Vessel Code" class="form-input bg-gray-100" readonly autocomplete="off" />
           </label>
+        
+        
+      </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner Name</span>
               <input type="text" v-model.trim="form.owner_name" placeholder="Vessel Owner Name" class="form-input bg-gray-100" readonly autocomplete="off" />
@@ -66,12 +70,11 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Capacity</span>
             <input type="text" v-model.trim="form.capacity" placeholder="Vessel Capacity" class="form-input bg-gray-100" readonly autocomplete="off" />
         </label>
-        
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" @search="fetchCharterers"  v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -89,6 +92,9 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
               <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
         </label>
+      </div>
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Email</span>
               <input type="text" v-model.trim="form.email" placeholder="Charterer Email" class="form-input bg-gray-100" readonly autocomplete="off" />
@@ -161,15 +167,16 @@ import Error from "../Error.vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useBusinessInfo from "../../composables/useBusinessInfo"
 import useVessel from "../../composables/operations/useVessel";
+import useVoyage from "../../composables/operations/useVoyage";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
-const { searchChartererProfiles, chartererProfiles } = useChartererProfile();
-
+const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
+const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const props = defineProps({
     form: {
         required: false,
@@ -179,15 +186,7 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-function fetchVessels(search, loading) {
-      loading(true);
-      searchVessels(search, props.form.business_unit, loading);
-}
 
-function fetchCharterers(search, loading) {
-      loading(true);
-      searchChartererProfiles(search, loading)
-}
 
 watch(() => props.form.opsVessel, (value) => {
   if(value) {
@@ -195,10 +194,35 @@ watch(() => props.form.opsVessel, (value) => {
     props.form.short_code = value?.short_code
     props.form.owner_name = value?.owner_name
     props.form.capacity = value?.capacity
-    
-    showVessel(value?.id)
+  
+    let loadStatus = false;
+    showVessel(value?.id, loadStatus);
   }
 }, { deep: true})
+
+watch(() => props.form.business_unit, (value) => {
+
+  if(props?.formType != 'edit') {
+    props.form.opsVoyage = null;
+    props.form.ops_voyage_id = null;
+    props.form.opsVessel = null;
+    props.form.ops_vessel_id = null;
+    props.form.opsChartererProfile = null;
+    props.form.ops_charterer_profile_id = null;
+    props.form.short_code = null;
+    props.form.owner_name = null;
+    props.form.capacity = null;
+    props.form.owner_code = null;
+    props.form.email = null;
+    props.form.contact_no = null;
+    props.form.opsBunkers = null;
+  }
+
+  getVesselList(props.form.business_unit);
+  getAllChartererProfiles(props.form.business_unit);
+  
+
+}, { deep : true })
 
 watch(() => vessel, (value) => {
   console.log("vessel change ")
@@ -286,6 +310,7 @@ function calculatePrice(index) {
 
 onMounted(() => {
   getCurrencies();
+  getVesselList(props.form.business_unit);
 })
 
 </script>

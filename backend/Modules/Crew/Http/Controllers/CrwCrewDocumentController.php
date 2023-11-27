@@ -9,7 +9,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
+use Modules\Crew\Entities\CrwCrewProfile;
 use Modules\Crew\Http\Requests\CrwCrewDocumentRequest;
+use Modules\Crew\Http\Requests\CrwCrewDocumentUpdateRequest;
 
 class CrwCrewDocumentController extends Controller
 {
@@ -27,7 +29,7 @@ class CrwCrewDocumentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewDocuments = CrwCrewDocument::globalSearch($request->all());
+            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank', 'crwRank')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwCrewDocuments, 200);
         }
@@ -100,18 +102,18 @@ class CrwCrewDocumentController extends Controller
      * @param  \App\Models\CrwCrewDocument  $crwCrewDocument
      * @return \Illuminate\Http\Response
      */
-    public function update(CrwCrewDocumentRequest $request, CrwCrewDocument $crwCrewDocument)
+    public function update(CrwCrewDocumentUpdateRequest $request, CrwCrewDocument $crwCrewDocument)
     {
         try {
 
-            $crwCrewDocumentData = $request->only('crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+//            $crwCrewDocumentData = $request->only('crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
+//
+//            $configData = Config::get('crew.crew_document_validity_period');
+//            if (array_key_exists($crwCrewDocumentData['validity_period_in_month'], $configData)) {
+//                $crwCrewDocumentData['validity_period'] = $configData[$crwCrewDocumentData['validity_period_in_month']];
+//            }
 
-            $configData = Config::get('crew.crew_document_validity_period');
-            if (array_key_exists($crwCrewDocumentData['validity_period_in_month'], $configData)) {
-                $crwCrewDocumentData['validity_period'] = $configData[$crwCrewDocumentData['validity_period_in_month']];
-            }
-
-            $crwCrewDocument->update($crwCrewDocumentData);
+            $crwCrewDocument->update($request->all());
 
             return response()->success('Updated successfully', $crwCrewDocument, 202);
         }

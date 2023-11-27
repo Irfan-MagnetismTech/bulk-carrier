@@ -163,8 +163,8 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'crw.documents.index',
-                        label: 'Document List',
+                        route: 'crw.documents.create',
+                        label: 'Add Document',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,

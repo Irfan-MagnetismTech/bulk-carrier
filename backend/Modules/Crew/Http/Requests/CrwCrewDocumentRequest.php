@@ -10,11 +10,11 @@ class CrwCrewDocumentRequest extends FormRequest
     {
         $data      = request('data');
         $dataArray = json_decode($data, true);
-    
-        $mergeData = array_merge($dataArray, ['attachment' => request('attachment')]);
-    
+        $attachment = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $attachment]);
+
         $this->replace($mergeData);
-    }    
+    }
     /**
      * Get the validation rules that apply to the request.
      *

@@ -175,7 +175,16 @@ export default [
                     },
                 ],
             },
-           
+            {
+                route: 'ops.contract-assigns.index',
+                label: 'Contract Assign',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
             // {
             //     route: '',
             //     label: 'Voyages',
