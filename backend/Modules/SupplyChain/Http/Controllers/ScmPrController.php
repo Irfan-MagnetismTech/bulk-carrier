@@ -224,15 +224,64 @@ class ScmPrController extends Controller
         if ($request->business_unit != 'ALL') {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
-                ->whereBusinessUnit($request->business_unit)
+                ->where(function($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                    ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
+                    ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+                })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                // ->limit(10)
+                ->limit(10)
                 ->get();
         } else {
-            $purchase_requisition = [];
+            $purchase_requisition = ScmPr::query()
+                    ->with('scmPrLines')
+                    ->where(function($query) use ($request) {
+                        $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
+                        ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+                    })
+                    ->orderByDesc('ref_no')
+                    ->limit(10)
+                    ->get();
         }
 
         return response()->success('Search result', $purchase_requisition, 200);
     }
+
+
+    // public function searchMrr(Request $request): JsonResponse
+    // {
+    //     if($request->has('searchParam')) { 
+    //         $materialReceiptReport = ScmMrr::query()
+    //         ->with('scmMrrLines.scmMaterial')
+    //         ->where(function($query) use ($request) {
+    //             $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+    //             ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
+    //             ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+    //         })
+    //         ->orderByDesc('ref_no')
+    //         ->limit(10)
+    //         ->get();
+            
+    //     }else{
+    //         $materialReceiptReport = ScmMrr::query()
+    //         ->with('scmMrrLines.scmMaterial')
+    //         ->where(function($query) use ($request) {
+    //             $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
+    //             ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+    //         })
+    //         ->orderByDesc('ref_no')
+    //         ->limit(10)
+    //         ->get();
+    //     }
+       
+    //     $materialReceiptReport = $materialReceiptReport->map(function($item) {
+    //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
+    //                  return $item1->scmMaterial;
+    //             });
+    //          return $item;             
+    //         });
+
+    //     return response()->success('Search Result', $materialReceiptReport, 200);
+    // }
 }
