@@ -69,7 +69,7 @@ class AccFixedAssetController extends Controller
         try {
             return response()->json([
                 'status' => 'success',
-                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMaterial', 'fixedAssetCategory'),
+                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial', 'fixedAssetCategory'),                
             ], 200);
         }
         catch (\Exception $e)

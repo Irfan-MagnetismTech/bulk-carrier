@@ -15,11 +15,14 @@ export default function useFixedAsset() {
         acc_cost_center_name : '', 
         acc_cost_center_id : '',
 
-        scm_mrr_id : 1,
-        scm_material_id : 1,
+        scmMrr : '', 
+        scm_mrr_id : '',
+        scmMaterial : '', 
+        scm_material_id : '',
         brand : '',
         model : '',
         serial : '',
+        
         acc_account_id : 1,
         
         fixedAssetCategory : '',

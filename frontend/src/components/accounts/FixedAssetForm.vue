@@ -5,10 +5,12 @@ import {onMounted, ref, watch, watchEffect, getCurrentInstance } from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+import useMaterialReceiptReport from "../../composables/supply-chain/useMaterialReceiptReport";
 import ErrorComponent from '../utils/ErrorComponent.vue';
 const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, allBankLists, allCostCenterLists,  allFixedAssetCategoryList, getFixedAssetCategory, getAccount, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
+const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
 
 
 const { emit } = getCurrentInstance();
@@ -30,6 +32,7 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 watch(() => props.form.costCenter, (value) => {
   if(value){
     props.form.acc_cost_center_id = value?.id ?? '';
+    searchMrr(props.form.business_unit, props.form.acc_cost_center_id); 
   }
 });
 
@@ -87,9 +90,9 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> MRR No <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
+        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scmMrr" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.scmMrr" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>

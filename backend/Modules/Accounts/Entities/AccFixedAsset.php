@@ -34,9 +34,14 @@ class AccFixedAsset extends Model
         return $this->belongsTo(AccCostCenter::class, 'acc_cost_center_id', 'id');
     }
 
+    public function scmMrr()
+    {
+        return $this->belongsTo(ScmMaterial::class, 'scm_mrr_id', 'id');
+    }
+
     public function scmMaterial()
     {
-        return $this->belongsTo(ScmMaterial::class, 'acc_material_id', 'id');
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id', 'id');
     }
 
     public function fixedAssetCategory()
