@@ -59,4 +59,8 @@ class OpsVoyage extends Model
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
+
+    public function opsContractAssign() {
+        return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id');
+    }
 }
