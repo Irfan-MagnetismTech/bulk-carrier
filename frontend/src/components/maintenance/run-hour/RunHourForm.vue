@@ -3,9 +3,9 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <div v-if="page === 'create'">
-              <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -22,9 +22,9 @@
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
             <div v-if="page === 'create'">
-              <v-select placeholder="Select Department" :options="shipDepartments" @search=""     v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search=""     v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -40,9 +40,9 @@
           <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Item Group <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
             <div v-if="page === 'create'">
-              <v-select placeholder="Select Item Group" :options="shipDepartmentWiseItemGroups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Item Group" :loading="isItemGroupLoading"  :options="shipDepartmentWiseItemGroups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -58,9 +58,9 @@
           <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
         </label>
         <div class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Item Name <span class="text-red-500">*</span></span>
             <div v-if="page === 'create'">
-              <v-select placeholder="Select Item" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+              <v-select placeholder="Select Item" :loading="isItemLoading" :options="form.itemGroupWiseHourlyItems" multiple @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -76,29 +76,29 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
           </div>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Previous Run Hour </span>
-            <input type="text" v-model="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Previous Run Hour </span>
+            <input type="text" v-model.trim="form.previous_run_hour" placeholder="Previous Run Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Running Hour (Since Last Update) <span v-show="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Running Hour (Since Last Update) <span v-show="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
             <input type="number" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input' : page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0  }"  :readonly="page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
           <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Present Run Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
             <input type="number" v-model="computedPresentRunHour" placeholder="Present Run Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Updated On <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Updated On <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  />
           <Error v-if="errors?.updated_on" :errors="errors.updated_on" />
         </label>
         
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -111,6 +111,7 @@ import useItemGroup from "../../../composables/maintenance/useItemGroup";
 import useItem from "../../../composables/maintenance/useItem";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const props = defineProps({
   form: {
@@ -124,11 +125,11 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
-const { vessels, getVesselsWithoutPaginate } = useVessel();
-const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups } = useItemGroup();
-const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems } = useItem();
-const { presentRunHour, getItemPresentRunHour } = useRunHour();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
+const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
+const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
+const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems, isItemLoading } = useItem();
+const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -147,7 +148,14 @@ const computedPresentRunHour = computed({
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
+  shipDepartments.value = [];
   fetchPresentRunHour();
+  if (businessUnit.value && props.form.ops_vessel_id) {
+    getShipDepartmentsWithoutPagination(businessUnit.value);
+  }
+  if (value === null) {
+    props.form.mnt_ship_department_name = null;
+  }
 });
 
 
@@ -194,8 +202,8 @@ function fetchPresentRunHour() {
 
 watch(() => props.form.mnt_item_name, (value) => {
   value = value ? value.find(val => val.id === 'all') ? [value.find(val => val.id === 'all')] : value : null;
-  props.form.mnt_item_name = value;
-  // props.form.previous_run_hour = value ? (value.length == 1 ? value[0].present_run_hour : '') : '';
+  if(props.form.mnt_item_name?.find(val => val.id === 'all') && props.form.mnt_item_name?.length > 1 )
+    props.form.mnt_item_name = value;
   fetchPresentRunHour();
 
   props.form.mnt_item_id = value ? value.map(val=>val.id) : null;
@@ -224,7 +232,7 @@ onMounted(() => {
   watchEffect(() => {
     if(businessUnit.value  && businessUnit.value != 'ALL'){
       getVesselsWithoutPaginate(businessUnit.value);
-      getShipDepartmentsWithoutPagination(businessUnit.value);
+      // getShipDepartmentsWithoutPagination(businessUnit.value);
     }
   });
 });
@@ -244,10 +252,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 

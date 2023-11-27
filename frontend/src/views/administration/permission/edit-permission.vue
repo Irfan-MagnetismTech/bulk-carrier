@@ -1,9 +1,9 @@
 <template>
-    <div class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+    <div class="my-6 text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200 flex items-center gap-2">
         <span>Update Permission:</span>
-        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">#{{ permissionId }}</span>
+        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">#{{ permissionId }}</span>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updatePermission(permission, permissionId)">
             <!-- Booking Form -->
           <permission-form v-model:form="permission" :errors="errors"></permission-form>
@@ -26,7 +26,7 @@ const { permission, showPermission, updatePermission, errors } = usePermission()
 
 const { setTitle } = Title();
 
-setTitle('Edit Permission');
+setTitle('Update Permission');
 
 onMounted(() => {
     showPermission(permissionId);

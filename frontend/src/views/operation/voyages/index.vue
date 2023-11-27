@@ -109,7 +109,7 @@ onMounted(() => {
             <th>Actual Load</th> -->
             <!-- Its Hidden cause when there will be multiple sectors, it won't be useful anymore as there will be multiple initial and actual loads -->
             <th>Voyage Status</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="voyages?.data?.length">
@@ -125,7 +125,7 @@ onMounted(() => {
                   <td></td> -->
                   <td>{{ voyage?.status }}</td>
 
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
                       <action-button @click="confirmDelete(voyage.id)" :action="'delete'"></action-button>

@@ -42,19 +42,39 @@ export default function useCargoTariff() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getCargoTariffs(page,columns = null, searchKey = null, table = null) {
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
+	const isTableLoading = ref(false);
+
+	async function getCargoTariffs(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/cargo-tariffs', {
 				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
+				 }
 			});
 			cargoTariffs.value = data.value;
 			notification.showSuccess(status);
@@ -63,8 +83,14 @@ export default function useCargoTariff() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -139,7 +165,7 @@ export default function useCargoTariff() {
 		try {
 			const { data, status } = await Api.delete( `/ops/cargo-tariffs/${cargoTariffId}`);
 			notification.showSuccess(status);
-			await getCargoTariffs();
+			await getCargoTariffs(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -151,15 +177,14 @@ export default function useCargoTariff() {
 	}
 
 	// Get ports by name or code
-	async function getCargoTariffsByNameOrCode(name_or_code, service = null) {
-		NProgress.start();
+	async function searchCargoTariffs(searchParam, business_unit, loading) {
+		// NProgress.start();
 		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// isLoading.value = true;
 
 		try {
-			const { data } = await Api.post(
-				'dataencoding/ports/get-ports-by-name-or-code',
-				{ name_or_code , service }
+			const { data } = await Api.get(
+				'ops/search-cargo-tariffs?tariff_name='+searchParam+'&business_unit='+business_unit,
 			);
 			cargoTariffs.value = data.value;
 			cargoTariff.value = data.value;
@@ -167,22 +192,72 @@ export default function useCargoTariff() {
 			error.value = Error.showError(error);
 		} finally {
 			//loader.hide();
-			isLoading.value = false;
-			NProgress.done();
+			loading(false)
 		}
 	}
 
+	async function getAllCargoTariffs(businessUnit = null) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-cargo-tariffs?business_unit=${businessUnit}`);
+			cargoTariffs.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//NProgress.done();
+		}
+	}
+
+
+	async function GetCargoTariffByBusinessunit(business_unit) {
+		// NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data } = await Api.get(
+				`ops/search-cargo-tariffs?business_unit=${business_unit}`,
+			);
+			cargoTariffs.value = data.value;
+		} catch (error) {
+			error.value = Error.showError(error);
+		} finally {
+		}
+	}
+
+	async function getCargoTariffsByVessel(vesselId) {
+		// NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data } = await Api.get(
+				`ops/get-search-cargo-tariffs?vessel_id=${vesselId}`,
+			);
+			cargoTariffs.value = data.value;
+		} catch (error) {
+			error.value = Error.showError(error);
+		} finally {
+		}
+	}
 	return {
 		cargoTariffLineObject,
 		cargoTariffs,
 		cargoTariff,
 		getCargoTariffs,
+		getAllCargoTariffs,
 		storeCargoTariff,
 		showCargoTariff,
 		updateCargoTariff,
 		deleteCargoTariff,
-		getCargoTariffsByNameOrCode,
+		searchCargoTariffs,
+		GetCargoTariffByBusinessunit,
+		getCargoTariffsByVessel,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

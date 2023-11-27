@@ -4,7 +4,10 @@ namespace App\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
+
+use function PHPUnit\Framework\isNull;
 
 class FileUploadService
 {
@@ -13,14 +16,14 @@ class FileUploadService
         try {
             if (is_string($file)) return $file;
 
-            $fileName = null;
+            $fileName = $previousFile;
             if ($file) {
                 $myRandomString = Str::random(10);
                 $fileName = $path . '/' . $myRandomString . time() . '.' . $file->getClientOriginalExtension();
                 $file->move($path, $fileName);
             }
 
-            if ($previousFile) {
+            if ($file && $previousFile) {
                 $this->deleteFile($previousFile);
             }
 
@@ -41,22 +44,22 @@ class FileUploadService
         }
     }
 
-    // note : new data, file storing path, previous data which is get from database and, field name if it's not attachment
-    public function handleMultipleFiles(string $path, array $newData, array $oldData = null, string $field = 'attachment'): array|null
+    // note : new data, new attachment filse, file storing path, previous data which is get from database and, field name if it's not attachment
+    public function handleMultipleFiles(string $path, array $newData, array $attachments, $oldData= null, string $field = 'attachment'): array|null
     {
+        if ($oldData instanceof Collection) {
+            $oldData = $oldData->toArray();
+        }        
         try {
             $results = [];
-            $oldLength = count($oldData);
+            $oldLength =0;
 
-            foreach ($newData as $key => $value) {
-                $data = $value->except(
-                    $field,
-                );
-                if (isset($value->attachment)) {
-                    if ($key < $oldLength) {
+            foreach ($newData as $key => $data) {
+                if (isset($attachments[$key])) {
+                    if (isset($oldData[$key]->attachment)) {
                         $this->deleteFile($oldData[$key]->attachment);
                     }
-                    $attachment = $this->handleFile($value->attachment, $path);
+                    $attachment = $this->handleFile($attachments[$key], $path);
                     $data[$field] = $attachment;
                 }
                 $results[$key] = $data;

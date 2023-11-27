@@ -2,8 +2,8 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Department <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Department" :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
+          <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -17,17 +17,17 @@
         <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
       </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.name" placeholder="Item Group Name" class="form-input" required/>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Name <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.name" placeholder="Item Group Name" class="form-input" required/>
           <Error v-if="errors?.name" :errors="errors.name" />
         </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Short Code <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.short_code" placeholder="Short Code" class="form-input" required/>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Short Code <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.short_code" placeholder="Short Code" class="form-input" required/>
         <Error v-if="errors?.short_code" :errors="errors.short_code" />
       </label>
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -36,6 +36,7 @@ import Editor from '@tinymce/tinymce-vue';
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
 import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -53,7 +54,7 @@ const props = defineProps({
 watch(() => props.form.mnt_ship_department_name, (value) => {
   props.form.mnt_ship_department_id = value?.id;
 });
-const { shipDepartments, getShipDepartmentsWithoutPagination } = useShipDepartment();
+const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
@@ -86,10 +87,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 >>> {

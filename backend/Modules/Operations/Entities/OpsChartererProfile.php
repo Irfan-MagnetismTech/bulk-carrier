@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsChartererProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'company_legal_name',
@@ -23,8 +24,16 @@ class OpsChartererProfile extends Model
         'business_unit'
     ];
 
+    protected $appends = ['name_and_code'];
+
     public function opsChartererBankAccounts()
     {
         return $this->hasMany(OpsChartererBankAccount::class, 'ops_charterer_profile_id', 'id');
+    }
+
+    
+    public function getNameAndCodeAttribute(): string
+    {
+        return $this->name . ' - ' . $this->owner_code;
     }
 }

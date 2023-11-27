@@ -29,12 +29,13 @@ class OpsHandoverTakeoverController extends Controller
     * @param Request $request
     * @return JsonResponse
     **/
-    public function index()
+    public function index(Request $request): JsonResponse
     {
         try {
-            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers')->latest()->paginate(15);
-            
-            return response()->success('Successfully retrieved handover takeovers.', $handover_takeovers, 200);
+            $handover_takeovers = OpsHandoverTakeover::with('opsChartererProfile','opsVessel','opsBunkers.scmMaterial')
+            ->globalSearch($request->all());
+
+            return response()->success('Data retrieved successfully.', $handover_takeovers, 200);
         }
         catch (QueryException $e)
         {
@@ -61,7 +62,7 @@ class OpsHandoverTakeoverController extends Controller
         $handover_takeover = OpsHandoverTakeover::create($handover_takeover_info);            
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
         DB::commit();
-        return response()->success('Handover takeover added successfully.', $handover_takeover, 201);
+        return response()->success('Data added successfully.', $handover_takeover, 201);
     }
     catch (QueryException $e)
     {
@@ -78,16 +79,20 @@ class OpsHandoverTakeoverController extends Controller
     */
     public function show(OpsHandoverTakeover $handover_takeover): JsonResponse
     {
-    $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers');
-    try
-    {
-        return response()->success('Successfully retrieved handover takeover.', $handover_takeover, 200);
-    }
-    catch (QueryException $e)
-    {
-        return response()->error($e->getMessage(), 500);
-    }
-
+        $handover_takeover->load('opsChartererProfile','opsVessel','opsBunkers.scmMaterial');
+        $handover_takeover->opsBunkers->map(function($bunker) {
+            $bunker->name = $bunker->scmMaterial->name;
+            return $bunker;
+        });
+        
+        try
+        {
+            return response()->success('Data retrieved successfully.', $handover_takeover, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
  
  
@@ -112,7 +117,7 @@ class OpsHandoverTakeoverController extends Controller
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
 
         DB::commit();
-        return response()->success('Handover takeover updated successfully.', $handover_takeover, 200);
+        return response()->success('Data updated successfully.', $handover_takeover, 202);
     }
     catch (QueryException $e)
     {
@@ -135,7 +140,7 @@ class OpsHandoverTakeoverController extends Controller
             $handover_takeover->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted handover takeover.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)

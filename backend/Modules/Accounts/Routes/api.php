@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Accounts\Entities\AccLoanReceived;
 use Modules\Accounts\Http\Controllers\AccAccountController;
 use Modules\Accounts\Http\Controllers\AccAccountOpeningBalanceController;
 use Modules\Accounts\Http\Controllers\AccAdvanceAdjustmentController;
@@ -18,6 +19,7 @@ use Modules\Accounts\Http\Controllers\AccSalaryController;
 use Modules\Accounts\Http\Controllers\AccSalaryHeadController;
 use Modules\Accounts\Http\Controllers\AccTransactionController;
 use Modules\Accounts\Http\Controllers\AccCommonController;
+use Modules\Accounts\Http\Controllers\AccLoanReceivedController;
 use Modules\Accounts\Http\Controllers\AisReportController;
 
 /*
@@ -42,6 +44,7 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::apiResource('acc-transactions', AccTransactionController::class);
     Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class);
     Route::apiResource('acc-loans', AccLoanController::class);
+    Route::apiResource('acc-loan-receiveds', AccLoanReceivedController::class);
     Route::apiResource('acc-fixed-assets', AccFixedAssetController::class);
     Route::apiResource('acc-depreciations', AccDepreciationController::class);
     Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class);
@@ -65,9 +68,9 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
 //    Route::post('get-accounts', [AccountsCommonController::class, 'getAccounts']);
 //
 //    //AIS Reports
-//    Route::post('day-book', [AisReportController::class, 'dayBook']);
+    Route::post('day-book', [AisReportController::class, 'dayBook']);
     Route::post('ledgers', [AisReportController::class, 'ledger']);
-//    Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
+    Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
     Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
     Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
 });

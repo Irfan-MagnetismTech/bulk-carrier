@@ -14,11 +14,11 @@ class MntCriticalItemController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalItems = MntCriticalItem::with(['mntCriticalItemCat.mntCriticalFunction'])->paginate(10);
+            $criticalItems = MntCriticalItem::with(['mntCriticalItemCat.mntCriticalFunction'])->globalSearch($request->all());
 
             return response()->success('Critical items are retrieved successfully', $criticalItems, 200);
             
@@ -121,6 +121,15 @@ class MntCriticalItemController extends Controller
     {
         try {            
             $criticalItem = MntCriticalItem::findorfail($id);
+            if ($criticalItem->mntCriticalVesselItems()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $criticalItem->delete();
             
             return response()->success('Critical item deleted successfully', $criticalItem, 204);

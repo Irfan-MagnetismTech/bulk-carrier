@@ -9,17 +9,18 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
-use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Entities\ScmMaterial;
-use Modules\SupplyChain\Services\GenerateUniqueId;
+use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Modules\SupplyChain\Entities\ScmPo;
+use Modules\SupplyChain\Entities\ScmPrLine;
 
 class ScmPrController extends Controller
 {
-    function __construct(private FileUploadService $fileUpload, private GenerateUniqueId $uniqueId)
+    function __construct(private FileUploadService $fileUpload, private UniqueId $uniqueId, private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -31,16 +32,12 @@ class ScmPrController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scm_prs = ScmPr::query()
-                ->with('scmPrLines')
-                ->latest()
-                ->when(request()->business_unit != "ALL", function ($q) {
-                    $q->where('business_unit', request()->business_unit);
-                })
-                ->paginate(10);;
+                ->with('scmPrLines', 'scmWarehouse')
+                ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_prs, 200);
         } catch (\Exception $e) {
@@ -53,22 +50,23 @@ class ScmPrController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmPrRequest $request)
+    public function store(ScmPrRequest $request): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
-        if (!empty($request->attachment)) {
+       
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
             $requestData['attachment'] = $attachment;
-        }
         $requestData['created_by'] = auth()->user()->id;
         $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
 
         try {
             DB::beginTransaction();
+
             $purchase_requisition = ScmPr::create($requestData);
-            if (request('enrty_type') == 0) {
-                $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+            if ($request->entry_type === '0') {
+                $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+                $purchase_requisition->scmPrLines()->createMany($linesData);
             } else {
                 $import = new ScmMaterialsImport();
                 Excel::import($import, $request->file('excel'));
@@ -77,17 +75,17 @@ class ScmPrController extends Controller
                 if ($import->invalid) {
                     return response()->json($import->invalid, 422);
                 } else {
-                    $purchase_requisition->scmPrLines()->createUpdateOrDelete($import->uniqueRows);
+                    $linesData = $this->compositeKey->generateArrayWithCompositeKey($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
+                    $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
                 }
             }
-            DB::commit();
 
+            DB::commit();
             return response()->success('Data created succesfully', $purchase_requisition, 201);
         } catch (ValidationException $e) {
             DB::rollBack();
 
             $failures = $e->failures();
-
             foreach ($failures as $failure) {
                 $failure->row();
                 $failure->attribute();
@@ -98,7 +96,6 @@ class ScmPrController extends Controller
             return response()->json($e->failures(), 422);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 501);
         }
     }
@@ -139,7 +136,7 @@ class ScmPrController extends Controller
             'pr_no' => $purchaseRequisition->ref_no,
             'ref_no' => $purchaseRequisition->ref_no,
             'business_unit' => $purchaseRequisition->business_unit,
-            'scmWarehouse' => $purchaseRequisition->scmWarehouse->id,
+            'scmWarehouse' => $purchaseRequisition->scmWarehouse,
             'scm_warehouse_id' => $purchaseRequisition->scm_warehouse_id,
             'raised_date' => $purchaseRequisition->raised_date,
             'is_critical' => $purchaseRequisition->is_critical,
@@ -151,11 +148,9 @@ class ScmPrController extends Controller
             'scmPrLines' => $prLines,
         ];
 
-
         try {
             return response()->success('Data updated sucessfully!', $purchaseRequisition, 200);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -166,25 +161,26 @@ class ScmPrController extends Controller
      * @param ScmPr $purchase_requisition
      * @return JsonResponse
      */
-    public function update(Request $request, ScmPr $purchase_requisition): JsonResponse
+    public function update(ScmPrRequest $request, ScmPr $purchase_requisition): JsonResponse
     {
-        $requestData = $request->except('ref_no');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
+
+        $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
         try {
             DB::beginTransaction();
 
-            if (isset($request->attachment)) {
+          
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
                 $requestData['attachment'] = $attachment;
-            }
+         
             $purchase_requisition->update($requestData);
-            $purchase_requisition->scmPrLines()->createUpdateOrDelete($request->scmPrLines);
+            $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 
             DB::commit();
             return response()->success('Data updated sucessfully!', $purchase_requisition, 202);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -197,12 +193,22 @@ class ScmPrController extends Controller
     public function destroy(ScmPr $purchase_requisition): JsonResponse
     {
         try {
+            $poLines = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
+            if ($poLines > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id" => ["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
+
             $purchase_requisition->scmPrLines()->delete();
             $purchase_requisition->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -213,15 +219,15 @@ class ScmPrController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function searchOpeningStock(Request $request): JsonResponse
+    public function searchPr(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                ->limit(10)
+                // ->limit(10)
                 ->get();
         } else {
             $purchase_requisition = [];

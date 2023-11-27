@@ -30,25 +30,40 @@ export default function useItemGroup() {
         form_type: 'create'
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isJobLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getJobs(page, businessUnit) {
+    async function getJobs(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/jobs',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             jobs.value = data.value;
@@ -57,9 +72,17 @@ export default function useItemGroup() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
             //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -72,7 +95,7 @@ export default function useItemGroup() {
             const { data, status } = await Api.post('/mnt/jobs', form);
             job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.jobs.index" });
+            await router.push({ name: "mnt.jobs.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -113,7 +136,7 @@ export default function useItemGroup() {
             );
             job.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.jobs.index" });
+            await router.push({ name: "mnt.jobs.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -132,10 +155,11 @@ export default function useItemGroup() {
         try {
             const { data, status } = await Api.delete( `/mnt/jobs/${jobId}`);
             notification.showSuccess(status);
-            await getJobs(indexPage.value, indexBusinessUnit.value);
+            await getJobs(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -146,6 +170,7 @@ export default function useItemGroup() {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isJobLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`/mnt/get-jobs-for-requisition`,{
@@ -164,6 +189,7 @@ export default function useItemGroup() {
         } finally {
             loader.hide();
             isLoading.value = false;
+            isJobLoading.value = false;
             //NProgress.done();
         }
     }
@@ -185,6 +211,8 @@ export default function useItemGroup() {
         deleteJob,
         getJobsForRequisition,
         isLoading,
+        isJobLoading,
+        isTableLoading,
         errors,
     };
 }

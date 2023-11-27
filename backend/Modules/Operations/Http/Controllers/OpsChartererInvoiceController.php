@@ -28,12 +28,13 @@ class OpsChartererInvoiceController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-    public function index()
+    public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines')->latest()->paginate(15);
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')
+            ->globalSearch($request->all());
             
-            return response()->success('Successfully retrieved charterer invoices.', $charterer_invoices, 200);
+            return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         }
         catch (QueryException $e)
         {
@@ -54,13 +55,15 @@ class OpsChartererInvoiceController extends Controller
              DB::beginTransaction();
              $charterer_invoice_info = $request->except(
                  '_token',
-                 'opsChartererInvoiceLines',
+                 'opsChartererInvoiceOthers',
+                 'opsChartererInvoiceServices'
              );
  
              $charterer_invoice = OpsChartererInvoice::create($charterer_invoice_info);
-             $charterer_invoice->opsChartererInvoiceLines()->createMany($request->opsChartererInvoiceLines);
+             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
+             $charterer_invoice->opsChartererInvoiceServices()->createMany($request->opsChartererInvoiceServices);
              DB::commit();
-             return response()->success('Charterer invoice added successfully.', $charterer_invoice, 201);
+             return response()->success('Data added successfully.', $charterer_invoice, 201);
          }
          catch (QueryException $e)
          {
@@ -77,10 +80,10 @@ class OpsChartererInvoiceController extends Controller
       */
      public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
      {
-         $charterer_invoice->load('opsChartererProfile','opsChartererContract','opsChartererInvoiceLines');
+         $charterer_invoice->load('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices');
          try
          {
-             return response()->success('Successfully retrieved charterer invoice.', $charterer_invoice, 200);
+             return response()->success('Data retrieved successfully.', $charterer_invoice, 200);
          }
          catch (QueryException $e)
          {
@@ -103,14 +106,16 @@ class OpsChartererInvoiceController extends Controller
              DB::beginTransaction();
              $charterer_invoice_info = $request->except(
                  '_token',
-                 'opsChartererInvoiceLines',
+                 'opsChartererInvoiceOthers',
              );
             
              $charterer_invoice->update($charterer_invoice_info);       
-             $charterer_invoice->opsChartererInvoiceLines()->delete();
-             $charterer_invoice->opsChartererInvoiceLines()->createMany($request->opsChartererInvoiceLines);
+             $charterer_invoice->opsChartererInvoiceOthers()->delete();
+             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
+             $charterer_invoice->opsChartererInvoiceServices()->delete();
+             $charterer_invoice->opsChartererInvoiceServices()->createMany($request->opsChartererInvoiceServices);
              DB::commit();
-             return response()->success('Charterer invoice updated successfully.', $charterer_invoice, 200);
+             return response()->success('Data updated successfully.', $charterer_invoice, 202);
          }
          catch (QueryException $e)
          {            
@@ -129,11 +134,12 @@ class OpsChartererInvoiceController extends Controller
      {
          try
          {
-             $charterer_invoice->opsChartererInvoiceLines()->delete();
+            $charterer_invoice->opsChartererInvoiceOthers()->delete();
+            $charterer_invoice->opsChartererInvoiceServices()->delete();
              $charterer_invoice->delete();
  
              return response()->json([
-                 'message' => 'Successfully deleted charterer invoice.',
+                 'message' => 'Data deleted successfully.',
              ], 204);
          }
          catch (QueryException $e)
@@ -142,15 +148,15 @@ class OpsChartererInvoiceController extends Controller
          }
      }
      
-     public function getChartererInvoiceName(){
-         try {
-             $charterer_invoices = OpsChartererInvoice::with('opsChartererInvoiceLines')->latest()->paginate(15);
-             
-             return response()->success('Successfully retrieved cargo tariffs name.', collect($charterer_invoices->pluck('tariff_name'))->unique()->values()->all(), 200);
-         } catch (QueryException $e){
-             return response()->error($e->getMessage(), 500);
-         }
-     }
+    public function getChartererInvoiceName(){
+        try {
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')->latest()->get();
+            
+            return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
  
 
 }

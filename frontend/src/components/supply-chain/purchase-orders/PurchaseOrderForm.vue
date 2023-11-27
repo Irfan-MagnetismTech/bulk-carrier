@@ -6,10 +6,16 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import useVendor from '../../../composables/supply-chain/useVendor';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import cloneDeep from 'lodash/cloneDeep';
+    import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors,searchVendor } = useVendor();
+    const { vendors, searchVendor } = useVendor();
+    const { currencies, getCurrencies } = useBusinessInfo();
+    const { getMaterialList, prMaterialList } = usePurchaseOrder();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -20,28 +26,39 @@
       materialObject: { type: Object, required: false },
       termsObject: { type: Object, required: false },
       csVendors: { type: Object, required: false },
-      page: {
-      required: false,
-      default: {}
-    },
+      page: { required: false, default: {} },
 
     });
 
     function addMaterial() {
-      props.form.scmPoLines.push(props.materialObject);
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPoLines.push(clonedObj);
+      setMinHeight();
     }
 
     function removeMaterial(index){
       props.form.scmPoLines.splice(index, 1);
-}
+      // setMinHeight();
+    }
 
     function addTerms() {
-          props.form.scmPoTerms.push(props.termsObject);
-        }
+          const clonedTermObj = cloneDeep(props.termsObject);
+          props.form.scmPoTerms.push(clonedTermObj);
+      }
 
     function removeTerms(index){
       props.form.scmPoTerms.splice(index, 1);
-    }
+}
+
+const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
+
+// const setMinHeight = () => {
+//   dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+// };
+
+// onMounted(() => {
+//   setMinHeight();
+// });
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -49,12 +66,6 @@
     //   props.form.materials[index].material_category_id = material.category.id;
     //   props.form.materials[index].material_category_name = material.category.name;
     // }
-
-
-    watch(() => props?.form?.status, (newVal, oldVal) => {
-      props?.form?.status == props?.form?.status;
-    })
-
 
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -70,69 +81,47 @@
     // }, { deep: true });
 
     // });// Code for global search end here
+    // function fetchVendor(search, loading) {
+    //   loading(true);
+    //   searchVendor(search, loading);
+// }
 
-
-    function fetchWarehouse(search, loading) {
-    loading(true);
-    console.log(props.form.business_unit);
-    searchWarehouse(search, loading,props.form.business_unit);
-  }
-
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id;
-  });
-    
-    function fetchVendor(search, loading) {
-    loading(true);
-    searchVendor(search, loading);
-  }
-    function fetchPurchaseRequisition(search, loading) {
-    loading(true);
-    searchWarehouseWisePurchaseRequisition(props.form.scm_warehouse_id,search, loading);
+ function fetchVendor(search) {
+      searchVendor(search);
     }
 
-    watch(() => props.form.scmPurchaseRequisition, (value) => {
-          props.form.scm_pr_id = value?.id;
-      });
-
-    function setMaterialOtherData(datas,index){
-      console.log(datas);
-      props.form.scmPoLines[index].unit = datas.unit;
-      props.form.scmPoLines[index].scm_material_id = datas.id;
+function setMaterialOtherData(line, index) {
+  const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
+              props.form.scmPoLines[index].unit = selectedMaterial.unit;
+              props.form.scmPoLines[index].brand = selectedMaterial.brand;
+              props.form.scmPoLines[index].model = selectedMaterial.model;;
+            }
+          }
     }
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
-  watch(() => props.form.business_unit, (newValue, oldValue) => {
-    if(newValue !== oldValue && oldValue != ''){
-      props.form.scm_warehouse_id = '';
-      props.form.scmWarehouse = null;
-    }
-  });
-
-//watch props.form.materials find amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from unit_price and quantity with parseFloat and toFixed 2
-//watch props.form.materials find sub_total from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find discount from sub_total with parseFloat and toFixed 2
-//watch props.form.materials find total_amount from sub_total and discount with parseFloat and toFixed 2
-//watch props.form.materials find vat from total_amount with parseFloat and toFixed 2
-//watch props.form.materials find net_amount from total_amount and vat with parseFloat and toFixed 2
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
-      newVal?.forEach((material, index) => {
-        props.form.scmPoLines[index].total_amount = parseFloat((material?.rate * material?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_amount);
+      newVal?.forEach((line, index) => {
+        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total += parseFloat(props.form.scmPoLines[index].total_price);
+        if (line.scmMaterial) {
+          setMaterialOtherData(line, index);
+        }
       });
-  props.form.sub_total = parseFloat(total.toFixed(2));
+      props.form.sub_total = parseFloat(total.toFixed(2));
       calculateNetAmount();
+
+  
 }, { deep: true });
     
   function calculateNetAmount(){
     props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
     props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
-}
+  }
  
   watch(() => props?.form?.discount, (newVal, oldVal) => {
     calculateNetAmount();
@@ -140,112 +129,60 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
   watch(() => props?.form?.vat, (newVal, oldVal) => {
     calculateNetAmount();
   });
+  onMounted(() => {
+    getCurrencies()
+    watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+      getMaterialList(props.form.scm_pr_id);
+    });
+    fetchVendor('');
+  }); 
 
+//watch scmVendor to change scm_vendor_id
+watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
+  if(newVal){
+    props.form.scm_vendor_id = newVal.id;
+  }
+});
+watch(() => props?.form?.scmPr, (newVal, oldVal) => {
+  if(newVal){
+    props.form.pr_no = newVal.ref_no;
+  }
+});
 </script>
 <template>
-
-  
-<!-- const purchaseOrder = ref( {
-        ref_no: '',
-        scmWarehouse: '',
-        scm_warehouse_name: '',
-        scm_warehouse_id: '',
-        po_date: '',
-        pr_no: null,
-        scm_pr_id: null,
-        scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
-        scmCs: null,
-        scmVendor: null,
-        scm_vendor_id: null,
-        vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
-        remarks: '',
-        sub_total: 0.0,
-        discount: 0.0,
-        total_amount: 0.0,
-        vat: 0.0,
-        net_amount: 0.0,
-        attachment: '',
-        business_unit: '',
-        scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
-        scmPoTerms: [
-                        {
-                            details: ''
-                        }
-                    ],  
-        });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
-    }
-
-    const termsObject =  {
-        details: ''
-    } -->
+<!-- &Get@Well@Soon100& -->
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
           <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
     </div>
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
         <input type="text" readonly v-model="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="scm_warehouse_id" :id="'scm_warehouse_id'" />
-        <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" />
+        <!-- <Error v-if="errors?.scm_warehouse_id" :errors="errors.scm_warehouse_id" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.po_date" required class="form-input" name="po_date" :id="'po_date'" />
-          <Error v-if="errors?.po_date" :errors="errors.po_date"  />
+          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-          <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" @search="fetchPurchaseRequisition"  v-model="form.scmPr" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmPr"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
+          <!-- <Error v-if="errors?.pr_no" :errors="errors.pr_no"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.pr_date" required readonly class="form-input" name="pr_date" :id="'pr_date'" />
-          <Error v-if="errors?.pr_date" :errors="errors.pr_date"  />
+          <input type="date" v-model="form.pr_date" required readonly class="form-input vms-readonly-input" name="pr_date" :id="'pr_date'" />
+          <!-- <Error v-if="errors?.pr_date" :errors="errors.pr_date"  /> -->
       </label>
       
   </div>
@@ -254,19 +191,20 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         <span class="label-item-title">CS No</span>
        <!-- <input type="text" v-model="form.scmCs.ref_no" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> -->
         <input type="text" v-model="form.scmCs" readonly required class="form-input" name="cs_ref" :id="'cs_ref'" /> 
-        <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" />
+        <!-- <Error v-if="errors?.scm_cs_id" :errors="errors.scm_cs_id" /> -->
     </label>
-    <label class="label-group" v-if="form.cs_no != ''">
+    <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
           <select class="form-input" v-model="form.scm_vendor_id">
             <option value="" disabled>select</option>
             <option v-for="(csVendor,index) in csVendors" :value="csVendor.id">{{ csVendor?.name }}</option>
           </select>
-          <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  />
+          <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id"  /> -->
       </label>
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input">
+          <!-- <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input"> -->
+          <v-select :options="vendors" placeholder="--Choose an option--" v-model="form.scmVendor" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -276,44 +214,53 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
               />
           </template>
           </v-select>
-          <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
+          <!-- <Error v-if="errors?.approved_date" :errors="errors.approved_date"  /> -->
       </label>
       
       <label class="label-group">
         <span class="label-item-title">Currency</span>
-        <input type="text" v-model="form.currency" required class="form-input" name="currency" :id="'currency'" />
-        <Error v-if="errors?.currency" :errors="errors.currency"/>
+        <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.currency"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+        <!-- <Error v-if="errors?.currency" :errors="errors.currency"/> -->
     </label>
-      <label class="label-group">
-          <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.convertion_rate" required class="form-input" name="approved_date" :id="'convertion_rate'" />
-          <Error v-if="errors?.convertion_rate" :errors="errors.convertion_rate"  />
-      </label>
+    <label class="label-group" v-if="form.currency == 'USD'">
+        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+        <!-- <Error v-if="errors?.foreign_to_usd" :errors="errors.convertion_rate"  /> -->
+    </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
 
-  <div id="customDataTable">
-    <div  class="table-responsive">
+  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+    <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="table_head_tr">
             <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Brand</th>
-            <th class="py-3 align-center">Model</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Unit</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Brand</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Model</th>
             <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Rate</th>
-            <th class="py-3 align-center">Total Price</th>
+            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
+            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
+            <th class="py-3 align-cente min-w-[70px] md:min-w-[95px] lg:min-w-[120px]r">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -321,7 +268,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
           <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPoLines[index].scmMaterial,index)" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -342,16 +289,16 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
               <input type="text" v-model="form.scmPoLines[index].model" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].required_date" class="form-input">
+              <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].quantity" class="form-input">
+              <input type="number" required v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="number" required v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
-              <input type="text" v-model="form.scmPoLines[index].total_amount" class="form-input">
+              <input type="number" readonly v-model="form.scmPoLines[index].total_price" class="form-input vms-readonly-input">
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="remove_button">
@@ -412,7 +359,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
          <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
             <td>
-              <input type="text" v-model="form.scmPoTerms[index].details" class="form-input">
+              <input type="text" v-model="form.scmPoTerms[index].description" class="form-input">
             </td>
            
             <td class="px-1 py-1 text-center">
@@ -434,7 +381,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       </fieldset>
     </div>
   </div>
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
@@ -453,19 +400,19 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         @apply block w-full mt-3 text-sm;
     }
     .label-item-title {
-        @apply text-gray-700 dark:text-gray-300 text-sm;
+        @apply text-gray-700 dark-disabled:text-gray-300 text-sm;
     }
     .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .form-fieldset {
-      @apply px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400;
+      @apply px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400;
     }
     .form-legend {
-      @apply px-2 text-gray-700 dark:text-gray-300;
+      @apply px-2 text-gray-700 dark-disabled:text-gray-300;
     }
     .vs__selected{
     display: none !important;
@@ -478,13 +425,13 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         @apply border border-gray-300
     }
     .table_tr {
-      @apply text-gray-700 dark:text-gray-400;
+      @apply text-gray-700 dark-disabled:text-gray-400;
     }
     .table_head_tr {
-      @apply text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+      @apply text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800;
     }
     .table_body {
-      @apply bg-white divide-y dark:divide-gray-700 dark:bg-gray-800;
+      @apply bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800;
     }
     .remove_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;

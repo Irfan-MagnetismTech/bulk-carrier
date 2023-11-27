@@ -105,22 +105,25 @@ body {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none;
 }
 table, th,td{
   @apply border border-collapse;
 }
 .search-result {
-  @apply px-4 py-3 text-sm text-center text-gray-600 dark:text-gray-300;
+  @apply px-4 py-3 text-sm text-center text-gray-600 dark-disabled:text-gray-300;
 }
 .search {
-  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-200 focus:border-purple-400 focus:outline-none dark:border-0;
+  @apply float-right  pr-10 text-sm border border-gray-300 rounded dark-disabled:bg-gray-800 dark-disabled:text-gray-200 focus:border-purple-400 focus:outline-none dark-disabled:border-0;
+}
+.custom_badge{
+  @apply px-2 py-1 font-semibold leading-tight rounded-full;
 }
 >>> {
   --vs-controls-color: #374151;
@@ -179,6 +182,6 @@ table, th,td{
     }
 
     .show-block {
-      @apply flex items-center w-full mt-1 text-sm rounded dark:text-gray-300 border border-gray-600 dark:bg-gray-700 bg-white p-2 min-h-[2.4rem]
+      @apply flex items-center w-full mt-1 text-sm rounded dark-disabled:text-gray-300 border border-gray-600 dark-disabled:bg-gray-700 bg-white p-2 min-h-[2.4rem]
     }
 </style>

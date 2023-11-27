@@ -4,8 +4,9 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
-const { allAccountLists, getAccount, allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
+const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 
 const props = defineProps({
   form: {
@@ -21,21 +22,21 @@ const props = defineProps({
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-function fetchAccounts(search, loading) {
-  if(search.length < 3) {
-    return;
-  } else {
-    getAccount(search, props.form.business_unit, loading);
-  }
-}
+// function fetchAccounts(search, loading) {
+//   if(search.length < 3) {
+//     return;
+//   } else {
+//     getAccount(search, props.form.business_unit, loading);
+//   }
+// }
 
-function fetchCostCenters(search, loading) {
-  if(search.length < 3) {
-    return;
-  } else {
-    getCostCenter(search, props.form.business_unit, loading);
-  }
-}
+// function fetchCostCenters(search, loading) {
+//   if(search.length < 3) {
+//     return;
+//   } else {
+//     getCostCenter(search, props.form.business_unit, loading);
+//   }
+// }
 
 watch(() => props.form, (value) => {
   if(value){
@@ -45,10 +46,10 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    getCostCenter(props.form.business_unit);
-    getAccount(props.form.business_unit);
+    getCostCenter(null,props.form.business_unit);
+    getAccount(null,props.form.business_unit);
   });
 });
 
@@ -58,48 +59,41 @@ onMounted(() => {
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
+
   </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" @search="fetchCostCenters" v-model="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
+    <div class="flex flex-col justify-center md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm w-1/3">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <v-select :options="allCostCenterLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
-        <Error v-if="errors?.acc_cost_center_name" :errors="errors.acc_cost_center_name" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account <span class="text-red-500">*</span></span>
-        <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts" v-model="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
+      <label class="block w-full mt-2 text-sm w-2/3">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+        <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_account_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
-        <Error v-if="errors?.acc_account_name" :errors="errors.acc_account_name" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.date" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.date" :errors="errors.date" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Debit Amount <span class="text-red-500">*</span></span>
-        <input type="number" step=".01" v-model="form.dr_amount" placeholder="Debit Amount" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.dr_amount" :errors="errors.dr_amount" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Credit Amount <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model="form.cr_amount" placeholder="Credit Amount" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.cr_amount" :errors="errors.cr_amount" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model.trim="form.date" class="form-input" autocomplete="off" required />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Debit Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.dr_amount" placeholder="Debit Amount" class="form-input" autocomplete="off" required />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Credit Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.cr_amount" placeholder="Credit Amount" class="form-input" autocomplete="off" required />
+    </label>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
@@ -114,10 +108,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 >>> {

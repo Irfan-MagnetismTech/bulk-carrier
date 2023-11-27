@@ -150,7 +150,6 @@ export default [
                 ],
             },
 
-            
             {
                 route: '',
                 label: 'Cri. Ship Function',
@@ -217,20 +216,9 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
-
-
-          ],
+                ],
             },
-
-
-            
-            
-
-
-
-
-            
-            
+                
             
         ]
     },

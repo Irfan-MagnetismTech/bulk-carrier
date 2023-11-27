@@ -11,6 +11,7 @@ export default function useMaterial() {
     const router = useRouter();
     const materials = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
         const material = ref( {
             name: '',
@@ -25,27 +26,35 @@ export default function useMaterial() {
             sample_photo: null
         });
 
-    const indexPage = ref(null);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const filterParams = ref(null);
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
+    const isMaterialLoading = ref(false);
 
-    async function getMaterials(page,columns = null, searchKey = null, table = null) {
+    async function getMaterials(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-
+        filterParams.value = filterOptions;
         try {
-            const {data, status} = await Api.get(`/${BASE}/materials`, {
-				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
-			});
+            const {data, status} = await Api.get(`/${BASE}/materials`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
             materials.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -53,8 +62,14 @@ export default function useMaterial() {
             notification.showError(status);
             console.log(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -102,8 +117,6 @@ export default function useMaterial() {
         isLoading.value = true;
         const formData = processFormData(form);
         formData.append('_method', 'PUT');
-        
-        console.log(formData,form);
         try {
             const { data, status } = await Api.post(
                 `/${BASE}/materials/${materialId}`,
@@ -122,26 +135,27 @@ export default function useMaterial() {
     }
 
     async function deleteMaterial(materialId) {
-        const loader = $loading.show(LoaderConfig);
+        // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/materials/${materialId}`);
             notification.showSuccess(status);
-            await getMaterials(indexPage.value);
+            await getMaterials(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function searchMaterial(searchParam, loading) {
+    async function searchMaterial(searchParam, loading = false) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
+        isMaterialLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam }});
@@ -153,7 +167,7 @@ export default function useMaterial() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            loading(false)
+            isMaterialLoading.value = false;
         }
     }
 
@@ -192,6 +206,25 @@ export default function useMaterial() {
         return formData;
     }
 
+    async function getBunkerList() {
+
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { materialCategoryId: 1}});
+            materials.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            // loading(false)
+        }
+    }
+
     return {
         materials,
         material,
@@ -201,8 +234,11 @@ export default function useMaterial() {
         showMaterial,
         updateMaterial,
         deleteMaterial,
+        isTableLoading,
         searchMaterialWithCategory,
+        getBunkerList,
         isLoading,
+        isMaterialLoading,
         errors
     };
 }

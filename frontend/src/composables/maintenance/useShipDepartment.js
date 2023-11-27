@@ -17,25 +17,38 @@ export default function useShipDepartment() {
         business_unit: '',
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isShipDepartmentLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getShipDepartments(page, businessUnit) {
+    async function getShipDepartments(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+        let loader = null;
+        
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+                
+        // indexPage.value = filterOptions.page;
+        // indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
+        
         try {
             const {data, status} = await Api.get('/mnt/ship-departments',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             shipDepartments.value = data.value;
@@ -44,8 +57,14 @@ export default function useShipDepartment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -59,7 +78,7 @@ export default function useShipDepartment() {
             const { data, status } = await Api.post('/mnt/ship-departments', form);
             shipDepartment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.ship-departments.index" });
+            await router.push({ name: "mnt.ship-departments.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -100,7 +119,7 @@ export default function useShipDepartment() {
             );
             shipDepartment.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.ship-departments.index" });
+            await router.push({ name: "mnt.ship-departments.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -119,10 +138,11 @@ export default function useShipDepartment() {
         try {
             const { data, status } = await Api.delete( `/mnt/ship-departments/${shipDepartmentId}`);
             notification.showSuccess(status);
-            await getShipDepartments(indexPage.value, indexBusinessUnit.value);
+            await getShipDepartments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -133,6 +153,7 @@ export default function useShipDepartment() {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        isShipDepartmentLoading.value = true;
 
         try {
             const {data, status} = await Api.get('/mnt/get-mnt-ship-departments',{
@@ -148,6 +169,7 @@ export default function useShipDepartment() {
         } finally {
             // loader.hide();
             isLoading.value = false;
+            isShipDepartmentLoading.value = false;
             //NProgress.done();
         }
     }
@@ -165,6 +187,8 @@ export default function useShipDepartment() {
         deleteShipDepartment,
         getShipDepartmentsWithoutPagination,
         isLoading,
+        isTableLoading,
+        isShipDepartmentLoading,
         errors,
     };
 }

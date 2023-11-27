@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('crw_agency_contracts', function (Blueprint $table) {
             $table->id();
 			$table->unsignedBigInteger('crw_agency_id');
+			$table->string('contract_name');
 			$table->string('billing_cycle');
 			$table->string('billing_currency');
 			$table->date('validity_from');

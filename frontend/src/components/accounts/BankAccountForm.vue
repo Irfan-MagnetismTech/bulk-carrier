@@ -3,6 +3,7 @@ import Error from "../Error.vue";
 import {onMounted, ref} from "vue";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   form: {
@@ -19,7 +20,7 @@ const props = defineProps({
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
+  //props.form.business_unit = businessUnit.value;
 });
 
 </script>
@@ -32,58 +33,50 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Bank Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.bank_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.bank_name" :errors="errors.bank_name" />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Bank Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.bank_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Branch Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.branch_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.branch_name" :errors="errors.branch_name" />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Branch Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.branch_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Type <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_type" placeholder="Account type" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.account_type" :errors="errors.account_type" />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Account Type <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.account_type" placeholder="Account type" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.account_name" placeholder="Account name" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.account_name" :errors="errors.account_name" />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Account Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.account_name" placeholder="Account name" class="form-input" autocomplete="off" required />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Account No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_number" placeholder="Account no" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.account_number" :errors="errors.account_number" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Account No <span class="text-red-500">*</span></span>
+      <input type="text" v-model.trim="form.account_number" placeholder="Account no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Routing No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.routing_number" placeholder="Routing no" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.routing_number" :errors="errors.routing_number" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Routing No <span class="text-red-500">*</span></span>
+      <input type="text" v-model.trim="form.routing_number" placeholder="Routing no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Contact No <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.contact_number" placeholder="Contact no" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.contact_number" :errors="errors.contact_number" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Contact No <span class="text-red-500">*</span></span>
+      <input type="text" v-model.trim="form.contact_number" placeholder="Contact no" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Opening Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.opening_date" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.opening_date" :errors="errors.opening_date" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Opening Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model.trim="form.opening_date" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Opening Balance <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model="form.opening_balance" placeholder="Opening balance" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.opening_balance" :errors="errors.opening_balance" />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Opening Balance <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.opening_balance" placeholder="Opening balance" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
@@ -98,10 +91,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 >>> {

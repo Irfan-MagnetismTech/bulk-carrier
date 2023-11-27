@@ -3,7 +3,7 @@
       <business-unit-input v-model="form.business_unit"></business-unit-input>
 
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
         <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
             <template #search="{attributes, events}">
                 <input
@@ -17,7 +17,7 @@
       </label>
       
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Certificate <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Certificate <span class="text-red-500">*</span></span>
         <v-select :options="vesselCertificates" placeholder="--Choose an option--" v-model="form.ops_maritime_certification_id" label="name" class="block form-input" :reduce="certificate=>certificate.id">
             <template #search="{attributes, events}">
                 <input
@@ -31,8 +31,8 @@
       </label>
 
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark:text-gray-300">Certificate Type </span>
-          <input type="text" v-model="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
+          <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type </span>
+          <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
           <Error v-if="errors?.type" :errors="errors.type" />
         </label>
     </div>
@@ -40,29 +40,29 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Validity Period </span>
-            <input type="text" v-model="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period </span>
+            <input type="text" v-model.trim="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
           <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Reference Number </span>
-            <input type="text" v-model="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Reference Number </span>
+            <input type="text" v-model.trim="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
           <Error v-if="errors?.reference_number" :errors="errors.reference_number" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Issue Date </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date </span>
             <input type="date" v-model="form.issue_date" placeholder="Issue Date" class="form-input" autocomplete="off" />
           <Error v-if="errors?.issue_date" :errors="errors.issue_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Expire Date </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Expire Date </span>
             <input type="date" v-model="form.expire_date" placeholder="Expire Date" class="form-input" autocomplete="off" />
           <Error v-if="errors?.expire_date" :errors="errors.expire_date" />
         </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <h2 class="text-gray-600 dark:text-gray-300 text-2xl font-semibold py-3 text-center">
+      <h2 class="text-gray-600 dark-disabled:text-gray-300 text-2xl font-semibold py-3 text-center">
         Attachment (Image of Certificate)
       </h2>
       <label class="block w-full mt-2 text-sm">
@@ -156,12 +156,12 @@ watch(dropZoneFile, (value) => {
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
 }
 </style>

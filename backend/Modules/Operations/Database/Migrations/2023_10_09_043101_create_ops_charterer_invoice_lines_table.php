@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('ops_charterer_invoice_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ops_charterer_invoice_id')->constrained('ops_charterer_invoices')->onDelete('cascade');
-            $table->string('charge_or_deduct');
-            $table->string('particular');
-            $table->string('cost_unit');
-            $table->string('currency');
-            $table->float('quantity');
-            $table->float('rate');
+            $table->string('charge_or_deduct')->nullable();
+            $table->string('particular')->nullable();
+            $table->string('cost_unit')->nullable();
+            $table->string('currency')->nullable();
+            $table->float('quantity')->nullable();
+            $table->float('rate')->nullable();
             $table->float('exchange_rate_bdt')->nullable();
             $table->float('exchange_rate_usd')->nullable();
             $table->float('amount')->nullable();

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwCrewChecklist;
 use Illuminate\Support\Facades\DB;
+use Modules\Crew\Http\Requests\CrwCrewChecklistRequest;
+use Modules\Crew\Http\Requests\CrwCrewRankRequest;
 
 class CrwCrewChecklistController extends Controller
 {
@@ -15,14 +17,12 @@ class CrwCrewChecklistController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $crwCrewChecklists = CrwCrewChecklist::with('crwCrewChecklistLines')->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $crwCrewChecklists = CrwCrewChecklist::with('crwCrewChecklistLines')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwCrewChecklists, 200);
+            return response()->success('Retrieved Successfully', $crwCrewChecklists, 200);
         }
         catch (QueryException $e)
         {
@@ -36,7 +36,7 @@ class CrwCrewChecklistController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwCrewChecklistRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
@@ -45,8 +45,8 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist     = CrwCrewChecklist::create($crwCrewChecklistData);
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Created Succesfully', $crwCrewChecklist, 201);
             });
+            return response()->success('Created Successfully', '', 201);
         }
         catch (QueryException $e)
         {
@@ -63,7 +63,7 @@ class CrwCrewChecklistController extends Controller
     public function show(CrwCrewChecklist $crwCrewChecklist)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwCrewChecklist->load('crwCrewChecklistLines'), 200);
+            return response()->success('Retrieved Successfully', $crwCrewChecklist->load('crwCrewChecklistLines'), 200);
         }
         catch (QueryException $e)
         {
@@ -78,7 +78,7 @@ class CrwCrewChecklistController extends Controller
      * @param  \App\Models\CrwCrewChecklist  $crwCrewChecklist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewChecklist $crwCrewChecklist)
+    public function update(CrwCrewChecklistRequest $request, CrwCrewChecklist $crwCrewChecklist)
     {
         try {
             DB::transaction(function () use ($request, $crwCrewChecklist)
@@ -88,8 +88,8 @@ class CrwCrewChecklistController extends Controller
                 $crwCrewChecklist->crwCrewChecklistLines()->delete();
                 $crwCrewChecklist->crwCrewChecklistLines()->createMany($request->crwCrewChecklistLines);
 
-                return response()->success('Updated succesfully', $crwCrewChecklist, 202);
             });
+            return response()->success('Updated Successfully', '', 202);
         }
         catch (QueryException $e)
         {
@@ -108,7 +108,7 @@ class CrwCrewChecklistController extends Controller
         try {
             $crwCrewChecklist->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

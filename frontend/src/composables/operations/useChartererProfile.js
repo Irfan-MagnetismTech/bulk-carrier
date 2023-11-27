@@ -41,16 +41,34 @@ export default function useChartererProfile() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 
-	async function getChartererProfiles(page, businessUnit) {
-		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+	const indexPage = ref(null);
+	const indexBusinessUnit = ref(null);
+	const filterParams = ref(null);
+	const isTableLoading = ref(false);
+
+	async function getChartererProfiles(filterOptions) {
+		let loader = null;
+
+		if (!filterOptions.isFilter) {
+			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+			isLoading.value = true;
+			isTableLoading.value = false;
+		} else {
+			isTableLoading.value = true;
+			isLoading.value = false;
+			loader?.hide();
+		}
+
+		indexPage.value = filterOptions.page;
+		indexBusinessUnit.value = filterOptions.business_unit;
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/charterer-profiles', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit
+					page: filterOptions.page,
+					items_per_page: filterOptions.items_per_page,
+					data: JSON.stringify(filterOptions)
 				}
 			});
 			chartererProfiles.value = data.value;
@@ -59,9 +77,13 @@ export default function useChartererProfile() {
 			const { data, status } = error.response;
 			//notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+				loader?.hide();
+				isLoading.value = false;
+			} else {
+				isTableLoading.value = false;
+				loader?.hide();
+			}
 		}
 	}
 
@@ -130,18 +152,16 @@ export default function useChartererProfile() {
 	async function deleteChartererProfile(chartererProfileId) {
 		
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.delete( `/ops/charterer-profiles/${chartererProfileId}`);
 			notification.showSuccess(status);
-			await getChartererProfiles();
+			await getChartererProfiles(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loader.hide();
 			isLoading.value = false;
 			//NProgress.done();
 		}
@@ -151,7 +171,7 @@ export default function useChartererProfile() {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-charterer-profiles?name=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-charterer-profiles?name_or_code=${searchParam}`);
 			chartererProfiles.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -163,6 +183,44 @@ export default function useChartererProfile() {
 		}
 	}
 
+
+	async function getAllChartererProfiles(businessUnit = null) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-charterer-profiles?business_unit=${businessUnit}`);
+			chartererProfiles.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//NProgress.done();
+		}
+	}
+
+	//get charterer by buisness unit
+		async function getChartererByBusinessUnit(business_unit) {
+			//NProgress.start();
+
+			try {
+				// const { data, status } = await Api.get(`/ops/charterer-profiles-by-business-unit/${businessUnitId}`);
+				const { data, status } = await Api.get(`/ops/get-search-charterer-profiles`, {
+					params: {
+						business_unit: business_unit,
+					},
+				}
+				);
+				chartererProfiles.value = data.value;
+				notification.showSuccess(status);
+			} catch (error) {
+				const { data, status } = error.response;
+				notification.showError(status);
+			} finally {
+				//NProgress.done();
+			}
+		}
+
 	return {
 		chartererProfiles,
 		chartererProfile,
@@ -173,7 +231,10 @@ export default function useChartererProfile() {
 		updateChartererProfile,
 		deleteChartererProfile,
 		searchChartererProfiles,
+		getAllChartererProfiles,
+		getChartererByBusinessUnit,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

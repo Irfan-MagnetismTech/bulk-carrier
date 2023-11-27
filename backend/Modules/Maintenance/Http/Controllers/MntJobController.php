@@ -11,6 +11,7 @@ use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntJobLine;
 use Modules\Maintenance\Entities\MntRunHour;
+use Modules\Maintenance\Entities\MntWorkRequisitionLine;
 use Modules\Maintenance\Http\Requests\MntJobRequest;
 
 class MntJobController extends Controller
@@ -19,16 +20,12 @@ class MntJobController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
             $jobs = MntJob::with(['opsVessel:id,name','mntItem.mntItemGroup.mntShipDepartment'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+                            ->globalSearch($request->all());
 
             return response()->success('Jobs retrieved successfully', $jobs, 200);
             
@@ -156,6 +153,17 @@ class MntJobController extends Controller
     {
         try {
             DB::beginTransaction();
+            $mntJobLineIds = MntJobLine::where('mnt_job_id', $id)->pluck('id');
+            $mntWorkRequisitionLines = MntWorkRequisitionLine::whereIn('mnt_job_line_id', $mntJobLineIds)->count();
+            if ($mntWorkRequisitionLines > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $job = MntJob::findorfail($id);
             $job->mntJobLines()->delete();
             $job->delete();
@@ -229,6 +237,7 @@ class MntJobController extends Controller
                 $jobs = $jobs->pluck($returnField)->flatten();
             }
 
+            $jobs = ($returnField == "mntItem") ? $jobs->sortBy('name')->values()->all() : $jobs;
 
             return response()->success('Vessel wise jobs retrieved successfully', $jobs, 200);
             

@@ -18,7 +18,7 @@ const route = useRoute();
 const warehouseId = route.params.warehouseId;
 
 
-setTitle('Edit Warehouse');
+setTitle('Update Warehouse');
 
 onMounted(() => {
     showWarehouse(warehouseId);
@@ -28,11 +28,11 @@ onMounted(() => {
 </script>
 <template>
     <!-- Heading -->
-    <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Edit Warehouse</h2>
+    <div class="flex items-center justify-between w-full my-3" v-once>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Warehouse</h2>
         <default-button :title="'Warehouse List'" :to="{ name: 'scm.warehouse.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="updateWarehouse(warehouse, warehouseId)">
             <warehouse-form v-model:form="warehouse" :errors="errors"></warehouse-form>
             <!-- Submit button -->

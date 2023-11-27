@@ -3,7 +3,7 @@
       <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark:text-gray-300">Critical Function <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Critical Function" :loading="isLoading"  :options="criticalFunctions" @search="" v-model="form.mnt_critical_function_name" label="function_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+          <v-select placeholder="Select Critical Function" :loading="isCriticalFunctionLoading"  :options="criticalFunctions" @search="" v-model="form.mnt_critical_function_name" label="function_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -18,7 +18,7 @@
       </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Catrgory Name <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Critical Function" :options="form.mntItemCategories" @search="" v-model="form.mnt_critical_item_cat_name" label="category_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Critical Item Category" :loading="isCriticalItemCategoryLoading"  :options="form.mntItemCategories" @search="" v-model="form.mnt_critical_item_cat_name" label="category_name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -34,25 +34,26 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark:text-gray-300">Item Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model="form.item_name" placeholder="Item Name" class="form-input" required/>
+            <input type="text" v-model.trim="form.item_name" placeholder="Item Name" class="form-input" required/>
           <Error v-if="errors?.item_name" :errors="errors.item_name" />
         </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Specification</span>
-        <input type="text" v-model="form.specification" placeholder="Specification" class="form-input"/>
+        <input type="text" v-model.trim="form.specification" placeholder="Specification" class="form-input"/>
         <Error v-if="errors?.specification" :errors="errors.specification" />
       </label>
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Notes</span>
-        <input type="text" v-model="form.notes" placeholder="Notes" class="form-input"/>
+        <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </label>
 
 
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>
     
 </template>
 <script setup>
@@ -64,6 +65,7 @@ import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useCriticalFunction from "../../../composables/maintenance/useCriticalFunction";
 import useCriticalItemCategory from "../../../composables/maintenance/useCriticalItemCategory";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -97,8 +99,8 @@ watch(() => props.form.mnt_critical_item_cat_name, (value) => {
 
 
 
-const { criticalFunctions, getCriticalFunctionsWithoutPagination } = useCriticalFunction();
-const { criticalFunctionWiseItemCategories, getCriticalFunctionWiseItemCategories, isLoading } = useCriticalItemCategory();
+const { criticalFunctions, getCriticalFunctionsWithoutPagination, isCriticalFunctionLoading } = useCriticalFunction();
+const { criticalFunctionWiseItemCategories, getCriticalFunctionWiseItemCategories, isCriticalItemCategoryLoading } = useCriticalItemCategory();
 
 watch(() => criticalFunctionWiseItemCategories.value, (val) => {
   props.form.mntItemCategories = val;

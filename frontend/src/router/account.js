@@ -109,6 +109,33 @@ export default [
         component: () => import(`../views/${VIEW_BASE}/bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/bank-accounts/:bankAccountId/show`,
+        name: `${BASE}.bank-accounts.show`,
+        component: () => import (`../views/${VIEW_BASE}/bank-account/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
+
+    /* Salary head Routes */
+    {
+        path: `/${BASE}/salary-heads`,
+        name: `${BASE}.salary-heads.index`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/salary-heads/create`,
+        name: `${BASE}.salary-heads.create`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/salary-heads/:salaryHeadId/edit`,
+        name: `${BASE}.salary-heads.edit`,
+        component: () => import(`../views/${VIEW_BASE}/salary-head/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 
     /* Cash Accounts Routes */
     {
@@ -149,6 +176,12 @@ export default [
         path: `/${BASE}/transactions/:transactionId/edit`,
         name: `${BASE}.transactions.edit`,
         component: () => import(`../views/${VIEW_BASE}/transaction/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/transactions/:transactionId`,
+        name: `${BASE}.transactions.show`,
+        component: () => import(`../views/${BASE}/transactions/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 

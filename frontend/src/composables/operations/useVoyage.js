@@ -241,11 +241,11 @@ export default function useVoyage() {
 		}
 	}
 
-	async function searchVoyages(searchParam, businessUnit, loading) {
+	async function searchVoyages(searchParam, businessUnit, loading, vesselId = null) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-voyages?name=${searchParam}&business_unit=${businessUnit}`);
+			const { data, status } = await Api.get(`/ops/search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&vessel_id=${vesselId}`);
 			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -256,6 +256,7 @@ export default function useVoyage() {
 			//NProgress.done();
 		}
 	}
+	
 
 	async function getVoyagesWithoutPaginate(businessUnit) {
 		NProgress.start();
@@ -274,10 +275,31 @@ export default function useVoyage() {
 		}
 	}
 
+	async function getVoyageList(businessUnit, opsVesselId) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-search-voyages?business_unit=${businessUnit}&ops_vessel_id=${opsVesselId}`);
+
+			voyages.value = data?.value;
+
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+			console.log(error)
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
+
 	return {
 		voyages,
 		voyage,
 		voyageName,
+		getVoyageList,
 		getVoyages,
 		portScheduleObject,
 		voyageSectorObject,

@@ -2,30 +2,29 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVesselParticular extends Model
 {
-    use HasFactory;
-    // public static $snakeAttributes = false;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ops_vessel_id',
         'vessel_type',
-        'depth',
         'class_no',
-        'attachment',
         'loa',
         'depth',
         'ecdis_type',
         'maker_ssas',
         'engine_type',
-        'bhp',
-        'email',
-        'lbc',
+        'name',
         'previous_name',
+        'short_code',
+        'manager',
+        'delivery_date',
         'call_sign',
         'owner_name',
         'classification',
@@ -38,12 +37,20 @@ class OpsVesselParticular extends Model
         'grt',
         'official_number',
         'keel_laying_date',
+        'launching_date',
         'mmsi',
         'year_built',
+        'capacity',
+        'total_cargo_hold',
         'tues_capacity',
         'overall_length',
         'overall_width',
         'depth_moulded',
+        'bhp',
+        'email',
+        'lbc',
+        'attachment',
+        'remarks',
         'business_unit',
     ];
 

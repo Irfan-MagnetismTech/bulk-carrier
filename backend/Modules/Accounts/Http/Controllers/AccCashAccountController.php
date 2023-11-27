@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCashAccount;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccCashAccountRequest;
 
 class AccCashAccountController extends Controller
 {
@@ -17,11 +18,9 @@ class AccCashAccountController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCashAccounts = AccCashAccount::when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->paginate(10);
+            $accCashAccounts = AccCashAccount::globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $accCashAccounts, 200);
+            return response()->success('Retrieved Successfully', $accCashAccounts, 200);
         }
         catch (QueryException $e)
         {
@@ -35,13 +34,13 @@ class AccCashAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccCashAccountRequest $request)
     {
         try {
             $accCashAccountData = $request->only('name', 'business_unit');
             $accCashAccount    = AccCashAccount::create($accCashAccountData);
 
-            return response()->success('Created Succesfully', $accCashAccount, 201);
+            return response()->success('Created Successfully', $accCashAccount, 201);
         }
         catch (QueryException $e)
         {
@@ -58,7 +57,7 @@ class AccCashAccountController extends Controller
     public function show(AccCashAccount $accCashAccount)
     {
         try {
-            return response()->success('Retrieved succesfully', $accCashAccount, 200);
+            return response()->success('Retrieved Successfully', $accCashAccount, 200);
         }
         catch (QueryException $e)
         {
@@ -73,13 +72,13 @@ class AccCashAccountController extends Controller
      * @param  \App\Models\AccCashAccount  $accCashAccount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccCashAccount $accCashAccount)
+    public function update(AccCashAccountRequest $request, AccCashAccount $accCashAccount)
     {
         try {
             $accCashAccountData = $request->only('name', 'business_unit');
             $accCashAccount->update($accCashAccountData);
 
-            return response()->success('Updated succesfully', $accCashAccount, 202);
+            return response()->success('Updated Successfully', $accCashAccount, 202);
         }
         catch (QueryException $e)
         {
@@ -98,7 +97,7 @@ class AccCashAccountController extends Controller
         try {
             $accCashAccount->delete();
 
-            return response()->success('Deleted Succesfully', null, 204);
+            return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {

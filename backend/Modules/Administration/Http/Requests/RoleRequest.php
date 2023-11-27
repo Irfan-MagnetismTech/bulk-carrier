@@ -28,10 +28,7 @@ class RoleRequest extends FormRequest
         $role = $this->route('role'); // Assuming the route parameter is named 'role'
 
         return [
-            'name' => [
-                'required',
-                Rule::unique('roles')->ignore($role),
-            ],
+            'name' => ['required',Rule::unique('roles')->ignore($role),'max:50'],
             'current_permissions' => 'required',
         ];
     }
@@ -39,7 +36,9 @@ class RoleRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Name is required.',
+            'name.required' => 'The role name is required.',
+            'name.unique' => 'The role name has already been taken.',
+            'name.max' => 'The role name field must not exceed 50 characters.',
         ];
     }
 }

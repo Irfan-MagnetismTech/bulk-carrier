@@ -14,7 +14,8 @@ class ScmVendorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'scmVendorContactPersons.*.email' => ['required', 'email', 'max:255'],
         ];
     }
 
@@ -27,6 +28,10 @@ class ScmVendorRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required',
+            'name.max' => 'Name is too long',
+            'scmVendorContactPersons.*.email.required' => 'Email is required',
+            'scmVendorContactPersons.*.email.email' => 'Email is not valid',
+            'scmVendorContactPersons.*.email.max' => 'Email is too long',
         ];
     }
 

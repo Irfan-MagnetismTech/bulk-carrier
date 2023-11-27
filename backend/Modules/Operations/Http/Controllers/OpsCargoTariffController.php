@@ -29,18 +29,19 @@ class OpsCargoTariffController extends Controller
     * @param Request $request
     * @return JsonResponse
     */
-   public function index(Request $request): JsonResponse
-   {
-       try {
-           $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')->latest()->paginate(15);
-           
-           return response()->success('Successfully retrieved cargo tariffs.', $cargoTariffs, 200);
-       }
-       catch (QueryException $e)
-       {
-           return response()->error($e->getMessage(), 500);
-       }
-   }
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $cargoTariffs = OpsCargoTariff::with('opsVessel','opsCargoType','opsCargoTariffLines')
+            ->globalSearch($request->all());
+            
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 
        /**
@@ -51,7 +52,6 @@ class OpsCargoTariffController extends Controller
     */
     public function store(OpsCargoTariffRequest $request): JsonResponse
     {
-        // dd($request);
         try {
             DB::beginTransaction();
             $cargoTariffInfo = $request->except(
@@ -62,7 +62,7 @@ class OpsCargoTariffController extends Controller
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
             $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
             DB::commit();
-            return response()->success('Cargo tariff added successfully.', $cargoTariff, 201);
+            return response()->success('Data added successfully.', $cargoTariff, 201);
         }
         catch (QueryException $e)
         {
@@ -79,10 +79,10 @@ class OpsCargoTariffController extends Controller
      */
     public function show(OpsCargoTariff $cargo_tariff): JsonResponse
     {
-        $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines');
+        $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines', 'loadingPoint', 'unloadingPoint');
         try
         {
-            return response()->success('Successfully retrieved cargo tariff.', $cargo_tariff, 200);
+            return response()->success('Data retrieved successfully.', $cargo_tariff, 200);
         }
         catch (QueryException $e)
         {
@@ -111,7 +111,7 @@ class OpsCargoTariffController extends Controller
             $cargo_tariff->update($cargoTariffInfo);            
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
-            return response()->success('Cargo tariff updated successfully.', $cargo_tariff, 200);
+            return response()->success('Data updated successfully.', $cargo_tariff, 202);
         }
         catch (QueryException $e)
         {            
@@ -134,7 +134,7 @@ class OpsCargoTariffController extends Controller
             $cargo_tariff->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted vessel certificate.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -147,8 +147,8 @@ class OpsCargoTariffController extends Controller
     public function getCargoTariffByName(Request $request){
         try {
             $cargoTariffs = OpsCargoTariff::query()
-            ->where(function ($query) use($request) {
-                $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
+            ->when(request()->has('tariff_name'), function ($query) {
+                    $query->where('tariff_name', 'like', '%' . request()->tariff_name . '%');                
             })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
@@ -156,7 +156,21 @@ class OpsCargoTariffController extends Controller
             ->limit(10)
             ->get();
 
-            return response()->success('Successfully retrieved cargo tariffs name.', $cargoTariffs, 200);
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCargoTariffName(Request $request){
+        try {
+            $cargoTariffs = OpsCargoTariff::query()
+            ->when(request()->business_unit && request()->business_unit != "ALL", function($q){
+                $q->where('business_unit', request()->business_unit);  
+            })
+            ->get();
+
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

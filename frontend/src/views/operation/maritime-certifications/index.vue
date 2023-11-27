@@ -86,7 +86,7 @@ onMounted(() => {
             <th>Certificate Name</th>
             <th>Certificate Type</th>
             <th>Validity Period</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="maritimeCertificates?.data?.length">
@@ -96,7 +96,7 @@ onMounted(() => {
                   <td>{{ maritimeCertificate?.name }}</td>
                   <td>{{ maritimeCertificate?.type }}</td>
                   <td>{{ maritimeCertificate?.validity }}</td>
-                  <td class="items-center justify-center space-x-2 text-gray-600">
+                  <td class="items-center justify-center space-x-1 text-gray-600">
                       <action-button :action="'edit'" :to="{ name: 'ops.maritime-certifications.edit', params: { maritimeCertificateId: maritimeCertificate.id } }"></action-button>
                       <action-button @click="confirmDelete(maritimeCertificate.id)" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->

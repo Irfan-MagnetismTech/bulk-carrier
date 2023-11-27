@@ -10,18 +10,18 @@ import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
-const { unit, storeUnit,errors,isLoading } = useUnit();
+const { unit, storeUnit, errors, isLoading } = useUnit();
 const { setTitle } = Title();
 
 setTitle('Create Unit');
 </script>
 <template>
     <!-- Heading -->
-    <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Create Unit</h2>
+    <div class="flex items-center justify-between w-full my-3" v-once>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Unit</h2>
         <default-button :title="'Unit List'" :to="{ name: 'scm.units.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeUnit(unit)">
             <unit-form v-model:form="unit" :errors="errors"></unit-form>
             <!-- Submit button -->

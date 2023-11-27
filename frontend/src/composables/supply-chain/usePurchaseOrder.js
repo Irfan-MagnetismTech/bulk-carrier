@@ -13,6 +13,7 @@ export default function usePurchaseOrder() {
     const purchaseOrders = ref([]);
     const filteredPurchaseOrders = ref([]);
     const $loading = useLoading();
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
     const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
@@ -22,20 +23,22 @@ export default function usePurchaseOrder() {
         ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
-        acc_cost_center_id: '',
-        po_date: '',
+        acc_cost_center_id: null,
+        date: '',
         pr_no: null,
         scm_pr_id: null,
         scmPr: null,
-        pr_date: '',
-        cs_no: '',
-        scm_cs_id: '',
+        date: '',
+        cs_no: null,
+        purchase_center: null,
+        scm_cs_id: null,
         scmCs: null,
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        currency: 0.0,
-        convertion_rate: '',
+        currency: '',
+        foreign_to_bdt: 0,
+        foreign_to_usd: 0,
         remarks: '',
         sub_total: 0.0,
         discount: 0.0,
@@ -44,61 +47,70 @@ export default function usePurchaseOrder() {
         net_amount: 0.0,
         business_unit: '',
         scmPoLines: [
-                        {
-                            scmMaterial: '',
-                            scm_material_id: '',
-                            unit: '',
-                            brand: '',
-                            model: '',
-                            required_date: '',
-                            quantity: 0.0,
-                            rate: 0.0,
-                            total_price: 0.0,
-                        }
-                    ],
+            {
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: null,
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+                max_quantity: 0.0,
+            }
+        ],
         scmPoTerms: [
                         {
                             description: ''
                         }
                     ],  
-        });
+    });
+    
+    const prMaterialList = ref([]);
     const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
-        required_date: '',
-        quantity: 0.0,
-        rate: 0.0,
-        total_price: 0.0,
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: null,
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+                max_quantity: 0.0,
     }
 
     const termsObject =  {
         description: ''
     }
+
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getPurchaseOrders(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
-
+    async function getPurchaseOrders(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
         try {
             const {data, status} = await Api.get(`/${BASE}/purchase-orders`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             purchaseOrders.value = data.value;
             notification.showSuccess(status);
@@ -106,9 +118,14 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storePurchaseOrder(form) {
@@ -141,6 +158,7 @@ export default function usePurchaseOrder() {
         try {
             const { data, status } = await Api.get(`/${BASE}/purchase-orders/${purchaseOrderId}`);
             purchaseOrder.value = data.value;
+            console.log('podata', purchaseOrder.value);
 
         } catch (error) {
             const { data, status } = error.response;
@@ -175,36 +193,49 @@ export default function usePurchaseOrder() {
 
     async function deletePurchaseOrder(purchaseOrderId) {
 
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
 
         try {
             const { data, status } = await Api.delete( `/${BASE}/purchase-orders/${purchaseOrderId}`);
             notification.showSuccess(status);
-            await getPurchaseOrders(indexPage.value,indexBusinessUnit.value);
+            await getPurchaseOrders(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
         }
     }
 
-    async function searchPurchaseOrder(searchParam, loading) {
-        
+    async function searchPurchaseOrder(searchParam, business_unit) {
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-orders`,searchParam);
+        const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
             filteredPurchaseOrders.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false)
+            // loading(false)
         }
     }
-    //getPrAndCsWisePurchaseOrder data     
+
+    async function searchPurchaseOrderForLc(searchParam, business_unit) {
+            
+            try {
+            const { data, status } = await Api.get(`${BASE}/search-po-for-lc`, {params: {searchParam: searchParam, business_unit: business_unit}});
+                filteredPurchaseOrders.value = data.value;
+            } catch (error) {
+                const { data, status } = error.response;
+                notification.showError(status);
+            } finally {
+                // loading(false)
+            }
+    }
+    
+    
     async function getPrAndCsWisePurchaseOrder(prId, csId) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
@@ -218,8 +249,6 @@ export default function usePurchaseOrder() {
                 },
             });
             purchaseOrder.value = merge(purchaseOrder.value, data.value);
-            console.log('data', data.value);
-            console.log('po', purchaseOrders.value);
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -231,7 +260,23 @@ export default function usePurchaseOrder() {
         }
     }
 
+    
+    async function getMaterialList(prId) {
 
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+                params: {
+                    pr_id: prId,
+                },
+            });
+            prMaterialList.value = data.value;
+            console.log('prMaterialList', prMaterialList.value);    
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+        }
+    }
 
     return {
         purchaseOrders,
@@ -244,8 +289,12 @@ export default function usePurchaseOrder() {
         updatePurchaseOrder,
         deletePurchaseOrder,
         getPrAndCsWisePurchaseOrder,
+        searchPurchaseOrderForLc,
+        getMaterialList,
+        prMaterialList,
         materialObject,
         termsObject,
+        isTableLoading,
         isLoading,
         errors,
     };

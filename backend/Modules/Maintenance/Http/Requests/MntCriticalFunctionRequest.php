@@ -15,7 +15,7 @@ class MntCriticalFunctionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'function_name'  => ['required', Rule::unique('mnt_critical_functions')->ignore($this->id)],
+            'function_name'  => ['required', 'max:20', Rule::unique('mnt_critical_functions')->ignore($this->route('critical_function'), 'id')],
         ];
     }
 

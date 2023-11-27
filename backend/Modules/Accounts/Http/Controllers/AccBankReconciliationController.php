@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccBankReconciliation;
 use Modules\Accounts\Entities\AccTransaction;
 use Illuminate\Database\QueryException;
+use Modules\Accounts\Http\Requests\AccBankReconciliationRequest;
 
 class AccBankReconciliationController extends Controller
 {
@@ -32,7 +33,7 @@ class AccBankReconciliationController extends Controller
             ->latest()
             ->paginate(10);
 
-            return response()->success('Retrieved Succesfully', $accTransactions, 200);
+            return response()->success('Retrieved Successfully', $accTransactions, 200);
         }
         catch (QueryException $e)
         {
@@ -46,14 +47,14 @@ class AccBankReconciliationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccBankReconciliationRequest $request)
     {
         try {
             $bankReconciliationData            = $request->only('date', 'acc_transaction_id', 'business_unit');
             $bankReconciliationData['status']  = 'Complete';
             $accBankReconciliation             = AccBankReconciliation::create($bankReconciliationData);
 
-            return response()->success('Created Succesfully', $accBankReconciliation, 201);
+            return response()->success('Created Successfully', $accBankReconciliation, 201);
         }
         catch (QueryException $e)
         {

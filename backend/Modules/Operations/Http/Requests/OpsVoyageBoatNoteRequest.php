@@ -6,6 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsVoyageBoatNoteRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        // dd(request('info'));
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachments')]);
+        $this->replace($mergeData);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,9 +25,11 @@ class OpsVoyageBoatNoteRequest extends FormRequest
         return [
             'ops_voyage_id'      => ['required'],
             'ops_vessel_id'      => ['required'],
-            'type'               => ['required'],
-            'vessel_draft'       => ['required', 'string', 'max:255'],
-            'water_density'      => ['required', 'string', 'max:255'],
+            'type'               => ['nullable'],
+            'vessel_draft'       => ['nullable', 'numeric'],
+            'water_density'      => ['nullable', 'numeric'],
+            'opsVoyageBoatNoteLines.*.voyage_note_type.required' =>  ['nullable', 'string'],
+            'opsVoyageBoatNoteLines.*.quantity.required' =>  ['nullable', 'integer'],
         ];
     }
 
@@ -30,7 +41,12 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_voyage_id.required' => 'Voyage is required.',
+            'ops_vessel_id.required' => 'Vessel is required.',
+            'vessel_draft.numeric' => 'Draft must be numeric.',
+            'water_density.numeric' => 'Density must be numeric.',
+            'opsVoyageBoatNoteLines.*.voyage_note_type.required' => 'Boat note type is required for row is :position.',
+            'opsVoyageBoatNoteLines.*.quantity.required' => 'Quantity is required for row is :position.',
         ];
     }
 

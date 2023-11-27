@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_ports', function (Blueprint $table) {
             $table->id();
-            $table->string('code',10);
+            $table->string('code', 255);
             $table->string('name');
             $table->integer('is_active')->default(1);
             $table->timestamps();

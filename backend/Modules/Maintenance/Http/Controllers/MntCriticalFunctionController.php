@@ -14,11 +14,11 @@ class MntCriticalFunctionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalFunctions = MntCriticalFunction::select('*')->paginate(10);
+            $criticalFunctions = MntCriticalFunction::select('*')->globalSearch($request->all());;
 
             return response()->success('Critical functions are retrieved successfully', $criticalFunctions, 200);
             
@@ -140,6 +140,15 @@ class MntCriticalFunctionController extends Controller
     {
         try {            
             $criticalFunction = MntCriticalFunction::findorfail($id);
+            if ($criticalFunction->mntCriticalItemCats()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $criticalFunction->delete();
             
             return response()->success('Critical function deleted successfully', $criticalFunction, 204);

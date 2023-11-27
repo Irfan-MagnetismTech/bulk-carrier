@@ -10,6 +10,7 @@ export default function useRole() {
     const router = useRouter();
     const $loading = useLoading();
     const roles = ref([]);
+    const isTableLoading = ref(false);
     const notification = useNotification();
     const role = ref( {
         name: '',
@@ -17,23 +18,48 @@ export default function useRole() {
     });
     const errors = ref(null);
     const isLoading = ref(false);
+    const filterParams = ref(null);
 
-    async function getRoles() {
-        //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+    async function getRoles(filterOptions) {
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/administration/roles');
+            const {data, status} = await Api.get('/administration/roles',{
+                params: {
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                 }
+            });
             roles.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -137,7 +163,7 @@ export default function useRole() {
         try {
             const { data, status } = await Api.delete( `/administration/roles/${roleId}`);
             notification.showSuccess(status);
-            await getRoles();
+            await getRoles(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -154,6 +180,7 @@ export default function useRole() {
         storeRole,
         showRole,
         updateRole,
+        isTableLoading,
         deleteRole,
         isLoading,
         errors,

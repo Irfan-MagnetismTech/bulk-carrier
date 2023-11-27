@@ -2,7 +2,6 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Database\QueryException;
@@ -18,7 +17,8 @@ class ScmMaterialCategoryController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $scm_material_categories = ScmMaterialCategory::with('parent')->latest()->paginate(10);
+            $scm_material_categories = ScmMaterialCategory::with('parent')
+                ->globalSearch(request()->all());
 
             return response()->success('Material Category list', $scm_material_categories, 200);
         } catch (\Exception $e) {
@@ -84,6 +84,14 @@ class ScmMaterialCategoryController extends Controller
     public function destroy(ScmMaterialCategory $material_category): JsonResponse
     {
         try {
+            // if (count($material_category->children) > 0) {
+            //     return response()->error('Category has Children', 500);
+            // }
+            //if id is 1 then return error
+            if ($material_category->id === 1) {
+
+                return response()->error('Category cannot be deleted', 501);
+            }
             $material_category->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
@@ -97,14 +105,17 @@ class ScmMaterialCategoryController extends Controller
     {
         $materialCategory = ScmMaterialCategory::query()
             ->with('parent')
-            ->when(request()->has('searchParam'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
-                        ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
-                });
+            ->when(request()->has('self_id'), function ($query) {
+                $query->where('id', '!=', request()->self_id);
             })
+            // ->when(request()->has('searchParam'), function ($query) {
+            //     $query->where(function ($subquery) {
+            //         $subquery->where('name', 'like',  "%" . request()->searchParam . "%")
+            //             ->orWhere('short_code', 'like',  "%" . request()->searchParam . "%");
+            //     });
+            // })
             ->orderByDesc('name')
-            ->limit(10)
+            // ->limit(10)
             ->get();
 
         return response()->success('Search result', $materialCategory, 200);

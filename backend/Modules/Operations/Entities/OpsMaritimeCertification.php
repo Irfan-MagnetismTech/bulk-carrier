@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsMaritimeCertification extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -21,12 +22,6 @@ class OpsMaritimeCertification extends Model
         'validity',
         'authority',
         'business_unit'
-    ];
-    
-    protected static function newFactory()
-    {
-        return \Modules\Operations\Database\factories\OpsMaritimeCertificationFactory::new();
-    }
-
+    ];    
     
 }

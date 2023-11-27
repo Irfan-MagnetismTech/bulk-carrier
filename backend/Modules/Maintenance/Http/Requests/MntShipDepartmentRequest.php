@@ -15,8 +15,8 @@ class MntShipDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
-            'short_code' => ['required', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'name'  => ['required', 'max:30', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
+            'short_code' => ['required', 'max:5', Rule::unique('mnt_ship_departments')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }
 
@@ -28,8 +28,8 @@ class MntShipDepartmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Ship department name on selected business unit already exists.',
-            'short_code.unique' => 'Ship department short code on selected business unit already exists.',
+            'name.unique' => 'Ship department name already exists.',
+            'short_code.unique' => 'Ship department short code already exists.',
         ];
     }
 

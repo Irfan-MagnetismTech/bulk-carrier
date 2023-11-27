@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Entities\MntShipDepartment;
 use Modules\Maintenance\Http\Requests\MntShipDepartmentRequest;
 
@@ -17,16 +18,12 @@ class MntShipDepartmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request)
     {
         try {
 
             $shipDepartments = MntShipDepartment::select('*')
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->latest()
-            ->paginate(10);
+            ->globalSearch($request->all());
 
             return response()->success('Ship departments retrieved successfully', $shipDepartments, 200);
             
@@ -104,7 +101,7 @@ class MntShipDepartmentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntShipDepartmentRequest $request, $id)
     {
         try {
             $input = $request->all();
@@ -128,8 +125,19 @@ class MntShipDepartmentController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {
+            
             $shipDepartment = MntShipDepartment::findorfail($id);
+            if ($shipDepartment->mntItemGroups()->exists())
+            {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $shipDepartment->delete();
             
             return response()->success('Ship departments deleted successfully', $shipDepartment, 204);

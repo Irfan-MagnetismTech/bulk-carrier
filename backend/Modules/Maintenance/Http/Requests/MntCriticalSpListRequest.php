@@ -14,7 +14,9 @@ class MntCriticalSpListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'reference_no' => 'required',
+            'record_date' => 'required',
+            'mntCriticalSpListLines.*.rob' => 'required|integer|min:1',
         ];
     }
 
@@ -26,7 +28,9 @@ class MntCriticalSpListRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'mntCriticalSpListLines.*.rob.required' => 'ROB is required for row no. :position',
+            'mntCriticalSpListLines.*.rob.integer' => 'ROB should be a number for row no. :position',
+            'mntCriticalSpListLines.*.rob.min' => 'ROB should have minimum 1 for row no. :position',
         ];
     }
 

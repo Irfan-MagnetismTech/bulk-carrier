@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntCriticalSpList;
+use Modules\Maintenance\Http\Requests\MntCriticalSpListRequest;
 
 class MntCriticalSpListController extends Controller
 {
@@ -14,16 +15,11 @@ class MntCriticalSpListController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $criticalSps = MntCriticalSpList::with(['opsVessel:id,name'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+            $criticalSps = MntCriticalSpList::with(['opsVessel:id,name'])->globalSearch($request->all());
 
             return response()->success('Critical spare list for vessels are retrieved successfully', $criticalSps, 200);
             
@@ -48,7 +44,7 @@ class MntCriticalSpListController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntCriticalSpListRequest $request)
     {
         try {
             $criticalSp['ops_vessel_id'] = $request->get('ops_vessel_id');
@@ -115,7 +111,6 @@ class MntCriticalSpListController extends Controller
             $criticalSp['ops_vessel_id'] = $request->get('ops_vessel_id');
             $criticalSp['reference_no'] = $request->get('reference_no');
             $criticalSp['record_date'] = $request->get('record_date') ?? '';
-            // $criticalSp['business_unit'] = $request->get('business_unit');
 
             $mntCriticalSpListLines = $request->get('mntCriticalSpListLines');
 
@@ -162,5 +157,5 @@ class MntCriticalSpListController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-    }
+    
 }

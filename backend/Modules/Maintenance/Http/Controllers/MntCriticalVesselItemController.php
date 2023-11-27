@@ -15,16 +15,12 @@ class MntCriticalVesselItemController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
             $jobs = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction'])
-                        ->when(request()->business_unit != "ALL", function($q){
-                            $q->where('business_unit', request()->business_unit);  
-                        })
-                        ->latest()
-                        ->paginate(10);
+                    ->globalSearch($request->all());
 
             return response()->success('Critical items for vessels are retrieved successfully', $jobs, 200);
             

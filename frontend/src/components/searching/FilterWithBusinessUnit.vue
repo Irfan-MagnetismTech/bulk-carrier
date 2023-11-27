@@ -16,8 +16,8 @@ export default {
 </script>
 
 <template>
-  <div v-if="businessUnit === 'ALL'" class="relative w-full">
-    <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-control business_filter_input border-transparent focus:ring-0">
+  <div class="relative w-full">
+    <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="filter_input" :class="{'custom_disabled' : businessUnit !== 'ALL'}">
       <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
       <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
       <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>

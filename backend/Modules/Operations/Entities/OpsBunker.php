@@ -22,6 +22,7 @@ class OpsBunker extends Model
         'requested_quantity',
         'exchange_rate_bdt',
         'exchange_rate_usd',
+        'rate',
         'amount',
         'opening_balance',
         'amount_usd',
@@ -45,5 +46,10 @@ class OpsBunker extends Model
     public function bunkerable()
     {
         return $this->morphTo();
+    }
+
+    public function opsBulkNoonReportConsumptions()
+    {
+        return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_cargo_tariff_id', 'id');
     }
 }

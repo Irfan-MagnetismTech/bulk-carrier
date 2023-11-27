@@ -2,6 +2,7 @@
     import { ref, watch, onMounted } from 'vue';
     import Error from "../../Error.vue";
     import useService from "../../../composables/supply-chain/useService.js";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     
     const props = defineProps({
         form: { type: Object, required: true },
@@ -10,7 +11,7 @@
     
 </script>
 <template>
-    <div class="border-b border-gray-200 dark:border-gray-700 pb-5">
+    <div class="border-b border-gray-200 dark-disabled:border-gray-700 pb-5">
         <legend>
                         
             <div class="input-group">
@@ -18,23 +19,24 @@
                 <label class="label-group">
                     <span class="label-item-title">Service Name <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.name" class="form-input" name="name" :id="'name'" />
-                    <Error v-if="errors?.name" :errors="errors.name" />
+                    <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Short Code <span class="text-red-500">*</span></span>
-                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" />
-                    <Error v-if="errors?.short_code" :errors="errors.short_code" />
+                    <span class="label-item-title">Short Code <span class="required-style">*</span></span>
+                    <input type="text" v-model="form.short_code" class="form-input" name="short_code" :id="'short_code'" required/>
+                    <!-- <Error v-if="errors?.short_code" :errors="errors.short_code" /> -->
                 </label>
                 <label class="label-group">
-                    <span class="label-item-title">Description <span class="text-red-500">*</span></span>
+                    <span class="label-item-title">Description <span class="required-style"></span></span>
                     <input type="text" v-model="form.description" class="form-input" name="description" :id="'description'" />
-                    <Error v-if="errors?.description" :errors="errors.description" />
+                    <!-- <Error v-if="errors?.description" :errors="errors.description" /> -->
                 </label>
             </div>
 
            
         </legend>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <style lang="postcss" scoped>
      #table, #table th, #table td{
@@ -50,10 +52,13 @@
       }
 
       .label-item-title {
-        @apply text-gray-700 dark:text-gray-300;
+        @apply text-gray-700 dark-disabled:text-gray-300;
       }
       .label-item-input {
-        @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+        @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
+      }
+      .required-style {
+        @apply text-red-500;
       }
       
       >>> {

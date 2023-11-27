@@ -2,13 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsCustomer extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'code',
@@ -29,4 +30,22 @@ class OpsCustomer extends Model
         'email_invoice',
         'business_unit'
     ];
+
+    
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var string[]
+     */
+    protected $appends = ['name_code'];
+
+    /**
+     * Concatenate the code and name of the port.
+     *
+     * @return string
+     */
+    public function getNameCodeAttribute()
+    {
+        return  $this->name. ' - '.$this->code;
+    }
 }
