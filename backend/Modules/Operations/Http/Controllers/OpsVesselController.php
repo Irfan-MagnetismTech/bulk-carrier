@@ -220,11 +220,11 @@ class OpsVesselController extends Controller
     public function getVesselNameorCode(Request $request){
         try {
             $vessels = OpsVessel::query()
-            ->where(function ($query) use($request) {
-                $query->where('name', 'like', '%' . $request->name_or_code . '%');
-                $query->orWhere('short_code', 'like', '%' . $request->name_or_code . '%');
+            ->when(request()->has('name_or_code'), function ($query) {
+                $query->where('name', 'like', '%' . request()->name_or_code . '%');
+                $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
             })
-            ->when(request()->business_unit != "ALL", function($q){
+            ->when(request()->has('business_unit') && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })
             ->get();

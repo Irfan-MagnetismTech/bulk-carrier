@@ -47,4 +47,9 @@ class OpsBunker extends Model
     {
         return $this->morphTo();
     }
+
+    public function opsBulkNoonReportConsumptions()
+    {
+        return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_cargo_tariff_id', 'id');
+    }
 }

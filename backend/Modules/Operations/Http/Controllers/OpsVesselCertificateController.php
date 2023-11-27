@@ -215,8 +215,8 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateByReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->where(function ($query) use($request) {
-                    $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+                ->when(request()->has('reference_number'), function ($query) {
+                    $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {
                 //     $query->select(DB::raw('MAX(id)'))
@@ -236,8 +236,8 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->where(function ($query) use($request) {
-                    $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+                ->when(request()->has('reference_number'), function ($query) {
+                    $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {
                 //     $query->select(DB::raw('MAX(id)'))

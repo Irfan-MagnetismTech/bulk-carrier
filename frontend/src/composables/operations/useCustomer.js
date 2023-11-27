@@ -185,6 +185,24 @@ export default function useCustomer() {
 		}
 	}
 
+
+	async function getCustomersByBusinessUnit(businessUnit) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/search-customers?business_unit=${businessUnit}`);
+			customers.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//loading(false)
+			//NProgress.done();
+		}
+	}
+
+
 	return {
 		customers,
 		customer,
@@ -194,6 +212,7 @@ export default function useCustomer() {
 		updateCustomer,
 		deleteCustomer,
 		getCustomersByNameOrCode,
+		getCustomersByBusinessUnit,
 		isLoading,
 		isTableLoading,
 		errors,

@@ -428,6 +428,31 @@ export default [
 		name: `${BASE}.bulk-noon-reports.show`,
 		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+		/*Contract Assign */
+	{
+		path: `/${BASE}/contract-assigns`,
+		name: `${BASE}.contract-assigns.index`,
+		component: () => import(`../views/${ViEWBASE}/contract-assigns/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/contract-assigns/create`,
+		name: `${BASE}.contract-assigns.create`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/contract-assigns/:contractAssignId/edit`,
+		name: `${BASE}.contract-assigns.edit`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/contract-assigns/:contractAssignId/show`,
+		name: `${BASE}.contract-assigns.show`,
+		component: () => import (`../views/${ViEWBASE}/contract-assigns/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
 	}
-		
 ];

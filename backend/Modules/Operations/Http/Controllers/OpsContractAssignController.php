@@ -97,7 +97,7 @@ class OpsContractAssignController extends Controller
         try {
             DB::beginTransaction();
             $contract_assign->update($request->all());
-            DB::commit();               
+            DB::commit();  
             return response()->success('Data updated Successfully.', $contract_assign, 202);
         }
         catch (QueryException $e)
