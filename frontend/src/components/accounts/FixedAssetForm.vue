@@ -28,16 +28,33 @@ const props = defineProps({
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-// v-select for change unit depend on material start
-watch(() => props.form.costCenter, (value) => {
+let allMaterialLists = ref([]);
+
+watch(() => props.form.acc_cost_center_name, (value) => {
   if(value){
     props.form.acc_cost_center_id = value?.id ?? '';
     searchMrr(props.form.business_unit, props.form.acc_cost_center_id); 
   }
 });
 
+watch(() => props.form.scm_mrr_name, (value) => {
+  if(value){
+    props.form.scm_mrr_id = value?.id ?? '';
+    let materialData = filteredMaterialReceiptReports.value.find(doc => doc.id === value?.id);
+    if(materialData){
+      allMaterialLists.value = materialData?.scmMaterials;
+    }
+  }
+});
+
+watch(() => props.form.scm_material_name, (value) => {
+  if(value){
+    props.form.scm_material_id = value?.id ?? '';
+  }
+});
+
 // v-select for change unit depend on material start
-watch(() => props.form.fixedAssetCategory, (value) => {
+watch(() => props.form.acc_parent_account_name, (value) => {
   if(value){
     props.form.acc_parent_account_id = value?.id ?? '';
   }
@@ -52,13 +69,30 @@ function fixedAssetCosts() {
   props.form.fixedAssetCosts.push(obj);
 }
 
-function removefixedAssetCosts(index){
+function removeFixedAssetCosts(index){
   props.form.fixedAssetCosts.splice(index, 1);
 }
 
+watch(
+    () => props.form,
+    (newEntries, oldEntries) => {
+
+      if(newEntries?.fixedAssetCosts?.length > 0) {
+        let total_grand_amount = 0.0;
+        newEntries?.fixedAssetCosts?.forEach((item) => {
+          if(item.amount) {
+            total_grand_amount += parseFloat(item.amount);
+          }
+        });
+        if(!isNaN(total_grand_amount)) {
+          props.form.total_amount = total_grand_amount;
+        }
+      }
+    },
+    { deep: true }
+);
+
 onMounted(() => {
-  console.log(props.form); 
-  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
     getAccount(null,props.form.business_unit);
@@ -81,27 +115,27 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.costCenter" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.costCenter" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> MRR No <span class="text-red-500">*</span></span>
-        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scmMrr" label="ref_no"  class="block w-full rounded form-input">
+        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_mrr_name" label="ref_no"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.scmMrr" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.scm_mrr_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Name <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allMaterialLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_material_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.scm_material_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>      
@@ -127,9 +161,9 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Category <span class="text-red-500">*</span></span>
-        <v-select :options="allFixedAssetCategoryList" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.fixedAssetCategory" label="account_name"  class="block w-full rounded form-input" required>
+        <v-select :options="allFixedAssetCategoryList" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_parent_account_name" label="account_name"  class="block w-full rounded form-input" required>
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.fixedAssetCategory" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_parent_account_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>
@@ -193,7 +227,7 @@ onMounted(() => {
               <input type="text" v-model.trim="form.fixedAssetCosts[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
             </td>
             <td class="px-1 py-1 text-center">
-              <button v-if="index!==0" type="button" @click="removefixedAssetCosts(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <button v-if="index!==0" type="button" @click="removeFixedAssetCosts(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
@@ -204,6 +238,13 @@ onMounted(() => {
                 </svg>
               </button>
             </td>
+          </tr>
+          <tr class="text-gray-700 dark-disabled:text-gray-400">
+            <td class="px-1 py-1 font-bold text-right">Total Amount</td>
+            <td class="px-1 py-1 font-bold text-right">
+              <input type="text" v-model.trim="form.total_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+            </td>
+            <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
           </tbody>
         </table>

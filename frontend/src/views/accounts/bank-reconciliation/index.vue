@@ -323,7 +323,7 @@ onMounted(() => {
                 <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
                   <nobr>
 <!--                    <input v-if="!bankReconciliation?.bank_reconciliation" type="date" class="transaction_date form-input">-->
-                    <span> {{ (bankReconciliation?.bankReconciliation?.reconciliation_date) ? moment(bankReconciliation?.bankReconciliation?.reconciliation_date).format('DD-MM-YYYY') : '---' }} </span>
+                    <span> {{ bankReconciliation?.bankReconciliation?.reconciliation_date ?? '---' }} </span>
                   </nobr>
                 </td>
                 <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
