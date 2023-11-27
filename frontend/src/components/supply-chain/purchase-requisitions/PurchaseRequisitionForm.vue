@@ -507,11 +507,11 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
  
     #customDataTable::-webkit-scrollbar:horizontal {
-      height: 0.3rem!important; 
+      height: 1rem!important; 
     }
   
     #customDataTable::-webkit-scrollbar-thumb:horizontal{
-      background-color: rgba(126, 58, 242); 
+      background-color: rgb(132, 109, 175); 
       border-radius: 12rem!important;
       width: 0.5rem!important;
       height: 0.5rem!important;
@@ -525,6 +525,8 @@ watch(() => props.form.scmPrLines, (newLines) => {
   
     #customDataTable::-webkit-scrollbar-button:horizontal {
       background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
     }   
 
   
