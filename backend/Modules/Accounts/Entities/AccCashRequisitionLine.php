@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccCashRequisitionLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['particular', 'remarks', 'amount'];
+
 }

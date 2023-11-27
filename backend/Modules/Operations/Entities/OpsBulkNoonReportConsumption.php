@@ -10,8 +10,9 @@ class OpsBulkNoonReportConsumption extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ops_bunker_id',
         'ops_bulk_noon_report_id',
+        'ops_bunker_id',
+        'scm_material_id',
         'type',
         'previous_rob',
         'received',
@@ -25,6 +26,6 @@ class OpsBulkNoonReportConsumption extends Model
 
     public function opsBulkNoonReportConsumptionHeads()
     {
-        return $this->hasMany(OpsBulkNoonReport::class, 'ops_bulk_noon_report_consumption_id' , 'id');
+        return $this->hasMany(OpsBulkNoonReportConsumptionHead::class, 'ops_bulk_noon_report_consumption_id' , 'id');
     }
 }

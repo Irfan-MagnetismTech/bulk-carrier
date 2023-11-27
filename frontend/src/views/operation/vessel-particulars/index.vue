@@ -1,19 +1,20 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useVesselParticular from '../../../composables/operations/useVesselParticular';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Store from './../../../store/index.js';
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
-
-const { vesselParticulars, getVesselParticulars, deleteVesselParticular, isLoading, downloadGeneralParticular, downloadChartererParticular } = useVesselParticular();
+const { vesselParticulars, getVesselParticulars, deleteVesselParticular, downloadGeneralParticular, downloadChartererParticular, isLoading, isTableLoading } = useVesselParticular();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const icons = useHeroIcon();
 
 const props = defineProps({
   page: {
@@ -25,6 +26,8 @@ const props = defineProps({
 const { setTitle } = Title();
 setTitle('Vessel Particular List');
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
@@ -107,65 +110,18 @@ let filterOptions = ref( {
 			"order_by": null,
 			"date_from": null
 			},
-      {
-			"relation_name": null,
-			"field_name": "overall_length",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "loa",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "overall_width",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "depth_moulded",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "grt",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "nrt",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "dwt",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
+      
       {
 			"relation_name": null,
 			"field_name": "tues_capacity",
+			"search_param": "",
+			"action": null,
+			"order_by": null,
+			"date_from": null
+			},
+      {
+			"relation_name": null,
+			"field_name": 'business_unit',
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -174,17 +130,42 @@ let filterOptions = ref( {
 	]
 });
 
-function setSortingState(index,order){
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
   filterOptions.value.filter_options[index].order_by = order;
 }
 
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
-  watchEffect(() => {
-    filterOptions.value.page = props.page;
+  watchPostEffect(() => {
+  
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+
+      router.push({ name: 'ops.vessels.index', query: { page: filterOptions.value.page } });
+
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
     getVesselParticulars(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -194,8 +175,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+    
 });
-
+    filterOptions.value.filter_options.forEach((option, index) => {
+      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+    });
 });
 
 </script>
@@ -220,7 +204,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Vessel Name</span>
+                  <nobr>Vessel Name</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -229,7 +213,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>IMO</span>
+                  <nobr>IMO</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -238,7 +222,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Class No</span>
+                  <nobr>Class No</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -247,16 +231,17 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Official Number</span>
+                  <nobr>Official Number</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
+              
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>Length (LBP)</span>
+                  <nobr>Tues Capacity</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -265,66 +250,12 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span>LOA</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                    <span>Business Unit</span>
+                    <div class="flex flex-col cursor-pointer">
+                      <div v-html="icons.descIcon" @click="setSortingState(5,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
+                      <div v-html="icons.ascIcon" @click="setSortingState(5,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
+                    </div>
                   </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Breadth</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Depth (Moulded)</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>GRT</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(8,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[8].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(8,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[8].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[8].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>NRT</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(9,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[9].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[9].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(9,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[9].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[9].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>DWT</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(10,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[10].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[10].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(10,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[10].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[10].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Tues Capacity</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(11,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[11].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[11].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(11,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[11].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[11].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
               </th>
               <th>Action</th>
             </tr>
@@ -343,34 +274,27 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[9].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[10].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[11].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
-
+              <th>
+                <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
+              </th>
             </tr>
           </thead>
-          <tbody v-if="vesselParticulars?.data?.length">
+          <tbody v-if="vesselParticulars?.data?.length" class="relative">
               <tr v-for="(vesselParticular, index) in vesselParticulars.data" :key="vesselParticular?.id">
-                  <td>{{ vesselParticulars.from + index }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+
                   <td>{{ vesselParticular?.opsVessel?.name }}</td>
                   <td>{{ vesselParticular?.imo }}</td>
                   <td>{{ vesselParticular?.class_no }}</td>
                   <td>{{ vesselParticular?.official_number }}</td>
-                  <td>{{ vesselParticular?.overall_length }}</td>
-                  <td>{{ vesselParticular?.loa }}</td>
-                  <td>{{ vesselParticular?.overall_width }}</td>
-                  <td>{{ vesselParticular?.depth_moulded }}</td>
-                  <td>{{ vesselParticular?.grt }}</td>
-                  <td>{{ vesselParticular?.nrt }}</td>
-                  <td>{{ vesselParticular?.dwt }}</td>
+                 
                   <td>{{ vesselParticular?.tues_capacity }}</td>
+                  <td>
+                    <span :class="vesselParticular?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselParticular?.business_unit }}</span>
+                  </td>
                   <td class="flex border-b-0 border-l-0 items-center justify-center text-gray-600 ">
                       <div class="flex space-x-1">
                         <button @click="dlGeneralParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
@@ -392,11 +316,18 @@ onMounted(() => {
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselParticulars?.data?.length"></LoaderComponent>
+
           </tbody>
           
-          <tfoot v-if="!vesselParticulars?.length">
+          <tfoot v-if="!vesselParticulars?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="14">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="14">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!vesselParticulars?.data?.length">
             <td colspan="14">No data found.</td>

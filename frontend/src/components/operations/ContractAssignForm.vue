@@ -154,19 +154,18 @@ getVesselList(props.form.business_unit);
 }, { deep : true })
 
 onMounted(() => {
-  watchEffect
-  getVesselList(props.form.business_unit);
+  watchPostEffect(() => {
+    getVesselList(props.form.business_unit);
   getChartererByBusinessUnit(props.form.business_unit);
   getCustomersByBusinessUnit(props.form.business_unit);
+  })
+ 
 })
 
 watch(() => props.form.opsVoyage, (value) => {
 if(value) {
   props.form.ops_voyage_id = value?.id
   }
-if(props.form.business_unit == 'PSML') {
-  getChartererContractsByCharterOwner(props.form.ops_voyage_id);
-}
 }, { deep: true })
 
 watch(() => props.form.opsVessel, (value) => {

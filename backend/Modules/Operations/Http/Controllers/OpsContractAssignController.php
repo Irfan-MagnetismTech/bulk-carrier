@@ -32,7 +32,7 @@ class OpsContractAssignController extends Controller
     {
         try {
             // dd($request->all());
-            $contract_assigns = OpsContractAssign::with('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract')->globalSearch($request->all());
+            $contract_assigns = OpsContractAssign::with('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract')->latest()->paginate(10);
             
             return response()->success('Data retrieved successfully.', $contract_assigns, 200);
         }
@@ -126,6 +126,20 @@ class OpsContractAssignController extends Controller
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);        
+        }
+    }
+
+    public function getVoyageByContract(Request $request){
+        $voyages= OpsContractAssign::with('opsVoyage','opsCargoTariff')
+        ->when(request()->has('voyage_id'), function($q) {
+            $q->where('ops_voyage_id', request()->voyage_id);
+        })
+        ->get();
+
+        try {            
+            return response()->success('Data retrieved successfully.', $voyages, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
         }
     }
 }

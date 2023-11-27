@@ -11,7 +11,6 @@ class OpsBulkNoonReportConsumptionHead extends Model
 
     protected $fillable = [
         'ops_bulk_noon_report_consumption_id',
-        'scm_material_id',
         'type',
         'amount',
     ];

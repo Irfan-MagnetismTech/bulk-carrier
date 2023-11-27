@@ -12,10 +12,11 @@ class OpsContractAssign extends Model
     protected $fillable = [
         'ops_vessel_id',
         'ops_voyage_id',
-        'ops_tariff_id',
+        'ops_cargo_tariff_id',
         'ops_customer_id',
         'ops_charterer_profile_id',
         'ops_charterer_contract_id',
+        'assign_date',
         'remarks',
         'business_unit',
     ];
