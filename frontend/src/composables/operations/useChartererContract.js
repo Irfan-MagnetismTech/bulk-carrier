@@ -9,6 +9,7 @@ import useNotification from '../useNotification.js';
 export default function useChartererContract() {
 	const router = useRouter();
 	const chartererContracts = ref([]);
+	const voyages = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
 
@@ -249,6 +250,23 @@ export default function useChartererContract() {
 		}
 	}
 
+	//get contract wise voyage
+	async function getContractWiseVoyage(contractId) {
+		try {
+			const { data, status } = await Api.get(`/ops/get-voyage-by-contract?contract_id=${contractId}`);
+			voyages.value = data.value;
+			notification.showSuccess(status);
+			return data.value;
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			//loader.hide();
+			//isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		chartererContracts,
 		chartererContract,
@@ -260,6 +278,9 @@ export default function useChartererContract() {
 		deleteChartererContract,
 		searchChartererContracts,
 		getChartererContractsByCharterOwner,
+		getContractWiseVoyage,
+		chartererContracts,
+		voyages,
 		isLoading,		
 		isTableLoading,
 		errors,

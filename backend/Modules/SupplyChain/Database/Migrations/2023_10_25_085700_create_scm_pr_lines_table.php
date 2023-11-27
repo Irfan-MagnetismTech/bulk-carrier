@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
+            $table->string('country_name')->nullable();
             $table->bigInteger('country_id')->nullable();
             $table->string('sample_file')->nullable();
             $table->string('drawing_no')->nullable();

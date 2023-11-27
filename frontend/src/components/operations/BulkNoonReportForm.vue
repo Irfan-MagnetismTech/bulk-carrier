@@ -691,10 +691,10 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
 
 
 onMounted(() => {
-getVesselList(props.form.business_unit);
-getPortList();
-getBunkerConsumptionHeadList();
-getEngineTemparatureTypeList();
+  getVesselList(props.form.business_unit);
+  getPortList();
+  getBunkerConsumptionHeadList();
+  getEngineTemparatureTypeList();
 });
 </script>
 <style lang="postcss" scoped>

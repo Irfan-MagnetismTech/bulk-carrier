@@ -5,7 +5,8 @@ namespace Modules\SupplyChain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\SupplyChain\Entities\ScmMmr;
-use Modules\SupplyChain\Entities\ScmMoLine;
+use Modules\SupplyChain\Entities\ScmMiLine;
+use Modules\SupplyChain\Entities\ScmMiShortage;
 use Modules\SupplyChain\Traits\StockLedger;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,13 +17,18 @@ class ScmMi extends Model
     use HasFactory;
     
     protected $fillable = [
-        'ref_no', 'scm_mmr_id', 'from_warehouse_id', 'to_warehouse_id', 'date', 'business_unit', 'created_by',
+        'ref_no', 'scm_mmr_id','scm_mo_id', 'from_warehouse_id', 'to_warehouse_id', 'date', 'business_unit', 'created_by',
     ];
 
-    public function scmMoLines(): HasMany
+    public function scmMiLines(): HasMany
     {
-        return $this->hasMany(ScmMoLine::class);
+        return $this->hasMany(ScmMiLine::class);
     }
+
+    public function scmShortage(){
+        return $this->hasOne(ScmMiShortage::class);
+    }
+    
     public function fromWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class, 'from_warehouse_id', 'id');

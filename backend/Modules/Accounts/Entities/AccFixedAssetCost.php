@@ -13,6 +13,6 @@ class AccFixedAssetCost extends Model
     /**
      * @var array
      */
-    protected $fillable = ['particular', 'amount'];
+    protected $fillable = ['particular', 'amount', 'remarks'];
 
 }

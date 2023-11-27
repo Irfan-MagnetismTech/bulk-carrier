@@ -165,12 +165,12 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
       </label>
       <label class="label-group">
         <span class="label-item-title">Invoice Value</span>
-        <input type="text" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
+        <input type="number" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
         <!-- <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/> -->
     </label>
       <label class="label-group">
           <span class="label-item-title">Assessment Value<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
+          <input type="number" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
           <!-- <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  /> -->
       </label>
   </div>
@@ -231,14 +231,14 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">CFR Value (BDT)</td>
               <td class="align-center">
-                <input type="text" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
+                <input type="number" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">LC Margin (BDT)</td>
               <td class="align-center">
-                <input type="text" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
+                <input type="number" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
 
               </td>
             </tr>
@@ -251,28 +251,28 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
             <tr class="text-right">
               <td class="align-right font-bold bg-gray-100">Total Costs Relating To LC ( a + b + c + d)</td>
               <td class="align-center">
-                <input type="text" v-model="form.total_cost" required readonly class="form-input text-center vms-readonly-input" name="total_cost" :id="'total_cost'" />
+                <input type="number" v-model="form.total_cost" required readonly class="form-input text-center vms-readonly-input" name="total_cost" :id="'total_cost'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Documents Value (CFR - Margin) (BDT)</td>
               <td class="align-center">
-                <input type="text" v-model="form.document_value" readonly required class="form-input text-center vms-readonly-input" name="document_value" :id="'document_value'" />
+                <input type="number" v-model="form.document_value" readonly required class="form-input text-center vms-readonly-input" name="document_value" :id="'document_value'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD)</td>
               <td class="align-center">
-                <input type="text" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
+                <input type="number" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
 
               </td>
             </tr>
             <tr class="text-center">
               <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD)</td>
               <td class="align-center">
-                <input type="text" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'" />
+                <input type="number" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'" />
 
               </td>
             </tr>

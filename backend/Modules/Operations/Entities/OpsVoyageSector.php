@@ -44,4 +44,5 @@ class OpsVoyageSector extends Model
         return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
     }
 
+
 }

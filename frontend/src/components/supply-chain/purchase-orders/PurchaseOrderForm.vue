@@ -33,10 +33,12 @@
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmPoLines.push(clonedObj);
+      setMinHeight();
     }
 
     function removeMaterial(index){
-          props.form.scmPoLines.splice(index, 1);
+      props.form.scmPoLines.splice(index, 1);
+      // setMinHeight();
     }
 
     function addTerms() {
@@ -46,7 +48,17 @@
 
     function removeTerms(index){
       props.form.scmPoTerms.splice(index, 1);
-    }
+}
+
+const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
+
+// const setMinHeight = () => {
+//   dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+// };
+
+// onMounted(() => {
+//   setMinHeight();
+// });
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -234,21 +246,21 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     </label>
   </div>
 
-  <div id="customDataTable">
-    <div  class="table-responsive">
+  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+    <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="table_head_tr">
             <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Brand</th>
-            <th class="py-3 align-center">Model</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Unit</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Brand</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Model</th>
             <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Rate</th>
-            <th class="py-3 align-center">Total Price</th>
+            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
+            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
+            <th class="py-3 align-cente min-w-[70px] md:min-w-[95px] lg:min-w-[120px]r">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -280,10 +292,10 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="number" v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
+              <input type="number" required v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
             </td>
             <td>
-              <input type="number" v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="number" required v-model="form.scmPoLines[index].rate" class="form-input">
             </td>
             <td>
               <input type="number" readonly v-model="form.scmPoLines[index].total_price" class="form-input vms-readonly-input">

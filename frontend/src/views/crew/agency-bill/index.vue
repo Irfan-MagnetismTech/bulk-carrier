@@ -12,7 +12,6 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();

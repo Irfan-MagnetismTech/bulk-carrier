@@ -48,15 +48,11 @@ class ScmSrController extends Controller
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmSr::class, 'SR');
 
-
-
         try {
             DB::beginTransaction();
 
             $scmSr = ScmSr::create($requestData);
-
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
-
             $scmSr->scmSrLines()->createMany($linesData);
 
             DB::commit();

@@ -128,7 +128,7 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Bill Amount <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model.trim="form.invoice_amount" placeholder="Bill amount" class="form-input" autocomplete="off" required />
+      <input type="number" step=".01" v-model.trim="form.invoice_amount" placeholder="Bill Amount" class="form-input" autocomplete="off" required />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
