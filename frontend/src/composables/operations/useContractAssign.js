@@ -69,7 +69,7 @@ export default function useContractAssign() {
 
 			const { data, status } = await Api.post('/ops/contract-assigns', formData);
 			notification.showSuccess(status);
-			// router.push({ name: 'ops.contract-assigns.index' });
+			router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -107,11 +107,6 @@ export default function useContractAssign() {
 		try {
 
 			let formData = new FormData();
-			
-			form.opsContractAssignLines.map((element, index) => {
-				formData.append('attachments['+index+']', element.attachment ?? null);
-				element.attachment = null;
-			})
 
 
 			formData.append('info', JSON.stringify(form));

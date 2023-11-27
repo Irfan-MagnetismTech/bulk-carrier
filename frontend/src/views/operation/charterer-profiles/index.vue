@@ -105,6 +105,20 @@ let filterOptions = ref( {
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
+function setSortingState(index, order) {
+  filterOptions.value.filter_options.forEach(function (t) {
+    t.order_by = null;
+  });
+  filterOptions.value.filter_options[index].order_by = order;
+}
+
+function clearFilter(){
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = "";
+    filterOptions.value.filter_options[index].order_by = null;
+  });
+}
+
 onMounted(() => {
   watchPostEffect(() => {
 
@@ -236,7 +250,8 @@ onMounted(() => {
           </thead>
           <tbody v-if="chartererProfiles?.data?.length" class="relative">
               <tr v-for="(chartererProfile, index) in chartererProfiles.data" :key="chartererProfile?.id">
-                  <td>{{ chartererProfiles.from + index }}</td>
+                
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ chartererProfile?.name }}</td>
                   <td>{{ chartererProfile?.owner_code }}</td>
                   <td>{{ chartererProfile?.country }}</td>

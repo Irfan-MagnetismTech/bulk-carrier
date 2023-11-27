@@ -320,7 +320,7 @@ onMounted(() => {
             <td colspan="9">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="8">
+              <td colspan="9">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
