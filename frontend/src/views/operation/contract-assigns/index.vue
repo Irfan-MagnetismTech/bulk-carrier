@@ -87,20 +87,25 @@ onMounted(() => {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Mother Vessel</th>
             <th>Vessel</th>
             <th>Voyage No</th>
-            <th>Capacity</th>
-            <th>Initial Survey Qty.</th>
-            <th>Finally Received Qty.</th>
+            <th>Cargo tarrif</th>
+            <th>Customer</th>
+            <th>Charterer Profile</th>
+            <th>Contract Cntract</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody v-if="contractAssigns?.data?.length">
               <tr v-for="(contractAssign, index) in contractAssigns.data" :key="contractAssign?.id">
                   <td>{{ contractAssigns.from + index }}</td>
-                  <!-- <td>{{ contractAssign?.opsVoyage?.mother_vessel }}</td>
-                  <td>{{ contractAssign?.opsVessel?.name }}</td>
+                 <td>{{ contractAssign?.opsVessel?.name }}</td>
+                  <td>{{ contractAssign?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ contractAssign?.opsCargoTariff?.cargo_tarrif }}</td>
+                  <td>{{ contractAssign?.opsCustomer?.name }}</td>
+                  <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
+                  <td>{{ contractAssign?.opsChartererContract?.contract_name }}</td>
+                   <!-- <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_no }}</td>
                   <td>{{ contractAssign?.opsVessel?.capacity }}</td>
                   <td>
