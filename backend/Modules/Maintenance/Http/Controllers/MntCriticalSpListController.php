@@ -162,5 +162,5 @@ class MntCriticalSpListController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-    }
+    
 }

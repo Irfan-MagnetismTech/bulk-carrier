@@ -121,6 +121,15 @@ class MntCriticalItemController extends Controller
     {
         try {            
             $criticalItem = MntCriticalItem::findorfail($id);
+            if ($criticalItem->mntCriticalVesselItems()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $criticalItem->delete();
             
             return response()->success('Critical item deleted successfully', $criticalItem, 204);

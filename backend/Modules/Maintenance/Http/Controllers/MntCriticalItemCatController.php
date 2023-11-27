@@ -121,6 +121,15 @@ class MntCriticalItemCatController extends Controller
     {
         try {            
             $criticalItemCat = MntCriticalItemCat::findorfail($id);
+            if ($criticalItemCat->mntCriticalItems()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $criticalItemCat->delete();
             
             return response()->success('Critical item category deleted successfully', $criticalItemCat, 204);
