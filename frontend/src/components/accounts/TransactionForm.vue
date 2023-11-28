@@ -153,7 +153,7 @@ onMounted(() => {
         <Error v-if="errors?.voucher_type" :errors="errors.voucher_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Voucher Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Transaction Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.transaction_date" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
