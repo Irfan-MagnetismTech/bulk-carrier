@@ -27,7 +27,39 @@ class ScmMaterialCategory extends Model
         return $this->hasMany(self::class, 'id', 'parent_id');
     }
 
+    public function getTopLevelParent(): ?self
+    {
+        $currentCategory = $this;
+        
+        while ($currentCategory->parent) {
+            $currentCategory = $currentCategory->parent;
+        }
+
+        return $currentCategory;
+    }
+
+    public function getAllDescendants(): HasMany
+    {
+        return $this->children()->with('getAllDescendants');
+    }
+
+    public function isLeafNode(): bool
+    {
+        return $this->children()->count() === 0;
+    }
+
+    public function getAllSiblings(): HasMany
+    {
+        return $this->parent->children()->where('id', '!=', $this->id);
+    }
+
+
+    public function getAllAncestors(): BelongsTo
+    {
+        return $this->parent()->with('getAllAncestors');
+    }
+
     public function account(){
         return $this->morphOne(AccAccount::class, 'accountable')->withDefault();
-       }
+    }
 }
