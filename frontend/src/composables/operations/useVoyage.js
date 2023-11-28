@@ -74,19 +74,35 @@ export default function useVoyage() {
 		opsVoyagePortSchedules: [{...portScheduleObject}]
 	});
 	
+	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
 
-	async function getVoyages(page, businessUnit) {
+	async function getVoyages(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+		}
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/voyages', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit,
+					page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
 				},
 			});
 			voyages.value = data.value;
@@ -96,8 +112,16 @@ export default function useVoyage() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			// loader.hide();
+			// isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -119,7 +143,7 @@ export default function useVoyage() {
 			const { data, status } = await Api.post('/ops/voyages', form);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.voyages.index' });
+			await router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -170,7 +194,7 @@ export default function useVoyage() {
 			);
 			voyage.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.voyages.index' });
+			await router.push({ name: 'ops.voyages.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -190,10 +214,11 @@ export default function useVoyage() {
 		try {
 			const { data, status } = await Api.delete( `/ops/voyages/${voyageId}`);
 			notification.showSuccess(status);
-			await getVoyages();
+			await getVoyages(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			// notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -294,6 +319,47 @@ export default function useVoyage() {
 		}
 	}
 
+	function checkValidation(openTab, tabNumber, props, requiredFields) {
+        for (const field of requiredFields) {
+            const element = document.getElementById(field);
+            if (openTab.value === 1) {
+                if(!props.form[field]){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+            else if(openTab.value === 2){
+                let sectorFieldStatus = true;
+                props.form.opsVoyageSectors.forEach((value, index) => {
+                    if(!props.form.opsVoyageSectors[index][field]){
+                        sectorFieldStatus = false;
+                    }
+                });
+                if(!sectorFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+			}
+			
+            else if(openTab.value === 4){
+                let voyageScheduleFieldStatus = true;
+                props.form.opsVoyagePortSchedules.forEach((value, index) => {
+                    if(!props.form.opsVoyagePortSchedules[index][field]){
+                        voyageScheduleFieldStatus = false;
+                    }
+                });
+                if(!voyageScheduleFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+			}
+			
+            
+        }
+
+        return true;
+    }
+
 
 	return {
 		voyages,
@@ -313,7 +379,9 @@ export default function useVoyage() {
 		voyageVoyages,
 		getVoyagesByVoyage,
 		getVoyagesWithoutPaginate,
+		checkValidation,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

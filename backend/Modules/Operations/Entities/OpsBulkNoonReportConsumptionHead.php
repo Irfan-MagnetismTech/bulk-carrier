@@ -3,6 +3,7 @@
 namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBulkNoonReportConsumptionHead extends Model

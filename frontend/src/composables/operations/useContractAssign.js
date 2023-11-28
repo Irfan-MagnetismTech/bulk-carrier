@@ -13,12 +13,13 @@ export default function useContractAssign() {
 	const notification = useNotification();
 
 	const contractAssign = ref({
+		assign_date: null,
 		ops_vessel_id: null,
 		opsVessel : null,
 		ops_voyage_id: null,
 		opsVoyage: null,
-		ops_tariff_id: null,
-		opsTariff: null,
+		ops_cargo_tariff_id: null,
+		opsCargoTariff: null,
 		ops_customer_id: null,
 		opsCustomer: null,
 		ops_charterer_profile_id: null,
