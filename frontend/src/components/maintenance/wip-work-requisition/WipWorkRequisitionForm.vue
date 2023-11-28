@@ -40,7 +40,7 @@
         </label>
         <label class="block w-full mt-2 text-sm"> 
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour </span>
-            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <input type="text" v-model="form.mntWorkRequisitionItem.present_run_hour" placeholder="Present Run Hour" class="form-input"  />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -67,16 +67,34 @@
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
 
-        <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
+        <!-- <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
             <span class="text-gray-700 dark-disabled:text-gray-300">Status </span>
             <select v-model="form.status" class="form-input" >
               <option value="" disabled selected>Select</option>
               <option value="0" > Pending</option>
               <option value="1" > WIP</option>
-              <!-- <option value="2" > Done</option> -->
             </select>
           <Error v-if="errors?.status" :errors="errors.status" />
+        </label> -->
+
+        
+        <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Status </span>
+            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
+            :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.status"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+          <Error v-if="errors?.status" :errors="errors.status" />
         </label>
+
+
     </div>
 
     <div>
@@ -95,7 +113,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Assigned Job</legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Status</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
@@ -112,14 +130,31 @@
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
             <td class="px-1 py-1"> 
               <!-- <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span> -->
-                <select v-model="mntWorkRequisitionLine.status" @change="setStartAndCompletionDate(mntWorkRequisitionLine)"  class="form-input" required :disabled="page != 'edit'">
+
+                <!-- <select v-model="mntWorkRequisitionLine.status" @change="setStartAndCompletionDate(mntWorkRequisitionLine)"  class="form-input" required :disabled="page != 'edit'">
                   <option value="" disabled selected>Select</option>
                   <option :value="index" v-for="(status, index) in workRequisitionStatus" :key="index"  > {{ status }}</option>
-                </select>
+                </select> -->
+
+            <v-select placeholder="Select Status"  :options="workRequisitionStatus" v-model="mntWorkRequisitionLine.status" label="value" 
+            :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="mntWorkRequisitionLine.status == null"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+
+
+
+
             </td>
             <td class="px-1 py-1">
               <input type="date" class="form-input" :min="form.act_start_date"  
-              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status == 0  }"  :disabled="mntWorkRequisitionLine.status == 0" :required="mntWorkRequisitionLine.status != 0" /> 
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)  }"  :disabled="(mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)" :required="(mntWorkRequisitionLine.status != 0 || mntWorkRequisitionLine.status != null)" /> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
             <td class="px-1 py-1"> 
@@ -145,7 +180,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts Consumed </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-4/12 px-4 py-3 align-bottom">Material Name <span v-show="form.mntWorkRequisitionMaterials?.length" class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>
@@ -184,9 +219,6 @@
         </tbody>
       </table>
     </fieldset>
-
-
-    
     <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 <script setup>
@@ -290,7 +322,7 @@ function removeConsumedSparePart(index) {
 }
 
 function setStartAndCompletionDate(mntWorkRequisitionLine) {
-  if (mntWorkRequisitionLine.status == 0) {
+  if (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null) {
     mntWorkRequisitionLine.start_date = '';
     mntWorkRequisitionLine.completion_date = '';
     props.form.act_completion_date = '';
@@ -303,6 +335,13 @@ function setStartAndCompletionDate(mntWorkRequisitionLine) {
     props.form.status = 1;
   }
 }
+
+watch(() => props.form.mntWorkRequisitionLines, (mntWorkRequisitionLines) => {
+  mntWorkRequisitionLines?.forEach(mntWorkRequisitionLine => {
+    setStartAndCompletionDate(mntWorkRequisitionLine);
+  });
+
+}, { deep: true });
 
 // function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {
 //   mntWorkRequisitionLine.start_date_error = [''];

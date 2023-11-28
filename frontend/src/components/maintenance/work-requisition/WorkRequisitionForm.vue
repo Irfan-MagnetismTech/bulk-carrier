@@ -11,14 +11,33 @@
             <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" required />
           <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
             <select v-model="form.maintenance_type" class="form-input" required>
               <option value="" disabled selected>Select Maintenance Type</option>
               <option :value="index" v-for="(maintenanceType, index) in maintenanceTypes" :key="index">{{maintenanceType}}</option>
             </select>
           <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+        </label> -->
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Maintenance Type"  :options="maintenanceTypes" v-model="form.maintenance_type" label="value" 
+            :reduce="maintenanceType => maintenanceType.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.maintenance_type"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
         </label>
+
+
 
         
         <label class="block w-full mt-2 text-sm">
@@ -107,7 +126,7 @@
         
 
         
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Assign To <span class="text-red-500">*</span></span>
             <select v-model="form.assigned_to" class="form-input" required>
               <option value="" disabled selected>Select</option>
@@ -115,7 +134,26 @@
               <option value="Vendor" > Vendor</option>
             </select>
           <Error v-if="errors?.assigned_to" :errors="errors.assigned_to" />
+        </label> -->
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Assign To <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select"  :options="assignTo" v-model="form.assigned_to" label="value" 
+            :reduce="aTo => aTo.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.assigned_to"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+          <Error v-if="errors?.assigned_to" :errors="errors.assigned_to" />
         </label>
+
+
 
         
         <label class="block w-full mt-2 text-sm">
@@ -131,7 +169,7 @@
                 />
               </template>
             </v-select>
-            <input type="hidden" v-model="form.responsible_person">
+            <!-- <input type="hidden" v-model="form.responsible_person"> -->
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
         </label>
        
@@ -147,16 +185,34 @@
         </label> -->
 
         
-        <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
+        <!-- <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
             <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
             <select v-model="form.status" class="form-input" required :disabled="page != 'edit'">
               <option value="" disabled selected>Select</option>
               <option value="0" > Pending</option>
               <option value="1" > WIP</option>
-              <!-- <option value="2" > Done</option> -->
             </select>
           <Error v-if="errors?.status" :errors="errors.status" />
+        </label> -->
+
+        
+        <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
+            :reduce="status => status.key" :disabled="page != 'edit'"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.status"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+          <Error v-if="errors?.status" :errors="errors.status" />
         </label>
+
+
 
 
 
@@ -175,7 +231,7 @@
         <div v-if="itemWiseJobLines[tab]?.length || (tab === 'added_jobs' && form.added_job_lines?.length)">
           <table class="w-full whitespace-no-wrap" id="table">
             <thead>
-              <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                 <th class="px-4 py-3 align-bottom" :class="{ 'w-4/12': !form.mnt_item_name?.has_run_hour, 
                                                              'w-2/12': form.mnt_item_name?.has_run_hour }">Job Description</th>
 
@@ -211,7 +267,7 @@
           </table>
         </div>
         <div v-else class="py-10 bg-purple-100 text-center rounded-md">
-          <p class="text-md font-bold">No job found</p>
+          <p class="text-md font-bold">{{ form.mnt_item_id ? 'No job found' : 'Please select Item' }}</p>
         </div>
 
         <Error v-if="errors?.added_job_lines" :errors="errors.added_job_lines" />
@@ -219,6 +275,8 @@
       </div>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
+    <!-- isJobLoading -->
+    <LoaderComponent :isLoading = isJobLoading ></LoaderComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -237,6 +295,7 @@ import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiR
 import moment from 'moment';
 import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
+import LoaderComponent from "../../utils/LoaderComponent.vue";
 
 const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
@@ -245,7 +304,7 @@ const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVessel
 const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
 const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
 const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
-const { maintenanceTypes  } = useMaintenanceHelper();
+const { maintenanceTypes, workRequisitionStatus, assignTo  } = useMaintenanceHelper();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
@@ -368,7 +427,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 const crewsWithRank = computed(() => {
   if(crews.value.length)
     return crews.value.map(crew => ({
-      displayName: `${crew?.crwRank?.name} - ${crew.full_name}`
+      displayName: `${crew?.crwCurrentRank?.name} - ${crew.full_name}`
       }));
   return [];
 });
