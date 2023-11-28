@@ -6,7 +6,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+// import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useVoyageBoatNote from '../../../composables/operations/useVoyageBoatNote';
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
@@ -56,12 +56,12 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "ops.configurations.voyages.index", query: { page: 1 } })
+        router.push({ name: "ops.voyage-boat-notes.index", query: { page: 1 } })
       }
     }
 );
 let filterOptions = ref( {
-  "business_unit": null,
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -70,12 +70,12 @@ let filterOptions = ref( {
     {
       "rel_type": null,
       "relation_name": "opsVoyage",
-      "field_name": "mother_vessel",
+      "field_name": "voyage_sequence",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Mother Vessel Name",
+      "label": "Voyage",
       "filter_type": "input"
     },
     
@@ -93,24 +93,24 @@ let filterOptions = ref( {
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "voyage_no",
+      "field_name": "vessel_draft",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Voyage No",
+      "label": "Draft",
       "filter_type": "input"
     },
     
     {
       "rel_type": null,
-      "relation_name": "opsCargoType",
-      "field_name": "cargo_type",
+      "relation_name": null,
+      "field_name": "water_density",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cargo Type",
+      "label": "Density",
       "filter_type": "input"
     },
     
@@ -126,7 +126,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.configurations.voyages.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.voyage-boat-notes.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -193,27 +193,17 @@ onMounted(() => {
           <tbody v-if="voyageBoatNotes?.data?.length" class="relative">
               <tr v-for="(voyageBoatNote, index) in voyageBoatNotes.data" :key="voyageBoatNote?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ voyageBoatNote?.opsVoyage?.mother_vessel }}</td>
+                  <td>{{ voyageBoatNote?.opsVoyage?.voyage_sequence }}</td>
                   <td>{{ voyageBoatNote?.opsVessel?.name }}</td>
-                  <td>{{ voyageBoatNote?.opsVoyage?.voyage_no }}</td>
-                  <td>{{ voyageBoatNote?.opsVessel?.capacity }}</td>
+
+                  <td>{{ voyageBoatNote?.vessel_draft }}</td>
+                  <td>{{ voyageBoatNote?.water_density }}</td>
                   <td>
-                    {{ 
-                  voyageBoatNote?.opsVoyage?.opsVoyageSectors.reduce((accumulator, currentObject) => {
-  return accumulator + currentObject.initial_survey_qty
-}, 0)
-                  }}
-                  </td>
-                  <td>
-                    {{ 
-                  voyageBoatNote?.opsVoyage?.opsVoyageSectors.reduce((accumulator, currentObject) => {
-  return accumulator + currentObject.final_received_qty
-}, 0)
-                  }}  
+                    <span :class="voyageBoatNote?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBoatNote?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.voyage-boat-notes.edit', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
                       <action-button @click="confirmDelete(voyageBoatNote.id)" :action="'delete'"></action-button>
                     </nobr>
@@ -240,4 +230,5 @@ onMounted(() => {
     </div>
     <Paginate :data="voyageBoatNotes" to="ops.voyage-boat-notes.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
