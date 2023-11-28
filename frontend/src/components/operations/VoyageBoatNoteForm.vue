@@ -82,7 +82,7 @@
         </table>     
       
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchEffect  } from "vue";
@@ -91,6 +91,7 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../utils/ErrorComponent.vue";
 
 const editInitiated = ref(false);
 

@@ -125,7 +125,7 @@
             <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
             <Error v-if="errors?.remarks" :errors="errors.remarks" />
           </label> -->
-          <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
+          <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
         </div>
       </div>
     </div>
@@ -367,6 +367,7 @@
       </svg>
       Back
     </button>
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../Error.vue";
@@ -379,6 +380,7 @@ import useCargoType from '../../composables/operations/useCargoType';
 import useVoyage from '../../composables/operations/useVoyage';
 import { ref, watch, onMounted, watchEffect } from "vue";
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import ErrorComponent from "../utils/ErrorComponent.vue";
 
 
 const { ports, searchPorts, isPortLoading } = usePort();
