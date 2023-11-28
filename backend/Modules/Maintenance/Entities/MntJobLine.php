@@ -52,11 +52,12 @@ class MntJobLine extends Model
                 if ($this->cycle < $hoursPassedAfterPreviousWork) {
                     $nextDue = 0 - $hoursPassedAfterPreviousWork;
                 } else {
-                    $nextDue = $this->cycle - ($this->present_run_hour % $this->cycle);
+                    $nextDue = $this->cycle - $hoursPassedAfterPreviousWork;//($this->present_run_hour % $this->cycle);
                 }
                 
             } else {
-                $nextDue = $this->cycle - $this->present_run_hour;
+                $previousRunHour = $this->previous_run_hour ?? 0;
+                $nextDue = ($this->cycle + $previousRunHour) - $this->present_run_hour;
             }
                 
         }
