@@ -243,21 +243,21 @@ export default [
     /* Crew documents renew Routes */
     {
         path: `/${BASE}/renew-schedules`,
-        name: `${BASE}.renew-schedule.index`,
+        name: `${BASE}.renew-schedules.index`,
         component: () => import(`../views/crew/document-renew-schedule/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
     {
-        path: `/${BASE}/documents/create`,
-        name: `${BASE}.documents.create`,
-        component: () => import(`../views/crew/document/create.vue`),
+        path: `/${BASE}/renew-schedules/create`,
+        name: `${BASE}.renew-schedules.create`,
+        component: () => import(`../views/crew/document-renew-schedule/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
     {
-        path: `/${BASE}/documents/:documentId/edit`,
-        name: `${BASE}.documents.edit`,
-        component: () => import(`../views/crew/document/edit.vue`),
+        path: `/${BASE}/renew-schedules/:renewScheduleId/edit`,
+        name: `${BASE}.renew-schedules.edit`,
+        component: () => import(`../views/crew/document-renew-schedule/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
