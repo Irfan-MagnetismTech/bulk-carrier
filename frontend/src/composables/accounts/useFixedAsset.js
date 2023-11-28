@@ -11,31 +11,26 @@ export default function useFixedAsset() {
     const notification = useNotification();
 
     const fixedAsset = ref( {
-        costCenter : '', 
-        acc_cost_center_name : '', 
+        acc_cost_center_name : null,
         acc_cost_center_id : '',
-
-        scmMrr : '', 
+        scm_mrr_name : null,
         scm_mrr_id : '',
-        scmMaterial : '', 
+        scm_material_name : null,
         scm_material_id : '',
         brand : '',
         model : '',
         serial : '',
-        
+        acc_parent_account_name : null,
+        acc_parent_account_id : '',
+        acc_account_name : null,
         acc_account_id : 1,
-        
-        fixedAssetCategory : '',
-        acc_parent_account_id : '',        
         asset_tag : '',
-
         useful_life : '',
         depreciation_rate : '',
-        location : '',
         acquisition_date : '',
-        acquisition_cost : 0,
+        location : '',
         business_unit : '',
-
+        acquisition_cost: '',
         fixedAssetCosts: [
             {
                 particular: '',
