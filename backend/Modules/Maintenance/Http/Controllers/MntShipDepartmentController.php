@@ -126,8 +126,10 @@ class MntShipDepartmentController extends Controller
     public function destroy($id)
     {
         try {
-            $itemGroups = MntItemGroup::where('mnt_ship_department_id', $id)->count();
-            if ($itemGroups > 0) {
+            
+            $shipDepartment = MntShipDepartment::findorfail($id);
+            if ($shipDepartment->mntItemGroups()->exists())
+            {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
@@ -136,7 +138,6 @@ class MntShipDepartmentController extends Controller
                 );
                 return response()->json($error, 422);
             }
-            $shipDepartment = MntShipDepartment::findorfail($id);
             $shipDepartment->delete();
             
             return response()->success('Ship departments deleted successfully', $shipDepartment, 204);

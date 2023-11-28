@@ -148,7 +148,11 @@ const computedPresentRunHour = computed({
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
+  shipDepartments.value = [];
   fetchPresentRunHour();
+  if (businessUnit.value && props.form.ops_vessel_id) {
+    getShipDepartmentsWithoutPagination(businessUnit.value);
+  }
   if (value === null) {
     props.form.mnt_ship_department_name = null;
   }
@@ -228,7 +232,7 @@ onMounted(() => {
   watchEffect(() => {
     if(businessUnit.value  && businessUnit.value != 'ALL'){
       getVesselsWithoutPaginate(businessUnit.value);
-      getShipDepartmentsWithoutPagination(businessUnit.value);
+      // getShipDepartmentsWithoutPagination(businessUnit.value);
     }
   });
 });
