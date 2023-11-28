@@ -6,6 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsChartererInvoiceRequest extends FormRequest
 {
+    protected function prepareForValidation(){
+        $data=  request('info');
+        $this->replace(json_decode($data, true));
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,20 +18,21 @@ class OpsChartererInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_charterer_profile_id'      => ['required', 'string', 'max:10'],
-            'ops_charterer_contract_id'     => ['required', 'string', 'max:10'],
-            'ops_voyage_id'                 => ['required', 'string', 'max:10'],
-            'contract_type'                 => ['required', 'string', 'max:255'],
-            'bill_from'                     => ['required', 'datetime', 'max:50'],
-            'bill_till'                     => ['required', 'datetime', 'max:50'],
-            'total_days'                    => ['required', 'string', 'max:50'],
-            'total_amount'                  => ['required', 'string', 'max:50'],
-            'others_billable_amount'        => ['required', 'string', 'max:50'],
-            'service_fee_deduction_amount'  => ['required', 'string', 'max:50'],
-            'discount_unit'                 => ['required', 'string', 'max:50'],
-            'discounted_amount'             => ['required', 'string', 'max:50'],
-            'grand_total'                   => ['required', 'string', 'max:50'],
-            'business_unit'                 => ['required', 'string', 'max:255'],
+            'ops_charterer_profile_id'      => ['required', 'numeric', 'max:20'],
+            'ops_charterer_contract_id'     => ['required', 'numeric'],
+            'ops_voyage_id'                 => ['nullable', 'numeric', 'max:20'],
+            'contract_type'                 => ['nullable', 'string', 'max:255'],
+            'bill_from'                     => ['nullable'],
+            'bill_till'                     => ['nullable'],
+            'total_days'                    => ['nullable', 'numeric'],
+            'total_amount'                  => ['required', 'numeric'],
+            'per_day_charge'                => ['nullable', 'numeric'],
+            'others_billable_amount'        => ['required', 'numeric'],
+            'service_fee_deduction_amount'  => ['required', 'numeric'],
+            // 'discount_unit'                 => ['required', 'string'],
+            'discounted_amount'             => ['required', 'numeric'],
+            'grand_total'                   => ['required', 'numeric'],
+            // 'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -43,9 +48,9 @@ class OpsChartererInvoiceRequest extends FormRequest
             'ops_charterer_contract_id.required' => 'Charterer owner code is required',
             'ops_voyage_id.required' => 'Charterer owner code is required',
             'contract_type.required' => 'Contract type is required',
-            'contract_type.max' => 'Contract type may not be greater than :max characters.',
+            // 'contract_type.max' => 'Contract type may not be greater than :max characters.',
             'bill_from.required' => 'Contract type is required',
-            'contract_type.max' => 'Contract type may not be greater than :max characters.',
+            // 'contract_type.max' => 'Contract type may not be greater than :max characters.',
         ];
     }
 
