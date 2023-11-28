@@ -13,6 +13,10 @@ class CrwCrewDocument extends Model
 
 	protected $fillable = ['crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit'];
 
+	public function crwCrewDocumentRenewal(){
+		return $this->hasOne(CrwCrewDocumentRenewal::class)->latest();
+	}
+
 	public function crwCrewDocumentRenewals(){
 		return $this->hasMany(CrwCrewDocumentRenewal::class);
 	}
