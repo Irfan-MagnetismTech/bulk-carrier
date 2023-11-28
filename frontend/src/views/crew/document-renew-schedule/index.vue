@@ -55,7 +55,7 @@ let filterOptions = ref( {
     {
       "relation_name": null,
       "field_name": "left_days",
-      "search_param": "",
+      "search_param": "30",
       "action": null,
       "order_by": null,
       "date_from": null,
@@ -63,8 +63,8 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "left_days",
+      "relation_name": "crwCrewProfile",
+      "field_name": "full_name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -73,8 +73,8 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "left_days",
+      "relation_name": "crwCrewProfile",
+      "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -83,8 +83,8 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "left_days",
+      "relation_name": "crwCrewProfile",
+      "field_name": "pre_email",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -135,6 +135,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'crw.agencyBills.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -150,7 +151,6 @@ onMounted(() => {
       if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
       }
-      // isTableLoader.value = true;
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -176,40 +176,40 @@ filterOptions.value.filter_options.forEach((option, index) => {
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-          <tr v-for="(user,index) in crewDocumentRenewSchedules.data" :key="index">
+          <tr v-for="(crwDocument,index) in crewDocumentRenewSchedules?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>Passport</td>
-            <td>20</td>
-            <td>{{ user?.name }}</td>
-            <td>015225522005</td>
-            <td>{{ user?.email }}</td>
+            <td>{{ crwDocument?.document_name }}</td>
+            <td>{{ crwDocument?.left_days }}</td>
+            <td>{{ crwDocument?.crwCrewProfile?.full_name }}</td>
+            <td>{{ crwDocument?.crwCrewProfile?.pre_mobile_no }}</td>
+            <td>{{ crwDocument?.crwCrewProfile?.pre_email }}</td>
             <td>
-              <strong>{{ user?.business_unit }}</strong>
+              <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>
             </td>
             <td>
-<!--              <nobr>-->
-<!--                <action-button :action="'edit'" :to="{ name: 'administration.users.edit', params: { userId: user?.id } }"></action-button>-->
-<!--                <action-button @click="confirmDelete(user?.id)" :action="'delete'"></action-button>-->
-<!--              </nobr>-->
+              <nobr>
+                <action-button :action="'edit'" :to="{ name: 'crw.renew-schedules.edit', params: { renewScheduleId: crwDocument?.id } }"></action-button>
+                <action-button @click="confirmDelete(crwDocument?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
-<!--          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && users?.data?.length"></LoaderComponent>-->
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewDocumentRenewSchedules?.data?.length"></LoaderComponent>
           </tbody>
-<!--          <tfoot v-if="!users?.data?.length" class="relative h-[250px]">-->
-<!--          <tr v-if="isLoading">-->
-<!--            &lt;!&ndash; <td colspan="6">Loading...</td> &ndash;&gt;-->
-<!--          </tr>-->
-<!--          <tr v-else-if="isTableLoading">-->
-<!--              <td colspan="8">-->
-<!--                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                -->
-<!--              </td>-->
-<!--          </tr>-->
-<!--          <tr v-else-if="!users?.data?.length">-->
-<!--            <td colspan="8">No user found.</td>-->
-<!--          </tr>-->
-<!--          </tfoot>-->
+          <tfoot v-if="!crewDocumentRenewSchedules?.data?.length" class="relative h-[250px]">
+          <tr v-if="isLoading">
+             <td colspan="8"></td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+              </td>
+          </tr>
+          <tr v-else-if="!crewDocumentRenewSchedules?.data?.length">
+            <td colspan="8">No data found.</td>
+          </tr>
+          </tfoot>
       </table>
     </div>
-<!--    <Paginate :data="users" to="administration.users.index" :page="page"></Paginate>-->
+    <Paginate :data="crewDocumentRenewSchedules" to="crw.renew-schedules.index" :page="page"></Paginate>
   </div>
 </template>
