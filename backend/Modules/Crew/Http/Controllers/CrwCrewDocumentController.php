@@ -149,7 +149,8 @@ class CrwCrewDocumentController extends Controller
             $requestedDays = intval($requestCustom->filter_options[1]->search_param); 
             $tillDate = Carbon::today()->addDays($requestedDays); 
 
-            $documents = CrwCrewDocument::where('validity_period_in_month', '>', 0)
+            $documents = CrwCrewDocument::query()
+            ->where('validity_period_in_month', '>', 0)
             ->with('crwCrewProfile:id,full_name,pre_mobile_no,pre_email')
             ->withWhereHas('crwCrewDocumentRenewal', function ($query) use($tillDate) {
                 $query->where('expire_date', '<', Carbon::today()->addDays($tillDate))->latest();
