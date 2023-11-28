@@ -207,7 +207,8 @@ class AccCommonController extends Controller
     public function getFixedAssets(Request $request)
     {
         try {
-            $fixedAssets = AccFixedAsset::when(request()->business_unit != "ALL", function ($q) {
+            $fixedAssets = AccFixedAsset::with('scmMaterial')
+            ->when(request()->business_unit != "ALL", function ($q) {
                 $q->where('business_unit', request()->business_unit);
             })
             ->when(request()->acc_cost_center_id, function($q){
