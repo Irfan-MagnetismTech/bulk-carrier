@@ -53,26 +53,38 @@ export default function useWipWorkRequisition() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isWipWorkRequisitionLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getWipWorkRequisitions(page, businessUnit) {
+    async function getWipWorkRequisitions(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/get-work-requisitions-wip',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
-                    status: 1,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             wipWorkRequisitions.value = data.value;
@@ -81,8 +93,14 @@ export default function useWipWorkRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -94,9 +112,9 @@ export default function useWipWorkRequisition() {
 
         try {
             const { data, status } = await Api.post('/mnt/work-requisitions', form);
-            workRequisition.value = data.value;
+            wipWorkRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.work-requisitions.index" });
+            await router.push({ name: "mnt.work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -137,7 +155,7 @@ export default function useWipWorkRequisition() {
             );
             wipWorkRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.wip-work-requisitions.index" });
+            await router.push({ name: "mnt.wip-work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -184,7 +202,7 @@ export default function useWipWorkRequisition() {
         try {
             const { data, status } = await Api.delete( `/mnt/work-requisitions/${wipWorkRequisitionId}`);
             notification.showSuccess(status);
-            await getWipWorkRequisitions(indexPage.value, indexBusinessUnit.value);
+            await getWipWorkRequisitions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -205,6 +223,8 @@ export default function useWipWorkRequisition() {
         updateWipWorkRequisitionLine,
         deleteWipWorkRequisition,
         isLoading,
+        isTableLoading,
+        isWipWorkRequisitionLoading,
         errors,
     };
 }

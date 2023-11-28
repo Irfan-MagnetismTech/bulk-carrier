@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-4 md:gap-2 ">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
@@ -118,13 +118,14 @@
         </label>
 
         
-        <!-- <label class="block w-full mt-2 text-sm">
+        <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Responsible Person" :options="crews" @search="" v-model="form.responsible_person_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Responsible Person" :loading="isCommonCrewLoading"  :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
+            :reduce="crewsWithRank => crewsWithRank.displayName" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.responsible_person_name"
+                    :required="!form.responsible_person"
                     v-bind="attributes"
                     v-on="events"
                 />
@@ -132,9 +133,10 @@
             </v-select>
             <input type="hidden" v-model="form.responsible_person">
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
-        </label> -->
+        </label>
+       
 
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
             <select v-model="form.responsible_person" class="form-input" required>
               <option value="" disabled selected>Select</option>
@@ -142,7 +144,7 @@
               <option value="Karim" > Karim</option>
             </select>
           <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
-        </label>
+        </label> -->
 
         
         <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
@@ -199,7 +201,7 @@
                     <button type="button" :class="{
                       'bg-yellow-600': jobLine.mnt_work_requisition_status === 0,
                       'bg-blue-600': jobLine.mnt_work_requisition_status === 1,
-                      'bg-green-600': jobLine.mnt_work_requisition_status === 2,
+                      'bg-green-600': jobLine.mnt_work_requisition_status === 2 || jobLine.mnt_work_requisition_status === null,
                   }" class="text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
@@ -216,14 +218,14 @@
         
       </div>
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
 import Editor from '@tinymce/tinymce-vue';
 
 import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect, computed} from "vue";
 // import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useVessel from "../../../composables/operations/useVessel";
@@ -234,6 +236,7 @@ import useRunHour from "../../../composables/maintenance/useRunHour";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import moment from 'moment';
 import useMaintenanceHelper from "../../../composables/maintenance/useMaintenanceHelper";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 
 const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
 const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
@@ -241,7 +244,7 @@ const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGro
 const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVesselWiseJobItems, isItemLoading } = useItem();
 const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
 const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
-const { crews, getCrews } = useCrewCommonApiRequest();
+const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
 const { maintenanceTypes  } = useMaintenanceHelper();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const tab = ref('all_jobs');
@@ -362,6 +365,13 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   }
 });
 
+const crewsWithRank = computed(() => {
+  if(crews.value.length)
+    return crews.value.map(crew => ({
+      displayName: `${crew?.crwRank?.name} - ${crew.full_name}`
+      }));
+  return [];
+});
 function addJobLine(jobLine){
   props.form.added_job_lines.push(jobLine);
 }
@@ -385,6 +395,7 @@ onMounted(() => {
       if(businessUnit.value && businessUnit.value != 'ALL'){
         // getShipDepartmentsWithoutPagination(businessUnit.value);
         getVesselsWithoutPaginate(businessUnit.value);
+        getCrews(businessUnit.value);
       }
   });
   
