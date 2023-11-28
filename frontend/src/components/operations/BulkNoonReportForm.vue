@@ -26,22 +26,19 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Report Type </span>
             <select v-model="form.type" class="form-input">
-              <option value="" disabled>Select Option</option>
+              <option value="" disabled selected>Select Option</option>
               <option value="Noon Report">Noon Report</option>
               <option value="Arrival Report">Arrival Report</option>
               <option value="Departure Report">Departure Report</option>
             </select>
-            <Error v-if="errors?.type" :errors="errors.type" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Master </span>
           <input type="text" v-model="form.ship_master" placeholder="Master" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.ship_master" :errors="errors.ship_master" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Chief Engineer </span>
           <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.chief_engineer" :errors="errors.chief_engineer" />
         </label>
       </div>
 
@@ -80,22 +77,18 @@
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Date/Time </span>
           <input type="datetime-local" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.date_time" :errors="errors.date_time" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">GMT Time </span>
           <input type="datetime-local" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.gmt_time" :errors="errors.gmt_time" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Location </span>
           <input type="text" v-model="form.location" placeholder="Location" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.location" :errors="errors.location" />
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Latitude </span>
           <input type="text" v-model="form.latitude" placeholder="Latitude" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.latitude" :errors="errors.latitude" />
         </label>
       </div>
 
@@ -103,12 +96,10 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Longitude </span>
             <input type="text" v-model="form.longitude" placeholder="Longitude" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.longitude" :errors="errors.longitude" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Fuel Figures From </span>
             <input type="text" v-model="form.fuel_figures_from" placeholder="Fuel Figures From" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.fuel_figures_from" :errors="errors.fuel_figures_from" />
           </label>
       </div>
 
@@ -193,22 +184,18 @@
             <label class="block w-full text-sm">
               <span class="text-gray-700 ">CP/Ordered Speed </span>
               <input type="text" v-model="form.opsBulkNoonReportDistance.cp_ordered_speed" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.opsBulkNoonReportDistance.cp_ordered_speed" :errors="errors.opsBulkNoonReportDistance.cp_ordered_speed" />
             </label>
             <label class="block w-full text-sm">
               <span class="text-gray-700 ">Average RPM </span>
               <input type="text" v-model="form.opsBulkNoonReportDistance.average_rpm" placeholder="Average RPM" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.opsBulkNoonReportDistance.average_rpm" :errors="errors.opsBulkNoonReportDistance.average_rpm" />
             </label>
             <label class="block w-full text-sm">
               <span class="text-gray-700 ">Reported Speed </span>
               <input type="text" v-model="form.opsBulkNoonReportDistance.reported_speed" placeholder="Reported Speed" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.opsBulkNoonReportDistance.reported_speed" :errors="errors.opsBulkNoonReportDistance.reported_speed" />
             </label>
             <label class="block w-full text-sm">
               <span class="text-gray-700 ">Fwd Draft </span>
               <input type="text" v-model="form.opsBulkNoonReportDistance.fwd_draft" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
-              <Error v-if="errors?.opsBulkNoonReportDistance.fwd_draft" :errors="errors.opsBulkNoonReportDistance.fwd_draft" />
             </label>
         </div>
 
@@ -216,22 +203,18 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Observed Distance </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.observed_distance" placeholder="Observed Distance" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.observed_distance" :errors="errors.opsBulkNoonReportDistance.observed_distance" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Mild Draft </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.mild_draft" placeholder="Mild Draft" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.mild_draft" :errors="errors.opsBulkNoonReportDistance.mild_draft" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Engine Distance </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.engine_distance" placeholder="Engine Distance" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.engine_distance" :errors="errors.opsBulkNoonReportDistance.engine_distance" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Aft Draft </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.aft_draft" placeholder="Aft Draft" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.aft_draft" :errors="errors.opsBulkNoonReportDistance.aft_draft" />
           </label>
         </div>
 
@@ -239,22 +222,18 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Main Engine Revs </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.main_engine_revs" placeholder="Main Engine Revs" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.main_engine_revs" :errors="errors.opsBulkNoonReportDistance.main_engine_revs" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Heading </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.heading" placeholder="Heading" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.heading" :errors="errors.opsBulkNoonReportDistance.heading" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Slip % </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.slip_percent" :errors="errors.opsBulkNoonReportDistance.slip_percent" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Steaming Hours </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.steaming_hours" :errors="errors.opsBulkNoonReportDistance.steaming_hours" />
           </label>
         </div>
 
@@ -262,22 +241,18 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Salinity </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.salinity" placeholder="Salinity" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.salinity" :errors="errors.opsBulkNoonReportDistance.salinity" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">S. DWT </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.s_dwt" placeholder="S. DWT" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.s_dwt" :errors="errors.opsBulkNoonReportDistance.s_dwt" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Ballast </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.ballast" placeholder="Ballast" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.ballast" :errors="errors.opsBulkNoonReportDistance.ballast" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">S. Displacement </span>
             <input type="text" v-model="form.opsBulkNoonReportDistance.s_displacement" placeholder="S. Displacement" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.opsBulkNoonReportDistance.s_displacement" :errors="errors.opsBulkNoonReportDistance.s_displacement" />
           </label>
         </div>
 
@@ -285,22 +260,18 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">FW Last Day Noon ROB </span>
             <input type="text" v-model="form.fw_last_day_noon_rob" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.fw_last_day_noon_rob" :errors="errors.fw_last_day_noon_rob" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">FW Production </span>
             <input type="text" v-model="form.fw_production" placeholder="FW Production" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.fw_production" :errors="errors.fw_production" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">FW Consumption </span>
             <input type="text" v-model="form.fw_consumption" placeholder="FW Consumption" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.fw_consumption" :errors="errors.fw_consumption" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">FW Today Noon ROB </span>
             <input type="text" v-model="form.fw_today_noon_rob" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
-            <Error v-if="errors?.fw_today_noon_rob" :errors="errors.fw_today_noon_rob" />
           </label>
         </div>
       </div>
@@ -474,7 +445,6 @@
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Wind Condition </span>
           <input type="text" v-model="form.sea_condition" placeholder="Wind Condition" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.sea_condition" :errors="errors.sea_condition" />
         </label>
       </div>
     
@@ -560,7 +530,6 @@
       </div>
     </form>
   </div>
-  <ErrorComponent :errors="errors"></ErrorComponent>
 
   <button v-if="openTab==3" type="submit" :disabled="isLoading" class="flex float-right items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <span v-if="formType=='create'">Create</span>
@@ -580,6 +549,7 @@
       Back
     </button>
   
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted } from "vue";
