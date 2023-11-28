@@ -70,7 +70,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number"  step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsVoyageBoatNoteLines[index]?.quantity" :errors="errors.opsVoyageBoatNoteLines[index]?.quantity" />
                 </label>
               </td>
@@ -82,7 +82,7 @@
         </table>     
       
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchEffect  } from "vue";
@@ -91,6 +91,7 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../utils/ErrorComponent.vue";
 
 const editInitiated = ref(false);
 
@@ -150,17 +151,17 @@ watch(() => voyage, (value) => {
   if(props?.formType == 'edit' && editInitiated.value != true) {
     console.log("Voyage Watched by Defalt 1")
     props.form.opsVoyageBoatNoteLines = [
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
     ];
     editInitiated.value = true
 
   } else {
       props.form.opsVoyageBoatNoteLines = [
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
     ];
   }
     

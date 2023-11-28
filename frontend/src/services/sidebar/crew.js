@@ -173,7 +173,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'administration.users.index',
+                        route: 'crw.renew-schedule.index',
                         label: 'Renew Schedule',
                         preIcon: '',
                         postIcon: icons.DownArrow,

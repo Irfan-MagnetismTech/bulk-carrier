@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -36,5 +37,10 @@ class ScmPrLine extends Model
     public function scmPoLines(): HasMany
     {
         return $this->hasMany(ScmPoLine::class, 'pr_composite_key', 'pr_composite_key');
+    }
+
+    public function scmMrrLines(): HasMany
+    {
+        return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 }

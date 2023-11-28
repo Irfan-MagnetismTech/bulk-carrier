@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmMaterialCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Accounts\Entities\AccAccount;
 
 class ScmMaterial extends Model
 {
@@ -34,4 +35,8 @@ class ScmMaterial extends Model
     {
         return $this->hasMany(ScmStockLedger::class);
     }
+
+    public function account(){
+        return $this->morphOne(AccAccount::class, 'accountable')->withDefault();
+       }
 }

@@ -5,7 +5,7 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function usePurchaseOrder() {
     const BASE = 'scm' 
@@ -16,7 +16,7 @@ export default function usePurchaseOrder() {
     const isTableLoading = ref(false);
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
+    // const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
 
     const purchaseOrder = ref( {
