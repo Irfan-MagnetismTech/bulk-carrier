@@ -212,7 +212,7 @@ class AccCommonController extends Controller
                 $q->where('business_unit', request()->business_unit);
             })
             ->when(request()->acc_cost_center_id, function($q){
-                $q->where('acc_cost_center_id', 4);
+                $q->where('acc_cost_center_id', request()->acc_cost_center_id);
             })
             ->get();
 

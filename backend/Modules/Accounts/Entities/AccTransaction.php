@@ -13,7 +13,7 @@ class AccTransaction extends Model
     /**
      * @var array
      */
-    protected $fillable = ['acc_cost_center_id', 'voucher_type', 'transactionable_type', 'transactionable_id', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'business_unit'];
+    protected $fillable = ['acc_cost_center_id', 'voucher_type', 'transactionable_type', 'transactionable_id', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'instrument_amount', 'business_unit'];
 
     /**
      * @return mixed

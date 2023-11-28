@@ -17,6 +17,7 @@ class AccTransactionRequest extends FormRequest
             'bill_no'                   => ['max:255'],
             'mr_no'                     => ['max:255'],
             'narration'                 => ['max:700'],
+            'instrument_amount'         => ['numeric', 'max:999999999999.99'],
             'ledgerEntries.*.reff_bill' => ['max:255'],
             'ledgerEntries.*.dr_amount' => ['required', 'numeric', 'max:999999999999.99'],
             'ledgerEntries.*.cr_amount' => ['required', 'numeric', 'max:999999999999.99'],

@@ -2,12 +2,13 @@
 
 namespace Modules\Accounts\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AccDepreciation extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * @var array
