@@ -215,7 +215,7 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateByReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->when(request()->has('reference_number'), function ($query) {
+                ->when(isset(request()->reference_number), function ($query) {
                     $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {
@@ -236,7 +236,7 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->when(request()->has('reference_number'), function ($query) {
+                ->when(isset(request()->reference_number), function ($query) {
                     $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {

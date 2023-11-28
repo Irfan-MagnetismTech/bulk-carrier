@@ -255,11 +255,11 @@ class OpsBulkNoonReportController extends Controller
     public function getBulkNoonReportByType(Request $request){
         try {
             $bulk_noon_reports = OpsBulkNoonReport::query()
-            ->where(function ($query) use($request) {
-                $query->where('type', 'like', '%' . $request->type . '%');                
+            ->when(isset(request()->type), function($query){
+                $query->where('type', 'like', '%' . request()->type . '%');                
             })
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
             })
             ->limit(10)
             ->get();
@@ -272,11 +272,11 @@ class OpsBulkNoonReportController extends Controller
 
     public function exportBulkNoonReport(Request $request){
             $bulk_noon_report = OpsBulkNoonReport::query()
-            ->where(function ($query) use($request) {
-                $query->where('type', 'like', '%' . $request->type . '%');                
+            ->when(isset(request()->type), function($query){
+                $query->where('type', 'like', '%' . request()->type . '%');                
             })
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
             })
             ->first();
 

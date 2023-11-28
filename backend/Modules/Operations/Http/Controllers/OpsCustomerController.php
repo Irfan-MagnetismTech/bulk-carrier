@@ -156,7 +156,7 @@ class OpsCustomerController extends Controller
                     $query->where('name', 'like', '%' . request()->name_or_code . '%');
                     $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
             })
-            ->when(request()->has('business_unit') && request()->business_unit != "ALL", function($q){
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })
             ->get();
