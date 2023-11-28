@@ -11,17 +11,13 @@ export default function useDepreciation() {
     const notification = useNotification();
 
     const depreciation = ref( {
-        month_year : null,
+        month_year : '',
         applied_date : null,
         acc_cost_center_name : null,
         acc_cost_center_id : '',
+        total_amount: '',
         business_unit : '',
-        depreciationLine: [
-            {
-                acc_fixed_asset_id: '',
-                amount: '',
-            }
-        ]
+        accDepreciationLines: []
     });
 
     const filterParams = ref(null);

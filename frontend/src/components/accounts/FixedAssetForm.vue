@@ -207,7 +207,7 @@ onMounted(() => {
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Fixed Asset Costs <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom"> Particular <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 align-bottom"> Amount <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 align-bottom"> Remarks</th>

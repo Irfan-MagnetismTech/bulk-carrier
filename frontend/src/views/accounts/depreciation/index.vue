@@ -109,7 +109,6 @@ onMounted(() => {
         if (customDataTable) {
           tableScrollWidth.value = customDataTable.scrollWidth;
         }
-      //  isTableLoader.value = true; 
       })
       .catch((error) => {
         console.error("Failed to Load:", error);

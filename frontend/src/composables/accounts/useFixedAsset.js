@@ -3,10 +3,12 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
+import {loaderSetting as LoaderConfig} from "../../config/setting";
 
 export default function useFixedAsset() {
     const router = useRouter();
     const fixedAssets = ref([]);
+    const filteredFixedAssets = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
@@ -169,6 +171,28 @@ export default function useFixedAsset() {
         }
     }
 
+    async function searchFixedAsset(cost_center_id = null, business_unit=null) {
+
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        let form = {
+            business_unit: business_unit,
+            acc_cost_center_id: cost_center_id,
+        };
+
+        try {
+            const { data, status } = await Api.post('/acc/get-fixed-assets', form);
+            filteredFixedAssets.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         fixedAssets,
         fixedAsset,
@@ -177,6 +201,8 @@ export default function useFixedAsset() {
         showFixedAsset,
         updateFixedAsset,
         deleteFixedAsset,
+        filteredFixedAssets,
+        searchFixedAsset,
         isLoading,
         isTableLoading,
         errors,
