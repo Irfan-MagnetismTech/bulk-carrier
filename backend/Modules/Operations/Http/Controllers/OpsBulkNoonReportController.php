@@ -36,7 +36,7 @@ class OpsBulkNoonReportController extends Controller
         try {
             $bulk_noon_reports = OpsBulkNoonReport::with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs','opsBulkNoonReportEngineInputTypes'])
             ->globalSearch($request->all());
-            
+
             return response()->success('Successfully retrieved bulk noon reports.', $bulk_noon_reports, 200);
         }
         catch (QueryException $e)
@@ -122,9 +122,12 @@ class OpsBulkNoonReportController extends Controller
     */
     public function show(OpsBulkNoonReport $bulk_noon_report): JsonResponse
     {
-        $bulk_noon_report->load(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts.lastPort','opsBulkNoonReportPorts.nextPort','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs','opsBulkNoonReportEngineInputTypes']);
+        $bulk_noon_report->load(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts.lastPort','opsBulkNoonReportPorts.nextPort','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs']);
         try
         {
+            $bulk_noon_report->opsBulkNoonReportConsumptions->map(function($item) {
+                return $item->name = $item->scmMaterial->name;
+            });
             return response()->success('Successfully retrieved bulk noon report.', $bulk_noon_report, 200);
         }
         catch (QueryException $e)

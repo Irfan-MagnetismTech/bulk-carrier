@@ -71,11 +71,11 @@ class OpsBulkNoonReport extends Model
 
     public function opsBulkNoonReportEngineInputs()
     {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNull('type');
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportEngineInputTypes()
-    {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
-    }
+    // public function opsBulkNoonReportEngineInputTypes()
+    // {
+    //     return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
+    // }
 }

@@ -414,7 +414,7 @@
                   </div>
                 </td>
                 <td>
-                  <input type="text" class="form-input" v-model.trim="item.rack" placeholder="PCO">
+                  <input type="text" class="form-input" v-model.trim="item.pco" placeholder="PCO">
                 </td>
                 <td>
                   <input type="text" class="form-input" v-model.trim="item.rack" placeholder="Rack">
