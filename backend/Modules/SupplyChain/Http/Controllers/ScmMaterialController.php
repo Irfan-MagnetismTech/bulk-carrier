@@ -58,19 +58,26 @@ class ScmMaterialController extends Controller
             $material = ScmMaterial::create($requestData);
             // for account creation start
             $topParent = ScmMaterialCategory::topLevelParent($request->scm_material_category_id);
+            $topParentAccounPsmlId = $topParent->account_psml->id;
+            $topParentAccountTsllId = $topParent->account_tsll->id;
+
+           
+
             $material->account()->create([
                  'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
                  'account_name' => $material->name,
-                 'account_code' => "config('accounts.account_types.Assets') - config('accounts.balance_income_balance_header.current_assets') - config('accounts.balance_income_line.inventory') - $topParent->id - $material->id",
+                 'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
                  'account_type' => config('accounts.account_types.Assets'),
+                 'parent_account_id' => $topParentAccounPsmlId,
                  'business_unit' => 'PSML',
              ]);
 
              $material->account()->create([
                 'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
                 'account_name' => $material->name,
-                'account_code' => "config('accounts.account_types.Assets') - config('accounts.balance_income_balance_header.current_assets') - config('accounts.balance_income_line.inventory') - $topParent->id - $material->id",
+                'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
                 'account_type' => config('accounts.account_types.Assets'),
+                'parent_account_id' => $topParentAccountTsllId,
                 'business_unit' => 'TSLL',
             ]);
              // for account creation end
