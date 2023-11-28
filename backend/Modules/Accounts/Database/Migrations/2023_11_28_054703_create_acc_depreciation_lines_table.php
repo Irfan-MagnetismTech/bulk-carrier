@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('acc_depreciations', function (Blueprint $table) {
+        Schema::create('acc_depreciation_lines', function (Blueprint $table) {
             $table->id();
-            $table->string('month_year', 7);
-            $table->date('applied_date');
-            $table->unsignedBigInteger('acc_cost_center_id');
-			$table->enum('business_unit', ['PSML', 'TSLL']);
+			$table->foreignId('acc_depreciation_id')->constrained('acc_depreciations', 'id')->cascadeOnDelete();
+			$table->unsignedBigInteger('acc_fixed_asset_id');
+            $table->float('depreciation_rate'); // in percentage
+			$table->decimal('amount', 16, 2);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('acc_depreciations');
+        Schema::dropIfExists('acc_depreciation_lines');
     }
 };

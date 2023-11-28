@@ -1,17 +1,17 @@
 <script setup>
 import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useCashRequisition from "../../../composables/accounts/useCashRequisition";
+import useFixedAsset from "../../../composables/accounts/useFixedAsset";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import useDepreciation from "../../../composables/accounts/useDepreciation";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -21,13 +21,10 @@ const props = defineProps({
   },
 });
 
-const { cashRequisitions, getCashRequisitions, deleteCashRequisition, isLoading, isTableLoading} = useCashRequisition();
+const { depreciations, getDepreciations, deleteDepreciation, isLoading, isTableLoading} = useDepreciation();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Cash Requisition');
-
-const tableScrollWidth = ref(null);
-const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+setTitle('Depreciation');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref({
@@ -37,23 +34,13 @@ let filterOptions = ref({
   "page": props.page,
   "filter_options": [
     {
-      "relation_name": 'costCenter',
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Cost Center",
-      "filter_type": "input"
-    },
-    {
       "relation_name": null,
-      "field_name": "id",
+      "field_name": "month_year",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cash Req. No",
+      "label": "Year",
       "filter_type": "input"
     },
     {
@@ -67,37 +54,20 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": 'scmPr',
-      "field_name": 'ref_no',
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "PR No",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": 'requisitor',
+      "relation_name": 'costCenter',
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Applied By",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "total_amount",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Total Amount",
+      "label": "Cost Center",
       "filter_type": "input"
     },
   ]
 });
+
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
@@ -114,7 +84,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteCashRequisition(id);
+      deleteDepreciation(id);
     }
   })
 }
@@ -123,7 +93,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'acc.cash-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'acc.depreciations.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -131,7 +101,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getCashRequisitions(filterOptions.value)
+    getDepreciations(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
@@ -144,20 +114,18 @@ onMounted(() => {
         console.error("Failed to Load:", error);
       });
   });
+
   filterOptions.value.filter_options.forEach((option, index) => {
     filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
   });
 });
-
-
-
 </script>
 
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700"> Cash Requisition List </h2>
-    <default-button :title="'Create Cash Requisition'" :to="{ name: 'acc.cash-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700"> Depreciation List </h2>
+    <default-button :title="'Create Depreciation'" :to="{ name: 'acc.depreciations.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
   <div id="customDataTable">
@@ -166,44 +134,40 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-                <tr v-for="(cashRequisition, index) in cashRequisitions?.data" :key="index">
+                <tr v-for="(depreciationData, index) in depreciations?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ cashRequisition?.costCenter?.name }} </td>
-                  <td> {{ cashRequisition?.id }} </td>
-                  <td> {{ cashRequisition?.applied_date }} </td>
-                  <td> {{ cashRequisition?.scmPr?.ref_no }} </td>
-                  <td class="text-left"> {{ cashRequisition?.requisitor?.name }} </td>
-                  <td class="text-right">  {{ cashRequisition?.total_amount }} </td>
+                  <td class="text-left"> {{ depreciationData?.month_year }} </td>
+                  <td class="text-left"> {{ depreciationData?.applied_date }} </td>
+                  <td class="text-left"> {{ depreciationData?.costCenter?.name }} </td>
                 <td>
-                  <span :class="cashRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
-                    {{ cashRequisition?.business_unit }}
+                  <span :class="depreciationData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
+                    {{ depreciationData?.business_unit }}
                   </span>
                 </td>
-
                 <td>
                   <nobr>
-                    <action-button :action="'edit'" :to="{ name: 'acc.cash-requisitions.edit', params: { cashRequisitionId: cashRequisition?.id } }"></action-button>
-                    <action-button @click="confirmDelete(cashRequisition?.id)" :action="'delete'"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'acc.depreciations.edit', params: { depreciationId: depreciationData?.id } }"></action-button>
+                    <action-button @click="confirmDelete(depreciationData?.id)" :action="'delete'"></action-button>
                   </nobr>
                 </td>
               </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && cashRequisitions?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && depreciations?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!cashRequisitions?.data?.length">
+          <tfoot v-if="!depreciations?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="13"></td>
+            <td colspan="5"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="13">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
-          <tr v-else-if="!cashRequisitions?.data?.length">
+          <tr v-else-if="!depreciations?.data?.length">
             <td colspan="13">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="cashRequisitions" to="acc.cash-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="depreciations" to="acc.depreciations.index" :page="page"></Paginate>
   </div>
 </template>
