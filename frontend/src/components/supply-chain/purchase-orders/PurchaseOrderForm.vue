@@ -30,10 +30,11 @@
 
     });
 
+    
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmPoLines.push(clonedObj);
-      setMinHeight();
+      // setMinHeight();
     }
 
     function removeMaterial(index){
@@ -98,14 +99,23 @@ function setMaterialOtherData(line, index) {
               props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
               props.form.scmPoLines[index].unit = selectedMaterial.unit;
               props.form.scmPoLines[index].brand = selectedMaterial.brand;
-              props.form.scmPoLines[index].model = selectedMaterial.model;;
+              props.form.scmPoLines[index].model = selectedMaterial.model;
+              props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
             }
           }
     }
 
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
+      let materialArray = [];
       newVal?.forEach((line, index) => {
+        let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmPoLines.splice(index, 1);
+        }  
         props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
         total += parseFloat(props.form.scmPoLines[index].total_price);
         if (line.scmMaterial) {
@@ -240,7 +250,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks</span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
@@ -292,10 +302,10 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="number" required v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
+              <input type="number" required v-model="form.scmPoLines[index].quantity" min=1 class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
             </td>
             <td>
-              <input type="number" required v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="number" required v-model="form.scmPoLines[index].rate" min=1 class="form-input">
             </td>
             <td>
               <input type="number" readonly v-model="form.scmPoLines[index].total_price" class="form-input vms-readonly-input">

@@ -60,6 +60,10 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-salary-structures', CrwSalaryStructureController::class);
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
 
+    //Additional Routes
+    Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);
+
+
 
     //helper apis
     Route::post('get-crew-ranks', [CrwCommonController::class, 'getCrewRanks']);

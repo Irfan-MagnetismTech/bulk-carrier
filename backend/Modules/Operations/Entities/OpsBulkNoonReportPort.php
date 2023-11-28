@@ -23,4 +23,12 @@ class OpsBulkNoonReportPort extends Model
     {
         return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
     }
+
+    public function lastPort() {
+        return $this->belongsTo(OpsPort::class, 'last_port', 'code');
+    }
+
+    public function nextPort() {
+        return $this->belongsTo(OpsPort::class, 'next_port', 'code');
+    }
 }
