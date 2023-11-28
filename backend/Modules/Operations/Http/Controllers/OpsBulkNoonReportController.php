@@ -80,7 +80,9 @@ class OpsBulkNoonReportController extends Controller
             if(isset($request->opsBulkNoonReportConsumptions)){
                 foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
                     $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
-                    $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
+                    if(isset($consumptionData['opsBulkNoonReportConsumptionHeads'])) {
+                        $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
+                    }
                 }
             }
 
