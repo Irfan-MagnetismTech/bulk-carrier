@@ -429,6 +429,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/bulk-noon-reports/:bulkNoonReportId/copy`,
+		name: `${BASE}.bulk-noon-reports.copy`,
+		component: () => import (`../views/${ViEWBASE}/bulk-noon-reports/copy.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 		/*Contract Assign */
 	{
 		path: `/${BASE}/contract-assigns`,
