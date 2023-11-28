@@ -240,6 +240,27 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    /* Crew documents renew Routes */
+    {
+        path: `/${BASE}/renew-schedules`,
+        name: `${BASE}.renew-schedules.index`,
+        component: () => import(`../views/crew/document-renew-schedule/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/renew-schedules/create`,
+        name: `${BASE}.renew-schedules.create`,
+        component: () => import(`../views/crew/document-renew-schedule/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/renew-schedules/:renewScheduleId/edit`,
+        name: `${BASE}.renew-schedules.edit`,
+        component: () => import(`../views/crew/document-renew-schedule/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* Crew Assigns Routes */
     {
         path: `/${BASE}/crew-assigns`,
