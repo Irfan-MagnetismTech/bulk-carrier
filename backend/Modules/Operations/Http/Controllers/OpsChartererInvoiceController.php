@@ -32,7 +32,7 @@ class OpsChartererInvoiceController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors')
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
@@ -56,11 +56,13 @@ class OpsChartererInvoiceController extends Controller
             DB::beginTransaction();
             $charterer_invoice_info = $request->except(
                 '_token',
+                'opsChartererInvoiceVoyages',
                 'opsChartererInvoiceOthers',
                 'opsChartererInvoiceServices'
             );
 
             $charterer_invoice = OpsChartererInvoice::create($charterer_invoice_info);
+            $charterer_invoice->opsChartererInvoiceVoyages()->createMany($request->opsChartererInvoiceVoyages);
             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
             $charterer_invoice->opsChartererInvoiceServices()->createMany($request->opsChartererInvoiceServices);
             DB::commit();
@@ -108,10 +110,14 @@ class OpsChartererInvoiceController extends Controller
             DB::beginTransaction();
             $charterer_invoice_info = $request->except(
                 '_token',
+                'opsChartererInvoiceVoyages',
                 'opsChartererInvoiceOthers',
+                'opsChartererInvoiceServices',
             );
         
-            $charterer_invoice->update($charterer_invoice_info);       
+            $charterer_invoice->update($charterer_invoice_info);
+            $charterer_invoice->opsChartererInvoiceVoyages()->delete();     
+            $charterer_invoice->opsChartererInvoiceVoyages()->createMany($request->opsChartererInvoiceVoyages);
             $charterer_invoice->opsChartererInvoiceOthers()->delete();
             $charterer_invoice->opsChartererInvoiceOthers()->createMany($request->opsChartererInvoiceOthers);
             $charterer_invoice->opsChartererInvoiceServices()->delete();
@@ -136,6 +142,7 @@ class OpsChartererInvoiceController extends Controller
     {
         try
         {
+            $charterer_invoice->opsChartererInvoiceVoyages()->delete();
             $charterer_invoice->opsChartererInvoiceOthers()->delete();
             $charterer_invoice->opsChartererInvoiceServices()->delete();
             $charterer_invoice->delete();
@@ -152,7 +159,9 @@ class OpsChartererInvoiceController extends Controller
      
     public function getChartererInvoiceName(){
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')->latest()->get();
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors')
+            ->latest()
+            ->get();
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         } catch (QueryException $e){
@@ -162,21 +171,20 @@ class OpsChartererInvoiceController extends Controller
 
     public function getVoyageByContract(Request $request): JsonResponse
     {
-
         $voyages= OpsVoyage::with('opsVoyageSectors','opsContractAssign')->whereHas('opsContractAssign',function($item){
             return $item->where('ops_charterer_contract_id', request()->contract_id);
         })
-        ->get();   
+        ->get();
      
         $voyages->map(function($voyage){  
             $cargo_quantity = 0;
-            if ($voyage->opsVoyageSectors->sum('final_received_qty') != 0) {
+            if ($voyage->opsVoyageSectors->sum('final_received_qty') > 0) {
                 $cargo_quantity = $voyage->opsVoyageSectors->sum('final_received_qty');
-            } elseif ($voyage->opsVoyageSectors->sum('final_survey_qty') != 0) {
+            } elseif ($voyage->opsVoyageSectors->sum('final_survey_qty') > 0) {
                 $cargo_quantity = $voyage->opsVoyageSectors->sum('final_survey_qty');
-            } elseif ($voyage->opsVoyageSectors->sum('boat_note_qty')) {
+            } elseif ($voyage->opsVoyageSectors->sum('boat_note_qty') > 0) {
                 $cargo_quantity = $voyage->opsVoyageSectors->sum('boat_note_qty');
-            } elseif ($voyage->opsVoyageSectors->sum('initial_survey_qty') != 0) {
+            } elseif ($voyage->opsVoyageSectors->sum('initial_survey_qty') > 0) {
                 $cargo_quantity = $voyage->opsVoyageSectors->sum('initial_survey_qty');
             }
         
