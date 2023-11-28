@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_bulk_noon_report_consumption_heads', function (Blueprint $table) {
             $table->id();           
+            $table->unsignedBigInteger('ops_bulk_noon_report_id');
             $table->unsignedBigInteger('ops_bulk_noon_report_consumption_id');
             $table->string('type')->nullable();
             $table->float('amount')->nullable();

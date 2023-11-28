@@ -11,6 +11,7 @@ class OpsBulkNoonReportConsumptionHead extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ops_bulk_noon_report_id',
         'ops_bulk_noon_report_consumption_id',
         'type',
         'amount',
