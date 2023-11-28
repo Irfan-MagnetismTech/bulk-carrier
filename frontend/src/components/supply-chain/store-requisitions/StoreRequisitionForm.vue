@@ -27,16 +27,22 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
+         <v-select :options="DEPARTMENTS" placeholder="--Choose an option--" v-model="form.department_id" label="name" class="block form-input" :reduce="DEPARTMENTS => DEPARTMENTS.id">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.scmWarehouse"
+                  :required="!form.department_id"
                   v-bind="attributes"
                   v-on="events"
               />
           </template>
           </v-select>
+          <!-- <select class="form-input" v-model.trim="form.department_id" autocomplete="off" required >
+            <option value="" disabled selected>Select</option>
+            <option value="1">Store Department</option>
+            <option value="2">Engine Department</option>
+            <option value="3">Provision Department</option>
+          </select> -->
           <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
@@ -48,7 +54,7 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks </span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
@@ -102,7 +108,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmSrLines[index].quantity" class="form-input" min="1" required>
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -156,6 +162,21 @@
       page: {required: false, default: {} },
 
     });
+
+const DEPARTMENTS = [
+  {
+    'id': 1,
+    'name': 'Store Department'
+  },
+  {
+    'id': 2,
+    'name': 'Engine Department'
+  },
+  {
+    'id': 3,
+    'name': 'Provision Department'
+  }
+]
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmSrLines.push(clonedObj);
@@ -202,9 +223,17 @@
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
 watch(() => props.form.scmSrLines, (newLines) => {
+
+  const materialArray = [];
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
-
+    let material_key = line.scm_material_id;
+    if (materialArray.indexOf(material_key) === -1) {
+      materialArray.push(material_key);
+    } else {
+      alert("Duplicate Material Found");
+      props.form.scmSrLines.splice(index, 1);
+    } 
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {

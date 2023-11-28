@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel </span>
-              <v-select :options="vessels" placeholder="--Choose an option--" @search="fetchVessels"  v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -23,7 +23,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -78,7 +78,7 @@
 
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Last Port <span class="text-red-500">*</span></span>
-          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.lastPort" label="code_name" class="block form-input">
+          <v-select :options="ports" placeholder="Search Port" v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -93,7 +93,7 @@
 
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Next Port <span class="text-red-500">*</span></span>
-          <v-select :options="ports" placeholder="Search Port" @search="fetchPorts"  v-model="form.nextPort" label="code_name" class="block form-input">
+          <v-select :options="ports" placeholder="Search Port" v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -109,12 +109,7 @@
 
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-              <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-        </label>
-    </div>
+    <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
     <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
       <h4 class="text-md font-semibold my-3">Bunker Info</h4>
@@ -132,7 +127,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(certificate, index) in form.opsBunkers">
+            <tr v-for="(certificate, index) in form.opsBunkers" :key="index">
               <td>
                 {{ index+1 }}
               </td>
@@ -151,40 +146,38 @@
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_24h" placeholder="FUEL - CON/24H" class="form-input text-right" autocomplete="off"/>
-                  <Error v-if="errors?.opsBunkers[index]?.fuel_con_24h" :errors="errors.opsBunkers[index]?.fuel_con_24h" />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_con_voyage" placeholder="FUEL - CON/Voyage" class="form-input text-right" autocomplete="off"/>
-                  <Error v-if="errors?.opsBunkers[index]?.fuel_con_voyage" :errors="errors.opsBunkers[index]?.fuel_con_voyage" />
                 </label>
               </td>
               <td class="hidden">
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].fuel_stock_l" placeholder="FUEL - Stock/L" class="form-input text-right" autocomplete="off"/>
-                  <Error v-if="errors?.opsBunkers[index]?.fuel_stock_l" :errors="errors.opsBunkers[index]?.fuel_stock_l" />
                 </label>
               </td>
             </tr>
           </tbody>
         </table>
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
-import { ref, watch } from "vue";
-import Error from "../Error.vue";
+import { ref, watch, onMounted } from "vue";
 import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import usePort from '../../composables/operations/usePort';
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 
 const editInitiated = ref(false);
 
-const { ports, searchPorts } = usePort();
-const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
+const { ports, getPortList } = usePort();
+const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
 const props = defineProps({
     form: {
@@ -195,20 +188,6 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-function fetchPorts(search, loading) {
-      loading(true);
-      searchPorts(search, loading)
-}
-
-function fetchVoyages(searchParam, loading) {
-  loading(true)
-  searchVoyages(searchParam, props.form.business_unit, loading)
-}
-
-function fetchVessels(search, loading) {
-      loading(true);
-      searchVessels(search, props.form.business_unit, loading);
-}
 
 watch(() => props.form.business_unit, (value) => {
   if(props?.formType != 'edit') {
@@ -218,6 +197,7 @@ watch(() => props.form.business_unit, (value) => {
     props.form.ops_vessel_id = null;
   }
   
+  getVesselList(props.form.business_unit);
 
 }, { deep : true })
 
@@ -232,7 +212,12 @@ watch(() => props.form.opsVessel, (value) => {
   
   if(value) {
     props.form.ops_vessel_id = value?.id
-    showVessel(value?.id)
+    let loadStatus = false;
+    showVessel(value?.id, loadStatus);
+    voyages.value = [];
+    props.form.opsVoyage = null;
+    props.form.ops_voyage_id = null;
+    getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
   }
 }, { deep: true })
 
@@ -267,7 +252,10 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
-
+onMounted(() => {
+  getVesselList(props.form.business_unit);
+  getPortList();
+});
 </script>
 <style lang="postcss" scoped>
 .input-group {

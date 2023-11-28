@@ -11,6 +11,7 @@ use App\Services\FileUploadService;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmMaterialCategory;
 use Modules\SupplyChain\Http\Requests\ScmMaterialRequest;
 
 class ScmMaterialController extends Controller
@@ -55,7 +56,16 @@ class ScmMaterialController extends Controller
                 $requestData['sample_photo'] = $sample_photos;
             }
             $material = ScmMaterial::create($requestData);
-
+            // scmMaterlCategory getTopLevelParent
+            // $data = ScmMaterialCategory::topLevelParent($request->scm_material_category_id);
+            // return response()->json(['message' => 'Data created successfully', 'data' => $data], 422);
+            // $material->account()->create([
+            //     'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+            //     'account_name' => $material->name,
+            //     'account_code' => "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material->id",
+            //     'account_type' => config('accounts.account_types.Assets'),
+            //     'business_unit' => 'PSML',
+            // ]);
             return response()->success('Data created succesfully', $material, 201);
         } catch (\Exception $e) {
 
