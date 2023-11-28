@@ -12,7 +12,7 @@ class OpsChartererInvoiceVoyage extends Model
     protected $fillable = [
         'ops_charterer_invoice_id',
         'ops_voyage_id',
-        'cargo_Quantity',
+        'cargo_quantity',
         'initial_loading_point',
         'final_loading_point',
         'rate_per_mt',
@@ -23,4 +23,5 @@ class OpsChartererInvoiceVoyage extends Model
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
+
 }

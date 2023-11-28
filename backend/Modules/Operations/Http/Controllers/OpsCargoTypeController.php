@@ -128,7 +128,7 @@ class OpsCargoTypeController extends Controller
     public function getCargoTypeByName(Request $request){
         try {
             $cargo_types = OpsCargoType::query()
-            ->when(request()->has('cargo_type'), function ($query) {
+            ->when(isset(request()->cargo_type), function ($query) {
                 $query->where('cargo_type', 'like', '%' . request()->cargo_type . '%');
             }) 
             ->limit(10)
@@ -143,7 +143,7 @@ class OpsCargoTypeController extends Controller
     public function getCargoTypeName(Request $request){
         try {
             $cargo_types = OpsCargoType::query()
-            ->when(request()->has('cargo_type'), function ($query) {
+            ->when(isset(request()->cargo_type), function ($query) {
                 $query->where('cargo_type', 'like', '%' . request()->cargo_type . '%');
             })    
             ->get();
