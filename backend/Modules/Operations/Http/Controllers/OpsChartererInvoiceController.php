@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsChartererInvoice;
 use Modules\Operations\Http\Requests\OpsChartererInvoiceRequest;
@@ -154,6 +155,40 @@ class OpsChartererInvoiceController extends Controller
             $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract','opsChartererInvoiceOthers','opsChartererInvoiceServices')->latest()->get();
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getVoyageByContract(Request $request): JsonResponse
+    {
+
+        $voyages= OpsVoyage::with('opsVoyageSectors','opsContractAssign')->whereHas('opsContractAssign',function($item){
+            return $item->where('ops_charterer_contract_id', request()->contract_id);
+        })
+        ->get();   
+     
+        $voyages->map(function($voyage){  
+            $cargo_quantity = 0;
+            if ($voyage->opsVoyageSectors->sum('final_received_qty') != 0) {
+                $cargo_quantity = $voyage->opsVoyageSectors->sum('final_received_qty');
+            } elseif ($voyage->opsVoyageSectors->sum('final_survey_qty') != 0) {
+                $cargo_quantity = $voyage->opsVoyageSectors->sum('final_survey_qty');
+            } elseif ($voyage->opsVoyageSectors->sum('boat_note_qty')) {
+                $cargo_quantity = $voyage->opsVoyageSectors->sum('boat_note_qty');
+            } elseif ($voyage->opsVoyageSectors->sum('initial_survey_qty') != 0) {
+                $cargo_quantity = $voyage->opsVoyageSectors->sum('initial_survey_qty');
+            }
+        
+            $voyage['cargo_quantity'] = $cargo_quantity;
+        
+            return $voyage;
+                        
+        });
+        
+       
+        try {            
+            return response()->success('Data retrieved successfully.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
