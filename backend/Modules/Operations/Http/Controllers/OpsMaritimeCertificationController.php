@@ -133,7 +133,7 @@ class OpsMaritimeCertificationController extends Controller
     public function getMaritimeCertificationByName(Request $request){
         try {
             $maritime_certifications = OpsMaritimeCertification::query()
-            ->when(request()->has('name'), function ($query) {
+            ->when(isset(request()->name), function ($query) {
                 $query->where('name', 'like', '%' . request()->name . '%');                
             })
             ->limit(10)
@@ -147,7 +147,7 @@ class OpsMaritimeCertificationController extends Controller
     public function getMaritimeCertificationName(Request $request){
         try {
             $maritime_certifications = OpsMaritimeCertification::query()
-            ->when(request()->has('name'), function ($query) {
+            ->when(isset(request()->name), function ($query) {
                 $query->where('name', 'like', '%' . request()->name . '%');                
             })
             ->get();
