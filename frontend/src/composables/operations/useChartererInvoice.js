@@ -10,6 +10,7 @@ export default function useChartererInvoice() {
 	const router = useRouter();
 	const chartererInvoices = ref([]);
 	const $loading = useLoading();
+    const isTableLoading = ref(false);
 	const notification = useNotification();
 
 	const chartererInvoice = ref({
@@ -114,31 +115,47 @@ export default function useChartererInvoice() {
 		amount_usd: 0,
 	};
 
+    const errors = ref('');
+    const isLoading = ref(false);
+    const filterParams = ref(null);
 
-	const errors = ref(null);
-	const isLoading = ref(false);
-
-	async function getChartererInvoices(page, businessUnit) {
+	async function getChartererInvoices(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
 
 		try {
-			const { data, status } = await Api.get('/ops/charterer-invoices', {
-				params: {
-					page: page || 1,
-					business_unit: businessUnit
-				}
-			});
+			const {data, status} = await Api.get(`/ops/charterer-invoices`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
 			chartererInvoices.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			//notification.showError(status);
+			notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -223,7 +240,7 @@ export default function useChartererInvoice() {
 		try {
 			const { data, status } = await Api.delete( `/ops/charterer-invoices/${chartererInvoiceId}`);
 			notification.showSuccess(status);
-			await getChartererInvoices();
+			await getChartererInvoices(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -261,6 +278,7 @@ export default function useChartererInvoice() {
 		chartererInvoiceVoyageObject,
 		searchChartererInvoices,
 		serviceObject,
+		isTableLoading,
 		otherObject,
 		isLoading,
 		errors,
