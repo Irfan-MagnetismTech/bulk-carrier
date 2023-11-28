@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBulkNoonReport extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -70,11 +71,11 @@ class OpsBulkNoonReport extends Model
 
     public function opsBulkNoonReportEngineInputs()
     {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNull('type');
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportEngineInputTypes()
-    {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
-    }
+    // public function opsBulkNoonReportEngineInputTypes()
+    // {
+    //     return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
+    // }
 }

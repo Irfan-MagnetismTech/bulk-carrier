@@ -219,7 +219,7 @@ onMounted(() => {
 
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
                       <action-button @click="confirmDelete(voyage.id)" :action="'delete'"></action-button>
                       <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
