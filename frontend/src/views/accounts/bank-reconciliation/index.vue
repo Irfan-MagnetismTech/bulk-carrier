@@ -60,7 +60,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Voucher Date",
+      "label": "Transaction Date",
       "filter_type": "input"
     },
     {
