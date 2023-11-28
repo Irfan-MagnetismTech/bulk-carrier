@@ -156,7 +156,7 @@ export default [
                         subSubMenu: [],
                     },
                     {
-                        route: 'crw.vesselRequiredCrews.index',
+                        route: 'acc.depreciations.index',
                         label: 'Depreciation',
                         preIcon: '',
                         postIcon: icons.DownArrow,
