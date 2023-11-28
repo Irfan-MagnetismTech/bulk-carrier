@@ -36,7 +36,7 @@ class ScmMaterialCategoryController extends Controller
         try {
             $material_category = ScmMaterialCategory::create($request->all());
             if($request->parent_id == null ){
-                $data = [
+                $psmlData = [
                     'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
                     'account_name'=> $material_category->name,
                     // 'account_code'=> "config('accounts.account_types.Assets') - config('accounts.base_header.current_asset') - config('accounts.balance_income_line.inventory') - $material_category->id",
@@ -45,7 +45,7 @@ class ScmMaterialCategoryController extends Controller
                     'business_unit'=> 'PSML',
                 ];
 
-                $data1 = [
+                $tsllData = [
                     'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
                     'account_name'=> $material_category->name,
                     // 'account_code'=> "config('accounts.account_types.Assets') - config('accounts.base_header.current_asset') - config('accounts.balance_income_line.inventory') - $material_category->id",
@@ -55,8 +55,8 @@ class ScmMaterialCategoryController extends Controller
                 ];
 
 
-                $material_category->account()->create($data);
-                $material_category->account()->create($data1);
+                $material_category->account()->create($psmlData);
+                $material_category->account()->create($tsllData);
             }
             return response()->success('Data created succesfully', $material_category, 201);
         } catch (\Exception $e) {

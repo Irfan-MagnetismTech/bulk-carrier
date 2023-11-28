@@ -60,9 +60,9 @@ class ScmPoRequest extends FormRequest
             'scm_warehouse_id.integer' => 'Warehouse must be an integer',
             'scm_warehouse_id.exists' => 'Warehouse is not found',
 
-            'acc_cost_center_id.required' => 'Cost center is required',
-            'acc_cost_center_id.integer' => 'Cost center must be an integer',
-            'acc_cost_center_id.exists' => 'Cost center is not found',
+            // 'acc_cost_center_id.required' => 'Cost center is required',
+            // 'acc_cost_center_id.integer' => 'Cost center must be an integer',
+            // 'acc_cost_center_id.exists' => 'Cost center is not found',
 
             'attachment.required' => 'Attachment is required',
             'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',

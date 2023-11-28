@@ -27,15 +27,26 @@ class ScmMaterialCategory extends Model
         return $this->hasMany(self::class, 'id', 'parent_id');
     }
 
-    public function getTopLevelParent(): ?self
-    {
-        $currentCategory = $this;
+    // public function getTopLevelParent(): ?self
+    // {
+    //     $currentCategory = $this;
         
-        while ($currentCategory->parent) {
-            $currentCategory = $currentCategory->parent;
+    //     while ($currentCategory->parent) {
+    //         $currentCategory = $currentCategory->parent;
+    //     }
+
+    //     return $currentCategory;
+    // }
+
+    public function scopeTopLevelParent($query, $categoryId)
+    {
+        $category = $query->find($categoryId);
+
+        while ($category && $category->parent) {
+            $category = $category->parent;
         }
 
-        return $currentCategory;
+        return $category;
     }
 
     public function getAllDescendants(): HasMany
