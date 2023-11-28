@@ -60,7 +60,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Tag",
+      "label": "Asset Tag",
       "filter_type": "input"
     },
     {
@@ -167,9 +167,9 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(fixedAsset, index) in fixedAssets?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ fixedAsset?.costCenter?.name }} </td>
-                  <td> {{ fixedAsset?.account?.account_name }} </td>
-                  <td> {{ fixedAsset?.asset_tag }} </td>
+                  <td class="text-left"> {{ fixedAsset?.costCenter?.name }} </td>
+                  <td class="text-left"> {{ fixedAsset?.account?.account_name }} </td>
+                  <td class="text-left"> {{ fixedAsset?.asset_tag }} </td>
                   <td> {{ fixedAsset?.useful_life }} </td>
                   <td> {{ fixedAsset?.depreciation_rate }} </td>
                   <td> {{ fixedAsset?.acquisition_date }} </td>
