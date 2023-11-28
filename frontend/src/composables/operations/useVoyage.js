@@ -77,6 +77,7 @@ export default function useVoyage() {
 	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isVoyageLoading = ref(false);
 	const isTableLoading = ref(false);
 
 	async function getVoyages(filterOptions) {
@@ -156,8 +157,9 @@ export default function useVoyage() {
 
 	async function showVoyage(voyageId) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2', 'is-full-page': false});
 		isLoading.value = true;
+		isTableLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/voyages/${voyageId}`);
@@ -167,8 +169,9 @@ export default function useVoyage() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loader.hide();
+			// loader.hide();
 			isLoading.value = false;
+			isVoyageLoading.value = false;
 			//NProgress.done();
 		}
 	}
@@ -268,17 +271,18 @@ export default function useVoyage() {
 
 	async function searchVoyages(searchParam, businessUnit, loading, vesselId = null) {
 		//NProgress.start();
-
+		isVoyageLoading.value = true;
 		try {
-			const { data, status } = await Api.get(`/ops/search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&vessel_id=${vesselId}`);
+			const { data, status } = await Api.get(`/ops/get-search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&vessel_id=${vesselId}`);
 			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
 			//NProgress.done();
+			isVoyageLoading.value = false;
 		}
 	}
 	
@@ -381,6 +385,7 @@ export default function useVoyage() {
 		getVoyagesWithoutPaginate,
 		checkValidation,
 		isLoading,
+		isVoyageLoading,
 		isTableLoading,
 		errors,
 	};
