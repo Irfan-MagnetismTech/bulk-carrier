@@ -47,7 +47,6 @@ function confirmDelete(id) {
   })
 }
 
-let showFilter = ref(false);
 let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
@@ -127,28 +126,9 @@ let filterOptions = ref( {
   ]
 });
 
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
-
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 const formParams = ref( {
   reconciliation_date: null,
