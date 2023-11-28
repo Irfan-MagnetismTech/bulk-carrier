@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Add Voyage Boat Notes</h2>
       <default-button :title="'Voyage Boat Notes List'" :to="{ name: 'ops.voyage-boat-notes.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 relative">
       <form @submit.prevent="storeVoyageBoatNote(voyageBoatNote)">
           <!-- Port Form -->
           <voyage-boat-note-form v-model:form="voyageBoatNote" :errors="errors" :formType="formType"></voyage-boat-note-form>
