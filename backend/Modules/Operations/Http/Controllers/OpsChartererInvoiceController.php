@@ -32,8 +32,9 @@ class OpsChartererInvoiceController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors')->latest()->paginate(20);
-            // ->globalSearch($request->all());
+            $charterer_invoices = OpsChartererInvoice::with('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors',
+            'opsChartererContract.opsVessel')
+            ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $charterer_invoices, 200);
         }
@@ -84,7 +85,8 @@ class OpsChartererInvoiceController extends Controller
     */
     public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
     {
-        $charterer_invoice->load('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors');
+        $charterer_invoice->load('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors',
+        'opsChartererContract.opsVessel');
         
         try
         {
