@@ -99,8 +99,8 @@ onMounted(() => {
           <tbody v-if="chartererInvoices?.data?.length">
               <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
                   <td>{{ chartererInvoices.from + index }}</td>
-                  <!-- <td>{{ chartererInvoice?.opsVoyage?.mother_vessel }}</td>
-                  <td>{{ chartererInvoice?.opsVessel?.name }}</td>
+                  <td>{{ chartererInvoice?.ops_voyage_id }}</td>
+                  <!-- <td>{{ chartererInvoice?.opsVessel?.name }}</td>
                   <td>{{ chartererInvoice?.opsVoyage?.voyage_no }}</td>
                   <td>{{ chartererInvoice?.opsVessel?.capacity }}</td>
                   <td>
