@@ -231,8 +231,11 @@ class MntWorkRequisitionController extends Controller
             
             $workRequisitionMaterials = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
             $workRequisitionLines = $input['mntWorkRequisitionLines'];
+
             $workRequisitionItem = $input['mntWorkRequisitionItem'];
             $itemPresentRunHour = $workRequisitionItem['present_run_hour'];
+            $wrItemUpdate = $workRequisition->mntWorkRequisitionItem()->update(['present_run_hour'=>$itemPresentRunHour]);
+            
             $row = 1;
             foreach($workRequisitionLines as $wrLine) {
                 // if ($wrLine['start_date'] == '' || $wrLine['start_date'] == null) {
