@@ -190,8 +190,10 @@ function confirmDelete(id) {
                 <span :class="materialReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialReceiptReport?.business_unit }}</span>
               </td>
               <td>
+                <nobr>
                 <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
                 <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
+               </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialReceiptReports?.data?.length"></LoaderComponent>

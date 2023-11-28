@@ -230,6 +230,7 @@ function confirmDelete(id) {
                 <span :class="storeRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeRequisition?.business_unit }}</span>
               </td>
               <td>
+                <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <button @click="navigateToSICreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
                   <!-- <button @click="navigateToPOCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
@@ -237,6 +238,7 @@ function confirmDelete(id) {
                   <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { storeRequisitionId: storeRequisition.id } }"></action-button>
                   <action-button @click="confirmDelete(storeRequisition.id)" :action="'delete'"></action-button>
                 </div>
+              </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && storeRequisitions?.data?.length"></LoaderComponent>

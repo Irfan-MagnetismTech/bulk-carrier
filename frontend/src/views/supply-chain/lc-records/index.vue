@@ -181,8 +181,10 @@ function confirmDelete(id) {
                 <span :class="lcRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lcRecord?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
-                <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
+                <nobr>
+                  <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
+                  <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
+                </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && lcRecords?.data?.length"></LoaderComponent>

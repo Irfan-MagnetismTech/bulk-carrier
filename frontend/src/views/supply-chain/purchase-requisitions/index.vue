@@ -232,10 +232,12 @@ function confirmDelete(id) {
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
-                  <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                  <nobr>
+                    <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+                    <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+                    <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                    <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                  </nobr>
                 </div>
               </td>
             </tr>
