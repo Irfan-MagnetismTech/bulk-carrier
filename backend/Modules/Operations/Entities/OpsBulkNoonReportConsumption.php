@@ -17,6 +17,7 @@ class OpsBulkNoonReportConsumption extends Model
         'type',
         'previous_rob',
         'received',
+        'consumption',
         'rob',
     ];
 

@@ -4,7 +4,16 @@ namespace Modules\Operations\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsBunker;
+use Modules\Operations\Entities\OpsVessel;
+use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Operations\Entities\OpsBulkNoonReportPort;
+use Modules\Operations\Entities\OpsBulkNoonReportDistance;
+use Modules\Operations\Entities\OpsBulkNoonReportCargoTank;
+use Modules\Operations\Entities\OpsBulkNoonReportConsumption;
+use Modules\Operations\Entities\OpsBulkNoonReportEngineInput;
+use Modules\Operations\Entities\OpsBulkNoonReportConsumptionHead;
 
 class OpsBulkNoonReport extends Model
 {
@@ -62,6 +71,11 @@ class OpsBulkNoonReport extends Model
     public function opsBulkNoonReportConsumptions()
     {
         return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_bulk_noon_report_id', 'id');
+    }
+
+    public function opsBulkNoonReportConsumptionHeads()
+    {
+        return $this->hasMany(OpsBulkNoonReportConsumptionHead::class, 'ops_bulk_noon_report_id', 'id');
     }
 
     public function opsBulkNoonReportDistance()

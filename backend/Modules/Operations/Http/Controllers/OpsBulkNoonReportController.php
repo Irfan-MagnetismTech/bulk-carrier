@@ -34,7 +34,7 @@ class OpsBulkNoonReportController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $bulk_noon_reports = OpsBulkNoonReport::with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs','opsBulkNoonReportEngineInputTypes'])
+            $bulk_noon_reports = OpsBulkNoonReport::with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs'])
             ->globalSearch($request->all());
 
             return response()->success('Successfully retrieved bulk noon reports.', $bulk_noon_reports, 200);
@@ -65,7 +65,6 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportConsumptions',
                 'opsBulkNoonReportDistance',
                 'opsBulkNoonReportEngineInputs',
-                'opsBulkNoonReportEngineInputTypes'
             );
 
             $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);
@@ -95,9 +94,9 @@ class OpsBulkNoonReportController extends Controller
                 $bulk_noon_report->opsBulkNoonReportEngineInputs()->createMany($request->opsBulkNoonReportEngineInputs);
             }
 
-            if(isset($request->opsBulkNoonReportEngineInputTypes)){
-                $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
-            }
+            // if(isset($request->opsBulkNoonReportEngineInputTypes)){
+            //     $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
+            // }
 
             if(isset($request->opsBunkers)){
                 $bulk_noon_report->opsBunkers()->createMany($request->opsBunkers);
@@ -126,7 +125,9 @@ class OpsBulkNoonReportController extends Controller
         try
         {
             $bulk_noon_report->opsBulkNoonReportConsumptions->map(function($item) {
-                return $item->name = $item->scmMaterial->name;
+                $item->name = $item->scmMaterial->name;
+
+                return $item;
             });
             return response()->success('Successfully retrieved bulk noon report.', $bulk_noon_report, 200);
         }
@@ -157,7 +158,6 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportConsumptions',
                 'opsBulkNoonReportDistance',
                 'opsBulkNoonReportEngineInputs',
-                'opsBulkNoonReportEngineInputTypes',
             );
             
             $bulk_noon_report->update($bulk_noon_report_info);
@@ -172,19 +172,24 @@ class OpsBulkNoonReportController extends Controller
                 $bulk_noon_report->opsBulkNoonReportCargoTanks()->createMany($request->opsBulkNoonReportCargoTanks);
             }
 
-            // $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
-            // foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
-            //     $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
-                
-            //     $consumptionData->opsBulkNoonReportConsumptions()->delete();
-            //     $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
-            // }
+
             if(isset($request->opsBulkNoonReportConsumptions)){
+                $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
+                $bulk_noon_report->opsBulkNoonReportConsumptionHeads()->delete();
+                // return response()->json($request->opsBulkNoonReportConsumptions);
+
                 foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
                     $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
 
-                    // $consumptionData->opsBulkNoonReportConsumptions()->delete();
-                    $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionData['opsBulkNoonReportConsumptionHeads']);
+                    if(isset($consumptionData['opsBulkNoonReportConsumptionHeads'])) {
+
+                        $consumptionHeadData = collect($consumptionData['opsBulkNoonReportConsumptionHeads'])->map(function($item) use($bulk_noon_report) {
+                            $item['ops_bulk_noon_report_id'] = $bulk_noon_report->id;
+                            return $item;
+                        })->toArray();
+
+                        $consumption->opsBulkNoonReportConsumptionHeads()->createMany($consumptionHeadData);
+                    }
                 }
             }
 
@@ -196,31 +201,27 @@ class OpsBulkNoonReportController extends Controller
                 $bulk_noon_report->opsBulkNoonReportEngineInputs()->createMany($request->opsBulkNoonReportEngineInputs);
             }
 
-            if(isset($request->opsBulkNoonReportEngineInputTypes)){
-                $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
-            }
+            // if(isset($request->opsBulkNoonReportEngineInputTypes)){
+            //     $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
+            // }
 
             if(isset($request->opsBunkers)){
                 $bulk_noon_report->opsBunkers()->createMany($request->opsBunkers);
             }
 
 
-
-            $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
-            $bulk_noon_report->opsBulkNoonReportConsumptions()->createMany($request->opsBulkNoonReportConsumptions);
-
             $bulk_noon_report->opsBulkNoonReportDistance()->delete();
             $bulk_noon_report->opsBulkNoonReportDistance()->create($request->opsBulkNoonReportDistance);
 
             $bulk_noon_report->opsBulkNoonReportEngineInputs()->delete();
             $bulk_noon_report->opsBulkNoonReportEngineInputs()->createMany($request->opsBulkNoonReportEngineInputs);
-            $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->delete();
-            $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
+            // $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->delete();
+            // $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->createMany($request->opsBulkNoonReportEngineInputTypes);
 
             $bulk_noon_report->opsBunkers()->delete();
             $bulk_noon_report->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
-            return response()->success('Bulk noon report updated successfully.', $bulk_noon_report, 200);
+            return response()->success('Bulk noon report updated successfully.', $bulk_noon_report, 202);
         }
         catch (QueryException $e)
         {            
@@ -244,7 +245,7 @@ class OpsBulkNoonReportController extends Controller
             $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
             $bulk_noon_report->opsBulkNoonReportDistance()->delete();
             $bulk_noon_report->opsBulkNoonReportEngineInputs()->delete();
-            $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->delete();
+            // $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->delete();
             $bulk_noon_report->opsBunkers()->delete();
             $bulk_noon_report->delete();
 
