@@ -104,6 +104,16 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
+      "relation_name": null,
+      "field_name": "instrument_amount",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Instrument Amount",
+      "filter_type": "input"
+    },
+    {
       "relation_name": 'bankReconciliation',
       "field_name": "reconciliation_date",
       "search_param": "",
@@ -197,6 +207,7 @@ onMounted(() => {
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.instrument_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.instrument_no }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> <nobr>{{ bankReconciliation?.instrument_date }}</nobr> </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> <nobr>{{ bankReconciliation?.instrument_amount }}</nobr> </td>
                 <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
                   <nobr>
                     <span> {{ bankReconciliation?.bankReconciliation?.reconciliation_date ?? '---' }} </span>

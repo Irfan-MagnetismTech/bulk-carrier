@@ -153,12 +153,12 @@ onMounted(() => {
         <Error v-if="errors?.voucher_type" :errors="errors.voucher_type" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Applied Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Voucher Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.transaction_date" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Payment Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.instrument_type" required>
           <option value="" selected disabled>Select Value</option>
           <option value="A/C Payee">A/C Payee</option>
@@ -172,11 +172,11 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="label-group">
-      <span class="label-item-title"> Cheque Number <span class="text-red-500">*</span></span>
+      <span class="label-item-title"> Instrument Number <span class="text-red-500">*</span></span>
       <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" required />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Cheque Date <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date <span class="text-red-500">*</span></span>
       <input type="date" v-model.trim="form.instrument_date" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
@@ -185,8 +185,14 @@ onMounted(() => {
       <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" required />
     </label>
     <label class="label-group">
+      <span class="label-item-title"> Instrument Amount <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" required />
+    </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="label-group">
       <span class="label-item-title"> Narration <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Narration" v-model.trim="form.narration" required />
+      <textarea type="text" class="label-item-input" placeholder="Narration" v-model.trim="form.narration" required></textarea>
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">

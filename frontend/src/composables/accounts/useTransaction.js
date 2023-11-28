@@ -25,6 +25,7 @@ export default function useTransaction() {
         instrument_type: '',
         instrument_no: '',
         instrument_date: '',
+        instrument_amount: '',
         business_unit: '',
         total_debit_amount: 0.0,
         total_credit_amount: 0.0,
