@@ -56,16 +56,24 @@ class ScmMaterialController extends Controller
                 $requestData['sample_photo'] = $sample_photos;
             }
             $material = ScmMaterial::create($requestData);
-            // scmMaterlCategory getTopLevelParent
-            // $data = ScmMaterialCategory::topLevelParent($request->scm_material_category_id);
-            // return response()->json(['message' => 'Data created successfully', 'data' => $data], 422);
-            // $material->account()->create([
-            //     'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
-            //     'account_name' => $material->name,
-            //     'account_code' => "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material->id",
-            //     'account_type' => config('accounts.account_types.Assets'),
-            //     'business_unit' => 'PSML',
-            // ]);
+            // for account creation start
+            $topParent = ScmMaterialCategory::topLevelParent($request->scm_material_category_id);
+            $material->account()->create([
+                 'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                 'account_name' => $material->name,
+                 'account_code' => "config('accounts.account_types.Assets') - config('accounts.balance_income_balance_header.current_assets') - config('accounts.balance_income_line.inventory') - $topParent->id - $material->id",
+                 'account_type' => config('accounts.account_types.Assets'),
+                 'business_unit' => 'PSML',
+             ]);
+
+             $material->account()->create([
+                'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                'account_name' => $material->name,
+                'account_code' => "config('accounts.account_types.Assets') - config('accounts.balance_income_balance_header.current_assets') - config('accounts.balance_income_line.inventory') - $topParent->id - $material->id",
+                'account_type' => config('accounts.account_types.Assets'),
+                'business_unit' => 'TSLL',
+            ]);
+             // for account creation end
             return response()->success('Data created succesfully', $material, 201);
         } catch (\Exception $e) {
 
