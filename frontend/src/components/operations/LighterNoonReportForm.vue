@@ -8,7 +8,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -27,7 +27,6 @@
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsVoyage"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -41,16 +40,16 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Ship Master</span>
-              <input type="text" v-model.trim="form.ship_master" placeholder="Ship Master" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Ship Master <span class="text-red-500">*</span></span>
+              <input type="text" v-model.trim="form.ship_master" required placeholder="Ship Master" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Chief Engineer</span>
-            <input type="text" v-model.trim="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Chief Engineer <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.chief_engineer" required placeholder="Chief Engineer" class="form-input" autocomplete="off" />
       </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Noon Position</span>
-              <input type="text" v-model.trim="form.noon_position" placeholder="Noon Position" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Noon Position <span class="text-red-500">*</span></span>
+              <input type="text" v-model.trim="form.noon_position" required placeholder="Noon Position" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Status</span>
@@ -66,12 +65,12 @@
               <input type="number" step="0.001" v-model.trim="form.engine_running_hours" placeholder="Engine Running Hours" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Lat/Long</span>
-              <input type="text" v-model.trim="form.lat_long" placeholder="Lat/Long" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Lat/Long <span class="text-red-500">*</span></span>
+              <input type="text" v-model.trim="form.lat_long" required placeholder="Lat/Long" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Date</span>
-              <input type="datetime-local" v-model.trim="form.date" placeholder="Vessel" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
+              <input type="datetime-local" v-model.trim="form.date" required placeholder="Vessel" class="form-input" autocomplete="off" />
         </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -105,8 +104,6 @@
           </v-select>
           <input type="hidden" v-model="form.next_port" />
         </label>
-
-
     </div>
 
     <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
@@ -214,9 +211,12 @@ watch(() => props.form.opsVessel, (value) => {
     props.form.ops_vessel_id = value?.id
     let loadStatus = false;
     showVessel(value?.id, loadStatus);
-    voyages.value = [];
-    props.form.opsVoyage = null;
-    props.form.ops_voyage_id = null;
+
+    if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
+      voyages.value = [];
+      props.form.opsVoyage = null;
+      props.form.ops_voyage_id = null;
+    }
     getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
   }
 }, { deep: true })
@@ -242,7 +242,7 @@ watch(() => vessel, (value) => {
   }
 }, { deep: true })
 
-watch(() => props.form, (value) => {
+watch(() => vessels, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
    
@@ -253,7 +253,6 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 onMounted(() => {
-  getVesselList(props.form.business_unit);
   getPortList();
 });
 </script>

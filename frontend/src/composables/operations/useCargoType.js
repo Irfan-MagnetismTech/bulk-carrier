@@ -17,6 +17,7 @@ export default function useCargoType() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isCargoTypeLoading = ref(false);
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
@@ -152,7 +153,7 @@ export default function useCargoType() {
 
 	async function searchCargoTypes(searchParam, loading) {
 		//NProgress.start();
-
+		isCargoTypeLoading.value = true;
 		try {
 			const { data, status } = await Api.get(`/ops/search-cargo-types?cargo_type=${searchParam}`);
 			cargoTypes.value = data.value;
@@ -161,8 +162,9 @@ export default function useCargoType() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
 			//NProgress.done();
+			isCargoTypeLoading.value = false;
 		}
 	}
 
@@ -194,6 +196,7 @@ export default function useCargoType() {
 		searchCargoTypes,
 		isLoading,
 		isTableLoading,
+		isCargoTypeLoading,
 		errors,
 	};
 }
