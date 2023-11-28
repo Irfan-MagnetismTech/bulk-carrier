@@ -2,7 +2,6 @@
 
 namespace Modules\Accounts\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -19,13 +18,10 @@ class AccFixedAssetController extends Controller
     public function index(Request $request)
     {
         try {
-            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter', 'scmMaterial:id,name', 'fixedAssetCategory')
-            ->globalSearch($request->all());
+            $accFixedAssets = AccFixedAsset::with('fixedAssetCosts', 'account:id,account_name', 'costCenter', 'scmMaterial:id,name', 'fixedAssetCategory', 'scmMrr')
+                ->globalSearch($request->all());
 
-            return response()->json([
-                'status' => 'success',
-                'value'  => $accFixedAssets,
-            ], 200);
+            return response()->success('Retrieved Successfully', $accFixedAssets, 200);
         }
         catch (\Exception $e)
         {
@@ -46,7 +42,7 @@ class AccFixedAssetController extends Controller
 
             DB::transaction(function () use ($request, $accFixedAssetData)
             {
-                $accFixedAsset     = AccFixedAsset::create($accFixedAssetData);
+                $accFixedAsset = AccFixedAsset::create($accFixedAssetData);
                 $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
             });
 
@@ -67,10 +63,10 @@ class AccFixedAssetController extends Controller
     public function show(AccFixedAsset $accFixedAsset)
     {
         try {
-            return response()->json([
-                'status' => 'success',
-                'value'  => $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial', 'fixedAssetCategory'),                
-            ], 200);
+
+            return response()->success('Retrieved Successfully',
+                $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial', 'fixedAssetCategory'),
+                200);
         }
         catch (\Exception $e)
         {
