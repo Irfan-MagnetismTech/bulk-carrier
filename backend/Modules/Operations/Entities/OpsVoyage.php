@@ -62,6 +62,6 @@ class OpsVoyage extends Model
     }
 
     public function opsContractAssign() {
-        return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id');
+        return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id','id');
     }
 }

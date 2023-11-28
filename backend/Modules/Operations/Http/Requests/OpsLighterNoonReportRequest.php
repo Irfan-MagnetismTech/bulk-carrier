@@ -15,7 +15,7 @@ class OpsLighterNoonReportRequest extends FormRequest
     {
         return [
             'ops_vessel_id'         => ['required', 'max:20'],
-            'ops_voyage_id'         => ['required', 'max:20'],
+            'ops_voyage_id'         => ['nullable', 'max:20'],
             'ship_master'           => ['required', 'string', 'max:255'],
             'chief_engineer'        => ['required', 'string', 'max:255'],
             'noon_position'         => ['required', 'string', 'max:255'],
@@ -26,7 +26,7 @@ class OpsLighterNoonReportRequest extends FormRequest
             'last_port'             => ['required', 'string', 'max:255'],
             'next_port'             => ['required', 'string', 'max:255'],
             'business_unit'         => ['required', 'string', 'max:255'],
-            'remarks'               => ['required', 'string', 'max:1000'],
+            'remarks'               => ['max:300'],
         ];
     }
 
@@ -39,7 +39,6 @@ class OpsLighterNoonReportRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
-            'ops_voyage_id.required' => 'Voyage is required.',
             'ship_master.required' => 'Ship master is required.',
             'ship_master.max' =>  'Ship master may not be greater than :max characters.',
             'chief_engineer.required' => 'Chief engineer is required.',

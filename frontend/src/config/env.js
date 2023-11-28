@@ -11,7 +11,6 @@ class env {
 
     static BASE_API_URL = env.DEVELOPMENT;
 
-
     static CLIENT_ID = 2
     static GRANT_TYPE = "password"
     static CLIENT_SECRET = "cCh0pcWvPsLHL08uFgSjNMaJO6HwvyttwBJpnqRU"

@@ -192,17 +192,18 @@ watch(() => props.form.opsChartererProfile, (value) => {
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
+    getChartererContractsByCharterOwner(value?.id);
 })
 
 
 
 
 
-watch(() => props.form.ops_charterer_profile_id, (value) => {
-    props.form.ops_charterer_contract_id = '';
-    props.form.opsChartererContract = null;
-    getChartererContractsByCharterOwner(value);
-})
+// watch(() => props.form.ops_charterer_profile_id, (value) => {
+//     // props.form.ops_charterer_contract_id = '';
+//     // props.form.opsChartererContract = null;
+//     // getChartererContractsByCharterOwner(value);
+// })
 
 
 watch(() => props.form.opsChartererContract, (value) => {
