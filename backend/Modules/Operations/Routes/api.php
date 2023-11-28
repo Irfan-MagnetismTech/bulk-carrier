@@ -52,6 +52,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'bulk-noon-reports' => OpsBulkNoonReportController::class,
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'contract-assigns' => OpsContractAssignController::class,
+        'voyage-expenditures' => OpsVoyageExpenditureController::class,
     ]);
 
     //start for without pagination
@@ -83,6 +84,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
+    Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     
     // end for search api route
     
@@ -98,13 +100,13 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
+    Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-    
-    
+        
         
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);

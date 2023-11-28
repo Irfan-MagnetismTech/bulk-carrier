@@ -33,8 +33,8 @@ class OpsContractAssignController extends Controller
     {
         try {
             // dd($request->all());
-            $contract_assigns = OpsContractAssign::with('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract')->latest()->paginate(10);
-            
+            $contract_assigns = OpsContractAssign::with('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract')
+            ->globalSearch($request->all());
             return response()->success('Data retrieved successfully.', $contract_assigns, 200);
         }
         catch (QueryException $e)
