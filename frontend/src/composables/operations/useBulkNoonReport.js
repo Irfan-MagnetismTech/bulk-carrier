@@ -33,7 +33,7 @@ export default function useBulkNoonReport() {
 	}
 
 	const engineObject = {
-		type: null,
+		type: '',
 		engine_unit: null,
 		pco: null,
 		rack: null,
@@ -278,6 +278,37 @@ export default function useBulkNoonReport() {
 		}
 	}
 
+	function checkValidation(openTab, tabNumber, props, requiredFields) {
+        for (const field of requiredFields) {
+            if (openTab.value === 1) {
+                
+				let sectorFieldStatus = true;
+
+				if (typeof field === 'object') {
+					console.log("obje", field)
+					props.form.opsBulkNoonReportPorts.forEach((value, index) => {
+						
+						field.check.forEach((fieldToCheck) => {
+							if (!props.form.opsBulkNoonReportPorts[index][fieldToCheck]) {
+								sectorFieldStatus = false
+							}
+						})
+					});
+			
+				} else if(!props.form[field]) {
+					sectorFieldStatus = false
+				}
+
+				if(!sectorFieldStatus){
+                    notification.showError(422, '', 'Please fill all required fields');
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 	return {
 		bulkNoonReports,
 		bulkNoonReport,
@@ -294,6 +325,7 @@ export default function useBulkNoonReport() {
 		updateBulkNoonReport,
 		deleteBulkNoonReport,
 		searchBulkNoonReports,
+		checkValidation,
 		isLoading,
 		isTableLoading,
 		errors,
