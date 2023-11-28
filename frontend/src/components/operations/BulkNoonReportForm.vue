@@ -1,466 +1,488 @@
 <template>
 
 <!-- General -->
-<div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 ">Report Type </span>
-          <select v-model="form.type" class="form-input">
-            <option value="" disabled>Select Option</option>
-            <option value="Noon Report">Noon Report</option>
-            <option value="Arrival Report">Arrival Report</option>
-            <option value="Departure Report">Departure Report</option>
-          </select>
-          <Error v-if="errors?.type" :errors="errors.type" />
-      </label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
-    </div>
+  <ul class="flex flex-wrap -mb-px">
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(1)" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === 1}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>General and Port Information
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(2)" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === 2}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Distance, Vessel and Cargo Tank
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(3)" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === 3}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Bunker and Engine Information
+        </a>
+      </li>
+    </ul>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel </span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsVessel"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-              <input type="hidden" v-model="form.ops_vessel_id" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsVoyage"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-              <input type="hidden" v-model="form.ops_voyage_id" />
-      </label>
-    </div>
+    <div v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Date/Time </span>
-        <input type="datetime-local" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.date_time" :errors="errors.date_time" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">GMT Time </span>
-        <input type="datetime-local" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.gmt_time" :errors="errors.gmt_time" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Location </span>
-        <input type="text" v-model="form.location" placeholder="Location" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.location" :errors="errors.location" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Latitude </span>
-        <input type="text" v-model="form.latitude" placeholder="Latitude" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.latitude" :errors="errors.latitude" />
-      </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 ">Longitude </span>
-          <input type="text" v-model="form.longitude" placeholder="Longitude" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.longitude" :errors="errors.longitude" />
+            <span class="text-gray-700 ">Report Type </span>
+            <select v-model="form.type" class="form-input">
+              <option value="" disabled>Select Option</option>
+              <option value="Noon Report">Noon Report</option>
+              <option value="Arrival Report">Arrival Report</option>
+              <option value="Departure Report">Departure Report</option>
+            </select>
+            <Error v-if="errors?.type" :errors="errors.type" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 ">Fuel Figures From </span>
-          <input type="text" v-model="form.fuel_figures_from" placeholder="Fuel Figures From" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.fuel_figures_from" :errors="errors.fuel_figures_from" />
+          <span class="text-gray-700">Master </span>
+          <input type="text" v-model="form.ship_master" placeholder="Master" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.ship_master" :errors="errors.ship_master" />
         </label>
-    </div>
-</div>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Chief Engineer </span>
+          <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.chief_engineer" :errors="errors.chief_engineer" />
+        </label>
+      </div>
 
-<!-- Upcoming Ports -->
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Upcoming Ports</legend>
-    <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700">Last Port </span>
-                <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsBulkNoonReportPorts[index].lastPort"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
+                <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
+                <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsVessel"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
                 </v-select>
-                <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
+                <input type="hidden" v-model="form.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Last Port </span>
-          <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.opsBulkNoonReportPorts[index].nextPort"
-                    v-bind="attributes"
-                    v-on="events"
-                    />
-            </template>
-          </v-select>
-          <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
+                <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
+                <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsVoyage"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+                <input type="hidden" v-model="form.ops_voyage_id" />
         </label>
-
       </div>
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">ETA </span>
-          <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
+          <span class="text-gray-700 ">Date/Time </span>
+          <input type="datetime-local" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.date_time" :errors="errors.date_time" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Distance Run </span>
-          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run" placeholder="Distance Run ">
+          <span class="text-gray-700 ">GMT Time </span>
+          <input type="datetime-local" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.gmt_time" :errors="errors.gmt_time" />
         </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">DTG </span>
-          <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg" placeholder="DTG">
+          <span class="text-gray-700 ">Location </span>
+          <input type="text" v-model="form.location" placeholder="Location" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.location" :errors="errors.location" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 ">Latitude </span>
+          <input type="text" v-model="form.latitude" placeholder="Latitude" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.latitude" :errors="errors.latitude" />
         </label>
       </div>
 
-      <RemarksComponet v-model="form.opsBulkNoonReportPorts[index].remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
-
-
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
-        <button type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-          </svg>
-        </button>
-        <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-          </svg>
-        </button> 
-        
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Longitude </span>
+            <input type="text" v-model="form.longitude" placeholder="Longitude" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.longitude" :errors="errors.longitude" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Fuel Figures From </span>
+            <input type="text" v-model="form.fuel_figures_from" placeholder="Fuel Figures From" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.fuel_figures_from" :errors="errors.fuel_figures_from" />
+          </label>
       </div>
-    </div>
-  </fieldset>
+
+      <!-- Upcoming Ports -->
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Upcoming Ports</legend>
+        <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700">Last Port <span class="text-red-500">*</span></span>
+                    <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.opsBulkNoonReportPorts[index].lastPort"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                    </v-select>
+                    <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700">Last Port <span class="text-red-500">*</span></span>
+              <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.opsBulkNoonReportPorts[index].nextPort"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+              </v-select>
+              <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].next_port" />
+            </label>
+
+          </div>
+
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700">ETA </span>
+              <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700">Distance Run </span>
+              <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].distance_run" placeholder="Distance Run ">
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700">DTG </span>
+              <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].dtg" placeholder="DTG">
+            </label>
+          </div>
+
+          <RemarksComponet v-model="form.opsBulkNoonReportPorts[index].remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
 
-<!-- Distance and Vessel -->
-  <div>
-    <h4 class="text-md font-semibold my-3">Distance and Vessel</h4>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full text-sm">
-          <span class="text-gray-700 ">CP/Ordered Speed </span>
-          <input type="text" v-model="form.opsBulkNoonReportDistance.cp_ordered_speed" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.opsBulkNoonReportDistance.cp_ordered_speed" :errors="errors.opsBulkNoonReportDistance.cp_ordered_speed" />
-        </label>
-        <label class="block w-full text-sm">
-          <span class="text-gray-700 ">Average RPM </span>
-          <input type="text" v-model="form.opsBulkNoonReportDistance.average_rpm" placeholder="Average RPM" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.opsBulkNoonReportDistance.average_rpm" :errors="errors.opsBulkNoonReportDistance.average_rpm" />
-        </label>
-        <label class="block w-full text-sm">
-          <span class="text-gray-700 ">Reported Speed </span>
-          <input type="text" v-model="form.opsBulkNoonReportDistance.reported_speed" placeholder="Reported Speed" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.opsBulkNoonReportDistance.reported_speed" :errors="errors.opsBulkNoonReportDistance.reported_speed" />
-        </label>
-        <label class="block w-full text-sm">
-          <span class="text-gray-700 ">Fwd Draft </span>
-          <input type="text" v-model="form.opsBulkNoonReportDistance.fwd_draft" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.opsBulkNoonReportDistance.fwd_draft" :errors="errors.opsBulkNoonReportDistance.fwd_draft" />
-        </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Observed Distance </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.observed_distance" placeholder="Observed Distance" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.observed_distance" :errors="errors.opsBulkNoonReportDistance.observed_distance" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Mild Draft </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.mild_draft" placeholder="Mild Draft" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.mild_draft" :errors="errors.opsBulkNoonReportDistance.mild_draft" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Engine Distance </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.engine_distance" placeholder="Engine Distance" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.engine_distance" :errors="errors.opsBulkNoonReportDistance.engine_distance" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Aft Draft </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.aft_draft" placeholder="Aft Draft" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.aft_draft" :errors="errors.opsBulkNoonReportDistance.aft_draft" />
-      </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Main Engine Revs </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.main_engine_revs" placeholder="Main Engine Revs" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.main_engine_revs" :errors="errors.opsBulkNoonReportDistance.main_engine_revs" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Heading </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.heading" placeholder="Heading" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.heading" :errors="errors.opsBulkNoonReportDistance.heading" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Slip % </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.slip_percent" :errors="errors.opsBulkNoonReportDistance.slip_percent" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Steaming Hours </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.steaming_hours" :errors="errors.opsBulkNoonReportDistance.steaming_hours" />
-      </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Salinity </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.salinity" placeholder="Salinity" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.salinity" :errors="errors.opsBulkNoonReportDistance.salinity" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">S. DWT </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.s_dwt" placeholder="S. DWT" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.s_dwt" :errors="errors.opsBulkNoonReportDistance.s_dwt" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Ballast </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.ballast" placeholder="Ballast" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.ballast" :errors="errors.opsBulkNoonReportDistance.ballast" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">S. Displacement </span>
-        <input type="text" v-model="form.opsBulkNoonReportDistance.s_displacement" placeholder="S. Displacement" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.opsBulkNoonReportDistance.s_displacement" :errors="errors.opsBulkNoonReportDistance.s_displacement" />
-      </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">FW Last Day Noon ROB </span>
-        <input type="text" v-model="form.fw_last_day_noon_rob" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.fw_last_day_noon_rob" :errors="errors.fw_last_day_noon_rob" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">FW Production </span>
-        <input type="text" v-model="form.fw_production" placeholder="FW Production" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.fw_production" :errors="errors.fw_production" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">FW Consumption </span>
-        <input type="text" v-model="form.fw_consumption" placeholder="FW Consumption" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.fw_consumption" :errors="errors.fw_consumption" />
-      </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">FW Today Noon ROB </span>
-        <input type="text" v-model="form.fw_today_noon_rob" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
-        <Error v-if="errors?.fw_today_noon_rob" :errors="errors.fw_today_noon_rob" />
-      </label>
-    </div>
-  </div>
-
-  <!-- Cargo Tank and Info -->
-  <div class="mt-5">
-    <h4 class="text-md font-semibold my-3">Cargo Tank Info</h4>
-
-    <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
-          <tr class="w-full">
-            <th class="w-72">Cargo Tanks</th>
-            <th>Liq Level</th>
-            <th><nobr> Pressure </nobr></th>
-            <th><nobr> Vapor Temp </nobr></th>
-            <th><nobr> Liq Temp </nobr></th>
-            <th><nobr> Quantity (MT) </nobr></th>
-            <th class="w-16">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(tank, index) in form.opsBulkNoonReportCargoTanks" :key="index">
-          
-          <td>
-            <span class="show-block">
-              CT {{ index+1 }}
-            </span>
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_level">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].pressure">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].vapor_temp">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_temp">
-          </td>
-          <td>
-            <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].quantity_mt">
-          </td>
-          <td>
-            <button type="button" v-if="index>0" @click="removeTank(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-              </svg>
-            </button> 
-            <button v-else type="button" @click="addTank()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
+            <button type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
               </svg>
             </button>
-          </td>
-        </tr> 
-        </tbody>
-      </table>
-  </div>
+            <button type="button" v-if="index>0" @click="removePort(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+              </svg>
+            </button> 
+            
+          </div>
+        </div>
+      </fieldset>
+    </div>
 
-  <!-- Master and Engineer Info -->
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700">Master </span>
-      <input type="text" v-model="form.ship_master" placeholder="Master" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.ship_master" :errors="errors.ship_master" />
-    </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700">Chief Engineer </span>
-      <input type="text" v-model="form.chief_engineer" placeholder="Chief Engineer" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.chief_engineer" :errors="errors.chief_engineer" />
-    </label>
-  </div>
+    <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}" class="border border-gray-200 rounded-md my-3 p-2">
 
-  <!-- Bunker Consumption -->
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Bunker Consumption</legend>
-    <div class="dt-responsive table-responsive">
-      <table id="dataTable" class="w-full table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Previous ROB</th>
-            <th>Received</th>
-            <th>Consumption</th>
-            <th>ROB</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(bunker, index) in form.opsBulkNoonReportConsumptions" :key="index">
+      <!-- Distance and Vessel -->
+      <div>
+        <h4 class="text-md font-semibold my-3">Distance and Vessel</h4>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-full text-sm">
+              <span class="text-gray-700 ">CP/Ordered Speed </span>
+              <input type="text" v-model="form.opsBulkNoonReportDistance.cp_ordered_speed" placeholder="CP/Ordered Speed" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.opsBulkNoonReportDistance.cp_ordered_speed" :errors="errors.opsBulkNoonReportDistance.cp_ordered_speed" />
+            </label>
+            <label class="block w-full text-sm">
+              <span class="text-gray-700 ">Average RPM </span>
+              <input type="text" v-model="form.opsBulkNoonReportDistance.average_rpm" placeholder="Average RPM" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.opsBulkNoonReportDistance.average_rpm" :errors="errors.opsBulkNoonReportDistance.average_rpm" />
+            </label>
+            <label class="block w-full text-sm">
+              <span class="text-gray-700 ">Reported Speed </span>
+              <input type="text" v-model="form.opsBulkNoonReportDistance.reported_speed" placeholder="Reported Speed" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.opsBulkNoonReportDistance.reported_speed" :errors="errors.opsBulkNoonReportDistance.reported_speed" />
+            </label>
+            <label class="block w-full text-sm">
+              <span class="text-gray-700 ">Fwd Draft </span>
+              <input type="text" v-model="form.opsBulkNoonReportDistance.fwd_draft" placeholder="Fwd Draft" class="form-input" autocomplete="off" />
+              <Error v-if="errors?.opsBulkNoonReportDistance.fwd_draft" :errors="errors.opsBulkNoonReportDistance.fwd_draft" />
+            </label>
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Observed Distance </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.observed_distance" placeholder="Observed Distance" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.observed_distance" :errors="errors.opsBulkNoonReportDistance.observed_distance" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Mild Draft </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.mild_draft" placeholder="Mild Draft" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.mild_draft" :errors="errors.opsBulkNoonReportDistance.mild_draft" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Engine Distance </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.engine_distance" placeholder="Engine Distance" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.engine_distance" :errors="errors.opsBulkNoonReportDistance.engine_distance" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Aft Draft </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.aft_draft" placeholder="Aft Draft" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.aft_draft" :errors="errors.opsBulkNoonReportDistance.aft_draft" />
+          </label>
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Main Engine Revs </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.main_engine_revs" placeholder="Main Engine Revs" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.main_engine_revs" :errors="errors.opsBulkNoonReportDistance.main_engine_revs" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Heading </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.heading" placeholder="Heading" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.heading" :errors="errors.opsBulkNoonReportDistance.heading" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Slip % </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.slip_percent" :errors="errors.opsBulkNoonReportDistance.slip_percent" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Steaming Hours </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.steaming_hours" :errors="errors.opsBulkNoonReportDistance.steaming_hours" />
+          </label>
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Salinity </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.salinity" placeholder="Salinity" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.salinity" :errors="errors.opsBulkNoonReportDistance.salinity" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">S. DWT </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.s_dwt" placeholder="S. DWT" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.s_dwt" :errors="errors.opsBulkNoonReportDistance.s_dwt" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">Ballast </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.ballast" placeholder="Ballast" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.ballast" :errors="errors.opsBulkNoonReportDistance.ballast" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 ">S. Displacement </span>
+            <input type="text" v-model="form.opsBulkNoonReportDistance.s_displacement" placeholder="S. Displacement" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.opsBulkNoonReportDistance.s_displacement" :errors="errors.opsBulkNoonReportDistance.s_displacement" />
+          </label>
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">FW Last Day Noon ROB </span>
+            <input type="text" v-model="form.fw_last_day_noon_rob" placeholder="FW Last Day Noon ROB" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.fw_last_day_noon_rob" :errors="errors.fw_last_day_noon_rob" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">FW Production </span>
+            <input type="text" v-model="form.fw_production" placeholder="FW Production" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.fw_production" :errors="errors.fw_production" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">FW Consumption </span>
+            <input type="text" v-model="form.fw_consumption" placeholder="FW Consumption" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.fw_consumption" :errors="errors.fw_consumption" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">FW Today Noon ROB </span>
+            <input type="text" v-model="form.fw_today_noon_rob" placeholder="FW Today Noon ROB" class="form-input" autocomplete="off" />
+            <Error v-if="errors?.fw_today_noon_rob" :errors="errors.fw_today_noon_rob" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Cargo Tank and Info -->
+      <div class="mt-5">
+        <h4 class="text-md font-semibold my-3">Cargo Tank Info</h4>
+
+        <table class="w-full whitespace-no-wrap" >
+            <thead v-once>
+              <tr class="w-full">
+                <th class="w-72">Cargo Tanks</th>
+                <th>Liq Level</th>
+                <th><nobr> Pressure </nobr></th>
+                <th><nobr> Vapor Temp </nobr></th>
+                <th><nobr> Liq Temp </nobr></th>
+                <th><nobr> Quantity (MT) </nobr></th>
+                <th class="w-16">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(tank, index) in form.opsBulkNoonReportCargoTanks" :key="index">
+              
               <td>
                 <span class="show-block">
-                  {{ bunker?.name }}
+                  CT {{ index+1 }}
                 </span>
               </td>
               <td>
-                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].previous_rob">
+                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_level">
               </td>
               <td>
-                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].received">
+                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].pressure">
               </td>
               <td>
-                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].consumption">
+                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].vapor_temp">
               </td>
               <td>
-                <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].rob">
+                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_temp">
               </td>
               <td>
-                <a @click="showBunkerConsumptionModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
-                  <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].quantity_mt">
+              </td>
+              <td>
+                <button type="button" v-if="index>0" @click="removeTank(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
-                  <span class="tooltiptext">Consumption Details</span>
-                </a>
+                </button> 
+                <button v-else type="button" @click="addTank()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
               </td>
-          </tr>
-        </tbody>
-      </table>
+            </tr> 
+            </tbody>
+          </table>
+      </div>
     </div>
-  </fieldset>
 
-  <!-- Engine Info -->
-  <div class="mt-5">
-    <h4 class="text-md font-semibold my-3">Engine Info</h4>
+  
+    <div v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}" class="border border-gray-200 rounded-md my-3 p-2">
 
-    <div class="dt-responsive table-responsive">
-      <table id="dataTable" class="w-full table table-striped table-bordered">
-        <thead>
-            <th class="w-72">Unit</th>
-            <th>PCO</th>
-            <th>Rack</th>
-            <th>Exh. Temp.</th>
-            <th>Action</th>
-        </thead>
-        <tbody>
+      <!-- Bunker Consumption -->
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Bunker Consumption</legend>
+        <div class="dt-responsive table-responsive">
+          <table id="dataTable" class="w-full table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Previous ROB</th>
+                <th>Received</th>
+                <th>Consumption</th>
+                <th>ROB</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(bunker, index) in form.opsBulkNoonReportConsumptions" :key="index">
+                  <td>
+                    <nobr class="show-block">
+                      {{ bunker?.name }}
+                    </nobr>
+                  </td>
+                  <td>
+                    <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].previous_rob">
+                  </td>
+                  <td>
+                    <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].received">
+                  </td>
+                  <td>
+                    <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].consumption">
+                  </td>
+                  <td>
+                    <input type="text" class="form-input" v-model.trim="form.opsBulkNoonReportConsumptions[index].rob">
+                  </td>
+                  <td>
+                    <a @click="showBunkerConsumptionModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+                      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                      </svg>
+                      <span class="tooltiptext">Consumption Details</span>
+                    </a>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
 
-          <tr v-for="(item, index) in form.opsBulkNoonReportEngineInputs" :key="index">
-            <td>
+      <!-- Engine Info -->
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Engine Info</legend>
+
+        <div class="dt-responsive table-responsive">
+          <table id="dataTable" class="w-full table table-striped table-bordered">
+            <thead>
+                <th class="w-72">Unit <span class="text-red-500">*</span></th>
+                <th>PCO</th>
+                <th>Rack</th>
+                <th>Exh. Temp.</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+
+              <tr v-for="(item, index) in form.opsBulkNoonReportEngineInputs" :key="index">
+                <td>
+                  
+                  <div class="flex items-center justify-between">
+                    <select v-model.trim="item.type" class="form-input" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="engine_unit">Engine Unit</option>
+                        <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
+                    </select>
+                    <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit">
+                  </div>
+                </td>
+                <td>
+                  <input type="text" class="form-input" v-model.trim="item.rack" placeholder="PCO">
+                </td>
+                <td>
+                  <input type="text" class="form-input" v-model.trim="item.rack" placeholder="Rack">
+                </td>
+                <td>
+                  <input type="text" class="form-input" v-model.trim="item.exh_temp" placeholder="Exh. Temp">
+                </td>
+                <td>
+                  <button type="button" v-if="index>0" @click="removeEngineType(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                  </button> 
+                  <button v-else type="button" @click="addEngineType()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
               
-              <div class="flex items-center justify-between">
-                <select v-model.trim="item.type" class="form-input" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="engine_unit">Engine Unit</option>
-                    <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
-                </select>
-                <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit">
-              </div>
-            </td>
-            <td>
-              <input type="text" class="form-input" v-model.trim="item.rack" placeholder="PCO">
-            </td>
-            <td>
-              <input type="text" class="form-input" v-model.trim="item.rack" placeholder="Rack">
-            </td>
-            <td>
-              <input type="text" class="form-input" v-model.trim="item.exh_temp" placeholder="Exh. Temp">
-            </td>
-            <td>
-              <button type="button" v-if="index>0" @click="removeEngineType(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button> 
-              <button v-else type="button" @click="addEngineType()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          
-        </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+
+      <div>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Wind Condition </span>
+          <input type="text" v-model="form.sea_condition" placeholder="Wind Condition" class="form-input" autocomplete="off" />
+          <Error v-if="errors?.sea_condition" :errors="errors.sea_condition" />
+        </label>
+      </div>
+    
+      <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+
     </div>
-  </div>
 
-  <div>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700">Wind Condition </span>
-      <input type="text" v-model="form.sea_condition" placeholder="Wind Condition" class="form-input" autocomplete="off" />
-      <Error v-if="errors?.sea_condition" :errors="errors.sea_condition" />
-    </label>
-  </div>
 
-  <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
   <!-- Consumption Module -->
   <div v-show="isBunkerConsumptionModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
@@ -500,7 +522,7 @@
             <tbody>
               <tr v-for="(details, index) in bunkerConsumptionDetails" :key="index">
                 <td>
-                  <select v-model.trim="details.type" class="form-input" required>
+                  <select v-model.trim="details.type" class="form-input">
                     <option value="" disabled selected>Select</option>
                     <option v-for="(item, index2) in bunkerConsumptionHeads" :key="index2">{{ item }}</option>
                   </select>
@@ -539,6 +561,24 @@
     </form>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
+
+  <button v-if="openTab==3" type="submit" :disabled="isLoading" class="flex float-right items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+      <span v-if="formType=='create'">Create Voyage</span>
+      <span v-else>Update Voyage</span>
+    </button>
+
+    <button type="button" v-else v-on:click="toggleTabs(openTab + 1)" :disabled="isLoading" class="flex float-right items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 uppercase focus:outline-none focus:shadow-outline-purple">Next
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        <path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <button type="button" v-if="openTab!=1" v-on:click="toggleTabs(openTab - 1)" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 uppercase focus:outline-none focus:shadow-outline-purple">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back
+    </button>
   
 </template>
 <script setup>
@@ -558,7 +598,7 @@ const editInitiated = ref(false);
 const { ports, getPortList } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes } = useBulkNoonReport();
+const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes, isLoading, checkValidation } = useBulkNoonReport();
 
 const props = defineProps({
   form: {
@@ -575,6 +615,18 @@ const props = defineProps({
 const isBunkerConsumptionModalOpen = ref(0);
 const bunkerConsumptionDetails = ref([{type: ''}]);
 const currentConsumptionIndex = ref(null);
+
+const openTab = ref(1);
+const toggleTabs = (tabNumber) => {
+  console.log("Active Tab Object "+ tabNumber);
+  if (openTab.value === 1) {
+    let tab1RequiredFields = ['business_unit', 'ops_voyage_id', 'ops_vessel_id', {name: 'opsBulkNoonReportPorts', check: ['last_port', 'next_port']}];
+    if (!checkValidation(openTab, tabNumber, props, tab1RequiredFields)) {
+      return;
+    }
+  }
+  openTab.value = tabNumber;
+}
 
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
@@ -622,7 +674,7 @@ function removeConsumptionHead(index) {
 }
 
 function addEngineType() {
-  props.form.opsBulkNoonReportEngineInputs.push({...props.cargoTankObject});
+  props.form.opsBulkNoonReportEngineInputs.push({...props.engineObject});
 }
 
 function removeEngineType(index) {
@@ -630,6 +682,8 @@ function removeEngineType(index) {
 }
 
 watch(() => props.form.business_unit, (value) => {
+  vessels.value = []
+  voyages.value = []
 if(props?.formType != 'edit') {
   props.form.opsVoyage = null;
   props.form.ops_voyage_id = null;
@@ -642,34 +696,28 @@ getVesselList(props.form.business_unit);
 }, { deep : true })
 
 watch(() => props.form.opsVoyage, (value) => {
-
+  props.form.ops_voyage_id = null;
 if(value) {
   props.form.ops_voyage_id = value?.id
 }
 }, { deep: true })
 
 watch(() => props.form.opsVessel, (value) => {
-
-if(value) {
-  props.form.ops_vessel_id = value?.id
-  let loadStatus = false;
-  showVessel(value?.id, loadStatus);
-  getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
-}
+  props.form.ops_vessel_id = null;
+  if(value) {
+    props.form.ops_vessel_id = value?.id
+    let loadStatus = false;
+    showVessel(value?.id, loadStatus);
+    getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
+  }
 }, { deep: true })
 
-watch(() => props.form.lastPort, (value) => {
-if(value) {
-  props.form.last_port = value?.code
-}
-}, { deep: true })
-
-watch(() => props.form.nextPort, (value) => {
-if(value) {
-  props.form.next_port = value?.code
-}
-}, { deep: true })
-
+watch(() => props.form.opsBulkNoonReportPorts, (value) => {
+  for(const port in value) {
+    value[port].last_port = value[port]?.lastPort?.code
+    value[port].next_port = value[port]?.nextPort?.code
+  }
+}, {deep: true} )
 
 watch(() => vessel, (value) => {
 if(value?.value) {
