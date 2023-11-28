@@ -145,7 +145,7 @@ export default function useUnit() {
     async function searchUnit(searchParam, loading) {
 
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
         try {
             const { data, status } = await Api.get(`${BASE}/search-unit`, {params: { searchParam: searchParam }});
             units.value = data.value;
@@ -157,7 +157,7 @@ export default function useUnit() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            // isLoading.value = false;
+            isLoading.value = false;
             loading(false)
         }
     }

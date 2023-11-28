@@ -153,7 +153,7 @@ export default function useMaterial() {
     async function searchMaterial(searchParam, loading = false) {
 
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam }});
@@ -164,14 +164,14 @@ export default function useMaterial() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            // isLoading.value = false;
+            isLoading.value = false;
         }
     }
 
     async function searchMaterialWithCategory(searchParam,materialCategoryId, loading) {
 
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-materials`, {params: { searchParam: searchParam ,materialCategoryId: materialCategoryId}});
@@ -182,7 +182,7 @@ export default function useMaterial() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            // isLoading.value = false;
+            isLoading.value = false;
             loading(false)
         }
     }

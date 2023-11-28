@@ -13,8 +13,8 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     
-    const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
+    const { material, materials, getMaterials,searchMaterial,isLoading: materialLoading } = useMaterial();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
     const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
     const { getAllStoreCategories } = useBusinessInfo();
     const store_category = ref([]);
@@ -242,7 +242,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
-          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -346,7 +346,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
               <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
-             <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+             <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

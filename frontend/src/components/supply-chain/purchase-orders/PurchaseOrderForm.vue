@@ -13,9 +13,9 @@
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors, searchVendor } = useVendor();
+    const { vendors, searchVendor,isLoading: vendorLoader } = useVendor();
     const { currencies, getCurrencies } = useBusinessInfo();
-    const { getMaterialList, prMaterialList } = usePurchaseOrder();
+    const { getMaterialList, prMaterialList, isLoading } = usePurchaseOrder();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -214,7 +214,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
           <!-- <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input"> -->
-          <v-select :options="vendors" placeholder="--Choose an option--" v-model="form.scmVendor" label="name" class="block form-input">
+          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -278,7 +278,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
           <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="prMaterialList" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

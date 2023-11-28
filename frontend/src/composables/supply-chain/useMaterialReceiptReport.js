@@ -227,7 +227,7 @@ export default function useMaterialReceiptReport() {
         
     }
     async function searchMaterialReceiptReport(searchParam, loading) {
-        
+        isLoading.value = true;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-material-receipt-reports`,searchParam);
@@ -237,6 +237,7 @@ export default function useMaterialReceiptReport() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 

@@ -204,7 +204,7 @@ export default function usePurchaseRequisition() {
     }
 
     async function searchPurchaseRequisition(searchParam, loading) {
-        
+        isLoading.value = true;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
@@ -214,6 +214,7 @@ export default function usePurchaseRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 
@@ -243,7 +244,7 @@ export default function usePurchaseRequisition() {
 
 
     async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
-        
+        isLoading.value = true;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,scm_warehouse_id,searchParam);
@@ -253,6 +254,7 @@ export default function usePurchaseRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 

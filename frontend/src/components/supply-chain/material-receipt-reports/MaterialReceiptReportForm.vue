@@ -13,10 +13,10 @@
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMaterialReceiptReport from '../../../composables/supply-chain/useMaterialReceiptReport';
     
-    const { material, materials, getMaterials, searchMaterial } = useMaterial();
-    const { searchLcRecord, filteredLcRecords } = useLcRecord();
+    const { material, materials, getMaterials, searchMaterial,isLoading:materialLoading } = useMaterial();
+    const { searchLcRecord, filteredLcRecords , isLoading: lcLoader} = useLcRecord();
     const { getMaterialWiseCurrentStock, CurrentStock } = useStockLedger();
-    const { getMaterialList, materialList } = useMaterialReceiptReport();
+    const { getMaterialList, materialList , isLoading} = useMaterialReceiptReport();
 
     const store_category = ref([]);
     const firstInitiated = ref(false);
@@ -191,7 +191,7 @@ function changeRate(index) {
       <label class="label-group" v-if="form.type == 'FOREIGN'">
           <span class="label-item-title">LC Record No<span class="text-red-500">*</span></span>
           <!-- <input type="text" v-model="form.scmLcRecord" required class="form-input" name="scmLcRecord" :id="'scmLcRecord'" /> -->
-          <v-select :options="filteredLcRecords" placeholder="--Choose an option--" v-model="form.scmLcRecord" label="lc_no" class="block form-input">
+          <v-select :options="filteredLcRecords" placeholder="--Choose an option--" :loading="lcLoader" v-model="form.scmLcRecord" label="lc_no" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -285,7 +285,7 @@ function changeRate(index) {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMrrLine, index) in form.scmMrrLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materialList" placeholder="--Choose an option--" v-model="form.scmMrrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+              <v-select :options="materialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmMrrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

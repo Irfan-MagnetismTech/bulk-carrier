@@ -148,9 +148,6 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 // Code for global search end here
 

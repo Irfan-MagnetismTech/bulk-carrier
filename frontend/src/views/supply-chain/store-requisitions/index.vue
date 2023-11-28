@@ -82,7 +82,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
+      "label": "Department",
       "filter_type": "select",
       "select_options": [
         {
@@ -115,30 +115,27 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
   watchPostEffect(() => {
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-      router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
-    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
-      filterOptions.value.isFilter = true;
-    }
-    getStoreRequisitions(filterOptions.value)
-      .then(() => {
-        paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
+      if(currentPage.value == props.page && currentPage.value != 1) {
+        filterOptions.value.page = 1;
+        router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
+      } else {
+        filterOptions.value.page = props.page;
       }
-    })
-    .catch((error) => {
-      console.error("Error fetching SR:", error);
-    });
-});
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+      currentPage.value = props.page;
+      if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+        filterOptions.value.isFilter = true;
+      }
+      getStoreRequisitions(filterOptions.value)
+        .then(() => {
+          paginatedPage.value = filterOptions.value.page;
+        const customDataTable = document.getElementById("customDataTable");
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching SR:", error);
+      });
   });
 });
 // Code for global search end here

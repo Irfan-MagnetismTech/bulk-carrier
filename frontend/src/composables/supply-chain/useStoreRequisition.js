@@ -172,7 +172,7 @@ export default function useStoreRequisition() {
 
     async function searchStoreRequisition(searchParam, loading) {
         
-
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
             filteredStoreRequisitions.value = data.value;
@@ -181,6 +181,7 @@ export default function useStoreRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 

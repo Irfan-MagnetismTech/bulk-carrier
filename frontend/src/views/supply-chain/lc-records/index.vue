@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useLcRecord from "../../../composables/supply-chain/useLcRecord";
@@ -113,7 +113,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
       router.push({ name: 'scm.lc-records.index', query: { page: filterOptions.value.page } });

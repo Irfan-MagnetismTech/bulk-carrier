@@ -85,6 +85,16 @@ let filterOptions = ref({
       "label": "Warehouse",
       "filter_type": "input"
     },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Date",
+      "filter_type": "input"
+    },
   ]
 });
 
@@ -123,9 +133,6 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 
 
@@ -175,9 +182,9 @@ function confirmDelete(id) {
             <tr v-for="(materialReceiptReport,index) in (materialReceiptReports?.data ? materialReceiptReports?.data : materialReceiptReports)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ materialReceiptReport?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmPo?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmPr?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmWarehouse?.name }}</td>
+              <td>{{ materialReceiptReport?.scmPo?.ref_no ?? "N/A" }}</td>
+              <td>{{ materialReceiptReport?.scmPr?.ref_no ?? "N/A" }}</td>
+              <td>{{ materialReceiptReport?.scmWarehouse?.name ?? "N/A" }}</td>
               <td>{{ materialReceiptReport?.date }}</td>
               <td>
                 <span :class="materialReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialReceiptReport?.business_unit }}</span>

@@ -13,7 +13,7 @@
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input"> -->
-          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -82,7 +82,7 @@
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
             <td class="!w-72">
               <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -149,8 +149,8 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     
-    const { materials, searchMaterial } = useMaterial();
-    const { warehouses, searchWarehouse } = useWarehouse();
+    const { materials, searchMaterial,isLoading: materialLoading } = useMaterial();
+    const { warehouses, searchWarehouse,isLoading } = useWarehouse();
    
 
 
@@ -282,8 +282,10 @@ watch(() => props.form.scmSrLines, (newLines) => {
 // });
 
 onMounted(() => {
+  console.log(isLoading);
   fetchMaterials("");
   watchPostEffect(() => {
+    console.log(isLoading);
     fetchWarehouse("");
   });
 });

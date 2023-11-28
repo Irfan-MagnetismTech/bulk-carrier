@@ -184,7 +184,8 @@ export default function useLcRecord() {
         }
     }
 
-    async function searchLcRecord(searchParam, business_unit, scm_po_id,loading = false) {
+    async function searchLcRecord(searchParam, business_unit, scm_po_id, loading = false) {
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-lc-record`,{params: {searchParam: searchParam, business_unit: business_unit, scm_po_id: scm_po_id}});
             filteredLcRecords.value = data.value;
@@ -193,6 +194,7 @@ export default function useLcRecord() {
             notification.showError(status);
         } finally {
             // loading(false)
+            isLoading.value = false;
         }
     }
     

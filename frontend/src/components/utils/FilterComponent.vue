@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref, toRefs, watch } from 'vue';
 import FilterWithBusinessUnit from '../searching/FilterWithBusinessUnit.vue'
 import { itemsPerPageOptions } from '../../config/setting.js';
 import useGlobalFilter from '../../composables/useGlobalFilter';
@@ -32,7 +32,11 @@ onMounted(() => {
   });
 
 });
-
+// watch(showFilter, (newVal, oldVal) => {
+//  if(newVal === false){
+//    clear();
+//  }  
+// });
 
 function clear(){
   clearFilter(filterOptions.value);
