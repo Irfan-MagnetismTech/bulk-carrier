@@ -4,8 +4,9 @@ import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequ
 import useRecruitmentApproval from "../../composables/crew/useRecruitmentApproval";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const props = defineProps({
   form: {
@@ -20,6 +21,13 @@ const { crwAgencies, getCrewAgencyLists } = useCrewCommonApiRequest();
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_agency_id = '';
+  }
+});
 
 onMounted(() => {
   watchEffect(() => {
@@ -83,10 +91,7 @@ onMounted(() => {
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-      <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks..." class="form-input" autocomplete="off"></textarea>
-    </label>
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
