@@ -242,11 +242,12 @@ watch(() => vessel, (value) => {
   }
 }, { deep: true })
 
-watch(() => vessels, (value) => {
+watch(() => props.form, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
-   
+    console.log("not edit")
     if(vessels.value.length > 0) {
+      console.log("vessels paisi")
         editInitiated.value = true
       }
   }

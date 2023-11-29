@@ -211,8 +211,8 @@ export default function useVoyage() {
 	async function deleteVoyage(voyageId) {
 		
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.delete( `/ops/voyages/${voyageId}`);
@@ -223,8 +223,8 @@ export default function useVoyage() {
 			// notification.showError(status);
 			errors.value = notification.showError(status, data);
 		} finally {
-			loader.hide();
-			isLoading.value = false;
+			// loader.hide();
+			// isLoading.value = false;
 			//NProgress.done();
 		}
 	}
