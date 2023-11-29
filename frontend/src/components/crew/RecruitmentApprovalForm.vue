@@ -6,6 +6,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watchEffect} from "vue";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const props = defineProps({
   form: {
@@ -88,10 +89,7 @@ onMounted(() => {
       <span class="text-gray-700 dark-disabled:text-gray-300">Body <span class="text-red-500">*</span></span>
       <textarea v-model.trim="form.body" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
     </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-      <textarea type="text" v-model.trim="form.remarks" placeholder="Type here...." class="form-input" autocomplete="off"></textarea>
-    </label>
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Candidate List</legend>

@@ -426,7 +426,7 @@ onMounted(() => {
         </div>
       </fieldset>
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Present Address</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Present Contact Info</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Address <span class="text-red-500">*</span></span>
@@ -447,7 +447,7 @@ onMounted(() => {
         </div>
       </fieldset>
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Permanent Address</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Permanent Contact Info</legend>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Address <span class="text-red-500">*</span></span>

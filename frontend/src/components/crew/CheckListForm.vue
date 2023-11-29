@@ -4,6 +4,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref} from "vue";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const props = defineProps({
   form: {
@@ -34,18 +35,14 @@ onMounted(() => {
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
-    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
+      <input type="date" v-model.trim="form.effective_date" class="form-input" autocomplete="off" required />
+    </label>
   </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model.trim="form.effective_date" class="form-input" autocomplete="off" required />
-        </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-        <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-      </label>
-    </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
+  </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Checklist Item <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">

@@ -49,7 +49,7 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "department_id",
+      "field_name": "department_name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -74,12 +74,12 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Contact",
+      "label": "Mobile No.",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "pre_mobile_email",
+      "field_name": "pre_email",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -180,6 +180,7 @@ onMounted(() => {
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.profiles.show', params: { profileId: crwProfileData?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwProfileData?.id } }"></action-button>
                 <action-button @click="confirmDelete(crwProfileData?.id)" :action="'delete'"></action-button>
               </nobr>
