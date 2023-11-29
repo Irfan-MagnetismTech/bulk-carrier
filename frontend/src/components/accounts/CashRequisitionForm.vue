@@ -8,6 +8,7 @@ import useAccountCommonApiRequest from "../../composables/accounts/useAccountCom
 import useMaterialReceiptReport from "../../composables/supply-chain/useMaterialReceiptReport";
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import usePurchaseRequisition from "../../composables/supply-chain/usePurchaseRequisition";
+import RemarksComponent from "../utils/RemarksComponent.vue";
 const { vessels, searchVessels } = useVessel();
 
 const { allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
@@ -113,24 +114,25 @@ onMounted(() => {
         <span class="text-gray-700 dark-disabled:text-gray-300"> PR Ref. </span>
         <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_pr_name" label="ref_no"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.scm_pr_name" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>    
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Purpose <span class="text-red-500">*</span> </span>
         <textarea type="text" v-model.trim="form.purpose" placeholder="Purpose" class="form-input" autocomplete="off" required></textarea>
-      </label>
+      </label> -->
+      <RemarksComponent :isRequired="true" v-model.trim="form.purpose" :maxlength="500" :fieldLabel="'Purpose'"></RemarksComponent>
     </div>
 
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Cash Requisition Lines <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom"> Particular <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 align-bottom"> Amount <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 align-bottom"> Remarks</th>

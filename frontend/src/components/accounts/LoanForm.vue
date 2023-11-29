@@ -6,6 +6,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
 const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, allBankLists, getAccount, allCostCenterLists, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
@@ -162,10 +163,11 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
         <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off"></textarea>
-      </label>
+      </label> -->
+      <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
     </div>
 
 </template>

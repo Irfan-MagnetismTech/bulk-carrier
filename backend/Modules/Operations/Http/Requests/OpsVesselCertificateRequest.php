@@ -45,10 +45,10 @@ class OpsVesselCertificateRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required',
-            'ops_maritime_certification_id.required' => 'Vessel is required',
-            'issue_date.required' => 'Port Name is required',
-            'expire_date.required' => 'Port Name is required',
-            'reference_number.required' => 'Port Name is already taken',
+            'ops_maritime_certification_id.required' => 'Certification is required',
+            'issue_date.required' => 'Issue date is required',
+            'expire_date.required' => 'Expire date is required',
+            'reference_number.required' => 'Reference number is already taken',
            
         ];
     }

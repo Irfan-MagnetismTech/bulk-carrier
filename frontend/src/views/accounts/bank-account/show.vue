@@ -29,7 +29,7 @@ onMounted(() => {
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Bank Information</h2>
+          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Bank Information</h2>
           <table class="w-full">
             <tbody>
               <tr>

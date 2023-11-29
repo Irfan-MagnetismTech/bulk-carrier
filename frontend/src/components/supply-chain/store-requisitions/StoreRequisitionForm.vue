@@ -54,9 +54,10 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks </span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <!-- <span class="label-item-title">Remarks </span> -->
+          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
@@ -144,6 +145,7 @@
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';

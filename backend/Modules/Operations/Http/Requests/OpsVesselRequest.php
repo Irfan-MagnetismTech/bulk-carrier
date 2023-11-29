@@ -36,7 +36,7 @@ class OpsVesselRequest extends FormRequest
             'call_sign'       => ['required', 'string', 'max:50', Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'owner_name'      => ['required', 'string', 'max:255'],
             'manager'         => ['required', 'string', 'max:255'],
-            'classification'  => ['required', 'alpha', 'max:50'],
+            'classification'  => ['required', 'string', 'max:50'],
             'flag'            => ['required', 'string', 'max:50'],
             'port_of_registry'=> ['required', 'string', 'max:255'],
             'nrt'             => ['required', 'numeric'],

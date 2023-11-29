@@ -8,6 +8,7 @@ class OpsChartererInvoiceRequest extends FormRequest
 {
     protected function prepareForValidation(){
         $data=  request('info');
+        // dd(json_decode($data, true));
         $this->replace(json_decode($data, true));
     }
     /**
@@ -20,18 +21,19 @@ class OpsChartererInvoiceRequest extends FormRequest
         return [
             'ops_charterer_profile_id'      => ['required', 'numeric', 'max:20'],
             'ops_charterer_contract_id'     => ['required', 'numeric'],
-            'ops_voyage_id'                 => ['nullable', 'numeric', 'max:20'],
+            // 'ops_voyage_id'                 => 'required_if:contract_type,==,Voyage Wise|nullable|max:20',
             'contract_type'                 => ['nullable', 'string', 'max:255'],
-            'bill_from'                     => ['nullable'],
-            'bill_till'                     => ['nullable'],
+            'bill_from'                     => 'required_if:contract_type,==,Day Wise|nullable',
+            'bill_till'                     => 'required_if:contract_type,==,Day Wise|nullable',
             'total_days'                    => ['nullable', 'numeric'],
             'total_amount'                  => ['required', 'numeric'],
             'per_day_charge'                => ['nullable', 'numeric'],
             'others_billable_amount'        => ['required', 'numeric'],
             'service_fee_deduction_amount'  => ['required', 'numeric'],
             // 'discount_unit'                 => ['required', 'string'],
-            'discounted_amount'             => ['required', 'numeric'],
+            'discounted_amount'             => ['nullable', 'numeric'],
             'grand_total'                   => ['required', 'numeric'],
+            'opsChartererInvoiceVoyages.*.ops_voyage_id' => 'required_if:contract_type,==,Voyage Wise|nullable|max:20',
             // 'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }
@@ -46,11 +48,9 @@ class OpsChartererInvoiceRequest extends FormRequest
         return [
             'ops_charterer_profile_id.required' => 'Charterer name  is required',
             'ops_charterer_contract_id.required' => 'Charterer owner code is required',
-            'ops_voyage_id.required' => 'Charterer owner code is required',
             'contract_type.required' => 'Contract type is required',
-            // 'contract_type.max' => 'Contract type may not be greater than :max characters.',
             'bill_from.required' => 'Contract type is required',
-            // 'contract_type.max' => 'Contract type may not be greater than :max characters.',
+            'opsChartererInvoiceVoyages.*.ops_voyage_id.required' => 'Voyage is required for row is :position.',
         ];
     }
 

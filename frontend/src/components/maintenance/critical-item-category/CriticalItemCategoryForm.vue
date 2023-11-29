@@ -26,7 +26,7 @@
         <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </label> -->
-      <RemarksComponent v-model.trim="form.notes" :maxlength="300" :fieldLabel="'Notes'"></RemarksComponent>
+      <RemarksComponent v-model.trim="form.notes" :maxlength="500" :fieldLabel="'Notes'"></RemarksComponent>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

@@ -22,7 +22,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
-              <span class="show-block">{{ lighterNoonReport.opsVoyage?.voyage_no }}</span>
+              <span class="show-block">{{ lighterNoonReport.opsVoyage?.voyage_sequence }}</span>
 
       </label>
       

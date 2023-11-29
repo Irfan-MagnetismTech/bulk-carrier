@@ -11,7 +11,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer Owner</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -24,7 +24,7 @@
               </v-select>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Contract</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
               <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -36,8 +36,18 @@
                   </template>
               </v-select>
         </label>
+        <!-- <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type</span>
+              <input type="text" readonly :value="form.opsChartererContract?.opsChartererContractsFinancialTerms?.opsCargoTariff?.opsCargoType.cargo_type" class="form-input bg-gray-100" autocomplete="off" />
+        </label> -->
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
@@ -48,11 +58,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type == 'Day Wise'">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bill From</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Bill From <span class="text-red-500">*</span></span>
               <input type="date" v-model.trim="form.bill_from" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till <span class="text-red-500">*</span></span>
               <input type="date" v-model.trim="form.bill_till" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -106,7 +116,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="">Voyage</th>
+              <th class="">Voyage <span class="text-red-500">*</span></th>
               <th class="">Cargo Quantity</th>
               <th class="">Rate Per MT</th>
               <th>Total Amount</th>
@@ -523,8 +533,7 @@
       </div>
     </form>
   </div>
-
-    
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchPostEffect } from "vue";
@@ -535,7 +544,8 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
 import useChartererContract from "../../composables/operations/useChartererContract";
 import useBusinessInfo from '../../composables/useBusinessInfo';
-
+import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -735,7 +745,7 @@ watch(() => props.form.ops_charterer_profile_id, (value) => {
 })
 
 watch(() => props.form.opsChartererContract, (value) => {
-  if (editInitiated.value) {
+  if (editInitiated.value || props?.formType != 'edit') {
   props.form.ops_charterer_contract_id = value?.id;
   props.form.contract_type = value?.contract_type;
   if(value?.contract_type == 'Voyage Wise') {
