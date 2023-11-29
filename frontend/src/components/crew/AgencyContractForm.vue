@@ -81,14 +81,17 @@ onMounted(() => {
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
+    <!-- <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Terms & Condition <span class="text-red-500">*</span></span>
       <textarea v-model.trim="form.terms_and_conditions" placeholder="Terms & Condition" class="form-input" autocomplete="off" required></textarea>
-    </label>
-    <label class="block w-full mt-2 text-sm">
+    </label> -->
+    <RemarksComponent :isRequired="true" v-model.trim="form.terms_and_conditions" :maxlength="500" :fieldLabel="'Terms & Condition'"></RemarksComponent>
+
+    <!-- <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Services Offered <span class="text-red-500">*</span></span>
       <textarea type="text" v-model.trim="form.service_offered" placeholder="Service Offered" class="form-input" autocomplete="off" required></textarea>
-    </label>
+    </label> -->
+    <RemarksComponent :isRequired="true" v-model.trim="form.service_offered" :maxlength="500" :fieldLabel="'Services Offered'"></RemarksComponent>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
