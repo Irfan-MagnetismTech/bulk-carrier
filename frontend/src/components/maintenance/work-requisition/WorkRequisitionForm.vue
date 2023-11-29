@@ -118,7 +118,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.est_start_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
+            <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
           <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
         </label>
 
