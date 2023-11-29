@@ -203,7 +203,7 @@
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.status"
+                    :required="form.status == null"
                     v-bind="attributes"
                     v-on="events"
                 />
