@@ -191,7 +191,7 @@ export default function useVesselParticular() {
 		try {
 			const { data, status } = await Api.delete( `/ops/vessel-particulars/${vesselParticularId}`);
 			notification.showSuccess(status);
-			await getVesselParticulars();
+			await getVesselParticulars(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -225,6 +225,7 @@ export default function useVesselParticular() {
 	}
 
 	async function downloadGeneralParticular(vesselName, vesselParticularId) {
+		isTableLoading.value = true
 		axios({
             url: 'ops/export-particular-report?id=' + vesselParticularId,
             method: 'GET',
@@ -253,12 +254,16 @@ export default function useVesselParticular() {
                 notification.showError(error.response.status, '', error.response.statusText);
             }
         }).finally(() => {
-            NProgress.done();
-            isLoading.value = false;
+            // NProgress.done();
+            // isLoading.value = false;
+			isTableLoading.value = false
+
         });
 	}
 
 	async function downloadChartererParticular(vesselName, vesselParticularId) {
+		isTableLoading.value = true
+
 		axios({
             url: 'ops/particular-charterer-download?id=' + vesselParticularId,
             method: 'GET',
@@ -288,8 +293,10 @@ export default function useVesselParticular() {
                 notification.showError(error.response.status, '', error.response.statusText);
             }
         }).finally(() => {
-            NProgress.done();
-            isLoading.value = false;
+            // NProgress.done();
+            // isLoading.value = false;
+			isTableLoading.value = false
+
         });
 	}
 
