@@ -71,7 +71,6 @@
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number"  step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
-                  <Error v-if="errors?.opsVoyageBoatNoteLines[index]?.quantity" :errors="errors.opsVoyageBoatNoteLines[index]?.quantity" />
                 </label>
               </td>
               <td>
