@@ -49,7 +49,7 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
       </label>
       <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
-        <span class="show-block">{{ form.pr_no }}</span>
+        <span class="show-block">{{ form?.scmPr?.ref_no }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>

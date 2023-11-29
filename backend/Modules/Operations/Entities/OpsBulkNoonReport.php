@@ -2,12 +2,22 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsBunker;
+use Modules\Operations\Entities\OpsVessel;
+use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Operations\Entities\OpsBulkNoonReportPort;
+use Modules\Operations\Entities\OpsBulkNoonReportDistance;
+use Modules\Operations\Entities\OpsBulkNoonReportCargoTank;
+use Modules\Operations\Entities\OpsBulkNoonReportConsumption;
+use Modules\Operations\Entities\OpsBulkNoonReportEngineInput;
+use Modules\Operations\Entities\OpsBulkNoonReportConsumptionHead;
 
 class OpsBulkNoonReport extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -63,6 +73,11 @@ class OpsBulkNoonReport extends Model
         return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_bulk_noon_report_id', 'id');
     }
 
+    public function opsBulkNoonReportConsumptionHeads()
+    {
+        return $this->hasMany(OpsBulkNoonReportConsumptionHead::class, 'ops_bulk_noon_report_id', 'id');
+    }
+
     public function opsBulkNoonReportDistance()
     {
         return $this->hasOne(OpsBulkNoonReportDistance::class, 'ops_bulk_noon_report_id', 'id');
@@ -70,11 +85,11 @@ class OpsBulkNoonReport extends Model
 
     public function opsBulkNoonReportEngineInputs()
     {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNull('type');
+        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportEngineInputTypes()
-    {
-        return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
-    }
+    // public function opsBulkNoonReportEngineInputTypes()
+    // {
+    //     return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
+    // }
 }

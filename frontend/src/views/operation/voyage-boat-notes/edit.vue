@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Voyage Boat Note</h2>
     <default-button :title="'Voyage Boat Note List'" :to="{ name: 'ops.voyage-boat-notes.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 relative">
       <form @submit.prevent="updateVoyageBoatNote(voyageBoatNote, voyageBoatNoteId)">
           <!-- Port Form -->
           <voyage-boat-note-form v-model:form="voyageBoatNote" :errors="errors" :formType="formType" :voyageBoatNoteLineObject="voyageBoatNoteLineObject"></voyage-boat-note-form>

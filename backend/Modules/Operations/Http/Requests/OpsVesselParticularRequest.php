@@ -23,7 +23,7 @@ class OpsVesselParticularRequest extends FormRequest
     public function rules(): array
     {
         return [  
-            'ops_vessel_id'     => ['numeric', 'max:20'],
+            'ops_vessel_id'     => ['nullable', 'numeric','max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'vessel_type'       => ['nullable', 'string', 'max:255'],
             'class_no'          => ['nullable', 'string', 'max:255'],
             'loa'               => ['nullable', 'numeric'],
@@ -36,7 +36,7 @@ class OpsVesselParticularRequest extends FormRequest
             'lbc'               => ['nullable', 'string', 'max:255'],
             'previous_name'     => ['nullable', 'string', 'max:255'],
             
-            'call_sign'         => ['max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
+            'call_sign'         =>['nullable', 'string', 'max:255'],
             
             'owner_name'        => ['nullable', 'string', 'max:255'],
             'classification'    => ['nullable', 'alpha'],
@@ -63,15 +63,14 @@ class OpsVesselParticularRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.unique' => 'Vessel is already taken.',
             'depth.numeric' => 'Depth must be numeric.',
             'loa.numeric' => 'LOA must be numeric.',
             'bhp.numeric' => 'BHP must be numeric.',
-            'call_sign.required' => 'Call Sign  is required.',
-            'call_sign.unique' => 'Call Sign is already taken',
-            'imo.digits_between' => 'IMO number must be between :min and :max characters',           
-            'official_number.digits_between' => 'Official Number must be between :min and :max characters',
-            'year_built.integer' => 'Year built must be an integer',
-            'year_built.min' => 'Year built must be greater than or equal to :min',
+            'imo.digits_between' => 'IMO number must be between :min and :max characters.',           
+            'official_number.digits_between' => 'Official Number must be between :min and :max characters.',
+            'year_built.integer' => 'Year built must be an integer.',
+            'year_built.min' => 'Year built must be greater than or equal to :min.',
             'year_built.max' => 'Year built may not be greater than :max characters.',
         ];
     }

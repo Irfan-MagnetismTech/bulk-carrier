@@ -1,4 +1,5 @@
 <template>
+  <LoaderComponent :isLoading = isVesselLoading></LoaderComponent>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
@@ -10,9 +11,10 @@
     <h4 class="text-md font-semibold mt-3">Basic Info</h4>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" @search="fetchVoyages"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -68,7 +70,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number"  step="0.001" v-model.trim="form.opsVoyageBoatNoteLines[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                   <Error v-if="errors?.opsVoyageBoatNoteLines[index]?.quantity" :errors="errors.opsVoyageBoatNoteLines[index]?.quantity" />
                 </label>
               </td>
@@ -80,19 +82,21 @@
         </table>     
       
     </div>
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, watchEffect  } from "vue";
 import Error from "../Error.vue";
 import useVoyage from "../../composables/operations/useVoyage";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../utils/ErrorComponent.vue";
 
 const editInitiated = ref(false);
 
-const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
-const { vessel, showVessel } = useVessel();
+const { voyage, voyages, showVoyage, searchVoyages, isVoyageLoading } = useVoyage();
+const { vessel, showVessel, isVesselLoading } = useVessel();
 
 const props = defineProps({
     form: {
@@ -105,7 +109,7 @@ const props = defineProps({
 
 
 function fetchVoyages(searchParam, loading) {
-  loading(true)
+  // loading(true)
   searchVoyages(searchParam, props.form.business_unit, loading)
 }
 
@@ -122,7 +126,8 @@ watch(() => props.form.business_unit, (value) => {
 }, { deep : true })
 
 watch(() => props.form.opsVoyage, (value) => {
-  
+  voyage.value = null;
+  vessel.value = null;
   if(value) {
     props.form.ops_voyage_id = value?.id
     props.form.ops_vessel_id = value?.ops_vessel_id
@@ -133,23 +138,30 @@ watch(() => props.form.opsVoyage, (value) => {
 }, { deep: true })
 
 watch(() => vessel, (value) => {
+  props.form.vessel_name = null;
   if(value?.value) {
     props.form.vessel_name = value?.value?.name
   }
 }, { deep: true })
 
 watch(() => voyage, (value) => {
+  props.form.opsVoyageBoatNoteLines = [];
   if(value?.value) {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
     console.log("Voyage Watched by Defalt 1")
+    props.form.opsVoyageBoatNoteLines = [
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
+    ];
     editInitiated.value = true
 
   } else {
       props.form.opsVoyageBoatNoteLines = [
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Boat Note' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Final Survey' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, voyage_note_type: 'Receipt Copy' }))
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
     ];
   }
     
@@ -161,6 +173,14 @@ function attachFile(event, index) {
     let fileData = event.target.files[0];
     props.form.opsVoyageBoatNoteLines[index].attachment = fileData;
 }
+
+onMounted(() => {
+    watchEffect(() => {
+      if(props.form.business_unit && props.form.business_unit != 'ALL'){
+        fetchVoyages("", false);
+      }
+    });
+});
 
 </script>
 <style lang="postcss" scoped>

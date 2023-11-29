@@ -21,31 +21,31 @@
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No</span>
-            <input type="text" v-model.trim="form.contact_no" placeholder="Contact No" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.contact_no" required placeholder="Contact No" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
-            <input type="text" v-model.trim="form.country" placeholder="Country" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Country <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.country" required placeholder="Country" class="form-input" autocomplete="off" />
         </label>
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
-          <input type="text" v-model.trim="form.address" placeholder="Address" class="form-input" autocomplete="off" />
+          <span class="text-gray-700 dark-disabled:text-gray-300">Address <span class="text-red-500">*</span></span>
+          <input type="text" v-model.trim="form.address" required placeholder="Address" class="form-input" autocomplete="off" />
       </label>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            <input type="email" v-model.trim="form.email" placeholder="Email" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Email <span class="text-red-500">*</span></span>
+            <input type="email" v-model.trim="form.email" required placeholder="Email" class="form-input" autocomplete="off" />
       </label>
       
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-1/2 mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
-            <input type="text" v-model.trim="form.billing_address" placeholder="Billing Address" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.billing_address" required placeholder="Billing Address" class="form-input" autocomplete="off" />
         </label>
       <label class="block w-1/2 mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
-            <input type="email" v-model.trim="form.billing_email" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email <span class="text-red-500">*</span> </span>
+            <input type="email" v-model.trim="form.billing_email" required placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
       
       <label class="block w-full mt-2 text-sm">

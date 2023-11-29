@@ -26,6 +26,7 @@ return new class extends Migration
 			$table->string('instrument_type')->nullable();
 			$table->string('instrument_no')->nullable();
 			$table->date('instrument_date')->nullable();
+			$table->decimal('instrument_amount', 16, 2)->nullable();
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });

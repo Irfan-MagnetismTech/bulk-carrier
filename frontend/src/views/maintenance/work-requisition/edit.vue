@@ -4,7 +4,7 @@
       
       <default-button :title="'Work Requisition List'" :to="{ name: 'mnt.work-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-      <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+      <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 relative">
           <form @submit.prevent="updateWorkRequisition(workRequisition, workRequisitionId)">
               <!-- Booking Form -->
             <work-requisition-form :page="page" v-model:form="workRequisition" :errors="errors"></work-requisition-form>

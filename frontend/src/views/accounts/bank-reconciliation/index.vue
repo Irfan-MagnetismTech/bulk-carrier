@@ -12,7 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-import moment from "moment";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const router = useRouter();
 
 const props = defineProps({
@@ -25,6 +25,7 @@ const icons = useHeroIcon();
 const { bankReconciliations, getBankReconciliations, updateBankReconciliation, deleteBankReconciliation, isOpenReconciliationDateModal, isLoading, isTableLoading  } = useBankReconciliation();
 const { setTitle } = Title();
 setTitle('Bank Reconciliation');
+const debouncedValue = useDebouncedRef('', 800);
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -46,7 +47,6 @@ function confirmDelete(id) {
   })
 }
 
-let showFilter = ref(false);
 let filterOptions = ref( {
   "business_unit": businessUnit.value,
   "items_per_page": 15,
@@ -55,53 +55,90 @@ let filterOptions = ref( {
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "name",
+      "field_name": "transaction_date",
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Transaction Date",
+      "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "short_name",
+      "field_name": "voucher_type",
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Voucher Type",
+      "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "type",
+      "field_name": "instrument_type",
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
-    }
+      "date_from": null,
+      "label": "Instrument Type",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "instrument_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Instrument No",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "instrument_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Instrument Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "instrument_amount",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Instrument Amount",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": 'bankReconciliation',
+      "field_name": "reconciliation_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Reconciliation Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": 'bankReconciliation',
+      "field_name": "status",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
+      "filter_type": "input"
+    },
   ]
 });
 
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
-
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 const formParams = ref( {
   reconciliation_date: null,
@@ -110,9 +147,6 @@ const formParams = ref( {
 });
 
 function updateBankReconciliationDate(event,transactionId,businessUnit){
-  // if (!confirm('Are you sure you want to posting?')) {
-  //   return;
-  // }
   isOpenReconciliationDateModal.value = 1;
   formParams.value.acc_transaction_id = transactionId;
   formParams.value.business_unit = businessUnit;
@@ -125,36 +159,32 @@ function closeReconciliationDateModal(){
 
 onMounted(() => {
   watchPostEffect(() => {
-    // filterOptions.value.page = props.page;
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'acc.bank-reconciliation.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-    // filterOptions.value.page = props.page;
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-  getBankReconciliations(filterOptions.value)
-    .then(() => {
-      paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching ranks:", error);
-    });
-});
+    getBankReconciliations(filterOptions.value)
+        .then(() => {
+          const customDataTable = document.getElementById("customDataTable");
+          paginatedPage.value = filterOptions.value.page;
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching ranks:", error);
+        });
+  });
   filterOptions.value.filter_options.forEach((option, index) => {
     filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
   });
-
 });
-
 </script>
 
 <template>
@@ -166,164 +196,21 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
-          <thead>
-          <tr class="w-full">
-            <th class="w-16">
-              <div class="w-full flex items-center justify-between">
-                # <button title="Filter Data" @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Voucher Date </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Voucher Type</nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr> Instrument Type </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr> Instrument No </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr> Instrument Date </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-<!--            <th>-->
-<!--              <div class="flex justify-evenly items-center">-->
-<!--                <span><nobr> Account Name </nobr></span>-->
-<!--                <div class="flex flex-col cursor-pointer">-->
-<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
-<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </th>-->
-<!--            <th>-->
-<!--              <div class="flex justify-evenly items-center">-->
-<!--                <span><nobr> Debit Amount </nobr></span>-->
-<!--                <div class="flex flex-col cursor-pointer">-->
-<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
-<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </th>-->
-<!--            <th>-->
-<!--              <div class="flex justify-evenly items-center">-->
-<!--                <span><nobr> Credit Amount </nobr></span>-->
-<!--                <div class="flex flex-col cursor-pointer">-->
-<!--                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>-->
-<!--                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </th>-->
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Reconciliation Date </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Status </nobr></span>
-                <div class="flex flex-col cursor-pointer">
-                  <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                  <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                </div>
-              </div>
-            </th>
-
-            <th>
-              <div class="flex justify-evenly items-center">
-                <span><nobr>Business Unit</nobr></span>
-              </div>
-            </th>
-            <th class="w-20">Action</th>
-          </tr>
-          <tr class="w-full" v-if="showFilter">
-            <th>
-              <select v-model.trim="filterOptions.items_per_page" class="filter_input">
-                <option value="15">15</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-            </th>
-            <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-            <th>
-              <filter-with-business-unit v-model.trim="filterOptions.business_unit"></filter-with-business-unit>
-            </th>
-            <th>
-              <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-            </th>
-          </tr>
-          </thead>
+      <table class="w-full whitespace-no-wrap">
+        <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-
             <template v-for="(bankReconciliation,index) in bankReconciliations?.data" :key="index">
               <tr v-for="(ledger, ledgerIndex) in bankReconciliation?.ledgerEntries" :key="ledgerIndex">
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                <!-- <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.costCenter?.name }} </td> -->
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> <nobr>{{ bankReconciliation?.transaction_date }}</nobr> </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.voucher_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.instrument_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.instrument_no }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> <nobr>{{ bankReconciliation?.instrument_date }}</nobr> </td>
-
-                <!-- <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> {{ bankReconciliation?.bill_no }} </td> -->
-
-<!--                <td class="text-left"> <nobr>{{ ledger?.account.account_name }} </nobr></td>-->
-<!--                <td class="text-right"> {{ ledger.dr_amount }} </td>-->
-<!--                <td class="text-right"> {{ ledger.cr_amount }} </td>-->
-
-<!--                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> -->
-<!--                  -->
-<!--                  <button class="btn"> - - - </button>-->
-<!--                -->
-<!--                </td>-->
-
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length"> <nobr>{{ bankReconciliation?.instrument_amount }}</nobr> </td>
                 <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
                   <nobr>
-<!--                    <input v-if="!bankReconciliation?.bank_reconciliation" type="date" class="transaction_date form-input">-->
-                    <span> {{ (bankReconciliation?.bankReconciliation?.reconciliation_date) ? moment(bankReconciliation?.bankReconciliation?.reconciliation_date).format('DD-MM-YYYY') : '---' }} </span>
+                    <span> {{ bankReconciliation?.bankReconciliation?.reconciliation_date ?? '---' }} </span>
                   </nobr>
                 </td>
                 <td class="px-4 py-3 text-sm" v-if="ledgerIndex == 0" :rowspan="bankReconciliation.total_ledger">
@@ -334,40 +221,31 @@ onMounted(() => {
                     <nobr>Not Posted</nobr>
                   </span>
                 </td>
-
-
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length">
                   <span :class="bankReconciliation?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bankReconciliation?.business_unit }}</span>
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(bankReconciliation?.ledgerEntries).length">
                   <nobr>
-<!--                    <svg @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit)" xmlns="http://www.w3.org/2000/svg" class="icn text-green-600 dark:text-gray-600 dark:hover:text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
-<!--                    </svg>-->
-                    <action-button :action="'posting'" :class="{'custom_opacity': bankReconciliation?.bankReconciliation}" @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit)"></action-button>
-                    <!-- <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: bankReconciliation?.id } }"></action-button> -->
+                    <action-button :action="'posting'" :class="{'custom_opacity text-green-600': bankReconciliation?.bankReconciliation}" @click="updateBankReconciliationDate($event,bankReconciliation.id,bankReconciliation?.business_unit)"></action-button>
                   </nobr>
                 </td>
               </tr>
             </template>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bankReconciliations?.data?.length"></LoaderComponent>
           </tbody>
-
-
-          <tfoot v-if="!bankReconciliations?.data?.length" class="relative h-[250px]">
-          <tr v-if="isLoading">
-            <td colspan="10">Loading...</td>
-          </tr>
-          <tr v-else-if="isTableLoading">
-            <td colspan="10">
-              <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-            </td>
-          </tr>
-
-          <tr v-else-if="!bankReconciliations?.data?.length">
-            <td colspan="10">No data found.</td>
-          </tr>
-          </tfoot>
+        <tfoot v-if="!bankReconciliations?.data?.length" class="relative h-[250px]">
+        <tr v-if="isLoading">
+          <td colspan="10"></td>
+        </tr>
+        <tr v-else-if="isTableLoading">
+          <td colspan="10">
+            <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+          </td>
+        </tr>
+        <tr v-else-if="!bankReconciliations?.data?.data?.length">
+          <td colspan="10">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
     <Paginate :data="bankReconciliations" to="acc.bank-reconciliation.index" :page="page"></Paginate>

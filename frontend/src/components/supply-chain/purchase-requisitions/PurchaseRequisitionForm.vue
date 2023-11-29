@@ -387,7 +387,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
+                 <input type="text" v-model="form.scmPrLines[index].country_name" class="form-input">
                </label>
               
             </td>

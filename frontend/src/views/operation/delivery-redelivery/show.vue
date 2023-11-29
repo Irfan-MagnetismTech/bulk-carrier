@@ -50,7 +50,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel </span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsVessel?.name }}
               </span>
@@ -77,7 +77,7 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer </span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.name }}
               </span>
@@ -85,7 +85,7 @@
           </label>
         
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code</span>
               <span class="show-block">
                 {{ deliveryRedelivery.opsChartererProfile?.owner_code }}
               </span>

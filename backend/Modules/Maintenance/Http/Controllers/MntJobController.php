@@ -315,7 +315,7 @@ class MntJobController extends Controller
             $jobs = MntJob::with(['mntItem', 'mntJobLines' => function($q){
                                 $q->where(function ($subQuery){
                                     $subQuery->whereHas('mntJob',function($q){
-                                        $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                        $q->havingRaw('(mnt_job_lines.cycle + mnt_job_lines.previous_run_hour) - mnt_jobs.present_run_hour < mnt_job_lines.min_limit')
                                             ->where('mnt_job_lines.cycle_unit', 'Hours');
                                     })->orWhereHas('mntJob',function($q){
                                         $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
@@ -333,7 +333,7 @@ class MntJobController extends Controller
                             }])
                             ->where(function ($jobLineQuery){
                                 $jobLineQuery->whereHas('mntJobLines',function($q){
-                                    $q->havingRaw('mnt_jobs.present_run_hour % mnt_job_lines.cycle >= mnt_job_lines.min_limit')
+                                    $q->havingRaw('(mnt_job_lines.cycle + mnt_job_lines.previous_run_hour) - mnt_jobs.present_run_hour < mnt_job_lines.min_limit')
                                         ->where('mnt_job_lines.cycle_unit', 'Hours');
                                 })
                                 ->orWhereHas('mntJobLines',function($q){

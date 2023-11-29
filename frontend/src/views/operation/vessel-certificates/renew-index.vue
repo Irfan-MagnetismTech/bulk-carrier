@@ -1,21 +1,27 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-const icons = useHeroIcon();
 import useVesselCertificate from '../../../composables/operations/useVesselCertificate';
-const { vesselCertificates, getRenewableVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
 import Store from './../../../store/index.js';
 import moment from 'moment';
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+const router = useRouter();
+const debouncedValue = useDebouncedRef('', 800);
 
+// const filterDays = ref(60);
+// const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const filterDays = ref(60);
-const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const { vesselCertificates, getRenewableVesselCertificates, deleteVesselCertificate, isLoading, isTableLoading, errors } = useVesselCertificate();
+const icons = useHeroIcon();
 const props = defineProps({
   page: {
     type: Number,
@@ -28,10 +34,11 @@ setTitle('Custom Renew Schedule List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-function setBusinessUnit($el){
-  businessUnit.value = $el.target.value;
-}
+// function setBusinessUnit($el){
+//   businessUnit.value = $el.target.value;
+// }
 
 function confirmDelete(id) {
   Swal.fire({
@@ -49,10 +56,121 @@ function confirmDelete(id) {
   })
 }
 
+
+watch(
+    () => businessUnit.value,
+    (newBusinessUnit, oldBusinessUnit) => {
+      if (newBusinessUnit !== oldBusinessUnit) {
+        router.push({ name: "ops.vessel-certificates.index", query: { page: 1 } })
+      }
+    }
+);
+
+
+let filterOptions = ref( {
+  "business_unit": null,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+  
+    {
+      "rel_type": null,
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsMaritimeCertification",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Certificate Name",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsMaritimeCertification",
+      "field_name": "validity",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Validity Period",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "issue_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Issue Date",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "expire_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Expire Date",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": null,
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": 'Left Days',
+      "filter_type": null
+    },
+  
+  ]
+});
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
 onMounted(() => {
-  watchEffect(() => {
-    getRenewableVesselCertificates(props.page, businessUnit.value)
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'ops.vessel-certificates.renew-list', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getRenewableVesselCertificates(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -62,6 +180,9 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+  });  
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
   });
 });
 
@@ -75,8 +196,8 @@ function getFilteredResult() {
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Custom Renew Schedule List</h2>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none ">
-    <!-- Search -->
+  <!-- <div class="flex items-center justify-between mb-2 select-none ">
+    
     <div class="relative w-full">
       <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
       :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
@@ -103,14 +224,14 @@ function getFilteredResult() {
       </svg>
       <input type="text" placeholder="Search..." class="search" />
     </div>
-  </div>
+  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
+         <!-- <thead v-once>
+           <tr class="w-full">
             <th>#</th>
             <th>Vessel Name</th>
             <th>Certificate Name</th>
@@ -120,13 +241,16 @@ function getFilteredResult() {
             <th>Left Days</th>
             <th>Action</th>
           </tr>
-          </thead>
-          <tbody v-if="Object.keys(vesselCertificates).length">
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody v-if="Object.keys(vesselCertificates).length" class="relative">
             
             <template v-for="(certificates, key, index) in vesselCertificates">
               <tr v-for="(item, itemIndex) in certificates">
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ certificates[0].opsVessel?.name }}</td>
+                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                <td >{{ item?.opsVessel?.name }}</td>
+                <!-- <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ certificates[0].opsVessel?.name }}</td> -->
                 <td>
                   {{ item?.opsMaritimeCertification?.name }}
                 </td>
@@ -150,13 +274,19 @@ function getFilteredResult() {
                   </button>
                 </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && Object.keys(vesselCertificates).length"></LoaderComponent>
             </template>
               
           </tbody>
           
-          <tfoot v-if="!Object.keys(vesselCertificates)?.length">
+          <tfoot v-if="!Object.keys(vesselCertificates)?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="14">Loading...</td>
+          </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
           </tr>
           <tr v-else-if="!Object.keys(vesselCertificates)?.length">
             <td colspan="14">No data found.</td>

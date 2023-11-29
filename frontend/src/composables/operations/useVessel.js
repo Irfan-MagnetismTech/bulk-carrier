@@ -153,8 +153,9 @@ export default function useVessel() {
 		//NProgress.start();
 		var loader = {};
 		if(LoadingStatus) {
-			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+			// loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 			isLoading.value = LoadingStatus;
+			isVesselLoading.value = true;
 		}
 		
 
@@ -167,8 +168,9 @@ export default function useVessel() {
 			notification.showError(status);
 		} finally {
 			if(LoadingStatus) {
-				loader.hide();
+				// loader.hide();
 				isLoading.value = false;
+				isVesselLoading.value = false;
 			}
 			//NProgress.done();
 		}

@@ -30,7 +30,7 @@
 
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel </span>
               
               <span class="show-block">{{ chartererContract.opsVessel?.name }}</span>
 
@@ -47,13 +47,13 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name</span>
               <span class="show-block">{{ chartererContract.opsChartererProfile?.name }}</span>
 
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code</span>
               <span class="show-block">{{ chartererContract.opsChartererProfile?.owner_code }}</span>
 
           </label>
@@ -87,10 +87,21 @@
             <span class="show-block">{{ chartererContract.contact_no }}</span>
 
         </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Attachment </span>
-              <a download href="" class="block text-blue-500 hover:text-blue-700 ease-linear duration-200 font-semibold mt-2.5">Download Attachment</a>
 
+        <label v-if="chartererContract?.attachment" class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Attachment </span>
+              <!-- <button @click="dlChartererContractAttachment(chartererContract.id)" class="mt-1 flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                Download Attachment
+                <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button> -->
+              <a download :href="env.BASE_API_URL+chartererContract.attachment" target="_blank" class="mt-1 flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                Download Attachment
+                <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </a>
           </label>
       </div>
     </div>
@@ -144,8 +155,8 @@
       <h4 class="text-md font-semibold mt-4">Local Agent Info</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].port_code }}</span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Port </span>
+              <span class="show-block">{{ chartererContract.opsChartererContractsLocalAgents[0].opsPort?.code_name }}</span>
           </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Agent Name</span>
@@ -240,7 +251,8 @@
 
         </label>
       </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+
+      <div v-if="chartererContract.opsChartererContractsFinancialTerms?.bunker_provider " class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300 font-semibold">Bunker Provider</span>
         </label>
@@ -249,7 +261,6 @@
             <input type="radio" checked disabled />
             {{ chartererContract.opsChartererContractsFinancialTerms?.bunker_provider }}</span>
 
-              
           </label>
         <label class="block w-full mt-2 text-sm">
             
@@ -266,12 +277,13 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import env from '../../../config/env';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
 const chartererContractId = route.params.chartererContractId;
-const { chartererContract, showChartererContract, errors } = useChartererContract();
+const { chartererContract, showChartererContract, downloadChartererContractAttachment, errors } = useChartererContract();
 const { numberFormat } = useHelper();
 
 const { setTitle } = Title();
@@ -281,4 +293,9 @@ setTitle('Charterer Contract Details');
 onMounted(() => {
     showChartererContract(chartererContractId)
 });
+
+function dlChartererContractAttachment(chartererContactId) {
+  downloadChartererContractAttachment(chartererContactId)
+}
+
 </script>

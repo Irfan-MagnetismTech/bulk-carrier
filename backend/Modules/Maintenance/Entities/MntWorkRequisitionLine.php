@@ -20,6 +20,7 @@ class MntWorkRequisitionLine extends Model
         'last_done',
         'previous_run_hour',
         'present_run_hour',
+        'next_due',
         'status',
         'start_date',
         'completion_date',
