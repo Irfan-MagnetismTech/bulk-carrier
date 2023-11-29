@@ -2,12 +2,12 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
       <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.function_name" placeholder="Critical Function Name" class="form-input" required/>
           <Error v-if="errors?.function_name" :errors="errors.function_name" />
         </label>
       <!-- <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Notes</span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span>
         <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input" />
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </label> -->
