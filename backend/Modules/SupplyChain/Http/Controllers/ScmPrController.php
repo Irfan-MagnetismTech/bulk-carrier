@@ -120,7 +120,7 @@ class ScmPrController extends Controller
                 'brand' => $scmPrLine->brand,
                 'model' => $scmPrLine->model,
                 'specification' => $scmPrLine->specification,
-                'origin' => $scmPrLine?->country?->name,
+                'country_name' => $scmPrLine?->country_name,
                 'drawing_no' => $scmPrLine->drawing_no,
                 'part_no' => $scmPrLine->part_no,
                 'rob' => $currentStock,

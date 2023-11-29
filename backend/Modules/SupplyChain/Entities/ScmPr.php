@@ -15,7 +15,7 @@ class ScmPr extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by', 'country_id', 'country_name'
+        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by'
     ];
 
     public function scmPrLines(): HasMany
