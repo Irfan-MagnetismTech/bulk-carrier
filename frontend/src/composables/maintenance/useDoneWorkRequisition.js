@@ -22,7 +22,7 @@ export default function useDoneWorkRequisition() {
         mnt_item_name: '',
         assigned_to: '',
         responsible_person: '',
-        responsible_person_name: '',
+        // responsible_person_name: '',
         scm_vendor_id: '',
         scm_vendor_name: '',
         maintenance_type: '',
@@ -53,25 +53,41 @@ export default function useDoneWorkRequisition() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isDoneWorkRequisitionLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getDoneWorkRequisitions(page, businessUnit) {
+    async function getDoneWorkRequisitions(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        // indexPage.value = page;
+        // indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
+        console.log("filterOptions", filterOptions);
 
         try {
             const {data, status} = await Api.get('/mnt/get-work-requisitions-wip',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions),
                     status: 2,
                 },
             });
@@ -81,8 +97,14 @@ export default function useDoneWorkRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
             //NProgress.done();
         }
     }
@@ -94,9 +116,9 @@ export default function useDoneWorkRequisition() {
 
         try {
             const { data, status } = await Api.post('/mnt/work-requisitions', form);
-            workRequisition.value = data.value;
+            doneWorkRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.work-requisitions.index" });
+            await router.push({ name: "mnt.work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -137,7 +159,7 @@ export default function useDoneWorkRequisition() {
             );
             doneWorkRequisition.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.done-work-requisitions.index" });
+            await router.push({ name: "mnt.done-work-requisitions.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -182,7 +204,7 @@ export default function useDoneWorkRequisition() {
         try {
             const { data, status } = await Api.delete( `/mnt/work-requisitions/${doneWorkRequisitionId}`);
             notification.showSuccess(status);
-            await getDoneWorkRequisitions(indexPage.value, indexBusinessUnit.value);
+            await getDoneWorkRequisitions(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -203,6 +225,8 @@ export default function useDoneWorkRequisition() {
         updateDoneWorkRequisitionLine,
         deleteDoneWorkRequisition,
         isLoading,
+        isTableLoading,
+        isDoneWorkRequisitionLoading,
         errors,
     };
 }

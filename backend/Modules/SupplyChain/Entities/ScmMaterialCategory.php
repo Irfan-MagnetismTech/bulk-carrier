@@ -73,4 +73,18 @@ class ScmMaterialCategory extends Model
     public function account(){
         return $this->morphOne(AccAccount::class, 'accountable')->withDefault();
     }
+
+    public function account_psml()
+    {
+        return $this->morphOne(AccAccount::class, 'accountable')
+        ->where('business_unit', 'PSML')
+        ->withDefault();
+    }
+
+    public function account_tsll()
+    {
+        return $this->morphOne(AccAccount::class, 'accountable')
+        ->where('business_unit', 'TSLL')
+        ->withDefault();
+    }
 }

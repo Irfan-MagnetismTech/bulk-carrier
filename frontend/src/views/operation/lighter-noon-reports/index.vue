@@ -58,7 +58,7 @@ let filterOptions = ref( {
 			},
 			{
 			"relation_name": 'opsVoyage',
-			"field_name": "voyage_no",
+			"field_name": "voyage_sequence",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -260,7 +260,7 @@ onMounted(() => {
                     <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('MM-DD-YYYY hh:mm A') : null }}</nobr>
                   </td>
                   <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
-                  <td>{{ lighterNoonReport?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ lighterNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ lighterNoonReport?.next_port }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>

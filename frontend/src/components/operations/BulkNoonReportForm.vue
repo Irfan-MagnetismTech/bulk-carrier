@@ -123,7 +123,7 @@
                     <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700">Last Port <span class="text-red-500">*</span></span>
+              <span class="text-gray-700">Next Port <span class="text-red-500">*</span></span>
               <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -229,11 +229,11 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Slip % </span>
-            <input type="text" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model="form.opsBulkNoonReportDistance.slip_percent" placeholder="Slip %" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Steaming Hours </span>
-            <input type="text" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model="form.opsBulkNoonReportDistance.steaming_hours" placeholder="Steaming Hours" class="form-input" autocomplete="off" />
           </label>
         </div>
 
@@ -303,19 +303,19 @@
                 </span>
               </td>
               <td>
-                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_level">
+                <input type="number" step="0.001" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_level">
               </td>
               <td>
-                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].pressure">
+                <input type="number" step="0.001" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].pressure">
               </td>
               <td>
-                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].vapor_temp">
+                <input type="number" step="0.001" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].vapor_temp">
               </td>
               <td>
-                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_temp">
+                <input type="number" step="0.001" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].liq_temp">
               </td>
               <td>
-                <input type="text" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].quantity_mt">
+                <input type="number" step="0.001" class="form-input" v-model="form.opsBulkNoonReportCargoTanks[index].quantity_mt">
               </td>
               <td>
                 <button type="button" v-if="index>0" @click="removeTank(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

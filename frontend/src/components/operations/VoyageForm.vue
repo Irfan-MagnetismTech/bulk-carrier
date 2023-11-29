@@ -412,6 +412,7 @@ const toggleTabs = (tabNumber) => {
       return;
     }
   }
+
   else if (openTab.value === 2) {
     let tab2RequiredFields = ['loading_point', 'unloading_point', 'initial_survey_qty'];
     if (!checkValidation(openTab, tabNumber, props, tab2RequiredFields)) {
@@ -458,12 +459,26 @@ watch(() => props.form.business_unit, (value) => {
   }
 })
 
+const bunkerReset = ref([]);
+
 watch(() => props.form.ops_vessel_id, (value) => {
   if(value) {
     showVessel(value)
     .then(() => {
+      bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
+    // Assuming you want to reset the resettableValue property to some default value
+    return {
+      ...obj,
+      exchange_rate_bdt: null,
+      exchange_rate_usd: null,
+      rate: null,
+      amount_usd: null,
+      amount_bdt: null,
+    };
+  });
+
       console.log(vessel.value);
-      props.form.opsBunkers = vessel?.value?.opsBunkers
+      // props.form.opsBunkers = vessel?.value?.opsBunkers
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
@@ -473,7 +488,19 @@ watch(() => props.form.ops_vessel_id, (value) => {
 
 watch(() => vessel, (value) => {
   if(value) {
-      props.form.opsBunkers = vessel?.value?.opsBunkers
+    bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
+    // Assuming you want to reset the resettableValue property to some default value
+    return {
+      ...obj,
+      exchange_rate_bdt: null,
+      exchange_rate_usd: null,
+      rate: null,
+      amount_usd: null,
+      amount_bdt: null,
+    };
+  });
+  
+      props.form.opsBunkers = bunkerReset.value
   }
 }, { deep: true })
 

@@ -13,6 +13,7 @@ export default function useCrewDocument() {
     const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
+    const isCrewDocumentRenewScheduleModalOpen = ref(0);
     const isDocumentEditModal = ref(0);
     const currentCrewDocRenewData = ref(null);
     const $loading = useLoading();
@@ -204,6 +205,7 @@ export default function useCrewDocument() {
         try {
             const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
             currentCrewDocRenewData.unshift(data.value);
+            isCrewDocumentRenewScheduleModalOpen.value = 0;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -305,6 +307,7 @@ export default function useCrewDocument() {
         crewDocument,
         isCrewDocumentAddModalOpen,
         isCrewDocumentRenewModalOpen,
+        isCrewDocumentRenewScheduleModalOpen,
         crewRenewDocuments,
         crewRenewDocument,
         currentCrewDocRenewData,
