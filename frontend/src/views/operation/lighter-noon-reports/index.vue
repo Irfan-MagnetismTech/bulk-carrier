@@ -275,7 +275,7 @@ onMounted(() => {
               <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>
-                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
+                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('MM-DD-YYYY hh:mm A') : null }}</nobr>
                   </td>
                   <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
                   <td>{{ lighterNoonReport?.opsVoyage?.voyage_no }}</td>
