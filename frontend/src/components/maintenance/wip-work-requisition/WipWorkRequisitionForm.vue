@@ -196,7 +196,7 @@
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
             <td class="px-1 py-1 flex items-center">
-              <v-select :options="materials" placeholder="Enter Material Name" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
+              <v-select :options="materials" :loading="isMaterialLoading"  placeholder="Enter Material Name" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -253,7 +253,7 @@ const { itemGroupWiseItems, vesselWiseJobItems, getItemGroupWiseItems, getVessel
 const { itemWiseJobLines, getJobsForRequisition, isJobLoading } = useJob();
 const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
 const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
-const { material, materials, getMaterials, searchMaterial, isMaterialLoading } = useMaterial();
+const { material, materials, getMaterials, searchMaterial, isLoading : isMaterialLoading } = useMaterial();
 const { workRequisitionStatus } = useMaintenanceHelper();
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
