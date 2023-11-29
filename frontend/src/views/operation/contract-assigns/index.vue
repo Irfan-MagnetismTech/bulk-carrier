@@ -18,7 +18,6 @@ const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
 
-
 const { contractAssigns, getContractAssigns, deleteContractAssign, isLoading, isTableLoading, errors } = useContractAssign();
 const icons = useHeroIcon();
 const props = defineProps({
@@ -60,6 +59,7 @@ watch(
       }
     }
 );
+
 let filterOptions = ref( {
   "business_unit": null,
   "items_per_page": 15,
@@ -219,8 +219,8 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="contractAssigns?.data?.length" class="relative">
               <tr v-for="(contractAssign, index) in contractAssigns.data" :key="contractAssign?.id">
-                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                 <td>{{ contractAssign?.opsVessel?.name }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
                   <td>{{ contractAssign?.opsCargoTariff?.cargo_tarrif }}</td>
                   <td>{{ contractAssign?.opsCustomer?.name }}</td>
@@ -255,18 +255,18 @@ onMounted(() => {
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && contractAssigns?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!contractAssigns?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
-          </tr>
-          <tr v-else-if="isTableLoading">
-              <td colspan="8">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-              </td>
+          <tfoot v-if="!contractAssigns?.data?.length" class="relative h-[250px]">
+            <tr v-if="isLoading">
+              <td colspan="8">Loading...</td>
             </tr>
-          <tr v-else-if="!contractAssigns?.data?.length">
-            <td colspan="8">No data found.</td>
-          </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="8">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!contractAssigns?.data?.length">
+              <td colspan="8">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>

@@ -266,11 +266,10 @@ class OpsVesselCertificateController extends Controller
                     ->from('ops_vessel_certificates')
                     ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
             })
-            ->latest()
-            ->paginate(15)
+            ->globalSearch($request->all())
+            // ->latest()
+            // ->paginate(15)
             ->groupBy('ops_vessel_id');
-
-            // dd($vesselCertificates);
 
             $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate,$days) {
                 return $certificateGroup->filter(function ($certificate)  use ($currentDate,$days) {
@@ -281,6 +280,7 @@ class OpsVesselCertificateController extends Controller
                     return $certificate->expire_days <= $days && $certificate->opsMaritimeCertification->type != 'Permanent';
                 })->values();
             })->filter();
+
             
             return response()->success('Data retrieved successfully.', $filterCertificates, 200);
         }

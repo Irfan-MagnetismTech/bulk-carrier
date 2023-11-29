@@ -2,8 +2,8 @@ import NProgress from 'nprogress';
 import {useLoading} from 'vue-loading-overlay';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Api from '../../apis/Api';
-import Error from '../../services/error';
+import Api from '../../apis/Api.js';
+import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
 
 export default function useMaritimeCertificate() {
@@ -12,27 +12,39 @@ export default function useMaritimeCertificate() {
 	const $loading = useLoading();
 	const notification = useNotification();
 	const maritimeCertificate = ref({
-		name: '',
-		type: '',
-		validity: '',
-		authority: '',
+		name: null,
+		type: null,
+		validity: null,
+		authority: null,
 	});
+
+	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
 
-	async function getMaritimeCertificates(page,columns = null, searchKey = null, table = null) {
+	async function getMaritimeCertificates(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+		}
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/maritime-certifications', {
 				params: {
-					page: page || 1,
-					columns: columns || null,
-					searchKey: searchKey || null,
-					table: table || null,
-				},
+					page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+				}
 			});
 			maritimeCertificates.value = data.value;
 			notification.showSuccess(status);
@@ -40,9 +52,14 @@ export default function useMaritimeCertificate() {
 			const { data, status } = error.response;
 			//notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -171,6 +188,7 @@ export default function useMaritimeCertificate() {
 		searchMaritimeCertificates,
 		getMaritimeCertificateList,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }
