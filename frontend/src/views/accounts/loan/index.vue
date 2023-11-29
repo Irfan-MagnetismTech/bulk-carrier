@@ -11,6 +11,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -45,19 +46,23 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "sanctioned_limit",
+      "field_name": "source_type",
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Source Type",
+      "filter_type": null,      
     },
     {
-      "relation_name": null,
-      "field_name": "sanctioned_limit",
+      "relation_name": 'bank',
+      "field_name": "bank_name",
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Bank Name",
+      "filter_type": "input"      
     },
     {
       "relation_name": null,
@@ -65,7 +70,9 @@ let filterOptions = ref({
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Loan Type",
+      "filter_type": "input"      
     },
     {
       "relation_name": null,
@@ -73,7 +80,9 @@ let filterOptions = ref({
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Loan Number",
+      "filter_type": "input"      
     },
     {
       "relation_name": null,
@@ -81,7 +90,9 @@ let filterOptions = ref({
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Loan Name",
+      "filter_type": "input"      
     },
     {
       "relation_name": null,
@@ -89,7 +100,9 @@ let filterOptions = ref({
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Total Sanctioned",
+      "filter_type": "input"      
     },
     {
       "relation_name": null,
@@ -97,7 +110,9 @@ let filterOptions = ref({
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Sanctioned Limit",
+      "filter_type": "input"      
     },
   ]
 });
@@ -163,9 +178,9 @@ onMounted(() => {
       });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+  // filterOptions.value.filter_options.forEach((option, index) => {
+  //   filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  // });
 });
 
 
@@ -183,7 +198,9 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
+        <FilterComponent :filterOptions = "filterOptions"/>
+
+          <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                 <div class="w-full flex items-center justify-between">
@@ -286,12 +303,13 @@ onMounted(() => {
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
-          </thead>
+          </thead> -->
+
           <tbody class="relative">
                 <tr v-for="(loan,index) in loans?.data" :key="index">
                   <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ loan?.loanable_type }}</td>
-                  <td>{{ loan?.loanable_id }}</td>
+                  <td>{{ loan?.bank?.bank_name }}</td>
                   <td>{{ loan?.loan_type }}</td>
                   <td>{{ loan?.loan_number }}</td>
                   <td>{{ loan?.loan_name }}</td>

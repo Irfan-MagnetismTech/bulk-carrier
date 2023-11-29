@@ -17,7 +17,7 @@ class AccLoanController extends Controller
     public function index(Request $request)
     {
         try {
-            $accLoans = AccLoan::globalSearch($request->all());
+            $accLoans = AccLoan::with('bank')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accLoans, 200);
         }
