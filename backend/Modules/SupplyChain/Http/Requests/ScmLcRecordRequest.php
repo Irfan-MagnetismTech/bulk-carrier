@@ -10,9 +10,9 @@ class ScmLcRecordRequest extends FormRequest
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
-        
-        $mergeData = array_merge($dataArray, ['attachment' => request('attachment')]);
-        
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $imgData, 'excel' => request('excel')]);
+
         $this->replace($mergeData);
     }
 
@@ -43,8 +43,7 @@ class ScmLcRecordRequest extends FormRequest
             // 'beneficiary_bank_id' => 'required|integer|exists:acc_banks,id',
             'beneficiary_bank_name' => 'max:255',
             'scm_vendor_id' => 'required|integer|exists:scm_vendors,id',
-            'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
-            'lc_type' => 'required|integer',
+            'lc_type' => 'required',
             // 'acc_bank_id' => 'required|integer|exists:acc_banks,id',
             'bank_name' => 'max:255',
             'cfr_value' => 'required|numeric',
@@ -66,7 +65,38 @@ class ScmLcRecordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'scm_warehouse_id.required' => 'Warehouse is required',
+            'scm_warehouse_id.integer' => 'Warehouse must be an integer',
+            'scm_warehouse_id.exists' => 'Warehouse is not found',
+
+            'acc_cost_center_id.required' => 'Cost center is required',
+            'acc_cost_center_id.integer' => 'Cost center must be an integer',
+            'acc_cost_center_id.exists' => 'Cost center is not found',
+
+            'attachment.required' => 'Attachment is required',
+            'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
+
+            'raised_date.required' => 'Raised date is required',
+            'raised_date.date' => 'Raised date must be a date',
+
+            'remarks.max' => 'Remarks must be less than 255 characters',
+
+            'purchase_center.required' => 'Purchase center is required',
+            'purchase_center.max' => 'Purchase center must be less than 255 characters',
+
+            'is_critical.required' => 'Criticality is required',
+            'is_critical.integer' => 'Criticality must be an integer',
+
+            'approved_date.required' => 'Approved date is required',
+            'approved_date.date' => 'Approved date must be a date',
+
+            'amount.required' => 'Amount is required',
+            'amount.numeric' => 'Amount must be a number',
+
+            'particular.required' => 'Particular is required',
+
+            'scmLcRecordLines.*.amount.required' => 'Amount is required',
+            'scmLcRecordLines.*.amount.numeric' => 'Amount must be a number',
         ];
     }
 
