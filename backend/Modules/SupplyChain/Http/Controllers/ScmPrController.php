@@ -53,10 +53,8 @@ class ScmPrController extends Controller
     public function store(ScmPrRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
-
-       
-            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
-            $requestData['attachment'] = $attachment;
+        $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
+        $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
         $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
 
@@ -170,10 +168,10 @@ class ScmPrController extends Controller
         try {
             DB::beginTransaction();
 
-          
-                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
-                $requestData['attachment'] = $attachment;
-         
+
+            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
+            $requestData['attachment'] = $attachment;
+
             $purchase_requisition->update($requestData);
             $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 
@@ -224,10 +222,10 @@ class ScmPrController extends Controller
         if (isset($request->searchParam)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
-                ->where(function($query) use ($request) {
+                ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                    ->where('business_unit',$request->business_unit)
-                    ->where('acc_cost_center_id',$request->cost_center_id);
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
                 })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
@@ -235,14 +233,14 @@ class ScmPrController extends Controller
                 ->get();
         } else {
             $purchase_requisition = ScmPr::query()
-                    ->with('scmPrLines')
-                    ->where(function($query) use ($request) {
-                        $query->where('business_unit',$request->business_unit)
-                        ->where('acc_cost_center_id',$request->cost_center_id);
-                    })
-                    ->orderByDesc('ref_no')
-                    ->limit(10)
-                    ->get();
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
         }
 
         return response()->success('Search result', $purchase_requisition, 200);
@@ -262,7 +260,7 @@ class ScmPrController extends Controller
     //         ->orderByDesc('ref_no')
     //         ->limit(10)
     //         ->get();
-            
+
     //     }else{
     //         $materialReceiptReport = ScmMrr::query()
     //         ->with('scmMrrLines.scmMaterial')
@@ -274,7 +272,7 @@ class ScmPrController extends Controller
     //         ->limit(10)
     //         ->get();
     //     }
-       
+
     //     $materialReceiptReport = $materialReceiptReport->map(function($item) {
     //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
     //                  return $item1->scmMaterial;
