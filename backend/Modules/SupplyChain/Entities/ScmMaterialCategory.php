@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Modules\Accounts\Entities\AccAccount;
 
 class ScmMaterialCategory extends Model
@@ -14,9 +15,9 @@ class ScmMaterialCategory extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'name', 'short_code','parent_id'
+        'name', 'short_code', 'parent_id'
     ];
-    
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -30,7 +31,7 @@ class ScmMaterialCategory extends Model
     // public function getTopLevelParent(): ?self
     // {
     //     $currentCategory = $this;
-        
+
     //     while ($currentCategory->parent) {
     //         $currentCategory = $currentCategory->parent;
     //     }
@@ -38,7 +39,7 @@ class ScmMaterialCategory extends Model
     //     return $currentCategory;
     // }
 
-    public function scopeTopLevelParent($query, $categoryId)
+    public function scopeTopLevelParent($query, $categoryId): object
     {
         $category = $query->find($categoryId);
 
@@ -70,21 +71,22 @@ class ScmMaterialCategory extends Model
         return $this->parent()->with('getAllAncestors');
     }
 
-    public function account(){
+    public function account(): MorphOne
+    {
         return $this->morphOne(AccAccount::class, 'accountable')->withDefault();
     }
 
-    public function account_psml()
+    public function account_psml(): MorphOne
     {
         return $this->morphOne(AccAccount::class, 'accountable')
-        ->where('business_unit', 'PSML')
-        ->withDefault();
+            ->where('business_unit', 'PSML')
+            ->withDefault();
     }
 
-    public function account_tsll()
+    public function account_tsll(): MorphOne
     {
         return $this->morphOne(AccAccount::class, 'accountable')
-        ->where('business_unit', 'TSLL')
-        ->withDefault();
+            ->where('business_unit', 'TSLL')
+            ->withDefault();
     }
 }

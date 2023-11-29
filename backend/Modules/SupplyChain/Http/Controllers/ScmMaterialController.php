@@ -61,8 +61,6 @@ class ScmMaterialController extends Controller
             $topParentAccounPsmlId = $topParent->account_psml->id;
             $topParentAccountTsllId = $topParent->account_tsll->id;
 
-           
-
             $material->account()->create([
                  'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
                  'account_name' => $material->name,

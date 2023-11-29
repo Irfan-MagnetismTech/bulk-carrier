@@ -55,7 +55,6 @@ class ScmMaterialCategoryController extends Controller
                     'business_unit'=> 'TSLL',
                 ];
 
-
                 $material_category->account()->create($psmlData);
                 $material_category->account()->create($tsllData);
             }
