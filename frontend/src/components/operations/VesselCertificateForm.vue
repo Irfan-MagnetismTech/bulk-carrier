@@ -33,7 +33,6 @@
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type </span>
           <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
-          <Error v-if="errors?.type" :errors="errors.type" />
         </label>
     </div>
 
@@ -42,22 +41,18 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period </span>
             <input type="text" v-model.trim="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
-          <Error v-if="errors?.validity_period" :errors="errors.validity_period" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Reference Number </span>
             <input type="text" v-model.trim="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.reference_number" :errors="errors.reference_number" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date </span>
             <input type="date" v-model="form.issue_date" placeholder="Issue Date" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.issue_date" :errors="errors.issue_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Expire Date </span>
             <input type="date" v-model="form.expire_date" placeholder="Expire Date" class="form-input" autocomplete="off" />
-          <Error v-if="errors?.expire_date" :errors="errors.expire_date" />
         </label>
     </div>
 
@@ -70,7 +65,7 @@
       </label>
   </div>
 
-
+<ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, computed, watch } from "vue";
@@ -80,6 +75,7 @@ import useVessel from '../../composables/operations/useVessel';
 import DropZoneV2 from '../../components/DropZoneV2.vue';
 import {useStore} from "vuex";
 import env from '../../config/env';
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));

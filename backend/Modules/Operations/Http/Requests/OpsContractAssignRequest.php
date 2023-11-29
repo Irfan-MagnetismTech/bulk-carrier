@@ -18,7 +18,13 @@ class OpsContractAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id'             => ['required', 'max:20'],
+            'ops_voyage_id'             => ['required', 'max:20'],
+            'ops_charterer_contract_id' => 'required_if:business_unit,!=,PSML|nullable|max:20',
+            'ops_charterer_profile_id'  => 'required_if:business_unit,!=,PSML|nullable|max:20',
+            'ops_cargo_tariff_id'       => 'required_if:business_unit,!=,TSLL|nullable|max:20',
+            'ops_customer_id'           => 'required_if:business_unit,!=,TSLL|nullable|max:20',
+            'assign_date'               => ['required'],            
         ];
     }
 
@@ -30,7 +36,13 @@ class OpsContractAssignRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_voyage_id.required' => 'Voyage is required',
+            'ops_charterer_profile_id.required' => 'Charterer is required',
+            'ops_charterer_contract_id.required' => 'Charterer Contract is required',
+            'ops_cargo_tariff_id.required' => 'Tarrif is required',
+            'ops_customer_id.required' => 'Customer is required',
+            'assign_date.required' => 'Assign Date is required',
         ];
     }
 
