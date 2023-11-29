@@ -74,7 +74,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Contact",
+      "label": "Mobile No.",
       "filter_type": "input"
     },
     {
@@ -180,6 +180,7 @@ onMounted(() => {
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.profiles.show', params: { profileId: crwProfileData?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.profiles.edit', params: { profileId: crwProfileData?.id } }"></action-button>
                 <action-button @click="confirmDelete(crwProfileData?.id)" :action="'delete'"></action-button>
               </nobr>
