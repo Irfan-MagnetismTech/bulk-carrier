@@ -268,7 +268,7 @@ export default function useMaterialReceiptReport() {
 
     async function searchMrr(business_unit, cost_center_id = null, searchParam = '') {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
+        //const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
@@ -284,7 +284,7 @@ export default function useMaterialReceiptReport() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }

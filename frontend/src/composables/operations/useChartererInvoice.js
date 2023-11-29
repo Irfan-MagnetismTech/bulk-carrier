@@ -10,39 +10,41 @@ export default function useChartererInvoice() {
 	const router = useRouter();
 	const chartererInvoices = ref([]);
 	const $loading = useLoading();
+    const isTableLoading = ref(false);
 	const notification = useNotification();
 
 	const chartererInvoice = ref({
-		business_unit: '',
-		ops_charterer_profile_id: '',
+		business_unit: null,
+		ops_charterer_profile_id: null,
 		opsChartererProfile: null,
-		ops_charterer_contract_id: '',
+		ops_charterer_contract_id: null,
 		opsChartererContract: null,
-		ops_voyage_id: '',
+		ops_voyage_id: null,
 		opsVoyage: null,
-		contract_type: '',
+		contract_type: null,
 		cargo_quantity: 0,
-        bill_from: '',
-        bill_till: '',
-        total_days: '',
-        total_amount: '',
-        others_billable_amount: '',
-		others_billable_amount_usd: '',
-		sub_total_amount: '',
-		sub_total_amount_usd: '',
-		service_fee_deduction_amount: '',
-		service_fee_deduction_amount_usd: '',
-		discount_unit: '',
-		discounted_amount: '',
-		discounted_amount_usd: '',
-		grand_total: '',
-		grand_total_usd: '',
+        bill_from: null,
+        bill_till: null,
+        total_days: null,
+		total_amount: null,
+		per_day_charge: 0,
+        others_billable_amount: null,
+		others_billable_amount_usd: null,
+		sub_total_amount: null,
+		sub_total_amount_usd: null,
+		service_fee_deduction_amount: null,
+		service_fee_deduction_amount_usd: null,
+		discount_unit: null,
+		discounted_amount: null,
+		discounted_amount_usd: null,
+		grand_total: null,
+		grand_total_usd: null,
 		opsChartererInvoiceServices: [
 			{
 				charge_or_deduct: 'deduct',
-				particular: '',
-				cost_unit: '',
-				currency: '',
+				particular: null,
+				cost_unit: null,
+				currency: null,
 				quantity: 0,
 				rate: 0,
 				exchange_rate_bdt: 0,
@@ -55,9 +57,9 @@ export default function useChartererInvoice() {
 		opsChartererInvoiceOthers: [
 			{
 				charge_or_deduct: 'charge',
-				particular: '',
-				cost_unit: '',
-				currency: '',
+				particular: null,
+				cost_unit: null,
+				currency: null,
 				quantity: 0,
 				rate: 0,
 				exchange_rate_bdt: 0,
@@ -68,7 +70,7 @@ export default function useChartererInvoice() {
 			},
 		],
 		opsChartererInvoiceVoyages: [{
-			'ops_voyage_id': '',
+			'ops_voyage_id': null,
 			'opsVoyage': null,
 			'cargo_quantity': 0,
 			'rate_per_mt': 0,
@@ -78,7 +80,7 @@ export default function useChartererInvoice() {
 
 
 	const chartererInvoiceVoyageObject = {
-		'ops_voyage_id': '',
+		'ops_voyage_id': null,
 		'opsVoyage': null,
 		'cargo_quantity': 0,
 		'rate_per_mt': 0,
@@ -87,9 +89,9 @@ export default function useChartererInvoice() {
 
 	const serviceObject = {
 		charge_or_deduct: 'deduct',
-		particular: '',
-		cost_unit: '',
-		currency: '',
+		particular: null,
+		cost_unit: null,
+		currency: null,
 		quantity: 0,
 		rate: 0,
 		exchange_rate_bdt: 0,
@@ -101,9 +103,9 @@ export default function useChartererInvoice() {
 
 	const otherObject = {
 		charge_or_deduct: 'charge',
-		particular: '',
-		cost_unit: '',
-		currency: '',
+		particular: null,
+		cost_unit: null,
+		currency: null,
 		quantity: 0,
 		rate: 0,
 		exchange_rate_bdt: 0,
@@ -113,31 +115,47 @@ export default function useChartererInvoice() {
 		amount_usd: 0,
 	};
 
+    const errors = ref('');
+    const isLoading = ref(false);
+    const filterParams = ref(null);
 
-	const errors = ref(null);
-	const isLoading = ref(false);
-
-	async function getChartererInvoices(page, businessUnit) {
+	async function getChartererInvoices(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
 
 		try {
-			const { data, status } = await Api.get('/ops/charterer-invoices', {
-				params: {
-					page: page || 1,
-					business_unit: businessUnit
-				}
-			});
+			const {data, status} = await Api.get(`/ops/charterer-invoices`,{
+                params: {
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
+            });
 			chartererInvoices.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			//notification.showError(status);
+			notification.showError(status);
 		} finally {
-			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -148,18 +166,12 @@ export default function useChartererInvoice() {
 
 		try {
 			let formData = new FormData();
-			
-			form.opsChartererInvoiceLines.map((element, index) => {
-				formData.append('attachments['+index+']', element.attachment ?? null);
-				element.attachment = null;
-			})
-
 
 			formData.append('info', JSON.stringify(form));
 
 			const { data, status } = await Api.post('/ops/charterer-invoices', formData);
 			notification.showSuccess(status);
-			// router.push({ name: 'ops.charterer-invoices.index' });
+			router.push({ name: 'ops.charterer-invoices.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -197,11 +209,6 @@ export default function useChartererInvoice() {
 		try {
 
 			let formData = new FormData();
-			
-			form.opsChartererInvoiceLines.map((element, index) => {
-				formData.append('attachments['+index+']', element.attachment ?? null);
-				element.attachment = null;
-			})
 
 
 			formData.append('info', JSON.stringify(form));
@@ -233,7 +240,7 @@ export default function useChartererInvoice() {
 		try {
 			const { data, status } = await Api.delete( `/ops/charterer-invoices/${chartererInvoiceId}`);
 			notification.showSuccess(status);
-			await getChartererInvoices();
+			await getChartererInvoices(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -271,6 +278,7 @@ export default function useChartererInvoice() {
 		chartererInvoiceVoyageObject,
 		searchChartererInvoices,
 		serviceObject,
+		isTableLoading,
 		otherObject,
 		isLoading,
 		errors,

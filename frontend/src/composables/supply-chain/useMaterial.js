@@ -30,6 +30,7 @@ export default function useMaterial() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'};
     const errors = ref('');
     const isLoading = ref(false);
+    const isMaterialLoading = ref(false);
 
     async function getMaterials(filterOptions) {
         //NProgress.start();
@@ -235,6 +236,7 @@ export default function useMaterial() {
         searchMaterialWithCategory,
         getBunkerList,
         isLoading,
+        isMaterialLoading,
         errors
     };
 }

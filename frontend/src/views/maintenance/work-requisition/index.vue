@@ -57,7 +57,7 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "mnt.ship-departments.index", query: { page: 1 } })
+        router.push({ name: "mnt.work-requisitions.index", query: { page: 1 } })
       }
     }
 );
@@ -129,13 +129,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Status",
-      "filter_type": "select",
-      "select_options": [
-          { value: "", label: "Select" ,defaultSelected: true},
-          { value: 0, label: "Pending" ,defaultSelected: false},
-          { value: 1, label: "WIP",defaultSelected: false},
-          { value: 2, label: "Done",defaultSelected: false},
-        ]
+      "input_value": 'Pending',
     },
 
   ]
@@ -150,6 +144,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'mnt.work-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -220,7 +215,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             
           <tr v-for="(workRequisition,index) in workRequisitions?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ workRequisition?.requisition_date }}</td>
+            <td><nobr>{{ workRequisition?.requisition_date }}</nobr></td>
             <td>{{ workRequisition?.reference_no }}</td>
             <td>{{ workRequisition?.opsVessel?.name }}</td>
             <td>{{ workRequisition?.maintenance_type }}</td>
@@ -231,8 +226,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td><span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span></td>
             
             <td>
+              <nobr> 
                 <action-button :action="'edit'" :to="{ name: 'mnt.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
                 <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
+              </nobr>
+
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && workRequisitions?.data?.length"></LoaderComponent>

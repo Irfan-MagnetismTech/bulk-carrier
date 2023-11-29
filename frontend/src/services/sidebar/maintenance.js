@@ -73,7 +73,7 @@ export default [
                                 },
                                 {
                                     route: 'mnt.jobs.index',
-                                    label: 'Job',
+                                    label: 'Job List',
                                     preIcon: icons.User,
                                     postIcon: icons.DownArrow,
                                     is_active: false,
@@ -86,7 +86,7 @@ export default [
             
             {
                 route: 'mnt.run-hours.index',
-                label: 'Run Hour Entry',
+                label: 'Running Hour Entry',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -149,14 +149,76 @@ export default [
                     },
                 ],
             },
-            
-            
 
+            {
+                route: '',
+                label: 'Cri. Ship Function',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'mnt.critical-functions.index',
+                        label: 'Critical Functions',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                             
+                    {
+                        route: 'mnt.critical-item-categories.index',
+                        label: 'Categories',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
 
+                    
+                    {
+                        route: 'mnt.critical-items.index',
+                        label: 'Items',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
 
+                    
+                    // {
+                    //     route: 'mnt.critical-vessel-items.index',
+                    //     label: 'Vessel Items',
+                    //     preIcon: icons.User,
+                    //     postIcon: icons.DownArrow,
+                    //     is_active: false,
+                    //     is_open: false,
+                    //     permissionKey: '',
+                    //     subSubMenu: [],
+                    // },
 
-            
-            
+                    
+                    // {
+                    //     // route: 'mnt.critical-spare-lists.index',
+                    //     label: 'Critical Spare List',
+                    //     preIcon: icons.User,
+                    //     postIcon: icons.DownArrow,
+                    //     is_active: false,
+                    //     is_open: false,
+                    //     permissionKey: '',
+                    //     subSubMenu: [],
+                    // },
+                ],
+            },
+                
             
         ]
     },

@@ -1,17 +1,24 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useContractAssign from '../../../composables/operations/useContractAssign';
 import Store from "../../../store";
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+const router = useRouter();
+const debouncedValue = useDebouncedRef('', 800);
 
 
-const { contractAssigns, getContractAssigns, deleteContractAssign, isLoading } = useContractAssign();
+const { contractAssigns, getContractAssigns, deleteContractAssign, isLoading, isTableLoading, errors } = useContractAssign();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -44,10 +51,119 @@ function confirmDelete(id) {
   })
 }
 
+watch(
+    () => businessUnit.value,
+    (newBusinessUnit, oldBusinessUnit) => {
+      if (newBusinessUnit !== oldBusinessUnit) {
+        router.push({ name: "ops.contract-assigns.index", query: { page: 1 } })
+      }
+    }
+);
+
+let filterOptions = ref( {
+  "business_unit": null,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+  
+    {
+      "rel_type": null,
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsVoyage",
+      "field_name": "voyage_sequence",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Voyage",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsCargoTariff",
+      "field_name": "cargo_tarrif",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Cargo tarrif",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsCustomer",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Customer",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsChartererProfile",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Charterer Profile",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsChartererContract",
+      "field_name": "contract_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Contract",
+      "filter_type": "input"
+    },    
+  ]
+});
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+
 onMounted(() => {
-  watchEffect(() => {
-    getContractAssigns(props.page, businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'ops.contract-assigns.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getContractAssigns(filterOptions.value)
+      .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -57,7 +173,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
+
 
 });
 
@@ -69,7 +189,7 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Contract Assign List</h2>
     <default-button :title="'Contract Assign'" :to="{ name: 'ops.contract-assigns.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
+  <!-- <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
 
     <div class="relative w-full">
@@ -78,13 +198,13 @@ onMounted(() => {
       </svg>
       <input type="text" placeholder="Search..." class="search" />
     </div>
-  </div>
+  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Vessel</th>
@@ -95,12 +215,13 @@ onMounted(() => {
             <th>Contract Cntract</th>
             <th>Action</th>
           </tr>
-          </thead>
-          <tbody v-if="contractAssigns?.data?.length">
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody v-if="contractAssigns?.data?.length" class="relative">
               <tr v-for="(contractAssign, index) in contractAssigns.data" :key="contractAssign?.id">
-                  <td>{{ contractAssigns.from + index }}</td>
-                 <td>{{ contractAssign?.opsVessel?.name }}</td>
-                  <td>{{ contractAssign?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ contractAssign?.opsVessel?.name }}</td>
+                  <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
                   <td>{{ contractAssign?.opsCargoTariff?.cargo_tarrif }}</td>
                   <td>{{ contractAssign?.opsCustomer?.name }}</td>
                   <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
@@ -123,24 +244,33 @@ onMounted(() => {
                   }}  
                   </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
-                      <action-button :action="'show'" :to="{ name: 'ops.contract-assigns.show', params: { contractAssignId: contractAssign.id } }"></action-button>
+                    <nobr>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.contract-assigns.show', params: { contractAssignId: contractAssign.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.contract-assigns.edit', params: { contractAssignId: contractAssign.id } }"></action-button>
                       <action-button @click="confirmDelete(contractAssign.id)" :action="'delete'"></action-button>
+                    </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && contractAssigns?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!contractAssigns?.length">
-          <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
-          </tr>
-          <tr v-else-if="!contractAssigns?.data?.length">
-            <td colspan="8">No data found.</td>
-          </tr>
+          <tfoot v-if="!contractAssigns?.data?.length" class="relative h-[250px]">
+            <tr v-if="isLoading">
+              <td colspan="8">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="8">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!contractAssigns?.data?.length">
+              <td colspan="8">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>
     <Paginate :data="contractAssigns" to="ops.contract-assigns.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

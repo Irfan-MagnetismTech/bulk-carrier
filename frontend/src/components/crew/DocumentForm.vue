@@ -88,10 +88,6 @@ function showCrewDocumentRenewModal(crwDocumentId){
     getCrewDocumentRenewals(crwDocumentId);
   }
   renewFormData.value.crw_crew_document_id = crwDocumentId;
-
-  // isCrewDocumentRenewModalOpen.value = 1;
-  // currentCrewDocRenewData.value = crwDocumentData;
-  // renewFormData.value.crw_crew_document_id = crwDocumentData.id;
 }
 
 function closeCrewDocumentRenewModal(){
