@@ -105,19 +105,6 @@ let filterOptions = ref( {
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -186,7 +173,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <nobr>Charterer Short Code</nobr>
+                  <nobr>Charterer Owner Code</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(1,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(1,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -213,7 +200,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <nobr>Contact</nobr>
+                  <nobr>Contact No</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(4,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(4,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
