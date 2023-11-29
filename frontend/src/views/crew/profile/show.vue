@@ -5,6 +5,7 @@ import useCrewProfile from '../../../composables/crew/useCrewProfile.js';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import env from '../../../config/env';
 
 const icons = useHeroIcon();
 
@@ -73,6 +74,16 @@ onMounted(() => {
               <tr>
                 <th>Rank</th>
                 <td>{{ crewProfile?.crewRank?.name }}</td>
+              </tr>
+              <tr>
+                <th>Attachment</th>
+                <td>
+                  <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crewProfile?.attachment">{{
+                      (typeof crewProfile?.attachment === 'string')
+                          ? '('+crewProfile?.attachment.split('/').pop()+')'
+                          : '----'
+                    }}</a>
+                </td>
               </tr>
               <tr>
                 <th>Others</th>
