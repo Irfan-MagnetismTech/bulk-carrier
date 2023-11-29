@@ -454,8 +454,11 @@ watch(() => props.form.ops_vessel_id, (value) => {
     };
   });
 
-      console.log(vessel.value);
-      props.form.opsBunkers = bunkerReset.value
+      if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+        props.form.opsBunkers = bunkerReset.value
+      } else {
+        editInitiated.value = true
+      }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
@@ -478,10 +481,10 @@ watch(() => vessel, (value) => {
   //   };
   // });
 
-if(props?.formType == 'edit' && editInitiated.value == true) {
+// if(props?.formType == 'edit' && editInitiated.value == true) {
 
-      props.form.opsBunkers = bunkerReset.value
-}
+//       props.form.opsBunkers = bunkerReset.value
+// }
   }
 }, { deep: true })
 
@@ -493,10 +496,10 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
   vessels.value = [props?.form?.opsVessel]
   cargoTypes.value = [props?.form?.opsCargoType]
 
-  if(vessels.value.length > 0) {
-      console.log("Changing editInitatedValue ")
-      editInitiated.value = true
-    }
+  // if(vessels.value.length > 0) {
+  //     console.log("Changing editInitatedValue ")
+  //     editInitiated.value = true
+  //   }
   }
 });
 
