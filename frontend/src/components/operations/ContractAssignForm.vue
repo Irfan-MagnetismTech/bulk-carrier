@@ -8,7 +8,7 @@
     </div>
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Assign Date </span>
+              <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
               <input type="date" v-model="form.assign_date" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
       </label>
 
@@ -16,7 +16,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel </span>
+              <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -30,7 +30,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage </span>
+              <span class="text-gray-700 ">Voyage<span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -47,7 +47,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Tarrif </span>
+              <span class="text-gray-700 ">Tarrif <span class="text-red-500">*</span></span>
               <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -61,7 +61,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Customer </span>
+              <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
               <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -78,7 +78,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='PSML'">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer </span>
+              <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -92,7 +92,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer Contract </span>
+              <span class="text-gray-700 ">Charterer Contract <span class="text-red-500">*</span></span>
               <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input

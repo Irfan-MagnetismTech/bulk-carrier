@@ -39,7 +39,7 @@ class OpsVesselParticularRequest extends FormRequest
             'call_sign'         =>['nullable', 'string', 'max:255'],
             
             'owner_name'        => ['nullable', 'string', 'max:255'],
-            'classification'    => ['nullable', 'alpha'],
+            'classification'    => ['nullable', 'string'],
             'flag'              => ['nullable', 'string', 'max:255'],
             'previous_flag'     => ['nullable', 'string', 'max:255'],
             'port_of_registry'  => ['nullable', 'string', 'max:255'],
