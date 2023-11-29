@@ -745,7 +745,7 @@ watch(() => props.form.ops_charterer_profile_id, (value) => {
 })
 
 watch(() => props.form.opsChartererContract, (value) => {
-  if (editInitiated.value) {
+  if (editInitiated.value || props?.formType != 'edit') {
   props.form.ops_charterer_contract_id = value?.id;
   props.form.contract_type = value?.contract_type;
   if(value?.contract_type == 'Voyage Wise') {
