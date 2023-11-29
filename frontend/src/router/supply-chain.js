@@ -281,7 +281,7 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-edit' },
     },
     {
-        path: `/${BASE}/purchase-orders/:purchaseRequisitionId`,
+        path: `/${BASE}/purchase-orders/:purchaseOrderId`,
         name: `${BASE}.purchase-orders.show`,
         component: () => import(`../views/${PATH_BASE}/purchase-orders/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'purchase-orders-show'  },

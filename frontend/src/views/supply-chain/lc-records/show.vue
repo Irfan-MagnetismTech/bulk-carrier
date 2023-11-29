@@ -3,11 +3,11 @@ import {ref,onMounted, watchPostEffect} from "vue";
 
 import Title from "../../../services/title";
 import useHelper from "../../../composables/useHelper.js";
-import useMaterialReceiptReport from "../../../composables/supply-chain/useMaterialReceiptReport";
-import MaterialReceiptReportShow from "../../../components/supply-chain/material-receipt-reports/MaterialReceiptReportShow.vue";
+import useLcRecord from "../../../composables/supply-chain/useLcRecord";
+import LcRecordShow from "../../../components/supply-chain/lc-records/LcRecordShow.vue";
 import { useRoute } from 'vue-router';
 
-const { getMaterialReceiptReports, showMaterialReceiptReport, materialReceiptReport, updateMaterialReceiptReport,materialObject, errors, isLoading } = useMaterialReceiptReport();
+const { getLcRecord, showLcRecord, lcRecord, updateLcRecord,materialObject, errors, isLoading } = useLcRecord();
 
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
@@ -16,24 +16,28 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 const route = useRoute();
-const materialReceiptReportId = route.params.materialReceiptReportId;
+const lcRecordId = route.params.lcRecordId;
 const formType = 'edit';
 
-setTitle('Material Receipt Report Details');
+setTitle('Update LC Records');
 
 onMounted(() => {
-    showMaterialReceiptReport(materialReceiptReportId);
+    showLcRecord(lcRecordId);
 });
 </script>
 <template>
-  <!-- Heading -->
-  <div class="flex items-center justify-between w-full my-3" v-once>
-      <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Material Receipt Report Details</h2>
-      <default-button :title="'MRR List'" :to="{ name: 'scm.material-receipt-reports.index' }" :icon="icons.DataBase"></default-button>
-  </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
-          <material-receipt-report-show v-model:form="materialReceiptReport"></material-receipt-report-show>
-  </div>
+    <!-- Heading -->
+    
+    <div class="flex items-center justify-between w-full my-3" v-once>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create LC Records</h2>
+        <default-button :title="'PO List'" :to="{ name: 'scm.lc-records.index' }" :icon="icons.DataBase"></default-button>
+    </div>
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+        
+          
+        <lc-record-show :form="lcRecord"></lc-record-show>      
+        
+</div>
 </template>
 
 
