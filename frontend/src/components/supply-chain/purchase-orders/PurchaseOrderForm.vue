@@ -10,7 +10,7 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
-
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { vendors, searchVendor,isLoading: vendorLoader } = useVendor();
@@ -250,13 +250,14 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks</span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <!-- <span class="label-item-title">Remarks</span> -->
+          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTable" ref="customDataTableirf" class="pb-10 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
@@ -270,7 +271,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             <th class="py-3 align-center">Required Date</th>
             <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
             <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
-            <th class="py-3 align-cente min-w-[70px] md:min-w-[95px] lg:min-w-[120px]r">Total Price</th>
+            <th class="py-3 align-cente min-w-[70px] md:min-w-[110px] lg:min-w-[125px]r">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
