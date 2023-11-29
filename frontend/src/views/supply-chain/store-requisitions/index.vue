@@ -76,14 +76,33 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "department_id",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Warehouse",
-      "filter_type": "input"
+      "filter_type": "select",
+      "select_options": [
+        {
+          "label": "Select",
+          "value": "",
+          "defaultSelected" : true
+        },
+        {
+          "label": "Store Department",
+          "value": 1
+        },
+        {
+          "label": "Engine Department",
+          "value": 2
+        },
+        {
+          "label": "Provision Department",
+          "value": 3
+        }
+      ]
     }
   ]
 });
@@ -154,7 +173,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -166,7 +185,7 @@ function confirmDelete(id) {
           }
         })
       }
-
+      const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
       const navigateToSICreate = (SrId) => {
         const sr_id = SrId;
         const routeOptions = {
@@ -209,7 +228,7 @@ function confirmDelete(id) {
               <td>{{ storeRequisition?.ref_no }}</td>
               <td>{{ storeRequisition?.date }}</td>
               <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ DEPARTMENTS[storeRequisition.department_id] ?? '' }}</td>
               <td>
                 <span :class="storeRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeRequisition?.business_unit }}</span>
               </td>

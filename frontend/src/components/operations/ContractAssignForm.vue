@@ -6,8 +6,13 @@
       <label class="block w-full mt-2 text-sm"></label>
 
     </div>
+    <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 ">Assign Date </span>
+              <input type="date" v-model="form.assign_date" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+      </label>
 
-    <h4 class="text-md font-semibold mt-3">Basic Info</h4>
+    </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
@@ -43,11 +48,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif </span>
-              <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsTariff" label="tariff_name" class="block form-input">
+              <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsTariff"
+                          :required="!form.opsCargoTariff"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -187,17 +192,18 @@ watch(() => props.form.opsChartererProfile, (value) => {
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
+    getChartererContractsByCharterOwner(value?.id);
 })
 
 
 
 
 
-watch(() => props.form.ops_charterer_profile_id, (value) => {
-    props.form.ops_charterer_contract_id = '';
-    props.form.opsChartererContract = null;
-    getChartererContractsByCharterOwner(value);
-})
+// watch(() => props.form.ops_charterer_profile_id, (value) => {
+//     // props.form.ops_charterer_contract_id = '';
+//     // props.form.opsChartererContract = null;
+//     // getChartererContractsByCharterOwner(value);
+// })
 
 
 watch(() => props.form.opsChartererContract, (value) => {
@@ -210,8 +216,8 @@ watch(() => props.form.opsCustomer, (value) => {
   props.form.ops_customer_id = value?.id;
 })
 
-watch(() => props.form.opsTariff, (value) => {
-  props.form.ops_tariff_id = value?.id;
+watch(() => props.form.opsCargoTariff, (value) => {
+  props.form.ops_cargo_tariff_id = value?.id;
 })
 
 </script>

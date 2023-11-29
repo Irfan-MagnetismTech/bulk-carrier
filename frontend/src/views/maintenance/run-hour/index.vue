@@ -27,7 +27,7 @@ const props = defineProps({
 
 const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading, errors  } = useRunHour();
 const { setTitle } = Title();
-setTitle('Run Hour List');
+setTitle('Runnig Hour List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -44,7 +44,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to delete this run hour!",
+    text: "You want to delete this runnig hour!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -191,7 +191,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Run Hour List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Runnig Hour List</h2>
     <!-- <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }"></default-button> -->
     <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }" :icon="icons.AddIcon"></default-button>
   </div>

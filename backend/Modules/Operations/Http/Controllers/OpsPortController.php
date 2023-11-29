@@ -134,7 +134,7 @@ class OpsPortController extends Controller
     public function getPortByNameOrCode(Request $request){
         try {
             $ports = OpsPort::query()
-                ->when(request()->has('name_or_code'), function ($query) {
+                ->when(isset(request()->name_or_code), function ($query) {
                     $query->where('name', 'like', '%' . request()->name_or_code . '%');
                     $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
                 })
@@ -150,7 +150,7 @@ class OpsPortController extends Controller
     public function getPortNameOrCode(Request $request){
         try {
             $ports = OpsPort::query()
-            ->when(request()->has('name_or_code'), function ($query) {
+            ->when(isset(request()->name_or_code), function ($query) {
                 $query->where('name', 'like', '%' . request()->name_or_code . '%');
                 $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
             })

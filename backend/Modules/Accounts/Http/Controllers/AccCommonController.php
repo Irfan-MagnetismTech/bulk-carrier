@@ -10,6 +10,7 @@ use Modules\Accounts\Entities\AccAccount;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
 use Modules\Accounts\Entities\AccBankAccount;
 use Modules\Accounts\Entities\AccCostCenter;
+use Modules\Accounts\Entities\AccFixedAsset;
 use Modules\Accounts\Entities\AccLoan;
 
 class AccCommonController extends Controller
@@ -195,6 +196,29 @@ class AccCommonController extends Controller
             return response()->json([
                 'status' => 'success',
                 'value'  => $loans,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getFixedAssets(Request $request)
+    {
+        try {
+            $fixedAssets = AccFixedAsset::with('scmMaterial')
+            ->when(request()->business_unit != "ALL", function ($q) {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->when(request()->acc_cost_center_id, function($q){
+                $q->where('acc_cost_center_id', request()->acc_cost_center_id);
+            })
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $fixedAssets,
             ], 200);
         }
         catch (\Exception $e)

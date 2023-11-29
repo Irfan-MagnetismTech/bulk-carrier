@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('acc_depreciations', function (Blueprint $table) {
             $table->id();
+            $table->string('month_year', 7);
+            $table->date('applied_date');
+            $table->unsignedBigInteger('acc_cost_center_id');
 			$table->enum('business_unit', ['PSML', 'TSLL']);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

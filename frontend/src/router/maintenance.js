@@ -241,6 +241,162 @@ export default [
 
 	/* Work Requisition Done end */
 
+	/* Critical Ship Function start */
+	{
+		path: `/${BASE}/critical-functions`,
+		name: `${BASE}.critical-functions.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-functions/create`,
+		name: `${BASE}.critical-functions.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-create' },
+	},
+	{
+		path: `/${BASE}/critical-functions/:criticalFunctionId/edit`,
+		name: `${BASE}.critical-functions.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-edit' },
+	},
+	{
+		path: `/${BASE}/critical-functions/:criticalFunctionId`,
+		name: `${BASE}.critical-functions.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-function/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-function-show'  },
+	},
+
+	/* Critical Ship Function end */
+
+	
+	/* Critical Item Categories Start */
+	{
+		path: `/${BASE}/critical-item-categories`,
+		name: `${BASE}.critical-item-categories.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-item-categories/create`,
+		name: `${BASE}.critical-item-categories.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-create' },
+	},
+	{
+		path: `/${BASE}/critical-item-categories/:criticalItemCategoryId/edit`,
+		name: `${BASE}.critical-item-categories.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-edit' },
+	},
+	{
+		path: `/${BASE}/critical-item-categories/:criticalItemCategoryId`,
+		name: `${BASE}.critical-item-categories.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-item-category/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-category-show'  },
+	},
+
+	/* Critical Item Categories End */
+
+	
+	/* Critical Items Start */
+	{
+		path: `/${BASE}/critical-items`,
+		name: `${BASE}.critical-items.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-items/create`,
+		name: `${BASE}.critical-items.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-create' },
+	},
+	{
+		path: `/${BASE}/critical-items/:criticalItemId/edit`,
+		name: `${BASE}.critical-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-edit' },
+	},
+	{
+		path: `/${BASE}/critical-items/:criticalItemId`,
+		name: `${BASE}.critical-items.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-item-show'  },
+	},
+
+	/* Critical Items End */
+
+	
+	/* Critical Vessel Items Start */
+	{
+		path: `/${BASE}/critical-vessel-items`,
+		name: `${BASE}.critical-vessel-items.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/create`,
+		name: `${BASE}.critical-vessel-items.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-create' },
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/:criticalVesselItemId/edit`,
+		name: `${BASE}.critical-vessel-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-edit' },
+	},
+	{
+		path: `/${BASE}/critical-vessel-items/:criticalVesselItemId`,
+		name: `${BASE}.critical-vessel-items.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-item-show'  },
+	},
+
+	/* Critical Vessel Items End */
+	
+	
+	/* Critical Spare List Start */
+	{
+		path: `/${BASE}/critical-spare-lists`,
+		name: `${BASE}.critical-spare-lists.index`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/create`,
+		name: `${BASE}.critical-spare-lists.create`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-create' },
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/:criticalSpareListId/edit`,
+		name: `${BASE}.critical-spare-lists.edit`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-edit' },
+	},
+	{
+		path: `/${BASE}/critical-spare-lists/:criticalSpareListId`,
+		name: `${BASE}.critical-spare-lists.show`,
+		component: () => import(`../views/${VIEWBASE}/critical-spare-list/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-spare-list-show'  },
+	},
+
+	/* Critical Spare List End */
+
+
+
+
+
+
+
+
 
 
 

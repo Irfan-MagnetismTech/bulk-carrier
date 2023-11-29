@@ -29,21 +29,39 @@
       page: { required: false, default: {} },
 
     });
+
+    const customDataTableirf = ref(null);
+    
     // const {form} = toRefs(props);
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmMrrLines.push(clonedObj);
       // const index = props.form.scmMrrLines.length - 1;
       // watchQuantity(index);
+      setMinHeight();
     }
 
     function removeMaterial(index){
       props.form.scmMrrLines.splice(index, 1);
+      setMinHeight();
     }
   
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-    
+
+
+    const dynamicMinHeight = ref(0);
+
+    const setMinHeight = () => {
+      dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+      console.log(dynamicMinHeight.value);
+    };
+
+    onMounted(() => {
+      setMinHeight();
+    });
+
+
     // onMounted(() => {
     //   watchEffect(() => {
     //   if(firstInitiated.value == false){
@@ -71,19 +89,6 @@
           if (selectedMaterial) {
             if ( line.scm_material_id !== selectedMaterial.id
             ) {
-              // scmMaterial: '',
-              //   scm_material_id: '',
-              //   unit: '',
-              //   brand: '',
-              //   model: '',
-              //   quantity: 0.0,
-              //   rate: 0.0,
-              //   net_rate: 0.0,
-              //   po_qty: 0.0,
-              //   pr_qty: 0.0,
-              //   current_stock: 0.0,
-              //   po_composite_key: '',
-              //   pr_composite_key: ''
               props.form.scmMrrLines[index].scm_material_id = selectedMaterial.id;
               props.form.scmMrrLines[index].unit = selectedMaterial.unit;
               props.form.scmMrrLines[index].brand = selectedMaterial.brand;
@@ -95,13 +100,22 @@
               props.form.scmMrrLines[index].pr_composite_key = selectedMaterial.pr_composite_key;
               props.form.scmMrrLines[index].rate = selectedMaterial.rate;
               props.form.scmMrrLines[index].net_rate = selectedMaterial.net_rate;
+              props.form.scmMrrLines[index].max_quantity = selectedMaterial.max_quantity;
             }
           }
 }
 
 
 watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
+      const materialArray = [];
       newVal?.forEach((line, index) => {
+       let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmMrrLines.splice(index, 1);
+        } 
         if (line.scmMaterial) {
           setMaterialOtherData(line, index);
         }
@@ -113,6 +127,9 @@ watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
     if(newVal){
       props.form.scm_po_no = newVal.ref_no;
       props.form.po_date = newVal.date;
+    }
+    if (newVal.purchase_center  == "Foreign") {
+      fetchLc('');
     }
   });
   watch(() => props?.form?.scmPr, (newVal, oldVal) => {
@@ -136,11 +153,15 @@ watch(() => props?.form?.scmLcRecord, (newVal, oldVal) => {
   }
 });
 
-
-  function fetchLc(search, loading) {
-    loading(true);
-    searchLcRecord(search, loading, props.form.business_unit,props.form.scmPo.id);
+  function fetchLc(search, loading = false) {
+    // loading(true);
+    searchLcRecord(search, props.form.business_unit,props.form.scmPo.id);
 }
+
+//   function fetchLc(search, loading) {
+//     loading(true);
+//     searchLcRecord(search, loading, props.form.business_unit,props.form.scmPo.id);
+// }
 
 function changeRate(index) {
   props.form.scmMrrLines[index].net_rate = props.form.scmMrrLines[index].rate;
@@ -170,7 +191,7 @@ function changeRate(index) {
       <label class="label-group" v-if="form.type == 'FOREIGN'">
           <span class="label-item-title">LC Record No<span class="text-red-500">*</span></span>
           <!-- <input type="text" v-model="form.scmLcRecord" required class="form-input" name="scmLcRecord" :id="'scmLcRecord'" /> -->
-          <v-select :options="filteredLcRecords" placeholder="--Choose an option--" @search="fetchLc" v-model="form.scmLcRecord" label="lc_no" class="block form-input">
+          <v-select :options="filteredLcRecords" placeholder="--Choose an option--" v-model="form.scmLcRecord" label="lc_no" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -227,7 +248,7 @@ function changeRate(index) {
   </div>
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks</span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
@@ -235,17 +256,16 @@ function changeRate(index) {
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">QC Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.qc_remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <textarea v-model.trim="form.qc_remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <!-- <Error v-if="errors?.qc_remarks" :errors="errors.qc_remarks" /> -->
     </label>
   </div>
-  <div id="">
-
-    <div id="customDataTable" style="">
-    <div class="table-responsive min-w-screen overflow-y-scroll">
+  
+  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+        <div class=""> 
+        <table class="table-auto">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th style="" class="py-3 align-center">Material Name </th>
@@ -311,12 +331,12 @@ function changeRate(index) {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].quantity" min=1 required class="form-input" :max="form.scmMrrLines[index].max_quantity" :class="{'border-2': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity}">
               </label>
             </td> 
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].rate" class="form-input" @change="changeRate(index)" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
+                 <input type="text" v-model="form.scmMrrLines[index].rate" class="form-input" :min="form.type === 'CASH' ? 1 : null" :required="form.type === 'CASH'" @change="changeRate(index)" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -334,10 +354,9 @@ function changeRate(index) {
           </tr>
           </tbody>
         </table>
+        </div>  
       </fieldset>
     </div>
-    </div>
-  </div>
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 

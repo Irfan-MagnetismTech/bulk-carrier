@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed, onUpdated } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, onUpdated, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -66,7 +66,7 @@
     onMounted(() => {
       fetchAllStoreCategories();
       fetchMaterials('');
-      watchEffect(() => {
+      watchPostEffect(() => {
         fetchWarehouse('');
       });
     });
@@ -126,13 +126,14 @@
   }
   const dynamicMinHeight = ref(0);
 
-const setMinHeight = () => {
-  dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
-};
+  const setMinHeight = () => {
+    dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+  
+  };
 
-onMounted(() => {
-  setMinHeight();
-});
+  onMounted(() => {
+    setMinHeight();
+  });
 
 // Use onUpdated to adjust min-height after the component updates
 // onUpdated(() => {
@@ -152,12 +153,12 @@ onMounted(() => {
 watch(() => props.form.scmPrLines, (newLines) => {
   let materialArray = [];
   newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line.brand + "-" + line.model;
+    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
     if (materialArray.indexOf(material_key) === -1) {
       materialArray.push(material_key);
     } else {
       alert("Duplicate Material Found");
-      // props.form.scmPrLines.splice(index, 1);
+      props.form.scmPrLines.splice(index, 1);
     }
 
     if (line.scmMaterial) {
@@ -234,7 +235,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">PR Ref <span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
@@ -320,7 +321,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
     <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <div class=""> 
         <table class="table-auto">
           <thead>
@@ -413,7 +414,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmPrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmPrLines[index].quantity" min=1 required class="form-input">
               </label>
             </td>
             <td>

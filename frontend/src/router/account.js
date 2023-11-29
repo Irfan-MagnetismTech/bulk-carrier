@@ -266,6 +266,33 @@ export default [
         component: () => import(`../views/${BASE}/fixed-asset/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+
+    /* Depreciation route */
+    {
+        path: `/${BASE}/depreciations`,
+        name: `${BASE}.depreciations.index`,
+        component: () => import(`../views/${VIEW_BASE}/depreciation/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/depreciations/create`,
+        name: `${BASE}.depreciations.create`,
+        component: () => import(`../views/${VIEW_BASE}/depreciation/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/depreciations/:depreciationId/edit`,
+        name: `${BASE}.depreciations.edit`,
+        component: () => import(`../views/${VIEW_BASE}/depreciation/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/depreciations/:depreciationId`,
+        name: `${BASE}.depreciations.show`,
+        component: () => import(`../views/${BASE}/depreciation/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
     
     /* Cash Requisitions */
     {

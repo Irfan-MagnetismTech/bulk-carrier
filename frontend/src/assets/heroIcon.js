@@ -66,6 +66,8 @@ export default function useHeroIcon() {
         '</svg>\n';
     const NotFilterIcon = '<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#888888" d="m14.8 11.975l-1.425-1.425L16.95 6H8.825l-2-2H19q.625 0 .9.55t-.1 1.05l-5 6.375ZM19.775 22.6L14 16.825V19q0 .425-.288.713T13 20h-2q-.425 0-.713-.288T10 19v-6.175l-8.6-8.6L2.8 2.8l18.4 18.4l-1.425 1.4Zm-6.4-12.05Z"/></svg>';
 
+    const ExclamationTriangle = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>';
+
     return {
         HomeSolid,
         CubeOutline,
@@ -95,5 +97,6 @@ export default function useHeroIcon() {
         EyeSlash,
         RenewIcon,
         NotFilterIcon,
+        ExclamationTriangle,
     }
 };

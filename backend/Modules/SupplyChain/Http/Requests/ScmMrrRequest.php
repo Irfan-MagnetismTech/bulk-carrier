@@ -24,11 +24,8 @@ class ScmMrrRequest extends FormRequest
     public function rules(): array
     {
 
-        // [
-        //     'ref_no', 'type', 'date', 'scm_po_id', 'scm_pr_id', 'scm_warehouse_id', 'scm_lc_record_id', 'scm_cs_id', 'acc_cost_center_id', 'remarks', 'challan_no', 'is_qc_passed', 'qc_remarks', 'business_unit', 'created_by', 'is_completed', 'iou_id', 'purchase_center', 'iou_no',
-        // ];
         return [
-            'type' => 'required|integer',
+            // 'type' => 'required|integer',
             'date' => 'required|date',
             'scm_po_id' => 'sometimes|nullable|integer|exists:scm_pos,id',
             'scm_pr_id' => 'sometimes|nullable|integer|exists:scm_prs,id',
@@ -39,13 +36,13 @@ class ScmMrrRequest extends FormRequest
             'remarks' => 'max:255',
             'challan_no' => 'max:255',
             // 'is_qc_passed' => 'required|integer',
-            'qc_remarks' => 'max:255',
+            'qc_remarks' => 'max:255|required',
             // 'business_unit' => 'required|max:255',
             // 'created_by' => 'required|integer|exists:users,id',
             'is_completed' => 'required|integer',
             // 'iou_id' => 'requiredsometimes|nullable|integer|exists:ious,id',
             'purchase_center' => 'required|max:255',
-            'iou_no' => 'required|max:255',
+            'iou_no' => 'required_if:type,Foreign|nullable|max:255',
             'scmMrrLines.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
             'scmMrrLines.*.unit' => 'required|max:255|exists:scm_units,name|string',
             'scmMrrLines.*.brand' => 'max:255',

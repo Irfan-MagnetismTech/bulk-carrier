@@ -147,11 +147,11 @@ class OpsChartererProfileController extends Controller
     public function getChartererProfileByNameorCode(Request $request){
         try {
             $charterer_profiles = OpsChartererProfile::query()
-            ->when(request()->has('name_or_code'), function ($query) {
-            $query->where('name', 'like', '%' . request()->name_or_code . '%');
-            $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
+            ->when(isset(request()->name_or_code), function ($query) {
+                $query->where('name', 'like', '%' . request()->name_or_code . '%');
+                $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
             })    
-            ->when(request()->business_unit && request()->business_unit != 'ALL', function($query){
+            ->when(isset(request()->business_unit) && request()->business_unit != 'ALL', function($query){
                 $query->where('business_unit', request()->business_unit);  
             })
             ->limit(10)
@@ -166,13 +166,13 @@ class OpsChartererProfileController extends Controller
     public function getChartererProfileNameorCode(Request $request){
     try {
         $charterer_profiles = OpsChartererProfile::query()
-        ->when(request()->has('name_or_code'), function ($query) {
+        ->when(isset(request()->name_or_code), function ($query) {
                 $query->where('name', 'like', '%' . request()->name_or_code . '%');
                 $query->orWhere('owner_code', 'like', '%' . request()->name_or_code . '%');
         })
-        // ->when(request()->has('business_unit') && request()->business_unit != 'ALL', function($query){
-        //     $query->where('business_unit', request()->business_unit);  
-        // })
+        ->when(isset(request()->business_unit) && request()->business_unit != 'ALL', function($query){
+            $query->where('business_unit', request()->business_unit);  
+        })
         ->get();
         
         $charterer_profiles->load('opsChartererBankAccounts');

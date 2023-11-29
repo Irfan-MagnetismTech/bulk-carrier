@@ -9,7 +9,7 @@
               <!-- Booking Form -->
             <wip-work-requisition-form :page="page" v-model:form="wipWorkRequisition" :errors="errors"></wip-work-requisition-form>
               <!-- Submit button -->
-              <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update Work Requisition</button>
+              <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
           </form>
       </div>
   </template>
@@ -46,6 +46,8 @@ import WipWorkRequisitionForm from '../../../components/maintenance/wip-work-req
     wipWorkRequisition.value.mnt_item_id = value?.mntWorkRequisitionItem?.MntItem?.id;
 
     wipWorkRequisition.value.mntWorkRequisitionLines = value?.mntWorkRequisitionLines;
+
+    wipWorkRequisition.value.mntWorkRequisitionItem = value?.mntWorkRequisitionItem;
     // wipWorkRequisition.value.mntWorkRequisitionMaterials = value?.mntWorkRequisitionMaterials?.length ? value?.mntWorkRequisitionMaterials : [
     //         {
     //             material_name_and_code: '',

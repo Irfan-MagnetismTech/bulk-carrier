@@ -7,10 +7,12 @@ import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useMaterialReceiptReport from "../../composables/supply-chain/useMaterialReceiptReport";
 import ErrorComponent from '../utils/ErrorComponent.vue';
+import usePurchaseRequisition from "../../composables/supply-chain/usePurchaseRequisition";
 const { vessels, searchVessels } = useVessel();
 
 const { allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
+const { searchPr, filteredPurchaseRequisitions } = usePurchaseRequisition();
 
 
 const { emit } = getCurrentInstance();
@@ -28,11 +30,15 @@ const props = defineProps({
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-// v-select for change unit depend on material start
-watch(() => props.form.costCenter, (value) => {
+watch(() => props.form.acc_cost_center_name, (value) => {
   if(value){
     props.form.acc_cost_center_id = value?.id ?? '';
-    searchMrr(props.form.business_unit, props.form.acc_cost_center_id); 
+  }
+});
+
+watch(() => props.form.scm_pr_name, (value) => {
+  if(value){
+    props.form.scm_pr_id = value?.id ?? '';
   }
 });
 
@@ -49,11 +55,31 @@ function removeAccCashRequisitionLines(index){
   props.form.accCashRequisitionLines.splice(index, 1);
 }
 
+watch(
+    () => props.form,
+    (newEntries, oldEntries) => {
+
+      if(newEntries?.accCashRequisitionLines?.length > 0) {
+        let total_amount = 0.0;
+        newEntries?.accCashRequisitionLines?.forEach((item) => {
+          if(item.amount) {
+            total_amount += parseFloat(item.amount);
+          }
+        });
+        if(!isNaN(total_amount)) {
+          props.form.total_amount = total_amount;
+        }
+      }
+    },
+    { deep: true }
+);
+
 onMounted(() => {
   console.log(props.form); 
   //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
+    searchPr(props.form.business_unit,props.form.acc_cost_center_id,null)
   });
 });
 
@@ -76,18 +102,18 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.costCenter" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.costCenter" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> PR Ref. </span>
-        <v-select :options="filteredMaterialReceiptReports" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scmMrr" label="name"  class="block w-full rounded form-input">
+        <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_pr_name" label="ref_no"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" :required="!form.scm_pr_name" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>    
@@ -118,7 +144,7 @@ onMounted(() => {
               <input type="text" v-model.trim="form.accCashRequisitionLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="number" step=".01" v-model.trim="form.accCashRequisitionLines[index].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <input type="number" step=".01" v-model.trim="form.accCashRequisitionLines[index].amount" class="form-input !text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
               <input type="text" v-model.trim="form.accCashRequisitionLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -135,6 +161,13 @@ onMounted(() => {
                 </svg>
               </button>
             </td>
+          </tr>
+          <tr class="text-gray-700 dark-disabled:text-gray-400">
+            <td class="px-1 py-1 font-bold !text-right">Total Amount</td>
+            <td class="px-1 py-1 font-bold text-right">
+              <input type="number" step=".01" v-model.trim="form.total_amount" class="block w-full rounded form-input vms-readonly-input !text-right" readonly>
+            </td>
+            <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
           </tbody>
         </table>

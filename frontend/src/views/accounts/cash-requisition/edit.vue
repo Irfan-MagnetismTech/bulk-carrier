@@ -22,10 +22,10 @@ const page = 'edit';
 
 watch(cashRequisition, (value) => {
   if(value) {
-    
+    cashRequisition.value.acc_cost_center_name = cashRequisition.value.costCenter;
+    cashRequisition.value.scm_pr_name = cashRequisition.value.scmPr;
   }
 });
-
 
 onMounted(() => {
   showCashRequisition(cashRequisitionId);
