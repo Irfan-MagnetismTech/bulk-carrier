@@ -176,7 +176,7 @@ onMounted(() => {
       // isTableLoader.value = true;
     })
     .catch((error) => {
-      console.error("Error fetching run hours:", error);
+      console.error("Error fetching runnig hours:", error);
     });
   });
 
@@ -257,7 +257,7 @@ onMounted(() => {
               </th>
             <th class="w-2/12 ">
               <div class="flex justify-center items-center">
-                  <span class="mr-1">Present Run Hour</span>
+                  <span class="mr-1">Present Runnig Hour</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -328,7 +328,7 @@ onMounted(() => {
               </td>
             </tr>
           <tr v-else-if="!runHours?.data?.length">
-            <td colspan="7">No run hour found.</td>
+            <td colspan="7">No runnig hour found.</td>
           </tr>
           </tfoot>
       </table>
