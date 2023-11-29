@@ -44,8 +44,8 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": 'account',
-      "field_name": "account_name",
+      "relation_name": 'scmMaterial',
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -70,7 +70,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Useful Life",
+      "label": "Useful Life (Year)",
       "filter_type": "input"
     },
     {
@@ -80,7 +80,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Depreciation Rate",
+      "label": "Depreciation Rate (%)",
       "filter_type": "input"
     },
     {
@@ -146,9 +146,9 @@ onMounted(() => {
       });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+  // filterOptions.value.filter_options.forEach((option, index) => {
+  //   filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  // });
 });
 </script>
 
@@ -168,8 +168,8 @@ onMounted(() => {
                 <tr v-for="(fixedAsset, index) in fixedAssets?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
                   <td class="text-left"> {{ fixedAsset?.costCenter?.name }} </td>
-                  <td class="text-left"> {{ fixedAsset?.account?.account_name }} </td>
-                  <td class="text-left"> {{ fixedAsset?.asset_tag }} </td>
+                  <td class="text-left"> {{ fixedAsset?.scmMaterial?.name }} </td>
+                  <td class="text-left"> <nobr> {{ fixedAsset?.asset_tag }} </nobr> </td>
                   <td> {{ fixedAsset?.useful_life }} </td>
                   <td> {{ fixedAsset?.depreciation_rate }} </td>
                   <td> {{ fixedAsset?.acquisition_date }} </td>

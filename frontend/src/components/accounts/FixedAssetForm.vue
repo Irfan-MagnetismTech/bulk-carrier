@@ -181,7 +181,7 @@ onMounted(() => {
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Useful Life (in Years) <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Useful Life (Year) <span class="text-red-500">*</span></span>
         <input type="number" v-model.trim="form.useful_life" placeholder="Useful Life" class="form-input" autocomplete="off" required />
       </label>
 
