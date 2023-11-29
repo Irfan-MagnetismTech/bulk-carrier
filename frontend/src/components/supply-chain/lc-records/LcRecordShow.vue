@@ -87,10 +87,10 @@
         <span class="label-item-title">Party Name</span>
         <span class="show-block">{{ form.scmVendor?.name }}</span>
     </label>
-    <label class="label-group">
+    <!-- <label class="label-group">
           <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
           <a download href="" class="block text-blue-500 hover:text-blue-700 ease-linear duration-200 font-semibold mt-2.5">Download Attachment</a>
-      </label>
+      </label> -->
   </div>
 
 
