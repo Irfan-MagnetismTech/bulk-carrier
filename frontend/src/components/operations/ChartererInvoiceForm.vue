@@ -45,8 +45,8 @@
               <input type="text" readonly :value="form.opsChartererContract?.opsChartererContractsFinancialTerms?.opsCargoTariff?.opsCargoType.cargo_type" class="form-input bg-gray-100" autocomplete="off" />
         </label> -->
     </div>
-    <div class="flex flex-col w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm" :class="{'w-1/2':form.contract_type == 'Day Wise'}">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
