@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-      <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Update Critical Function</h2>
+      <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Critical Function</h2>
      
       <default-button :title="'Critical Function List'" :to="{ name: 'mnt.critical-functions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-      <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
           <form @submit.prevent="updateCriticalFunction(criticalFunction, criticalFunctionId)"> 
               <!-- Booking Form -->
             <critical-function-form :page="page" v-model:form="criticalFunction" :errors="errors"></critical-function-form>
