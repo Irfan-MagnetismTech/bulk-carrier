@@ -6,24 +6,24 @@
   <h4 class="text-md font-semibold">Basic Info</h4>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit </span>
             <span class="show-block">{{ chartererProfile.business_unit }}</span>
             
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name </span>
             <span class="show-block">{{ chartererProfile.name }}</span>
 
             
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Company Legal Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Company Legal Name </span>
             
             <span class="show-block">{{ chartererProfile.company_legal_name }}</span>
           
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code </span>
             
             <span class="show-block">{{ chartererProfile.owner_code }}</span>
           

@@ -18,7 +18,7 @@ class OpsHandoverTakeoverRequest extends FormRequest
             'ops_charterer_profile_id'  => ['required'],
             'note_type'                 => ['required', 'string', 'max:255'],
             'effective_date'            => ['required', 'string', 'max:255'],
-            'exchange_rate'             => ['required', 'numeric'],
+            // 'exchange_rate'             => ['required', 'numeric'],
             'currency'                  => ['required', 'string', 'max:255'],
             'remarks'                  => ['nullable', 'string', 'max:255'],
         ];
@@ -37,7 +37,7 @@ class OpsHandoverTakeoverRequest extends FormRequest
             'note_type.required' => 'Note type is required.',
             'note_type.max' => 'Note type may not be greater than :max characters.',
             'effective_date.required' => 'Effective date is required.',
-            'exchange_rate.required' => 'Exchange rate is required.',
+            // 'exchange_rate.required' => 'Exchange rate is required.',
             // 'exchange_rate.numeric' => 'Exchange rate is numeric.',
             'currency.required' => 'Currency is required.',
             'remarks.max' => 'Remarks may not be greater than :max characters.',

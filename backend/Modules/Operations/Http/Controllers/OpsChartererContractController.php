@@ -193,4 +193,24 @@ class OpsChartererContractController extends Controller
         }
     }
 
+    public function downloadContractAttachment(Request $request)
+    {
+        $particular= OpsChartererContract::find($request->id);
+        $filePath=null;
+        $fileName=null;
+        if(isset($particular->attachment)){  
+            $filePath= public_path($particular->attachment);
+            $fileName = basename($filePath);
+        }
+        if (file_exists($filePath)) {
+            return response()->download($filePath, $fileName, [
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment',
+            ]);
+        } else {
+            return response()->error(['message' => 'File not found.'], 404);
+        }
+        
+    }
+
 }
