@@ -87,7 +87,7 @@ class ScmPoController extends Controller
                     'model'=> $item->model,
                     'required_date'=> $item->required_date,
                     'quantity'=> $item->quantity,
-                    'rate'=> $item->rate,
+                    'rate'=> $item->rate ?? 0,
                     'total_price'=> $item->total_price,
                     'net_rate'=> $item->net_rate,
                     'po_composite_key'=> $item->po_composite_key,
@@ -244,7 +244,7 @@ class ScmPoController extends Controller
                             'quantity' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmPoLines->sum('quantity'),
-                            // 'rate' => $item->rate,
+                            'rate' => 0,
                             // 'total_price' => $item->total_price
                         ];
                     })

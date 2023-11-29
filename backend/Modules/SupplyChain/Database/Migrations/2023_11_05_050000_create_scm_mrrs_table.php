@@ -31,9 +31,8 @@ return new class extends Migration
             $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->tinyInteger('is_completed')->comment('0, 1')->nullable();
-            $table->bigInteger('iou_id')->nullable();
+            $table->bigInteger('acc_cash_requisition_id')->nullable();
             $table->string('purchase_center')->nullable();
-            $table->string('iou_no')->nullable();
             $table->timestamps();
         });
     }
