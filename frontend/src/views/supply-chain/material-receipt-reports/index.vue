@@ -191,6 +191,7 @@ function confirmDelete(id) {
               </td>
               <td>
                 <nobr>
+                <action-button :action="'show'" :to="{ name: 'scm.material-receipt-reports.show', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
                 <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
                </nobr>

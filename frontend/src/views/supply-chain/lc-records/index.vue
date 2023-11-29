@@ -182,6 +182,7 @@ function confirmDelete(id) {
               </td>
               <td>
                 <nobr>
+                  <action-button :action="'show'" :to="{ name: 'scm.lc-records.show', params: { lcRecordId: lcRecord.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
                   <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
                 </nobr>
