@@ -106,8 +106,7 @@
               <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
     </div>
-
-    
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchPostEffect, watchEffect } from "vue";
@@ -117,9 +116,9 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
 import useChartererContract from "../../composables/operations/useChartererContract";
-
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useBusinessInfo from '../../composables/useBusinessInfo';
-
+import LoaderComponent from "../../components/utils/LoaderComponent.vue";
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 import useCustomer from "../../composables/operations/useCustomer";

@@ -533,8 +533,7 @@
       </div>
     </form>
   </div>
-
-    
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchPostEffect } from "vue";
@@ -545,7 +544,8 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
 import useChartererContract from "../../composables/operations/useChartererContract";
 import useBusinessInfo from '../../composables/useBusinessInfo';
-
+import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 
