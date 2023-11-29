@@ -12,8 +12,11 @@ import Store from "../../../store";
 import moment from 'moment';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import useGlobalFilter from "../../../composables/useGlobalFilter";
 
 const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading, isTableLoading} = useLighterNoonReport();
+const { showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
+
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -30,13 +33,6 @@ setTitle('Lighter Noon Report List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
-
-let showFilter = ref(false);
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
 
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
@@ -97,20 +93,6 @@ let filterOptions = ref( {
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 
 function confirmDelete(id) {
@@ -267,7 +249,7 @@ onMounted(() => {
               
 
               <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+                <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
           </thead>
@@ -275,7 +257,7 @@ onMounted(() => {
               <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>
-                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
+                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('MM-DD-YYYY hh:mm A') : null }}</nobr>
                   </td>
                   <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
                   <td>{{ lighterNoonReport?.opsVoyage?.voyage_no }}</td>
