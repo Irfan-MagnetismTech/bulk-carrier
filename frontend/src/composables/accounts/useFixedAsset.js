@@ -3,39 +3,36 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
+import {loaderSetting as LoaderConfig} from "../../config/setting";
 
 export default function useFixedAsset() {
     const router = useRouter();
     const fixedAssets = ref([]);
+    const filteredFixedAssets = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
 
     const fixedAsset = ref( {
-        costCenter : '', 
-        acc_cost_center_name : '', 
+        acc_cost_center_name : null,
         acc_cost_center_id : '',
-
-        scmMrr : '', 
+        scm_mrr_name : null,
         scm_mrr_id : '',
-        scmMaterial : '', 
+        scm_material_name : null,
         scm_material_id : '',
         brand : '',
         model : '',
         serial : '',
-        
+        acc_parent_account_name : null,
+        acc_parent_account_id : '',
+        acc_account_name : null,
         acc_account_id : 1,
-        
-        fixedAssetCategory : '',
-        acc_parent_account_id : '',        
         asset_tag : '',
-
         useful_life : '',
         depreciation_rate : '',
-        location : '',
         acquisition_date : '',
-        acquisition_cost : 0,
+        location : '',
         business_unit : '',
-
+        acquisition_cost: '',
         fixedAssetCosts: [
             {
                 particular: '',
@@ -174,6 +171,28 @@ export default function useFixedAsset() {
         }
     }
 
+    async function searchFixedAsset(cost_center_id = null, business_unit=null) {
+
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        let form = {
+            business_unit: business_unit,
+            acc_cost_center_id: cost_center_id,
+        };
+
+        try {
+            const { data, status } = await Api.post('/acc/get-fixed-assets', form);
+            filteredFixedAssets.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         fixedAssets,
         fixedAsset,
@@ -182,6 +201,8 @@ export default function useFixedAsset() {
         showFixedAsset,
         updateFixedAsset,
         deleteFixedAsset,
+        filteredFixedAssets,
+        searchFixedAsset,
         isLoading,
         isTableLoading,
         errors,

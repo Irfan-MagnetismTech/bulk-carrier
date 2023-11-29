@@ -39,7 +39,7 @@ class AccTransactionController extends Controller
     public function store(AccTransactionRequest $request)
     {
         try {
-            $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'user_id', 'business_unit');
+            $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'instrument_amount', 'user_id', 'business_unit');
             $accTransaction     = AccTransaction::create($accTransactionData);
             $accTransaction->ledgerEntries()->createMany($request->ledgerEntries);
 
@@ -78,7 +78,7 @@ class AccTransactionController extends Controller
     public function update(AccTransactionRequest $request, AccTransaction $accTransaction)
     {
         try {
-            $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'user_id', 'business_unit');
+            $accTransactionData = $request->only('acc_cost_center_id', 'voucher_type', 'transactionable_id', 'transactionable_type', 'transaction_date', 'bill_no', 'mr_no', 'narration', 'instrument_type', 'instrument_no', 'instrument_date', 'instrument_amount', 'user_id', 'business_unit');
             $accTransaction->update($accTransactionData);
             $accTransaction->ledgerEntries()->delete();
             $accTransaction->ledgerEntries()->createMany($request->ledgerEntries);

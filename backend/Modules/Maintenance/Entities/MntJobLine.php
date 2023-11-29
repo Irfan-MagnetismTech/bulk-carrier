@@ -15,6 +15,7 @@ class MntJobLine extends Model
 
     protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','previous_run_hour','remarks','status'];
     protected $appends = ['mnt_job_line_id','next_due','over_due','present_run_hour','mnt_work_requisition_status'];
+    protected $hidden = ['status'];
     
     
     public function mntJob () : BelongsTo
@@ -46,9 +47,19 @@ class MntJobLine extends Model
             $nextDue = date('Y-m-d', strtotime($this->last_done. ' + '.$this->cycle.' '.$this->cycle_unit));
             
         } else {
-            $nextDue = ($this->present_run_hour > $this->cycle) 
-                            ? $this->present_run_hour % $this->cycle
-                            : $this->cycle - $this->present_run_hour;
+            if ($this->present_run_hour > $this->cycle) {
+                $hoursPassedAfterPreviousWork = $this->present_run_hour - $this->previous_run_hour;
+                if ($this->cycle < $hoursPassedAfterPreviousWork) {
+                    $nextDue = 0 - $hoursPassedAfterPreviousWork;
+                } else {
+                    $nextDue = $this->cycle - $hoursPassedAfterPreviousWork;//($this->present_run_hour % $this->cycle);
+                }
+                
+            } else {
+                $previousRunHour = $this->previous_run_hour ?? 0;
+                $nextDue = ($this->cycle + $previousRunHour) - $this->present_run_hour;
+            }
+                
         }
 
         return $nextDue;

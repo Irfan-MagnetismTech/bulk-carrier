@@ -11,13 +11,14 @@ export default function useCashRequisition() {
     const notification = useNotification();
 
     const cashRequisition = ref( {
-        costCenter : '', 
         acc_cost_center_name : '', 
         acc_cost_center_id : '',
 
-        scmPr : '', 
-        scm_pr_ref_no : '', 
+        scm_pr_name : '',
         scm_pr_id : '',
+
+
+        scm_pr_ref_no : '',
 
         applied_date : '',
         total_amount : 0,

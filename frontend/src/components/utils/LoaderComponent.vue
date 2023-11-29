@@ -9,7 +9,7 @@ const props = defineProps({
 
 </script>
 <template>
-    <div v-show="isLoading"  class="absolute inset-0 z-10 flex items-center justify-center bg-gray-200 opacity-50">
+    <div v-show="isLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-gray-200 opacity-50">
                   <div>
                     <div class="flex justify-center items-center">
                       <div class="h-2.5 w-2.5 bg-[#6C2BD9] rounded-full mx-1 animate-pulse1"></div>

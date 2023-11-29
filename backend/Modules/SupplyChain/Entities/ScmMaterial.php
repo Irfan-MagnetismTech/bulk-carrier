@@ -38,5 +38,5 @@ class ScmMaterial extends Model
 
     public function account(){
         return $this->morphOne(AccAccount::class, 'accountable')->withDefault();
-       }
+    }
 }

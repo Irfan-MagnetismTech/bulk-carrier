@@ -168,7 +168,7 @@ export default function useItemGroup() {
 
     async function getJobsForRequisition(businessUnit, opsVesselId, mntItemId){
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
         isJobLoading.value = true;
 
@@ -187,7 +187,7 @@ export default function useItemGroup() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
             isJobLoading.value = false;
             //NProgress.done();
