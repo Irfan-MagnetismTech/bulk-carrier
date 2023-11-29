@@ -94,16 +94,6 @@ export default [
                 subSubMenu: []
             },
             {
-                route: 'ops.charterer-invoices.index',
-                label: 'Charterer Invoices',
-                preIcon: '',
-                postIcon: '',
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
-            {
                 route: 'ops.delivery-redelivery.index',
                 label: 'Delivery & Re-delivery',
                 preIcon: '',
@@ -134,6 +124,16 @@ export default [
                 subSubMenu: []
             },
             {
+                route: 'ops.contract-assigns.index',
+                label: 'Contract Assign',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
                 route: 'ops.voyage-boat-notes.index',
                 label: 'Voyage Boat Note',
                 preIcon: '',
@@ -143,7 +143,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-
+            {
+                route: 'ops.charterer-invoices.index',
+                label: 'Charterer Invoices',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
             {
                 route: '',
                 label: 'Voyage Reports',
@@ -175,16 +184,7 @@ export default [
                     },
                 ],
             },
-            {
-                route: 'ops.contract-assigns.index',
-                label: 'Contract Assign',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
+            
             // {
             //     route: '',
             //     label: 'Voyages',
