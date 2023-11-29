@@ -101,8 +101,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour </span>
-            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
+            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
