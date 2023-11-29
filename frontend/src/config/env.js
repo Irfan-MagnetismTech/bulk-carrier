@@ -9,7 +9,7 @@ class env {
     static RABIUL_URL = 'http://192.168.88.40/bulk-carrier-erp/backend/public/'; 
     static SUMON_URL = 'http://192.168.88.222/bulk-carrier-erp/backend/public/';
 
-    static BASE_API_URL = env.PRODUCTION;
+    static BASE_API_URL = env.DEVELOPMENT;
 
     static CLIENT_ID = 2
     static GRANT_TYPE = "password"
