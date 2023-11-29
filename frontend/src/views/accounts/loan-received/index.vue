@@ -68,7 +68,7 @@ let filterOptions = ref({
       "date_from": null
     },
     {
-      "relation_name": 'receivedAccount',
+      "relation_name": 'loan.bank',
       "field_name": "account_name",
       "search_param": "",
       "action": null,
@@ -291,7 +291,7 @@ onMounted(() => {
               <td>{{ loanReceived?.loan?.loan_name }}</td>
               <td>{{ loanReceived?.received_date }}</td>
               <td>{{ loanReceived?.payment_method }}</td>
-              <td>{{ loanReceived?.received_acc_account_id }}</td>
+              <td>{{ loanReceived?.loan?.bank?.bank_name }} - {{ loanReceived?.loan?.bank?.account_type }}</td>
               <td>{{ loanReceived?.instrument_no }}</td>
               <td>{{ loanReceived?.received_amount }}</td>
               <td>{{ loanReceived?.interest_rate }}</td>

@@ -62,7 +62,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Document Name",
-      "filter_type": "input"
+      "filter_type": null, 
     },
     {
       "relation_name": "crwCrewDocumentRenewal",
@@ -181,12 +181,23 @@ filterOptions.value.filter_options.forEach((option, index) => {
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap" >
-        <FilterComponent :filterOptions = "filterOptions"/>
+        <!-- <FilterComponent :filterOptions = "filterOptions"/> -->
+        <thead>
+          <tr>
+            <th> # </th>
+            <th> Document Name </th>
+            <th> Expire Date </th>
+            <th> Left Days</th>
+            <th> Crew Name </th>
+            <th> Contact </th>
+            <th> Business Unit</th>
+            <th> Action </th>
+          </tr>
+        </thead>
           <tbody class="relative">
-          <tr v-for="(crwDocument,index) in crewDocumentRenewSchedules?.data" :key="index">
-            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+          <tr v-for="(crwDocument,index) in crewDocumentRenewSchedules" :key="index">
+            <td>{{ index + 1 }}</td>
             <td>{{ crwDocument?.document_name }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.expire_date }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.left_days }}</td>
@@ -214,7 +225,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
               </td>
           </tr>
-          <tr v-else-if="!crewDocumentRenewSchedules?.data?.length">
+          <tr v-else-if="!crewDocumentRenewSchedules">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>

@@ -186,7 +186,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16">
+              <th class="w-20">
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
@@ -263,6 +263,7 @@ onMounted(() => {
               </th>
               <th>
                 <select v-model="filterOptions.filter_options[0].search_param" class="filter_input">
+                  <option value="">ALL</option>
                   <option value="Voyage Wise">Voyage Wise</option>
                   <option value="Day Wise">Day Wise</option>
                 </select>

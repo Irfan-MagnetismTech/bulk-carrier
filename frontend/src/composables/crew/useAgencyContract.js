@@ -14,7 +14,7 @@ export default function useAgencyContract() {
         crw_agency_id: '',
         contract_name: '',
         billing_cycle: '',
-        billing_currency: '',
+        billing_currency: 'BDT',
         validity_from: '',
         validity_till: '',
         service_offered: '',

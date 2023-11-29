@@ -6,8 +6,9 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
-const { vessels, searchVessels } = useVessel();
+const { vessels, searchVessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
 const props = defineProps({
   form: {
@@ -32,21 +33,23 @@ function removeItem(index){
   props.form.crwVesselRequiredCrewLines.splice(index, 1);
 }
 
-// function fetchVessels(search, loading) {
-//   loading(true);
-//   searchVessels(search, props.form.business_unit, loading)
-// }
-
 watch(() => props.form, (value) => {
   if(value){
     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
   }
 }, {deep: true});
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.ops_vessel_name = null;
+    props.form.ops_vessel_id = '';
+  }
+});
+
 onMounted(() => {
-  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
-    searchVessels(null,props.form.business_unit)
+    getVesselsWithoutPaginate(props.form.business_unit);
     getCrewRankLists(props.form.business_unit);
   });
 });
@@ -62,7 +65,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--"  v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--"  v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -83,13 +86,10 @@ onMounted(() => {
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-      <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-    </label>
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Item List</legend>
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Required Crew List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">

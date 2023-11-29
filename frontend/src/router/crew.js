@@ -218,6 +218,12 @@ export default [
         component: () => import(`../views/crew/profile/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/profiles/:profileId/show`,
+        name: `${BASE}.profiles.show`,
+        component: () => import (`../views/crew/profile/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew documents Routes */
     {

@@ -20,11 +20,11 @@ class OpsVoyageRequest extends FormRequest
             'ops_cargo_type_id'     => ['required'],
             'voyage_no' 	        => ['required'],
             'voyage_sequence' 	    => ['required'],
-            'route'                 => ['required'],
+            'route'                 => ['required', 'max:255'],
             'load_port_distance'    => ['nullable'],
             'sail_date'             => 'required|date',
             'transit_date'          => 'required|date',
-            'remarks'               => ['nullable'],
+            'remarks'               => ['nullable','max:255'],
             'business_unit'         => ['required'],
         ];
     }

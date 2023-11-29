@@ -5,6 +5,7 @@ import {computed, onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import Store from "../../store";
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const { crwAgencies, getCrewAgencyLists, crwAgencyContracts, getCrewAgencyContracts } = useCrewCommonApiRequest();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -68,10 +69,24 @@ watch(() => netAmount, (value) => {
   }
 }, {deep: true});
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_agency_id = '';
+    props.form.crw_agency_contract_id = '';
+  }
+});
+
+watch(() => props.form.crw_agency_id, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_agency_contract_id = '';
+  }
+});
+
 onMounted(() => {
   watchEffect(() => {
     getCrewAgencyLists(props.form.business_unit);
-    getCrewAgencyContracts(props.form.business_unit,props.form.crw_agency_id);
+    getCrewAgencyContracts(null,props.form.crw_agency_id);
   });
 });
 
@@ -132,10 +147,7 @@ onMounted(() => {
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-      <textarea type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off"></textarea>
-    </label>
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
