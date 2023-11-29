@@ -13,7 +13,7 @@ import moment from 'moment';
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 
-const { bulkNoonReports, getBulkNoonReports, deleteBulkNoonReport, isLoading } = useBulkNoonReport();
+const { bulkNoonReports, getBulkNoonReports, deleteBulkNoonReport, isLoading, isTableLoading } = useBulkNoonReport();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -51,19 +51,19 @@ let filterOptions = ref({
    "page": props.page,
    "isFilter": false,
    "filter_options": [
+    // {
+    //   "relation_name": null,
+    //   "field_name": "ref_no",
+    //   "search_param": "",
+    //    "action": null,
+    //    "order_by": null,
+    //    "date_from": null,
+    //    "label": "Date",
+    //    "filter_type": "input"
+    // },
     {
-      "relation_name": null,
-      "field_name": "ref_no",
-      "search_param": "",
-       "action": null,
-       "order_by": null,
-       "date_from": null,
-       "label": "Date",
-       "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "ref_no",
+      "relation_name": "opsVessel",
+      "field_name": "name",
       "search_param": "",
        "action": null,
        "order_by": null,
@@ -72,8 +72,8 @@ let filterOptions = ref({
        "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "ref_no",
+      "relation_name": "opsVoyage",
+      "field_name": "voyage_sequence",
       "search_param": "",
        "action": null,
        "order_by": null,
@@ -83,7 +83,7 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "ref_no",
+      "field_name": "latitude",
       "search_param": "",
        "action": null,
        "order_by": null,
@@ -93,7 +93,7 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "Master",
+      "field_name": "ship_master",
       "search_param": "",
        "action": null,
        "order_by": null,
@@ -161,17 +161,17 @@ onMounted(() => {
               <tr v-for="(bulkNoonReport, index) in bulkNoonReports.data" :key="bulkNoonReport?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
 
-                  <td>
+                  <!-- <td>
                     <nobr>{{ bulkNoonReport?.date_time ? moment(bulkNoonReport?.date_time).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
-                  </td>
+                  </td> -->
                   <td>{{ bulkNoonReport?.opsVessel?.name }}</td>
-                  <td>{{ bulkNoonReport?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ bulkNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ bulkNoonReport?.latitude }}</nobr></td>
                   <td><nobr>{{ bulkNoonReport?.ship_master }}</nobr></td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
-                        <action-button :action="'copy'" :to="{ name: 'ops.bulk-noon-reports.copy', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
-                        <action-button :action="'show'" :to="{ name: 'ops.bulk-noon-reports.show', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
+                        <!-- <action-button :action="'copy'" :to="{ name: 'ops.bulk-noon-reports.copy', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
+                        <!-- <action-button :action="'show'" :to="{ name: 'ops.bulk-noon-reports.show', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
                         <action-button :action="'edit'" :to="{ name: 'ops.bulk-noon-reports.edit', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
                         <action-button @click="confirmDelete(bulkNoonReport.id)" :action="'delete'"></action-button>
                       </nobr>

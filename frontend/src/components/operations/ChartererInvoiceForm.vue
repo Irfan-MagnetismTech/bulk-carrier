@@ -38,7 +38,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-              <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+              <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type</span>
@@ -61,7 +61,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charge Per Day</span>
-              <input type="text" readonly :value="form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge" class="form-input bg-gray-100" autocomplete="off" />
+              <input type="text" readonly :value="form?.per_day_charge" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
@@ -106,7 +106,6 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th>SL</th>
               <th class="">Voyage</th>
               <th class="">Cargo Quantity</th>
               <th class="">Rate Per MT</th>
@@ -117,9 +116,6 @@
           </thead>
           <tbody>
             <tr v-for="(sector, index) in form.opsChartererInvoiceVoyages">
-              <td>
-                {{ index+1 }}
-              </td>
               <td class="!w-1/4">
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
@@ -138,20 +134,20 @@
               </td>
               <td>
                   <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].cargo_quantity" placeholder="Quantity" readonly class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].cargo_quantity" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].rate_per_mt" readonly placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].rate_per_mt" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                  
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].total_amount" placeholder="Quantity" readonly class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -183,13 +179,12 @@
     </div>
 
 
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Other</legend>
     <div id="sectors" class="mt-5">
-      <h4 class="text-md font-semibold my-3">Other</h4>
-
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th>SL</th>
               <th class="">Particulars</th>
               <th class="">Currency</th>
               <th class="">Unit</th>
@@ -205,11 +200,8 @@
           <tbody>
             <tr v-for="(sector, index) in form.opsChartererInvoiceOthers">
               <td>
-                {{ index+1 }}
-              </td>
-              <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].particular" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].particular" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -225,44 +217,44 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                  
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].quantity" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].rate" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].exchange_rate_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsChartererInvoiceOthers,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].exchange_rate_usd" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsChartererInvoiceOthers,index)"/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].exchange_rate_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceOthers,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].exchange_rate_bdt" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceOthers,index)"/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_usd" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -284,15 +276,16 @@
         </table>     
       
     </div>
-    
+    </fieldset>
 
+
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services Taken From Charterer</legend>
     <div id="sectors" class="mt-5">
-      <h4 class="text-md font-semibold my-3">Services Taken From Charterer</h4>
 
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
-              <th>SL</th>
               <th>Particulars</th>
               <th>Currency</th>
               <th>Unit</th>
@@ -308,11 +301,8 @@
           <tbody>
             <tr v-for="(item, index) in form.opsChartererInvoiceServices">
               <td>
-                {{ index+1 }}
-              </td>
-              <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].particular" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsChartererInvoiceServices[index].particular" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
@@ -328,44 +318,44 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].cost_unit" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].cost_unit" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].quantity" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
 
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].rate" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].exchange_rate_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsChartererInvoiceServices,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].exchange_rate_usd" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsChartererInvoiceServices,index)"/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].exchange_rate_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceServices,index)"/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].exchange_rate_bdt" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsChartererInvoiceServices,index)"/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_usd" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_usd" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_bdt" placeholder="Quantity" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
@@ -383,7 +373,7 @@
               </td>
             </tr>
           </tbody>
-          <tfoot>
+          <!-- <tfoot>
             <tr>
               <td colspan="8" class="text-right">Total</td>
               <td class="text-right">
@@ -424,14 +414,39 @@
               </td>
 
             </tr>
-          </tfoot>
+          </tfoot> -->
         </table>     
       
     </div>
-
-
-    // model
-
+    </fieldset>
+    <div id="sectors" class="mt-5">
+    <table class="w-full whitespace-no-wrap" >
+      <thead v-once>
+            <tr class="w-full">
+              <th>Subtotal</th>
+              <th>Total Service Fee (Deduction)</th>
+              <th>Discounte (Deduction)</th>
+              <th>Grand Total</th>
+            </tr>
+          </thead>
+      <tbody>
+            <tr>
+              <td>
+                <input type="text" readonly :value="props.form.sub_total_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
+              </td>
+              <td>
+                <input type="text" readonly :value="props.form.service_fee_deduction_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
+              </td>
+              <td>
+                <input type="text" v-model="props.form.discounted_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
+              </td>
+              <td>
+                <input type="text" readonly :value="props.form.grand_total" class="form-input bg-gray-100 text-right" autocomplete="off" />
+              </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
@@ -463,16 +478,32 @@
             <thead>
               <tr>
                 <th>Loading Point</th>
-                <th>Unloading point</th>
+                <th>Unloading Point</th>
+                <th>Initial Survey Quantity</th>
+                <th>Final Receipt Quantity</th>
+                <th>Boat Note Quantity</th>
+                <th>Final Survey Quantity</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(detail, index) in details" :key="index">
                 <td>
-                  <input type="text" :value="detail.loading_point" class="form-input text-right" placeholder="Head" />
+                  <input type="text" readonly :value="detail.loading_point" class="form-input text-right"/>
                 </td>
                 <td>
-                  <input type="text" :value="detail.unloading_point" class="form-input text-right" placeholder="Head" />
+                  <input type="text" readonly :value="detail.unloading_point" class="form-input text-right"/>
+                </td>
+                <td>
+                  <input type="text" readonly :value="detail.initial_survey_qty" class="form-input text-right"/>
+                </td>
+                <td>
+                  <input type="text" readonly :value="detail.final_received_qty" class="form-input text-right"/>
+                </td>
+                <td>
+                  <input type="text" readonly :value="detail.boat_note_qty" class="form-input text-right"/>
+                </td>
+                <td>
+                  <input type="text" readonly :value="detail.final_survey_qty" class="form-input text-right"/>
                 </td>
               </tr>
             </tbody>
@@ -482,7 +513,7 @@
         <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
           <button type="button" @click="closeModel" style="color: #1b1e21"
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-            Cancel
+            OK
           </button>
           <!-- <button type="button" @click="pushBunkerConsumption"
               class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -589,22 +620,6 @@ const isNotBDTCurrency = (item,index) => {
   return currency !== 'BDT';
 };
 
-// watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-//       let total = 0.0;
-//       newVal?.forEach((line, index) => {
-//         props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-//         total += parseFloat(props.form.scmPoLines[index].total_price);
-//         if (line.scmMaterial) {
-//           setMaterialOtherData(line, index);
-//         }
-//       });
-//       props.form.sub_total = parseFloat(total.toFixed(2));
-//       calculateNetAmount();
-
-
-// }, { deep: true });
-
-
 
 watch(() => props.form.opsChartererInvoiceVoyages, (newLines) => {
   let total_amount = 0.0;
@@ -630,36 +645,6 @@ watch(() => props.form.opsChartererInvoiceVoyages, (newLines) => {
 
 function CalculateAll() {
  
-  // props.form.others_billable_amount = total_bdt;
-  // props.form.total_amount +  props.form.others_billable_amount - props.form.service_fee_deduction_amount
-  // props.form.service_fee_deduction_amount_usd
-  // props.form.others_billable_amount_usd = total_usd;
-  // props.form.others_billable_amount = total_bdt;
-  // props.form.service_fee_deduction_amount_usd = total_usd;
-  // props.form.service_fee_deduction_amount = total_bdt ;
-  // let total_service_fee_bdt = 0.0;
-  // let total_service_fee_usd = 0.0;
-  // props.form.opsChartererInvoiceServices.forEach((line, index) => {
-  //   const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-  //   total_bdt += total_service_fee_bdt;
-  //   total_usd += total_service_fee_usd;
-  // });
-  
-
-//  total_amount = props.form.total_amount;
-
-  // total_others_billable_amount_bdt = 0.0;
-  // total_others_billable_amount_usd = 0.0;
-  // props.form.opsChartererInvoiceOthers.forEach((line, index) => {
-  //   const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-  //   total_bdt += total_others_billable_amount_bdt;
-  //   total_usd += total_others_billable_amount_usd;
-  // });
-
-  // props.form.others_billable_amount_usd = total_others_billable_amount_usd;
-  // props.form.others_billable_amount = total_others_billable_amount_bdt;
-
-  // props.form.service_fee_deduction_amount ;
   props.form.sub_total_amount = (props.form.total_amount * 1) + (props.form.others_billable_amount * 1);
 
   props.form.grand_total = (props.form.sub_total_amount * 1) - (props.form.service_fee_deduction_amount * 1 )- (props.form.discounted_amount * 1);
@@ -679,19 +664,6 @@ watch(() => props?.form?.opsChartererInvoiceServices, (newVal, oldVal) => {
   CalculateAll();
 }, { deep: true }); 
 
-//watch opsChartererInvoiceVoyages
-// watch(() => props?.form?.opsChartererInvoiceVoyages, (newVal, oldVal) => {
-
-//       // newVal?.forEach((line, index) => {
-//       //   const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-//       //   total_bdt += amount_bdt;
-//       //   total_usd += amount_usd;
-//       // });
-//       // props.form.total_amount_usd = total_usd;
-//       // props.form.total_amount = total_bdt;
-// }, { deep: true });
-
-// watch opsChartererInvoiceOthers
 watch(() => props?.form?.opsChartererInvoiceOthers, (newVal, oldVal) => {
       let total_bdt = 0.0;
       let total_usd = 0.0;
@@ -700,7 +672,7 @@ watch(() => props?.form?.opsChartererInvoiceOthers, (newVal, oldVal) => {
         total_bdt += amount_bdt;
         total_usd += amount_usd;
       });
-      props.form.others_billable_amount_usd = total_usd;
+  props.form.others_billable_amount_usd = total_usd;
   props.form.others_billable_amount = total_bdt;
   CalculateAll(); 
 }, { deep: true });
@@ -727,19 +699,19 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
   CalculateAll();
 });
 
-function fetchVoyages(searchParam, loading) {
-  loading(true)
-  searchVoyages(searchParam, props.form.business_unit, loading)
-}
+// function fetchVoyages(searchParam, loading) {
+//   loading(true)
+//   searchVoyages(searchParam, props.form.business_unit, loading)
+// }
 
 watch(() => props.form.business_unit, (value) => {
-  if(props?.formType != 'edit') {
-    props.form.opsVoyage = null;
-    vessel.value = null;
-    props.form.opsVoyageSectors = null;
-    props.form.vessel_name = null;
-    props.form.ops_voyage_id = null;
-  }
+  // if(props?.formType != 'edit') {
+  //   props.form.opsVoyage = null;
+  //   vessel.value = null;
+  //   props.form.opsVoyageSectors = null;
+  //   props.form.vessel_name = null;
+  //   props.form.ops_voyage_id = null;
+  // }
   getAllChartererProfiles(value);
 })
 
@@ -753,18 +725,27 @@ watch(() => props.form.opsChartererProfile, (value) => {
 
 
 watch(() => props.form.ops_charterer_profile_id, (value) => {
-    props.form.ops_charterer_contract_id = '';
-    props.form.opsChartererContract = null;
+
+    if (editInitiated.value) {
+      props.form.ops_charterer_contract_id = '';
+      props.form.opsChartererContract = null;
+  }
+    
     getChartererContractsByCharterOwner(value);
 })
 
 watch(() => props.form.opsChartererContract, (value) => {
+  if (editInitiated.value) {
   props.form.ops_charterer_contract_id = value?.id;
   props.form.contract_type = value?.contract_type;
-  if(value.contract_type == 'Voyage Wise') {
+  if(value?.contract_type == 'Voyage Wise') {
     getContractWiseVoyage(value.id);
     props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+  } else {
+    props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
+    }
   }
+  editInitiated.value = true;
 })
 
 
@@ -785,7 +766,7 @@ watchPostEffect(() => {
       } else {
         props.form.total_days = 0;
       }
-    props.form.total_amount = props.form.total_days * props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
+    props.form.total_amount = props.form.total_days * props.form.per_day_charge;
     CalculateAll();
   } else {
       // props.form.total_amount = props.form.cargo_quantity * props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge;

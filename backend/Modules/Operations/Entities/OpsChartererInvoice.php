@@ -20,6 +20,7 @@ class OpsChartererInvoice extends Model
         'bill_till',
         'total_days',
         'total_amount',
+        'per_day_charge',
         'others_billable_amount',
         'service_fee_deduction_amount',
         'discount_unit',

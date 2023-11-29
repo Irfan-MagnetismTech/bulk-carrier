@@ -11,12 +11,13 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name</span>
-              <input type="text" v-model.trim="form.contract_name" placeholder="Contract Name" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name <span class="text-red-500">*</span></span>
+              <input type="text" v-model.trim="form.contract_name" required placeholder="Contract Name" class="form-input" autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract Type <span class="text-red-500">*</span></span>
-              <select :disabled="formType=='edit'" v-model="form.contract_type" class="form-input">
+              <select :disabled="formType=='edit'" required v-model="form.contract_type" class="form-input">
+                <option value="" selected disabled>Select</option>
                 <option>Voyage Wise</option>
                 <option>Day Wise</option>
               </select>
@@ -62,8 +63,8 @@
 
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
-              <input type="text" v-model.trim="form.charterer_code" placeholder="Charterer Code" class="form-input bg-gray-100" readonly autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code</span>
+              <input type="text" v-model.trim="form.charterer_code" placeholder="Charterer Owner Code" class="form-input bg-gray-100" readonly autocomplete="off" />
           </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -187,18 +188,18 @@
               <input type="text" v-model.trim="form.opsChartererContractsFinancialTerms.billing_cycle" placeholder="Billing Cycle" class="form-input" autocomplete="off" />
           </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid From</span>
-            <input type="date" v-model.trim="form.opsChartererContractsFinancialTerms.valid_from" placeholder="Valid From" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Valid From <span class="text-red-500">*</span></span>
+            <input type="date" required v-model.trim="form.opsChartererContractsFinancialTerms.valid_from" placeholder="Valid From" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid Till</span>
-            <input type="date" v-model.trim="form.opsChartererContractsFinancialTerms.valid_till" placeholder="Valid Till" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Valid Till <span class="text-red-500">*</span></span>
+            <input type="date" required v-model.trim="form.opsChartererContractsFinancialTerms.valid_till" placeholder="Valid Till" class="form-input" autocomplete="off" />
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <div v-if="form.contract_type == 'Voyage Wise'" class="w-full">
             <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff </span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff <span class="text-red-500">*</span></span>
                 <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsChartererContractsFinancialTerms.opsCargoTariff" label="tariff_name" class="block form-input">
                     <template #search="{attributes, events}">
                         <input
@@ -235,12 +236,12 @@
       <h4 class="text-md font-semibold mt-4">Rates and Fees</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label v-if="form.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per Day Charge</span>
-              <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Per Day Charge <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required v-model.trim="form.opsChartererContractsFinancialTerms.per_day_charge" placeholder="Per Day Charge" class="form-input" autocomplete="off" />
         </label>
         <label v-if="form.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per MT Charge</span>
-              <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Per MT Charge <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required v-model.trim="form.opsChartererContractsFinancialTerms.per_ton_charge" placeholder="Per MT Charge" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cleaning Fee </span>
@@ -349,14 +350,6 @@ watch(() => props.form, (value) => {
 
   if(props?.formType == 'edit' && editInitiated.value != true) {
 
-    vessels.value = [{...props?.form?.opsVessel}];
-    ports.value = [
-      
-        { ...props?.form.opsChartererContractsLocalAgents[0].opsPort }
-      
-
-    ]
-
     if(vessels.value.length > 0) {
         editInitiated.value = true
       }
@@ -411,7 +404,6 @@ watch(() => props.form.opsChartererProfile, (value) => {
 
 function replaceThings(value) {
 
-  console.log(value, "DDDD")
     props.form.charterer_code = value?.owner_code
     props.form.country = value?.country
     props.form.address = value?.address

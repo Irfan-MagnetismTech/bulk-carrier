@@ -94,7 +94,7 @@ export default function useChartererProfile() {
 
 		try {
 			const { data, status } = await Api.post('/ops/charterer-profiles', form);
-			chartererProfile.value = data.value;
+			// chartererProfile.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.charterer-profiles.index' });
 		} catch (error) {
@@ -136,7 +136,7 @@ export default function useChartererProfile() {
 				`/ops/charterer-profiles/${chartererProfileId}`,
 				form
 			);
-			chartererProfile.value = data.value;
+			// chartererProfile.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.charterer-profiles.index' });
 		} catch (error) {

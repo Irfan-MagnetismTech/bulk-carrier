@@ -63,6 +63,7 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('get-banks', [AccCommonController::class, 'getBanks']);
     Route::post('get-fixed-asset-categories', [AccCommonController::class, 'getFixedAssetCategories']);
     Route::post('get-fixed-assets', [AccCommonController::class, 'getFixedAssets']);
+    Route::post('get-cash-requisitions', [AccCommonController::class, 'getCashRequisitions']);
 
 
 //    //Common routes

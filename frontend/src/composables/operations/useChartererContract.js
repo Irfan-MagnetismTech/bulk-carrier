@@ -22,7 +22,7 @@ export default function useChartererContract() {
 
 	const chartererContract = ref({
 		contract_name: '',
-		contract_type: 'Voyage Wise',
+		contract_type: '',
 		business_unit: '',
 		ops_vessel_id: null,
 		vessel_owner: '',
@@ -267,6 +267,41 @@ export default function useChartererContract() {
 		}
 	}
 
+
+	async function downloadChartererContractAttachment(chartererContactId) {
+		axios({
+            url: 'ops/export-particular-report?id=' + chartererContactId,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response) => {
+
+            //stream pdf file to new tab start
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download',  "- Attachment" + "");
+            document.body.appendChild(link);
+            link.click();
+            //stream pdf file to new tab end
+        }).catch((error) => {
+            if (error.response.status === 422) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const data = JSON.parse(reader.result);
+                    const message = data.message;
+                    console.log("Response message: " + message);
+                    notification.showError(error.response.status, '', message);
+                }
+                reader.readAsText(error.response.data);
+            } else {
+                notification.showError(error.response.status, '', error.response.statusText);
+            }
+        }).finally(() => {
+            NProgress.done();
+            isLoading.value = false;
+        });
+	}
+
 	return {
 		chartererContracts,
 		chartererContract,
@@ -279,6 +314,7 @@ export default function useChartererContract() {
 		searchChartererContracts,
 		getChartererContractsByCharterOwner,
 		getContractWiseVoyage,
+		downloadChartererContractAttachment,
 		chartererContracts,
 		voyages,
 		isLoading,		

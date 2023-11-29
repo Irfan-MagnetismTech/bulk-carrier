@@ -62,8 +62,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour</span>
-            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Run Hour" class="form-input" :class="{ 'vms-readonly-input': page === 'edit' }" :disabled="page === 'edit'" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour</span>
+            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input" :class="{ 'vms-readonly-input': page === 'edit' }" :disabled="page === 'edit'" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
         

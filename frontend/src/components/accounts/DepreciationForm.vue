@@ -95,7 +95,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="label-group">
         <span class="label-item-title"> Year <span class="text-red-500">*</span></span>
-        <input type="text" class="label-item-input" placeholder="Year" required v-model.trim="form.month_year" />
+        <input type="number" class="label-item-input" placeholder="Year" required v-model.trim="form.month_year" />
       </label>
       <label class="label-group">
         <span class="label-item-title"> Applied Date <span class="text-red-500">*</span></span>
