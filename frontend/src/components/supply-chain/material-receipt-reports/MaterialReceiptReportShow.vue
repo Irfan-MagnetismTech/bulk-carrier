@@ -55,11 +55,11 @@
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.scm_po_no }}</span>
+          <span class="show-block">{{ form?.scmPo?.ref_no }}</span>
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.po_date }}</span>
+          <span class="show-block">{{ form?.scmPo?.date }}</span>
       </label>
       
       <label class="label-group">
@@ -68,14 +68,14 @@
       </label>
       <label class="label-group" v-if="form.type !== 'CASH'">
           <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.scm_cs_no }}</span>
+          <span class="show-block">{{ form?.scmCs?.ref_no ?? 'N/A' }}</span>
       </label>
       <!-- <label class="label-group" v-if="form.type == 'CASH'">
           <span class="label-item-title">IOU No<span class="text-red-500">*</span></span>
           <span class="show-block">{{ form.scmIou_no }}</span>
       </label> -->
       <label class="label-group">
-          <span class="label-item-title">Challan<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Challan No<span class="text-red-500">*</span></span>
           <span class="show-block">{{ form.challan_no }}</span>
       </label>
       <label class="label-group">

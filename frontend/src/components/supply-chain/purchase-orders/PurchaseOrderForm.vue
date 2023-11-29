@@ -449,4 +449,27 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     .add_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
+
+    #customDataTable::-webkit-scrollbar:horizontal {
+      height: 1rem!important; 
+    }
+  
+    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-button:horizontal {
+      background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
+    }   
 </style>
