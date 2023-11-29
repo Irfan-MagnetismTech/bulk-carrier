@@ -49,7 +49,7 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "department_id",
+      "field_name": "department_name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -79,7 +79,7 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "pre_mobile_email",
+      "field_name": "pre_email",
       "search_param": "",
       "action": null,
       "order_by": null,

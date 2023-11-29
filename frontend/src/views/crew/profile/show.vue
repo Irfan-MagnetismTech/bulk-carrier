@@ -43,6 +43,20 @@ onMounted(() => {
                 <td><span :class="crewProfile?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewProfile?.business_unit }}</span></td>
               </tr>
               <tr>
+                <th class="w-40">Full Name</th>
+                <td>{{ crewProfile?.full_name }}</td>
+              </tr>
+              <tr>
+                <th class="w-40">Profile Picture</th>
+                <td>
+                  <img
+                      :src="env.BASE_API_URL + '/' + crewProfile?.picture"
+                      alt="Crew Profile Image"
+                      class="h-20 w-auto"
+                  />
+                </td>
+              </tr>
+              <tr>
                 <th>Recruitment Approval</th>
                 <td>
                   [
@@ -152,7 +166,7 @@ onMounted(() => {
                     <table class="w-full">
                       <tbody>
                       <tr class="bg-gray-300">
-                        <td style="text-align: center" class="font-bold" colspan="2">Present Address</td>
+                        <td style="text-align: center" class="font-bold" colspan="2">Present Contact Info</td>
                       </tr>
                       <tr>
                         <th>Address</th>
@@ -171,7 +185,7 @@ onMounted(() => {
                         <td>{{ crewProfile?.pre_email }}</td>
                       </tr>
                       <tr class="bg-gray-300">
-                        <td style="text-align: center" class="font-bold" colspan="2">Permanent Address</td>
+                        <td style="text-align: center" class="font-bold" colspan="2">Permanent Contact Info</td>
                       </tr>
                       <tr>
                         <th>Address</th>

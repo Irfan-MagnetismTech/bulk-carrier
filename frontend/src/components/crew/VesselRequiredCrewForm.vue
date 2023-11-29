@@ -6,6 +6,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const { vessels, searchVessels } = useVessel();
 const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
@@ -83,10 +84,7 @@ onMounted(() => {
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-      <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-    </label>
+    <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Item List</legend>

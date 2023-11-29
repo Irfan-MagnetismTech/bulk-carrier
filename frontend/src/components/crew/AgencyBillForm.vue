@@ -68,6 +68,20 @@ watch(() => netAmount, (value) => {
   }
 }, {deep: true});
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_agency_id = '';
+    props.form.crw_agency_contract_id = '';
+  }
+});
+
+watch(() => props.form.crw_agency_id, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.crw_agency_contract_id = '';
+  }
+});
+
 onMounted(() => {
   watchEffect(() => {
     getCrewAgencyLists(props.form.business_unit);

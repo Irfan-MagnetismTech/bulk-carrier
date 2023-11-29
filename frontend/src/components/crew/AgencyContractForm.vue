@@ -62,7 +62,10 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.billing_currency" placeholder="Currency" class="form-input" autocomplete="off" required />
+      <select v-model.trim="form.billing_currency" class="form-input" required>
+        <option value="BDT">BDT</option>
+        <option value="USD">USD</option>
+      </select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300 text-sm font-medium text-gray-900 dark-disabled:text-white">Attachment </span>
