@@ -12,7 +12,7 @@ export default function useCrewProfile() {
     const notification = useNotification();
     const crewProfile = ref( {
         business_unit: '',
-        crw_recruitment_approval_id: null,
+        crw_recruitment_approval_id: '',
         crw_recruitment_approval_name: null,
         hired_by: '',
         agency_id: null,
