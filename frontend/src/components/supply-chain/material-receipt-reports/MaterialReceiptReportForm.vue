@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed,toRefs } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed,toRefs, watchPostEffect } from 'vue';
     import {useStore} from "vuex";
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -16,7 +16,7 @@
     const { material, materials, getMaterials, searchMaterial,isLoading:materialLoading } = useMaterial();
     const { searchLcRecord, filteredLcRecords , isLoading: lcLoader} = useLcRecord();
     const { getMaterialWiseCurrentStock, CurrentStock } = useStockLedger();
-    const { getMaterialList, materialList , isLoading} = useMaterialReceiptReport();
+    const { getMaterialList, materialList , isLoading, getCashRequisitionNoList,filteredCashRequisitions} = useMaterialReceiptReport();
 
     const store_category = ref([]);
     const firstInitiated = ref(false);
@@ -59,6 +59,9 @@
 
     onMounted(() => {
       setMinHeight();
+      watch(() => props?.form?.acc_cost_center_id, (newVal, oldVal) => {
+        getCashRequisitionNoList(props.form.acc_cost_center_id);
+      });
     });
 
 
@@ -122,6 +125,11 @@ watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
       });
 }, { deep: true });
 
+      watch(() => props?.form?.accCashRequisition, (newVal, oldVal) => {
+        if (newVal) {
+          props.form.acc_cash_requisition_id = newVal.id;
+        }
+      });
 
   watch(() => props?.form?.scmPo, (newVal, oldVal) => {
     if(newVal){
@@ -225,9 +233,17 @@ function changeRate(index) {
           <!-- <Error v-if="errors?.scm_cs_no" :errors="errors.scm_cs_no"  /> -->
       </label>
       <label class="label-group" v-if="form.type == 'CASH'">
-          <span class="label-item-title">IOU No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scm_iou_no" required class="form-input" name="scm_iou_no" :id="'scm_iou_no'" />
-          <!-- <Error v-if="errors?.scm_iou_no" :errors="errors.scm_iou_no"  /> -->
+          <span class="label-item-title">Cash Requisition<span class="text-red-500">*</span></span>
+          <v-select :options="materialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.accCashRequisition" label="id" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.accCashRequisition"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+             </v-select>
       </label>
       <label class="label-group">
           <span class="label-item-title">Challan<span class="text-red-500">*</span></span>
