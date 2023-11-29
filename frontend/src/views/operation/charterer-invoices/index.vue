@@ -155,7 +155,7 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="chartererInvoices?.data?.length">
+          <tbody v-if="chartererInvoices?.data?.length" class="relative">
               <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ chartererInvoice?.opsChartererProfile?.name }}</td>

@@ -23,21 +23,34 @@ export default function useVesselCertificate() {
 		certificate_type: '',
 		validity_period: ''
 	});
+
+	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
 
-	async function getVesselCertificates(page, businessUnit) {
+	async function getVesselCertificates(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+		}
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/vessel-certificates', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit,
-
-				},
+					page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+				}
 			});
 			vesselCertificates.value = data.value;
 			notification.showSuccess(status);
@@ -46,8 +59,14 @@ export default function useVesselCertificate() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -183,18 +202,28 @@ export default function useVesselCertificate() {
 		}
 	}
 
-	async function getRenewableVesselCertificates(page, businessUnit, filterDays = 60) {
+	async function getRenewableVesselCertificates(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+		}
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/vessel-certificates-renew', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit,
-					filter_days: filterDays
-				},
+					page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+				}
 			});
 			vesselCertificates.value = data.value;
 			notification.showSuccess(status);
@@ -203,8 +232,14 @@ export default function useVesselCertificate() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -220,6 +255,7 @@ export default function useVesselCertificate() {
 		getVesselCertificatesByNameOrCode,
 		getVesselCertificateHistory,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }
