@@ -73,12 +73,12 @@ let filterOptions = ref({
     },
     {
       "relation_name": "opsVoyage",
-      "field_name": "voyage_no",
+      "field_name": "voyage_sequence",
       "search_param": "",
        "action": null,
        "order_by": null,
        "date_from": null,
-       "label": "Voyage No",
+       "label": "Voyage",
        "filter_type": "input"
     },
     {
@@ -165,7 +165,7 @@ onMounted(() => {
                     <nobr>{{ bulkNoonReport?.date_time ? moment(bulkNoonReport?.date_time).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
                   </td> -->
                   <td>{{ bulkNoonReport?.opsVessel?.name }}</td>
-                  <td>{{ bulkNoonReport?.opsVoyage?.voyage_no }}</td>
+                  <td>{{ bulkNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ bulkNoonReport?.latitude }}</nobr></td>
                   <td><nobr>{{ bulkNoonReport?.ship_master }}</nobr></td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
