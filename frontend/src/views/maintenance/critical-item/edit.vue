@@ -36,7 +36,7 @@
   watch(criticalItem, (value) => {
     criticalItem.value.mnt_critical_function_name = value?.mntCriticalItemCat?.mntCriticalFunction;
 
-    criticalItem.value.mnt_critical_item_cat_name = value?.mntCriticalItemCat?.category_name;
+    criticalItem.value.mnt_critical_item_cat_name = value?.mntCriticalItemCat;
     criticalItem.value.mntItemCategories = value?.mntCriticalItemCat?.mntCriticalFunction?.mntCriticalItemCats;
   });
   

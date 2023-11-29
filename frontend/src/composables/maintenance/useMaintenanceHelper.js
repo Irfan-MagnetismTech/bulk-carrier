@@ -3,20 +3,36 @@ import { ref } from "vue";
 
 export default function useMaintenanceHelper() {
     
-    const maintenanceTypes = ref(
-        {
-            'Schedule' : 'Schedule',
-            'Breakdown' : 'Breakdown',
-            'Dry Dock' : 'Dry Dock'
-        }
+    const maintenanceTypes = ref([
+        {'key': 'Schedule', 'value' : 'Schedule'},
+        {'key': 'Breakdown', 'value' : 'Breakdown'},
+        {'key': 'Dry Dock', 'value' : 'Dry Dock'},
+    ]
+        // {
+        //     'Schedule' : 'Schedule',
+        //     'Breakdown' : 'Breakdown',
+        //     'Dry Dock' : 'Dry Dock'
+        // }
+    );
+
+    const assignTo = ref(
+        [
+            {'key': 'Team', 'value': 'Team'},
+            {'key': 'Vendor', 'value': 'Vendor'},
+        ]
     );
     
     const workRequisitionStatus = ref(
-        {
-            "0" : 'Pending',
-            "1" : 'WIP',
-            "2" : 'Done'
-        }
+        [
+            {'key': 0, 'value' : 'Pending'},
+            {'key': 1, 'value' : 'WIP'},
+            {'key': 2, 'value' : 'Done'},
+        ]
+        // {
+        //     "0" : 'Pending',
+        //     "1" : 'WIP',
+        //     "2" : 'Done'
+        // }
     );
 
 
@@ -27,6 +43,7 @@ export default function useMaintenanceHelper() {
 
     return {
         maintenanceTypes,
-        workRequisitionStatus
+        workRequisitionStatus,
+        assignTo
     };
 }

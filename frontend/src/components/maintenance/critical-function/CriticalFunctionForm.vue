@@ -6,11 +6,12 @@
             <input type="text" v-model.trim="form.function_name" placeholder="Critical Function Name" class="form-input" required/>
           <Error v-if="errors?.function_name" :errors="errors.function_name" />
         </label>
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Notes</span>
         <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input" />
         <Error v-if="errors?.notes" :errors="errors.notes" />
-      </label>
+      </label> -->
+      <RemarksComponent v-model.trim="form.notes" :maxlength="300" :fieldLabel="'Notes'"></RemarksComponent>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
@@ -21,6 +22,7 @@ import Editor from '@tinymce/tinymce-vue';
 import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
+import RemarksComponent from "../../utils/RemarksComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({

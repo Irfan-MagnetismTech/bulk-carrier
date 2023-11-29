@@ -41,6 +41,7 @@ export default function useWipWorkRequisition() {
         form_type: 'create',
         added_job_lines: [],
         mntWorkRequisitionLines: [],
+        mntWorkRequisitionItem: {},
         // workRequisition
         mntWorkRequisitionMaterials: [
             {

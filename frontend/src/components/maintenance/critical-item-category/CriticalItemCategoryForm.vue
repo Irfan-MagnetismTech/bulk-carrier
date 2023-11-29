@@ -21,11 +21,12 @@
             <input type="text" v-model.trim="form.category_name" placeholder="Category Name" class="form-input" required/>
           <Error v-if="errors?.category_name" :errors="errors.category_name" />
         </label>
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Notes</span>
         <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
-      </label>
+      </label> -->
+      <RemarksComponent v-model.trim="form.notes" :maxlength="300" :fieldLabel="'Notes'"></RemarksComponent>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
@@ -38,6 +39,7 @@ import {onMounted, watch, watchEffect, ref} from "vue";
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useCriticalFunction from "../../../composables/maintenance/useCriticalFunction";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
+import RemarksComponent from "../../utils/RemarksComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({

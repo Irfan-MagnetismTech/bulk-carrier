@@ -45,11 +45,12 @@
       </label>
 
       
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark:text-gray-300">Notes</span>
         <input type="text" v-model.trim="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
-      </label>
+      </label> -->
+      <RemarksComponent v-model.trim="form.notes" :maxlength="300" :fieldLabel="'Notes'"></RemarksComponent>
 
 
     </div>
@@ -66,6 +67,7 @@ import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 import useCriticalFunction from "../../../composables/maintenance/useCriticalFunction";
 import useCriticalItemCategory from "../../../composables/maintenance/useCriticalItemCategory";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
+import RemarksComponent from "../../utils/RemarksComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
