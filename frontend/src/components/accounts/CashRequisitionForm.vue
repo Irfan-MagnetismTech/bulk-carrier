@@ -113,7 +113,7 @@ onMounted(() => {
         <span class="text-gray-700 dark-disabled:text-gray-300"> PR Ref. </span>
         <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_pr_name" label="ref_no"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.scm_pr_name" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
       </label>    
