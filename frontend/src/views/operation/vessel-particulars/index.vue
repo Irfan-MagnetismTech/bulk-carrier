@@ -152,7 +152,7 @@ onMounted(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
 
-      router.push({ name: 'ops.vessels.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.vessel-particulars.index', query: { page: filterOptions.value.page } });
 
     } else {
       filterOptions.value.page = props.page;

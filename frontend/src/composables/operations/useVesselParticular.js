@@ -62,6 +62,8 @@ export default function useVesselParticular() {
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
+
 	async function getVesselParticulars(filterOptions) {
 		//NProgress.start();
 		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
@@ -80,6 +82,7 @@ export default function useVesselParticular() {
 
 		indexPage.value = filterOptions.page;
 		indexBusinessUnit.value = filterOptions.business_unit;
+        filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/vessel-particulars', {
@@ -122,7 +125,7 @@ export default function useVesselParticular() {
 
 		try {
 			const { data, status } = await Api.post('/ops/vessel-particulars', formData);
-			vesselParticular.value = data.value;
+			// vesselParticular.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.vessel-particulars.index' });
 		} catch (error) {
@@ -169,7 +172,7 @@ export default function useVesselParticular() {
 				`/ops/vessel-particulars/${vesselParticularId}`,
 				formData
 			);
-			vesselParticular.value = data.value;
+			// vesselParticular.value = data.value;
 			notification.showSuccess(status);
 			router.push({ name: 'ops.vessel-particulars.index' });
 		} catch (error) {
