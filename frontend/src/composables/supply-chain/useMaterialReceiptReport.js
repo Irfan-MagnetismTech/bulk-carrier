@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
@@ -19,7 +19,7 @@ export default function useMaterialReceiptReport() {
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialReceiptReport = ref( {
         ref_no: null,
@@ -267,7 +267,7 @@ export default function useMaterialReceiptReport() {
 
     async function searchMrr(business_unit, cost_center_id = null, searchParam = '') {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
+        //const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
@@ -283,7 +283,7 @@ export default function useMaterialReceiptReport() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            //loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }

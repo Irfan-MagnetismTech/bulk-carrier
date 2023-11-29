@@ -32,6 +32,7 @@ export default function useCustomer() {
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isCustomerLoading = ref(false);
 
 	const indexPage = ref(null);
 	const indexBusinessUnit = ref(null);
@@ -171,17 +172,19 @@ export default function useCustomer() {
 	// Get ports by name or code
 	async function getCustomersByNameOrCode(searchParam, businessUnit, loading) {
 		//NProgress.start();
+		isCustomerLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-customers?name_or_code=${searchParam}&business_unit=${businessUnit}`);
+			const { data, status } = await Api.get(`/ops/get-search-customers?name_or_code=${searchParam}&business_unit=${businessUnit}`);
 			customers.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
 			//NProgress.done();
+			isCustomerLoading.value = false;
 		}
 	}
 
@@ -215,6 +218,7 @@ export default function useCustomer() {
 		getCustomersByBusinessUnit,
 		isLoading,
 		isTableLoading,
+		isCustomerLoading,
 		errors,
 	};
 }

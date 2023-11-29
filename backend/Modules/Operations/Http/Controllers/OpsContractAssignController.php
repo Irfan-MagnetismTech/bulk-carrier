@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsContractAssign;
 use Illuminate\Contracts\Supcontract_assign\Renderable;
 use Modules\Operations\Http\Requests\OpsContractAssignRequest;
@@ -129,17 +130,4 @@ class OpsContractAssignController extends Controller
         }
     }
 
-    public function getVoyageByContract(Request $request){
-        $voyages= OpsContractAssign::with('opsVoyage','opsCargoTariff')
-        ->when(request()->has('voyage_id'), function($q) {
-            $q->where('ops_voyage_id', request()->voyage_id);
-        })
-        ->get();
-
-        try {            
-            return response()->success('Data retrieved successfully.', $voyages, 200);
-        } catch (QueryException $e){
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

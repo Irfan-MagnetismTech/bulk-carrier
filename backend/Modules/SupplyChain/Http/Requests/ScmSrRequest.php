@@ -26,7 +26,7 @@ class ScmSrRequest extends FormRequest
         return [
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
             // 'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
-            'department_id' => 'required|integer|exists:departments,id',
+            'department_id' => 'required|integer',
             'date' => 'required|date',
             'remarks' => 'max:255',
             // 'business_unit' => 'required|max:255',

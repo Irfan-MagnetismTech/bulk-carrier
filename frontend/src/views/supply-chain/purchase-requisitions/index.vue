@@ -78,7 +78,22 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Is Critical",
-      "filter_type": "input"
+      "filter_type": "select",
+      "select_options": [
+        {
+          "value": '',
+          "label": "Select",
+          "defaultSelected" : true
+        },
+        {
+          "value": "0",
+          "label": "No"
+        },
+        {
+          "value": "1",
+          "label": "Yes"
+        }
+      ]
     },
     {
       "relation_name": null,
@@ -169,7 +184,7 @@ const navigateToMRRCreate = (purchaseRequisitionId) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',

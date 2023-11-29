@@ -25,7 +25,7 @@ class ScmPrRequest extends FormRequest
     {
         return [
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
-            'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
+            // 'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'raised_date' => 'required|date',
             'remarks' => 'max:255',

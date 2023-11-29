@@ -35,7 +35,32 @@ class ScmMaterialCategoryController extends Controller
     {
         try {
             $material_category = ScmMaterialCategory::create($request->all());
+            // for account creation start
+            if($request->parent_id == null || $request->parent_id == ""){
+                $psmlData = [
+                    'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
+                    'account_name'=> $material_category->name,
+                    'account_code'=> config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $material_category->id,
+                    // 'account_code'=> "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material_category->id",
+                    'account_type'=> config('accounts.account_types.Assets'),
+                    'business_unit'=> 'PSML',
+                ];
 
+                $tsllData = [
+                    'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
+                    'account_name'=> $material_category->name,
+                    'account_code'=> config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $material_category->id,
+                    // 'account_code'=> "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material_category->id",
+                    'account_type'=> config('accounts.account_types.Assets'),
+                    'business_unit'=> 'TSLL',
+                ];
+
+
+                $material_category->account()->create($psmlData);
+                $material_category->account()->create($tsllData);
+            }
+
+            // for account creation end
             return response()->success('Data created succesfully', $material_category, 201);
         } catch (\Exception $e) {
 
