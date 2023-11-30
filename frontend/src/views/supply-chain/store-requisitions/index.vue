@@ -86,21 +86,21 @@ let filterOptions = ref({
       "filter_type": "dropdown",
       "select_options": [
         {
-          "label": "Select",
-          "value": "",
-          "defaultSelected" : true
+          label: "All",
+          value: "",
+          defaultSelected : true
         },
         {
-          "label": "Store Department",
-          "value": 1
+          label: "Store Department",
+          value: 1
         },
         {
-          "label": "Engine Department",
-          "value": 2
+          label: "Engine Department",
+          value: 2
         },
         {
-          "label": "Provision Department",
-          "value": 3
+          label: "Provision Department",
+          value: 3
         }
       ]
     }
