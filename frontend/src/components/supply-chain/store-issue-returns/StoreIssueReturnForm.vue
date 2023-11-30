@@ -40,8 +40,7 @@
             <v-select
                 :options="filteredStoreIssues"
                 placeholder="--Choose an option--"
-                @search="fetchStoreIssue"
-                @change="setStoreIssueOtherData(form.scmSi)"
+                @option:selected="setStoreIssueOtherData(form.scmSi)"
                 v-model="form.scmSi"
                 label="ref_no"
                 class="block form-input">
@@ -120,11 +119,10 @@
               <v-select
                 :options="materials"
                 placeholder="--Choose an option--"
-                @search="fetchMaterials"
                 v-model="form.scmSirLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @change="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
+                @option:selected="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -239,11 +237,11 @@
 
 
 
-function fetchStoreIssue(search, loading) {
-    if (search.length > 0) {
-      loading(true);
-      searchStoreIssue(search, loading, props.form.business_unit);
-    }
+function fetchStoreIssue(search, loading = false) {
+    // if (search.length > 0) {
+    //   loading(true);
+      searchStoreIssue(search, /*loading,*/ props.form.business_unit);
+    // }
   }
 
 function setStoreIssueOtherData(datas) {
@@ -252,9 +250,8 @@ function setStoreIssueOtherData(datas) {
       props.form.acc_cost_center_id = datas.acc_cost_center_id;
       props.form.scm_warehouse_id = datas.scm_warehouse_id;
       props.form.scmWarehouse = datas.scmWarehouse;
+      props.form.scm_warehouse_name = datas.scmWarehouse.name;
       props.form.scm_department_id = datas.scm_department_id;
-      filteredStoreIssues.value = []; 
-      console.log(datas);
       getSiWiseSir(datas.id);    
 }
 
@@ -270,6 +267,12 @@ function setStoreIssueOtherData(datas) {
 //       filteredStoreIssues.value = []; 
 //       getSiWiseSir(newVal?.id);    
 // });
+watch(() => props.form.scmDepartment, (value) => {
+  if (value) {
+    props.form.scm_department_id = value?.id;
+  }
+});
+
 
 watch(() => props.form.scmWarehouse, (value) => {
   if (value) {
@@ -337,7 +340,8 @@ function setMaterialOtherData(datas, index) {
     props.form.scm_department_id = null,
     props.form.scmSirLines = [];
     filteredStoreIssues.value = [];
-  }
+   } 
+     fetchStoreIssue('');
 });
 
 function tableWidth() {

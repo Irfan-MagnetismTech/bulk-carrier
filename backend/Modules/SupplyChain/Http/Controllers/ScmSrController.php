@@ -10,6 +10,8 @@ use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmSrRequest;
+use Modules\SupplyChain\Entities\ScmSrLine;
+use Modules\SupplyChain\Services\CurrentStock;
 
 class ScmSrController extends Controller
 {
@@ -133,4 +135,24 @@ class ScmSrController extends Controller
 
         return response()->success('Search result', $storeRequisitions, 200);
     }
+
+    public function getMaterialBySrId(Request $request): JsonResponse
+    {
+        $srMaterials = ScmSrLine::query()
+            ->with('scmMaterial','scmSr')
+            ->where('scm_sr_id', request()->sr_id)
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['unit'] = $item->unit;
+                $data['sr_quantity'] = $item->quantity;
+                $data['quantity'] = $item->quantity;
+                $data['current_stock'] = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
+                $data['max_quantity'] = $item->quantity - $item->scmSiLines->sum('quantity');
+                $data['sr_composite_key'] = $item->sr_composite_key;
+                return $data;
+            });
+        return response()->success('data list', $srMaterials, 200);
+    }
+
 }

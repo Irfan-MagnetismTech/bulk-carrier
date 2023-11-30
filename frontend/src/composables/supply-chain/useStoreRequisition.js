@@ -17,6 +17,7 @@ export default function useStoreRequisition() {
     const router = useRouter();
     const storeRequisitions = ref([]);
     const filteredStoreRequisitions = ref([]);
+    const srWiseMaterials = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
@@ -185,7 +186,21 @@ export default function useStoreRequisition() {
         }
     }
 
- 
+    const fetchSrWiseMaterials = async (storeRequisitionId) => {
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const { data, status } = await Api.get(`/${BASE}/search-sr-wise-material`, {params: {sr_id: storeRequisitionId}});
+            srWiseMaterials.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+        }
+    }
+    
 
     return {
         storeRequisitions,
@@ -197,6 +212,8 @@ export default function useStoreRequisition() {
         showStoreRequisition,
         updateStoreRequisition,
         deleteStoreRequisition,
+        fetchSrWiseMaterials,
+        srWiseMaterials,
         materialObject,
         isTableLoading,
         isLoading,

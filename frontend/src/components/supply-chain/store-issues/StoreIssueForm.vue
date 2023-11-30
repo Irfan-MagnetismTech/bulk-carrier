@@ -136,13 +136,14 @@
             :key="index">
             <td class="!w-72">
               <v-select
-                :options="materials"
+                :options="srWiseMaterials"
                 placeholder="--Choose an option--"
-                @search="fetchMaterials"
                 v-model="form.scmSiLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
+                @option:selected="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)"
+                @clear="unsetMaterialOtherData(index)"
+                >
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -230,11 +231,13 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+    import useStoreRequisition from '../../../composables/supply-chain/useStoreRequisition';
+    import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-
-
+    const { srWiseMaterials , fetchSrWiseMaterials } = useStoreRequisition();
+    const { getMaterialWiseCurrentStock,CurrentStock} = useStockLedger();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -256,10 +259,11 @@
     }
 
     // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
+      // let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
+      // props.form.materials[index].unit = material.unit;
+      // props.form.materials[index].material_category_id = material.category.id;
+      // props.form.materials[index].material_category_name = material.category.name;
+      
     // }
 
 
@@ -270,8 +274,8 @@
 
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
+    function fetchWarehouse(search, loading=false) {
+    // loading(true);
     searchWarehouse(search, loading,props.form.business_unit);
   }
 
@@ -281,39 +285,54 @@
     });
 
 function setMaterialOtherData(datas, index) {
-      console.log('change_event');
       props.form.scmSiLines[index].unit = datas.unit;
       props.form.scmSiLines[index].scm_material_id = datas.id;
+      getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id).then(() => {
+       props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
+    });
+}
+
+function unsetMaterialOtherData(index) {
+      props.form.scmSiLines[index].unit = null;
+      props.form.scmSiLines[index].scm_material_id = null;
+       props.form.scmSiLines[index].current_stock = 0;
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmSiLines, (newLines) => {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
+// watch(() => props.form.scmSiLines, (newLines) => {
+//   newLines.forEach((line, index) => {
+//     // const previousLine = previousLines.value[index];
 
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmSiLines[index].unit = selectedMaterial.unit;
-          props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
-        }
-      }
-    }
-  });
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+//     if (line.scmMaterial) {
+//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//       if (selectedMaterial) {
+//         if ( line.scm_material_id !== selectedMaterial.id
+//         ) {
+//           props.form.scmSiLines[index].unit = selectedMaterial.unit;
+//           props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
+//         }
+//       }
+//     }
+//   });
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
+    function fetchMaterials(search, loading=false) {
+    // loading(true);
     searchMaterial(search, loading)
   }
 
 
+//watch scmSr changes
+  watch(() => props.form.scmSr, (newValue, oldValue) => {
+      fetchSrWiseMaterials(props.form.scm_sr_id);
+    });
+
+
   watch(() => props.form.business_unit, (newValue, oldValue) => {
+
    if(newValue !== oldValue && oldValue != ''){
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
@@ -332,6 +351,8 @@ function tableWidth() {
       
     }, 10000);
 }
+
+
 //after mount
 onMounted(() => {
   tableWidth();

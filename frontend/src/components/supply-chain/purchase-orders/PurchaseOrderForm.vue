@@ -91,42 +91,42 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
       searchVendor(search);
     }
 
-function setMaterialOtherData(line, index) {
-  const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
-          if (selectedMaterial) {
-            if ( line.scm_material_id !== selectedMaterial.id
-            ) {
-              props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
-              props.form.scmPoLines[index].unit = selectedMaterial.unit;
-              props.form.scmPoLines[index].brand = selectedMaterial.brand;
-              props.form.scmPoLines[index].model = selectedMaterial.model;
-              props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
+  function setMaterialOtherData(line, index) {
+    const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
+            if (selectedMaterial) {
+              if ( line.scm_material_id !== selectedMaterial.id
+              ) {
+                props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
+                props.form.scmPoLines[index].unit = selectedMaterial.unit;
+                props.form.scmPoLines[index].brand = selectedMaterial.brand;
+                props.form.scmPoLines[index].model = selectedMaterial.model;
+                props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
+              }
             }
+      }
+
+  watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
+        let total = 0.0;
+        let materialArray = [];
+        newVal?.forEach((line, index) => {
+          let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+          if (materialArray.indexOf(material_key) === -1) {
+            materialArray.push(material_key);
+          } else {
+            alert("Duplicate Material Found");
+            props.form.scmPoLines.splice(index, 1);
+          }  
+          props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].total_price);
+          if (line.scmMaterial) {
+            setMaterialOtherData(line, index);
           }
-    }
+        });
+        props.form.sub_total = parseFloat(total.toFixed(2));
+        calculateNetAmount();
 
-watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      let total = 0.0;
-      let materialArray = [];
-      newVal?.forEach((line, index) => {
-        let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
-        if (materialArray.indexOf(material_key) === -1) {
-          materialArray.push(material_key);
-        } else {
-          alert("Duplicate Material Found");
-          props.form.scmPoLines.splice(index, 1);
-        }  
-        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_price);
-        if (line.scmMaterial) {
-          setMaterialOtherData(line, index);
-        }
-      });
-      props.form.sub_total = parseFloat(total.toFixed(2));
-      calculateNetAmount();
-
-  
-}, { deep: true });
+    
+  }, { deep: true });
     
   function calculateNetAmount(){
     props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));

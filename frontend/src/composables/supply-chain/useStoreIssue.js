@@ -178,7 +178,7 @@ export default function useStoreIssue() {
         }
     }
 
-    async function searchStoreIssue(searchParam, loading, business_unit) {
+    async function searchStoreIssue(searchParam, /* loading,*/ business_unit) {
         
 
         try {
@@ -194,9 +194,8 @@ export default function useStoreIssue() {
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
-            console.log('tag', data)
         } finally {
-            loading(false)
+            //     loading(false)
         }
     }
     async function getSrWiseSi(srId) {

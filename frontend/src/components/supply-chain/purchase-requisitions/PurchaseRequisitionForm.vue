@@ -212,6 +212,16 @@ watch(() => props.form.scmPrLines, (newLines) => {
   }
 });
 
+
+function tytyty(indx) {
+  console.log(indx)
+}
+
+
+
+function tytytyasd(indx) {
+  console.log(indx)
+}
 // function tableWidth() {
 //   setTimeout(function() {
 //     const customDataTable = document.getElementById("customDataTable");
@@ -348,7 +358,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
               <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
-             <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+             <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @option:selected="tytyty(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -357,10 +367,6 @@ watch(() => props.form.scmPrLines, (newLines) => {
                         v-on="events"
                         />
                 </template>
-                  <!-- <template #option="{ option, onOptionClick }">
-                   
-
-                 </template> -->
             </v-select>
             </td>
             <td>
