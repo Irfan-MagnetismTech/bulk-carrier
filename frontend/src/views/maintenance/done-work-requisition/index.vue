@@ -111,14 +111,14 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Maintenance Type",
-      // "filter_type": "input",
-      "filter_type": "dropdown",
-      "select_options": [
-          { value: "", label: "Select" ,defaultSelected: true},
-          { value: "Schedule", label: "Schedule" ,defaultSelected: false},
-          { value: "Breakdown", label: "Breakdown",defaultSelected: false},
-          { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
-        ]
+      "filter_type": "input",
+      // "filter_type": "dropdown",
+      // "select_options": [
+      //     { value: "", label: "Select" ,defaultSelected: true},
+      //     { value: "Schedule", label: "Schedule" ,defaultSelected: false},
+      //     { value: "Breakdown", label: "Breakdown",defaultSelected: false},
+      //     { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
+      //   ]
     },
     {
       "rel_type": null,
