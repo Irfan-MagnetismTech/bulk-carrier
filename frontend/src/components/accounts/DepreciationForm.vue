@@ -37,7 +37,7 @@ watch(() => props.form.acc_cost_center_name, (value) => {
   }
 });
 
-watch(() => filteredFixedAssets, (newEntries, oldEntries) => {
+watch(() => filteredFixedAssets.value, (newEntries, oldEntries) => {
   if(newEntries?.length > 0) {
     props.form.accDepreciationLines = [];
     filteredFixedAssets?.value?.forEach((item) => {
@@ -74,10 +74,16 @@ watch(() => filteredFixedAssets, (newEntries, oldEntries) => {
 //     { deep: true }
 // );
 
+watch(() => props.form.acc_cost_center_id, (newEntries, oldEntries) => {
+  if(newEntries != ''){
+    props.form.accDepreciationLines = [];
+    searchFixedAsset(props.form.acc_cost_center_id,props.form.business_unit);
+  }
+})
+
 onMounted(() => {
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
-    searchFixedAsset(props.form.acc_cost_center_id,props.form.business_unit);
   });
 });
 
