@@ -55,7 +55,7 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" >
-                <template #search="{attributes, events}">
+                <template #search="{attributes, events}" @option:selected="bunkerInfo">
                     <input
                         class="vs__search"
                         :required="!form.ops_vessel_id"
@@ -457,7 +457,13 @@ watch(() => props.form.business_unit, (value) => {
 
 const bunkerReset = ref([]);
 
-watch(() => props.form.ops_vessel_id, (value) => {
+// watch(() => props.form.ops_vessel_id, (value) => {
+ 
+// }, { deep: true })
+
+
+function bunkerInfo(){
+  let value = props.form.ops_vessel_id;
   if(value) {
     showVessel(value)
     .then(() => {
@@ -474,18 +480,19 @@ watch(() => props.form.ops_vessel_id, (value) => {
     };
   });
 
-      if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-        props.form.opsBunkers = bunkerReset.value
-      } else {
-        props.form.opsBunkers = vessel?.value?.opsBunkers
-        editInitiated.value = true
-      }
+  props.form.opsBunkers = bunkerReset.value
+      // if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+       
+      // } else {
+      //   bunkerReset.value;
+      //   editInitiated.value = true
+      // }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
   }
-}, { deep: true })
+  }
 
 watch(() => vessel, (value) => {
   if(value) {
