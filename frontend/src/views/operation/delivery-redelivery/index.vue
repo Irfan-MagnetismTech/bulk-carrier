@@ -103,8 +103,12 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Note Type",
-      "filter_type": "input",
-     
+      "filter_type": "dropdown",
+      "select_options": [
+          { value: "", label: "All" ,defaultSelected: true},
+          { value: "Delivery", label: "Delivery" ,defaultSelected: false},
+          { value: "Re-delivery", label: "Re-delivery",defaultSelected: false},
+        ]
     },
     {
       "relation_name": null,

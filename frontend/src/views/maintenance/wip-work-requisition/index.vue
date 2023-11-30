@@ -111,7 +111,7 @@ let filterOptions = ref( {
       "date_from": null,
       "label": "Maintenance Type",
       "filter_type": "input",
-      // "filter_type": "select",
+      // "filter_type": "dropdown",
       // "select_options": [
       //     { value: "", label: "Select" ,defaultSelected: true},
       //     { value: "Schedule", label: "Schedule" ,defaultSelected: false},

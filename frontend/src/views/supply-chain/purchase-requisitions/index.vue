@@ -78,7 +78,7 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Is Critical",
-      "filter_type": "select",
+      "filter_type": "dropdown",
       "select_options": [
         {
           "value": '',
