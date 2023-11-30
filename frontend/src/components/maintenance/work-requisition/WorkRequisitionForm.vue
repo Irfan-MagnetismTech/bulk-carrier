@@ -255,9 +255,9 @@
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" :class="{
-                      'bg-yellow-600': jobLine.mnt_work_requisition_status === 0,
-                      'bg-blue-600': jobLine.mnt_work_requisition_status === 1,
-                      'bg-green-600': jobLine.mnt_work_requisition_status === 2 || jobLine.mnt_work_requisition_status === null,
+                      'bg-yellow-600': jobLine.mnt_work_requisition_status == 0,
+                      'bg-blue-600': jobLine.mnt_work_requisition_status == 1,
+                      'bg-green-600': jobLine.mnt_work_requisition_status == 2 || jobLine.mnt_work_requisition_status == null,
                   }" class="text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
