@@ -34,6 +34,7 @@ class MntWorkRequisitionLine extends Model
         'checking' => 'boolean',
         'replace' => 'boolean',
         'cleaning' => 'boolean',
+        'status' => 'integer'
     ];
     
     public function mntWorkRequisitionItem () : BelongsTo
