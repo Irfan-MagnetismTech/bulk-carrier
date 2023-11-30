@@ -24,9 +24,9 @@ export default function useMaintenanceHelper() {
     
     const workRequisitionStatus = ref(
         [
-            {'key': "0", 'value' : 'Pending'},
-            {'key': "1", 'value' : 'WIP'},
-            {'key': "2", 'value' : 'Done'},
+            {'key': 0, 'value' : 'Pending'},
+            {'key': 1, 'value' : 'WIP'},
+            {'key': 2, 'value' : 'Done'},
         ]
         // {
         //     "0" : 'Pending',
