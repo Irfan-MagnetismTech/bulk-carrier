@@ -31,13 +31,13 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let allMaterialLists = ref([]);
 
-watch(() => props.form.acc_cost_center_name, (value) => {
-  if(value){
-    props.form.acc_cost_center_id = value?.id ?? '';
-  }
-});
+// watch(() => props.form.acc_cost_center_name, (value) => {
+//   if(value){
+//     props.form.acc_cost_center_id = value?.id ?? '';
+//   }
+// });
 
-watch(() => filteredFixedAssets, (newEntries, oldEntries) => {
+watch(() => filteredFixedAssets.value, (newEntries, oldEntries) => {
   if(newEntries?.length > 0) {
     props.form.accDepreciationLines = [];
     filteredFixedAssets?.value?.forEach((item) => {
@@ -74,10 +74,21 @@ watch(() => filteredFixedAssets, (newEntries, oldEntries) => {
 //     { deep: true }
 // );
 
+// watch(() => props.form.acc_cost_center_id, (newEntries, oldEntries) => {
+//   if(newEntries !== oldEntries && oldEntries != '' ){
+//     
+//   }
+// })
+
+function callapi(){
+  props.form.acc_cost_center_id = props.form.acc_cost_center_name.id;
+  props.form.accDepreciationLines = [];
+  searchFixedAsset(props.form.acc_cost_center_id,props.form.business_unit);
+}
+
 onMounted(() => {
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
-    searchFixedAsset(props.form.acc_cost_center_id,props.form.business_unit);
   });
 });
 
@@ -103,7 +114,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
-        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input" @option:selected="callapi">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
           </template>

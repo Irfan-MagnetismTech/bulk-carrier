@@ -13,7 +13,7 @@ class AccDepreciationRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'month_year'                                => 'required|string',
+            'month_year'                                => 'required',
             'applied_date'                              => 'required|date',
             'acc_cost_center_id'                        => 'required',
             'business_unit'                             => 'required|in:PSML,TSLL',

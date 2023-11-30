@@ -110,13 +110,14 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Maintenance Type",
-      "filter_type": "select",
-      "select_options": [
-          { value: "", label: "Select" ,defaultSelected: true},
-          { value: "Schedule", label: "Schedule" ,defaultSelected: false},
-          { value: "Breakdown", label: "Breakdown",defaultSelected: false},
-          { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
-        ]
+      "filter_type": "input",
+      // "filter_type": "select",
+      // "select_options": [
+      //     { value: "", label: "Select" ,defaultSelected: true},
+      //     { value: "Schedule", label: "Schedule" ,defaultSelected: false},
+      //     { value: "Breakdown", label: "Breakdown",defaultSelected: false},
+      //     { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
+      //   ]
     },
     {
       "rel_type": null,
@@ -228,7 +229,7 @@ onMounted(() => {
             <td>{{ wipWorkRequisition?.maintenance_type }}</td>
             <!-- <td>{{ workRequisition?.status }}</td> -->
             <td>
-              <span :class="wipWorkRequisition?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (wipWorkRequisition?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.status === 0 ? 'Pending' : (wipWorkRequisition?.status === 1 ? 'WIP' : 'Done') }}</span>
+              <span :class="wipWorkRequisition?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (wipWorkRequisition?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.status == 0 ? 'Pending' : (wipWorkRequisition?.status == 1 ? 'WIP' : 'Done') }}</span>
             </td>
             <td><span :class="wipWorkRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.business_unit }}</span></td>
             
