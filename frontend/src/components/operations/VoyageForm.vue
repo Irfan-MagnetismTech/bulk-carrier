@@ -44,6 +44,9 @@
                 </template>
             </v-select>
           </label>
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Mother Vessel Name <span class="text-red-500">*</span></span>
                 <input type="text" v-model.trim="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
@@ -112,7 +115,7 @@
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
-          <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
+          <RemarksComponent v-model="form.remarks" :maxlength="250" :fieldLabel="'Remarks'"></RemarksComponent>
         </div>
       </div>
     </div>
@@ -242,7 +245,24 @@
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
         <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 bg-gray-100 shadow-md">
-          <label class="block w-1/4 mt-2 text-sm">
+          <label class="block w-1/2 mt-2 text-sm">
+
+<span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
+
+<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
+  <template #search="{attributes, events}">
+      <input
+          class="vs__search"
+          :required="!form.opsVoyagePortSchedules[index].port_code"
+          v-bind="attributes"
+          v-on="events"
+          />
+  </template>
+</v-select>
+</label>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+                    
+                    <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type <span class="text-red-500">*</span></span>
 
             <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input" required>
@@ -251,23 +271,6 @@
               <option value="Discharge">Discharge</option>
             </select>
           </label>
-          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-                    <label class="block w-full mt-2 text-sm">
-
-                      <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
-
-                      <v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
-                        <template #search="{attributes, events}">
-                            <input
-                                class="vs__search"
-                                :required="!form.opsVoyagePortSchedules[index].port_code"
-                                v-bind="attributes"
-                                v-on="events"
-                                />
-                        </template>
-                      </v-select>
-                    </label>
-                    
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">ATA </span>
