@@ -103,12 +103,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Note Type",
-      "filter_type": "select",
-      "select_options": [
-          { value: "", label: "All" ,defaultSelected: true},
-          { value: "Delivery", label: "Delivery" ,defaultSelected: false},
-          { value: "Re-delivery", label: "Re-delivery",defaultSelected: false},
-        ]
+      "filter_type": "input",
     },
     {
       "relation_name": null,
@@ -133,6 +128,14 @@ let filterOptions = ref( {
 	]
 });
 
+
+      // "select_options": [
+      //     { value: "", label: "All" ,defaultSelected: true},
+      //     { value: "Delivery", label: "Delivery" ,defaultSelected: false},
+      //     { value: "Re-delivery", label: "Re-delivery",defaultSelected: false},
+      //   ]
+
+      
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
