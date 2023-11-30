@@ -312,67 +312,27 @@ class MntJobController extends Controller
     {
         try {
             // DB::enableQueryLog(); 
-            $jobs = MntJob::with(['mntItem', 'mntJobLines' => function($q){
-                                $q->where(function ($subQuery){
-                                    $subQuery->whereHas('mntJob',function($q){
-                                        $q->havingRaw('(mnt_job_lines.cycle + mnt_job_lines.previous_run_hour) - mnt_jobs.present_run_hour < mnt_job_lines.min_limit')
-                                            ->where('mnt_job_lines.cycle_unit', 'Hours');
-                                    })->orWhereHas('mntJob',function($q){
-                                        $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
-                                            ->where('mnt_job_lines.cycle_unit', 'Days');
-                                    })
-                                    ->orWhereHas('mntJob',function($q){
-                                        $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
-                                            ->where('mnt_job_lines.cycle_unit', 'Weeks');
-                                    })
-                                    ->orWhereHas('mntJob',function($q){
-                                        $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
-                                            ->where('mnt_job_lines.cycle_unit', 'Months');
-                                    });
-                                });
-                            }])
-                            ->where(function ($jobLineQuery){
-                                $jobLineQuery->whereHas('mntJobLines',function($q){
-                                    $q->havingRaw('(mnt_job_lines.cycle + mnt_job_lines.previous_run_hour) - mnt_jobs.present_run_hour < mnt_job_lines.min_limit')
-                                        ->where('mnt_job_lines.cycle_unit', 'Hours');
-                                })
-                                ->orWhereHas('mntJobLines',function($q){
-                                    $q->havingRaw('DATEDIFF(mnt_job_lines.last_done,current_date) >= mnt_job_lines.min_limit')
-                                        ->where('mnt_job_lines.cycle_unit', 'Days');
-                                })
-                                ->orWhereHas('mntJobLines',function($q){
-                                    $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*7')
-                                        ->where('mnt_job_lines.cycle_unit', 'Weeks');
-                                })
-                                ->orWhereHas('mntJobLines',function($q){
-                                    $q->havingRaw('DATEDIFF(current_date,mnt_job_lines.last_done) >= mnt_job_lines.min_limit*30')
-                                        ->where('mnt_job_lines.cycle_unit', 'Months');
-                                });
-                            })
+            $jobs = MntJob::with(['mntItem','mntJobLines'])
                             ->where('ops_vessel_id', request()->ops_vessel_id)          
                             ->when(request()->has('mnt_item_id'), function($qJobs){
                                 $qJobs->where('mnt_item_id', request()->mnt_item_id);  
                             })
-                            ->when(request()->business_unit != "ALL", function($qItems){
-                                $qItems->where('business_unit', request()->business_unit);  
+                            ->when(request()->business_unit != "ALL", function($qJobs){
+                                $qJobs->where('business_unit', request()->business_unit);  
                             })
                             ->get();
             
             // To get the return value dynamically
             $returnField = request()->return_field ?? '';
-            if ($returnField == "mntItem" || $returnField == "mntJobLines") {
+            if ($returnField == "mntJobLines") {
                 $jobs = $jobs->pluck($returnField)->flatten();
             }
-            
-            $jobs =  $jobs->filter(function ($value) {
-                if($value->cycle_unit != 'Hours')
-                    return strtotime($value->next_due) > strtotime(date('Y-m-d'));
-                else 
-                    return true;
-            });
 
-            // dd(DB::getQueryLog());
-            return $jobs;
+            $jobs =  $jobs->filter(function ($value) {
+                return $value->upcoming_job;
+            });
+            return $jobs->values();
+            
             
         }
         catch (\Exception $e)
