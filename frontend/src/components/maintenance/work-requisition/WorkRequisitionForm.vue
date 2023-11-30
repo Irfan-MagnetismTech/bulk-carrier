@@ -443,7 +443,7 @@ function removeJobLine(jobLine){
 }
 
 function findAddedJobLine(jobLine){
-  return props.form.added_job_lines.find((addedJobLine) => addedJobLine.mnt_job_line_id === jobLine.mnt_job_line_id);
+  return props.form.added_job_lines.find((addedJobLine) => addedJobLine.mnt_job_line_id == jobLine.mnt_job_line_id);
 }
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
