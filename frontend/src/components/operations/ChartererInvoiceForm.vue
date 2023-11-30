@@ -758,32 +758,32 @@ function ChartereProfileChange() {
 }
 
 
-function ChartereContractChange() {
-  let val = props.form.opsChartererContract;
-  props.form.ops_charterer_contract_id = val?.id;
-  props.form.contract_type = val?.contract_type;
-  if(val?.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(val.id);
-    props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
-  } else {
-    props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
-    }
-  }
-
-
-// watch(() => props.form.opsChartererContract, (value) => {
-//   if (editInitiated.value || props?.formType != 'edit') {
-//   props.form.ops_charterer_contract_id = value?.id;
-//   props.form.contract_type = value?.contract_type;
-//   if(value?.contract_type == 'Voyage Wise') {
-//     getContractWiseVoyage(value.id);
+// function ChartereContractChange() {
+//   let val = props.form.opsChartererContract;
+//   props.form.ops_charterer_contract_id = val?.id;
+//   props.form.contract_type = val?.contract_type;
+//   if(val?.contract_type == 'Voyage Wise') {
+//     getContractWiseVoyage(val.id);
 //     props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
 //   } else {
 //     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
 //     }
 //   }
-//   editInitiated.value = true;
-// })
+
+
+watch(() => props.form.opsChartererContract, (value) => {
+  if (editInitiated.value || props?.formType != 'edit') {
+  props.form.ops_charterer_contract_id = value?.id;
+  props.form.contract_type = value?.contract_type;
+  if(value?.contract_type == 'Voyage Wise') {
+    getContractWiseVoyage(value.id);
+    props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+  } else {
+    props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
+    }
+  }
+  editInitiated.value = true;
+})
 
 
 onMounted(() => {
