@@ -94,7 +94,7 @@ function setSortState(index, order) {
                 <template v-else-if="option.filter_type === 'date'">
                   <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
-                <template v-else-if="option.filter_type === 'select'">
+                <template v-else-if="option.filter_type === 'dropdown'">
                   <select v-model="option.search_param" class="filter_input" autocomplete="off">
                     <option v-for="(selectOption, index) in option.select_options" :key="index" :value="selectOption.value" :selected="selectOption.defaultSelected">
                       {{ selectOption.label }}
