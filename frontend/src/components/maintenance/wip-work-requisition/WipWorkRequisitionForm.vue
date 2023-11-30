@@ -80,7 +80,7 @@
         
         <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
             <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model.number="form.status" label="value" 
+            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
             :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -136,7 +136,7 @@
                   <option :value="index" v-for="(status, index) in workRequisitionStatus" :key="index"  > {{ status }}</option>
                 </select> -->
 
-            <v-select placeholder="Select Status"  :options="workRequisitionStatus" v-model.number="mntWorkRequisitionLine.status" label="value" 
+            <v-select placeholder="Select Status"  :options="workRequisitionStatus" v-model="mntWorkRequisitionLine.status" label="value" 
             :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input

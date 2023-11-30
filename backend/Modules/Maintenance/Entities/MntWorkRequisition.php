@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Modules\Operations\Entities\OpsVessel;
+use Ramsey\Uuid\Type\Integer;
 
 class MntWorkRequisition extends Model
 {
@@ -31,6 +32,8 @@ class MntWorkRequisition extends Model
         'status',
         'business_unit'
     ];
+
+    protected $casts = ['status'=>'integer'];
     
     public function opsVessel () : BelongsTo
     {
