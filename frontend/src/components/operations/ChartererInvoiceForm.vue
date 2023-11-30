@@ -12,7 +12,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @option:selected="ChartereProfileChange">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -25,7 +25,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @option:selected="ChartereContractChange">
+              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -714,7 +714,7 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 //   searchVoyages(searchParam, props.form.business_unit, loading)
 // }
 
-watch(() => props.form.business_unit, (oldval,newval) => {
+watch(() => props.form.business_unit, (value) => {
   // if(props?.formType != 'edit') {
   //   props.form.opsVoyage = null;
   //   vessel.value = null;
@@ -722,54 +722,27 @@ watch(() => props.form.business_unit, (oldval,newval) => {
   //   props.form.vessel_name = null;
   //   props.form.ops_voyage_id = null;
   // }
-  if (oldval != newval) {
-    props.form.ops_charterer_contract_id = '';
-
-    props.form.opsChartererContract = null;
-  }
   getAllChartererProfiles(value);
 })
 
 
-// watch(() => props.form.opsChartererProfile, (value) => {
-   
-// })
+watch(() => props.form.opsChartererProfile, (value) => {
+    props.form.ops_charterer_profile_id = value?.id;
+})
 
 
 
 
 
-// watch(() => props.form.ops_charterer_profile_id, (value) => {
+watch(() => props.form.ops_charterer_profile_id, (value) => {
 
-//     if (editInitiated.value) {
-//       props.form.ops_charterer_contract_id = '';
-//       props.form.opsChartererContract = null;
-//   }
+    if (editInitiated.value) {
+      props.form.ops_charterer_contract_id = '';
+      props.form.opsChartererContract = null;
+  }
     
-//     getChartererContractsByCharterOwner(value);
-// })
-
-function ChartereProfileChange() {
-  let val = props.form.opsChartererProfile;
-  props.form.ops_charterer_profile_id = val?.id;
-  props.form.ops_charterer_contract_id = '';
-  props.form.opsChartererContract = null;
-  getChartererContractsByCharterOwner(val.id);
-}
-
-
-// function ChartereContractChange() {
-//   let val = props.form.opsChartererContract;
-//   props.form.ops_charterer_contract_id = val?.id;
-//   props.form.contract_type = val?.contract_type;
-//   if(val?.contract_type == 'Voyage Wise') {
-//     getContractWiseVoyage(val.id);
-//     props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
-//   } else {
-//     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
-//     }
-//   }
-
+    getChartererContractsByCharterOwner(value);
+})
 
 watch(() => props.form.opsChartererContract, (value) => {
   if (editInitiated.value || props?.formType != 'edit') {
