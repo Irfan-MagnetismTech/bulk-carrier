@@ -78,20 +78,20 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Is Critical",
-      "filter_type": "select",
+      "filter_type": "dropdown",
       "select_options": [
         {
-          "value": '',
-          "label": "Select",
-          "defaultSelected" : true
+          value: '',
+          label: "ALL",
+          defaultSelected : true
         },
         {
-          "value": "0",
-          "label": "No"
+          value: "0",
+          label: "No"
         },
         {
-          "value": "1",
-          "label": "Yes"
+          value: "1",
+          label: "Yes"
         }
       ]
     },

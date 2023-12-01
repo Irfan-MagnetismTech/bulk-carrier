@@ -264,16 +264,16 @@ export default [
                         permissionKey: '',
                         subSubMenu: []
                     },
-                    {
-                        route: 'ops.vessel-certificates.renew-list',
-                        label: 'Renew Schedule',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
+                    // {
+                    //     route: 'ops.vessel-certificates.renew-list',
+                    //     label: 'Renew Schedule',
+                    //     preIcon: '',
+                    //     postIcon: icons.DownArrow,
+                    //     is_active: false,
+                    //     is_open: false,
+                    //     permissionKey: '',
+                    //     subSubMenu: []
+                    // },
                 ]
             },
                     // {

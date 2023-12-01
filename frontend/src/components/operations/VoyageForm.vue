@@ -33,7 +33,7 @@
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
-            <v-select :options="customers" placeholder="--Choose an option--" :loading="isCustomerLoading"   v-model="form.ops_customer_id" label="name" class="block form-input" :reduce="customer=>customer.id">
+            <v-select :options="customers" placeholder="--Choose an option--" :loading="isCustomerLoading"   v-model="form.ops_customer_name" label="name" class="block form-input" >
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -43,6 +43,7 @@
                         />
                 </template>
             </v-select>
+            <input type="hidden" v-model="form.ops_customer_id">
           </label>
         </div>
 
@@ -53,8 +54,8 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
-                <template #search="{attributes, events}">
+            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" >
+                <template #search="{attributes, events}" @option:selected="bunkerInfo">
                     <input
                         class="vs__search"
                         :required="!form.ops_vessel_id"
@@ -63,6 +64,7 @@
                         />
                 </template>
             </v-select>
+            <input type="hidden" v-model="form.ops_vessel_id">
           </label>
 
         </div>
@@ -87,7 +89,7 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" :loading="isCargoTypeLoading"  v-model="form.ops_cargo_type_id" label="cargo_type" class="block form-input" :reduce="vessel=>vessel.id">
+              <v-select :options="cargoTypes" placeholder="--Choose an option--" :loading="isCargoTypeLoading"  v-model="form.ops_cargo_type_name" label="cargo_type" class="block form-input" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -97,6 +99,7 @@
                           />
                   </template>
               </v-select>
+              <input type="hidden" v-model="form.ops_cargo_type_id">
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Load Port Distance (NM) <span class="text-red-500">*</span></span>
@@ -423,6 +426,20 @@ function fetchCargoTypes(search, loading) {
       searchCargoTypes(search, loading)
 }
 
+watch(() => props.form.ops_customer_name, (value) => {
+  props.form.ops_customer_id = value?.id;
+});
+
+watch(() => props.form.ops_vessel_name, (value) => {
+  props.form.ops_vessel_id = value?.id;
+});
+
+watch(() => props.form.ops_cargo_type_name, (value) => {
+  props.form.ops_cargo_type_id = value?.id;
+});
+
+
+
 watch(() => props.form.voyage_no, (value) => {
   if(props.form.business_unit == 'TSLL') {
     props.form.voyage_sequence = value+'L'
@@ -433,14 +450,20 @@ watch(() => props.form.voyage_no, (value) => {
 
 watch(() => props.form.business_unit, (value) => {
   if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')){
-    props.form.ops_customer_id = null;
-    props.form.ops_vessel_id = null;
+    props.form.ops_customer_name = null;
+    props.form.ops_vessel_name = null;
   }
 })
 
 const bunkerReset = ref([]);
 
-watch(() => props.form.ops_vessel_id, (value) => {
+// watch(() => props.form.ops_vessel_id, (value) => {
+ 
+// }, { deep: true })
+
+
+function bunkerInfo(){
+  let value = props.form.ops_vessel_id;
   if(value) {
     showVessel(value)
     .then(() => {
@@ -457,17 +480,19 @@ watch(() => props.form.ops_vessel_id, (value) => {
     };
   });
 
-      if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-        props.form.opsBunkers = bunkerReset.value
-      } else {
-        editInitiated.value = true
-      }
+  props.form.opsBunkers = bunkerReset.value
+      // if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+       
+      // } else {
+      //   bunkerReset.value;
+      //   editInitiated.value = true
+      // }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
   }
-}, { deep: true })
+  }
 
 watch(() => vessel, (value) => {
   if(value) {
@@ -495,9 +520,12 @@ watch(() => props.form, (value) => {
 
 if(props?.formType == 'edit' && editInitiated.value != true) {
 
-  customers.value = [props?.form?.opsCustomer]
-  vessels.value = [props?.form?.opsVessel]
-  cargoTypes.value = [props?.form?.opsCargoType]
+  // customers.value = [props?.form?.opsCustomer]
+  // vessels.value = [props?.form?.opsVessel]
+  // cargoTypes.value = [props?.form?.opsCargoType]
+  props.form.ops_customer_name = value?.opsCustomer;
+  props.form.ops_vessel_name = value?.opsVessel;
+  props.form.ops_cargo_type_name = value?.opsCargoType;
 
   // if(vessels.value.length > 0) {
   //     console.log("Changing editInitatedValue ")

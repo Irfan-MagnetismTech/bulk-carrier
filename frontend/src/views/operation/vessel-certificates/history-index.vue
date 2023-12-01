@@ -80,8 +80,8 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate History</h2>
     <default-button :title="'Vessel Certificate List'" :to="{ name: 'ops.vessel-certificates.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
+  <!-- <div class="flex items-center justify-between mb-2 select-none">
+
     <div class="relative w-full">
       <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
       :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
@@ -97,7 +97,7 @@ onMounted(() => {
       </svg>
       <input type="text" placeholder="Search..." class="search" />
     </div>
-  </div>
+  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
@@ -140,7 +140,7 @@ onMounted(() => {
                   {{ item?.reference_number }}
                 </td>
                 <td>
-                  <div class="w-full text-center">
+                  <div class="w-full text-center" v-if="item?.attachment">
                     <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
                     </a>

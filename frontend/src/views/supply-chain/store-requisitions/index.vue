@@ -83,29 +83,31 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Department",
-      "filter_type": "select",
+      "filter_type": "dropdown",
       "select_options": [
         {
-          "label": "Select",
-          "value": "",
-          "defaultSelected" : true
+          label: "All",
+          value: "",
+          defaultSelected : true
         },
         {
-          "label": "Store Department",
-          "value": 1
+          label: "Store Department",
+          value: 1
         },
         {
-          "label": "Engine Department",
-          "value": 2
+          label: "Engine Department",
+          value: 2
         },
         {
-          "label": "Provision Department",
-          "value": 3
+          label: "Provision Department",
+          value: 3
         }
       ]
     }
   ]
 });
+
+
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);

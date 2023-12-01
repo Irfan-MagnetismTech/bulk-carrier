@@ -601,7 +601,7 @@ const toggleTabs = (tabNumber) => {
 function showBunkerConsumptionModal(opsBunkerIndex) {
   isBunkerConsumptionModalOpen.value = 1
   currentConsumptionIndex.value = opsBunkerIndex
-  if(props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads) {
+  if(props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads && props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads?.length > 0) {
     bunkerConsumptionDetails.value = cloneDeep(props.form.opsBulkNoonReportConsumptions[opsBunkerIndex]?.opsBulkNoonReportConsumptionHeads)
   } else {
     bunkerConsumptionDetails.value = [{type: ''}]

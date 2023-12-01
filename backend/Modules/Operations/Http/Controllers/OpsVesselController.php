@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -276,12 +277,18 @@ class OpsVesselController extends Controller
             },
             'opsBunkers'
         ])->find($request->vessel_id);
+        $currentDate = Carbon::now();
 
-        $vessel->opsVesselCertificates->map(function($certificate) {
+        $vessel->opsVesselCertificates->map(function($certificate) use($currentDate) {
             $certificate->type = $certificate->opsMaritimeCertification->type;
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->id;
+            // $certificate->expire_days = 
+
+            $expireDate = Carbon::parse($certificate->expire_date);
+                    $expire_days = $currentDate->diffInDays($expireDate, false);
+                    $certificate->expire_days = $expire_days;
             return $certificate;
         });
         try

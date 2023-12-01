@@ -108,7 +108,7 @@
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" readonly/> </td>
             <td class="px-1 py-1" > <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.remarks" placeholder="Remarks"  readonly/> </td>
             <td class="px-1 py-1"> 
-              <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span>
+              <span :class="mntWorkRequisitionLine?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status == 0 ? 'Pending' : (mntWorkRequisitionLine?.status == 1 ? 'WIP' : 'Done') }}</span>
             </td>
             <!-- <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="submitWipWorkRequisitionLine(mntWorkRequisitionLine)">Submit</button> 
             </td> -->

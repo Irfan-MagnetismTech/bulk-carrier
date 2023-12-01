@@ -112,13 +112,14 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Maintenance Type",
-      "filter_type": "select",
-      "select_options": [
-          { value: "", label: "Select" ,defaultSelected: true},
-          { value: "Schedule", label: "Schedule" ,defaultSelected: false},
-          { value: "Breakdown", label: "Breakdown",defaultSelected: false},
-          { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
-        ]
+      "filter_type": "input",
+      // "filter_type": "dropdown",
+      // "select_options": [
+      //     { value: "", label: "Select" ,defaultSelected: true},
+      //     { value: "Schedule", label: "Schedule" ,defaultSelected: false},
+      //     { value: "Breakdown", label: "Breakdown",defaultSelected: false},
+      //     { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
+      //   ]
     },
     {
       "rel_type": null,
@@ -221,7 +222,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td>{{ workRequisition?.maintenance_type }}</td>
             <!-- <td>{{ workRequisition?.status }}</td> -->
             <td>
-              <span :class="workRequisition?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status === 0 ? 'Pending' : (workRequisition?.status === 1 ? 'WIP' : 'Done') }}</span>
+              <span :class="workRequisition?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status == 0 ? 'Pending' : (workRequisition?.status == 1 ? 'WIP' : 'Done') }}</span>
             </td>
             <td><span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span></td>
             
