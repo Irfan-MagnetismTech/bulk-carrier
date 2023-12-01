@@ -12,7 +12,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @option:selected="profileChanged">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -25,7 +25,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
+              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @option:selected="chartererContractChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -435,7 +435,7 @@
             <tr class="w-full">
               <th>Subtotal</th>
               <th>Total Service Fee (Deduction)</th>
-              <th>Discounte (Deduction)</th>
+              <th>Discount (Deduction)</th>
               <th>Grand Total</th>
             </tr>
           </thead>
@@ -448,7 +448,7 @@
                 <input type="text" readonly :value="props.form.service_fee_deduction_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
               </td>
               <td>
-                <input type="text" v-model="props.form.discounted_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
+                <input type="text" v-model="props.form.discounted_amount" class="form-input text-right" autocomplete="off" />
               </td>
               <td>
                 <input type="text" readonly :value="props.form.grand_total" class="form-input bg-gray-100 text-right" autocomplete="off" />
@@ -726,11 +726,14 @@ watch(() => props.form.business_unit, (value) => {
 })
 
 
-watch(() => props.form.opsChartererProfile, (value) => {
-    props.form.ops_charterer_profile_id = value?.id;
-})
+// watch(() => props.form.opsChartererProfile, (value) => {
+//     props.form.ops_charterer_profile_id = value?.id;
+// })
 
-
+function profileChanged() {
+  let val = props.form.opsChartererProfile;
+  props.form.ops_charterer_profile_id = val.id;
+}
 
 
 
@@ -744,18 +747,27 @@ watch(() => props.form.ops_charterer_profile_id, (value) => {
     getChartererContractsByCharterOwner(value);
 })
 
-watch(() => props.form.opsChartererContract, (value) => {
-  if (editInitiated.value || props?.formType != 'edit') {
-  props.form.ops_charterer_contract_id = value?.id;
-  props.form.contract_type = value?.contract_type;
-  if(value?.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(value.id);
+function chartererContractChange() {
+  let val = props.form.opsChartererContract;
+  props.form.ops_charterer_contract_id = val.id;
+  props.form.contract_type = val.contract_type;
+  if(val.contract_type == 'Voyage Wise') {
+    getContractWiseVoyage(val.id);
     props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
   } else {
     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
-    }
+    voyages.value = [];
   }
-  editInitiated.value = true;
+
+}
+
+watch(() => props.form.opsChartererContract, (value) => {
+  if(value?.contract_type == 'Voyage Wise') {
+    getContractWiseVoyage(value.id);
+  } else {  
+    voyages.value = [];
+    }
+    editInitiated.value = true;
 })
 
 
