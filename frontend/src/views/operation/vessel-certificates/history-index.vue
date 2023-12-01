@@ -140,7 +140,7 @@ onMounted(() => {
                   {{ item?.reference_number }}
                 </td>
                 <td>
-                  <div class="w-full text-center">
+                  <div class="w-full text-center" v-if="item?.attachment">
                     <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
                     </a>
