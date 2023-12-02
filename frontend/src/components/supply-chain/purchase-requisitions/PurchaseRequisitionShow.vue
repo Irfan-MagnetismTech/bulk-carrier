@@ -77,6 +77,12 @@
         <span class="label-item-title">Attachment</span>
         <!-- <a v-if="form.attachment" :href="env.BASE_API_URL+form.attachment" target="_blank" rel="noopener noreferrer"/>
           <img :src="env.BASE_API_URL+form.attachment"  alt="" srcset="" class="w-12 mx-auto"> -->
+          <!-- <div class="w-full text-center" v-if="item?.attachment">
+                <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer"> -->
+                  <!-- <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto"> -->
+                    <!-- Click here to see
+                </a>
+          </div> -->
     </label>
     <label class="label-group">
         <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
