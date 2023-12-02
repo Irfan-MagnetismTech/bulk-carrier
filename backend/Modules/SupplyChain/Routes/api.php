@@ -50,6 +50,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-pr-wise-material', [ScmPoController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
     Route::get('search-sr-wise-material', [ScmSrController::class, "getMaterialBySrId"])->name('getMaterialBySrId');
+    Route::get('get-si-wise-materials', [ScmSiController::class, "getMaterialBySiId"])->name('getMaterialBySiId');
+    Route::get('get-mmr-wise-materials', [ScmMmrController::class, "getMaterialByMmrId"])->name('getMaterialByMmrId');
     Route::get('search-po', [ScmPoController::class, "searchPo"])->name('searchPo');
     Route::get('search-po-for-lc', [ScmPoController::class, "searchPoForLc"])->name('searchPoForLc');
     Route::get('search-lc-record', [ScmLcRecordController::class, "searchLcRecord"])->name('searchLcRecord');
@@ -60,9 +62,11 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-si-wise-data', [ScmSirController::class, "getSiWiseData"])->name('getSiWiseData');
     Route::get('get-mmr-wise-data', [ScmMmrController::class, "getMmrWiseData"])->name('getMmrWiseData');
     Route::get('get-mmr-wise-mi-data', [ScmMiController::class, "getMmrWiseMiData"])->name('getMmrWiseMiData');
+    Route::get('get-mo-wise-mi-data', [ScmMiController::class, "getMoWiseMiData"])->name('getMoWiseMiData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
+    Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     

@@ -24,27 +24,19 @@ export default function useMaterialAdjustment() {
     const materialAdjustment = ref( {
         ref_no: '',
         date: '',
-        delivery_date: '',
-        fromWarehouse: '',
-        from_warehouse_id: '',
-        toWarehouse: '',
-        to_warehouse_id: '',
+        scmWarehouse: '',
         scm_warehouse_id: '',
-        from_cost_center_id: '',
-        to_cost_center_id: '',
-        requested_by: '',
-        required_for: '',
+        acc_cost_center_id: '',
+        type: '',
         remarks: '',
         business_unit: '',
-        scmMmrLines: [
+        scmAdjustmentLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                specification: '',
-                available_stock: '',
-                present_stock: '',
-                quantity: 0.0
+                quantity: 0.0,
+                rate: 0.0,
             }
         ],
     });
@@ -52,10 +44,8 @@ export default function useMaterialAdjustment() {
         scmMaterial: '',
         scm_material_id: '',
         unit: '',
-        specification: '',
-        available_stock: '',
-        present_stock: '',
-        quantity: 0.0
+        quantity: 0.0,
+        rate: 0.0,
     }
 
     const errors = ref('');

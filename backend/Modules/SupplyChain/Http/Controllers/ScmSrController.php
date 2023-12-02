@@ -143,12 +143,16 @@ class ScmSrController extends Controller
             ->where('scm_sr_id', request()->sr_id)
             ->get()
             ->map(function ($item) {
+                $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
+                $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
+                $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+
                 $data = $item->scmMaterial;
                 $data['unit'] = $item->unit;
                 $data['sr_quantity'] = $item->quantity;
                 $data['quantity'] = $item->quantity;
-                $data['current_stock'] = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
-                $data['max_quantity'] = $item->quantity - $item->scmSiLines->sum('quantity');
+                $data['current_stock'] = $currentStock;
+                $data['max_quantity'] = $maxQty;
                 $data['sr_composite_key'] = $item->sr_composite_key;
                 return $data;
             });

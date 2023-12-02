@@ -79,7 +79,7 @@
               />
           </template>
           </v-select> -->
-          <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
           <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
       </label>
       <label class="label-group">
@@ -142,7 +142,7 @@
                 label="material_name_and_code"
                 class="block form-input"
                 @option:selected="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)"
-                @clear="unsetMaterialOtherData(index)"
+                @update:modelValue="oomudueupdate"
                 >
                 <template #search="{attributes, events}">
                     <input
@@ -166,17 +166,17 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input
-                   type="text"
+                   type="text" readonly
                    v-model="form.scmSiLines[index].sr_quantity"
-                   class="form-input">
+                   class="vms-readonly-input form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input
-                   type="text"
+                   type="text" readonly
                    v-model="form.scmSiLines[index].current_stock"
-                   class="form-input">
+                   class="vms-readonly-input form-input">
                </label>
             </td>
             <td>
@@ -292,6 +292,11 @@ function setMaterialOtherData(datas, index) {
     });
 }
 
+
+function oomudueupdate(){
+  console.log('mudueupdate');
+}
+
 function unsetMaterialOtherData(index) {
       props.form.scmSiLines[index].unit = null;
       props.form.scmSiLines[index].scm_material_id = null;
@@ -300,23 +305,19 @@ function unsetMaterialOtherData(index) {
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-// watch(() => props.form.scmSiLines, (newLines) => {
-//   newLines.forEach((line, index) => {
-//     // const previousLine = previousLines.value[index];
+ watch(() => props.form.scmSiLines, (newLines) => {
+   const materialArray = [];
 
-//     if (line.scmMaterial) {
-//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-//       if (selectedMaterial) {
-//         if ( line.scm_material_id !== selectedMaterial.id
-//         ) {
-//           props.form.scmSiLines[index].unit = selectedMaterial.unit;
-//           props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
-//         }
-//       }
-//     }
-//   });
-//   // previousLines.value = cloneDeep(newLines);
-// }, { deep: true });
+   newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmSiLines.splice(index, 1);
+        } 
+   });
+ }, { deep: true });
 
 
     function fetchMaterials(search, loading=false) {
@@ -357,6 +358,8 @@ function tableWidth() {
 onMounted(() => {
   tableWidth();
 });
+
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 </script>
 
 

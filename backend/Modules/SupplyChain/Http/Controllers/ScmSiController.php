@@ -7,7 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmSi;
+use Modules\SupplyChain\Entities\ScmSiLine;
 use Modules\SupplyChain\Entities\ScmSr;
+use Modules\SupplyChain\Entities\ScmSrLine;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
@@ -197,20 +199,21 @@ class ScmSiController extends Controller
                         'scmSrLines.scmMaterial',
                     ])
                     ->where('id', $request->sr_id)
-                    ->first();
-
-                
-
+                    ->first();                
+                    
                 $data = [
                     'scmWarehouse' => $scmSr->scmWarehouse,
                     'scm_warehouse_id' => $scmSr->scm_warehouse_id,
-                    'scm_department_id' => $scmSr->scm_department_id,
+                    'department_id' => $scmSr->department_id,
                     'scm_sr_id' => $scmSr->id,
                     'scmSr' => $scmSr,
                     'sr_date' => $scmSr->date,
                     'acc_cost_center_id' => $scmSr->acc_cost_center_id,
                     'business_unit' => $scmSr->business_unit,
                     'scmSiLines' => $scmSr->scmSrLines->map(function ($item) use ($scmSr) {
+                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $scmSr->scm_warehouse_id);
+                        $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
+                        $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
@@ -218,8 +221,8 @@ class ScmSiController extends Controller
                             'quantity' => $item->quantity,
                             'sr_quantity' => $item->quantity,
                             'sr_composite_key' => $item->sr_composite_key,
-                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmSr->scm_warehouse_id),
-                            'max_quantity' => $item->quantity - $item->scmSiLines->sum('quantity'),
+                            'current_stock' => $currentStock,
+                            'max_quantity' => $maxQty,
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];
@@ -233,6 +236,57 @@ class ScmSiController extends Controller
             }
 
             return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    // public function getMaterialBySrId(Request $request): JsonResponse
+    // {
+    //     $srMaterials = ScmSrLine::query()
+    //         ->with('scmMaterial','scmSr')
+    //         ->where('scm_sr_id', request()->sr_id)
+    //         ->get()
+    //         ->map(function ($item) {
+    //             $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scm_warehouse_id);
+    //             $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
+    //             $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+
+    //             $data = $item->scmMaterial;
+    //             $data['unit'] = $item->unit;
+    //             $data['sr_quantity'] = $item->quantity;
+    //             $data['quantity'] = $item->quantity;
+    //             $data['current_stock'] = $currentStock;
+    //             $data['max_quantity'] = $maxQty;
+    //             $data['sr_composite_key'] = $item->sr_composite_key;
+    //             return $data;
+    //         });
+    //     return response()->success('data list', $srMaterials, 200);
+    // }
+
+    function getMaterialBySiId(Request $request)
+    {
+        try {
+            $siMaterials = ScmSiLine::query()
+                        ->with('scmMaterial','scmSirLines','scmSrLine')
+                        ->where('scm_si_id', request()->si_id)
+                        ->get()
+                        ->map(function ($item) {
+                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
+                        $siQty = $item->quantity - $item->scmSirLines->sum('quantity');
+                        $maxQty = $currentStock > $siQty ? $siQty : $currentStock;
+
+                        $data = $item->scmMaterial;
+                        $data['unit'] = $item->unit;
+                        $data['si_quantity'] = $item->quantity;
+                        $data['quantity'] = $item->quantity;
+                        $data['current_stock'] = $currentStock;
+                        $data['max_quantity'] = $siQty;
+                        $data['si_composite_key'] = $item->si_composite_key;
+                        $data['sr_composite_key'] = $item->sr_composite_key;
+                        return $data;
+                    });
+
+            return response()->success('data', $siMaterials, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

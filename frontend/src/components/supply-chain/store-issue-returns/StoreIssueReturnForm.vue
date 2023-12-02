@@ -62,19 +62,17 @@
           <input
             type="text"
             readonly
-            v-model="form.scm_warehouse_name"
+            :value="form?.scmWarehouse?.name"
             required
             class="form-input vms-readonly-input"
             name="scmwarehouse_name"
             :id="'scm_warehouse_id'" />
-          <Error
-            v-if="errors?.scm_warehouse_id"
-            :errors="errors.scm_warehouse_id" />
+         
       </label>
       <label class="label-group">
         <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
-          <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
+          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
      
   </div>
@@ -117,7 +115,7 @@
             :key="index">
             <td class="!w-72">
               <v-select
-                :options="materials"
+                :options="siWiseMaterials"
                 placeholder="--Choose an option--"
                 v-model="form.scmSirLines[index].scmMaterial"
                 label="material_name_and_code"
@@ -207,9 +205,8 @@
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { filteredStoreIssues, searchStoreIssue } = useStoreIssue();
+    const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
     const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
-    
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -267,18 +264,18 @@ function setStoreIssueOtherData(datas) {
 //       filteredStoreIssues.value = []; 
 //       getSiWiseSir(newVal?.id);    
 // });
-watch(() => props.form.scmDepartment, (value) => {
-  if (value) {
-    props.form.scm_department_id = value?.id;
-  }
-});
+// watch(() => props.form.scmDepartment, (value) => {
+//   if (value) {
+//     props.form.scm_department_id = value?.id;
+//   }
+// });
 
 
-watch(() => props.form.scmWarehouse, (value) => {
-  if (value) {
-    props.form.scm_warehouse_name = value?.scmWarehouse?.name;
-  }
-});
+// watch(() => props.form.scmWarehouse, (value) => {
+//   if (value) {
+//     props.form.scm_warehouse_name = value?.scmWarehouse?.name;
+//   }
+// });
 
 
 
@@ -299,6 +296,7 @@ watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
 function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].unit = datas.unit;
       props.form.scmSirLines[index].scm_material_id = datas.id;
+          
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
@@ -322,11 +320,23 @@ function setMaterialOtherData(datas, index) {
 // }, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
+  //   function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
+
+
+    function fetchMaterials(search, loading = false) {
+      // loading(true);
+      fetchSiWiseMaterials(props.form.scm_si_id);
   }
 
+  watch(() => props.form.scmSi, (newVal, oldVal) => {
+    fetchMaterials(newVal?.id)
+    props.form.department_id = newVal?.department_id;
+    props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
+    props.form.scmWarehouse = newVal?.scmWarehouse;
+  });
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
@@ -359,6 +369,8 @@ function tableWidth() {
 onMounted(() => {
   tableWidth();
 });
+
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 </script>
 
 

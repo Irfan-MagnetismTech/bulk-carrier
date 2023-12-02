@@ -242,4 +242,45 @@ return response()->json($request->scmMiShortage,422);
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    function getMoWiseMiData(Request $request)
+    {
+        try {
+           
+           
+            if ($request->mo_id != null) {
+                $scmMmr = ScmMo::query()
+                    ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
+                    ->where('id', $request->mo_id)
+                    ->first();
+
+                $data = [
+                    'scmMiLines' => $scmMmr->scmMoLines->map(function ($item) use ($scmMmr) {
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scmMaterial->id,
+                            'unit' => $item->scmMaterial->unit,
+                            'quantity' => $item->quantity,
+                            'mo_quantity' => $item->quantity,
+                            'mmr_quantity' => $item->scmMmrLine->quantity,
+                            'mmr_composite_key' => $item->mmr_composite_key,
+                            'mo_composite_key' => $item->mo_composite_key,
+                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
+                         
+                        ];
+                    })
+                ];
+            } else {
+                // $scmCs = ScmCs::query()
+                // ->with('scmWarehouse', 'scmMmr')
+                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
+                // ->get();
+            }
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

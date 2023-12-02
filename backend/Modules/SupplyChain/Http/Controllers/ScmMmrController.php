@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmMmr;
+use Modules\SupplyChain\Entities\ScmMmrLine;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
@@ -184,7 +185,7 @@ class ScmMmrController extends Controller
                     ->whereBusinessUnit($request->business_unit)
                     ->where('ref_no', 'LIKE', "%$request->searchParam%")
                     ->orderByDesc('ref_no')
-                    ->limit(10)
+                    // ->limit(10)
                     ->get();
             } else {
                 $movementRequisitions = [];
@@ -237,6 +238,36 @@ class ScmMmrController extends Controller
             }
 
             return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    function getMaterialByMmrId(Request $request): JsonResponse
+    {
+        try {
+            $mmrMaterials = ScmMmrLine::query()
+            ->with('scmMaterial','scmMmr')
+            ->where('scm_mmr_id', request()->mmr_id)
+            ->get()
+            ->map(function ($item) {
+                // $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
+                $mmrQty = $item->quantity - $item->scmMoLines->sum('quantity');
+                // $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+
+                $data = $item->scmMaterial;
+                $data['unit'] = $item->unit;
+                $data['mmr_quantity'] = $item->quantity;
+                $data['quantity'] =  $mmrQty;
+                $data['max_quantity'] =  $mmrQty;
+                $data['mmr_composite_key'] = $item->mmr_composite_key;
+                return $data;
+
+                
+            });
+
+            return response()->success('data', $mmrMaterials, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

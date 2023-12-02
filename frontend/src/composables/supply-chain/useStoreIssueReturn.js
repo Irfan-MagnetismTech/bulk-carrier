@@ -28,7 +28,7 @@ export default function useStoreIssueReturn() {
         scm_warehouse_name: '',
         acc_cost_center_id: '',
         scmDepartment: '',
-        scm_department_id: '',
+        department_id: '',
         scmSi: '',
         scm_si_id: '',
         si_no: '',

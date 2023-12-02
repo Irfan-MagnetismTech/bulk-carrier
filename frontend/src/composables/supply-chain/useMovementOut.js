@@ -44,6 +44,7 @@ export default function useMovementOut() {
                 unit: '',
                 remarks: '',
                 mmr_quantity: 0.00,
+                mmr_composite_key: '',
                 quantity: 0.00
             }
         ],
@@ -54,6 +55,7 @@ export default function useMovementOut() {
         unit: '',
         remarks: '',
         mmr_quantity: 0.00,
+        mmr_composite_key: '',
         quantity: 0.00
     }
 
@@ -191,7 +193,7 @@ console.log(movementOut.value);
             loading(false)
         }
     }
-    async function getMmrWiseMo(mmrId) {
+    async function getMmrWiseMoData(mmrId) {
         try {
             const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-data`,{
                 params: {
@@ -200,6 +202,22 @@ console.log(movementOut.value);
             });
             filteredMovementRequisitionLines.value = data.value.scmMmrLines;
             console.log(filteredMovementRequisitionLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
+    async function getMmrWiseMo(business_unit,mmrId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-mo`,{
+                params: {
+                    mmr_id: mmrId,
+                    business_unit: business_unit,
+                },
+            });
+            filteredMovementOuts.value = data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -220,6 +238,7 @@ console.log(movementOut.value);
         updateMovementOut,
         deleteMovementOut,
         filteredMovementRequisitionLines,
+        getMmrWiseMoData,
         getMmrWiseMo,
         materialObject,
         isTableLoading,

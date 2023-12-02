@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('shortage_type')->nullable();
             $table->unsignedBigInteger('scm_warehouse_id')->nullable();
             $table->unsignedBigInteger('scm_cost_center_id')->nullable();
+            $table->string('business_unit')->nullable();
             $table->timestamps();
         });
     }

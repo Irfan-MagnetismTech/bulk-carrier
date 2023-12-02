@@ -15,7 +15,13 @@ return new class extends Migration
     {
         Schema::create('scm_adjustment_lines', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('scm_adjustment_id')->nullable();
+            $table->foreign('scm_adjustment_id')->references('id')->on('scm_adjustments')->onDelete('cascade');
+            $table->unsignedBigInteger('scm_material_id')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('adjustment_composite_key')->nullable();
+            $table->decimal('quantity', 10, 2)->nullable();
+            $table->decimal('rate', 10, 2)->nullable();
             $table->timestamps();
         });
     }

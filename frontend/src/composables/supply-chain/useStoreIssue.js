@@ -16,6 +16,7 @@ export default function useStoreIssue() {
     const { downloadFile } = useHelper();
     const router = useRouter();
     const storeIssues = ref([]);
+    const siWiseMaterials = ref([]);
     const filteredStoreIssues = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
@@ -28,7 +29,7 @@ export default function useStoreIssue() {
         scmWarehouse: '',
         scm_warehouse_id: '',
         scmDepartment: '',
-        scm_department_id: '',
+        department_id: '',
         scmSr: '',
         scm_sr_id: '',
         sr_no: '',
@@ -220,6 +221,28 @@ export default function useStoreIssue() {
         }
     }
 
+    async function fetchSiWiseMaterials(siId) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-si-wise-materials`,{
+                params: {
+                    si_id: siId,
+                },
+            });
+            siWiseMaterials.value = data.value;
+            console.log('tag', data)
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
  
 
     return {
@@ -233,6 +256,8 @@ export default function useStoreIssue() {
         updateStoreIssue,
         deleteStoreIssue,
         materialObject,
+        fetchSiWiseMaterials,
+        siWiseMaterials,
         getSrWiseSi,
         isTableLoading,
         isLoading,

@@ -17,6 +17,7 @@ export default function useMovementRequisition() {
     const filteredMovementRequisitions = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const mmrWiseMaterials = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
@@ -180,7 +181,7 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function searchMovementRequisition(searchParam, loading, business_unit) {
+    async function searchMovementRequisition(searchParam,business_unit,loading = false) {
         try {
             const { data, status } = await Api.get(`/${BASE}/search-mmr`, {
                 params: {
@@ -196,7 +197,21 @@ export default function useMovementRequisition() {
             notification.showError(status);
             console.log('tag', data)
         } finally {
-            loading(false)
+            // loading(false)
+        }
+    }
+
+    async function getMmrWiseMaterials(mmrId) {
+        try {
+            const { data, status } = await Api.get(`/${BASE}/get-mmr-wise-materials`,{
+            params: {
+                    mmr_id: mmrId,
+                },
+            });
+            mmrWiseMaterials.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
         }
     }
 
@@ -212,6 +227,8 @@ export default function useMovementRequisition() {
         showMovementRequisition,
         updateMovementRequisition,
         deleteMovementRequisition,
+        getMmrWiseMaterials,
+        mmrWiseMaterials,
         materialObject,
         isTableLoading,
         isLoading,

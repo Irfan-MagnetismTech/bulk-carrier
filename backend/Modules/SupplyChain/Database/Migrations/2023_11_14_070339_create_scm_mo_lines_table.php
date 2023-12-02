@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('quantity')->nullable();
             $table->string('remarks')->nullable();
             $table->string('mmr_composite_key')->nullable();
+            $table->string('mo_composite_key')->nullable();
             $table->timestamps();
         });
     }

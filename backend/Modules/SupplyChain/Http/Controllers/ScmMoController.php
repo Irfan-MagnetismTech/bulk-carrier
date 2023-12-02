@@ -107,7 +107,7 @@ class ScmMoController extends Controller
                     'unit' => $scmMoLine->unit,
                     'quantity' => $scmMoLine->quantity,
                     'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
-                    'max_quantity' => $scmMoLine->scmMmrLine->scmMoLines->sum('quantity') - $scmMoLine->quantity,
+                    'max_quantity' =>  $scmMoLine->scmMmrLine->quantity + $scmMoLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity'),
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
                     'mmr_composite_key' => $scmMoLine->mmr_composite_key ?? null,
                     
@@ -164,6 +164,41 @@ class ScmMoController extends Controller
             $movementOut->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+      /**
+     * Searches for MMR records based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchMo(Request $request): JsonResponse
+    {
+        try {
+            if ($request->business_unit != 'ALL') {
+                $movementRequisitions = ScmMo::query()
+                    ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
+                    ->whereBusinessUnit($request->business_unit)
+                    ->when($request->searchParam, function ($query) {
+                        return $query->where('ref_no', 'LIKE', "%".request()->searchParam."%");
+                    })
+                    ->when($request->mmr_id, function ($query) {
+                        return $query->where('scm_mmr_id', request()->mmr_id);
+                    })
+                    // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                    ->orderByDesc('ref_no')
+                    // ->limit(10)
+                    ->get();
+            } else {
+                $movementRequisitions = [];
+            }
+
+            return response()->success('Search result', $movementRequisitions, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

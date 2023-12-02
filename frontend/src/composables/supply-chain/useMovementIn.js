@@ -18,6 +18,7 @@ export default function useMovementIn() {
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
     const filteredMovementRequisitionLines = ref([]);
+    const filteredMoLines = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
@@ -220,6 +221,23 @@ console.log(movementIn.value);
         }
     }
 
+    async function getMoWiseMiLines(moId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mo-wise-mi-data`,{
+                params: {
+                    mo_id: moId,
+                },
+            });
+            filteredMoLines.value = data.value.scmMiLines;
+            console.log(filteredMoLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+    
+
  
 
     return {
@@ -236,6 +254,8 @@ console.log(movementIn.value);
         getMmrWiseMi,
         materialObject,
         isTableLoading,
+        getMoWiseMiLines,
+        filteredMoLines,
         isLoading,
         errors,
     };

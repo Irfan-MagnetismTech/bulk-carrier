@@ -14,7 +14,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
-          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" @search="fetchMovementRequisitions" @change="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
+          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --"  @option:selected="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -65,7 +65,7 @@
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMoLine, index) in form.scmMoLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
+              <v-select :options="mmrWiseMaterials" placeholder="--Choose an option--" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @option:selected="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -141,8 +141,8 @@ import useMovementOut from '../../../composables/supply-chain/useMovementOut';
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { getFromAndToWarehouseWiseCurrentStock, stockData } = useStockLedger();
 
-    const { filteredMovementRequisitions, searchMovementRequisition } = useMovementRequisition();
-    const { getMmrWiseMo, filteredMovementRequisitionLines } = useMovementOut();
+    const { filteredMovementRequisitions, searchMovementRequisition ,mmrWiseMaterials, getMmrWiseMaterials} = useMovementRequisition();
+    const { getMmrWiseMoData, filteredMovementRequisitionLines } = useMovementOut();
   
     const props = defineProps({
       form: { type: Object, required: true },
@@ -188,23 +188,22 @@ import useMovementOut from '../../../composables/supply-chain/useMovementOut';
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  function fetchMovementRequisitions(search, loading) {
-      if (search.length > 0) {
-        loading(true);
-        searchMovementRequisition(search, loading, props.form.business_unit);
-      }
+  function fetchMovementRequisitions(search, loading = false) {
+        searchMovementRequisition(search,props.form.business_unit);
     }
 
-    function setMovementRequisitionData(mmr) {
-      if (mmr) {
-        getMmrWiseMo(mmr.id);
-        props.form.scm_mmr_id = mmr?.id;
-        props.form.fromWarehouse = mmr.fromWarehouse;
-        props.form.toWarehouse = mmr.toWarehouse;
-        filteredMovementRequisitions.value = [];
-        mmrKey.value++;
-      }
+  function setMovementRequisitionData(mmr) {
+    if (mmr) {
+      getMmrWiseMoData(mmr.id);
+      props.form.scm_mmr_id = mmr?.id;
+      props.form.fromWarehouse = mmr.fromWarehouse;
+      props.form.toWarehouse = mmr.toWarehouse;
+    }
 }
+watch(() => props.form.scmMmr, (value) => {
+  getMmrWiseMaterials(value?.id);
+});
+
 
     watch(() => filteredMovementRequisitionLines.value, (newVal, oldVal) => {
       props.form.scmMoLines = newVal;
@@ -241,7 +240,9 @@ function setMaterialOtherData(datas, index) {
       props.form.scmMoLines[index].unit = datas.unit;
       props.form.scmMoLines[index].scm_material_id = datas.id;
       getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
-}
+      props.form.scmMoLines[index].mmr_quantity = datas.mmr_quantity;
+      props.form.scmMoLines[index].quantity = datas.quantity;
+    }
 
 
 
@@ -264,12 +265,12 @@ watch(() => props.form.scmMoLines, (newLines) => {
 }, { deep: true });
 
 
-function fetchMaterials(search, loading) {
-  if (search.length > 0) {
-    loading(true);
-    searchMaterial(search, loading)
-  }
-  }
+// function fetchMaterials(search, loading) {
+//   if (search.length > 0) {
+//     loading(true);
+//     searchMaterial(search, loading)
+//   }
+//   }
 
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
@@ -283,9 +284,8 @@ function fetchMaterials(search, loading) {
      props.form.scmMmr = null;
      props.form.scmMoLines = [];
      props.form.scm_mmr_id = '';
-      
-      
-  }
+    }
+    fetchMovementRequisitions('');
 });
 
 function tableWidth() {
