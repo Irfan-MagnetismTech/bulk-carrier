@@ -29,12 +29,12 @@
             <input type="text" v-model.trim="form.validity_period" placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Reference Number </span>
-            <input type="text" v-model.trim="form.reference_number" placeholder="Reference Number" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Reference Number <span class="text-red-500">*</span></span>
+            <input type="text" v-model.trim="form.reference_number" required placeholder="Reference Number" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date </span>
-            <input type="date" v-model.trim="form.issue_date" placeholder="Issue Date" class="form-input" autocomplete="off" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model.trim="form.issue_date" required placeholder="Issue Date" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Expire Date </span>
