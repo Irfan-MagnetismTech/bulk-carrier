@@ -5,21 +5,21 @@
     <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
 
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark:text-gray-300">Group <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 ">Group <span class="text-red-500">*</span></span>
       <input type="text" v-model="form.name" required placeholder="Expediture Group" class="block w-full form-input" />
     </label>
     <label class="block w-full mt-2 text-sm" title="This will make this group available in every expenditure and budget input.">
-      <span class="text-gray-700 dark:text-gray-300 form-input">Voyage Report Visibility <span class="text-red-500">*</span></span>
+      <span class="text-gray-700  form-input">Voyage Report Visibility <span class="text-red-500">*</span></span>
       <input type="checkbox" :checked="form.is_visible_in_voyage_report == 1" v-model="form.is_visible_in_voyage_report" class="ml-2 " />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
   <!-- South Sectors -->
-  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-    <legend class="px-2 text-gray-700 dark:text-gray-300">Head <span class="text-red-500">*</span></legend>
+  <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded ">
+    <legend class="px-2 text-gray-700 ">Head <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50  ">
         <th class="px-4 py-3 align-bottom">SL.</th>
         <th class="px-4 py-3 align-bottom">Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Usage Type <small>(PER)</small></th>
@@ -27,8 +27,8 @@
       </tr>
       </thead>
 
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(subHead, index) in form.opsSubHeads" :key="subHead.id">
+      <tbody class="bg-white divide-y ">
+      <tr class="text-gray-700 " v-for="(subHead, index) in form.opsSubHeads" :key="subHead.id">
         <td class="px-1 py-1" width="10%">
           {{ index+1 }}
         </td>
@@ -101,13 +101,13 @@ function removeSubHead(index){
   @apply block w-full mt-3 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded  focus:border-purple-400 focus:outline-none focus:shadow-outline-purple  disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed ;
 }
 .form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
+  @apply block mt-1 text-sm rounded  focus:border-purple-400 focus:outline-none focus:shadow-outline-purple;
 }
 >>> {
   --vs-controls-color: #374151;
