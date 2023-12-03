@@ -41,7 +41,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'critical-item-cats' => MntCriticalItemCatController::class,
         'critical-items' => MntCriticalItemController::class,
         'critical-vessel-items' => MntCriticalVesselItemController::class,
-        'critical-sp-lists' => MntCriticalSpListController::class,
+        'critical-spare-lists' => MntCriticalSpListController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
