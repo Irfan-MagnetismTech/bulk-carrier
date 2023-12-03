@@ -482,10 +482,25 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
+	/* Expense Heads */
 	{
-		path: `/${BASE}/expense-heads/:expenseHeadId/show`,
-		name: `${BASE}.expense-heads.show`,
-		component: () => import (`../views/${ViEWBASE}/expense-heads/show.vue`),
+		path: `/${BASE}/vessel-expense-heads`,
+		name: `${BASE}.vessel-expense-heads.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-expense-heads/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-expense-heads/create`,
+		name: `${BASE}.vessel-expense-heads.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-expense-heads/:vesselExpenseHeadId/edit`,
+		name: `${BASE}.vessel-expense-heads.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 ];
