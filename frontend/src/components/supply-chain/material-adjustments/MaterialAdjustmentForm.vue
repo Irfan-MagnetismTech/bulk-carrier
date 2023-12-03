@@ -86,14 +86,11 @@
               <label class="block w-full mt-2 text-sm">
                  <input type="text" readonly v-model="form.scmAdjustmentLines[index].unit" class="vms-readonly-input form-input">
                </label>
-              
             </td>
-           
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmAdjustmentLines[index].rate" class="form-input">
                </label>
-              
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">

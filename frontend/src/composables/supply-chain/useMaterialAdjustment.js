@@ -17,6 +17,7 @@ export default function useMaterialAdjustment() {
     const filteredMaterialAdjustments = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -48,28 +49,32 @@ export default function useMaterialAdjustment() {
         rate: 0.0,
     }
 
+ 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getMaterialAdjustments(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+    async function getMaterialAdjustments(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/material-adjustments`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             materialAdjustments.value = data.value;
             notification.showSuccess(status);
@@ -152,7 +157,7 @@ export default function useMaterialAdjustment() {
         try {
             const { data, status } = await Api.delete( `/${BASE}/material-adjustments/${materialAdjustmentId}`);
             notification.showSuccess(status);
-            await getMaterialAdjustments(indexPage.value,indexBusinessUnit.value);
+            await getMaterialAdjustments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -194,6 +199,7 @@ export default function useMaterialAdjustment() {
         showMaterialAdjustment,
         updateMaterialAdjustment,
         deleteMaterialAdjustment,
+        isTableLoading,
         materialObject,
         isLoading,
         errors,
