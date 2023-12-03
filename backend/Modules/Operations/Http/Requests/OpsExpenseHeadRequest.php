@@ -12,10 +12,11 @@ class OpsExpenseHeadRequest extends FormRequest
      * @return array
      */
     public function rules(): array
-    {
+    {   
+        // dd($this);
         return [
             'billing_type'                  => ['nullable', 'string', 'max:255'],
-            'head_id'                       => ['numeric', 'max:20'],
+            'head_id'                       => ['nullable', 'numeric', 'max:50'],
             'name'                          => ['required', 'string', 'max:255'],
             'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],
@@ -30,12 +31,12 @@ class OpsExpenseHeadRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'billing_type.max' => 'Port Name may not be greater than :max characters.',
-            'head_id.numeric' => 'Port Name may not be greater than :max characters.',
-            'head_id.max' => 'Port Name may not be greater than :max characters.',
-            'code.required' => 'Port code is required',
-            'code.unique' => 'Port code is already taken',
-            'code.max' => 'Port code may not be greater than :max characters.',
+            'billing_type.max' => 'Billing type may not be greater than :max characters.',
+            'head_id.numeric' => 'Head must be numeric.',
+            // 'head_id.max' => 'Head may not be greater than :max characters.',
+            // 'code.required' => 'code is required',
+            // 'code.unique' => 'Port code is already taken',
+            // 'code.max' => 'Port code may not be greater than :max characters.',
         ];
     }
 

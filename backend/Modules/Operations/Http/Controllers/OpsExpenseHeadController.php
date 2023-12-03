@@ -135,7 +135,7 @@ class OpsExpenseHeadController extends Controller
                     'head_id' => $expense_head->id,
                     'name' => $item['name'],
                     'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                    'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? null
+                    'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? 0,
                 ];
             })->toArray();
 
@@ -144,6 +144,7 @@ class OpsExpenseHeadController extends Controller
                     'head_id' => $expense_head->id,
                     'name' => $item['name'],
                     'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
+                    'is_visible_in_voyage_report' => (isset($item['is_visible_in_voyage_report'])) ? $item['is_visible_in_voyage_report'] : 0,
                 ];
             })->toArray();
 
@@ -179,6 +180,13 @@ class OpsExpenseHeadController extends Controller
     {
         try
         {
+            if($expense_head->is_readonly){
+                return response()->json([
+                    'message' => 'Data is read-only.You can not use this one.',
+                ], 403);
+            }
+            
+            $expense_head->opsSubHeads()->delete();
             $expense_head->delete();
 
             return response()->json([
