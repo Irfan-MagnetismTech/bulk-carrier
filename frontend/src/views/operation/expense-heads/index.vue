@@ -146,11 +146,12 @@ onMounted(() => {
                       {{ subhead?.name }}
                     </span>
                   </td>
-                  <td>
-                    <span :class="expenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ expenseHead?.business_unit }}</span>
-                  </td>
+                  
                   <td>
                     <span v-if="expenseHead?.is_visible_in_voyage_report === 1" :class="expenseHead?.is_visible_in_voyage_report === 1 ? 'text-green-700 bg-green-100' : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">SHOW</span>
+                  </td>
+                  <td>
+                    <span :class="expenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ expenseHead?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
