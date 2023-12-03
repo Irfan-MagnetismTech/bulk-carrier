@@ -202,31 +202,18 @@ class OpsExpenseHeadController extends Controller
     public function getExpenseHeadByHead(Request $request){
         try {
             $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
-            ->where('id', $request->head_id)->when(request()->business_unit != "ALL", function($q){
+            ->where('id', $request->head_id)->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->get()->toArray();
-                
+
             $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
             ->where('is_visible_in_voyage_report', 1)
-            ->when(request()->business_unit != "ALL", function($q){
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->get()->toArray();
 
-            $output = collect(array_merge($heads, $globals));
+            $result = collect(array_merge($heads, $globals));
 
-            $heads = $output->map(function($item, $key) {
-                if(($item['head_id'] == null) && (count($item['opsSubHeads']) > 0)) {
-                } else {
-                    return $item;
-                }
-            });
-
-            $result = collect($heads)->map(function($item, $key) {
-                if(!empty($item)) {
-                    $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
-                    return $item;
-                }
-            })->filter()->values();
 
             return response()->success('Data retrieved successfully.', $result, 200);
 
@@ -234,6 +221,42 @@ class OpsExpenseHeadController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    // public function getExpenseHeadByHead(Request $request){
+    //     try {
+    //         $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+    //         ->where('id', $request->head_id)->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+    //             $q->where('business_unit', request()->business_unit);  
+    //         })->get()->toArray();
+
+    //         $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+    //         ->where('is_visible_in_voyage_report', 1)
+    //         ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+    //             $q->where('business_unit', request()->business_unit);  
+    //         })->get()->toArray();
+
+    //         $output = collect(array_merge($heads, $globals));
+
+    //         $heads = $output->map(function($item, $key) {
+    //             if(($item['head_id'] == null) && (count($item['opsSubHeads']) > 0)) {
+    //             } else {
+    //                 return $item;
+    //             }
+    //         });
+
+    //         $result = collect($heads)->map(function($item, $key) {
+    //             if(!empty($item)) {
+    //                 $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
+    //                 return $item;
+    //             }
+    //         })->filter()->values();
+
+    //         return response()->success('Data retrieved successfully.', $result, 200);
+
+    //     } catch (QueryException $e){
+    //         return response()->error($e->getMessage(), 500);
+    //     }
+    // }
 
 
     
