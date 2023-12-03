@@ -225,7 +225,7 @@ class OpsExpenseHeadController extends Controller
                 if(!empty($item)) {
                     $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
                     return $item;
-                }                
+                }
             })->filter()->values();
 
             return response()->success('Data retrieved successfully.', $result, 200);

@@ -33,6 +33,8 @@ class OpsExpenseHeadRequest extends FormRequest
         return [
             'billing_type.max' => 'Billing type may not be greater than :max characters.',
             'head_id.numeric' => 'Head must be numeric.',
+            'name.required' => 'Name is required.',
+            'name.max' => 'Name may not be greater than :max characters.',
             // 'head_id.max' => 'Head may not be greater than :max characters.',
             // 'code.required' => 'code is required',
             // 'code.unique' => 'Port code is already taken',

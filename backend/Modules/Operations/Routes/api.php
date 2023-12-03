@@ -113,6 +113,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
     Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
+    Route::get('get-search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
