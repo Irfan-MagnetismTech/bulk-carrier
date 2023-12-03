@@ -151,7 +151,7 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function searchExpenseHeads(searchParam, business_unit, loading) {
+	async function searchExpenseHeads(searchParam, business_unit, loading = false) {
 		//NProgress.start();
 
 		try {

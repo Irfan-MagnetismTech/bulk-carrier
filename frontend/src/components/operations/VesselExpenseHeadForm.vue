@@ -46,6 +46,7 @@ function getSubHead(headId, index) {
 }
 
 function fetchExpenseHeads(searchParam, loading) {
+  
   searchExpenseHeads(searchParam, props.form.business_unit, loading)
 }
 
@@ -61,12 +62,12 @@ function checkSubHead(headId, headIndex) {
 watch(() => props.form.business_unit, (value) => {
   if (value) {
     getVesselList(props.form.business_unit);
+    fetchExpenseHeads('', false)
     
   }
 }, {deep: true});
 
 onMounted(() => {
-  fetchExpenseHeads('', false)
 })
 
 </script>
