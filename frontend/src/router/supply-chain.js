@@ -570,4 +570,35 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-show'  },
     },
     /* Movement Requisition end */
+
+    /* Material Cs start */
+
+    {
+        path: `/${BASE}/material-cs`,
+        name: `${BASE}.material-cs.index`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/material-cs/create`,
+        name: `${BASE}.material-cs.create`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-create' },
+    },
+    {
+        path: `/${BASE}/material-cs/:storeIssueReturnId/edit`,
+        name: `${BASE}.material-cs.edit`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-edit' },
+    },
+    {
+        path: `/${BASE}/material-cs/:storeIssueReturnId`,
+        name: `${BASE}.material-cs.show`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-show'  },
+    },
+    /* Material Cs end */
+    
+    
 ];

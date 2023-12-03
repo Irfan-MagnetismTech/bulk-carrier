@@ -113,7 +113,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].available_stock" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].remarks" class="form-input">
                 </label>
                 
               </td>
