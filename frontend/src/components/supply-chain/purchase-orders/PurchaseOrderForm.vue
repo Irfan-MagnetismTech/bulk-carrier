@@ -19,7 +19,7 @@
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
-    const props = defineProps({
+    const prop= defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },

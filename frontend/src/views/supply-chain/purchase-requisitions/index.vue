@@ -178,6 +178,17 @@ const navigateToMRRCreate = (purchaseRequisitionId) => {
 };
 
 
+const navigateToCSCreate = (purchaseRequisitionId) => {
+  const pr_id = purchaseRequisitionId; 
+  const routeOptions = {
+    name: 'scm.material-cs.create',
+    query: {
+      pr_id: pr_id
+    }
+  };
+  router.push(routeOptions);
+}; 
+
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -233,6 +244,7 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
+                    <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CSS</button>
                     <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                     <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
                     <action-button :action="'show'" :to="{ name: 'scm.purchase-requisitions.show', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>

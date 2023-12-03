@@ -573,12 +573,21 @@ export default [
 
     /* Material Cs start */
 
+    // {
+    //     path: `/${BASE}/material-cs`,
+    //     name: `${BASE}.material-cs.index`,
+    //     component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
+    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    // },
     {
-        path: `/${BASE}/material-cs`,
-        name: `${BASE}.material-cs.index`,
-        component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
-        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+        path: `/${BASE}/material-cs/create`,
+        name: `${BASE}.material-cs.create`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-create' },
+        props: (route) => ({
+            pr_id: route.query.pr_id
+        })
     },
     {
         path: `/${BASE}/material-cs/create`,

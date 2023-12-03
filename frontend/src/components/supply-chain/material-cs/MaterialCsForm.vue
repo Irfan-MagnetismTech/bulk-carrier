@@ -1,5 +1,4 @@
 <template>
-
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
@@ -7,7 +6,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
     <label class="label-group">
-          <span class="label-item-title">SIR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">CS Ref<span class="text-red-500">*</span></span>
           <input
             type="text"
             readonly
@@ -31,13 +30,20 @@
           class="form-input"
           name="date"
           :id="'date'" />
-        <Error
-          v-if="errors?.date"
-          :errors="errors.date" />
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Expire Date<span class="text-red-500">*</span></span>
+        <input
+          type="date"
+          v-model="form.expire_date"
+          required
+          class="form-input"
+          name="date"
+          :id="'expire_date'" />
     </label>
       <label class="label-group">
-          <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
-            <v-select
+          <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
+            <!-- <v-select
                 :options="filteredStoreIssues"
                 placeholder="--Choose an option--"
                 @option:selected="setStoreIssueOtherData(form.scmSi)"
@@ -52,10 +58,15 @@
                           v-on="events"
                           />
                   </template>
-              </v-select>
-          <Error
-            v-if="errors?.scm_si_id"
-            :errors="errors.scm_si_id" />
+              </v-select> -->
+              <input
+                type="text"
+                readonly
+                :value="form.scmPr.ref_no"
+                required
+                class="form-input vms-readonly-input"
+                name="si_no"
+                :id="'si_no'" />
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -68,15 +79,25 @@
             name="scmwarehouse_name"
             :id="'scm_warehouse_id'" />
          
-      </label>
+      </label>     
+  </div>
+  <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+        <span class="label-item-title">Cs Type <span class="text-red-500">*</span></span>
+          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
-     
+      <label class="label-group">
+        <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
+          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Required Days <span class="text-red-500">*</span></span>
+          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+      </label>
   </div>
-  
 
   <div class="input-group !w-3/4">
     <label class="label-group">
@@ -115,7 +136,6 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
-      materialObject: { type: Object, required: false },
       page: {
       required: false,
       default: {}
@@ -124,15 +144,7 @@
     }); 
     const form = toRefs(props).form;
     
-    function addMaterial() {
-      const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmSirLines.push(clonedObj);
-    }
-
-    function removeMaterial(index){
-      props.form.scmSirLines.splice(index, 1);
-    }
-
+   
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 

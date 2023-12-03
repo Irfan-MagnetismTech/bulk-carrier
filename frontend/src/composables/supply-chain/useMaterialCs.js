@@ -23,6 +23,8 @@ export default function useMaterialCs() {
     const materialCs = ref({
         ref_no: '',
         date: '',
+        expire_date: '',
+        priority: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
         scm_warehouse_name: '',
@@ -31,19 +33,11 @@ export default function useMaterialCs() {
         scm_pr_id: '',
         pr_no: '',
         special_instruction: '',
+        purchase_center: '',
         business_unit: '',
-        scmSirLines: [
-        ],
+        required_days: '',
     });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        quantity: 0.0,
-        notes: '',
-        sr_composite_key: '',
-        si_composite_key: '',
-    }
+
 
     const errors = ref('');
     const isLoading = ref(false);
@@ -220,6 +214,24 @@ export default function useMaterialCs() {
     //     }
     // }
 
+    async function getPrWiseCs(prId) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-pr-wise-data`,{
+                params: {
+                    pr_id: prId,
+                },
+            });
+            filteredMaterialCsLines.value = data.value.scmPrLines;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
  
 
     return {
@@ -233,8 +245,8 @@ export default function useMaterialCs() {
         showMaterialCs,
         updateMaterialCs,
         deleteMaterialCs,
-        materialObject,
         getSiWiseSir,
+        getPrWiseCs,
         // getSiWiseData,
         isTableLoading,
         isLoading,
