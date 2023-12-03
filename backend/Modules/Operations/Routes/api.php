@@ -8,7 +8,9 @@ use Modules\Operations\Http\Controllers\OpsVesselController;
 use Modules\Operations\Http\Controllers\OpsVoyageController;
 use Modules\Operations\Http\Controllers\OpsCustomerController;
 use Modules\Operations\Http\Controllers\OpsCargoTypeController;
+use Modules\Operations\Http\Controllers\OpsBunkerBillController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
+use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
@@ -17,6 +19,7 @@ use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsChartererProfileController;
 use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsVesselParticularController;
+use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 use Modules\Operations\Http\Controllers\OpsChartererContractController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
@@ -56,6 +59,8 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'contract-assigns' => OpsContractAssignController::class,
         'voyage-expenditures' => OpsVoyageExpenditureController::class,
         'expense-heads' => OpsExpenseHeadController::class,
+        'bunker-requisitions' => OpsBunkerRequisitionController::class,
+        'bunker-bills' => OpsBunkerBillController::class,
     ]);
 
     //start for without pagination
