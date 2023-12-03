@@ -16,7 +16,7 @@ export default function useExpenseHead() {
 	const expenseHead = ref( {
         name: '',
         is_global: '0' ,
-        subheads: [
+        opsSubHeads: [
             {
                 head_id: '',
                 head_id_name: '',
@@ -29,7 +29,7 @@ export default function useExpenseHead() {
     const isLoading = ref(false);
     const filterParams = ref(null);
 
-	async function getexpenseHeads(filterOptions) {
+	async function getExpenseHeads(filterOptions) {
 		//NProgress.start();
 		let loader = null;
         if (!filterOptions.isFilter) {
@@ -75,11 +75,8 @@ export default function useExpenseHead() {
 		isLoading.value = true;
 
 		try {
-			let formData = new FormData();
 
-			formData.append('info', JSON.stringify(form));
-
-			const { data, status } = await Api.post('/ops/expense-heads', formData);
+			const { data, status } = await Api.post('/ops/expense-heads', form);
 			notification.showSuccess(status);
 			router.push({ name: 'ops.expense-heads.index' });
 		} catch (error) {
@@ -99,7 +96,7 @@ export default function useExpenseHead() {
 
 		try {
 			const { data, status } = await Api.get(`/ops/expense-heads/${ExpenseHeadId}`);
-			ExpenseHead.value = data.value;
+			expenseHead.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -118,15 +115,9 @@ export default function useExpenseHead() {
 
 		try {
 
-			let formData = new FormData();
-
-
-			formData.append('info', JSON.stringify(form));
-			formData.append('_method', 'PUT');
-
-			const { data, status } = await Api.post(
+			const { data, status } = await Api.put(
 				`/ops/expense-heads/${ExpenseHeadId}`,
-				formData
+				form
 			);
 			// ExpenseHead.value = data.value;
 			notification.showSuccess(status);
@@ -150,7 +141,7 @@ export default function useExpenseHead() {
 		try {
 			const { data, status } = await Api.delete( `/ops/expense-heads/${ExpenseHeadId}`);
 			notification.showSuccess(status);
-			await getexpenseHeads(filterParams.value);
+			await getExpenseHeads(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -161,7 +152,7 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function searchexpenseHeads(searchParam, loading) {
+	async function searchExpenseHeads(searchParam, loading) {
 		//NProgress.start();
 
 		try {
@@ -180,12 +171,12 @@ export default function useExpenseHead() {
 	return {
 		expenseHeads,
 		expenseHead,
-		getexpenseHeads,
+		getExpenseHeads,
 		storeExpenseHead,
 		showExpenseHead,
 		updateExpenseHead,
 		deleteExpenseHead,
-		searchexpenseHeads,
+		searchExpenseHeads,
 		isTableLoading,
 		isLoading,
 		errors,

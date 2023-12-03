@@ -7,13 +7,13 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useChartererInvoice from '../../../composables/operations/useChartererInvoice';
+import useExpenseHead from '../../../composables/operations/useExpenseHead';
 import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
-const { chartererInvoices, getChartererInvoices, deleteChartererInvoice, isLoading,isTableLoading ,errors } = useChartererInvoice();
+const { ExpenseHeads, getExpenseHeads, deleteExpenseHead, isLoading,isTableLoading ,errors } = useExpenseHead();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -107,7 +107,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteChartererInvoice(id);
+        deleteExpenseHead(id);
     }
   })
 }
@@ -116,7 +116,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.expense-heads.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -124,7 +124,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getChartererInvoices(filterOptions.value)
+    getExpenseHeads(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -145,8 +145,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Charterer Invoice List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.charterer-invoices.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Expense Head List</h2>
+    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.expense-heads.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   
 
@@ -155,8 +155,8 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="chartererInvoices?.data?.length" class="relative">
-              <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
+          <tbody v-if="ExpenseHeads?.data?.length" class="relative">
+              <tr v-for="(chartererInvoice, index) in ExpenseHeads.data" :key="chartererInvoice?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ chartererInvoice?.opsChartererProfile?.name }}</td>
                   <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
@@ -168,16 +168,16 @@ onMounted(() => {
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.charterer-invoices.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.expense-heads.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererInvoice.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererInvoices?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ExpenseHeads?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!chartererInvoices?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!ExpenseHeads?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -185,12 +185,12 @@ onMounted(() => {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!chartererInvoices?.data?.length">
+            <tr v-else-if="!ExpenseHeads?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="chartererInvoices" to="ops.charterer-invoices.index" :page="page"></Paginate>
+    <Paginate :data="ExpenseHeads" to="ops.expense-heads.index" :page="page"></Paginate>
   </div>
 </template>
