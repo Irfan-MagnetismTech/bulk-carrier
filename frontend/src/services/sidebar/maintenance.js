@@ -193,6 +193,18 @@ export default [
                         subSubMenu: [],
                     },
                     
+                    // {
+                    //     route: 'mnt.critical-vessel-items.index',
+                    //     label: 'Vessel Items',
+                    //     preIcon: icons.User,
+                    //     postIcon: icons.DownArrow,
+                    //     is_active: false,
+                    //     is_open: false,
+                    //     permissionKey: '',
+                    //     subSubMenu: [],
+                    // },
+
+                    
                     {
                         route: 'mnt.critical-vessel-items.index',
                         label: 'Vessel Items',
@@ -206,7 +218,7 @@ export default [
 
                     
                     {
-                        route: 'mnt.critical-spare-lists.index',
+                        // route: 'mnt.critical-spare-lists.index',
                         label: 'Critical Spare List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
