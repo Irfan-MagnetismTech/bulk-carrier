@@ -477,13 +477,13 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/expense-heads/:chartererInvoiceId/edit`,
+		path: `/${BASE}/expense-heads/:expenseHeadId/edit`,
 		name: `${BASE}.expense-heads.edit`,
 		component: () => import (`../views/${ViEWBASE}/expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/expense-heads/:chartererInvoiceId/show`,
+		path: `/${BASE}/expense-heads/:expenseHeadId/show`,
 		name: `${BASE}.expense-heads.show`,
 		component: () => import (`../views/${ViEWBASE}/expense-heads/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
