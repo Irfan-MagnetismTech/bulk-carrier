@@ -238,16 +238,16 @@ export default [
                         subSubMenu: [],
                     },
                              
-                    // {
-                    //     route: 'mnt.survey-types.index',
-                    //     label: 'Survey Types',
-                    //     preIcon: icons.User,
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: [],
-                    // },
+                    {
+                        route: 'mnt.survey-types.index',
+                        label: 'Survey Types',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
 
                     
                     // {

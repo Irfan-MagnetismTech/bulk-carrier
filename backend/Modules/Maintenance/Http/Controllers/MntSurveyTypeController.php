@@ -14,11 +14,12 @@ class MntSurveyTypeController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $surveyTypes = MntSurveyType::select('*')->paginate(10);
+            $surveyTypes = MntSurveyType::select('*')
+                                ->globalSearch($request->all());
 
             return response()->success('Survey types are retrieved successfully', $surveyTypes, 200);
             

@@ -420,6 +420,36 @@ export default [
 
 	/* Survey Items End */
 	
+	
+	/* Survey Types Start */
+	{
+		path: `/${BASE}/survey-types`,
+		name: `${BASE}.survey-types.index`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/survey-types/create`,
+		name: `${BASE}.survey-types.create`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-create' },
+	},
+	{
+		path: `/${BASE}/survey-types/:surveyTypeId/edit`,
+		name: `${BASE}.survey-types.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-edit' },
+	},
+	{
+		path: `/${BASE}/survey-types/:surveyTypeId`,
+		name: `${BASE}.survey-types.show`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-show'  },
+	},
+
+	/* Survey Types End */
+	
 
 
 
