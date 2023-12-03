@@ -24,6 +24,7 @@ use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 use Modules\Operations\Http\Controllers\OpsChartererContractController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
+use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
 
@@ -60,6 +61,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'contract-assigns' => OpsContractAssignController::class,
         'voyage-expenditures' => OpsVoyageExpenditureController::class,
         'expense-heads' => OpsExpenseHeadController::class,
+        'vessel-expense-heads' => OpsVesselExpenseHeadController::class,
         'cash-requisitions' => OpsCashRequisitionController::class,
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'bunker-bills' => OpsBunkerBillController::class,
