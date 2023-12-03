@@ -10,7 +10,7 @@
     </label>
     <label class="block w-full mt-2 text-sm" title="This will make this group available in every expenditure and budget input.">
       <span class="text-gray-700 dark:text-gray-300 form-input">Voyage Report Visibility <span class="text-red-500">*</span></span>
-      <input type="checkbox" :checked="form.is_global == 1" v-model="form.is_global" class="ml-2 " />
+      <input type="checkbox" :checked="form.is_visible_in_voyage_report == 1" v-model="form.is_visible_in_voyage_report" class="ml-2 " />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
@@ -34,7 +34,6 @@
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.subheads[index].name" required :id="'sub_head_name' + index" placeholder="Sub Head" class="form-input" />
-          <input type="hidden" v-model="form.subheads[index].head_id_name">
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.subheads[index].billing_type" :id="'cost_type' + index" placeholder="Usage Type" class="form-input" />
