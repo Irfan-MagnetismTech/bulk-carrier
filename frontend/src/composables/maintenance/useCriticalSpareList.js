@@ -17,7 +17,7 @@ export default function useCriticalSpareList() {
         reference_no: '',
         record_date: '',
         business_unit: '',
-        mntCriticalSpListLine: [],
+        mntCriticalSpListLines: [],
     });
 
     const filterParams = ref(null);

@@ -32,26 +32,29 @@
     
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400" >
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts <span class="text-red-500">*</span></legend>
-      <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLine?.length">
+      <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLines?.length">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="w-6/12 px-4 py-3 align-bottom">Spare Parts Name</th>
+            <th class="w-4/12 px-4 py-3 align-bottom">Spare Parts Name</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob</th>
             <th class="w-2/12 px-4 py-3 align-bottom"> Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom"> Remarks </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           
-          <template  v-for="(criticalVesselItem, index) in form.mntCriticalSpListLine" :key="index">
+          <template  v-for="(criticalVesselItem, index) in form.mntCriticalSpListLines" :key="index">
               <tr class="text-gray-700 dark-disabled:text-gray-400">
-                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem.item_name }}</span> <span class="pl-1">{{ criticalVesselItem.specification }}</span></strong> </td>
+                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem.specification">({{ criticalVesselItem.specification }})</span></strong> </td>
               </tr>
               <tr class="text-gray-700 dark-disabled:text-gray-400"  v-for="(mntCriticalItemSp, mntCriticalItemSpIndex) in criticalVesselItem?.mntCriticalItemSps" :key="mntCriticalItemSpIndex">
                 <td>{{ mntCriticalItemSp?.sp_name }}</td>
                 <td>{{ mntCriticalItemSp?.unit }}</td>
                 <td>{{ mntCriticalItemSp?.min_rob }}</td>
                 <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="Rob" class="form-input" required/></td>
+                <td><input type="text" v-model.trim="mntCriticalItemSp.remarks" placeholder="Remarks" class="form-input"/></td>
+                
               </tr>
           </template>
         </tbody>
@@ -120,7 +123,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
 watch(() => criticalVesselItems.value, (value) => {
-  props.form.mntCriticalSpListLine = value;
+  props.form.mntCriticalSpListLines = value;
 });
 
 
