@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('head_id')->nullable();
             $table->foreign('head_id')->references('id')->on('ops_expense_heads');
             $table->string('name')->nullable();
-            $table->tinyInteger('is_visible_in_voyage_report?')->nullable();
+            $table->tinyInteger('is_visible_in_voyage_report')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });
