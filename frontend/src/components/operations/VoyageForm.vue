@@ -55,7 +55,7 @@
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" >
-                <template #search="{attributes, events}" @option:selected="bunkerInfo">
+                <template #search="{attributes, events}">
                     <input
                         class="vs__search"
                         :required="!form.ops_vessel_id"
@@ -457,15 +457,16 @@ watch(() => props.form.business_unit, (value) => {
 
 const bunkerReset = ref([]);
 
-// watch(() => props.form.ops_vessel_id, (value) => {
+watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
  
 // }, { deep: true })
 
 
-function bunkerInfo(){
-  let value = props.form.ops_vessel_id;
-  if(value) {
-    showVessel(value)
+// function bunkerInfo(){
+//   let value = props.form.ops_vessel_id;
+props.form.ops_vessel_id = newValue;
+if(newValue !== oldValue && oldValue != '' && newValue != ''){
+    showVessel(newValue)
     .then(() => {
       bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
     // Assuming you want to reset the resettableValue property to some default value
@@ -480,41 +481,20 @@ function bunkerInfo(){
     };
   });
 
-  props.form.opsBunkers = bunkerReset.value
-      // if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-       
-      // } else {
-      //   bunkerReset.value;
-      //   editInitiated.value = true
+      if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+          props.form.opsBunkers = bunkerReset.value
       // }
+      } else {
+      //   bunkerReset.value;
+        editInitiated.value = true
+      }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
   }
-  }
+  });
 
-watch(() => vessel, (value) => {
-  if(value) {
-  //   bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
-  //   // Assuming you want to reset the resettableValue property to some default value
-  //   return {
-  //     ...obj,
-  //     exchange_rate_bdt: null,
-  //     exchange_rate_usd: null,
-  //     rate: null,
-  //     amount_usd: null,
-  //     amount_bdt: null,
-  //     quantity: null
-  //   };
-  // });
-
-// if(props?.formType == 'edit' && editInitiated.value == true) {
-
-//       props.form.opsBunkers = bunkerReset.value
-// }
-  }
-}, { deep: true })
 
 watch(() => props.form, (value) => {
 
@@ -535,11 +515,6 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
     props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
   }
 
-
-  // if(vessels.value.length > 0) {
-  //     console.log("Changing editInitatedValue ")
-  //     editInitiated.value = true
-  //   }
   }
 });
 
