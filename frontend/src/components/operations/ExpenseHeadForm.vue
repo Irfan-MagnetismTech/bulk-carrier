@@ -82,11 +82,7 @@ function addSubHead() {
 }
 
 function removeSubHead(index){
-  if(props.form.opsSubHeads.length==1) {
-    alert('You cannot delete every row!')
-  } else {
     props.form.opsSubHeads.splice(index, 1);
-  }
 }
 
 

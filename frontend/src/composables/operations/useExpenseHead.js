@@ -19,7 +19,6 @@ export default function useExpenseHead() {
         opsSubHeads: [
             {
                 head_id: '',
-                head_id_name: '',
                 name: '',
                 billing_type: ''
             }
@@ -108,7 +107,7 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function updateExpenseHead(form, ExpenseHeadId) {
+	async function updateExpenseHead(form, expenseHeadId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -116,7 +115,7 @@ export default function useExpenseHead() {
 		try {
 
 			const { data, status } = await Api.put(
-				`/ops/expense-heads/${ExpenseHeadId}`,
+				`/ops/expense-heads/${expenseHeadId}`,
 				form
 			);
 			// ExpenseHead.value = data.value;

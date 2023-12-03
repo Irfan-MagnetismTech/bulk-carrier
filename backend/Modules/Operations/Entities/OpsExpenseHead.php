@@ -31,6 +31,6 @@ class OpsExpenseHead extends Model
 
     public function opsSubHeads()
     {
-        return $this->hasMany(OpsExpenseHead::class, 'head_id', 'id')->with('heads');
+        return $this->hasMany(OpsExpenseHead::class, 'head_id', 'id')->with('opsHeads');
     }
 }

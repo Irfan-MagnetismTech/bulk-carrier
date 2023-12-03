@@ -13,7 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
-const { ExpenseHeads, getExpenseHeads, deleteExpenseHead, isLoading,isTableLoading ,errors } = useExpenseHead();
+const { expenseHeads, getExpenseHeads, deleteExpenseHead, isLoading, isTableLoading, errors } = useExpenseHead();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -36,55 +36,36 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "opsChartererProfile",
+      "relation_name": null,
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Charterer",
+      "label": "Group",
       "filter_type": "input"
     },
     {
-      "relation_name": "opsChartererContract",
-      "field_name": "contract_name",
+      "relation_name": "opsSubHeads",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Contract Name",
+      "label": "Heads",
       "filter_type": "input" 
     },
     {
-      "relation_name": "opsChartererContract.opsVessel",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Vessel",
-      "filter_type": "input"
-    },
-    {
       "relation_name": null,
-      "field_name": "contract_type",
+      "field_name": '',
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cantract Type",
-      "filter_type": "input",
+      "label": "Voyage Report Status",
+      "filter_type": null
     },
-    {
-      "relation_name": null,
-      "field_name": "grand_total",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Grand Total",
-      "filter_type": "input",
-    }
+    
   ]
 });
 
@@ -155,29 +136,33 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="ExpenseHeads?.data?.length" class="relative">
-              <tr v-for="(chartererInvoice, index) in ExpenseHeads.data" :key="chartererInvoice?.id">
+          <tbody v-if="expenseHeads?.data?.length" class="relative">
+              <tr v-for="(expenseHead, index) in expenseHeads.data" :key="expenseHead?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ chartererInvoice?.opsChartererProfile?.name }}</td>
-                  <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
-                  <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
-                  <td>{{ chartererInvoice?.contract_type }}</td>
-                  <td>{{ chartererInvoice?.grand_total }}</td>
+                  <td>{{ expenseHead?.name }}</td>
+                  <td style="text-align: left !important;">
+                    <span v-for="(subhead,index) in expenseHead?.opsSubHeads" :key="index"
+                          class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+                      {{ subhead?.name }}
+                    </span>
+                  </td>
                   <td>
-                    <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
+                    <span :class="expenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ expenseHead?.business_unit }}</span>
+                  </td>
+                  <td>
+                    <span v-if="expenseHead?.is_visible_in_voyage_report === 1" :class="expenseHead?.is_visible_in_voyage_report === 1 ? 'text-green-700 bg-green-100' : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">SHOW</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.expense-heads.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
-                      <action-button @click="confirmDelete(chartererInvoice.id)" :action="'delete'"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { expenseHeadId: expenseHead.id } }"></action-button>
+                      <action-button @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ExpenseHeads?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && expenseHeads?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!ExpenseHeads?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!expenseHeads?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -185,12 +170,12 @@ onMounted(() => {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!ExpenseHeads?.data?.length">
+            <tr v-else-if="!expenseHeads?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="ExpenseHeads" to="ops.expense-heads.index" :page="page"></Paginate>
+    <Paginate :data="expenseHeads" to="ops.expense-heads.index" :page="page"></Paginate>
   </div>
 </template>
