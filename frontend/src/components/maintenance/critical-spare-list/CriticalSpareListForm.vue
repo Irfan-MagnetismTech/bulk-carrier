@@ -64,6 +64,7 @@
       </div>
     </fieldset>
     <LoaderComponent :isLoading = isCriticalVesselItemLoading ></LoaderComponent>
+    <ErrorComponent :errors="errors"></ErrorComponent>
     
 </template>
 <script setup>
@@ -79,6 +80,7 @@ import useCriticalItem from "../../../composables/maintenance/useCriticalItem";
 import useCriticalVesselItem from "../../../composables/maintenance/useCriticalVesselItem";
 import useVessel from "../../../composables/operations/useVessel";
 import LoaderComponent from "../../utils/LoaderComponent.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({

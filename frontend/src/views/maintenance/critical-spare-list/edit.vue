@@ -5,7 +5,7 @@
       <default-button :title="'Critical Item List'" :to="{ name: 'mnt.critical-spare-lists.index' }" :icon="icons.DataBase"></default-button>
     </div>
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 relative">
-          <form @submit.prevent="updateCriticalSpareList(criticalSpareList, criticalSparelistId)"> 
+          <form @submit.prevent="updateCriticalSpareList(criticalSpareList, criticalSpareListId)"> 
               <!-- Booking Form -->
             <critical-spare-list-form :page="page" v-model:form="criticalSpareList" :errors="errors"></critical-spare-list-form>
               <!-- Submit button -->
@@ -24,7 +24,7 @@
   import DefaultButton from '../../../components/buttons/DefaultButton.vue';
   
   const route = useRoute();
-  const criticalSparelistId = route.params.criticalSparelistId;
+  const criticalSpareListId = route.params.criticalSpareListId;
   const { criticalSpareList, showCriticalSpareList, updateCriticalSpareList, errors } = useCriticalSpareList();
   const icons = useHeroIcon();
   
@@ -33,14 +33,11 @@
   
   setTitle('Edit Critical Spare List');
 
-  // watch(criticalItem, (value) => {
-  //   criticalItem.value.mnt_critical_function_name = value?.mntCriticalItemCat?.mntCriticalFunction;
-
-  //   criticalItem.value.mnt_critical_item_cat_name = value?.mntCriticalItemCat?.category_name;
-  //   criticalItem.value.mntItemCategories = value?.mntCriticalItemCat?.mntCriticalFunction?.mntCriticalItemCats;
-  // });
+  watch(criticalSpareList, (value) => {
+    criticalSpareList.value.ops_vessel = value?.opsVessel;
+  });
   
   onMounted(() => {
-      showCriticalSpareList(criticalSparelistId);
+      showCriticalSpareList(criticalSpareListId);
   });
   </script>
