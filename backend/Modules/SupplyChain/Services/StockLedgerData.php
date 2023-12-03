@@ -10,29 +10,30 @@ class StockLedgerData
      * Inserts stock ledger data related to a parent model.
      *
      * @param mixed $parentModel
-     * @param array $scm_opening_stock_lines
-     * @param bool $os
+     * @param array $lines
+     * @param bool $os(opening stock)
      *
      * @return void
      */
-    public function insert($parentModel, $scm_opening_stock_lines, $os = false): void
+    public function insert($parentModel, $lines, $os = false)
     {
         $stock_ledger_data = [];
-        collect($scm_opening_stock_lines)->map(function ($linesData) use ($parentModel, &$stock_ledger_data, $os) {
+        collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
             $stock_ledger_data[] = [
-                'scm_material_id' => $linesData['scm_material_id'],
-                'scm_warehouse_id' => $parentModel->scm_warehouse_id,
-                'acc_cost_center_id' => null,
-                'quantity' => $linesData['quantity'],
-                'gross_unit_price' => $linesData['rate'] ?? null,
-                'net_unit_price' => $os ? $linesData['rate'] : $linesData['net_rate'] ?? null,
-                'currency' => $linesData['currency'] ?? null,
+                'scm_material_id' => $line['scm_material_id'],
+                'scm_warehouse_id' => $parentModel->scm_warehouse_id ?? $parentModel->to_warehouse_id,
+                'acc_cost_center_id' => $parentModel->acc_cost_center_id ?? null,
+                'quantity' => $line['quantity'],
+                'gross_unit_price' => $line['rate'] ?? null,
+                'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
+                'currency' => $line['currency'] ?? null,
                 'received_date' => now(),
                 'business_unit' => $parentModel->business_unit,
             ];
         });
 
         $parentModel->stockable()->createMany($stock_ledger_data);
+        return $stock_ledger_data;
     }
 
     /**
@@ -88,7 +89,7 @@ class StockLedgerData
                     'business_unit'             => $value->business_unit,
                     'received_date'             => $value->received_date,
                 ];
-                
+
                 break;
             } else {
                 $stockOutArray[] = [

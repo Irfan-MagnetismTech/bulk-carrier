@@ -56,27 +56,27 @@ class ScmMoController extends Controller
         try {
             DB::beginTransaction();
 
-            $ScmMo = ScmMo::create($requestData);
+            $scmMo = ScmMo::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $ScmMo->id, 'scm_material_id', 'mo');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
             
 
-            $ScmMo->scmMoLines()->createMany($linesData);
+            $scmMo->scmMoLines()->createMany($linesData);
 
             //loop through each line and update current stock
             $dataForStock = [];
 
             foreach ($request->scmMoLines as $scmMoLine) {
-                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $ScmMo->scm_warehouse_id, $scmMoLine['quantity']);
+                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMo->scm_warehouse_id, $scmMoLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
 
-            $ScmMo->stockable()->createMany($dataForStockLedger);
+            $scmMo->stockable()->createMany($dataForStockLedger);
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $ScmMo, 201);
+            return response()->success('Data created succesfully', $scmMo, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
