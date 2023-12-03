@@ -55,6 +55,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'contract-assigns' => OpsContractAssignController::class,
         'voyage-expenditures' => OpsVoyageExpenditureController::class,
+        'expense-heads' => OpsExpenseHeadController::class,
     ]);
 
     //start for without pagination
