@@ -204,9 +204,13 @@ class OpsExpenseHeadController extends Controller
 
             $result = OpsExpenseHead::with('opsSubHeads')
             ->whereNull('head_id')
-            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->get()->toArray();
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);  
+            })
+            ->when(isset(request()->name), function($query){
+                $query->where('name', 'like', '%' . request()->name . '%');
+            })
+            ->get()->toArray();
 
             return response()->success('Data retrieved successfully.', $result, 200);
 
