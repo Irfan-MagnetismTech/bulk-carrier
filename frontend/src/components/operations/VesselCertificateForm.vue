@@ -4,7 +4,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel => vessel.id">
+        <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -20,7 +20,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Certificate <span class="text-red-500">*</span></span>
-        <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.ops_maritime_certification_id" label="name" class="block form-input" :reduce="certificate => certificate.id">
+        <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsMaritimeCertification" label="name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -52,10 +52,12 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.issue_date" required placeholder="Issue Date" class="form-input" autocomplete="off" />
         </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Expire Date <span class="text-red-500">*</span></span>
+        <label class="block w-full mt-2 text-sm" v-if="form.type != 'Permanent'">
+            <span class="text-gray-700 dark-disabled:text-gray-300" >Expire Date <span class="text-red-500">*</span></span>
             <input type="date" v-model="form.expire_date" required placeholder="Expire Date" class="form-input" autocomplete="off" />
         </label>
+        <label class="block w-full mt-2 text-sm" v-else></label>
+
     </div>
 
     <div class="w-full">
@@ -123,23 +125,26 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
-watch(() => props.form.ops_vessel_id, (value) => {
+watch(() => props.form.opsVessel, (value) => {
   if(value) {
+    props.form.ops_vessel_id = value?.id
     if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
       console.log("showing vessel")
-      showVessel(value)
+      showVessel(value?.id)
     }
   }
 }, {deep: true})
+
+
 
 watch(() => vessel, (value) => {
   vesselCertificates.value = value?.value?.opsVesselCertificates
 }, {deep: true})
 
-watch(() => props.form.ops_maritime_certification_id, (value) => {
+watch(() => props.form.opsMaritimeCertification, (value) => {
   if(value) {
-    
-    const certificate = maritimeCertificates.value.find(obj => obj["id"] === value);
+    props.form.ops_maritime_certification_id = value?.id
+    const certificate = maritimeCertificates.value.find(obj => obj["id"] === value?.id);
     props.form.validity_period = certificate?.validity
     props.form.type = certificate?.type
   }
