@@ -14,10 +14,10 @@ class OpsExpenseHeadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'billing_type'                  => ['string', 'max:255'],
+            'billing_type'                  => ['nullable', 'string', 'max:255'],
             'head_id'                       => ['numeric', 'max:20'],
             'name'                          => ['required', 'string', 'max:255'],
-            'is_visible_in_voyage_report'   => ['string', 'max:255'],
+            'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }

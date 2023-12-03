@@ -70,9 +70,9 @@ class OpsExpenseHeadController extends Controller
                     return [
                         'name' => $item['name'],
                         'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                        'head_id'   =>  $head->id,
+                        'head_id' => $head->id,
                         'business_unit'=>request()->business_unit, 
-                        'is_visible_in_voyage_report'    => $head->is_visible_in_voyage_report
+                        'is_visible_in_voyage_report' => $head->is_visible_in_voyage_report
                     ];
                 })->toArray();
 

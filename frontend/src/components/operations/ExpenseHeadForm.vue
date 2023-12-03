@@ -28,15 +28,15 @@
       </thead>
 
       <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-      <tr class="text-gray-700 dark:text-gray-400" v-for="(subHead, index) in form.subheads" :key="subHead.id">
+      <tr class="text-gray-700 dark:text-gray-400" v-for="(subHead, index) in form.opsSubHeads" :key="subHead.id">
         <td class="px-1 py-1" width="10%">
           {{ index+1 }}
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.subheads[index].name" required :id="'sub_head_name' + index" placeholder="Sub Head" class="form-input" />
+          <input type="text" v-model="form.opsSubHeads[index].name" required :id="'sub_head_name' + index" placeholder="Sub Head" class="form-input" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.subheads[index].billing_type" :id="'cost_type' + index" placeholder="Usage Type" class="form-input" />
+          <input type="text" v-model="form.opsSubHeads[index].billing_type" :id="'cost_type' + index" placeholder="Usage Type" class="form-input" />
         </td>
         <td class="px-1 py-1 text-center">
           
@@ -78,15 +78,11 @@ function addSubHead() {
     head_id_name: '',
     name: '',
   };
-  props.form.subheads.push(obj);
+  props.form.opsSubHeads.push(obj);
 }
 
 function removeSubHead(index){
-  if(props.form.subheads.length==1) {
-    alert('You cannot delete every row!')
-  } else {
-    props.form.subheads.splice(index, 1);
-  }
+    props.form.opsSubHeads.splice(index, 1);
 }
 
 
