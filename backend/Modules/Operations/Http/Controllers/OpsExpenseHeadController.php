@@ -34,9 +34,9 @@ class OpsExpenseHeadController extends Controller
         try {
             $expenseHeads = OpsExpenseHead::whereNull('head_id')
             ->with('opsSubHeads')
-            ->latest()->paginate(15);
+            ->globalSearch($request->all());
 
-            return response()->success('Successfully retrieved expense heads.', $expenseHeads, 200);
+            return response()->success('Data retrieved successfully.', $expenseHeads, 200);
         }
         catch (QueryException $e)
         {
@@ -79,7 +79,7 @@ class OpsExpenseHeadController extends Controller
                 OpsExpenseHead::insert($subHeads);
             }
             DB::commit();
-            return response()->success('Expense head added successfully.', $head, 201);
+            return response()->success('Data added successfully.', $head, 201);
         }
             catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class OpsExpenseHeadController extends Controller
      {        
          try
          {
-             return response()->success('Successfully retrieved expense head.', $expense_head->load('opsSubHeads'), 200);
+             return response()->success('Data retrieved successfully.', $expense_head->load('opsSubHeads'), 200);
          }
          catch (QueryException $e)
          {
@@ -160,7 +160,7 @@ class OpsExpenseHeadController extends Controller
             OpsExpenseHead::upsert($subHeads, ['id'], $fields);
             DB::commit();
         }
-        return response()->success('Expense head updated successfully.', $expense_head, 200);
+        return response()->success('Data updated successfully.', $expense_head, 202);
         }
         catch (QueryException $e)
         {            
@@ -182,7 +182,7 @@ class OpsExpenseHeadController extends Controller
             $expense_head->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted expense head.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -220,7 +220,7 @@ class OpsExpenseHeadController extends Controller
                 }                
             })->filter()->values();
 
-            return response()->success('Successfully retrieved expense head.', $result, 200);
+            return response()->success('Data retrieved successfully.', $result, 200);
 
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
@@ -234,7 +234,7 @@ class OpsExpenseHeadController extends Controller
             $subheads = OpsExpenseHead::where('head_id', $headId)->get();
             return response()->json([
                 'value' => $subheads,
-                'message' => 'Expense Subheads derived successfully.'
+                'message' => 'Data retrieved successfully.'
             ], 200);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);
