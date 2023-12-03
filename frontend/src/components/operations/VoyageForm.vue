@@ -465,7 +465,7 @@ watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
 // function bunkerInfo(){
 //   let value = props.form.ops_vessel_id;
 props.form.ops_vessel_id = newValue;
-if(newValue !== oldValue && oldValue != '' && newValue != ''){
+if(newValue !== oldValue && oldValue != '' && newValue != undefined){
     showVessel(newValue)
     .then(() => {
       bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
@@ -507,11 +507,11 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
   props.form.ops_vessel_name = value?.opsVessel;
   props.form.ops_cargo_type_name = value?.opsCargoType;
 
-  if(props.form.opsVoyageSectors.length < 1) {
+  if(props.form.opsVoyageSectors?.length < 1) {
     props.form.opsVoyageSectors.push({... props.voyageSectorObject });
   }
 
-  if(props.form.opsVoyagePortSchedules.length < 1) {
+  if(props.form.opsVoyagePortSchedules?.length < 1) {
     props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
   }
 
