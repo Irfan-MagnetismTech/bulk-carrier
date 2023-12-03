@@ -14,11 +14,12 @@ class MntSurveyItemController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $surveyItems = MntSurveyItem::select('*')->paginate(10);
+            $surveyItems = MntSurveyItem::select('*')
+                            ->globalSearch($request->all());
 
             return response()->success('Survey items are retrieved successfully', $surveyItems, 200);
             

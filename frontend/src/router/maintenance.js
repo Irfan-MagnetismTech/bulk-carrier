@@ -390,8 +390,36 @@ export default [
 
 	/* Critical Spare List End */
 
+	
+	/* Survey Items Start */
+	{
+		path: `/${BASE}/survey-items`,
+		name: `${BASE}.survey-items.index`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/survey-items/create`,
+		name: `${BASE}.survey-items.create`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-create' },
+	},
+	{
+		path: `/${BASE}/survey-items/:surveyItemId/edit`,
+		name: `${BASE}.survey-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-edit' },
+	},
+	{
+		path: `/${BASE}/survey-items/:surveyItemId`,
+		name: `${BASE}.survey-items.show`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-show'  },
+	},
 
-
+	/* Survey Items End */
+	
 
 
 
