@@ -201,19 +201,12 @@ class OpsExpenseHeadController extends Controller
 
     public function getExpenseHeadByHead(Request $request){
         try {
-            $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
-            ->where('id', $request->head_id)->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->get()->toArray();
 
-            $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
-            ->where('is_visible_in_voyage_report', 1)
+            $result = OpsExpenseHead::with('opsSubHeads')
+            ->whereNull('head_id')
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })->get()->toArray();
-
-            $result = collect(array_merge($heads, $globals));
-
 
             return response()->success('Data retrieved successfully.', $result, 200);
 
