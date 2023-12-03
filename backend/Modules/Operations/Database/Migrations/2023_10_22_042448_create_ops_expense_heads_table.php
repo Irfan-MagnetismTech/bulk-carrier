@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_expense_heads', function (Blueprint $table) {
             $table->id();
-            $table->string('billing_type');
+            $table->string('billing_type')->nullable();
             $table->unsignedBigInteger('head_id')->nullable();
             $table->foreign('head_id')->references('id')->on('ops_expense_heads');
             $table->string('name')->nullable();
