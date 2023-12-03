@@ -46,7 +46,7 @@ function getSubHead(headId, index) {
 }
 
 function fetchExpenseHeads(searchParam, loading) {
-  searchExpenseHeads(searchParam, loading)
+  searchExpenseHeads(searchParam, props.form.business_unit, loading)
 }
 
 function checkSubHead(headId, headIndex) {

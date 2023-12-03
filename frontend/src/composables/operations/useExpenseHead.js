@@ -151,11 +151,11 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function searchExpenseHeads(searchParam, loading) {
+	async function searchExpenseHeads(searchParam, business_unit, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-expense-heads?name=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-expense-heads?name=${searchParam}&business_unit=${business_unit}`);
 			expenseHeads.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
