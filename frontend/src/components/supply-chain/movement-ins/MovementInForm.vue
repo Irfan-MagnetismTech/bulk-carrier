@@ -203,7 +203,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].available_stock" class="form-input">
+                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].remarks" class="form-input">
                 </label>
                 
               </td>
