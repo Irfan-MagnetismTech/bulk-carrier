@@ -154,7 +154,7 @@ export default function useWarehouse() {
     async function searchWarehouse(searchParam, business_unit) {
 
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-warehouse`, {params: { searchParam: searchParam,business_unit: business_unit }});
@@ -165,12 +165,13 @@ export default function useWarehouse() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            // isLoading.value = false;
+            isLoading.value = false;
             // loading(false)
         }
     }
 
-    async function getCostCenters(business_unit,name,loading = false) {
+    async function getCostCenters(business_unit, name, loading = false) {
+        isLoading.value = true;
         try {
             const {data, status} = await Api.post(`acc/get-cost-centers`, { business_unit: business_unit, name: name });
             costCenters.value = data.value;
@@ -179,6 +180,7 @@ export default function useWarehouse() {
             notification.showError(status);
         } finally {
             // loading(false);
+            isLoading.value = false;
         }
     }
 

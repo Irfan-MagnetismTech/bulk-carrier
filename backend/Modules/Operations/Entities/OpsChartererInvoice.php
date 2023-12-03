@@ -20,6 +20,7 @@ class OpsChartererInvoice extends Model
         'bill_till',
         'total_days',
         'total_amount',
+        'per_day_charge',
         'others_billable_amount',
         'service_fee_deduction_amount',
         'discount_unit',
@@ -43,6 +44,7 @@ class OpsChartererInvoice extends Model
     {
         return $this->hasMany(OpsChartererInvoiceVoyage::class, 'ops_charterer_invoice_id', 'id');
     }
+    
     public function opsChartererInvoiceOthers()
     {
         return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','charge');

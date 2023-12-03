@@ -88,10 +88,6 @@ function showCrewDocumentRenewModal(crwDocumentId){
     getCrewDocumentRenewals(crwDocumentId);
   }
   renewFormData.value.crw_crew_document_id = crwDocumentId;
-
-  // isCrewDocumentRenewModalOpen.value = 1;
-  // currentCrewDocRenewData.value = crwDocumentData;
-  // renewFormData.value.crw_crew_document_id = crwDocumentData.id;
 }
 
 function closeCrewDocumentRenewModal(){
@@ -296,10 +292,11 @@ onMounted(() => {
         </header>
         <!-- Modal body -->
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
-          <thead v-once>
+          <thead>
           <tr style="background-color: #04AA6D;color: white"
               class="text-xs font-semibold tracking-wide text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th colspan="5">Add Crew Document</th>
+            <th colspan="5" v-if="!isDocumentEditModal">Add Crew Document</th>
+            <th colspan="2" v-else>Update Crew Document</th>
           </tr>
           </thead>
         </table>

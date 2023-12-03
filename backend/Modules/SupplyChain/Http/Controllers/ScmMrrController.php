@@ -35,7 +35,7 @@ class ScmMrrController extends Controller
     {
         try {
             $mrr = ScmMrr::query()
-                ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+                ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $mrr, 200);
@@ -78,7 +78,7 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+            ->with('scmMrrLines.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
             ->find($id);
 
         $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
@@ -96,6 +96,8 @@ class ScmMrrController extends Controller
                 'current_stock' => (new CurrentStock)->count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
                 'po_composite_key' => $scmMrrLine->po_composite_key ?? null,
                 'pr_composite_key' => $scmMrrLine->pr_composite_key ?? null,
+                'max_quantity' => ($scmMrrLine->po_composite_key != null && $scmMrrLine->po_composite_key != '') ? ($scmMrrLine->scmPoLine->quantity - $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity) : ($scmMrrLine->scmPrLine->quantity - $scmMrrLine->scmPrLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity),
+                // 'max_quantity' => $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity'),
             ];
 
             return $lines;
@@ -157,36 +159,35 @@ class ScmMrrController extends Controller
 
     public function searchMrr(Request $request): JsonResponse
     {
-        if($request->has('searchParam')) { 
+        if ($request->has('searchParam')) {
             $materialReceiptReport = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial')
-            ->where(function($query) use ($request) {
-                $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
-                ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
-            })
-            ->orderByDesc('ref_no')
-            ->limit(10)
-            ->get();
-            
-        }else{
+                ->with('scmMrrLines.scmMaterial')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
             $materialReceiptReport = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial')
-            ->where(function($query) use ($request) {
-                $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
-                ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
-            })
-            ->orderByDesc('ref_no')
-            ->limit(10)
-            ->get();
+                ->with('scmMrrLines.scmMaterial')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
         }
-       
-        $materialReceiptReport = $materialReceiptReport->map(function($item) {
-            $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
-                     return $item1->scmMaterial;
-                });
-             return $item;             
+
+        $materialReceiptReport = $materialReceiptReport->map(function ($item) {
+            $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
+                return $item1->scmMaterial;
             });
+            return $item;
+        });
 
         return response()->success('Search Result', $materialReceiptReport, 200);
     }
@@ -232,6 +233,7 @@ class ScmMrrController extends Controller
                             'quantity' => $item->quantity,
                             'pr_qty' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
+                            'max_quantity' => $item->quantity,
                         ];
                     })
                 ];
@@ -277,6 +279,7 @@ class ScmMrrController extends Controller
                             'net_rate' => $item->net_rate,
                             'po_composite_key' => $item->po_composite_key,
                             'pr_composite_key' => $item->pr_composite_key,
+                            'max_quantity' => $item->quantity,
                         ];
                     })
                 ];
@@ -298,7 +301,7 @@ class ScmMrrController extends Controller
     {
         if (!request()->scm_po_id) {
             $prMaterials = ScmPrLine::query()
-                ->with('scmMaterial')
+                ->with('scmMaterial', 'scmMrrLines')
                 ->where('scm_pr_id', request()->scm_pr_id)
                 ->get()
                 ->map(function ($item) {
@@ -307,6 +310,7 @@ class ScmMrrController extends Controller
                     $data['model'] = $item->model;
                     $data['unit'] = $item->unit;
                     $data['quantity'] = $item->quantity;
+                    $data['max_quantity'] = $item->quantity;
                     $data['pr_qty'] = $item->quantity;
                     $data['po_qty'] = 0;
                     $data['rate'] = 0;
@@ -314,6 +318,7 @@ class ScmMrrController extends Controller
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['po_composite_key'] = null;
                     $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    // $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity');//some edit needed
                     return $data;
                 });
             return response()->success('data list', $prMaterials, 200);
@@ -321,7 +326,7 @@ class ScmMrrController extends Controller
 
         if (request()->scm_po_id) {
             $prMaterials = ScmPoLine::query()
-                ->with('scmMaterial', 'scmPrLine')
+                ->with('scmMaterial', 'scmMrrLines', 'scmPrLine')
                 ->where('scm_po_id', request()->scm_po_id)
                 ->get()
                 ->map(function ($item) {
@@ -330,6 +335,7 @@ class ScmMrrController extends Controller
                     $data['model'] = $item->model;
                     $data['unit'] = $item->unit;
                     $data['quantity'] = $item->quantity;
+                    $data['max_quantity'] = $item->quantity;
                     $data['po_qty'] = $item->quantity;
                     $data['pr_qty'] = $item->scmPrLine->quantity;
                     $data['rate'] = $item->rate;
@@ -337,6 +343,7 @@ class ScmMrrController extends Controller
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['po_composite_key'] = $item->po_composite_key;
                     $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    // $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity');//some edit needed
                     return $data;
                 });
             return response()->success('data list', $prMaterials, 200);

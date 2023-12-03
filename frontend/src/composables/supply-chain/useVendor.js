@@ -154,7 +154,7 @@ export default function useVendor() {
     async function searchVendor(searchParam, loading= false) {
 
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
 
         try {
             const { data, status } = await Api.get(`${BASE}/search-vendor`, {params: { searchParam: searchParam }});
@@ -165,7 +165,7 @@ export default function useVendor() {
             notification.showError(status);
         } finally {
             // loader.hide();
-            // isLoading.value = false;
+            isLoading.value = false;
             // loading(false)
         }
     }

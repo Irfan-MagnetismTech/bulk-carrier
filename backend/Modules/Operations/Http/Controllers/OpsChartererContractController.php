@@ -181,10 +181,8 @@ class OpsChartererContractController extends Controller
         try {
             $charterer = OpsChartererContract::query()->with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererContractsFinancialTerms.opsVoyage',
             'opsChartererContractsLocalAgents.opsPort')
-            ->when(request()->has('charterer_profile_id'), function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('ops_charterer_profile_id',request()->charterer_profile_id);
-                });
+            ->when(isset(request()->ops_charterer_profile_id), function ($query) {
+                    $query->where('ops_charterer_profile_id',request()->charterer_profile_id);
             })
             ->get();            
             // $charterer->load('opsChartererProfile');
@@ -193,6 +191,26 @@ class OpsChartererContractController extends Controller
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function downloadContractAttachment(Request $request)
+    {
+        $particular= OpsChartererContract::find($request->id);
+        $filePath=null;
+        $fileName=null;
+        if(isset($particular->attachment)){  
+            $filePath= public_path($particular->attachment);
+            $fileName = basename($filePath);
+        }
+        if (file_exists($filePath)) {
+            return response()->download($filePath, $fileName, [
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment',
+            ]);
+        } else {
+            return response()->error(['message' => 'File not found.'], 404);
+        }
+        
     }
 
 }

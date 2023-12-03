@@ -215,7 +215,7 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateByReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->when(request()->has('reference_number'), function ($query) {
+                ->when(isset(request()->reference_number), function ($query) {
                     $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {
@@ -236,7 +236,7 @@ class OpsVesselCertificateController extends Controller
     public function getVesselCertificateReferenceNumber(Request $request) {
         try {
             $vesselCertificates = OpsVesselCertificate::query()
-                ->when(request()->has('reference_number'), function ($query) {
+                ->when(isset(request()->reference_number), function ($query) {
                     $query->where('reference_number', 'like', '%' . request()->reference_number . '%');                
                 })
                 // ->whereIn('id', function ($query) {
@@ -266,11 +266,10 @@ class OpsVesselCertificateController extends Controller
                     ->from('ops_vessel_certificates')
                     ->groupBy('ops_vessel_id', 'ops_maritime_certification_id');
             })
-            ->latest()
-            ->paginate(15)
+            ->globalSearch($request->all())
+            // ->latest()
+            // ->paginate(15)
             ->groupBy('ops_vessel_id');
-
-            // dd($vesselCertificates);
 
             $filterCertificates=$vesselCertificates->map(function ($certificateGroup, $vesselId)  use ($currentDate,$days) {
                 return $certificateGroup->filter(function ($certificate)  use ($currentDate,$days) {
@@ -281,6 +280,7 @@ class OpsVesselCertificateController extends Controller
                     return $certificate->expire_days <= $days && $certificate->opsMaritimeCertification->type != 'Permanent';
                 })->values();
             })->filter();
+
             
             return response()->success('Data retrieved successfully.', $filterCertificates, 200);
         }

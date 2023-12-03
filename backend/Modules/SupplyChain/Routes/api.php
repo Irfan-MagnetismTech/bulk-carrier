@@ -60,6 +60,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-mmr-wise-data', [ScmMmrController::class, "getMmrWiseData"])->name('getMmrWiseData');
     Route::get('get-mmr-wise-mi-data', [ScmMiController::class, "getMmrWiseMiData"])->name('getMmrWiseMiData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
+    Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');

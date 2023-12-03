@@ -10,12 +10,12 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
-
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { vendors, searchVendor } = useVendor();
+    const { vendors, searchVendor,isLoading: vendorLoader } = useVendor();
     const { currencies, getCurrencies } = useBusinessInfo();
-    const { getMaterialList, prMaterialList } = usePurchaseOrder();
+    const { getMaterialList, prMaterialList, isLoading } = usePurchaseOrder();
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
@@ -30,10 +30,11 @@
 
     });
 
+    
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmPoLines.push(clonedObj);
-      setMinHeight();
+      // setMinHeight();
     }
 
     function removeMaterial(index){
@@ -98,14 +99,23 @@ function setMaterialOtherData(line, index) {
               props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
               props.form.scmPoLines[index].unit = selectedMaterial.unit;
               props.form.scmPoLines[index].brand = selectedMaterial.brand;
-              props.form.scmPoLines[index].model = selectedMaterial.model;;
+              props.form.scmPoLines[index].model = selectedMaterial.model;
+              props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
             }
           }
     }
 
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
+      let materialArray = [];
       newVal?.forEach((line, index) => {
+        let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmPoLines.splice(index, 1);
+        }  
         props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
         total += parseFloat(props.form.scmPoLines[index].total_price);
         if (line.scmMaterial) {
@@ -204,7 +214,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       <label class="label-group" v-else>
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
           <!-- <v-select :options="vendors" placeholder="--Choose an option--" @search="fetchVendor"  v-model="form.scmVendor" label="name" class="block form-input"> -->
-          <v-select :options="vendors" placeholder="--Choose an option--" v-model="form.scmVendor" label="name" class="block form-input">
+          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -240,13 +250,14 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <!-- <span class="label-item-title">Remarks</span> -->
+          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTable" ref="customDataTableirf" class="pb-10 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
@@ -260,7 +271,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             <th class="py-3 align-center">Required Date</th>
             <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
             <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
-            <th class="py-3 align-cente min-w-[70px] md:min-w-[95px] lg:min-w-[120px]r">Total Price</th>
+            <th class="py-3 align-cente min-w-[70px] md:min-w-[110px] lg:min-w-[125px]r">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -268,7 +279,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
           <tbody class="table_body">
           <tr class="table_tr" v-for="(scmPoLine, index) in form.scmPoLines" :key="index">
             <td class="">
-              <v-select :options="prMaterialList" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -292,10 +303,10 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
               <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
             </td>
             <td>
-              <input type="number" required v-model="form.scmPoLines[index].quantity" class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
+              <input type="number" required v-model="form.scmPoLines[index].quantity" min=1 class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
             </td>
             <td>
-              <input type="number" required v-model="form.scmPoLines[index].rate" class="form-input">
+              <input type="number" required v-model="form.scmPoLines[index].rate" min=1 class="form-input">
             </td>
             <td>
               <input type="number" readonly v-model="form.scmPoLines[index].total_price" class="form-input vms-readonly-input">
@@ -439,4 +450,27 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     .add_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
+
+    #customDataTable::-webkit-scrollbar:horizontal {
+      height: 1rem!important; 
+    }
+  
+    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTable::-webkit-scrollbar-button:horizontal {
+      background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
+    }   
 </style>

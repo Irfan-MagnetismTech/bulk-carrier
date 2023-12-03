@@ -85,6 +85,16 @@ let filterOptions = ref({
       "label": "Warehouse",
       "filter_type": "input"
     },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Date",
+      "filter_type": "input"
+    },
   ]
 });
 
@@ -123,9 +133,6 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 
 
@@ -133,7 +140,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -175,16 +182,19 @@ function confirmDelete(id) {
             <tr v-for="(materialReceiptReport,index) in (materialReceiptReports?.data ? materialReceiptReports?.data : materialReceiptReports)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ materialReceiptReport?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmPo?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmPr?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmWarehouse?.name }}</td>
+              <td>{{ materialReceiptReport?.scmPo?.ref_no ?? "N/A" }}</td>
+              <td>{{ materialReceiptReport?.scmPr?.ref_no ?? "N/A" }}</td>
+              <td>{{ materialReceiptReport?.scmWarehouse?.name ?? "N/A" }}</td>
               <td>{{ materialReceiptReport?.date }}</td>
               <td>
                 <span :class="materialReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialReceiptReport?.business_unit }}</span>
               </td>
               <td>
+                <nobr>
+                <action-button :action="'show'" :to="{ name: 'scm.material-receipt-reports.show', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
                 <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
+               </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialReceiptReports?.data?.length"></LoaderComponent>

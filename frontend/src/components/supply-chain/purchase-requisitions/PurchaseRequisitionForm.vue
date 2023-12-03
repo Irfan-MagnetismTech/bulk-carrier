@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted,watchEffect,computed, onUpdated } from 'vue';
+    import { ref, watch, onMounted,watchEffect,computed, onUpdated, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
@@ -9,12 +9,13 @@
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import DropZoneV2 from '../../../components/DropZoneV2.vue';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     
-    const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
+    const { material, materials, getMaterials,searchMaterial,isLoading: materialLoading } = useMaterial();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
     const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
     const { getAllStoreCategories } = useBusinessInfo();
     const store_category = ref([]);
@@ -66,7 +67,7 @@
     onMounted(() => {
       fetchAllStoreCategories();
       fetchMaterials('');
-      watchEffect(() => {
+      watchPostEffect(() => {
         fetchWarehouse('');
       });
     });
@@ -126,13 +127,14 @@
   }
   const dynamicMinHeight = ref(0);
 
-const setMinHeight = () => {
-  dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
-};
+  const setMinHeight = () => {
+    dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+  
+  };
 
-onMounted(() => {
-  setMinHeight();
-});
+  onMounted(() => {
+    setMinHeight();
+  });
 
 // Use onUpdated to adjust min-height after the component updates
 // onUpdated(() => {
@@ -152,12 +154,12 @@ onMounted(() => {
 watch(() => props.form.scmPrLines, (newLines) => {
   let materialArray = [];
   newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line.brand + "-" + line.model;
+    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
     if (materialArray.indexOf(material_key) === -1) {
       materialArray.push(material_key);
     } else {
       alert("Duplicate Material Found");
-      // props.form.scmPrLines.splice(index, 1);
+      props.form.scmPrLines.splice(index, 1);
     }
 
     if (line.scmMaterial) {
@@ -234,14 +236,14 @@ watch(() => props.form.scmPrLines, (newLines) => {
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">PR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">PR Ref <span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
-          <v-select :options="warehouses" placeholder="--Choose an option--" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -260,7 +262,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
-          <select v-model="form.is_critical" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+          <select v-model="form.is_critical" required class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <option value="1">YES</option>
               <option value="0">NO</option>
           </select>
@@ -296,9 +298,10 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks </span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <!-- <span class="label-item-title">Remarks </span> -->
+          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
           <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
@@ -320,7 +323,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
 
     <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <div class=""> 
         <table class="table-auto">
           <thead>
@@ -345,7 +348,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
               <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
-             <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+             <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -386,7 +389,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmPrLines[index].origin" class="form-input">
+                 <input type="text" v-model="form.scmPrLines[index].country_name" class="form-input">
                </label>
               
             </td>
@@ -413,7 +416,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmPrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmPrLines[index].quantity" min=1 required class="form-input">
               </label>
             </td>
             <td>

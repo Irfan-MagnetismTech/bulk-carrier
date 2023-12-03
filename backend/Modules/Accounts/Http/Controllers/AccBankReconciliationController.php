@@ -18,6 +18,8 @@ class AccBankReconciliationController extends Controller
      */
     public function index(Request $request)
     {
+        // return AccTransaction::where('voucher_type', '!=', 'Journal')->get(); 
+        
         try {
             $bankBalanceIncomeLineId = config('accounts.balance_income_line.bank');
 
@@ -26,12 +28,12 @@ class AccBankReconciliationController extends Controller
             ->wherehas('ledgerEntries.account', function ($q) use ($bankBalanceIncomeLineId){
                 $q->where('acc_balance_and_income_line_id', $bankBalanceIncomeLineId);
             })
-            ->whereIn('voucher_type', ['Receipt', 'Payment', 'Contra'])            
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })
-            ->latest()
-            ->paginate(10);
+            ->where('voucher_type', '!=', 'Journal')
+            // ->latest()
+            // ->paginate(10)
+            // ->get()
+            ->globalSearch($request->all())
+            ;  
 
             return response()->success('Retrieved Successfully', $accTransactions, 200);
         }
@@ -50,7 +52,7 @@ class AccBankReconciliationController extends Controller
     public function store(AccBankReconciliationRequest $request)
     {
         try {
-            $bankReconciliationData            = $request->only('date', 'acc_transaction_id', 'business_unit');
+            $bankReconciliationData            = $request->only('reconciliation_date', 'acc_transaction_id', 'business_unit');
             $bankReconciliationData['status']  = 'Complete';
             $accBankReconciliation             = AccBankReconciliation::create($bankReconciliationData);
 

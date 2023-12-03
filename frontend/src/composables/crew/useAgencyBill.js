@@ -21,7 +21,7 @@ export default function useAgencyBill() {
         invoice_currency: '',
         invoice_amount: '',
         grand_total: '',
-        discount: '',
+        discount: 0,
         net_amount: '',
         remarks: '',
         crwAgencyBillLines: [

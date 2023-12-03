@@ -3,23 +3,25 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsPortController;
+use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsVesselController;
-use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
-use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
-use Modules\Operations\Http\Controllers\OpsVesselParticularController;
+use Modules\Operations\Http\Controllers\OpsVoyageController;
+use Modules\Operations\Http\Controllers\OpsCustomerController;
 use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
-use Modules\Operations\Http\Controllers\OpsCustomerController;
-use Modules\Operations\Http\Controllers\OpsVoyageController;
-use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
-use Modules\Operations\Http\Controllers\OpsChartererProfileController;
-use Modules\Operations\Http\Controllers\OpsChartererContractController;
-use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
-use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
-use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
-use Modules\Operations\Http\Controllers\OpsCommonController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
+use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
+use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
+use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
+use Modules\Operations\Http\Controllers\OpsChartererProfileController;
+use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
+use Modules\Operations\Http\Controllers\OpsVesselParticularController;
+use Modules\Operations\Http\Controllers\OpsChartererContractController;
+use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
+use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
+use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
+use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +54,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'bulk-noon-reports' => OpsBulkNoonReportController::class,
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'contract-assigns' => OpsContractAssignController::class,
+        'voyage-expenditures' => OpsVoyageExpenditureController::class,
     ]);
 
     //start for without pagination
@@ -83,6 +86,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-voyages', [OpsVoyageController::class, 'searchVoyages']);
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
+    Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     
     // end for search api route
     
@@ -97,14 +101,14 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-search-voyages', [OpsVoyageController::class, 'getSearchVoyages']);
     Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
-    Route::get('get-voyage-by-contract', [OpsContractAssignController::class, 'getVoyageByContract']);
-    //end get data without limit
+    Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
+    Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
+    //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-    
-    
+        
         
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);

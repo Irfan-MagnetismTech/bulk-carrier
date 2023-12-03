@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref, toRefs, watch } from 'vue';
 import FilterWithBusinessUnit from '../searching/FilterWithBusinessUnit.vue'
 import { itemsPerPageOptions } from '../../config/setting.js';
 import useGlobalFilter from '../../composables/useGlobalFilter';
@@ -32,7 +32,11 @@ onMounted(() => {
   });
 
 });
-
+// watch(showFilter, (newVal, oldVal) => {
+//  if(newVal === false){
+//    clear();
+//  }  
+// });
 
 function clear(){
   clearFilter(filterOptions.value);
@@ -51,7 +55,8 @@ function setSortState(index, order) {
                 </div>
               </th>
               <th v-for="(option, key) in filterOptions.filter_options" :key="key" :class="option?.class">
-                <div class="flex justify-center items-center">
+                <nobr>
+                  <div class="flex justify-center items-center">
                   <span class="mr-2">{{ option.label }}</span>
                   <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
                     <div
@@ -68,6 +73,7 @@ function setSortState(index, order) {
                     ></div>
                   </div>
                 </div>
+                </nobr>
               </th>
               <th v-if="filterOptions.business_unit"><nobr>Business Unit</nobr></th>
               <th class=""><nobr>Action</nobr></th>
@@ -88,7 +94,7 @@ function setSortState(index, order) {
                 <template v-else-if="option.filter_type === 'date'">
                   <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
-                <template v-else-if="option.filter_type === 'select'">
+                <template v-else-if="option.filter_type === 'dropdown'">
                   <select v-model="option.search_param" class="filter_input" autocomplete="off">
                     <option v-for="(selectOption, index) in option.select_options" :key="index" :value="selectOption.value" :selected="selectOption.defaultSelected">
                       {{ selectOption.label }}

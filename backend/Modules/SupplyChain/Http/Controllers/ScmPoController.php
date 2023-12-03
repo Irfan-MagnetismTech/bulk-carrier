@@ -73,7 +73,34 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            return response()->success('data', $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr'), 200);
+            $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr');
+            // po line fillable  protected $fillable = [
+            //     'scm_po_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'net_rate', 'po_composite_key', 'pr_composite_key',
+            // ];
+
+            $scmPoLines = $purchaseOrder->scmPoLines->map(function ($item) {
+                $data = [
+                    'scm_material_id'=> $item->scmMaterial->id,
+                    'scmMaterial'=> $item->scmMaterial,
+                    'unit'=> $item->unit,
+                    'brand'=> $item->brand,
+                    'model'=> $item->model,
+                    'required_date'=> $item->required_date,
+                    'quantity'=> $item->quantity,
+                    'rate'=> $item->rate ?? 0,
+                    'total_price'=> $item->total_price,
+                    'net_rate'=> $item->net_rate,
+                    'po_composite_key'=> $item->po_composite_key,
+                    'pr_composite_key'=> $item->pr_composite_key,
+                    'max_quantity'=> $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
+                ];
+
+                return $data;
+            });
+            data_forget($purchaseOrder, 'scmPoLines');
+
+            $purchaseOrder->scmPoLines = $scmPoLines;
+            return response()->success('data', $purchaseOrder, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -217,7 +244,7 @@ class ScmPoController extends Controller
                             'quantity' => $item->quantity,
                             'pr_composite_key' => $item->pr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmPoLines->sum('quantity'),
-                            // 'rate' => $item->rate,
+                            'rate' => 0,
                             // 'total_price' => $item->total_price
                         ];
                     })
@@ -243,13 +270,14 @@ class ScmPoController extends Controller
     public function getMaterialByPrId(): JsonResponse
     {
         $prMaterials = ScmPrLine::query()
-            ->with('scmMaterial')
+            ->with('scmMaterial', 'scmPoLines')
             ->where('scm_pr_id', request()->pr_id)
             ->get()
             ->map(function ($item) {
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
+                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
                 return $data;
             });
         return response()->success('data list', $prMaterials, 200);
@@ -283,8 +311,8 @@ class ScmPoController extends Controller
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
-                ->whereBusinessUnit($request->business_unit)
                 ->where('purchase_center', 'foreign')
+                ->orWhere('purchase_center', 'FOREIGN')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)

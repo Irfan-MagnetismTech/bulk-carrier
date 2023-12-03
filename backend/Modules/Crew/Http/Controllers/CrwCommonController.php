@@ -56,11 +56,13 @@ class CrwCommonController extends Controller
     {
         try {
 
-            $crwAgencies      = CrwAgencyContract::when(request()->business_unit != "ALL", function ($q)
-            {
-                $q->where('business_unit', request()->business_unit);
-            })
-            ->when(request()->crw_agency_id != null, function ($q) {
+            $crwAgencies      = CrwAgencyContract::
+//            when(request()->business_unit != "ALL", function ($q)
+//            {
+//                $q->where('business_unit', request()->business_unit);
+//            })
+//            ->
+            when(request()->crw_agency_id != null, function ($q) {
                     return $q->where('crw_agency_id',request()->crw_agency_id);
             })->get();
 

@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
-
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { cargoTypes, getCargoTypes, deleteCargoType, isLoading, isTableLoading } = useCargoType();

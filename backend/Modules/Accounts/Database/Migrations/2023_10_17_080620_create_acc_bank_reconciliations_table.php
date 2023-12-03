@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('acc_bank_reconciliations', function (Blueprint $table) {
             $table->id();
 			$table->integer('acc_transaction_id');
-			$table->date('date');
+			$table->date('reconciliation_date');
 			$table->string('status');
 			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();

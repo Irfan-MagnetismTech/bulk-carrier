@@ -186,7 +186,7 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
-              <th class="w-16">
+              <th class="w-20">
                   <div class="w-full flex items-center justify-between">
                     # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
                   </div>
@@ -211,7 +211,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <nobr>Charterer Short Code</nobr>
+                    <nobr>Charterer Owner Code</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -263,6 +263,7 @@ onMounted(() => {
               </th>
               <th>
                 <select v-model="filterOptions.filter_options[0].search_param" class="filter_input">
+                  <option value="">ALL</option>
                   <option value="Voyage Wise">Voyage Wise</option>
                   <option value="Day Wise">Day Wise</option>
                 </select>
@@ -305,15 +306,15 @@ onMounted(() => {
           
           <tfoot v-if="!chartererContracts?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
+            <td colspan="9">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="8">
+              <td colspan="9">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
           <tr v-else-if="!chartererContracts?.data?.length">
-            <td colspan="8">No data found.</td>
+            <td colspan="9">No data found.</td>
           </tr>
           </tfoot>
       </table>

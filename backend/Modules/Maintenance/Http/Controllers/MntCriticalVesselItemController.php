@@ -80,7 +80,7 @@ class MntCriticalVesselItemController extends Controller
     {
         try {
             
-            $mntCriticalVesselItem = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction','mntCriticalItemSps'])->find($id);
+            $mntCriticalVesselItem = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction.mntCriticalItemCats','mntCriticalItem.mntCriticalItemCat.mntCriticalItems','mntCriticalItemSps'])->find($id);
             
             return response()->success('Critical vessel item found successfully', $mntCriticalVesselItem, 200);
             

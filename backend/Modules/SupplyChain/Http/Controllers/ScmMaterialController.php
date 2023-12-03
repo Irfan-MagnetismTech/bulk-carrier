@@ -11,6 +11,7 @@ use App\Services\FileUploadService;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmMaterialCategory;
 use Modules\SupplyChain\Http\Requests\ScmMaterialRequest;
 
 class ScmMaterialController extends Controller
@@ -55,7 +56,29 @@ class ScmMaterialController extends Controller
                 $requestData['sample_photo'] = $sample_photos;
             }
             $material = ScmMaterial::create($requestData);
+            // for account creation start
+            $topParent = ScmMaterialCategory::topLevelParent($request->scm_material_category_id);
+            $topParentAccounPsmlId = $topParent->account_psml->id;
+            $topParentAccountTsllId = $topParent->account_tsll->id;
 
+            $material->account()->create([
+                 'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                 'account_name' => $material->name,
+                 'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
+                 'account_type' => config('accounts.account_types.Assets'),
+                 'parent_account_id' => $topParentAccounPsmlId,
+                 'business_unit' => 'PSML',
+             ]);
+
+             $material->account()->create([
+                'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                'account_name' => $material->name,
+                'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
+                'account_type' => config('accounts.account_types.Assets'),
+                'parent_account_id' => $topParentAccountTsllId,
+                'business_unit' => 'TSLL',
+            ]);
+             // for account creation end
             return response()->success('Data created succesfully', $material, 201);
         } catch (\Exception $e) {
 

@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Controllers;
 
 use App\Services\FileUploadService;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -135,10 +136,53 @@ class CrwCrewDocumentController extends Controller
             $crwCrewDocument->delete();
 
             return response()->success('Deleted Succesfully', null, 204);
-        }
+        }   
         catch (QueryException $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    // public function renewScehdules(Request $request){
+    //     try {
+    //         $requestCustom = json_decode($request['data']);
+    //         $requestedDays = intval($requestCustom->filter_options[1]->search_param); 
+    //         $tillDate = Carbon::today()->addDays($requestedDays); 
+
+    //         $documents = CrwCrewDocument::query()
+    //         ->where('validity_period_in_month', '>', 0)
+    //         ->with('crwCrewProfile:id,full_name,pre_mobile_no,pre_email')
+    //         ->withWhereHas('crwCrewDocumentRenewal', function ($q) use($tillDate) {
+    //             $q->latest()->where('expire_date', '<', Carbon::today()->addDays($tillDate));
+    //         })
+    //         ->globalSearch($request->all());
+
+    //         return response()->success('Retrieved Succesfully', $documents, 200);
+    //     }   
+    //     catch (QueryException $e)
+    //     {
+    //         return response()->error($e->getMessage(), 500);
+    //     }
+    // }
+
+    public function renewScehdules(Request $request){
+        try {
+            $leftDays = request()->left_days ?? 30; 
+
+            $documents = CrwCrewDocument::with('crwCrewDocumentRenewal', 'crwCrewProfile:id,full_name,pre_mobile_no,pre_email')            
+            ->where('validity_period_in_month', '>', 0)
+            ->get();
+
+            $upcomingSchedules = $documents->filter(function($q) use ( $leftDays ) {
+                return $q->crwCrewDocumentRenewal->expire_date < Carbon::today()->addDays( $leftDays ); 
+            });
+
+            return response()->success('Retrieved Succesfully', $upcomingSchedules, 200);
+        }   
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
 }

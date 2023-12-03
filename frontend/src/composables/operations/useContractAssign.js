@@ -13,12 +13,13 @@ export default function useContractAssign() {
 	const notification = useNotification();
 
 	const contractAssign = ref({
+		assign_date: null,
 		ops_vessel_id: null,
 		opsVessel : null,
 		ops_voyage_id: null,
 		opsVoyage: null,
-		ops_tariff_id: null,
-		opsTariff: null,
+		ops_cargo_tariff_id: null,
+		opsCargoTariff: null,
 		ops_customer_id: null,
 		opsCustomer: null,
 		ops_charterer_profile_id: null,
@@ -30,20 +31,34 @@ export default function useContractAssign() {
 	});
 
 
-
+	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
+	const isTableLoading = ref(false);
 
-	async function getContractAssigns(page, businessUnit) {
+	async function getContractAssigns(filterOptions) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+		}
+		filterParams.value = filterOptions;
 
 		try {
 			const { data, status } = await Api.get('/ops/contract-assigns', {
 				params: {
-					page: page || 1,
-					business_unit: businessUnit
+					page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
 				}
 			});
 			contractAssigns.value = data.value;
@@ -53,8 +68,16 @@ export default function useContractAssign() {
 			//notification.showError(status);
 		} finally {
 			//NProgress.done();
-			loader.hide();
-			isLoading.value = false;
+			// loader.hide();
+			// isLoading.value = false;
+			if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
 		}
 	}
 
@@ -69,7 +92,7 @@ export default function useContractAssign() {
 
 			const { data, status } = await Api.post('/ops/contract-assigns', formData);
 			notification.showSuccess(status);
-			router.push({ name: 'ops.contract-assigns.index' });
+			await router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -118,7 +141,7 @@ export default function useContractAssign() {
 			);
 			// contractAssign.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.contract-assigns.index' });
+			await router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -138,10 +161,11 @@ export default function useContractAssign() {
 		try {
 			const { data, status } = await Api.delete( `/ops/contract-assigns/${contractAssignId}`);
 			notification.showSuccess(status);
-			await getContractAssigns();
+			await getContractAssigns(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			// notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -175,6 +199,7 @@ export default function useContractAssign() {
 		deleteContractAssign,
 		searchContractAssigns,
 		isLoading,
+		isTableLoading,
 		errors,
 	};
 }

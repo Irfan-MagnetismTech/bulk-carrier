@@ -73,7 +73,7 @@ export default [
                                 },
                                 {
                                     route: 'mnt.jobs.index',
-                                    label: 'Job',
+                                    label: 'Job List',
                                     preIcon: icons.User,
                                     postIcon: icons.DownArrow,
                                     is_active: false,
@@ -86,7 +86,7 @@ export default [
             
             {
                 route: 'mnt.run-hours.index',
-                label: 'Run Hour Entry',
+                label: 'Running Hour Entry',
                 preIcon: icons.User,
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -192,7 +192,6 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
-
                     
                     {
                         route: 'mnt.critical-vessel-items.index',
@@ -207,7 +206,7 @@ export default [
 
                     
                     {
-                        // route: 'mnt.critical-spare-lists.index',
+                        route: 'mnt.critical-spare-lists.index',
                         label: 'Critical Spare List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,

@@ -7,11 +7,13 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewDocument() {
     const router = useRouter();
     const crewDocuments = ref([]);
+    const crewDocumentRenewSchedules = ref([]);
     const crewRenewDocuments = ref([]);
     const isTableLoading = ref(false);
     const crewRenewDocument = ref();
     const isCrewDocumentAddModalOpen = ref(0);
     const isCrewDocumentRenewModalOpen = ref(0);
+    const isCrewDocumentRenewScheduleModalOpen = ref(0);
     const isDocumentEditModal = ref(0);
     const currentCrewDocRenewData = ref(null);
     const $loading = useLoading();
@@ -203,6 +205,7 @@ export default function useCrewDocument() {
         try {
             const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
             currentCrewDocRenewData.unshift(data.value);
+            isCrewDocumentRenewScheduleModalOpen.value = 0;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -258,11 +261,53 @@ export default function useCrewDocument() {
         }
     }
 
+    async function getCrewDocumentRenewSchedules(filterOptions) {
+
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
+
+        try {
+            const {data, status} = await Api.get('/crw/crw-crew-document-renew-schedules',{
+                params: {
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                },
+            });
+            crewDocumentRenewSchedules.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
+        }
+    }
+
     return {
         crewDocuments,
         crewDocument,
         isCrewDocumentAddModalOpen,
         isCrewDocumentRenewModalOpen,
+        isCrewDocumentRenewScheduleModalOpen,
         crewRenewDocuments,
         crewRenewDocument,
         currentCrewDocRenewData,
@@ -275,6 +320,8 @@ export default function useCrewDocument() {
         updateCrewDocument,
         deleteCrewDocument,
         deleteCrewRenewDocument,
+        crewDocumentRenewSchedules,
+        getCrewDocumentRenewSchedules,
         isTableLoading,
         isLoading,
         errors,

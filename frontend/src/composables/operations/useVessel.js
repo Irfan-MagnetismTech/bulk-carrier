@@ -153,8 +153,9 @@ export default function useVessel() {
 		//NProgress.start();
 		var loader = {};
 		if(LoadingStatus) {
-			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+			// loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 			isLoading.value = LoadingStatus;
+			isVesselLoading.value = true;
 		}
 		
 
@@ -167,8 +168,9 @@ export default function useVessel() {
 			notification.showError(status);
 		} finally {
 			if(LoadingStatus) {
-				loader.hide();
+				// loader.hide();
 				isLoading.value = false;
+				isVesselLoading.value = false;
 			}
 			//NProgress.done();
 		}
@@ -268,7 +270,7 @@ export default function useVessel() {
 
 	async function searchVessels(searchParam, businessUnit) {
 		//NProgress.start();
-
+		isVesselLoading.value = true;
 		try {
 			const { data, status } = await Api.get(`/ops/search-vessels?name_or_code=${searchParam}&business_unit=${businessUnit}`);
 			vessels.value = data.value;
@@ -279,6 +281,7 @@ export default function useVessel() {
 		} finally {
 			//loading(false)
 			//NProgress.done();
+			isVesselLoading.value = false;
 		}
 	}
 

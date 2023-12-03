@@ -11,20 +11,24 @@ class AccDepreciationRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'month_year'                                => 'required',
+            'applied_date'                              => 'required|date',
+            'acc_cost_center_id'                        => 'required',
+            'business_unit'                             => 'required|in:PSML,TSLL',
+            'accDepreciationLines.*.acc_fixed_asset_id' => 'required',
+            'accDepreciationLines.*.depreciation_rate'  => 'required|numeric|min:0|max:100',
+            'accDepreciationLines.*.amount'             => 'required|numeric',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

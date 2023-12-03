@@ -61,30 +61,42 @@ class OpsVoyageBoatNoteController extends Controller
                 'opsVoyageBoatNoteLines',
             );
 
-
             foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
-                // dd();
-                if($note_line['voyage_note_type'] == "Boat Note"){
-                    $data= [
-                        'boat_note_qty'=>  $note_line['boat_note_qty']
-                    ];
-                }else if($note_line['voyage_note_type'] == "Final Survey"){
-                    $data= [
-                        'final_survey_qty'=>  $note_line['final_survey_qty']
-                    ];
-                }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
-                    $data= [
-                        'final_received_qty'=>  $note_line['final_received_qty']
-                    ];
-                }else if($note_line['voyage_note_type'] == 'Draft Survey'){
-                    $data= [
-                        'initial_survey_qty'=>  $note_line['initial_survey_qty']
-                    ];
-                }
-
                 $voyage_sector=OpsVoyageSector::find($note_line['id']);
-                $voyage_sector->update($data);
+                if($note_line['voyage_note_type'] == "Boat Note"){                    
+                    $voyage_sector->boat_note_qty=$note_line['quantity'];
+                }else if($note_line['voyage_note_type'] == "Final Survey"){
+                    $voyage_sector->final_survey_qty=$note_line['quantity'];
+                }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
+                    $voyage_sector->final_received_qty=$note_line['quantity'];
+                }else if($note_line['voyage_note_type'] == 'Draft Survey'){
+                    $voyage_sector->initial_survey_qty=$note_line['quantity'];
+                }
+                $voyage_sector->save();
             }
+
+            // foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
+            //     if($note_line['voyage_note_type'] == "Boat Note"){
+            //         $data= [
+            //             'boat_note_qty'=>  $note_line['quantity']
+            //         ];
+            //     }else if($note_line['voyage_note_type'] == "Final Survey"){
+            //         $data= [
+            //             'final_survey_qty'=>  $note_line['quantity']
+            //         ];
+            //     }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
+            //         $data= [
+            //             'final_received_qty'=>  $note_line['quantity']
+            //         ];
+            //     }else if($note_line['voyage_note_type'] == 'Draft Survey'){
+            //         $data= [
+            //             'initial_survey_qty'=>  $note_line['quantity']
+            //         ];
+            //     }                
+
+            //     $voyage_sector=OpsVoyageSector::find($note_line['id']);
+            //     $voyage_sector->update($data);
+            // }
 
             $boat_note_lines= $this->fileUpload->handleMultipleFiles('ops/voyage/boat_note_line',$request->opsVoyageBoatNoteLines,$request->attachment);
             // dd($boat_note_lines);
@@ -137,7 +149,7 @@ class OpsVoyageBoatNoteController extends Controller
      */
     public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
-        // dd($request);
+        // dd($request->opsVoyageBoatNoteLines);
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -150,11 +162,11 @@ class OpsVoyageBoatNoteController extends Controller
             $voyage_boat_note->update($voyageBoatNoteInfo);
             
             foreach(collect($request->opsVoyageBoatNoteLines) as $note_line){
-                $voyage_sector=OpsVoyageSector::find($note_line['voyage_sector_id']);          
+                $voyage_sector=OpsVoyageSector::find($note_line['voyage_sector_id']);
                 if($note_line['voyage_note_type'] == "Boat Note"){                    
                     $voyage_sector->boat_note_qty=$note_line['quantity'];
                 }else if($note_line['voyage_note_type'] == "Final Survey"){
-                    $voyage_sector->final_survey_qty=$note_line['quantity'];                    
+                    $voyage_sector->final_survey_qty=$note_line['quantity'];
                 }else if($note_line['voyage_note_type'] == 'Receipt Copy'){
                     $voyage_sector->final_received_qty=$note_line['quantity'];
                 }else if($note_line['voyage_note_type'] == 'Draft Survey'){

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('mother_vessel')->nullable();
             $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
             $table->string('voyage_no')->nullable();
+            $table->string('voyage_sequence')->nullable();
             $table->string('route')->nullable();
             $table->string('load_port_distance')->nullable();
             $table->dateTime('sail_date')->nullable();

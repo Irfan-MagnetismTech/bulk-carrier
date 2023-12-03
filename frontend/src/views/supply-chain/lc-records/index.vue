@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watchEffect,watch,ref} from 'vue';
+import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useLcRecord from "../../../composables/supply-chain/useLcRecord";
@@ -113,7 +113,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 onMounted(() => {
-  watchEffect(() => {
+  watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
       router.push({ name: 'scm.lc-records.index', query: { page: filterOptions.value.page } });
@@ -143,7 +143,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this data!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -181,8 +181,11 @@ function confirmDelete(id) {
                 <span :class="lcRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lcRecord?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
-                <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
+                <nobr>
+                  <action-button :action="'show'" :to="{ name: 'scm.lc-records.show', params: { lcRecordId: lcRecord.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.lc-records.edit', params: { lcRecordId: lcRecord.id } }"></action-button>
+                  <action-button @click="confirmDelete(lcRecord.id)" :action="'delete'"></action-button>
+                </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && lcRecords?.data?.length"></LoaderComponent>

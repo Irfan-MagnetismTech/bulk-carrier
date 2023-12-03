@@ -78,7 +78,22 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Is Critical",
-      "filter_type": "input"
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          value: '',
+          label: "ALL",
+          defaultSelected : true
+        },
+        {
+          value: "0",
+          label: "No"
+        },
+        {
+          value: "1",
+          label: "Yes"
+        }
+      ]
     },
     {
       "relation_name": null,
@@ -133,9 +148,6 @@ onMounted(() => {
       console.error("Error fetching PR:", error);
     });
 });
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 });
 // Code for global search end here
 
@@ -169,7 +181,7 @@ const navigateToMRRCreate = (purchaseRequisitionId) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -219,12 +231,15 @@ function confirmDelete(id) {
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
               <td>
+                <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
-                  <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
-                </div>
+                    <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+                    <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+                    <action-button :action="'show'" :to="{ name: 'scm.purchase-requisitions.show', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                    <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                  </div>
+                </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseRequisitions?.data?.length"></LoaderComponent>

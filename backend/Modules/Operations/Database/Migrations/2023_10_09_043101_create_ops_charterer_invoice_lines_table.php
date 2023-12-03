@@ -20,13 +20,13 @@ return new class extends Migration
             $table->string('particular')->nullable();
             $table->string('cost_unit')->nullable();
             $table->string('currency')->nullable();
-            $table->float('quantity')->nullable();
-            $table->float('rate')->nullable();
-            $table->float('exchange_rate_bdt')->nullable();
-            $table->float('exchange_rate_usd')->nullable();
-            $table->float('amount')->nullable();
-            $table->float('amount_bdt')->nullable();
-            $table->float('amount_usd')->nullable();
+            $table->double('quantity')->nullable();
+            $table->double('rate')->nullable();
+            $table->double('exchange_rate_bdt')->nullable();
+            $table->double('exchange_rate_usd')->nullable();
+            $table->double('amount')->nullable();
+            $table->double('amount_bdt')->nullable();
+            $table->double('amount_usd')->nullable();
             $table->timestamps();
         });
     }

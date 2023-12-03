@@ -11,7 +11,7 @@ export default function useCrewRequisition() {
     const notification = useNotification();
     const crewRequisition = ref( {
         ops_vessel_id: '',
-        ops_vessel_name: '',
+        ops_vessel_name: null,
         applied_date: '',
         total_required_manpower: '',
         remarks: '',

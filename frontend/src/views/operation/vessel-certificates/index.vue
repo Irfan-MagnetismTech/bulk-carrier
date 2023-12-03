@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,13 +10,18 @@ import useVesselCertificate from '../../../composables/operations/useVesselCerti
 import Store from './../../../store/index.js';
 import moment from 'moment';
 import env from '../../../config/env';
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+const router = useRouter();
+const debouncedValue = useDebouncedRef('', 800);
 
 
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading, isTableLoading, errors } = useVesselCertificate();
 const icons = useHeroIcon();
-const { vesselCertificates, getVesselCertificates, deleteVesselCertificate, isLoading } = useVesselCertificate();
-
 const props = defineProps({
   page: {
     type: Number,
@@ -29,10 +34,7 @@ setTitle('Vessel Certificate List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
-function setBusinessUnit($el){
-  businessUnit.value = $el.target.value;
-}
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -50,10 +52,107 @@ function confirmDelete(id) {
   })
 }
 
+watch(
+    () => businessUnit.value,
+    (newBusinessUnit, oldBusinessUnit) => {
+      if (newBusinessUnit !== oldBusinessUnit) {
+        router.push({ name: "ops.vessel-certificates.index", query: { page: 1 } })
+      }
+    }
+);
+
+
+let filterOptions = ref( {
+  "business_unit": null,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+  
+    {
+      "rel_type": null,
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsMaritimeCertification",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Certificate Name",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsMaritimeCertification",
+      "field_name": "validity",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Validity Period",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "expire_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Expire Date",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": null,
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": 'Left Days',
+      "filter_type": null
+    },    
+    
+   
+  ]
+});
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
 onMounted(() => {
-  watchEffect(() => {
-    getVesselCertificates(props.page, businessUnit.value)
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'ops.contract-assigns.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getVesselCertificates(filterOptions.value)
     .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -64,6 +163,9 @@ onMounted(() => {
       console.error("Error fetching data.", error);
     });
 });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -75,30 +177,12 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate List</h2>
     <default-button :title="'Create Vessel Certificate'" :to="{ name: 'ops.vessel-certificates.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
-    <div class="relative w-full">
-      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
-      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
-      >
-        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
-        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
-        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
-      </select>
-    </div>
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Vessel Name</th>
@@ -111,13 +195,15 @@ onMounted(() => {
             <th>Certificate Image</th>
             <th>History</th>
           </tr>
-          </thead>
-          <tbody v-if="Object.keys(vesselCertificates).length">
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody v-if="Object.keys(vesselCertificates).length" class="relative">
             
             <template v-for="(certificates, key, index) in vesselCertificates">
               <tr v-for="(item, itemIndex) in certificates">
                 <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ certificates[0].opsVessel?.name }}</td>
+                <!-- <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td> -->
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ item?.opsVessel?.name }}</td>
                 <td>
                   {{ item?.opsMaritimeCertification?.name }}
                 </td>
@@ -125,43 +211,50 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.validity }}
                 </td>
                 <td>
-                  <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>
+                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('MM-DD-YYYY') : null }}</nobr>
                 </td>
                 <td>
-                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
+                  {{ (item?.expire_days < 0) ? 'Expired' : (item?.expire_days == 0 ? null : item?.expire_days) }}
                 </td>
-                <td>
-                  {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}
-                </td>
-                <td>
-                  {{ item?.reference_number }}
-                </td>
-                <td>
+                <!-- <td>
                   <div class="w-full text-center">
                     <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
                     </a>
                   </div>
-                </td>
+                </td> -->
                 <td>
-                  <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                  <nobr>
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                     <router-link :to="{ name: 'ops.vessel-certificates.history', params: { vesselId: certificates[0].opsVessel?.id, certificateId: item.opsMaritimeCertification.id } }" >
                     History
                     </router-link>
                   </button>
+                  <button type="button" class="bg-blue-500 ml-2 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                    <router-link :to="{ name: 'ops.vessel-certificates.renew', params: { vesselId: certificates[0].opsVessel?.id, marineCertificateId: item.opsMaritimeCertification.id } }" >
+                    Renew
+                    </router-link>
+                  </button>
+                  </nobr>
                 </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && Object.keys(vesselCertificates).length"></LoaderComponent>
             </template>
               
           </tbody>
           
-          <tfoot v-if="!Object.keys(vesselCertificates)?.length">
-          <tr v-if="isLoading">
-            <td colspan="14">Loading...</td>
-          </tr>
-          <tr v-else-if="!Object.keys(vesselCertificates)?.length">
-            <td colspan="14">No data found.</td>
-          </tr>
+          <tfoot v-if="!Object.keys(vesselCertificates)?.length" class="relative h-[250px]">
+            <tr v-if="isLoading">
+              <td colspan="14">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="8">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!Object.keys(vesselCertificates)?.length">
+              <td colspan="14">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>

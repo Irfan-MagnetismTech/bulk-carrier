@@ -4,27 +4,26 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Authority <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.authority" placeholder="Certificate Authority" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.authority" :errors="errors.authority" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.name" placeholder="Certificate Name" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.name" :errors="errors.name" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.type" :errors="errors.type" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.validity" placeholder="Validity Period" class="form-input" required autocomplete="off" />
-          <Error v-if="errors?.validity" :errors="errors.validity" />
         </label>
     </div>
+
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../Error.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const props = defineProps({
     form: {
         required: false,

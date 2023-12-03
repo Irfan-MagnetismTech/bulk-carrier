@@ -76,17 +76,38 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "department_id",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
-      "filter_type": "input"
+      "label": "Department",
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          label: "All",
+          value: "",
+          defaultSelected : true
+        },
+        {
+          label: "Store Department",
+          value: 1
+        },
+        {
+          label: "Engine Department",
+          value: 2
+        },
+        {
+          label: "Provision Department",
+          value: 3
+        }
+      ]
     }
   ]
 });
+
+
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
@@ -96,30 +117,27 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
   watchPostEffect(() => {
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-      router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
-    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
-      filterOptions.value.isFilter = true;
-    }
-    getStoreRequisitions(filterOptions.value)
-      .then(() => {
-        paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
+      if(currentPage.value == props.page && currentPage.value != 1) {
+        filterOptions.value.page = 1;
+        router.push({ name: 'scm.store-requisitions.index', query: { page: filterOptions.value.page } });
+      } else {
+        filterOptions.value.page = props.page;
       }
-    })
-    .catch((error) => {
-      console.error("Error fetching SR:", error);
-    });
-});
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+      currentPage.value = props.page;
+      if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+        filterOptions.value.isFilter = true;
+      }
+      getStoreRequisitions(filterOptions.value)
+        .then(() => {
+          paginatedPage.value = filterOptions.value.page;
+        const customDataTable = document.getElementById("customDataTable");
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching SR:", error);
+      });
   });
 });
 // Code for global search end here
@@ -154,7 +172,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -166,7 +184,7 @@ function confirmDelete(id) {
           }
         })
       }
-
+      const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
       const navigateToSICreate = (SrId) => {
         const sr_id = SrId;
         const routeOptions = {
@@ -209,18 +227,21 @@ function confirmDelete(id) {
               <td>{{ storeRequisition?.ref_no }}</td>
               <td>{{ storeRequisition?.date }}</td>
               <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ DEPARTMENTS[storeRequisition.department_id] ?? '' }}</td>
               <td>
                 <span :class="storeRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeRequisition?.business_unit }}</span>
               </td>
               <td>
+                <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToSICreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
+                  <!-- <button @click="navigateToSICreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
                   <!-- <button @click="navigateToPOCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.store-requisitions.show', params: { storeRequisitionId: storeRequisition.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { storeRequisitionId: storeRequisition.id } }"></action-button>
                   <action-button @click="confirmDelete(storeRequisition.id)" :action="'delete'"></action-button>
                 </div>
+              </nobr>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && storeRequisitions?.data?.length"></LoaderComponent>

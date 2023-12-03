@@ -53,10 +53,8 @@ class ScmPrController extends Controller
     public function store(ScmPrRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
-
-       
-            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
-            $requestData['attachment'] = $attachment;
+        $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
+        $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
         $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
 
@@ -122,7 +120,7 @@ class ScmPrController extends Controller
                 'brand' => $scmPrLine->brand,
                 'model' => $scmPrLine->model,
                 'specification' => $scmPrLine->specification,
-                'origin' => $scmPrLine?->country?->name,
+                'country_name' => $scmPrLine?->country_name,
                 'drawing_no' => $scmPrLine->drawing_no,
                 'part_no' => $scmPrLine->part_no,
                 'rob' => $currentStock,
@@ -170,10 +168,10 @@ class ScmPrController extends Controller
         try {
             DB::beginTransaction();
 
-          
-                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
-                $requestData['attachment'] = $attachment;
-         
+
+            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
+            $requestData['attachment'] = $attachment;
+
             $purchase_requisition->update($requestData);
             $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
 
@@ -221,18 +219,67 @@ class ScmPrController extends Controller
      */
     public function searchPr(Request $request): JsonResponse
     {
-        if ($request->business_unit != 'ALL') {
+        if (isset($request->searchParam)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
-                ->whereBusinessUnit($request->business_unit)
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                // ->limit(10)
+                ->limit(10)
                 ->get();
         } else {
-            $purchase_requisition = [];
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
         }
 
         return response()->success('Search result', $purchase_requisition, 200);
     }
+
+
+    // public function searchMrr(Request $request): JsonResponse
+    // {
+    //     if($request->has('searchParam')) { 
+    //         $materialReceiptReport = ScmMrr::query()
+    //         ->with('scmMrrLines.scmMaterial')
+    //         ->where(function($query) use ($request) {
+    //             $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+    //             ->orWhere('business_unit', 'like', '%' . $request->business_unit . '%')
+    //             ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+    //         })
+    //         ->orderByDesc('ref_no')
+    //         ->limit(10)
+    //         ->get();
+
+    //     }else{
+    //         $materialReceiptReport = ScmMrr::query()
+    //         ->with('scmMrrLines.scmMaterial')
+    //         ->where(function($query) use ($request) {
+    //             $query->where('business_unit', 'like', '%' . $request->business_unit . '%')
+    //             ->orWhere('acc_cost_center_id', 'like', '%' . $request->cost_center_id . '%');
+    //         })
+    //         ->orderByDesc('ref_no')
+    //         ->limit(10)
+    //         ->get();
+    //     }
+
+    //     $materialReceiptReport = $materialReceiptReport->map(function($item) {
+    //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
+    //                  return $item1->scmMaterial;
+    //             });
+    //          return $item;             
+    //         });
+
+    //     return response()->success('Search Result', $materialReceiptReport, 200);
+    // }
 }

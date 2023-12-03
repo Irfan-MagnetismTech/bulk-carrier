@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,11 +10,20 @@ const icons = useHeroIcon();
 import useVoyage from '../../../composables/operations/useVoyage';
 import Store from './../../../store/index.js';
 
+import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+const router = useRouter();
+const debouncedValue = useDebouncedRef('', 800);
+
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-const { voyages, getVoyages, deleteVoyage, isLoading } = useVoyage();
+const { voyages, getVoyages, deleteVoyage, isLoading, isTableLoading, errors } = useVoyage();
 
 const props = defineProps({
   page: {
@@ -45,13 +54,98 @@ function confirmDelete(id) {
     }
   })
 }
-function setBusinessUnit($el){
-  businessUnit.value = $el.target.value;
-}
+
+watch(
+    () => businessUnit.value,
+    (newBusinessUnit, oldBusinessUnit) => {
+      if (newBusinessUnit !== oldBusinessUnit) {
+        router.push({ name: "ops.configurations.voyages.index", query: { page: 1 } })
+      }
+    }
+);
+let filterOptions = ref( {
+  "business_unit": null,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+  
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "mother_vessel",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Mother Vessel Name",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel",
+      "filter_type": "input"
+    },
+
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "voyage_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Voyage No",
+      "filter_type": "input"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "opsCargoType",
+      "field_name": "cargo_type",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Cargo Type",
+      "filter_type": "input"
+    },
+
+
+
+    
+    
+
+  ]
+});
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+
+
 onMounted(() => {
-  watchEffect(() => {
-    getVoyages(props.page, businessUnit.value)
-    .then(() => {
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'ops.configurations.voyages.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
+    getVoyages(filterOptions.value)
+      .then(() => {
+      paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
 
       if (customDataTable) {
@@ -61,7 +155,10 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -73,8 +170,7 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Voyage List</h2>
     <default-button :title="'Create Voyage'" :to="{ name: 'ops.voyages.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
+  <!-- <div class="flex items-center justify-between mb-2 select-none">
     <div class="relative w-full">
       <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
       :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
@@ -90,13 +186,13 @@ onMounted(() => {
       </svg>
       <input type="text" placeholder="Search..." class="search" />
     </div>
-  </div>
+  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Mother Vessel</th>
@@ -104,46 +200,51 @@ onMounted(() => {
             <th>Voyage No</th>
             <th>Cargo Type</th>
             <th>POL</th>
-            <th>FPOD</th>
+            <th>FPOD</th> -->
             <!-- <th>Initial Load</th>
             <th>Actual Load</th> -->
             <!-- Its Hidden cause when there will be multiple sectors, it won't be useful anymore as there will be multiple initial and actual loads -->
-            <th>Voyage Status</th>
+            <!-- <th>Voyage Status</th>
             <th>Action</th>
           </tr>
-          </thead>
-          <tbody v-if="voyages?.data?.length">
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
+          <tbody v-if="voyages?.data?.length" class="relative">
               <tr v-for="(voyage, index) in voyages.data" :key="voyage?.id">
-                  <td>{{ voyages.from + index }}</td>
+                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ voyage?.mother_vessel }}</td>
                   <td>{{ voyage?.opsVessel?.name }}</td>
                   <td>{{ voyage?.voyage_no }}</td>
                   <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
-                  <td>{{ voyage?.opsVoyageSectors[0].loading_point }}</td>
-                  <td>{{ voyage?.opsVoyageSectors[voyage?.opsVoyageSectors.length - 1].unloading_point }}</td>
-                  <!-- <td></td>
-                  <td></td> -->
-                  <td>{{ voyage?.status }}</td>
 
                   <td class="items-center justify-center space-x-1 text-gray-600">
-                      <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
+                    <nobr>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
                       <action-button @click="confirmDelete(voyage.id)" :action="'delete'"></action-button>
-                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                      <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                    </nobr>
                   </td>
               </tr>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && voyages?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!voyages?.length">
+          <tfoot v-if="!voyages?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="11">Loading...</td>
+            <td colspan="8">Loading...</td>
           </tr>
+          <tr v-else-if="isTableLoading">
+              <td colspan="8">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+              </td>
+            </tr>
           <tr v-else-if="!voyages?.data?.length">
-            <td colspan="11">No data found.</td>
+            <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
     <Paginate :data="voyages" to="ops.configurations.voyages.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

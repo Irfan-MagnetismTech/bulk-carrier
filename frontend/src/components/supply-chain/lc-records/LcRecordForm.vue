@@ -12,7 +12,7 @@
     const { vendors, searchVendor } = useVendor();
     const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
 
-    const { filteredPurchaseOrders, searchPurchaseOrderForLc } = usePurchaseOrder();
+    const { filteredPurchaseOrders, searchPurchaseOrderForLc,isLoading} = usePurchaseOrder();
 
     const props = defineProps({
       form: { type: Object, required: true },
@@ -151,7 +151,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
     <label class="label-group">
           <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
             <!-- <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input"> -->
-            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input">
+            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPo" label="ref_no" class="block form-input">
               <template #search="{attributes,events}">
                 <input
                   class="vs__search"

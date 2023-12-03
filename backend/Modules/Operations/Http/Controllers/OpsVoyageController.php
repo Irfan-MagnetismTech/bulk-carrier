@@ -83,13 +83,20 @@ class OpsVoyageController extends Controller
       */
      public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers.scmMaterial');
 
         $voyage->opsVoyageSectors->map(function($sector) {
             $sector->voyage_sector_id = $sector->id;
             $sector->loading_point_name_code = $sector->loadingPoint->name.'-'.$sector->loadingPoint->code;
             $sector->unloading_point_name_code = $sector->unloadingPoint->name.'-'.$sector->unloadingPoint->code;
             return $sector;
+        });
+        
+        $voyage->opsBunkers->map(function($bunker) {
+            $bunker->id = $bunker->scmMaterial->id;
+            $bunker->name = $bunker->scmMaterial->name;
+            $bunker->is_readonly = true;
+            return $bunker;
         });
 
         try
@@ -171,13 +178,13 @@ class OpsVoyageController extends Controller
     public function searchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
-            ->when(request()->voyage_no != 'null', function($query) {
+            ->when(isset(request()->voyage_no), function($query) {
                 $query->where('voyage_no', 'like', '%' . request()->voyage_no . '%');                
             })
-            ->when(request()->business_unit != "ALL", function($q){
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })
-            ->when(request()->vessel_id != 'null', function($q) {
+            ->when(isset(request()->vessel_id), function($q) {
                 $q->where('ops_vessel_id', request()->vessel_id);
             })
             ->limit(10)
@@ -192,11 +199,11 @@ class OpsVoyageController extends Controller
     public function getSearchVoyages(Request $request){
         try {
             $voyages = OpsVoyage::query()
-            ->when(request()->has('business_unit') && request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
             })
-            ->when(request()->has('vessel_id') && request()->vessel_id != 'null', function($q) {
-                $q->where('ops_vessel_id', request()->ops_vessel_id);
+            ->when(isset(request()->ops_vessel_id), function($query) {
+                $query->where('ops_vessel_id', request()->ops_vessel_id);
             })
             ->get();
 

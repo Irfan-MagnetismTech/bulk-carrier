@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch, watchEffect, watchPostEffect} from "vue";
+import {onMounted, ref, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -12,8 +12,11 @@ import Store from "../../../store";
 import moment from 'moment';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import useGlobalFilter from "../../../composables/useGlobalFilter";
 
 const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading, isTableLoading} = useLighterNoonReport();
+const { showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
+
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -31,32 +34,15 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
-
-let showFilter = ref(false);
-
-function swapFilter() {
-  showFilter.value = !showFilter.value;
-}
-
-watch(
-
-	() => businessUnit.value,
-	(newBusinessUnit, oldBusinessUnit) => {
-		if (newBusinessUnit !== oldBusinessUnit) {
-		router.push({ name: "ops.configurations.cargo-types.index", query: { page: 1 } })
-		}	
-	}
-);
-
 let filterOptions = ref( {
+"business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
 "isFilter": false,
 "filter_options": [
-
 			{
 			"relation_name": null,
-			"field_name": null,
+			"field_name": "date",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -72,23 +58,7 @@ let filterOptions = ref( {
 			},
 			{
 			"relation_name": 'opsVoyage',
-			"field_name": "voyage_no",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": null,
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "last_port",
+			"field_name": "voyage_sequence",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -118,41 +88,11 @@ let filterOptions = ref( {
 			"action": null,
 			"order_by": null,
 			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "chief_engineer",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      // {
-			// "relation_name": null,
-			// "field_name": "business_unit",
-			// "search_param": "",
-			// "action": null,
-			// "order_by": null,
-			// "date_from": null
-			// },
+			}
 	]
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 
 function confirmDelete(id) {
@@ -221,21 +161,6 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Date and Time</th>
-            <th>Vessel</th>
-            <th>Voyage</th>
-            <th>Cargo Type</th>
-            <th>Last Port</th>
-            <th>Next Port</th>
-            <th>Lat / Long</th>
-            <th>Master</th>
-            <th>Chief Engineer</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
 
           <thead>
             <tr class="w-full">
@@ -246,7 +171,7 @@ onMounted(() => {
                 </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Date and Time</span>
+                    <nobr>Date and Time</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -255,7 +180,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Vessel</span>
+                    <nobr>Vessel</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -264,7 +189,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Voyage</span>
+                    <nobr>Voyage</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -273,7 +198,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Cargo Type</span>
+                    <nobr>Next Port</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -282,7 +207,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Last Port</span>
+                    <nobr>Lat/Long</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -291,40 +216,15 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <span>Next Port</span>
+                    <nobr>Master</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
                     </div>
                   </div>
               </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <span>Lat / Long</span>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(6,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(6,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <span>Master</span>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(7,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(7,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <span>Chief Engineer</span>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(8,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[8].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[8].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(8,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[8].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[8].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
+             
+             
               <th>
                 Action
               </th>
@@ -345,15 +245,11 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <!-- <th>
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th> -->
+              
+              
 
               <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
+                <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
           </thead>
@@ -361,16 +257,13 @@ onMounted(() => {
               <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>
-                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
+                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('MM-DD-YYYY hh:mm A') : null }}</nobr>
                   </td>
                   <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
-                  <td>{{ lighterNoonReport?.opsVoyage?.voyage_no }}</td>
-                  <td>{{ lighterNoonReport?.opsVoyage?.opsCargoType?.cargo_type }}</td>
-                  <td><nobr>{{ lighterNoonReport?.last_port }}</nobr></td>
+                  <td>{{ lighterNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ lighterNoonReport?.next_port }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>
-                  <td><nobr>{{ lighterNoonReport?.chief_engineer }}</nobr></td>
                   <!-- <td>
                     <span :class="lighterNoonReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lighterNoonReport?.business_unit }}</span>
                   </td> -->
@@ -389,7 +282,7 @@ onMounted(() => {
           
           <tfoot v-if="!lighterNoonReports?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="11">Loading...</td>
+            <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="8">
@@ -397,7 +290,7 @@ onMounted(() => {
               </td>
           </tr>
           <tr v-else-if="!lighterNoonReports?.data?.length">
-            <td colspan="11">No data found.</td>
+            <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>

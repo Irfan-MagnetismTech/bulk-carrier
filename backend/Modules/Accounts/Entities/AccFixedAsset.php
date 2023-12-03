@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use App\Traits\GlobalSearchTrait;
+use Modules\SupplyChain\Entities\ScmMrr;
 
 class AccFixedAsset extends Model
 {
@@ -15,6 +16,17 @@ class AccFixedAsset extends Model
      * @var array
      */
     protected $fillable = ['acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit'];
+
+    protected $appends = ['left_days']; 
+
+
+    public function getLeftDaysAttribute()
+    {
+        // $expireDate = Carbon::parse($this->expire_date);
+        // $today = Carbon::today();
+
+        // return $today->diffInDays($expireDate, false);
+    }    
 
     /**
      * @return mixed
@@ -31,11 +43,21 @@ class AccFixedAsset extends Model
 
     public function costCenter()
     {
-        return $this->hasOne(AccCostCenter::class, 'id', 'acc_cost_center_id');
+        return $this->belongsTo(AccCostCenter::class, 'acc_cost_center_id', 'id');
+    }
+
+    public function scmMrr()
+    {
+        return $this->belongsTo(ScmMrr::class, 'scm_mrr_id', 'id');
     }
 
     public function scmMaterial()
     {
-        return $this->belongsTo(ScmMaterial::class, 'acc_material_id', 'id');
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id', 'id');
+    }
+
+    public function fixedAssetCategory()
+    {
+        return $this->belongsTo(AccAccount::class, 'acc_parent_account_id', 'id');
     }
 }

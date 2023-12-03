@@ -24,7 +24,7 @@ setTitle('Create Store Requisition');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeStoreRequisition(storeRequisition)">
-          <store-requisition-form v-model:form="storeRequisition" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></store-requisition-form>
+          <store-requisition-form v-model:form="storeRequisition" :errors="errors" :materialObject="materialObject" :page="page"></store-requisition-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

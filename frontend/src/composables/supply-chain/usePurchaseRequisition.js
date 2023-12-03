@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function usePurchaseRequisition() {
@@ -19,7 +20,7 @@ export default function usePurchaseRequisition() {
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const purchaseRequisition = ref( {
         raised_date: '',
@@ -44,6 +45,7 @@ export default function usePurchaseRequisition() {
                 model: '',
                 specification: '',
                 origin: '',
+                country_name: '',
                 drawing_no: '',
                 part_no: '',
                 rob: 0,
@@ -60,6 +62,7 @@ export default function usePurchaseRequisition() {
         model: '',
         specification: '',
         origin: '',
+        country_name: '',
         drawing_no: '',
         part_no: '',
         rob: '',
@@ -203,7 +206,7 @@ export default function usePurchaseRequisition() {
     }
 
     async function searchPurchaseRequisition(searchParam, loading) {
-        
+        isLoading.value = true;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
@@ -213,11 +216,37 @@ export default function usePurchaseRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 
+    async function searchPr(business_unit, cost_center_id = null, searchParam = '') {
+        //NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-pr`,{
+                params: {
+                    business_unit: business_unit,
+                    searchParam: searchParam,
+                    cost_center_id: cost_center_id,
+                },
+            });
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
     async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
-        
+        isLoading.value = true;
 
         try {
             const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,scm_warehouse_id,searchParam);
@@ -227,6 +256,7 @@ export default function usePurchaseRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 
@@ -268,6 +298,7 @@ export default function usePurchaseRequisition() {
         getStoreCategoryWiseExcel,
         searchWarehouseWisePurchaseRequisition,
         materialObject,
+        searchPr,
         excelExportData,
         isTableLoading,
         isLoading,

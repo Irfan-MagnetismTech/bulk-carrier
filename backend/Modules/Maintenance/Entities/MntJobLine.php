@@ -2,6 +2,7 @@
 
 namespace Modules\Maintenance\Entities;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ class MntJobLine extends Model
     use HasFactory;
 
     protected $fillable = ['job_description','cycle','cycle_unit','min_limit','last_done','previous_run_hour','remarks','status'];
-    protected $appends = ['mnt_job_line_id','next_due','over_due','present_run_hour','mnt_work_requisition_status'];
+    protected $appends = ['mnt_job_line_id','upcoming_job','next_due','over_due','present_run_hour','mnt_work_requisition_status'];
     protected $hidden = ['status'];
     
     
@@ -41,6 +42,23 @@ class MntJobLine extends Model
         return $this->belongsToMany(MntWorkRequisitionItem::class, MntWorkRequisitionLine::class);
     }
 
+    public function getUpcomingJobAttribute()
+    {
+        if ($this->cycle_unit != 'Hours') {
+            $today = new DateTime(date('Y-m-d'));
+            $lastDone = new DateTime($this->last_done);
+            $interval = $lastDone->diff($today);
+            $daysPassed = $interval->format('%a');
+            $minLimit = ($this->cycle_unit == 'Weeks') ? $this->min_limit*7:
+                            (($this->cycle_unit == 'Months') ? $this->min_limit*30 : $this->min_limit);
+            $upcoming = $this->over_due == false && $daysPassed > $minLimit;
+            
+            return $upcoming;
+        } else {
+            return $this->over_due == false && $this->next_due < ($this->cycle - $this->min_limit);
+        }
+    }
+
     public function getNextDueAttribute()
     {
         if ($this->cycle_unit != 'Hours') {
@@ -52,11 +70,12 @@ class MntJobLine extends Model
                 if ($this->cycle < $hoursPassedAfterPreviousWork) {
                     $nextDue = 0 - $hoursPassedAfterPreviousWork;
                 } else {
-                    $nextDue = $this->cycle - ($this->present_run_hour % $this->cycle);
+                    $nextDue = $this->cycle - $hoursPassedAfterPreviousWork;//($this->present_run_hour % $this->cycle);
                 }
                 
             } else {
-                $nextDue = $this->cycle - $this->present_run_hour;
+                $previousRunHour = $this->previous_run_hour ?? 0;
+                $nextDue = ($this->cycle + $previousRunHour) - $this->present_run_hour;
             }
                 
         }

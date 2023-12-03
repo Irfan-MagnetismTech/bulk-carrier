@@ -111,9 +111,10 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Maintenance Type",
-      "filter_type": "select",
+      // "filter_type": "input",
+      "filter_type": "dropdown",
       "select_options": [
-          { value: "", label: "Select" ,defaultSelected: true},
+          { value: "", label: "All" ,defaultSelected: true},
           { value: "Schedule", label: "Schedule" ,defaultSelected: false},
           { value: "Breakdown", label: "Breakdown",defaultSelected: false},
           { value: "Dry Dock", label: "Dry Dock",defaultSelected: false},
@@ -230,7 +231,7 @@ onMounted(() => {
             <td>{{ doneWorkRequisition?.maintenance_type }}</td>
             <!-- <td>{{ workRequisition?.status }}</td> -->
             <td>
-              <span :class="doneWorkRequisition?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (doneWorkRequisition?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ doneWorkRequisition?.status === 0 ? 'Pending' : (doneWorkRequisition?.status === 1 ? 'WIP' : 'Done') }}</span>
+              <span :class="doneWorkRequisition?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (doneWorkRequisition?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ doneWorkRequisition?.status == 0 ? 'Pending' : (doneWorkRequisition?.status == 1 ? 'WIP' : 'Done') }}</span>
             </td>
             <td><span :class="doneWorkRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ doneWorkRequisition?.business_unit }}</span></td>
             

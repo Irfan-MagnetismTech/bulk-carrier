@@ -22,7 +22,7 @@ export default function useWipWorkRequisition() {
         mnt_item_name: '',
         assigned_to: '',
         responsible_person: '',
-        responsible_person_name: '',
+        // responsible_person_name: '',
         scm_vendor_id: '',
         scm_vendor_name: '',
         maintenance_type: '',
@@ -41,6 +41,7 @@ export default function useWipWorkRequisition() {
         form_type: 'create',
         added_job_lines: [],
         mntWorkRequisitionLines: [],
+        mntWorkRequisitionItem: {},
         // workRequisition
         mntWorkRequisitionMaterials: [
             {

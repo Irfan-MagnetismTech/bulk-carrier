@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Maintenance\Entities\MntJob;
 use Modules\Maintenance\Entities\MntJobLine;
 use Modules\Maintenance\Entities\MntWorkRequisition;
 use Modules\Maintenance\Entities\MntWorkRequisitionItem;
@@ -225,25 +226,40 @@ class MntWorkRequisitionController extends Controller
             $wr['status'] = ($input['act_completion_date'] == '') ? $input['status'] : 2;
 
             DB::beginTransaction();
-
+            // update work_requisition
             $workRequisition = MntWorkRequisition::findorfail($id);
             $workRequisition->update($wr);
             
+            // update work_requisition_materials
             $workRequisitionMaterials = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
-            $workRequisitionLines = $input['mntWorkRequisitionLines'];
+
+            // update work_requisition_items
+            $workRequisitionItem = $input['mntWorkRequisitionItem'];
+            $mntJob = MntJob::where(
+                                    [
+                                        'ops_vessel_id'=>$input['ops_vessel_id'], 
+                                        'mnt_item_id'=>$workRequisitionItem['mnt_item_id']
+                                    ])
+                                    ->first();
+            
+            $itemPresentRunHour = $workRequisitionItem['present_run_hour'];
+            if ($itemPresentRunHour > $mntJob['present_run_hour']) {
+                $error = array(
+                        "message" => "Present running hour should not over Item running hour",
+                        "errors" => [
+                            "present_run_hour" => ["Present running hour should not over Item running hour"]
+                        ]
+                    );
+                    DB::rollBack();
+                    return response()->json($error, 422);
+            }
+            $wrItemUpdate = $workRequisition->mntWorkRequisitionItem()->update(['present_run_hour'=>$itemPresentRunHour]);
+            
+            // update work_requisition_lines
             $row = 1;
+            $workRequisitionLines = $input['mntWorkRequisitionLines'];
             foreach($workRequisitionLines as $wrLine) {
-                // if ($wrLine['start_date'] == '' || $wrLine['start_date'] == null) {
-                //     $error = array(
-                //         "message" => "Start date is a required field at row no. $row",
-                //         "errors" => [
-                //             "start_date" => ["Start date is a required field at row no. $row"]
-                //         ]
-                //     );
-                //     DB::rollBack();
-                //     return response()->json($error, 422);
-                // }
-                $updateWipLine = $this->updateWipLine($wrLine, $wrLine['id']);
+                $updateWipLine = $this->updateWipLine($wrLine, $wrLine['id'], $itemPresentRunHour);
                 if (!$updateWipLine) {
                     $error = array(
                         "message" => "Completion date should be after start date at row no. $row",
@@ -275,7 +291,7 @@ class MntWorkRequisitionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function updateWipLine(Array $input, $id)
+    public function updateWipLine(Array $input, $id, $itemPresentRunHour)
     {
         try {
 
@@ -308,12 +324,12 @@ class MntWorkRequisitionController extends Controller
 
             // DB::beginTransaction();
 
-            $workRequisition = MntWorkRequisitionLine::findorfail($id);
-            $workRequisition->update($wr);
+            $workRequisitionLine = MntWorkRequisitionLine::findorfail($id);
+            $workRequisitionLine->update($wr);
 
             $jobLine = MntJobLine::findorfail($input['mnt_job_line_id']);
             $job['last_done'] = $input['completion_date']; // Update job line information
-            $job['previous_run_hour'] = $input['present_run_hour']; // Present run hour is previous run hour for next job
+            $job['previous_run_hour'] = $itemPresentRunHour; // Present run hour is previous run hour for next job
             $jobLine->update($job);
             
             // DB::commit();

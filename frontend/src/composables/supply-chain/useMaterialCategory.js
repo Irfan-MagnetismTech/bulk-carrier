@@ -145,7 +145,7 @@ export default function useMaterialCategory() {
     }
 
     async function searchMaterialCategory(searchParam,selfId=null) {
-
+        isLoading.value = true;
         try {
             const { data, status } = await Api.get(`${BASE}/search-material-category`, {params: { searchParam: searchParam ,self_id: selfId}});
             materialCategories.value = data.value;
@@ -154,6 +154,7 @@ export default function useMaterialCategory() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
+            isLoading.value = false;
         }
     }
 

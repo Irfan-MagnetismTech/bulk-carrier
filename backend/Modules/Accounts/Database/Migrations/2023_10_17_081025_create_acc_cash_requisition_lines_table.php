@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('acc_cash_requisition_lines', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('acc_cash_requisition_id')->constrained('acc_cash_requisitions', 'id')->cascadeOnDelete();
+			$table->string('particular');
+            $table->decimal('amount', 10, 2)->nullable();
+			$table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

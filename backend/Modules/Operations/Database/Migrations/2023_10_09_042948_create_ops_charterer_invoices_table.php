@@ -22,12 +22,13 @@ return new class extends Migration
             $table->dateTime('bill_from')->nullable();
             $table->dateTime('bill_till')->nullable();
             $table->bigInteger('total_days')->nullable();
-            $table->float('total_amount')->nullable();
-            $table->float('others_billable_amount')->nullable();
-            $table->float('service_fee_deduction_amount')->nullable();
+            $table->double('total_amount')->nullable();
+            $table->double('per_day_charge')->nullable();
+            $table->double('others_billable_amount')->nullable();
+            $table->double('service_fee_deduction_amount')->nullable();
             $table->string('discount_unit')->nullable();
-            $table->float('discounted_amount')->nullable();
-            $table->float('grand_total')->nullable();
+            $table->double('discounted_amount')->nullable();
+            $table->double('grand_total')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL', 'BOTH'])->nullable();
             $table->timestamps();
         });

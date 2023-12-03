@@ -39,8 +39,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Run Hour </span>
-            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Run Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
+            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -83,7 +83,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Assigned Job</legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
@@ -108,7 +108,7 @@
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" readonly/> </td>
             <td class="px-1 py-1" > <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.remarks" placeholder="Remarks"  readonly/> </td>
             <td class="px-1 py-1"> 
-              <span :class="mntWorkRequisitionLine?.status === 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status === 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status === 0 ? 'Pending' : (mntWorkRequisitionLine?.status === 1 ? 'WIP' : 'Done') }}</span>
+              <span :class="mntWorkRequisitionLine?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status == 0 ? 'Pending' : (mntWorkRequisitionLine?.status == 1 ? 'WIP' : 'Done') }}</span>
             </td>
             <!-- <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="submitWipWorkRequisitionLine(mntWorkRequisitionLine)">Submit</button> 
             </td> -->
@@ -122,7 +122,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts Consumed </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-2/12 px-4 py-3 align-bottom">Material Name </th>
             <th class="w-2/12 px-4 py-3 align-bottom">Specification</th>
             <th class="w-1/12 px-4 py-3 align-bottom">Unit</th>

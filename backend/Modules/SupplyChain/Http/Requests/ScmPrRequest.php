@@ -25,7 +25,7 @@ class ScmPrRequest extends FormRequest
     {
         return [
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
-            'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
+            // 'acc_cost_center_id' => 'required|integer|exists:acc_cost_centers,id',
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'raised_date' => 'required|date',
             'remarks' => 'max:255',
@@ -40,7 +40,7 @@ class ScmPrRequest extends FormRequest
             'scmPrLines.*.drawing_no' => 'exclude_if:entry_type,1|max:255',
             'scmPrLines.*.part_no' => 'exclude_if:entry_type,1|max:255',
             'scmPrLines.*.specification' => 'exclude_if:entry_type,1|max:255',
-            'scmPrLines.*.quantity' => 'exclude_if:entry_type,1|required|numeric',
+            'scmPrLines.*.quantity' => 'exclude_if:entry_type,1|required|numeric|min:1',
             'scmPrLines.*.required_date' => 'exclude_if:entry_type,1|required|date',
         ];
     }
@@ -87,6 +87,7 @@ class ScmPrRequest extends FormRequest
 
             'scmPrLines.*.quantity.required' => 'In row no :position Quantity is required',
             'scmPrLines.*.quantity.numeric' => 'In row no :position Quantity must be a number',
+            'scmPrLines.*.quantity.min' => 'In row no :position Quantity must be greater than 0',
 
             'scmPrLines.*.required_date.required' => 'In row no :position Required date is required',
             'scmPrLines.*.required_date.date' => 'In row no :position Required date must be a date',

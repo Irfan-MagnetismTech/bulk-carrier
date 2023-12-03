@@ -6,7 +6,9 @@ import useNotification from '../useNotification.js';
 import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 import useHelper from '../useHelper';
+
 
 
 export default function useStoreRequisition() {
@@ -18,13 +20,14 @@ export default function useStoreRequisition() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const storeRequisition = ref( {
         ref_no: '',
         date: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
+        department_id: '',
         acc_cost_center_id: '',
         remarks: '',
         business_unit: '',
@@ -169,7 +172,7 @@ export default function useStoreRequisition() {
 
     async function searchStoreRequisition(searchParam, loading) {
         
-
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
             filteredStoreRequisitions.value = data.value;
@@ -178,6 +181,7 @@ export default function useStoreRequisition() {
             notification.showError(status);
         } finally {
             loading(false)
+            isLoading.value = false;
         }
     }
 

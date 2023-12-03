@@ -5,7 +5,7 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useLcRecord() {
     const BASE = 'scm' 
@@ -15,7 +15,7 @@ export default function useLcRecord() {
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
+    // const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
 
     const lcRecord = ref({
@@ -184,7 +184,8 @@ export default function useLcRecord() {
         }
     }
 
-    async function searchLcRecord(searchParam, loading, business_unit, scm_po_id) {
+    async function searchLcRecord(searchParam, business_unit, scm_po_id, loading = false) {
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-lc-record`,{params: {searchParam: searchParam, business_unit: business_unit, scm_po_id: scm_po_id}});
             filteredLcRecords.value = data.value;
@@ -192,7 +193,8 @@ export default function useLcRecord() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loading(false)
+            // loading(false)
+            isLoading.value = false;
         }
     }
     

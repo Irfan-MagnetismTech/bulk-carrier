@@ -5,7 +5,7 @@ import Api from "../../apis/Api";
 import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function usePurchaseOrder() {
     const BASE = 'scm' 
@@ -16,7 +16,7 @@ export default function usePurchaseOrder() {
     const isTableLoading = ref(false);
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-    const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
+    // const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
 
     const purchaseOrder = ref( {
@@ -210,7 +210,7 @@ export default function usePurchaseOrder() {
     }
 
     async function searchPurchaseOrder(searchParam, business_unit) {
-
+        isLoading.value = true;
         try {
         const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
             filteredPurchaseOrders.value = data.value;
@@ -219,11 +219,12 @@ export default function usePurchaseOrder() {
             notification.showError(status);
         } finally {
             // loading(false)
+            isLoading.value = false;
         }
     }
 
     async function searchPurchaseOrderForLc(searchParam, business_unit) {
-            
+        isLoading.value = true;
             try {
             const { data, status } = await Api.get(`${BASE}/search-po-for-lc`, {params: {searchParam: searchParam, business_unit: business_unit}});
                 filteredPurchaseOrders.value = data.value;
@@ -232,6 +233,7 @@ export default function usePurchaseOrder() {
                 notification.showError(status);
             } finally {
                 // loading(false)
+                isLoading.value = false;
             }
     }
     
@@ -262,7 +264,7 @@ export default function usePurchaseOrder() {
 
     
     async function getMaterialList(prId) {
-
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
                 params: {
@@ -275,6 +277,7 @@ export default function usePurchaseOrder() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
+            isLoading.value = false;
         }
     }
 

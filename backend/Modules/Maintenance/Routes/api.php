@@ -46,7 +46,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'critical-item-cats' => MntCriticalItemCatController::class,
         'critical-items' => MntCriticalItemController::class,
         'critical-vessel-items' => MntCriticalVesselItemController::class,
-        'critical-sp-lists' => MntCriticalSpListController::class,
+        'critical-spare-lists' => MntCriticalSpListController::class,
         'survey-items' => MntSurveyItemController::class,
         'survey-types' => MntSurveyTypeController::class,
         'surveys' => MntSurveyController::class,

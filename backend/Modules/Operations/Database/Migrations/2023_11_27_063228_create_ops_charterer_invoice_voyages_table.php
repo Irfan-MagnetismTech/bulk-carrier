@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ops_charterer_invoice_id')->constrained('ops_charterer_invoices')->onDelete('cascade');
             $table->bigInteger('ops_voyage_id')->nullable();
-            $table->string('cargo_Quantity')->nullable();
+            $table->string('cargo_quantity')->nullable();
             $table->string('initial_loading_point')->nullable();
             $table->string('final_loading_point')->nullable();
-            $table->float('rate_per_mt')->nullable();
-            $table->float('total_amount')->nullable();
+            $table->double('rate_per_mt')->nullable();
+            $table->double('total_amount')->nullable();
             $table->timestamps();
         });
     }
