@@ -105,20 +105,6 @@ let filterOptions = ref( {
       "label": "Validity Period",
       "filter_type": "input"
     },
-
-    
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "issue_date",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Issue Date",
-      "filter_type": "input"
-    },
-
     
     {
       "rel_type": null,
@@ -144,29 +130,8 @@ let filterOptions = ref( {
       "label": 'Left Days',
       "filter_type": null
     },    
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": 'reference_number',
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": 'Reference Number',
-      "filter_type": 'input'
-    },    
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": 'Certificate Image Number',
-      "filter_type": null
-    },    
-  
+    
+   
   ]
 });
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
@@ -236,9 +201,9 @@ onMounted(() => {
             
             <template v-for="(certificates, key, index) in vesselCertificates">
               <tr v-for="(item, itemIndex) in certificates">
-                <!-- <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td> -->
-                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                <td >{{ item?.opsVessel?.name }}</td>
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
+                <!-- <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td> -->
+                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ item?.opsVessel?.name }}</td>
                 <td>
                   {{ item?.opsMaritimeCertification?.name }}
                 </td>
@@ -246,30 +211,31 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.validity }}
                 </td>
                 <td>
-                  <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>
+                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('MM-DD-YYYY') : null }}</nobr>
                 </td>
                 <td>
-                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
+                  {{ (item?.expire_days < 0) ? 'Expired' : (item?.expire_days == 0 ? null : item?.expire_days) }}
                 </td>
-                <td>
-                  {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}
-                </td>
-                <td>
-                  {{ item?.reference_number }}
-                </td>
-                <td>
+                <!-- <td>
                   <div class="w-full text-center">
                     <a :href="env.BASE_API_URL+item?.attachment" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+item?.attachment"  alt="" srcset="" class="w-12 mx-auto">
                     </a>
                   </div>
-                </td>
+                </td> -->
                 <td>
-                  <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                  <nobr>
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                     <router-link :to="{ name: 'ops.vessel-certificates.history', params: { vesselId: certificates[0].opsVessel?.id, certificateId: item.opsMaritimeCertification.id } }" >
                     History
                     </router-link>
                   </button>
+                  <button type="button" class="bg-blue-500 ml-2 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                    <router-link :to="{ name: 'ops.vessel-certificates.renew', params: { vesselId: certificates[0].opsVessel?.id, marineCertificateId: item.opsMaritimeCertification.id } }" >
+                    Renew
+                    </router-link>
+                  </button>
+                  </nobr>
                 </td>
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && Object.keys(vesselCertificates).length"></LoaderComponent>

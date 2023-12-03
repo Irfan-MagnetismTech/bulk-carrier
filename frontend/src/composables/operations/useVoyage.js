@@ -31,6 +31,7 @@ export default function useVoyage() {
 	const portScheduleObject = {
 		ops_voyage_id: '',
         port_code: '',
+		operation_type: "",
         eta: '',
         etb: '',
         etd: '',

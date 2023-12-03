@@ -81,17 +81,17 @@ let filterOptions = ref({
       "filter_type": "dropdown",
       "select_options": [
         {
-          "value": '',
-          "label": "Select",
-          "defaultSelected" : true
+          value: '',
+          label: "ALL",
+          defaultSelected : true
         },
         {
-          "value": "0",
-          "label": "No"
+          value: "0",
+          label: "No"
         },
         {
-          "value": "1",
-          "label": "Yes"
+          value: "1",
+          label: "Yes"
         }
       ]
     },

@@ -37,7 +37,7 @@ class OpsVesselParticularRequest extends FormRequest
             'previous_name'     => ['nullable', 'string', 'max:255'],
             
             'call_sign'         =>['nullable', 'string', 'max:255'],
-            
+            'attachment'        => 'nullable|mimes:xlsx',
             'owner_name'        => ['nullable', 'string', 'max:255'],
             'classification'    => ['nullable', 'string'],
             'flag'              => ['nullable', 'string', 'max:255'],
@@ -68,6 +68,7 @@ class OpsVesselParticularRequest extends FormRequest
             'loa.numeric' => 'LOA must be numeric.',
             'bhp.numeric' => 'BHP must be numeric.',
             'imo.digits_between' => 'IMO number must be between :min and :max characters.',           
+            'attachment.mimes' => 'Attachment field must be an excel file of type: xlsx.',
             'official_number.digits_between' => 'Official Number must be between :min and :max characters.',
             'year_built.integer' => 'Year built must be an integer.',
             'year_built.min' => 'Year built must be greater than or equal to :min.',

@@ -297,7 +297,7 @@ export default function useMaterialReceiptReport() {
         isLoading.value = true;
 
         try {
-            const {data, status} = await Api.get(`/acc/get-cash-requisition-no-list`,{
+            const {data, status} = await Api.post(`/acc/get-cash-requisitions`,{
                 params: {
                     cost_center_id: cost_center_id,
                 },

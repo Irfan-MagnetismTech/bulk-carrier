@@ -6,8 +6,8 @@
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <form @submit.prevent="updateVoyage(voyage, voyageId)">
           <!-- Port Form -->
-          <voyage-form v-model:form="voyage" :errors="errors" :maritimeCertificateObject="maritimeCertificateObject" :bunkerObject="bunkerObject" :formType="formType"></voyage-form>
-          <!-- Submit button -->
+          <voyage-form v-model:form="voyage" :formType="formType" :errors="errors" :voyageSectorObject="voyageSectorObject" :portScheduleObject="portScheduleObject" :bunkerObject="bunkerObject"></voyage-form>
+
       </form>
   </div>
 </template>
@@ -24,7 +24,8 @@ const icons = useHeroIcon();
 
 const route = useRoute();
 const voyageId = route.params.voyageId;
-const { voyage, maritimeCertificateObject, bunkerObject, showVoyage, updateVoyage, errors } = useVoyage();
+const { voyage, portScheduleObject, bunkerObject, voyageSectorObject, showVoyage, updateVoyage, errors, isLoading } = useVoyage();
+
 
 const { setTitle } = Title();
 

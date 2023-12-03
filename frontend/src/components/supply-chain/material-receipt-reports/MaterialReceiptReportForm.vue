@@ -236,7 +236,7 @@ function changeRate(index) {
       </label>
       <label class="label-group" v-if="form.type == 'CASH'">
           <span class="label-item-title">Cash Requisition<span class="text-red-500">*</span></span>
-          <v-select :options="materialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.accCashRequisition" label="id" class="block form-input">
+          <v-select :options="filteredCashRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.accCashRequisition" label="id" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
