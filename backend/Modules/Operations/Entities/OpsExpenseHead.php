@@ -15,8 +15,8 @@ class OpsExpenseHead extends Model
         'head_id',
         'name',
         'is_visible_in_voyage_report',
+        'is_readonly',
         'business_unit'
-
     ];
 
         
@@ -31,6 +31,6 @@ class OpsExpenseHead extends Model
 
     public function opsSubHeads()
     {
-        return $this->hasMany(OpsExpenseHead::class, 'head_id', 'id')->with('opsHeads');
+        return $this->hasMany(OpsExpenseHead::class, 'head_id', 'id');
     }
 }
