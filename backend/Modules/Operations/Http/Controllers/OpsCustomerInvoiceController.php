@@ -108,6 +108,7 @@ class OpsCustomerInvoiceController extends Controller
             $customerInvoiceInfo = $request->except(
                 '_token',
                 'opsCustomerInvoiceLines',
+                'opsChartererInvoiceVoyages'
             );
         
             $customer_invoice->update($customerInvoiceInfo);        
