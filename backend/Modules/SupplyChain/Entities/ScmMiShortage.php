@@ -3,6 +3,10 @@
 namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmMi;
+use Modules\Accounts\Entities\AccCostCenter;
+use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Entities\ScmMiShortageLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMiShortage extends Model

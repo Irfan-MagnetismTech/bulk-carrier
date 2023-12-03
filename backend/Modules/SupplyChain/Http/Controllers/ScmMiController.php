@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmMi;
 use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Services\UniqueId;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
@@ -56,7 +57,6 @@ class ScmMiController extends Controller
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmMi::class, 'MI');
 
-
         try {
             DB::beginTransaction();
 
@@ -66,29 +66,16 @@ class ScmMiController extends Controller
 
             $scmMi->scmMiLines()->createMany($linesData);
 
-           $shortage = $scmMi->scmShortage()->create($request->scmMiShortage);
-return response()->json($request->scmMiShortage,422);
+            if ($request->scmMiShortage['shortage_type'] != "") {
+                $shortage = $scmMi->scmMiShortage()->create($request->scmMiShortage);
 
-            $shortage->scmMiShortageLines()->createMany($request['scmMiShortag']['scmMiShortageLines']);
-
-        //    return response()->success('Data created succesfully', $id, 422);
-
-            //loop through each line and update current stock
-            // $dataForStock = [];
-
-            // foreach ($request->scmMiLines as $scmMoLine) {
-            //     $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMi->scm_warehouse_id, $scmMoLine['quantity']);
-            // }
-
-            // $dataForStockLedger = array_merge(...$dataForStock);
-
-            // $scmMi->stockable()->createMany($dataForStockLedger);
-
-
+                $shortage->scmMiShortageLines()->createMany($request->scmMiShortage['scmMiShortageLines']);
+            }
+            (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $shortage, 201);
+            return response()->success('Data created succesfully', $scmMi, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -106,10 +93,12 @@ return response()->json($request->scmMiShortage,422);
         try {
             $movementIn->load(
                 'scmMiLines.scmMaterial',
+                'scmMiShortage.scmMiShortageLines',
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
                 'scmMmr',
+                'scmMo'
             );
 
             $scmMiLines = $movementIn->scmMiLines->map(function ($scmMoLine) use ($movementIn) {
@@ -118,9 +107,11 @@ return response()->json($request->scmMiShortage,422);
                     'scmMaterial' => $scmMoLine->scmMaterial,
                     'unit' => $scmMoLine->unit,
                     'quantity' => $scmMoLine->quantity,
+                    'mo_quantity' => $scmMoLine->scmMmrLine->scmMoLines->sum('quantity'),
                     'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
-                    'max_quantity' => $scmMoLine->scmMmrLine->scmMiLines->sum('quantity') - $scmMoLine->quantity,
+                    'max_quantity' => $scmMoLine->scmMmrLine->scmMoLines->sum('quantity') - $scmMoLine->quantity,
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
+                    'remarks' => $scmMoLine->remarks,
                 ];
 
                 return $lines;
@@ -146,14 +137,34 @@ return response()->json($request->scmMiShortage,422);
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
+        // request only 'scm_mi_id','shortage_type','scm_warehouse_id','scm_cost_center_id','business_unit'
+        // $requestDataForShortage = $request->only(['scmMiShortage.scm_mi_id', 'scmMiShortage.shortage_type', 'scmMiShortage.scm_warehouse_id', 'scmMiShortage.scm_cost_center_id', 'business_unit']);
+
+        // return response()->json($request->scmMiShortage['scmMiShortageLines'], 422);
         try {
             $movementIn->update($requestData);
 
             $movementIn->scmMiLines()->delete();
+            $movementIn->stockable()->delete();
+            $movementIn->scmMiShortage->scmMiShortageLines()->delete();
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
+
+            if ($request->scmMiShortage['shortage_type'] != "") {
+                $movementIn->scmMiShortage()->update([
+                    'scm_mi_id' => $movementIn->id,
+                    'shortage_type' => $request->scmMiShortage['shortage_type'],
+                    'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                    'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+                    'business_unit' => $request->business_unit
+                ]);
+
+                $movementIn->scmMiShortage->scmMiShortageLines()->createMany($request->scmMiShortage['scmMiShortageLines']);
+            }
+
+            (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
 
             return response()->success('Data updated sucessfully!', $movementIn, 202);
         } catch (\Exception $e) {
@@ -225,7 +236,7 @@ return response()->json($request->scmMiShortage,422);
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
                             'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
-                         
+
                         ];
                     })
                 ];
@@ -246,8 +257,8 @@ return response()->json($request->scmMiShortage,422);
     function getMoWiseMiData(Request $request)
     {
         try {
-           
-           
+
+
             if ($request->mo_id != null) {
                 $scmMmr = ScmMo::query()
                     ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
@@ -266,7 +277,7 @@ return response()->json($request->scmMiShortage,422);
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
                             'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
-                         
+
                         ];
                     })
                 ];
