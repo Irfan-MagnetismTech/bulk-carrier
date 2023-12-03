@@ -16,9 +16,8 @@ class OpsCustomerInvoiceRequest extends FormRequest
         return [
             'ops_customer_id'       => ['required', 'numeric', 'max:50'],
             'sub_total'             => ['required', 'numeric'],
-            'discount'              => ['required', 'string', 'max:255'],
+            'discount'              => ['required', 'string'],
             'grand_total'           => ['required', 'numeric'],
-            'business_unit'         => ['required', 'string', 'max:255'],
             'opsCustomerInvoiceLines.*.amount'         => ['nullable', 'numeric', 'max:255'],
         ];
     }
