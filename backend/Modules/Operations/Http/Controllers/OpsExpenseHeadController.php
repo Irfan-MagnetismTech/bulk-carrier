@@ -181,11 +181,11 @@ class OpsExpenseHeadController extends Controller
         try
         {
             if($expense_head->is_readonly){
-                return response()->json([
-                    'message' => 'Data is read-only.You can not use this one.',
-                ], 403);
+                return response()->error([
+                    'message' => 'Data is read-only.',
+                ], 422);
             }
-            
+
             $expense_head->opsSubHeads()->delete();
             $expense_head->delete();
 
