@@ -10,7 +10,7 @@ class OpsVesselExpenseHead extends Model
     use HasFactory;
 
     protected $fillable = [
-        'vessel',
+        'vessel_code',
         'ops_expense_head_id',
         'business_unit',
     ];
