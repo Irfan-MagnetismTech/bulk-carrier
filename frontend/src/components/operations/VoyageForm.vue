@@ -269,7 +269,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type <span class="text-red-500">*</span></span>
 
             <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input" required>
-              <option value="">Select Type</option>
+              <option value="" selected disabled>Select Type</option>
               <option value="Loading">Loading</option>
               <option value="Discharge">Discharge</option>
             </select>
@@ -526,6 +526,15 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
   props.form.ops_customer_name = value?.opsCustomer;
   props.form.ops_vessel_name = value?.opsVessel;
   props.form.ops_cargo_type_name = value?.opsCargoType;
+
+  if(props.form.opsVoyageSectors.length < 1) {
+    props.form.opsVoyageSectors.push({... props.voyageSectorObject });
+  }
+
+  if(props.form.opsVoyagePortSchedules.length < 1) {
+    props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
+  }
+
 
   // if(vessels.value.length > 0) {
   //     console.log("Changing editInitatedValue ")
