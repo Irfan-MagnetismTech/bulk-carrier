@@ -23,7 +23,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Expense Head List');
+setTitle('Charterer Invoice List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -156,8 +156,7 @@ onMounted(() => {
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { expenseHeadId: expenseHead.id } }"></action-button>
-                      
-                      <action-button v-if="!expenseHead?.is_readonly" @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
+                      <action-button @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
