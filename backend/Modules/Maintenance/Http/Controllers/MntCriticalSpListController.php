@@ -53,10 +53,25 @@ class MntCriticalSpListController extends Controller
             $criticalSp['business_unit'] = $request->get('business_unit');
 
             $mntCriticalSpListLines = $request->get('mntCriticalSpListLines');
+            // $mntCriSpListLines = collect($mntCriticalSpListLines);
+            // $csll = $mntCriSpListLines->pluck('mntCriticalItemSps');
+            $csll = array();
+            $count = 1;
+            foreach($mntCriticalSpListLines as $critical_item) {
+                foreach($critical_item['mntCriticalItemSps'] as $criticalSps) {
+                    $csll[$count]['mnt_critical_item_sp_id'] = $criticalSps['id'];
+                    $csll[$count]['min_rob'] = $criticalSps['min_rob'];
+                    $csll[$count]['rob'] = $criticalSps['rob'];
+                    $csll[$count]['remarks'] = array_key_exists("remarks", $criticalSps) ? $criticalSps['remarks'] : "";
+                }
+                $count++;
+            }
+            var_dump($csll);
+
             
             DB::beginTransaction();
             $mntCriticalSp = MntCriticalSpList::create($criticalSp); // Create vessel critical item
-            $mntCriticalSp->mntCriticalSpListLines()->createMany($mntCriticalSpListLines); // create critical item spare parts
+            $mntCriticalSp->mntCriticalSpListLines()->createMany($csll); // create critical item spare parts
             
             DB::commit();
             return response()->success('Critical spare parts list created successfully', $mntCriticalSp, 201);
