@@ -13,7 +13,7 @@ export default function useCriticalSpareList() {
     const notification = useNotification();
     const criticalSpareList = ref( {
         ops_vessel_id: '',
-        ops_vessel_name: '',
+        ops_vessel: '',
         reference_no: '',
         record_date: '',
         business_unit: '',

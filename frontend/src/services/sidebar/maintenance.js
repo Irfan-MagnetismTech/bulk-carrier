@@ -218,7 +218,7 @@ export default [
 
                     
                     {
-                        // route: 'mnt.critical-spare-lists.index',
+                        route: 'mnt.critical-spare-lists.index',
                         label: 'Critical Spare List',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
