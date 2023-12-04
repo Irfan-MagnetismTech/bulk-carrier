@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useCrewAssign from "../../../composables/crew/useCrewAssign";
 import Title from "../../../services/title";
@@ -8,8 +8,14 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
+
 const icons = useHeroIcon();
+const router = useRouter();
+import env from '../../../config/env';
 
 const props = defineProps({
   page: {
@@ -18,13 +24,97 @@ const props = defineProps({
   },
 });
 
-const { crewAssigns, getCrewAssigns, deleteCrewAssign, isLoading } = useCrewAssign();
+const { crewAssigns, getCrewAssigns, deleteCrewAssign, isLoading, isTableLoading } = useCrewAssign();
+const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Crew Assigns');
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
+let filterOptions = ref( {
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "crwCrew",
+      "field_name": "full_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Crew Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "Rank",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "status",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "date_of_joining",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Joining Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "port_of_joining",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Joining Port",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "duration",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Duration (Months)",
+      "filter_type": "input"
+    }
+  ]
+});
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -42,22 +132,35 @@ function confirmDelete(id) {
   })
 }
 
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
 onMounted(() => {
-  watchEffect(() => {
-  getCrewAssigns(props.page,businessUnit.value)
-    .then(() => {
-      const customDataTable = document.getElementById("customDataTable");
+  watchPostEffect(() => {
+    if(currentPage.value == props.page && currentPage.value != 1) {
+      filterOptions.value.page = 1;
+      router.push({ name: 'crw.crewAssigns.index', query: { page: filterOptions.value.page } });
+    } else {
+      filterOptions.value.page = props.page;
+    }
+    currentPage.value = props.page;
+    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+      filterOptions.value.isFilter = true;
+    }
 
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching ranks:", error);
-    });
-});
+    getCrewAssigns(filterOptions.value)
+        .then(() => {
+          const customDataTable = document.getElementById("customDataTable");
+          paginatedPage.value = filterOptions.value.page;
+          if (customDataTable) {
+            tableScrollWidth.value = customDataTable.scrollWidth;
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching ranks:", error);
+        });
+  });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -69,61 +172,38 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Crew Assign List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.crewAssigns.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- Search -->
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
 
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Vessel Name</th>
-            <th>Crew Name</th>
-            <th>Rank</th>
-            <th>Status</th>
-            <th>Joining Date</th>
-            <th>Joining Port</th>
-            <th>Duration(Months)</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead>
+        <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-          <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ crwAssign?.opsVessel?.name }}</td>
-            <td>{{ crwAssign?.crwCrew?.name }}</td>
-            <td>{{ crwAssign?.position_onboard }}</td>
-            <td>{{ crwAssign?.date_of_joining }}</td>
-            <td>{{ crwAssign?.port_of_joining }}</td>
-            <td>{{ crwAssign?.port_of_joining }}</td>
-            <td>{{ crwAssign?.approx_duration }}</td>
-            <td>
-              <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
-            </td>
-            <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
-              <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
-            </td>
-          </tr>
+            <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
+              <td> {{ index + 1 }} </td>
+              <td> {{ crwAssign?.opsVessel?.name }} </td>
+              <td> {{ crwAssign?.crwCrew?.full_name }} </td>
+              <td> {{ crwAssign?.position_onboard }} </td>
+              <td>  -- --   </td>
+              <td> {{ crwAssign?.date_of_joining }} </td>
+              <td> {{ crwAssign?.port_of_joining }} </td>
+              <td> {{ crwAssign?.approx_duration }}  </td>
+              <td>
+                <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
+              </td>
+              <td>
+                <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
+                <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
+              </td>
+            </tr>
           </tbody>
           <tfoot v-if="!crewAssigns?.data?.length">
-          <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
-          </tr>
-          <tr v-else-if="!crewAssigns?.data?.length">
-            <td colspan="9">No data found.</td>
-          </tr>
+            <tr v-if="isLoading">
+              <td colspan="9">Loading...</td>
+            </tr>
+            <tr v-else-if="!crewAssigns?.data?.length">
+              <td colspan="9">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>

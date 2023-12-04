@@ -17,7 +17,8 @@ class CrwCrewAssignmentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,name')
+            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,full_name,pre_mobile_no')
+            // ->get();
             ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);

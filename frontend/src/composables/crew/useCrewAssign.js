@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useCrewAssign() {
     const router = useRouter();
     const crewAssigns = ref([]);
+    const isTableLoading = ref(false);    
     const $loading = useLoading();
     const notification = useNotification();
     const crewAssign = ref( {
@@ -27,22 +28,31 @@ export default function useCrewAssign() {
     const indexPage = ref(null);
     const indexBusinessUnit = ref(null);
 
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewAssigns(page,businessUnit) {
+    async function getCrewAssigns(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
-
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-crew-assignments',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             crewAssigns.value = data.value;
@@ -51,8 +61,14 @@ export default function useCrewAssign() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
