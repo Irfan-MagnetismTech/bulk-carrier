@@ -31,7 +31,9 @@ class OpsBunkerRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_voyage_id.required' => 'Voyage is required',
+            'requisition_no.required' => 'Requisiton no is required',
         ];
     }
 
