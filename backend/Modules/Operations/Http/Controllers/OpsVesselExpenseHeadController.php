@@ -107,7 +107,7 @@ class OpsVesselExpenseHeadController extends Controller
                 $query->select('id', 'name');
             }])->get()
             ->groupBy('vessel_code');
-            
+
             // $heads = OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->pluck('ops_expense_head_id');
             // $vesselDetails = OpsVessel::where('short_code', $vessel_expense_head->vessel_code)->first();
 
@@ -138,7 +138,7 @@ class OpsVesselExpenseHeadController extends Controller
     //         DB::beginTransaction();
     //         $vessel_expense_head->update($request->all());
     //         DB::commit();
-    //         return response()->success('Vessel expense heads updated Successfully.', $vessel_expense_head, 200);
+    //         return response()->success('Vessel expense heads updated Successfully.', $vessel_expense_head, 202);
     //     }
     //     catch (QueryException $e)
     //     {

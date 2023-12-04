@@ -111,7 +111,7 @@ class OpsCustomerInvoiceController extends Controller
             $customer_invoice->update($customerInvoiceInfo);        
             $customer_invoice->opsCustomerInvoiceLines()->createUpdateOrDelete($request->opsCustomerInvoiceLines);
             DB::commit();
-            return response()->success('Data updated successfully.', $customer_invoice, 200);
+            return response()->success('Data updated successfully.', $customer_invoice, 202);
          }
          catch (QueryException $e)
          {            
