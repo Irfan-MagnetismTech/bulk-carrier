@@ -16,10 +16,10 @@ class OpsBunkerRequisitionRequest extends FormRequest
         return [
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
-            'created_by'        => ['required', 'numeric', 'max:50'],
+            'created_by'        => ['nullable', 'numeric', 'max:50'],
             'requisition_no'    => ['required', 'string'],
             'remarks'           => ['nullable', 'string'],
-            'status'            => ['required', 'string'],
+            'status'            => ['nullable', 'string'],
         ];
     }
 

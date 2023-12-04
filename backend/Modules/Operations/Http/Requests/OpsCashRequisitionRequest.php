@@ -32,8 +32,8 @@ class OpsCashRequisitionRequest extends FormRequest
             'received_date'                 => ['nullable', 'date', 'max:50'],
             'received_amount'               => ['nullable', 'numeric'],
             'amount'                        => ['required', 'numeric'],
-            'amount_bdt'                    => ['required', 'numeric'],  
-            'amount_usd'                    => ['required', 'numeric'],
+            'amount_bdt'                    => ['nullable', 'numeric'],  
+            'amount_usd'                    => ['nullable', 'numeric'],
         ];
     }
 
