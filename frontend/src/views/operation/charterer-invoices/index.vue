@@ -168,7 +168,7 @@ onMounted(() => {
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-invoices.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
                       <action-button @click="confirmDelete(chartererInvoice.id)" :action="'delete'"></action-button>
                     </nobr>
