@@ -35,6 +35,10 @@
 
   watch(criticalSpareList, (value) => {
     criticalSpareList.value.ops_vessel = value?.opsVessel;
+    criticalSpareList.value.mntCriticalSpListLines = value?.mntCriticalVesselItems;
+    criticalSpareList.value.mntCriticalSpListLines.forEach((mntCriticalSpListLine) => {
+      mntCriticalSpListLine.mntCriticalItemSps = mntCriticalSpListLine.mntCriticalSpListLines;
+    });
   });
   
   onMounted(() => {

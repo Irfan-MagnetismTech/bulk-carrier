@@ -22,7 +22,7 @@ class MntCriticalSpListController extends Controller
             $criticalSps = MntCriticalSpList::with(['opsVessel:id,name'])->globalSearch($request->all());
 
             return response()->success('Critical spare list for vessels are retrieved successfully', $criticalSps, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -53,7 +53,7 @@ class MntCriticalSpListController extends Controller
             $criticalSp['business_unit'] = $request->get('business_unit');
 
             $mntCriticalSpListLines = $request->get('mntCriticalSpListLines');
-            
+
             $csll = array();
             $count = 1;
             foreach($mntCriticalSpListLines as $critical_item) {
@@ -68,14 +68,14 @@ class MntCriticalSpListController extends Controller
             }
             // var_dump($csll);
 
-            
+
             DB::beginTransaction();
             $mntCriticalSp = MntCriticalSpList::create($criticalSp); // Create vessel critical item
             $mntCriticalSp->mntCriticalSpListLines()->createMany($csll); // create critical item spare parts
-            
+
             DB::commit();
             return response()->success('Critical spare parts list created successfully', $mntCriticalSp, 201);
-            
+
         }
         catch (\Exception $e)
         {
@@ -92,11 +92,13 @@ class MntCriticalSpListController extends Controller
     public function show($id)
     {
         try {
-            
-            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalVesselItems.mntCriticalItem','mntCriticalVesselItems.mntCriticalSpListLines'])->find($id);
-            
+
+            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalVesselItems.mntCriticalItem','mntCriticalVesselItems.mntCriticalSpListLines'=>function($query)use($id){
+                $query->where('mnt_critical_sp_list_id', $id);
+            }])->find($id);
+
             return response()->success('Critical spare parts list found successfully', $mntCriticalVesselItem, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -135,10 +137,10 @@ class MntCriticalSpListController extends Controller
             $mntCriticalSp->update($criticalSp);
             // Update critical item spare parts
             $mntCriticalSp->mntCriticalSpListLines()->createUpdateOrDelete($mntCriticalSpListLines);
-            
+
             DB::commit();
             return response()->success('Critical spare parts list updated successfully', $mntCriticalSp, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -161,10 +163,10 @@ class MntCriticalSpListController extends Controller
             $mntCriticalSp->mntCriticalSpListLines()->delete();
             // Delete critical item
             $mntCriticalSp->delete();
-            
+
             DB::commit();
             return response()->success('Critical spare parts list deleted successfully', $mntCriticalSp, 204);
-            
+
         }
         catch (\Exception $e)
         {
@@ -172,5 +174,5 @@ class MntCriticalSpListController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
 }
