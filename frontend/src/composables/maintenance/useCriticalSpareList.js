@@ -74,6 +74,10 @@ export default function useCriticalSpareList() {
 
     async function storeCriticalSpareList(form) {
 
+        if (!form.mntCriticalSpListLines?.length) {
+            Swal.fire("No Critical Spare Part Found.");
+            return null;
+        }
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 

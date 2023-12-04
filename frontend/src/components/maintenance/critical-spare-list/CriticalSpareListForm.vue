@@ -31,7 +31,7 @@
     </div>
     
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400" >
-      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts <span class="text-red-500">*</span></legend>
+      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Critical Spare Parts <span class="text-red-500">*</span></legend>
       <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLines?.length">
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -60,7 +60,7 @@
         </tbody>
       </table>
       <div v-else class="py-10  text-center rounded-md">
-          <p class="text-md font-bold">{{ form.ops_vessel_id ? 'No spare part found' : 'Please Select Vessel' }}</p>
+          <p class="text-md font-bold">{{ form.ops_vessel_id ? 'No Critical Spare Part Found' : 'Please Select Vessel' }}</p>
         </div>
       <div>
 
