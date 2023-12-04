@@ -15,7 +15,23 @@ return new class extends Migration
     {
         Schema::create('scm_cs', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('scm_pr_id');
+            $table->string('ref_no')->nullable();
+            $table->unsignedBigInteger('scm_warehouse_id');
+            $table->unsignedBigInteger('acc_cost_center_id');
+            $table->date('effective_date');
+            $table->date('expire_date');
+            $table->text('special_instructions')->nullable();
+            $table->string('priority')->nullable();
+            $table->string('required_days')->nullable();
+            $table->string('purchase_center')->nullable();
+            $table->string('selection_ground')->nullable();
+            $table->date('auditor_remarks_date')->nullable();
+            $table->string('auditor_remarks')->nullable();
+            $table->string('status')->nullable();
+            $table->string('business_unit')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->integer('is_foreign')->nullable();
             $table->timestamps();
         });
     }

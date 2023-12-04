@@ -16,17 +16,12 @@ class ScmAdjustment extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no', 'date', 'delivery_date', 'from_warehouse_id', 'to_warehouse_id', 'requested_by', 'requested_for', 'remarks', 'business_unit', 'created_by',
+        'ref_no', 'date', 'scm_warehouse_id','acc_cost_center_id', 'remarks', 'business_unit', 'created_by', 'type'
     ];
 
-    public function fromWarehouse(): BelongsTo
+    public function scmWarehouse(): BelongsTo
     {
-        return $this->belongsTo(ScmWarehouse::class, 'from_warehouse_id', 'id');
-    }
-
-    public function toWarehouse(): BelongsTo
-    {
-        return $this->belongsTo(ScmWarehouse::class, 'to_warehouse_id', 'id');
+        return $this->belongsTo(ScmWarehouse::class, 'scm_warehouse_id', 'id');
     }
 
     public function createdBy(): BelongsTo  

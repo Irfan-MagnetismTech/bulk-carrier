@@ -32,14 +32,13 @@ class ScmAdjustmentController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $movementRequisitions = ScmAdjustment::with(
-                'fromWarehouse',
-                'toWarehouse',
+            $datas = ScmAdjustment::with(
+                'scmWarehouse',
                 'createdBy',
                 'scmAdjustmentLines.scmMaterial',
             )->latest()->paginate(10);
 
-            return response()->success('Data list', $movementRequisitions, 200);
+            return response()->success('Data list', $datas, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -53,22 +52,22 @@ class ScmAdjustmentController extends Controller
      */
     public function store(ScmAdjustmentRequest $request): JsonResponse
     {
-        $requestData = $request->except('ref_no', 'mmr_composite_key');
+        $requestData = $request->except('ref_no', 'adjustment_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmAdjustment::class, 'MMR');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmAdjustment::class, 'ADMNT');
 
         try {
             DB::beginTransaction();
 
-            $movementRequisition = ScmAdjustment::create($requestData);
+            $adjustment = ScmAdjustment::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'adjustment');
 
-            $movementRequisition->scmAdjustmentLines()->createMany($linesData);
+            $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $movementRequisition, 201);
+            return response()->success('Data created succesfully', $adjustment, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -82,29 +81,11 @@ class ScmAdjustmentController extends Controller
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
-    public function show(ScmAdjustment $movementRequisition): JsonResponse
+    public function show(ScmAdjustment $adjustment): JsonResponse
     {
         try {
-            $movementRequisition->load('scmAdjustmentLines.scmMaterial', 'fromWarehouse', 'toWarehouse', 'createdBy',);
-
-            $scmAdjustmentLines = $movementRequisition->scmAdjustmentLines->map(function ($scmAdjustmentLine) use ($movementRequisition) {
-                $lines = [
-                    'scm_material_id' => $scmAdjustmentLine->scm_material_id,
-                    'scmMaterial' => $scmAdjustmentLine->scmMaterial,
-                    'unit' => $scmAdjustmentLine->unit,
-                    'present_stock' => (new CurrentStock)->count($scmAdjustmentLine->scm_material_id, $movementRequisition->to_warehouse_id),
-                    'available_stock' => (new CurrentStock)->count($scmAdjustmentLine->scm_material_id, $movementRequisition->from_warehouse_id),
-                    'quantity' => $scmAdjustmentLine->quantity,
-                    'mmr_composite_key' => $scmAdjustmentLine->mmr_composite_key,
-                ];
-
-                return $lines;
-            });
-
-            data_forget($movementRequisition, 'scmAdjustmentLines');
-
-            $movementRequisition->scmAdjustmentLines = $scmAdjustmentLines;
-            return response()->success('data', $movementRequisition, 200);
+            $adjustment->load('scmAdjustmentLines.scmMaterial', 'scmWarehouse','createdBy');
+            return response()->success('data', $adjustment, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -118,18 +99,18 @@ class ScmAdjustmentController extends Controller
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
-    public function update(ScmAdjustmentRequest $request, ScmAdjustment $movementRequisition): JsonResponse
+    public function update(ScmAdjustmentRequest $request, ScmAdjustment $adjustment): JsonResponse
     {
         try {
-            $movementRequisition->update($request->all());
+            $adjustment->update($request->all());
 
-            $movementRequisition->scmAdjustmentLines()->delete();
+            $adjustment->scmAdjustmentLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'adjustment');
 
-            $movementRequisition->scmAdjustmentLines()->createMany($linesData);
+            $adjustment->scmAdjustmentLines()->createMany($linesData);
 
-            return response()->success('Data updated sucessfully!', $movementRequisition, 202);
+            return response()->success('Data updated sucessfully!', $adjustment, 202);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -142,11 +123,11 @@ class ScmAdjustmentController extends Controller
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
-    public function destroy(ScmAdjustment $movementRequisition): JsonResponse
+    public function destroy(ScmAdjustment $adjustment): JsonResponse
     {
         try {
-            $movementRequisition->scmAdjustmentLines()->delete();
-            $movementRequisition->delete();
+            $adjustment->scmAdjustmentLines()->delete();
+            $adjustment->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {

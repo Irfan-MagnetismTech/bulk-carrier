@@ -37,6 +37,7 @@ export default function useMaterialAdjustment() {
                 scm_material_id: '',
                 unit: '',
                 quantity: 0.0,
+                adjustment_composite_key: '',
                 rate: 0.0,
             }
         ],
@@ -46,6 +47,7 @@ export default function useMaterialAdjustment() {
         scm_material_id: '',
         unit: '',
         quantity: 0.0,
+        adjustment_composite_key: '',
         rate: 0.0,
     }
 
@@ -69,7 +71,7 @@ export default function useMaterialAdjustment() {
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/material-adjustments`,{
+            const {data, status} = await Api.get(`/${BASE}/adjustments`,{
                 params: {
                    page: filterOptions.page,
                    items_per_page: filterOptions.items_per_page,
@@ -96,7 +98,7 @@ export default function useMaterialAdjustment() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-adjustments`, formData);
+            const { data, status } = await Api.post(`/${BASE}/adjustments`, formData);
             materialAdjustment.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-adjustments.index` });
@@ -115,7 +117,7 @@ export default function useMaterialAdjustment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/material-adjustments/${materialAdjustmentId}`);
+            const { data, status } = await Api.get(`/${BASE}/adjustments/${materialAdjustmentId}`);
             materialAdjustment.value = data.value;
 
         } catch (error) {
@@ -136,7 +138,7 @@ export default function useMaterialAdjustment() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-adjustments/${materialAdjustmentId}`, formData);
+            const { data, status } = await Api.post(`/${BASE}/adjustments/${materialAdjustmentId}`, formData);
             materialAdjustment.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-adjustments.index` });
@@ -155,7 +157,7 @@ export default function useMaterialAdjustment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/material-adjustments/${materialAdjustmentId}`);
+            const { data, status } = await Api.delete( `/${BASE}/adjustments/${materialAdjustmentId}`);
             notification.showSuccess(status);
             await getMaterialAdjustments(filterParams.value);
         } catch (error) {

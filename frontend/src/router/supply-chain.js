@@ -590,19 +590,19 @@ export default [
         })
     },
     {
-        path: `/${BASE}/material-cs/create`,
-        name: `${BASE}.material-cs.create`,
-        component: () => import(`../views/${PATH_BASE}/material-cs/create.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-create' },
+        path: `/${BASE}/material-cs/index`,
+        name: `${BASE}.material-cs.index`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
     },
     {
-        path: `/${BASE}/material-cs/:storeIssueReturnId/edit`,
+        path: `/${BASE}/material-cs/:materialCsId/edit`,
         name: `${BASE}.material-cs.edit`,
         component: () => import(`../views/${PATH_BASE}/material-cs/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-edit' },
     },
     {
-        path: `/${BASE}/material-cs/:storeIssueReturnId`,
+        path: `/${BASE}/material-cs/:materialCsId`,
         name: `${BASE}.material-cs.show`,
         component: () => import(`../views/${PATH_BASE}/material-cs/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-show'  },
