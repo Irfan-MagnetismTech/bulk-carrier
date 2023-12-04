@@ -609,5 +609,33 @@ export default [
     },
     /* Material Cs end */
     
+    {
+        path: `/${BASE}/quotations/:csId/create`,
+        name: `${BASE}.quotations.create`,
+        component: () => import(`../views/${PATH_BASE}/quotations/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-create' },
+        props: (route) => ({
+            cs_id: route.query.cs_id ?? null
+        })
+    },
+    {
+        path: `/${BASE}/quotations/:csId/edit`,
+        name: `${BASE}.quotations.edit`,
+        component: () => import(`../views/${PATH_BASE}/quotations/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-edit' },
+    },
+    {
+        path: `/${BASE}/quotations/:csId/show`,
+        name: `${BASE}.quotations.show`,
+        component: () => import(`../views/${PATH_BASE}/quotations/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-show'  },
+    },
+    {
+        path: `/${BASE}/quotations/:csId/index`,
+        name: `${BASE}.quotations.index`,
+        component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
     
 ];
