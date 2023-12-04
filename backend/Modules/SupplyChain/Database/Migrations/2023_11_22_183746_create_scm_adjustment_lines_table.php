@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('scm_adjustment_id')->references('id')->on('scm_adjustments')->onDelete('cascade');
             $table->unsignedBigInteger('scm_material_id')->nullable();
             $table->string('unit')->nullable();
-            $table->string('adjustment_composite_key')->nullable();
+            $table->string('ajt_composite_key')->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
             $table->decimal('rate', 10, 2)->nullable();
             $table->timestamps();
