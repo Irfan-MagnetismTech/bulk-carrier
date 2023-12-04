@@ -26,11 +26,11 @@ return new class extends Migration
             $table->string('perticular')->nullable();
             $table->string('percentage')->nullable();
             $table->string('currency')->nullable();
-            $table->float('amount')->nullable();
-            $table->float('exchange_rate_bdt')->nullable();
-            $table->float('exchange_rate_usd')->nullable();
-            $table->float('amount_bdt')->nullable();
-            $table->float('amount_usd')->nullable();
+            $table->float('amount', 20, 2)->nullable();
+            $table->float('exchange_rate_bdt', 20, 2)->nullable();
+            $table->float('exchange_rate_usd', 20, 2)->nullable();
+            $table->float('amount_bdt', 20, 2)->nullable();
+            $table->float('amount_usd', 20, 2)->nullable();
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();

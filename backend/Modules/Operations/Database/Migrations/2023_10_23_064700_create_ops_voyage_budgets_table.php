@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ops_expense_head_id')->nullable();
             $table->foreign('ops_expense_head_id')->references('id')->on('ops_expense_heads');
             $table->string('title');
-            $table->float('total')->nullable();
+            $table->float('total', 20, 2)->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });
