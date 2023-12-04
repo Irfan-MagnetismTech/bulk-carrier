@@ -250,16 +250,16 @@ export default [
                     },
 
                     
-                    // {
-                    //     route: 'mnt.surveys.index',
-                    //     label: 'Surveys',
-                    //     preIcon: icons.User,
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: [],
-                    // },
+                    {
+                        route: 'mnt.surveys.index',
+                        label: 'Surveys',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
                 ]
             }                   
                 

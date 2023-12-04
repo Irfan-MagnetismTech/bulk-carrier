@@ -9,14 +9,14 @@
         </label>
       
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Due Period <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.due_period" placeholder="Due Period" class="form-input" required/>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Due Period (Month)<span class="text-red-500">*</span></span>
+            <input type="number" v-model.trim="form.due_period" placeholder="Due Period" class="form-input" required/>
           <Error v-if="errors?.due_period" :errors="errors.due_period" />
         </label>
       
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Window Period <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.window_period" placeholder="Window Period" class="form-input" required/>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Window Period (Month) <span class="text-red-500">*</span></span>
+            <input type="number" v-model.trim="form.window_period" placeholder="Window Period" class="form-input" required/>
           <Error v-if="errors?.window_period" :errors="errors.window_period" />
         </label>
 

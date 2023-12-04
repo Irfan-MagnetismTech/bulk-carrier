@@ -450,6 +450,34 @@ export default [
 
 	/* Survey Types End */
 	
+	/* Survey Start */
+	{
+		path: `/${BASE}/surveys`,
+		name: `${BASE}.surveys.index`,
+		component: () => import(`../views/${VIEWBASE}/survey/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/surveys/create`,
+		name: `${BASE}.surveys.create`,
+		component: () => import(`../views/${VIEWBASE}/survey/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-create' },
+	},
+	{
+		path: `/${BASE}/surveys/:criticalItemId/edit`,
+		name: `${BASE}.surveys.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-edit' },
+	},
+	{
+		path: `/${BASE}/surveys/:criticalItemId`,
+		name: `${BASE}.surveys.show`,
+		component: () => import(`../views/${VIEWBASE}/survey/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-show'  },
+	},
+
+	/* Survey End */
 
 
 
