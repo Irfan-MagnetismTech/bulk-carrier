@@ -59,6 +59,7 @@ class MntCriticalSpListController extends Controller
             foreach($mntCriticalSpListLines as $critical_item) {
                 foreach($critical_item['mntCriticalItemSps'] as $criticalSps) {
                     $csll[$count]['mnt_critical_item_sp_id'] = $criticalSps['id'];
+                    $csll[$count]['mnt_critical_vessel_item_id'] = $criticalSps['mnt_critical_vessel_item_id'];
                     $csll[$count]['min_rob'] = $criticalSps['min_rob'];
                     $csll[$count]['rob'] = array_key_exists("rob", $criticalSps) ? $criticalSps['rob'] : 0;
                     $csll[$count]['remarks'] = array_key_exists("remarks", $criticalSps) ? $criticalSps['remarks'] : "";
@@ -92,7 +93,7 @@ class MntCriticalSpListController extends Controller
     {
         try {
             
-            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalVesselItems.mntCriticalItem.mntCriticalItemSps.mntCriticalSpListLines'])->find($id);
+            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalVesselItems.mntCriticalItem','mntCriticalVesselItems.mntCriticalSpListLines'])->find($id);
             
             return response()->success('Critical spare parts list found successfully', $mntCriticalVesselItem, 200);
             
