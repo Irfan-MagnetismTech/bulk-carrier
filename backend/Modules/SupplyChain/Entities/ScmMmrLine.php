@@ -8,6 +8,7 @@ use Modules\SupplyChain\Entities\ScmMoLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ScmMmrLine extends Model
 {
@@ -27,8 +28,13 @@ class ScmMmrLine extends Model
         return $this->belongsTo(ScmMaterial::class);
     }
 
-    public function scmMoLines()
+    public function scmMoLines(): HasMany
     {
         return $this->hasMany(ScmMoLine::class, 'mmr_composite_key', 'mmr_composite_key');
+    }
+
+    public function scmMiLines(): HasMany
+    {
+        return $this->hasMany(ScmMiLine::class, 'mmr_composite_key', 'mmr_composite_key');
     }
 }

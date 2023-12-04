@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('scm_mi_id')->references('id')->on('scm_mis')->onDelete('cascade');
             $table->string('shortage_type')->nullable();
             $table->unsignedBigInteger('scm_warehouse_id')->nullable();
-            $table->unsignedBigInteger('scm_cost_center_id')->nullable();
+            $table->unsignedBigInteger('acc_cost_center_id')->nullable();
             $table->string('business_unit')->nullable();
             $table->timestamps();
         });

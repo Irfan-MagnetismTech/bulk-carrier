@@ -11,7 +11,7 @@ class StockLedgerData
      *
      * @param mixed $parentModel
      * @param array $lines
-     * @param bool $os(opening stock)
+     * @param bool $os (opening stock)
      *
      * @return void
      */
