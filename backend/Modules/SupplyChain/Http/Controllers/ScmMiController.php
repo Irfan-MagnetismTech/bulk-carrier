@@ -64,10 +64,26 @@ class ScmMiController extends Controller
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
 
+            // return response()->json($linesData, 422);
+
             $scmMi->scmMiLines()->createMany($linesData);
 
             if ($request->scmMiShortage['shortage_type'] != "") {
                 $shortage = $scmMi->scmMiShortage()->create($request->scmMiShortage);
+
+                //if shortage lines material is and scm mi lines material id is same then get the mi_composite_key
+                $shortageLines = $request->scmMiShortage['scmMiShortageLines'];
+                foreach ($shortageLines as &$shortageLine) {
+                    $materialId = $shortageLine['scm_material_id'];
+                    $miLine = $scmMi->scmMiLines()->where('scm_material_id', $materialId)->first();
+
+                    if ($miLine && $miLine->mi_composite_key) {
+                        $shortageLine['mi_composite_key'] = $miLine->mi_composite_key;
+                        // return response()->json($shortageLine, 422);
+                    }
+                }
+
+
 
                 $shortage->scmMiShortageLines()->createMany($request->scmMiShortage['scmMiShortageLines']);
             }
