@@ -12,7 +12,7 @@ class OpsBunkerBillRequest extends FormRequest
         $dataArray = json_decode($data, true);
         
         $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
-        $mergeData = array_merge($dataArray , ['smr_file_path' => request('smr_file_path')]);
+        $mergeData = array_merge($mergeData , ['smr_file_path' => request('smr_file_path')]);
         $this->replace($mergeData);
     }
     /**
@@ -26,13 +26,12 @@ class OpsBunkerBillRequest extends FormRequest
             'date'              => ['required', 'date'],
             'scm_vendor_id'     => ['required', 'numeric', 'max:20'],
             'vendor_bill_no'    => ['required', 'string', 'max:255'],
-            'remarks'           => ['required', 'string', 'max:2550'],
-            'attachment'        => ['required', 'string'],
-            'smr_file_path'     => ['required', 'string'],
-            'sub_total'         => ['required', 'numeric', 'max:255'],
-            'discount'          => ['required', 'numeric', 'max:255'],
-            'grand_total'       => ['required', 'numeric', 'max:255'],
-            'business_unit'     => ['required', 'string'],
+            'sub_total'         => ['required', 'numeric'],
+            'discount'          => ['nullable', 'numeric'],
+            'grand_total'       => ['required', 'numeric'],
+            // 'attachment'        => ['nullable', 'string'],
+            // 'smr_file_path'     => ['nullable', 'string'],
+            'remarks'           => ['nullable', 'string', 'max:2550'],
         ];
     }
 

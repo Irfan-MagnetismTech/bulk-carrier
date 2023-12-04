@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunkerBill extends Model
@@ -23,10 +24,10 @@ class OpsBunkerBill extends Model
         'business_unit',
     ];
 
-    // public function scmVendor()
-    // {
-    //     return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
-    // }
+    public function scmVendor()
+    {
+        return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
+    }
 
     public function opsBunkerBillLines()
     {
