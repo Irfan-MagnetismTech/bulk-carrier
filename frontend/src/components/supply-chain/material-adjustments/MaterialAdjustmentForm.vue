@@ -19,10 +19,10 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Adjustment Type <span class="text-red-500">*</span></span>
-        <select v-model="form.adjustment_type" required class="form-input" name="adjustment_type" :id="'adjustment_type'">
+        <select v-model="form.type" required class="form-input" name="adjustment_type" :id="'adjustment_type'">
           <option value="">--Choose an option--</option>
-          <option value="1">Addition</option>
-          <option value="2">Deduction</option>
+          <option value="Addition">Addition</option>
+          <option value="Deduction">Deduction</option>
         </select>
       </label>
       <label class="label-group">
@@ -71,7 +71,7 @@
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMmrLine, index) in form.scmAdjustmentLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmAdjustmentLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmAdjustmentLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmAdjustmentLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="setMaterialOtherData(form.scmAdjustmentLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -165,12 +165,7 @@
       props.form.scmAdjustmentLines.splice(index, 1);
     }
 
-    // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
-    // }
+    
 
 
  
@@ -192,7 +187,7 @@
 
 watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id;
-        props.form.scm_cost_center_id = value?.acc_cost_center_id;
+        props.form.acc_cost_center_id = value?.cost_center_id;
     // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
     // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
     });
@@ -251,12 +246,6 @@ function fetchMaterials(search) {
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
      props.form.scmWarehouse = null;
-     props.form.scmFromWarehouse = null;
-     props.form.scmToWarehouse = null;
-     props.form.from_warehouse_id = '';
-     props.form.from_cost_center_id = '';
-     props.form.to_warehouse_id = '';
-     props.form.to_cost_center_id = '';
       
     }
     

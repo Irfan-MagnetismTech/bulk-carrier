@@ -11,7 +11,7 @@ class env {
     static SUMON_URL = 'http://192.168.88.222/bulk-carrier-erp/backend/public/';
     static DELOWAR_WSL = 'http://192.168.88.173:1337/'
 
-    static BASE_API_URL = env.DEVELOPMENT_WITH_IP;
+    static BASE_API_URL = env.DEVELOPMENT;
 
     static CLIENT_ID = 2
     static GRANT_TYPE = "password"

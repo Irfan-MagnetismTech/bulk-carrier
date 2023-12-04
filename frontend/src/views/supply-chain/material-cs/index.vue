@@ -55,7 +55,7 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "date",
+      "field_name": "effective_date",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -64,8 +64,18 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "expire_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "purchase_center",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -194,11 +204,12 @@ function confirmDelete(id) {
             <tr v-for="(materialCsdata,index) in (materialCsLists?.data ? materialCsLists?.data : materialCsLists)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ materialCsdata?.ref_no }}</td>
-              <td>{{ materialCsdata?.date }}</td>
-              <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ materialCsdata?.effective_date }}</td>
+              <td>{{ materialCsdata?.expire_date }}</td>
+              <td>{{ materialCsdata?.purchase_center }}</td>
               <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
               <td>
-                <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCs?.business_unit }}</span>
+                <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">

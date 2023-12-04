@@ -22,7 +22,7 @@ export default function useMaterialCs() {
 
     const materialCs = ref({
         ref_no: '',
-        date: '',
+        effective_date: '',
         expire_date: '',
         priority: '',
         scmWarehouse: '',
@@ -32,7 +32,7 @@ export default function useMaterialCs() {
         scmPr: '',
         scm_pr_id: '',
         pr_no: '',
-        special_instruction: '',
+        special_instructions: '',
         purchase_center: '',
         business_unit: '',
         required_days: '',
@@ -57,10 +57,8 @@ export default function useMaterialCs() {
         }
         filterParams.value = filterOptions;
         try {
-            const {data, status} = await Api.get(`/${BASE}/store-issue-returns`,{
+            const {data, status} = await Api.get(`/${BASE}/material-cs`,{
                 params: {
-                   page: filterOptions.page,
-                   items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }
             });
@@ -89,10 +87,10 @@ export default function useMaterialCs() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/store-issue-returns`, formData);
-            materialCsLists.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-cs`, formData);
+            materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.store-issue-returns.index` });
+            router.push({ name: `${BASE}.material-cs.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -108,8 +106,8 @@ export default function useMaterialCs() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/store-issue-returns/${materialCsId}`);
-            materialCsLists.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/material-cs/${materialCsId}`);
+            materialCs.value = data.value;
 
         } catch (error) {
             const { data, status } = error.response;
@@ -129,10 +127,10 @@ export default function useMaterialCs() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/store-issue-returns/${materialCsId}`, formData);
-            materialCsLists.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-cs/${materialCsId}`, formData);
+            materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.store-issue-returns.index` });
+            router.push({ name: `${BASE}.material-cs.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -148,7 +146,7 @@ export default function useMaterialCs() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/store-issue-returns/${materialCsId}`);
+            const { data, status } = await Api.delete( `/${BASE}/material-cs/${materialCsId}`);
             notification.showSuccess(status);
             await getMaterialCs(filterParams.value);
         } catch (error) {
@@ -164,7 +162,7 @@ export default function useMaterialCs() {
         
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-store-issue-returns`,searchParam);
+            const {data, status} = await Api.get(`/${BASE}/search-material-cs`,searchParam);
             filteredMaterialCs.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
@@ -174,57 +172,20 @@ export default function useMaterialCs() {
         }
     }
 
-    async function getSiWiseSir(siId) {
-        //NProgress.start();
-        // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
-        try {
-            const {data, status} = await Api.get(`/${BASE}/get-si-wise-data`,{
-                params: {
-                    si_id: siId,
-                },
-            });
-            filteredMaterialCsLines.value = data.value.scmSirLines;
-        } catch (error) {
-            console.log('tag', error)
-        } finally {
-            //NProgress.done();
-        }
-    }
+   
 
-    // async function getSiWiseData(srId) {
-    //     NProgress.start();
-    //     const loader = $loading.show(LoaderConfig);
-    //     isLoading.value = true;
-
-    //     try {
-    //         const {data, status} = await Api.get(`/${BASE}/get-sr-wise-data`,{
-    //             params: {
-    //                 sr_id: srId,
-    //             },
-    //         });
-    //         materialCs.value = merge(materialCs.value, data.value);
-    //         console.log('tag', data)
-    //     } catch (error) {
-    //         console.log('tag', error)
-    //     } finally {
-    //         loader.hide();
-    //         isLoading.value = false;
-    //         NProgress.done();
-    //     }
-    // }
 
     async function getPrWiseCs(prId) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/get-pr-wise-data`,{
+            const {data, status} = await Api.get(`/${BASE}/get-pr-wise-cs-data`,{
                 params: {
                     pr_id: prId,
                 },
             });
-            filteredMaterialCsLines.value = data.value.scmPrLines;
+            materialCs.value =  merge(materialCs.value, data.value);
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -238,14 +199,12 @@ export default function useMaterialCs() {
         materialCs,
         materialCsLists,
         filteredMaterialCs,
-        filteredMaterialCsLines,
         searchMaterialCs,
         getMaterialCs,
         storeMaterialCs,
         showMaterialCs,
         updateMaterialCs,
         deleteMaterialCs,
-        getSiWiseSir,
         getPrWiseCs,
         // getSiWiseData,
         isTableLoading,

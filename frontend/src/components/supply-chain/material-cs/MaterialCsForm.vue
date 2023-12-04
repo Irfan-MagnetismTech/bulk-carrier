@@ -1,7 +1,7 @@
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="{edit}" v-model="form.business_unit"></business-unit-input>
   </div>
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
@@ -25,7 +25,7 @@
         <span class="label-item-title">Date<span class="text-red-500">*</span></span>
         <input
           type="date"
-          v-model="form.date"
+          v-model="form.effective_date"
           required
           class="form-input"
           name="date"
@@ -89,21 +89,37 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
-          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" /> -->
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+          <v-select
+            :options="PRIORITY"
+            placeholder="--Choose an option--"
+            v-model="form.priority"
+            label="name"
+            class="block form-input">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.priority"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+          </v-select>
       </label>
       <label class="label-group">
         <span class="label-item-title">Required Days <span class="text-red-500">*</span></span>
-          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <input type="number" v-model="form.required_days" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Special instruction
+             <span class="text-red-500">*</span></span>
           <textarea
-            v-model="form.remarks"
+            v-model="form.special_instructions"
             class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <Error
             v-if="errors?.remarks"
@@ -142,6 +158,8 @@
     },
 
     }); 
+
+    const PRIORITY = ['High', 'Medium', 'Low']
     const form = toRefs(props).form;
     
    

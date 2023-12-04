@@ -103,7 +103,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'scm.movement-outs.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'scm.adjustments.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -209,11 +209,9 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(materialAdjustment,index) in (materialAdjustments?.data ? materialAdjustments?.data : materialAdjustments)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialAdjustment?.ref_no }}</td>
-              <td>{{ materialAdjustment?.fromWarehouse?.name?? '' }}</td>
-              <td>{{ materialAdjustment?.toWarehouse?.name?? '' }}</td>
               <td>{{ materialAdjustment?.date }}</td>
-              <td>{{ materialAdjustment?.required_date }}</td>
+              <td>{{ materialAdjustment?.type ?? '' }}</td>
+              <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="materialAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialAdjustment?.business_unit }}</span>
               </td>

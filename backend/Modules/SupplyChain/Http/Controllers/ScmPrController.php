@@ -246,7 +246,67 @@ class ScmPrController extends Controller
         return response()->success('Search result', $purchase_requisition, 200);
     }
 
+    // getPrWiseCsData
 
+    // const materialCs = ref({
+    //     ref_no: '',
+    //     date: '',
+    //     expire_date: '',
+    //     priority: '',
+    //     scmWarehouse: '',
+    //     scm_warehouse_id: '',
+    //     scm_warehouse_name: '',
+    //     acc_cost_center_id: '',
+    //     scmPr: '',
+    //     scm_pr_id: '',
+    //     pr_no: '',
+    //     special_instruction: '',
+    //     purchase_center: '',
+    //     business_unit: '',
+    //     required_days: '',
+    // });
+
+
+    public function getPrWiseCsData(Request $request): JsonResponse
+    {
+        if(request()->filled('pr_id')){
+        $pr_data = ScmPr::query()
+            ->with('scmPrLines')
+            ->find($request->pr_id);
+
+            $data = [
+                "scmWarehouse" => $pr_data->scmWarehouse,
+                "scm_warehouse_id" => $pr_data->scm_warehouse_id,
+                "scm_warehouse_name" => $pr_data->scmWarehouse->name,
+                "acc_cost_center_id" => $pr_data->acc_cost_center_id,
+                "scmPr" => $pr_data,
+                "scm_pr_id" => $pr_data->id,
+                "pr_no" => $pr_data->ref_no,
+                "purchase_center" => $pr_data->purchase_center,
+                "business_unit" => $pr_data->business_unit,
+            ];
+         }else{
+            $data = [
+                "scmWarehouse" => null,
+                "scm_warehouse_id" => null,
+                "scm_warehouse_name" => null,
+                "acc_cost_center_id" => null,
+                "scmPr" => null,
+                "scm_pr_id" => null,
+                "pr_no" => null,
+                "purchase_center" => null,
+                "business_unit" => null,
+            ];
+         }
+
+        try {
+            return response()->success
+            ('Data updated sucessfully!', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+     
     // public function searchMrr(Request $request): JsonResponse
     // {
     //     if($request->has('searchParam')) { 
