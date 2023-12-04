@@ -53,20 +53,19 @@ class MntCriticalSpListController extends Controller
             $criticalSp['business_unit'] = $request->get('business_unit');
 
             $mntCriticalSpListLines = $request->get('mntCriticalSpListLines');
-            // $mntCriSpListLines = collect($mntCriticalSpListLines);
-            // $csll = $mntCriSpListLines->pluck('mntCriticalItemSps');
+            
             $csll = array();
             $count = 1;
             foreach($mntCriticalSpListLines as $critical_item) {
                 foreach($critical_item['mntCriticalItemSps'] as $criticalSps) {
                     $csll[$count]['mnt_critical_item_sp_id'] = $criticalSps['id'];
                     $csll[$count]['min_rob'] = $criticalSps['min_rob'];
-                    $csll[$count]['rob'] = $criticalSps['rob'];
+                    $csll[$count]['rob'] = array_key_exists("rob", $criticalSps) ? $criticalSps['rob'] : 0;
                     $csll[$count]['remarks'] = array_key_exists("remarks", $criticalSps) ? $criticalSps['remarks'] : "";
                 }
                 $count++;
             }
-            var_dump($csll);
+            // var_dump($csll);
 
             
             DB::beginTransaction();
@@ -93,7 +92,7 @@ class MntCriticalSpListController extends Controller
     {
         try {
             
-            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalSpListLines.mntCriticalItemSp'])->find($id);
+            $mntCriticalVesselItem = MntCriticalSpList::with(['opsVessel:id,name','mntCriticalVesselItems.mntCriticalItem.mntCriticalItemSps.mntCriticalSpListLines'])->find($id);
             
             return response()->success('Critical spare parts list found successfully', $mntCriticalVesselItem, 200);
             
