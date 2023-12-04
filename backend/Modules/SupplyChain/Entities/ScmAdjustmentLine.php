@@ -13,7 +13,7 @@ class ScmAdjustmentLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_adjustment_id', 'scm_material_id', 'unit', 'quantity','rate', 'adjustment_composite_key'
+        'scm_adjustment_id', 'scm_material_id', 'unit', 'quantity','rate', 'ajt_composite_key'
     ];
 
     public function scmAdjustment(): BelongsTo

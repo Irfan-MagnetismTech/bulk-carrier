@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Modules\SupplyChain\Entities\ScmAdjustment;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Entities\ScmAdjustment;
 use Modules\SupplyChain\Entities\ScmStockLedger;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 
 class ScmAdjustmentController extends Controller
@@ -54,16 +55,25 @@ class ScmAdjustmentController extends Controller
     {
         $requestData = $request->except('ref_no', 'adjustment_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmAdjustment::class, 'ADMNT');
+        $requestData['ref_no'] = $this->uniqueId->generate(ScmAdjustment::class, 'AJT');
 
         try {
             DB::beginTransaction();
 
             $adjustment = ScmAdjustment::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'adjustment');
-
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+            
+            if($request->type === 'Addition')
+            {
+                (new StockLedgerData)->insert($adjustment, $linesData);
+
+            }
+            else
+            {
+                (new StockLedgerData)->insert($adjustment, $linesData, true);
+            }
 
             DB::commit();
 
@@ -84,7 +94,7 @@ class ScmAdjustmentController extends Controller
     public function show(ScmAdjustment $adjustment): JsonResponse
     {
         try {
-            $adjustment->load('scmAdjustmentLines.scmMaterial', 'scmWarehouse','createdBy');
+            $adjustment->load('scmAdjustmentLines.scmMaterial', 'scmWarehouse', 'createdBy');
             return response()->success('data', $adjustment, 200);
         } catch (\Exception $e) {
 
@@ -106,7 +116,7 @@ class ScmAdjustmentController extends Controller
 
             $adjustment->scmAdjustmentLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'adjustment');
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
