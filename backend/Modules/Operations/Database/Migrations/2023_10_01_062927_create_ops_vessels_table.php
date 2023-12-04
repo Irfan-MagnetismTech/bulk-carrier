@@ -41,7 +41,7 @@ return new class extends Migration
             $table->float('capacity', 20, 2)->nullable();
             $table->string('total_cargo_hold');
             $table->string('live_tracking_config')->nullable();
-            $table->text('remarks')->nullable();  
+            $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();           
             $table->timestamps();
         });
