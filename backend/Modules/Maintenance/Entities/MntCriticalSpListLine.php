@@ -14,8 +14,16 @@ class MntCriticalSpListLine extends Model
         "mnt_critical_item_sp_id",
         "min_rob",
         "rob",
-        "remarks"
+        "remarks",
+        "mnt_critical_vessel_item_id"
     ];
+
+    protected $appends = ["sp_name"];
+
+    public function getSpNameAttribute() {
+        $criticalItemSp = $this->mntCriticalItemSp()->first();
+        return $criticalItemSp["sp_name"];
+    }
 
     public function mntCriticalSpList() : BelongsTo {
         return $this->belongsTo(MntCriticalSpList::class);

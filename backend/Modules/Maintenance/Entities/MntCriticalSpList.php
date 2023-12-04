@@ -31,9 +31,6 @@ class MntCriticalSpList extends Model
         return $this->hasMany(MntCriticalSpListLine::class);
     }
 
-    // public function mntCriticalVesselItems() : BelongsToMany {
-    //     return $this->belongsToMany(MntCriticalVesselItem::class, 'ops_vessel_id', 'ops_vessel_id');
-    // }
     public function mntCriticalVesselItems()
     {
         return $this->hasMany(MntCriticalVesselItem::class, 'ops_vessel_id', 'ops_vessel_id')->where('is_critical',1);
