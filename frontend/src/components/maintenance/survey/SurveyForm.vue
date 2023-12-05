@@ -88,11 +88,11 @@
         <Error v-if="errors?.due_date" :errors="errors.due_date" />
       </label>
 
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Status</span>
         <input type="text" v-model="form.status" placeholder="Status" class="form-input vms-readonly-input" readonly/>
         <Error v-if="errors?.status" :errors="errors.status" />
-      </label>
+      </label> -->
 
     </div>
     
