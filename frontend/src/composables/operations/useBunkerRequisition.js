@@ -134,21 +134,9 @@ export default function useBunkerRequisition() {
 		isLoading.value = true;
 
 		try {
-
-			let formData = new FormData();
-			
-			// form.opsVoyageBoatNoteLines.map((element, index) => {
-			// 	formData.append('attachments['+index+']', element.attachment ?? null);
-			// 	element.attachment = null;
-			// })
-
-
-			// formData.append('info', JSON.stringify(form));
-			formData.append('_method', 'PUT');
-
-			const { data, status } = await Api.post(
+			const { data, status } = await Api.put(
 				`/ops/bunker-requisitions/${bunkerRequisitionId}`,
-				formData
+				form
 			);
 
 			notification.showSuccess(status);
