@@ -39,12 +39,12 @@
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmPrLines.push(clonedObj);
-      setMinHeight();
+      // setMinHeight();
     }
 
     function removeMaterial(index){
       props.form.scmPrLines.splice(index, 1);
-      setMinHeight();
+      // setMinHeight();
     }
 
     // function setMaterialOtherData(index){
@@ -133,7 +133,7 @@
   };
 
   onMounted(() => {
-    setMinHeight();
+    // setMinHeight();
   });
 
 // Use onUpdated to adjust min-height after the component updates
@@ -331,7 +331,7 @@ function tytytyasd(indx) {
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
 
-    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
+    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <div class=""> 
