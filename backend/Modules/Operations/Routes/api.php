@@ -123,6 +123,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
+    Route::put('bunker-requisitions-approved/{id}', [OpsBunkerRequisitionController::class, 'approved']);
         
         
     // report routes

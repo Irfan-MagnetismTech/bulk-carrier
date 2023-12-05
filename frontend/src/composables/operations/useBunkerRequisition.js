@@ -12,31 +12,18 @@ export default function useBunkerRequisition() {
 	const $loading = useLoading();
 	const notification = useNotification();
 
-	const bunkerObject = {
-		name: '',
-        material_code: '',
-        scm_material_category_id: '',
-        scm_material_category_name: '',
-        unit: '',
-        hs_code: '',
-        minimum_stock: 0,
-        store_category: '',
-        description: '',
-        sample_photo: null,
-		quantity: null
-	}
-
-	const bunkerRequisition = ref({
-		
-		business_unit: '',
-		ops_vessel_id: '',
-		ops_voyage_id: '',
-		requisition_no: '',
-		created_by: '',
-		water_density: '',
-		remarks: '',
-		status: '',
-		opsVoyage: '',
+	const bunkerRequisition = ref({		
+		business_unit: null,
+		ops_vessel_id: null,
+		ops_voyage_id: null,
+		requisition_no: null,
+		created_by: null,
+		approved_by: null,
+		water_density: null,
+		remarks: null,
+		note: null,
+		status: null,
+		opsVoyage: null,
 		opsBunkers: [],
 	});
 
@@ -151,6 +138,29 @@ export default function useBunkerRequisition() {
 		}
 	}
 
+	async function approvedBunkerRequisition(form, bunkerRequisitionId) {
+		//NProgress.start();
+		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.put(
+				`/ops/bunker-requisitions-approved/${bunkerRequisitionId}`,
+				form
+			);
+
+			notification.showSuccess(status);
+			await router.push({ name: 'ops.bunker-requisitions.index' });
+		} catch (error) {
+			const { data, status } = error.response;
+			errors.value = notification.showError(status, data);
+		} finally {
+			loader.hide();
+			isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	async function deleteBunkerRequisition(bunkerRequisitionId) {
 		
 		//NProgress.start();
@@ -191,13 +201,13 @@ export default function useBunkerRequisition() {
 	return {
 		bunkerRequisitions,
 		bunkerRequisition,
-		bunkerObject,
 		getBunkerRequisitions,
 		storeBunkerRequisition,
 		showBunkerRequisition,
 		updateBunkerRequisition,
 		deleteBunkerRequisition,
 		searchBunkerRequisitions,
+		approvedBunkerRequisition,
 		isLoading,
 		isTableLoading,
 		errors,

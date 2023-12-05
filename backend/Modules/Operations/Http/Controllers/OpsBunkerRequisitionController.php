@@ -116,7 +116,7 @@ class OpsBunkerRequisitionController extends Controller
                 '_token',
                 'opsBunkers',
             );
-            
+
             $bunker_requisition->update($bunkerRequisitionInfo);
             $bunker_requisition->opsBunkers()->delete();
             $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
@@ -152,6 +152,38 @@ class OpsBunkerRequisitionController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+    *
+    * @param OpsBunkerRequisitionRequest $request
+    * @param  OpsBunkerRequisition  $bunker_requisition
+    * @return JsonResponse
+    */
+    public function approved(OpsBunkerRequisitionRequest $request, OpsBunkerRequisition $bunker_requisition): JsonResponse
+    {
+        dd($request);
+        try {
+            DB::beginTransaction();
+            $bunkerRequisitionInfo = $request->except(
+                '_token',
+                'opsBunkers',
+            );
+
+            $bunkerRequisitionInfo['approved_by']= Auth::user()->id;
+            $bunker_requisition->update($bunkerRequisitionInfo);
+            $bunker_requisition->opsBunkers()->delete();
+            $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
+            DB::commit();
+            return response()->success('Ruquisiton approved successfully.', $bunker_requisition, 202);
+        }
+        catch (QueryException $e)
+        {            
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 
     public function getBunkerRequisitionByReqNo(Request $request){
         try {
