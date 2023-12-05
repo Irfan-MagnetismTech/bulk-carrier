@@ -124,7 +124,7 @@ export default function useCriticalSpareList() {
                 `/mnt/critical-spare-lists/${criticalSpareListId}`,
                 form
             );
-            criticalSpareList.value = data.value;
+            // criticalSpareList.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "mnt.critical-spare-lists.index" });
         } catch (error) {
@@ -145,7 +145,7 @@ export default function useCriticalSpareList() {
         try {
             const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSpareListId}`);
             notification.showSuccess(status);
-            await getCriticalSpareListItems(filterParams.value);
+            await getCriticalSpareLists(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             // notification.showError(status);

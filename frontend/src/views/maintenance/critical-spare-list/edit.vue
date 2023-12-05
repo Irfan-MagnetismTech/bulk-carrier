@@ -34,11 +34,19 @@
   setTitle('Edit Critical Spare List');
 
   watch(criticalSpareList, (value) => {
-    criticalSpareList.value.ops_vessel = value?.opsVessel;
-    criticalSpareList.value.mntCriticalSpListLines = value?.mntCriticalVesselItems;
-    criticalSpareList.value.mntCriticalSpListLines.forEach((mntCriticalSpListLine) => {
+    const { opsVessel, mntCriticalVesselItems } = value || {};
+
+    criticalSpareList.value.ops_vessel = opsVessel;
+    criticalSpareList.value.mntCriticalSpListLines = mntCriticalVesselItems;
+
+    criticalSpareList.value?.mntCriticalSpListLines.forEach((mntCriticalSpListLine) => {
       mntCriticalSpListLine.mntCriticalItemSps = mntCriticalSpListLine.mntCriticalSpListLines;
+      delete mntCriticalSpListLine.mntCriticalSpListLines;
     });
+
+    if ('mntCriticalVesselItems' in value) {
+      delete value.mntCriticalVesselItems;
+    }
   });
   
   onMounted(() => {
