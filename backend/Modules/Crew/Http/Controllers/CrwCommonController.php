@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwCrew;
+use Modules\Crew\Entities\CrwCrewAssignment;
 use Modules\Crew\Entities\CrwCrewDocument;
 use Modules\Crew\Entities\CrwCrewDocumentRenewal;
 use Modules\Crew\Entities\CrwCrewProfile;
@@ -146,7 +147,22 @@ class CrwCommonController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
 
+    public function getVesselAssignedCrews(Request $request){
+
+        try {
+            $vesselAssignedCrews = CrwCrewAssignment::with('crwCrew:id,full_name,pre_mobile_no')
+            ->where('ops_vessel_id', $request->ops_vessel_id)
+            ->where('status', "Onboard")
+            ->get();
+
+            return response()->success('Retrieved Successfully', $vesselAssignedCrews, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
 }

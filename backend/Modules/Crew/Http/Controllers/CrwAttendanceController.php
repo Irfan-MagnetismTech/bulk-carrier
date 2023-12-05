@@ -19,7 +19,7 @@ class CrwAttendanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwAttendances = CrwAttendance::with('crwAttendanceLines')->globalSearch($request->all());
+            $crwAttendances = CrwAttendance::with('opsVessel:id,name', 'crwAttendanceLines')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwAttendances, 200);
         }
@@ -40,7 +40,7 @@ class CrwAttendanceController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year_month', 'working_days', 'business_unit');
                 $crwAttendance     = CrwAttendance::create($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);
 
@@ -62,7 +62,7 @@ class CrwAttendanceController extends Controller
     public function show(CrwAttendance $crwAttendance)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAttendance->load('crwAttendanceLines'), 200);
+            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines'), 200);
         }
         catch (QueryException $e)
         {
@@ -82,7 +82,7 @@ class CrwAttendanceController extends Controller
         try {
             DB::transaction(function () use ($request, $crwAttendance)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year_month', 'working_days', 'business_unit');
                 $crwAttendance->update($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->delete();
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);

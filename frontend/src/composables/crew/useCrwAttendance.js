@@ -1,39 +1,38 @@
 import { useLoading } from "vue-loading-overlay";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Api from "../../apis/Api";
-import useNotification from "../../composables/useNotification.js";
+import Api from "../../apis/Api.js";
+import useNotification from "../useNotification.js";
 
-export default function useCrewAssign() {
+export default function useCrwAttendance() {
     const router = useRouter();
-    const crewAssigns = ref([]);
+    const crwAttendances = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const crewAssign = ref({
-        business_unit: "",
+    const crwAttendance = ref({
         ops_vessel_id: "",
-        ops_vessel_name: "",
-        // ops_vessel_flag: "",
-        crw_crew_id: "",
-        crw_crew_name: "",
-        crw_crew_contact: "",
-        position_onboard: "",
-        joining_date: "",
-        joining_port_code: "",
-        joining_port_name: "",
-        duration: "",
-        remarks: "",
+        year_month: "",
+        working_days: "",
+        business_unit: "",
+        crwAttendanceLines: [            
+            {
+                crw_crew_id : "",
+                crw_crew_name : "",
+                crw_crew_assignment_id : "",
+                // attendance_line_composite : "",
+                present_days : "",
+                absent_days : "",
+                payable_days : "",
+            },
+        ],
     });
-
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
 
     const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewAssigns(filterOptions) {
+    async function getCrwAttendances(filterOptions) {
         let loader = null;
         if (!filterOptions.isFilter) {
             loader = $loading.show({
@@ -52,17 +51,14 @@ export default function useCrewAssign() {
         filterParams.value = filterOptions;
 
         try {
-            const { data, status } = await Api.get(
-                "/crw/crw-crew-assignments",
-                {
-                    params: {
-                        page: filterOptions.page,
-                        items_per_page: filterOptions.items_per_page,
-                        data: JSON.stringify(filterOptions),
-                    },
-                }
-            );
-            crewAssigns.value = data.value;
+            const { data, status } = await Api.get("/crw/crw-attendances", {
+                params: {
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions),
+                },
+            });
+            crwAttendances.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -78,7 +74,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function storeCrewAssign(form) {
+    async function storeCrwAttendance(form) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -87,13 +83,10 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post(
-                "/crw/crw-crew-assignments",
-                form
-            );
-            crewAssign.value = data.value;
+            const { data, status } = await Api.post("/crw/crw-attendances", form);
+            crwAttendance.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crewAssigns.index" });
+            await router.push({ name: "crw.crwAttendances.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -103,7 +96,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function showCrewAssign(crewAssignId) {
+    async function showCrwAttendance(crwAttendanceId) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -112,10 +105,8 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(
-                `/crw/crw-crew-assignments/${crewAssignId}`
-            );
-            crewAssign.value = data.value;
+            const { data, status } = await Api.get(`/crw/crw-attendances/${crwAttendanceId}`);
+            crwAttendance.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -126,7 +117,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function updateCrewAssign(form, crewAssignId) {
+    async function updateCrwAttendance(form, crwAttendanceId) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -135,13 +126,10 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.put(
-                `/crw/crw-crew-assignments/${crewAssignId}`,
-                form
-            );
-            crewAssign.value = data.value;
+            const { data, status } = await Api.put(`/crw/crw-attendances/${crwAttendanceId}`, form);
+            crwAttendance.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crewAssigns.index" });
+            await router.push({ name: "crw.crwAttendances.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -151,7 +139,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function deleteCrewAssign(crewAssignId) {
+    async function deleteCrwAttendance(crwAttendanceId) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -160,11 +148,9 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete(
-                `/crw/crw-crew-assignments/${crewAssignId}`
-            );
+            const { data, status } = await Api.delete(`/crw/crw-attendances/${crwAttendanceId}`);
             notification.showSuccess(status);
-            await getCrewAssigns(filterParams.value);
+            await getCrwAttendances(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -175,13 +161,13 @@ export default function useCrewAssign() {
     }
 
     return {
-        crewAssigns,
-        crewAssign,
-        getCrewAssigns,
-        storeCrewAssign,
-        showCrewAssign,
-        updateCrewAssign,
-        deleteCrewAssign,
+        crwAttendances,
+        crwAttendance,
+        getCrwAttendances,
+        storeCrwAttendance,
+        showCrwAttendance,
+        updateCrwAttendance,
+        deleteCrwAttendance,
         isTableLoading,
         isLoading,
         errors,

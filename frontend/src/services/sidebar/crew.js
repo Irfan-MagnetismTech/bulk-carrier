@@ -194,6 +194,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: [],
             },
+            {
+                route: 'crw.crwAttendances.index',
+                label: 'Crew Attendance',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
             // {
             //     route: 'administration.users.index',
             //     label: 'Attendance Records',

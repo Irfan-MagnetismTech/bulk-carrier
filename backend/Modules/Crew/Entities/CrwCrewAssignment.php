@@ -13,7 +13,7 @@ class CrwCrewAssignment extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-	protected $fillable = ['ops_vessel_id', 'crw_crew_id', 'position_onboard', 'date_of_joining', 'port_of_joining', 'approx_duration', 'remarks', 'business_unit'];
+	protected $fillable = ['ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'status', 'completion_date', 'completion_remarks', 'remarks', 'business_unit'];
 
 	public function opsVessel()
     {
@@ -25,8 +25,8 @@ class CrwCrewAssignment extends Model
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }
 
-    public function port()
+    public function opsPort()
     {
-        return $this->hasOne(OpsPort::class,'code','port_of_joining');
+        return $this->hasOne(OpsPort::class,'code','joining_port_code');
     }
 }

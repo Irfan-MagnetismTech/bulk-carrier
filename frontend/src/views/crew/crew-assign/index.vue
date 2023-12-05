@@ -25,9 +25,13 @@ const props = defineProps({
 });
 
 const { crewAssigns, getCrewAssigns, deleteCrewAssign, isLoading, isTableLoading } = useCrewAssign();
+
 const debouncedValue = useDebouncedRef('', 800);
+
 const { setTitle } = Title();
+
 setTitle('Crew Assigns');
+
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -57,28 +61,28 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "Rank",
+      "relation_name": "crwCrew",
+      "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Current Rank",
+      "label": "Crew Contact",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "status",
+      "field_name": "position_onboard",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Status",
+      "label": "Position Onboard",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "date_of_joining",
+      "field_name": "joining_date",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -87,13 +91,13 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "port_of_joining",
+      "relation_name": 'opsPort',
+      "field_name": "joining_port_code",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Joining Port",
+      "label": "Joining Port Code",
       "filter_type": "input"
     },
     {
@@ -104,6 +108,16 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Duration (Months)",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "status",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
       "filter_type": "input"
     }
   ]
@@ -183,26 +197,39 @@ onMounted(() => {
               <td> {{ index + 1 }} </td>
               <td> {{ crwAssign?.opsVessel?.name }} </td>
               <td> {{ crwAssign?.crwCrew?.full_name }} </td>
+              <td> {{ crwAssign?.crwCrew?.pre_mobile_no }} </td>
               <td> {{ crwAssign?.position_onboard }} </td>
-              <td>  -- --   </td>
-              <td> {{ crwAssign?.date_of_joining }} </td>
-              <td> {{ crwAssign?.port_of_joining }} </td>
-              <td> {{ crwAssign?.approx_duration }}  </td>
+              <td> {{ crwAssign?.joining_date }} </td>
+              <td> {{ crwAssign?.joining_port_code }} </td>
+              <td> {{ crwAssign?.duration }}  </td>
+              <td>   
+                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }} 
+                </span>
+              
+              </td>
               <td>
                 <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
               </td>
               <td>
-                <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
-                <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
+                <nobr>
+                  <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
+                  <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
+                </nobr>
               </td>
             </tr>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewAssigns?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!crewAssigns?.data?.length">
+          <tfoot v-if="!crewAssigns?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
-              <td colspan="9">Loading...</td>
+              <td colspan="11"></td>
             </tr>
-            <tr v-else-if="!crewAssigns?.data?.length">
-              <td colspan="9">No data found.</td>
+            <tr v-else-if="isTableLoading">
+              <td colspan="11">
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+              </td>
+            </tr>
+            <tr v-else-if="!crewAssigns?.data?.data?.length">
+              <td colspan="11">No data found.</td>
             </tr>
           </tfoot>
       </table>
