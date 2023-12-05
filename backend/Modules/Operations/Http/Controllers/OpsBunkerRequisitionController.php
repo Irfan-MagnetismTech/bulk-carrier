@@ -31,7 +31,9 @@ class OpsBunkerRequisitionController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $bunker_requisitions = OpsBunkerRequisition::with('opsVessel','opsVoyage','opsBunkers.scmMaterial'.'opsBunkers.scmSupplier')
+            $bunker_requisitions = OpsBunkerRequisition::with('opsVessel','opsVoyage','opsBunkers.scmMaterial',
+            // 'opsBunkers.scmSupplier'
+            )
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
