@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Auth;
 use Modules\Operations\Entities\OpsBunkerRequisition;
 use Modules\Operations\Http\Requests\OpsBunkerRequisitionRequest;
 
@@ -60,7 +61,8 @@ class OpsBunkerRequisitionController extends Controller
                  '_token',
                  'opsBunkers',
              );
- 
+             
+             $bunkerRequisitionInfo['created_by']= Auth::user()->id;
              $bunker_requisition = OpsBunkerRequisition::create($bunkerRequisitionInfo);            
              $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
              DB::commit();
