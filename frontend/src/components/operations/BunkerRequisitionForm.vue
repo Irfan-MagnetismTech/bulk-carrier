@@ -8,7 +8,7 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
-        <label class="block w-full mt-2 text-sm">
+        <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
@@ -26,14 +26,14 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
-        <label class="block w-full mt-2 text-sm">
+        <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Requisition No. <span class="text-red-500">*</span></span>
               <input type="text" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
         </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-              <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-        </label>
+    </div>
+    <div>
+      <RemarksComponet v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
+
     </div>
 
     <div id="sectors" class="mt-5" v-if="form.opsBunkers?.length > 0">
@@ -78,6 +78,7 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import LoaderComponent from "../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../utils/ErrorComponent.vue";
+import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 
 const editInitiated = ref(false);
 
