@@ -84,7 +84,7 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
@@ -241,4 +241,27 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
     .add_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
+
+    #customDataTableMat::-webkit-scrollbar:horizontal {
+      height: 1rem!important; 
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-button:horizontal {
+      background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
+    } 
 </style>

@@ -112,20 +112,18 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
         if (materialArray.indexOf(material_key) === -1) {
           materialArray.push(material_key);
+          props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].total_price);
+          setMaterialOtherData(line, index);
+          props.form.sub_total = parseFloat(total.toFixed(2));
+          calculateNetAmount();
         } else {
           alert("Duplicate Material Found");
           props.form.scmPoLines.splice(index, 1);
         }  
-        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_price);
-        if (line.scmMaterial) {
-          setMaterialOtherData(line, index);
-        }
+       
+         
       });
-      props.form.sub_total = parseFloat(total.toFixed(2));
-      calculateNetAmount();
-
-  
 }, { deep: true });
     
   function calculateNetAmount(){
@@ -257,7 +255,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="pb-10 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
@@ -451,11 +449,11 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
 
-    #customDataTable::-webkit-scrollbar:horizontal {
+    #customDataTableMat::-webkit-scrollbar:horizontal {
       height: 1rem!important; 
     }
   
-    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+    #customDataTableMat::-webkit-scrollbar-thumb:horizontal{
       background-color: rgb(132, 109, 175); 
       border-radius: 12rem!important;
       width: 0.5rem!important;
@@ -463,12 +461,12 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-track:horizontal{
+    #customDataTableMat::-webkit-scrollbar-track:horizontal{
       background: rgb(148, 144, 155)!important; 
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-button:horizontal {
+    #customDataTableMat::-webkit-scrollbar-button:horizontal {
       background-color: rgb(0, 0, 0); 
       border-radius: 12rem!important;
       width: 1.3rem!important;
