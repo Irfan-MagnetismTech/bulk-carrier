@@ -8,18 +8,24 @@ use Modules\Operations\Http\Controllers\OpsVesselController;
 use Modules\Operations\Http\Controllers\OpsVoyageController;
 use Modules\Operations\Http\Controllers\OpsCustomerController;
 use Modules\Operations\Http\Controllers\OpsCargoTypeController;
+use Modules\Operations\Http\Controllers\OpsBunkerBillController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
+use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVoyageBudgetController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
+use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsChartererProfileController;
 use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
 use Modules\Operations\Http\Controllers\OpsVesselParticularController;
+use Modules\Operations\Http\Controllers\OpsBunkerRequisitionController;
 use Modules\Operations\Http\Controllers\OpsChartererContractController;
 use Modules\Operations\Http\Controllers\OpsLighterNoonReportController;
 use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
+use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
 
@@ -55,6 +61,12 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'customer-invoices' => OpsCustomerInvoiceController::class,
         'contract-assigns' => OpsContractAssignController::class,
         'voyage-expenditures' => OpsVoyageExpenditureController::class,
+        'expense-heads' => OpsExpenseHeadController::class,
+        'vessel-expense-heads' => OpsVesselExpenseHeadController::class,
+        'cash-requisitions' => OpsCashRequisitionController::class,
+        'bunker-requisitions' => OpsBunkerRequisitionController::class,
+        'bunker-bills' => OpsBunkerBillController::class,
+        'voyage-budgets' => OpsVoyageBudgetController::class,
     ]);
 
     //start for without pagination
@@ -103,6 +115,8 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
     Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
+    Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
+    Route::get('search-voyage-budgets', [OpsVoyageBudgetController::class, 'getVoyageBudgetByTitle']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
