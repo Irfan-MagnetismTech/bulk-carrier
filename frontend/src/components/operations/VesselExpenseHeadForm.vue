@@ -35,8 +35,8 @@ function removeSubHead(index){
 }
 
 function getSubHead(index) {
-  console.log(index)
-  subheads.value = expenseHeads[index]
+  console.log(expenseHeads.value[index])
+  subheads.value = expenseHeads.value[index]
   // console.log(props.form.heads[index])
   // if(props.form.heads.includes(headId)) {
   //   subheads.value.map(({id})=>{ 
