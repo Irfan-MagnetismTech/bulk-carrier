@@ -16,7 +16,7 @@ class MntCriticalSpListRequest extends FormRequest
         return [
             'reference_no' => 'required',
             'record_date' => 'required',
-            'mntCriticalSpListLines.*.rob' => 'required|integer|min:1',
+            'mntCriticalSpListLines.*.*.rob' => 'integer|min:1',
         ];
     }
 
