@@ -134,7 +134,8 @@ class MntCriticalSpListController extends Controller
             $count = 1;
             foreach($mntCriticalSpListLines as $critical_item) {
                 foreach($critical_item['mntCriticalItemSps'] as $criticalSps) {
-                    $csll[$count]['mnt_critical_item_sp_id'] = $criticalSps['id'];
+                    $csll[$count]['mnt_critical_sp_list_id'] = $criticalSps['mnt_critical_sp_list_id'];
+                    $csll[$count]['mnt_critical_item_sp_id'] = $criticalSps['mnt_critical_item_sp_id'];
                     $csll[$count]['mnt_critical_vessel_item_id'] = $criticalSps['mnt_critical_vessel_item_id'];
                     $csll[$count]['min_rob'] = $criticalSps['min_rob'];
                     $csll[$count]['rob'] = array_key_exists("rob", $criticalSps) ? $criticalSps['rob'] : 0;
@@ -142,6 +143,7 @@ class MntCriticalSpListController extends Controller
                     $count++;
                 }
             }
+            var_dump($csll);
             DB::beginTransaction();
             $mntCriticalSp = MntCriticalSpList::findorfail($id);
             // Update critical item
