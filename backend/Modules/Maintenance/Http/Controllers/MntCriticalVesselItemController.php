@@ -145,6 +145,16 @@ class MntCriticalVesselItemController extends Controller
         try {
             DB::beginTransaction();
             $mntCriticalVesselItem = MntCriticalVesselItem::findorfail($id);
+            
+            if ($mntCriticalVesselItem->mntCriticalSpListLines()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it is in use."]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             // Delete critical item spare parts
             $mntCriticalVesselItem->mntCriticalItemSps()->delete();
             // Delete critical item
