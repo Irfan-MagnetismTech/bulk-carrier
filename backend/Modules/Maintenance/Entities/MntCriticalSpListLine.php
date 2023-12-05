@@ -18,11 +18,16 @@ class MntCriticalSpListLine extends Model
         "mnt_critical_vessel_item_id"
     ];
 
-    protected $appends = ["sp_name"];
+    protected $appends = ["sp_name","unit"];
 
     public function getSpNameAttribute() {
         $criticalItemSp = $this->mntCriticalItemSp()->first();
         return $criticalItemSp["sp_name"];
+    }
+
+    public function getUnitAttribute() {
+        $criticalItemSp = $this->mntCriticalItemSp()->first();
+        return $criticalItemSp["unit"];
     }
 
     public function mntCriticalSpList() : BelongsTo {
