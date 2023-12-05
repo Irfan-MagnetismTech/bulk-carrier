@@ -64,15 +64,18 @@ class ScmAdjustmentController extends Controller
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
-            
-            if($request->type === 'Addition')
-            {
-                (new StockLedgerData)->insert($adjustment, $linesData);
 
-            }
-            else
-            {
-                (new StockLedgerData)->insert($adjustment, $linesData, true);
+            if ($request->type === 'Addition') {
+                (new StockLedgerData)->insert($adjustment, $linesData);
+            } else {
+                $dataForStock = [];
+                foreach ($request->scmAdjustmentLines as $key => $value) {
+                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
+                }
+
+                $dataForStockLedger = array_merge(...$dataForStock);
+
+                $adjustment->stockable()->createMany($dataForStockLedger);
             }
 
             DB::commit();
@@ -116,9 +119,24 @@ class ScmAdjustmentController extends Controller
 
             $adjustment->scmAdjustmentLines()->delete();
 
+            $adjustment->stockable()->delete();
+
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+
+            if ($request->type === 'Addition') {
+                (new StockLedgerData)->insert($adjustment, $linesData);
+            } else {
+                $dataForStock = [];
+                foreach ($request->scmAdjustmentLines as $key => $value) {
+                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
+                }
+
+                $dataForStockLedger = array_merge(...$dataForStock);
+
+                $adjustment->stockable()->createMany($dataForStockLedger);
+            }
 
             return response()->success('Data updated sucessfully!', $adjustment, 202);
         } catch (\Exception $e) {
