@@ -14,6 +14,7 @@ export default function useMaterialCs() {
     const router = useRouter();
     const materialCsLists = ref([]);
     const filteredMaterialCs = ref([]);
+    const quotations = ref([]);
     const filteredMaterialCsLines = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
@@ -193,6 +194,25 @@ export default function useMaterialCs() {
         }
     }
 
+
+    async function getQuotations(csId) {
+        // NProgress.start();
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-quotations`,{
+                params: {
+                    cs_id: csId,
+                },
+            });
+            quotations.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            isLoading.value = false;
+            loader.hide();
+        }
+    }
  
 
     return {
@@ -206,6 +226,8 @@ export default function useMaterialCs() {
         updateMaterialCs,
         deleteMaterialCs,
         getPrWiseCs,
+        getQuotations,
+        quotations,
         // getSiWiseData,
         isTableLoading,
         isLoading,

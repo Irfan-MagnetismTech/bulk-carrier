@@ -34,9 +34,9 @@ class OpsExpenseHeadController extends Controller
         try {
             $expenseHeads = OpsExpenseHead::whereNull('head_id')
             ->with('opsSubHeads')
-            ->latest()->paginate(15);
+            ->globalSearch($request->all());
 
-            return response()->success('Successfully retrieved expense heads.', $expenseHeads, 200);
+            return response()->success('Data retrieved successfully.', $expenseHeads, 200);
         }
         catch (QueryException $e)
         {
@@ -70,16 +70,16 @@ class OpsExpenseHeadController extends Controller
                     return [
                         'name' => $item['name'],
                         'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                        'head_id'   =>  $head->id,
+                        'head_id' => $head->id,
                         'business_unit'=>request()->business_unit, 
-                        'is_visible_in_voyage_report'    => $head->is_visible_in_voyage_report
+                        'is_visible_in_voyage_report' => $head->is_visible_in_voyage_report
                     ];
                 })->toArray();
 
                 OpsExpenseHead::insert($subHeads);
             }
             DB::commit();
-            return response()->success('Expense head added successfully.', $head, 201);
+            return response()->success('Data added successfully.', $head, 201);
         }
             catch (QueryException $e)
         {
@@ -98,7 +98,7 @@ class OpsExpenseHeadController extends Controller
      {        
          try
          {
-             return response()->success('Successfully retrieved expense head.', $expense_head->load('opsSubHeads'), 200);
+             return response()->success('Data retrieved successfully.', $expense_head->load('opsSubHeads'), 200);
          }
          catch (QueryException $e)
          {
@@ -135,7 +135,7 @@ class OpsExpenseHeadController extends Controller
                     'head_id' => $expense_head->id,
                     'name' => $item['name'],
                     'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
-                    'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? null
+                    'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report ?? 0,
                 ];
             })->toArray();
 
@@ -144,6 +144,7 @@ class OpsExpenseHeadController extends Controller
                     'head_id' => $expense_head->id,
                     'name' => $item['name'],
                     'billing_type' => (isset($item['billing_type'])) ? $item['billing_type'] : null,
+                    'is_visible_in_voyage_report' => (isset($item['is_visible_in_voyage_report'])) ? $item['is_visible_in_voyage_report'] : 0,
                 ];
             })->toArray();
 
@@ -160,7 +161,7 @@ class OpsExpenseHeadController extends Controller
             OpsExpenseHead::upsert($subHeads, ['id'], $fields);
             DB::commit();
         }
-        return response()->success('Expense head updated successfully.', $expense_head, 200);
+        return response()->success('Data updated successfully.', $expense_head, 202);
         }
         catch (QueryException $e)
         {            
@@ -179,10 +180,17 @@ class OpsExpenseHeadController extends Controller
     {
         try
         {
+            if($expense_head->is_readonly){
+                return response()->error([
+                    'message' => 'Data is read-only.',
+                ], 422);
+            }
+
+            $expense_head->opsSubHeads()->delete();
             $expense_head->delete();
 
             return response()->json([
-                'message' => 'Successfully deleted expense head.',
+                'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
@@ -193,39 +201,59 @@ class OpsExpenseHeadController extends Controller
 
     public function getExpenseHeadByHead(Request $request){
         try {
-            $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
-            ->where('id', $request->head_id)->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->get()->toArray();
-                
-            $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
-            ->where('is_visible_in_voyage_report', 1)
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);  
-            })->get()->toArray();
 
-            $output = collect(array_merge($heads, $globals));
+            $result = OpsExpenseHead::with('opsSubHeads')
+            ->whereNull('head_id')
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);  
+            })
+            ->when(isset(request()->name), function($query){
+                $query->where('name', 'like', '%' . request()->name . '%');
+            })
+            ->get()->toArray();
 
-            $heads = $output->map(function($item, $key) {
-                if(($item['head_id'] == null) && (count($item['opsSubHeads']) > 0)) {
-                } else {
-                    return $item;
-                }
-            });
-
-            $result = collect($heads)->map(function($item, $key) {
-                if(!empty($item)) {
-                    $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
-                    return $item;
-                }                
-            })->filter()->values();
-
-            return response()->success('Successfully retrieved expense head.', $result, 200);
+            return response()->success('Data retrieved successfully.', $result, 200);
 
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    // public function getExpenseHeadByHead(Request $request){
+    //     try {
+    //         $heads = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+    //         ->where('id', $request->head_id)->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+    //             $q->where('business_unit', request()->business_unit);  
+    //         })->get()->toArray();
+
+    //         $globals = OpsExpenseHead::with('opsHeads', 'opsSubHeads')
+    //         ->where('is_visible_in_voyage_report', 1)
+    //         ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+    //             $q->where('business_unit', request()->business_unit);  
+    //         })->get()->toArray();
+
+    //         $output = collect(array_merge($heads, $globals));
+
+    //         $heads = $output->map(function($item, $key) {
+    //             if(($item['head_id'] == null) && (count($item['opsSubHeads']) > 0)) {
+    //             } else {
+    //                 return $item;
+    //             }
+    //         });
+
+    //         $result = collect($heads)->map(function($item, $key) {
+    //             if(!empty($item)) {
+    //                 $item['category_head'] = $item['name'].((count($item['opsHeads']) > 0) ? " - ".collect($item['opsHeads'])->first()['name'] : null);
+    //                 return $item;
+    //             }
+    //         })->filter()->values();
+
+    //         return response()->success('Data retrieved successfully.', $result, 200);
+
+    //     } catch (QueryException $e){
+    //         return response()->error($e->getMessage(), 500);
+    //     }
+    // }
 
 
     
@@ -234,7 +262,7 @@ class OpsExpenseHeadController extends Controller
             $subheads = OpsExpenseHead::where('head_id', $headId)->get();
             return response()->json([
                 'value' => $subheads,
-                'message' => 'Expense Subheads derived successfully.'
+                'message' => 'Data retrieved successfully.'
             ], 200);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);

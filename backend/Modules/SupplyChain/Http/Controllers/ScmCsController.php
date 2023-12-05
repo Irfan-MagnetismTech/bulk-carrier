@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\UniqueId;
@@ -114,5 +115,15 @@ class ScmCsController extends Controller
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function getQuotations(Request $request)
+    {
+        $scmCs = ScmCsVendor::query()
+            ->with('scmPr', 'scmWarehouse')
+            ->where('id',$request->cs_id)
+            ->get();
+
+        return response()->success('Data list', $scmCs, 200);
     }
 }

@@ -110,7 +110,7 @@ class OpsVoyageExpenditureController extends Controller
             $voyage_expenditure->update($voyage_expenditure_info);
             $voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($request->opsVoyageExpenditureEntries);
             DB::commit();
-            return response()->success('Data updated successfully.', $voyage_expenditure, 200);
+            return response()->success('Data updated successfully.', $voyage_expenditure, 202);
         }
         catch (QueryException $e)
         {            

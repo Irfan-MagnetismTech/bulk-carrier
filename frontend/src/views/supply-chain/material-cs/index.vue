@@ -133,18 +133,15 @@ onMounted(() => {
 });
 // Code for global search end here
 
-// const navigateToPOCreate = (materialCsId) => {
-//   const pr_id = materialCsId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
+const navigateToQuotation = (csId) => {
+  const routeOptions = {
+    name: 'scm.quotations.index',
+    params: {
+      csId: csId
+    }
+  };
+  router.push(routeOptions);
+};  
 
 // const navigateToMRRCreate = (materialCsId) => {
 //   const pr_id = materialCsId; 
@@ -213,8 +210,8 @@ function confirmDelete(id) {
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToPOCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create Quotations</button>
+                  <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> -->
                   <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
                   <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
                 </div>

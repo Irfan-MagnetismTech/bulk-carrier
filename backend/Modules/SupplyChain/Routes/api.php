@@ -20,6 +20,7 @@ use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
+use Modules\SupplyChain\Http\Controllers\ScmCsController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -72,6 +73,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
+    // get-quotations
+    Route::get('get-quotations', [ScmCsController::class, "getQuotations"])->name('getQuotations');   
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
