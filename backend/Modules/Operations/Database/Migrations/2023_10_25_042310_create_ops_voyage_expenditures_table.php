@@ -18,9 +18,9 @@ return new class extends Migration
             $table->foreignId('ops_voyage_id')->constrained('ops_voyages', 'id')->nullable();
             $table->string('port');
             $table->string('currency')->nullable();
-            $table->string('rate')->nullable();
-            $table->float('total_usd')->nullable();
-            $table->float('total_bdt')->nullable();
+            $table->float('rate', 20, 2)->nullable();
+            $table->float('total_usd', 20, 2)->nullable();
+            $table->float('total_bdt', 20, 2)->nullable();
             $table->longText('expense_json')->nullable();
             $table->date('date')->nullable();
             $table->string('type')->nullable();

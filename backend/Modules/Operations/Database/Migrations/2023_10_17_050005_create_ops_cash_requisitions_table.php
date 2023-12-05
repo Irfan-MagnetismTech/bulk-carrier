@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('requisition_by');
             $table->string('serial');
             $table->string('unit');
-            $table->float('amount')->nullable();
+            $table->float('amount', 20, 2)->nullable();
             $table->string('amount_in_words')->nullable();
-            $table->float('amount_bdt')->nullable();
-            $table->float('amount_usd')->nullable();
+            $table->float('amount_bdt', 20, 2)->nullable();
+            $table->float('amount_usd', 20, 2)->nullable();
             $table->text('description')->nullable();
             $table->string('salary_unit');
             $table->string('pf_no');
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();             
             $table->date('approved_date')->nullable();
             $table->date('received_date')->nullable();
-            $table->float('received_amount')->nullable();
+            $table->float('received_amount', 20, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -56,6 +56,7 @@ class OpsVesselExpenseHeadController extends Controller
      */
     public function store(OpsVesselExpenseHeadRequest $request): JsonResponse
     {
+        // dd($request);
         try {
             DB::beginTransaction();
 
@@ -71,6 +72,8 @@ class OpsVesselExpenseHeadController extends Controller
                     'ops_expense_head_id' => $item
                 ];
             })->toArray();
+
+            // dd($items);
 
             OpsVesselExpenseHead::insert($items);
 
@@ -100,16 +103,21 @@ class OpsVesselExpenseHeadController extends Controller
     public function show(OpsVesselExpenseHead $vessel_expense_head): JsonResponse
     {
         try {
-            $heads = OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->pluck('ops_expense_head_id');
-            $vesselDetails = OpsVessel::where('code', $vessel_expense_head->vessel_code)->first();
+            $vessel_expense_heads= OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->with(['opsExpenseHead' => function($query){
+                $query->select('id', 'name');
+            }])->get()
+            ->groupBy('vessel_code');
 
-            $info = [
-                'vessel_code' => $vessel_expense_head->vessel_code,
-                'vessel_details' => $vesselDetails,
-                'heads' => $heads
-            ];
+            // $heads = OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->pluck('ops_expense_head_id');
+            // $vesselDetails = OpsVessel::where('short_code', $vessel_expense_head->vessel_code)->first();
+
+            // $info = [
+            //     'vessel_code' => $vessel_expense_head->vessel_code,
+            //     'vessel_details' => $vesselDetails,
+            //     'heads' => $heads
+            // ];
             
-            return response()->success('Data retrieved successfully.', $info, 200);
+            return response()->success('Data retrieved successfully.', $vessel_expense_heads, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
@@ -130,7 +138,7 @@ class OpsVesselExpenseHeadController extends Controller
     //         DB::beginTransaction();
     //         $vessel_expense_head->update($request->all());
     //         DB::commit();
-    //         return response()->success('Vessel expense heads updated Successfully.', $vessel_expense_head, 200);
+    //         return response()->success('Vessel expense heads updated Successfully.', $vessel_expense_head, 202);
     //     }
     //     catch (QueryException $e)
     //     {

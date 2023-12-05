@@ -16,10 +16,10 @@ class OpsBunkerRequisitionRequest extends FormRequest
         return [
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
-            'created_by'        => ['required', 'numeric', 'max:50'],
+            'created_by'        => ['nullable', 'numeric', 'max:50'],
             'requisition_no'    => ['required', 'string'],
             'remarks'           => ['nullable', 'string'],
-            'status'            => ['required', 'string'],
+            'status'            => ['nullable', 'string'],
         ];
     }
 
@@ -31,7 +31,9 @@ class OpsBunkerRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Vessel is required',
+            'ops_voyage_id.required' => 'Voyage is required',
+            'requisition_no.required' => 'Requisiton no is required',
         ];
     }
 

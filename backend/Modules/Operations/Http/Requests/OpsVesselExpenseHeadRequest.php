@@ -15,7 +15,7 @@ class OpsVesselExpenseHeadRequest extends FormRequest
     {
         return [
             'vessel_code'           => ['required', 'string', 'max:255'],
-            'ops_expense_head_id'   => ['required', 'numeric', 'max:50'],
+            // 'ops_expense_head_id'   => ['required', 'numeric', 'max:50'],
         ];
     }
 

@@ -22,7 +22,7 @@ class OpsCashRequisitionRequest extends FormRequest
             'description'                   => ['nullable', 'string'],
             'salary_unit'                   => ['required', 'string'],
             'pf_no'                         => ['nullable', 'string'],
-            'mobile_no'                     => ['required', 'string'],
+            'mobile_no'                     => ['required', 'numeric', 'digits_between:10,15'],
             'purpose'                       => ['nullable', 'string'],
             'preferred_adjustment_method'   => ['nullable', 'string', 'max:255'],
             'approximate_adjustment_date'   => ['nullable', 'date', 'max:50'],
@@ -32,8 +32,8 @@ class OpsCashRequisitionRequest extends FormRequest
             'received_date'                 => ['nullable', 'date', 'max:50'],
             'received_amount'               => ['nullable', 'numeric'],
             'amount'                        => ['required', 'numeric'],
-            'amount_bdt'                    => ['required', 'numeric'],  
-            'amount_usd'                    => ['required', 'numeric'],
+            'amount_bdt'                    => ['nullable', 'numeric'],  
+            'amount_usd'                    => ['nullable', 'numeric'],
         ];
     }
 
@@ -45,7 +45,14 @@ class OpsCashRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'date.required' => 'Date is required',
+            'requisition_by.required' => 'Requisiton by is required',
+            'serial.required' => 'Serial no is required',
+            'amount.required' => 'Amount is required',
+            'amount_in_words.required' => 'Amount in words is required',
+            'salary_unit.required' => 'Salary unit is required',
+            'mobile_no.required' => 'Mobile no is required',
+            'mobile_no.digits_between' => 'Mobile no must be between :min and :max characters',
         ];
     }
 

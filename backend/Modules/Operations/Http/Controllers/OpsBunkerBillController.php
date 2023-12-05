@@ -60,14 +60,14 @@ class OpsBunkerBillController extends Controller
                 'smr_file_path',
                 'opsBunkerBillLines',
             );
-
+            
             if(isset($request->attachment)){
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/bunker_bills');
                 $bunker_bill_info['attachment'] = $attachment;
             }
-
+            
             if(isset($request->smr_file_path)){                
-                $smr_file_path = $this->fileUpload->handleFile($request->attachment, 'ops/bunker_bills/srm_file');
+                $smr_file_path = $this->fileUpload->handleFile($request->smr_file_path, 'ops/bunker_bills/srm_file');
                 $bunker_bill_info['smr_file_path'] = $smr_file_path;
             }
 

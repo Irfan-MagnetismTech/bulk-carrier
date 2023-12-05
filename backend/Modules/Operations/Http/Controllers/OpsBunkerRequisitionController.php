@@ -108,8 +108,9 @@ class OpsBunkerRequisitionController extends Controller
                  'opsBunkers',
              );
              
-             $bunker_requisition->update($bunkerRequisitionInfo);            
-             $bunker_requisition->opsBunkers()->createUpdateOrDelete($request->opsBunkers);
+             $bunker_requisition->update($bunkerRequisitionInfo);
+             $bunker_requisition->opsBunkers()->delete();
+             $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
              DB::commit();
              return response()->success('Data updated successfully.', $bunker_requisition, 202);
          }

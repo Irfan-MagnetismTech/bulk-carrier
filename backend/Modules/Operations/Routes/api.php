@@ -11,6 +11,7 @@ use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsBunkerBillController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVoyageBudgetController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
@@ -65,6 +66,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'cash-requisitions' => OpsCashRequisitionController::class,
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'bunker-bills' => OpsBunkerBillController::class,
+        'voyage-budgets' => OpsVoyageBudgetController::class,
     ]);
 
     //start for without pagination
@@ -114,6 +116,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
     Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
+    Route::get('search-voyage-budgets', [OpsVoyageBudgetController::class, 'getVoyageBudgetByTitle']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);

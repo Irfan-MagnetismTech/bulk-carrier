@@ -21,9 +21,9 @@ return new class extends Migration
             $table->text('remarks');
             $table->string('attachment')->nullable();
             $table->string('smr_file_path')->nullable();
-            $table->float('sub_total');
-            $table->float('discount');
-            $table->float('grand_total')->nullable();
+            $table->float('sub_total', 20, 2);
+            $table->float('discount', 20, 2);
+            $table->float('grand_total', 20, 2)->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });
