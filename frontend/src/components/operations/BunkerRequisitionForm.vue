@@ -136,7 +136,7 @@ watch(() => props.form.opsVoyage, (value) => {
 
 const bunkerReset = ref([]);
 watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
-
+  console.log(props.form.ops_vessel_id);
   props.form.ops_vessel_id = newValue;
   if(newValue !== oldValue && newValue != undefined){
     showVessel(newValue)
