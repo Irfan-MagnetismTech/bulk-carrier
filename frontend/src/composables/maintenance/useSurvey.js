@@ -25,10 +25,6 @@ export default function useSurvey() {
         assigned_date: '',
         due_date: '',
         business_unit: '',
-        
-        opsVessels: [],
-        mntSurveyItems: [],
-        mntSurveyTypes: [],
     });
 
     const filterParams = ref(null);

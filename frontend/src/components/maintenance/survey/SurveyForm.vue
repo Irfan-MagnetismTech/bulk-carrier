@@ -63,7 +63,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (From) <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" required/>
+        <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/>
         <Error v-if="errors?.range_date_from" :errors="errors.range_date_from" />
       </label>
 
@@ -77,7 +77,7 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.assigned_date" placeholder="Assigned date" class="form-input" required/>
+        <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/>
         <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
       </label>
 
@@ -108,6 +108,7 @@ import useVessel from "../../../composables/operations/useVessel";
 import useSurveyItem from "../../../composables/maintenance/useSurveyItem";
 import useSurveyType from "../../../composables/maintenance/useSurveyType";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
+import moment from 'moment';
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -138,15 +139,19 @@ function surveyItemChange() {
 
 function surveyTypeChange() {
   props.form.mnt_survey_type_id = props.form.mnt_survey_type?.id;
+  setRangeDateTo();
+  setDueDate();
 }
 
 function setRangeDateTo() {
-  
+  if(props.form.range_date_from)
+    props.form.range_date_to = moment(props.form.range_date_from).add(props.form?.survey_type?.window_period ?? 0, 'months').format('YYYY-MM-DD');
 }
 
-// function setRangeDateTo() {
-  
-// }
+function setDueDate() {
+  if(props.form.assigned_date)
+    props.form.due_date = moment(props.form.assigned_date).add(props.form?.survey_type?.due_period ?? 0, 'months').format('YYYY-MM-DD');
+}
 
 
 
