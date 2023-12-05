@@ -7,7 +7,7 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 // import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useBunkerRequisiton from '../../../composables/operations/useBunkerRequisiton';
+import useBunkerRequisition from '../../../composables/operations/useBunkerRequisition';
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
@@ -19,7 +19,7 @@ const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
 
-const { voyageBoatNotes, getVoyageBoatNotes, deleteVoyageBoatNote, isLoading, isTableLoading, errors } = useBunkerRequisiton();
+const { bunkerRequisitions, getBunkerRequisitions, deleteBunkerRequisition, isLoading, isTableLoading, errors } = useBunkerRequisition();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Voyage Boat Note List');
+setTitle('Bunker Requisition List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -47,7 +47,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteVoyageBoatNote(id);
+      deleteBunkerRequisition(id);
     }
   })
 }
@@ -93,24 +93,24 @@ let filterOptions = ref( {
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "vessel_draft",
+      "field_name": "requisition_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Draft",
+      "label": "Requisition No.",
       "filter_type": "input"
     },
     
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "water_density",
+      "field_name": "Remarks",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Density",
+      "label": "Remarks",
       "filter_type": "input"
     },
     
@@ -126,7 +126,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.voyage-boat-notes.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.bunker-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -134,7 +134,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getVoyageBoatNotes(filterOptions.value)
+    getBunkerRequisitions(filterOptions.value)
       .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -159,61 +159,39 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Voyage Boat Note List</h2>
-    <default-button :title="'Create Voyage Boat Note'" :to="{ name: 'ops.voyage-boat-notes.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Bunker Requisition List</h2>
+    <default-button :title="'Create Bunker Requisition'" :to="{ name: 'ops.bunker-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <!-- <div class="flex items-center justify-between mb-2 select-none">
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div>
-  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Mother Vessel</th>
-            <th>Vessel</th>
-            <th>Voyage No</th>
-            <th>Capacity</th>
-            <th>Initial Survey Qty.</th>
-            <th>Finally Received Qty.</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="voyageBoatNotes?.data?.length" class="relative">
-              <tr v-for="(voyageBoatNote, index) in voyageBoatNotes.data" :key="voyageBoatNote?.id">
+          <tbody v-if="bunkerRequisitions?.data?.length" class="relative">
+              <tr v-for="(bunkerRequisition, index) in bunkerRequisitions.data" :key="bunkerRequisition?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ voyageBoatNote?.opsVoyage?.voyage_sequence }}</td>
-                  <td>{{ voyageBoatNote?.opsVessel?.name }}</td>
+                  <td>{{ bunkerRequisition?.opsVoyage?.voyage_sequence }}</td>
+                  <td>{{ bunkerRequisition?.opsVessel?.name }}</td>
 
-                  <td>{{ voyageBoatNote?.vessel_draft }}</td>
-                  <td>{{ voyageBoatNote?.water_density }}</td>
+                  <td>{{ bunkerRequisition?.requisition_no }}</td>
+                  <td>{{ bunkerRequisition?.remarks }}</td>
                   <td>
-                    <span :class="voyageBoatNote?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBoatNote?.business_unit }}</span>
+                    <span :class="bunkerRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerRequisition?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button> -->
-                      <action-button :action="'edit'" :to="{ name: 'ops.voyage-boat-notes.edit', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
-                      <action-button @click="confirmDelete(voyageBoatNote.id)" :action="'delete'"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.bunker-requisitions.show', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button> -->
+                      <action-button :action="'edit'" :to="{ name: 'ops.bunker-requisitions.edit', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button>
+                      <action-button @click="confirmDelete(bunkerRequisition.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && voyageBoatNotes?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bunkerRequisitions?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!voyageBoatNotes?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!bunkerRequisitions?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
@@ -222,13 +200,13 @@ onMounted(() => {
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
-          <tr v-else-if="!voyageBoatNotes?.data?.length">
+          <tr v-else-if="!bunkerRequisitions?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="voyageBoatNotes" to="ops.voyage-boat-notes.index" :page="page"></Paginate>
+    <Paginate :data="bunkerRequisitions" to="ops.bunker-requisitions.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

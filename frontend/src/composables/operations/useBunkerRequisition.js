@@ -6,9 +6,9 @@ import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
 
-export default function useBunkerRequisiton() {
+export default function useBunkerRequisition() {
 	const router = useRouter();
-	const bunkerRequisitons = ref([]);
+	const bunkerRequisitions = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
 
@@ -26,7 +26,7 @@ export default function useBunkerRequisiton() {
 		quantity: null
 	}
 
-	const bunkerRequisiton = ref({
+	const bunkerRequisition = ref({
 		
 		business_unit: '',
 		ops_vessel_id: '',
@@ -45,7 +45,7 @@ export default function useBunkerRequisiton() {
 	const isLoading = ref(false);
 	const isTableLoading = ref(false);
 
-	async function getBunkerRequisitons(filterOptions) {
+	async function getBunkerRequisitions(filterOptions) {
 		//NProgress.start();
 		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         // isLoading.value = true;
@@ -70,7 +70,7 @@ export default function useBunkerRequisiton() {
                     data: JSON.stringify(filterOptions)
 				}
 			});
-			bunkerRequisitons.value = data.value;
+			bunkerRequisitions.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -90,7 +90,7 @@ export default function useBunkerRequisiton() {
 		}
 	}
 
-	async function storeBunkerRequisiton(form) {
+	async function storeBunkerRequisition(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -109,14 +109,14 @@ export default function useBunkerRequisiton() {
 		}
 	}
 
-	async function showBunkerRequisiton(bunkerRequisitonId) {
+	async function showBunkerRequisition(bunkerRequisitionId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/bunker-requisitions/${bunkerRequisitonId}`);
-			bunkerRequisiton.value = data.value;
+			const { data, status } = await Api.get(`/ops/bunker-requisitions/${bunkerRequisitionId}`);
+			bunkerRequisition.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -128,7 +128,7 @@ export default function useBunkerRequisiton() {
 		}
 	}
 
-	async function updateBunkerRequisiton(form, bunkerRequisitonId) {
+	async function updateBunkerRequisition(form, bunkerRequisitionId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -147,7 +147,7 @@ export default function useBunkerRequisiton() {
 			formData.append('_method', 'PUT');
 
 			const { data, status } = await Api.post(
-				`/ops/bunker-requisitions/${bunkerRequisitonId}`,
+				`/ops/bunker-requisitions/${bunkerRequisitionId}`,
 				formData
 			);
 
@@ -163,16 +163,16 @@ export default function useBunkerRequisiton() {
 		}
 	}
 
-	async function deleteBunkerRequisiton(bunkerRequisitonId) {
+	async function deleteBunkerRequisition(bunkerRequisitionId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/bunker-requisitions/${bunkerRequisitonId}`);
+			const { data, status } = await Api.delete( `/ops/bunker-requisitions/${bunkerRequisitionId}`);
 			notification.showSuccess(status);
-			await getBunkerRequisitons(filterParams.value);
+			await getBunkerRequisitions(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			// notification.showError(status);
@@ -184,12 +184,12 @@ export default function useBunkerRequisiton() {
 		}
 	}
 
-	async function searchBunkerRequisitons(searchParam, loading) {
+	async function searchBunkerRequisitions(searchParam, loading) {
 		//NProgress.start();
 
 		try {
 			const { data, status } = await Api.get(`/ops/search-bunker-requisitions?requisition_no=${searchParam}`);
-			bunkerRequisitons.value = data.value;
+			bunkerRequisitions.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -201,15 +201,15 @@ export default function useBunkerRequisiton() {
 	}
 
 	return {
-		bunkerRequisitons,
-		bunkerRequisiton,
+		bunkerRequisitions,
+		bunkerRequisition,
 		bunkerObject,
-		getBunkerRequisitons,
-		storeBunkerRequisiton,
-		showBunkerRequisiton,
-		updateBunkerRequisiton,
-		deleteBunkerRequisiton,
-		searchBunkerRequisitons,
+		getBunkerRequisitions,
+		storeBunkerRequisition,
+		showBunkerRequisition,
+		updateBunkerRequisition,
+		deleteBunkerRequisition,
+		searchBunkerRequisitions,
 		isLoading,
 		isTableLoading,
 		errors,

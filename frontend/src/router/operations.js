@@ -518,7 +518,7 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/bunker-requisitions/:bunkerRequisitonId/edit`,
+		path: `/${BASE}/bunker-requisitions/:bunkerRequisitionId/edit`,
 		name: `${BASE}.bunker-requisitions.edit`,
 		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
