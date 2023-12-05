@@ -14,15 +14,11 @@ export default function useVesselExpenseHead() {
 	const notification = useNotification();
 
 	const vesselExpenseHead = ref( {
+		business_unit: null,
+		opsVessel: null,
+		ops_vessel_id: null,
         name: '',
-        is_global: '0' ,
-        opsSubHeads: [
-            {
-                head_id: '',
-                name: '',
-                billing_type: ''
-            }
-        ],
+		heads: [],
     });
     const errors = ref('');
     const isLoading = ref(false);
