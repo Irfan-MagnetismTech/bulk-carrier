@@ -2,6 +2,8 @@
 
 namespace Modules\Maintenance\Entities;
 
+use App\Traits\GlobalSearchTrait;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +11,7 @@ use Modules\Operations\Entities\OpsVessel;
 
 class MntSurvey extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'mnt_survey_item_id',
@@ -24,6 +26,8 @@ class MntSurvey extends Model
         'business_unit',
     ];
 
+    protected $appends = ["status"];
+
     public function opsVessel() : BelongsTo {
         return $this->belongsTo(OpsVessel::class);
     }
@@ -34,5 +38,18 @@ class MntSurvey extends Model
 
     public function mntSurveyType() : BelongsTo {
         return $this->belongsTo(MntSurveyType::class);
+    }
+
+    public function getStatusAttribute() {
+        $status = "Not Due";
+        $today = new DateTime(date('Y-m-d'));
+        $dueDate = new DateTime($this->due_date);
+        
+        $interval = $dueDate->diff($today);
+        $daysPassed =(int) $interval->format('%R%a');
+
+        $status = ($daysPassed > 0) ? "Due" : (($daysPassed >= -10) ? "Due Soon" : $status);
+
+        return $status;
     }
 }

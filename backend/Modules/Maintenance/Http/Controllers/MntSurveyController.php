@@ -5,6 +5,8 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntSurvey;
+use Modules\Maintenance\Http\Requests\MntSurveyRequest;
 
 class MntSurveyController extends Controller
 {
@@ -12,9 +14,39 @@ class MntSurveyController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('maintenance::index');
+        try {
+
+            $surveys = MntSurvey::select('*')
+                                ->globalSearch($request->all());
+
+            return response()->success('Surveys are retrieved successfully', $surveys, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function MntSurveyTypes()
+    {
+        try {
+
+            $surveys = MntSurvey::select('*')->get();
+
+            return response()->success('Surveys are retrieved successfully', $surveys, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -31,9 +63,20 @@ class MntSurveyController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntSurveyRequest $request)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $survey = MntSurvey::create($input);
+            
+            return response()->success('Survey created successfully', $survey, 201);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -43,7 +86,17 @@ class MntSurveyController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+            
+            $survey = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->find($id);
+            
+            return response()->success('Survey type found successfully', $survey, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -62,9 +115,21 @@ class MntSurveyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntSurveyRequest $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+            
+            $survey = MntSurvey::findorfail($id);
+            $survey->update($input);
+            
+            return response()->success('Survey updated successfully', $survey, 202);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -74,6 +139,16 @@ class MntSurveyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {            
+            $survey = MntSurvey::findorfail($id);
+            $survey->delete();
+            
+            return response()->success('Survey deleted successfully', $survey, 204);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
