@@ -18,7 +18,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $surveys = MntSurvey::select('*')
+            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])
                                 ->globalSearch($request->all());
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
@@ -38,7 +38,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $surveys = MntSurvey::select('*')->get();
+            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->get();
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
             
