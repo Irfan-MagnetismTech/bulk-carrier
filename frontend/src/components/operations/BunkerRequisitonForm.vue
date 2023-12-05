@@ -28,11 +28,11 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Requisition No. <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
+              <input type="text" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-              <input type="number" step="0.001" v-model.trim="form.remarks" placeholder="Remakrs" class="form-input" autocomplete="off" />
+              <input type="text" v-model.trim="form.remarks" placeholder="Remakrs" class="form-input" autocomplete="off" />
         </label>
     </div>
 
@@ -135,17 +135,12 @@ watch(() => props.form.opsVoyage, (value) => {
 
 const bunkerReset = ref([]);
 watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
-  console.log(props.form.ops_vessel_id);
-  console.log(oldValue, newValue);
- 
- 
+
   props.form.ops_vessel_id = newValue;
-  console.log('bunker info: ',props.form.opsBunkers);
-  if(newValue !== oldValue && oldValue != '' && newValue != undefined){
-    console.log('ok...');
+  if(newValue !== oldValue && newValue != undefined){
     showVessel(newValue)
     .then(() => {
-        props.form.vessel_name = value?.value?.name
+        props.form.vessel_name = vessel?.value?.name;
         bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
       // Assuming you want to reset the resettableValue property to some default value
       return {

@@ -96,17 +96,7 @@ export default function useBunkerRequisiton() {
 		isLoading.value = true;
 
 		try {
-			let formData = new FormData();
-			
-			// form.opsVoyageBoatNoteLines.map((element, index) => {
-			// 	formData.append('attachments['+index+']', element.attachment ?? null);
-			// 	element.attachment = null;
-			// })
-
-
-			// formData.append('info', JSON.stringify(form));
-
-			const { data, status } = await Api.post('/ops/bunker-requisitions', formData);
+			const { data, status } = await Api.post('/ops/bunker-requisitions', form);
 			notification.showSuccess(status);
 			await router.push({ name: 'ops.bunker-requisitions.index' });
 		} catch (error) {

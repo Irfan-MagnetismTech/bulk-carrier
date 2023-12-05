@@ -7,7 +7,7 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 // import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useVoyageBoatNote from '../../../composables/operations/useVoyageBoatNote';
+import useBunkerRequisiton from '../../../composables/operations/useBunkerRequisiton';
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
@@ -19,7 +19,7 @@ const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
 
-const { voyageBoatNotes, getVoyageBoatNotes, deleteVoyageBoatNote, isLoading, isTableLoading, errors } = useVoyageBoatNote();
+const { voyageBoatNotes, getVoyageBoatNotes, deleteVoyageBoatNote, isLoading, isTableLoading, errors } = useBunkerRequisiton();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {

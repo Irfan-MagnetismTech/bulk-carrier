@@ -51,7 +51,7 @@ class OpsBunkerRequisitionController extends Controller
      */
      public function store(OpsBunkerRequisitionRequest $request): JsonResponse
      {
-         dd($request);
+        //  dd($request);
          try {
              DB::beginTransaction();
              $bunkerRequisitionInfo = $request->except(
