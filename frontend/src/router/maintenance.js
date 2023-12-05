@@ -465,13 +465,13 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'survey-create' },
 	},
 	{
-		path: `/${BASE}/surveys/:criticalItemId/edit`,
+		path: `/${BASE}/surveys/:surveyId/edit`,
 		name: `${BASE}.surveys.edit`,
 		component: () => import(`../views/${VIEWBASE}/survey/edit.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'survey-edit' },
 	},
 	{
-		path: `/${BASE}/surveys/:criticalItemId`,
+		path: `/${BASE}/surveys/:surveyId`,
 		name: `${BASE}.surveys.show`,
 		component: () => import(`../views/${VIEWBASE}/survey/show.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'survey-show'  },

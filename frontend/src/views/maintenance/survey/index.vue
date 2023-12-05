@@ -67,42 +67,96 @@ let filterOptions = ref( {
       "date_from": null,
       "label": "Vessel",
       "filter_type": "input"
-    },   
+    },  
+     
     {
       "rel_type": null,
-      "relation_name": "mntCriticalItem.mntCriticalItemCat.mntCriticalFunction",
-      "field_name": "function_name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Cri. Function",
-      "filter_type": "input"
-    },
-    
-    {
-      "rel_type": null,
-      "relation_name": "mntCriticalItem.mntCriticalItemCat",
-      "field_name": "category_name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Cri. Category",
-      "filter_type": "input"
-    },
-    
-    {
-      "rel_type": null,
-      "relation_name": "mntCriticalItem",
+      "relation_name": "mntSurveyItem",
       "field_name": "item_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Item",
+      "label": "Survey Item",
+      "filter_type": "input"
+    },  
+
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "short_code",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Short Code",
+    //   "filter_type": "input"
+    // },
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "survey_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Survey Name",
       "filter_type": "input"
     },
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "range_date_from",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Range Date (From)",
+      "filter_type": "date"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "range_date_to",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Range Date (To)",
+      "filter_type": "date"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "assigned_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Assigned Date",
+      "filter_type": "date"
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "due_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Due Date",
+      "filter_type": "date"
+    },
+
+    
   ]
 });
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
@@ -167,17 +221,23 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(survey,index) in surveys?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <!-- <td>{{ criticalVesselItem?.opsVessel?.name }}</td>
-            <td>{{ criticalVesselItem?.mntCriticalItem?.mntCriticalItemCat?.mntCriticalFunction?.function_name }}</td>
-            <td>{{ criticalVesselItem?.mntCriticalItem?.mntCriticalItemCat?.category_name }}</td>
-            <td>{{ criticalVesselItem?.mntCriticalItem?.item_name }}</td>
-            <td><span :class="criticalVesselItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalVesselItem?.business_unit }}</span></td>
+            <td>{{ survey?.opsVessel?.name }}</td>
+            <td>{{ survey?.mntSurveyItem?.item_name }}</td>
+            <!-- <td>{{ survey?.mntSurveyType?.survey_type_name }}</td> -->
+            <!-- <td>{{ survey?.short_code }}</td> -->
+            <td>{{ survey?.survey_name }}</td>
+            <td><nobr>{{ survey?.range_date_from }}</nobr></td>
+            <td><nobr>{{ survey?.range_date_to }}</nobr></td>
+            <td><nobr>{{ survey?.assigned_date }}</nobr></td>
+            <td><nobr>{{ survey?.due_date }}</nobr></td>
+  
+            <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td>
             <td>
               <nobr>
-                <action-button :action="'edit'" :to="{ name: 'mnt.critical-vessel-items.edit', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
-                <action-button @click="confirmDelete(criticalVesselItem?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.surveys.edit', params: { surveyId: survey?.id } }"></action-button>
+                <action-button @click="confirmDelete(survey?.id)" :action="'delete'"></action-button>
               </nobr>
-            </td> -->
+            </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && surveys?.data?.length"></LoaderComponent>
           </tbody>

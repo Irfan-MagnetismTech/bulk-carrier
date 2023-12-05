@@ -50,17 +50,17 @@
       </label>
 
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Survey Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.survey_name" placeholder="Survey Name" class="form-input" required/>
-        <Error v-if="errors?.survey_name" :errors="errors.survey_name" />
-      </label>
-      
-      <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Short Code <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.short_code" placeholder="Short Code" class="form-input" required/>
         <Error v-if="errors?.short_code" :errors="errors.short_code" />
       </label>
 
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Survey Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.survey_name" placeholder="Survey Name" class="form-input" required/>
+        <Error v-if="errors?.survey_name" :errors="errors.survey_name" />
+      </label>
+      
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (From) <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/>

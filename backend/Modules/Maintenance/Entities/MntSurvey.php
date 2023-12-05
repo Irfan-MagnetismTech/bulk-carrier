@@ -44,12 +44,28 @@ class MntSurvey extends Model
         $status = "Not Due";
         $today = new DateTime(date('Y-m-d'));
         $dueDate = new DateTime($this->due_date);
-        
+
         $interval = $dueDate->diff($today);
         $daysPassed =(int) $interval->format('%R%a');
 
         $status = ($daysPassed > 0) ? "Due" : (($daysPassed >= -10) ? "Due Soon" : $status);
 
         return $status;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function ($survey) {
+            $survey->survey_name = $survey->short_code . '-' . $survey->survey_name;
+        });
+    }
+
+    public function getSurveyNameAttribute($value)
+    {
+        if($this->applySurveyNameModification && strpos($value, $this->short_code."-") !== false){
+            return substr_replace($value, '', 0, strlen($this->short_code)+1);
+        }
+        return $value;
     }
 }

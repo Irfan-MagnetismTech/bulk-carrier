@@ -22,14 +22,14 @@ class MntSurveyController extends Controller
                                 ->globalSearch($request->all());
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
-            
+
         }
         catch (\Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -41,7 +41,7 @@ class MntSurveyController extends Controller
             $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->get();
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -67,11 +67,11 @@ class MntSurveyController extends Controller
     {
         try {
             $input = $request->all();
-            
+
             $survey = MntSurvey::create($input);
-            
+
             return response()->success('Survey created successfully', $survey, 201);
-            
+
         }
         catch (\Exception $e)
         {
@@ -87,11 +87,13 @@ class MntSurveyController extends Controller
     public function show($id)
     {
         try {
-            
+
             $survey = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->find($id);
-            
+            $survey->applySurveyNameModification = true;
+            $survey->survey_name = $survey->survey_name;
+
             return response()->success('Survey type found successfully', $survey, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -119,12 +121,12 @@ class MntSurveyController extends Controller
     {
         try {
             $input = $request->all();
-            
+
             $survey = MntSurvey::findorfail($id);
             $survey->update($input);
-            
+
             return response()->success('Survey updated successfully', $survey, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -139,12 +141,12 @@ class MntSurveyController extends Controller
      */
     public function destroy($id)
     {
-        try {            
+        try {
             $survey = MntSurvey::findorfail($id);
             $survey->delete();
-            
+
             return response()->success('Survey deleted successfully', $survey, 204);
-            
+
         }
         catch (\Exception $e)
         {

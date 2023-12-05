@@ -43,7 +43,9 @@
     // criticalVesselItem.value.mntCriticalItemCategories = value?.mntCriticalItem?.mntCriticalItemCat?.mntCriticalFunction?.mntCriticalItemCats;
     // criticalVesselItem.value.mntCriticalItems = value?.mntCriticalItem?.mntCriticalItemCat?.mntCriticalItems;
 
-
+    survey.value.ops_vessel = value?.opsVessel;
+    survey.value.mnt_survey_item = value?.mntSurveyItem;
+    survey.value.mnt_survey_type = value?.mntSurveyType;
   });
   
   onMounted(() => {
