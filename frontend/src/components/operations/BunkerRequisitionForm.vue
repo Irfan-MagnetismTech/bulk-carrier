@@ -49,7 +49,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(bunker, index) in form.opsBunkers">
+            <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
               <td>
                 {{ index+1 }}
               </td>
@@ -61,7 +61,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" :class="{ '!bg-gray-100' : formType=='edit' }" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" />
                 </label>
               </td>
             </tr>
