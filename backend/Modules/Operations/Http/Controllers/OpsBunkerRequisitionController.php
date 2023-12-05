@@ -51,7 +51,7 @@ class OpsBunkerRequisitionController extends Controller
      */
      public function store(OpsBunkerRequisitionRequest $request): JsonResponse
      {
-         // dd($request);
+         dd($request);
          try {
              DB::beginTransaction();
              $bunkerRequisitionInfo = $request->except(
@@ -144,21 +144,20 @@ class OpsBunkerRequisitionController extends Controller
          }
      }
  
-    //  public function getBunkerRequisitionByName(Request $request){
-    //      try {
-    //          $bunker_requisitions = OpsBunkerRequisition::query()
-    //          ->where(function ($query) use($request) {
-    //              $query->where('tariff_name', 'like', '%' . $request->tariff_name . '%');                
-    //          })
-    //          ->when(request()->business_unit != "ALL", function($q){
-    //              $q->where('business_unit', request()->business_unit);  
-    //          })
-    //          ->limit(10)
-    //          ->get();
+     public function getBunkerRequisitionByReqNo(Request $request){
+         try {
+             $bunker_requisitions = OpsBunkerRequisition::query()
+            ->when(isset(request()->requisition_no), function($query){
+                 $query->where('requisition_no', 'like', '%' . request()->requisition_no . '%');                
+             })
+             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                 $query->where('business_unit', request()->business_unit);  
+             })
+             ->get();
  
-    //          return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
-    //      } catch (QueryException $e){
-    //          return response()->error($e->getMessage(), 500);
-    //      }
-    //  }
+             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
+         } catch (QueryException $e){
+             return response()->error($e->getMessage(), 500);
+         }
+     }
 }
