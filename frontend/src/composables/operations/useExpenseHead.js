@@ -151,7 +151,7 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function searchExpenseHeads(searchParam, business_unit, loading = false) {
+	async function searchExpenseHeads(searchParam, business_unit, loading) {
 		//NProgress.start();
 
 		try {
@@ -162,7 +162,9 @@ export default function useExpenseHead() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			if(loading) {
+				loading(false)				
+			}
 			//NProgress.done();
 		}
 	}

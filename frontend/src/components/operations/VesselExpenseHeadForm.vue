@@ -34,9 +34,9 @@ function removeSubHead(index){
   props.form.sub_head.splice(index, 1);
 }
 
-function getSubHead(headId, index) {
-  // console.log(headId, index)
-  subheads.value = props.heads[index].subheads
+function getSubHead(index) {
+  console.log(index)
+  subheads.value = expenseHeads[index]
   // console.log(props.form.heads[index])
   // if(props.form.heads.includes(headId)) {
   //   subheads.value.map(({id})=>{ 
@@ -46,7 +46,6 @@ function getSubHead(headId, index) {
 }
 
 function fetchExpenseHeads(searchParam, loading) {
-  
   searchExpenseHeads(searchParam, props.form.business_unit, loading)
 }
 
@@ -99,11 +98,11 @@ onMounted(() => {
         <fieldset class="w-1/2 mx-2 px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
           <legend class="px-2 text-gray-700 dark:text-gray-300">Cost Groups <span class="text-red-500">*</span></legend>
 
-          <div v-for="(singleHead,index) in heads" :key="index" class="mb-2">
+          <div v-for="(singleHead,index) in expenseHeads" :key="index" class="mb-2">
             <label class="mb-2 text-gray-600 dark:text-gray-400">
               <input type="checkbox" @change="checkSubHead(singleHead.id, index)" v-model="form.heads" :id="'heads' + index" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" :value="singleHead?.id">
             </label>
-            <span class="ml-2 top-1 relative font-medium hover:text-purple-00 hover:cursor-pointer" @click="getSubHead(singleHead.id,index)">{{ singleHead?.name }}</span>
+            <span class="ml-2 top-1 relative font-medium hover:text-purple-00 hover:cursor-pointer" @click="getSubHead(index)">{{ singleHead?.name }}</span>
           </div>
         </fieldset>
 
