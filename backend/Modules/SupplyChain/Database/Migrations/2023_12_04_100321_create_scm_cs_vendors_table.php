@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('quotation_date');
             $table->string('quotation_attachment');
             $table->string('quotation_validity');
-            $table->string('payment_mode')->comment('cash,credit,lc,advance');
+            $table->string('payment_method')->comment('cash,credit,lc,advance');
             $table->string('delivery_term');
             $table->string('sourcing')->comment('existing,new');
             $table->date('date_of_rfq');

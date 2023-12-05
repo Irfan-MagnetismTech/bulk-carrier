@@ -14,8 +14,10 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import useQuotation from '../../../composables/supply-chain/useQuotation';
 
-const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading,getQuotations, quotations } = useMaterialCs();
+const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading } = useMaterialCs();
+const {getQuotations,quotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -187,7 +189,7 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
-    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.quotations.create', params: { csId: 'CSID' }  }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">
