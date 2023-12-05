@@ -85,6 +85,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-handover-takeovers', [OpsCommonController::class, 'getHandoverTakeoverWithoutPaginate']);
     Route::get('get-charterer-invoices', [OpsCommonController::class, 'getChartererInvoiceWithoutPaginate']);
     Route::get('get-lighter-noon-reports', [OpsCommonController::class, 'getLighterNoonReportWithoutPaginate']);
+    Route::get('get-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeads']);
     //end for without pagination
 
     // start for search api route

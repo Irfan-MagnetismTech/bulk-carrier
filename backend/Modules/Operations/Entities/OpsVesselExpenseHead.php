@@ -11,7 +11,7 @@ class OpsVesselExpenseHead extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'vessel_code',
+        'ops_vessel_id',
         'ops_expense_head_id',
         'business_unit',
     ];

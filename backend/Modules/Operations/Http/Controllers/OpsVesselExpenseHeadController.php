@@ -58,33 +58,63 @@ class OpsVesselExpenseHeadController extends Controller
     {
         // dd($request);
         try {
-            DB::beginTransaction();
+            // DB::beginTransaction();
 
-            $vessel_code = $request->vessel_code;
-            OpsVesselExpenseHead::where('vessel_code', $vessel_code)
+            $ops_vessel_id = $request->ops_vessel_id;
+            OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);
             })->delete();
 
-            $items = collect(collect($request->heads)->unique()->values()->all())->map(function($item) use($vessel_code) {
+            $items = collect(collect($request->heads)->unique()->values()->all())->map(function($item) use($ops_vessel_id) {
                 return [
-                    'vessel_code' => $vessel_code,
+                    'ops_vessel_id' => $ops_vessel_id,
                     'ops_expense_head_id' => $item
                 ];
             })->toArray();
 
             // dd($items);
 
-            OpsVesselExpenseHead::insert($items);
+            // OpsVesselExpenseHead::insert($items);
 
-            $vessel_expense_head = OpsVesselExpenseHead::with(['opsExpenseHead' => function($query){
-                $query->select('id', 'name');
-            }])
-            ->where('vessel_code', $vessel_code)
-            ->get();
+            // $vessel_expense_head = OpsVesselExpenseHead::with(['opsExpenseHead' => function($query){
+            //     $query->select('id', 'name');
+            // }])
+            // ->where('ops_vessel_id', $ops_vessel_id)
+            // ->get();
             
-            DB::commit();
-            return response()->success('Data added Successfully.', $vessel_expense_head, 201);
+            // DB::commit();
+
+            $insertables = [];
+
+            $heads = collect($request->heads);
+
+            $heads = $heads->map(function($head) use(&$insertables, $ops_vessel_id) {
+                if($head['is_checked']) {
+                    array_push($insertables, 
+                    [
+                        
+                        'ops_vessel_id' => $ops_vessel_id,
+                        'ops_expense_head_id' => $head['id']
+                    ]
+                );
+                }
+                collect($head['opsSubHeads'])->map(function($sub) use(&$insertables, $ops_vessel_id) {
+                    if($sub['is_checked']) {
+                        array_push($insertables, 
+                        [
+                        
+                            'ops_vessel_id' => $ops_vessel_id,
+                            'ops_expense_head_id' => $sub['id']
+                        ]);
+                    }
+                });
+            });
+
+            OpsVesselExpenseHead::insert($insertables);
+
+
+            return response()->success('Data added Successfully.', $insertables, 201);
         }
         catch (QueryException $e)
         {
