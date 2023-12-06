@@ -16,6 +16,7 @@ export default function usePort() {
 	const port = ref({
 		code : '',
 		name : '',
+		business_unit: ''
 	});
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -193,11 +194,11 @@ export default function usePort() {
 		}
 	}
 
-	async function searchPorts(searchParam, loading) {
+	async function searchPorts(searchParam, business_unit = null, loading) {
 		//NProgress.start();
 		isPortLoading.value = true;
 		try {
-			const { data, status } = await Api.get(`/ops/search-ports?name_or_code=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-ports?name_or_code=${searchParam}&business_unit=${business_unit}`);
 			ports.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {

@@ -254,7 +254,7 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
 watch(() => props.form.opsVessel, (value) => {
@@ -276,6 +276,8 @@ watch(() => props.form.business_unit, (value) => {
   }
 
   getVesselList(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
+
   
 }, { deep : true })
 
@@ -339,9 +341,6 @@ watch(dropZoneFile, (value) => {
   }
 });
 
-onMounted(() => {
-  getPortList();
-})
 </script>
 <style lang="postcss" scoped>
 .input-group {

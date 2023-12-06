@@ -287,7 +287,7 @@ import useCargoTariff from "../../composables/operations/useCargoTariff";
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
 const { cargoTariffs, getAllCargoTariffs } = useCargoTariff();
 
@@ -321,6 +321,7 @@ watch(() => props.form.business_unit, (value) => {
   getVesselList(props.form.business_unit);
   getAllChartererProfiles(props.form.business_unit);
   getAllCargoTariffs(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
   
 }, { deep : true })
 
@@ -425,7 +426,6 @@ function replaceThings(value) {
 
 onMounted(() => {
   getCurrencies();
-  getPortList();
 })
 
 </script>
