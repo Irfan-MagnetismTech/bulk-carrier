@@ -44,8 +44,6 @@ class MntReportController extends Controller
             //     $jobs = $jobs->pluck($returnField)->flatten();
             // }
             
-            return $jobs;
-            
             return response()->success('All jobs are retrieved successfully', $jobs, 200);
             
             
