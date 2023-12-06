@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ops_vessel_expense_heads', function (Blueprint $table) {
             $table->id();
-            $table->string('vessel_code')->nullable();
+            $table->string('ops_vessel_id')->nullable();
             $table->foreignId('ops_expense_head_id')->constrained('ops_expense_heads')->onDelete('cascade');
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();

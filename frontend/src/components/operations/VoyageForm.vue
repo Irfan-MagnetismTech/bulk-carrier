@@ -464,22 +464,22 @@ watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
 
 // function bunkerInfo(){
 //   let value = props.form.ops_vessel_id;
-props.form.ops_vessel_id = newValue;
-if(newValue !== oldValue && oldValue != '' && newValue != undefined){
+  props.form.ops_vessel_id = newValue;
+  if(newValue !== oldValue && oldValue != '' && newValue != undefined){
     showVessel(newValue)
     .then(() => {
-      bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
-    // Assuming you want to reset the resettableValue property to some default value
-    return {
-      ...obj,
-      exchange_rate_bdt: null,
-      exchange_rate_usd: null,
-      rate: null,
-      amount_usd: null,
-      amount_bdt: null,
-      quantity: null
-    };
-  });
+        bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
+      // Assuming you want to reset the resettableValue property to some default value
+      return {
+        ...obj,
+        exchange_rate_bdt: null,
+        exchange_rate_usd: null,
+        rate: null,
+        amount_usd: null,
+        amount_bdt: null,
+        quantity: null
+      };
+    });
 
       if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
           props.form.opsBunkers = bunkerReset.value
@@ -493,30 +493,30 @@ if(newValue !== oldValue && oldValue != '' && newValue != undefined){
       console.error("Error fetching data.", error);
     });
   }
-  });
+});
 
 
 watch(() => props.form, (value) => {
 
-if(props?.formType == 'edit' && editInitiated.value != true) {
+  if(props?.formType == 'edit' && editInitiated.value != true) {
 
-  // customers.value = [props?.form?.opsCustomer]
-  // vessels.value = [props?.form?.opsVessel]
-  // cargoTypes.value = [props?.form?.opsCargoType]
-  props.form.ops_customer_name = value?.opsCustomer;
-  props.form.ops_vessel_name = value?.opsVessel;
-  props.form.ops_cargo_type_name = value?.opsCargoType;
+    // customers.value = [props?.form?.opsCustomer]
+    // vessels.value = [props?.form?.opsVessel]
+    // cargoTypes.value = [props?.form?.opsCargoType]
+    props.form.ops_customer_name = value?.opsCustomer;
+    props.form.ops_vessel_name = value?.opsVessel;
+    props.form.ops_cargo_type_name = value?.opsCargoType;
 
-  if(props.form.opsVoyageSectors?.length < 1) {
-    props.form.opsVoyageSectors.push({... props.voyageSectorObject });
-  }
+    if(props.form.opsVoyageSectors?.length < 1) {
+      props.form.opsVoyageSectors.push({... props.voyageSectorObject });
+    }
 
-  if(props.form.opsVoyagePortSchedules?.length < 1) {
-    props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
-  }
+    if(props.form.opsVoyagePortSchedules?.length < 1) {
+      props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
+    }
 
-  }
-});
+    }
+  });
 
 // watch(() => props.form.ops_vessel_id, (value) => {
 // if(value) {

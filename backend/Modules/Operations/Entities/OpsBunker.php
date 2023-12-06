@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmSupplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunker extends Model
@@ -17,6 +18,7 @@ class OpsBunker extends Model
         'bunkerable_id',
         'scm_vendor_id',
         'scm_material_id',
+        'scm_supplier_id',
         'unit',
         'quantity',
         'requested_quantity',
@@ -41,6 +43,11 @@ class OpsBunker extends Model
     public function scmMaterial()
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
+    }
+
+    public function scmSupplier()
+    {
+        return $this->belongsTo(ScmSupplier::class, 'scm_supplier_id' , 'id');
     }
     
     public function bunkerable()

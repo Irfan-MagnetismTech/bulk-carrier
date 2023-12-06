@@ -10,8 +10,10 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVessel;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
 use Modules\Operations\Http\Requests\OpsVesselExpenseHeadRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class OpsVesselExpenseHeadController extends Controller
 {
@@ -33,12 +35,8 @@ class OpsVesselExpenseHeadController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $vessel_expense_heads = OpsVesselExpenseHead::with(['opsExpenseHead' => function($query){
-                $query->select('id', 'name');
-            }])
-            ->globalSearch($request->all())
-            ->groupBy('vessel_code');
-
+            $vessel_expense_heads = OpsVesselExpenseHead::with('opsVessel')
+                                    ->globalSearch($request->all(), ['unique' => 'ops_vessel_id']);
 
             return response()->success('Data retrieved successfully.', $vessel_expense_heads, 200);
         }
@@ -60,31 +58,40 @@ class OpsVesselExpenseHeadController extends Controller
         try {
             DB::beginTransaction();
 
-            $vessel_code = $request->vessel_code;
-            OpsVesselExpenseHead::where('vessel_code', $vessel_code)
-            ->when(request()->business_unit != "ALL", function($q){
-                $q->where('business_unit', request()->business_unit);
-            })->delete();
+            $ops_vessel_id = $request->ops_vessel_id;
+            OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->delete();
 
-            $items = collect(collect($request->heads)->unique()->values()->all())->map(function($item) use($vessel_code) {
-                return [
-                    'vessel_code' => $vessel_code,
-                    'ops_expense_head_id' => $item
-                ];
-            })->toArray();
+            $insertables = [];
 
-            // dd($items);
+            $heads = collect($request->heads);
 
-            OpsVesselExpenseHead::insert($items);
+            $heads = $heads->map(function($head) use(&$insertables, $ops_vessel_id, $request) {
+                if($head['is_checked']) {
+                    array_push($insertables, 
+                        [
+                            'ops_vessel_id' => $ops_vessel_id,
+                            'business_unit' => $request->business_unit,
+                            'ops_expense_head_id' => $head['id'],
+                        ]
+                    );
+                }
+                collect($head['opsSubHeads'])->map(function($sub) use(&$insertables, $ops_vessel_id, $request) {
+                    if($sub['is_checked']) {
+                        array_push($insertables, 
+                        [
+                            'ops_vessel_id' => $ops_vessel_id,
+                            'business_unit' => $request->business_unit,
+                            'ops_expense_head_id' => $sub['id'],
+                        ]);
+                    }
+                });
+            });
 
-            $vessel_expense_head = OpsVesselExpenseHead::with(['opsExpenseHead' => function($query){
-                $query->select('id', 'name');
-            }])
-            ->where('vessel_code', $vessel_code)
-            ->get();
-            
+            OpsVesselExpenseHead::insert($insertables);
+
             DB::commit();
-            return response()->success('Data added Successfully.', $vessel_expense_head, 201);
+
+            return response()->success('Data added Successfully.', $insertables, (isset($request->type) ? 202 : 201));
         }
         catch (QueryException $e)
         {
@@ -103,21 +110,37 @@ class OpsVesselExpenseHeadController extends Controller
     public function show(OpsVesselExpenseHead $vessel_expense_head): JsonResponse
     {
         try {
-            $vessel_expense_heads= OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->with(['opsExpenseHead' => function($query){
+            $vessel_expense_heads = OpsVesselExpenseHead::where('ops_vessel_id', $vessel_expense_head->ops_vessel_id)->with(['opsExpenseHead' => function($query){
                 $query->select('id', 'name');
-            }])->get()
-            ->groupBy('vessel_code');
+            }])->pluck('ops_expense_head_id')->toArray();
 
             // $heads = OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->pluck('ops_expense_head_id');
             // $vesselDetails = OpsVessel::where('short_code', $vessel_expense_head->vessel_code)->first();
 
-            // $info = [
-            //     'vessel_code' => $vessel_expense_head->vessel_code,
-            //     'vessel_details' => $vesselDetails,
-            //     'heads' => $heads
-            // ];
+            $expenseHeads = OpsExpenseHead::with('opsSubHeads')
+                    ->where('business_unit', $vessel_expense_head->business_unit)
+                    ->whereNull('head_id')
+                    ->get(['id', 'head_id', 'name']);
+
+            $expenseHeads->map(function($item) use($vessel_expense_heads) {
+                $item['is_checked'] = (in_array($item['id'], $vessel_expense_heads)) ? true : false;
+
+                $item->opsSubHeads->map(function($subhead) use($vessel_expense_heads) {
+                    $subhead['is_checked'] = (in_array($subhead['id'], $vessel_expense_heads)) ? true : false;
+                    return $subhead;
+                });
+
+                return $item;
+            });
+
+            $data = [
+                'business_unit' => $vessel_expense_head->business_unit,
+                'opsVessel' => $vessel_expense_head->opsVessel,
+                'ops_vessel_id' => $vessel_expense_head->opsVessel->id,
+                'heads' => $expenseHeads
+            ];
             
-            return response()->success('Data retrieved successfully.', $vessel_expense_heads, 200);
+            return response()->success('Data retrieved successfully.', $data, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

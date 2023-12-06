@@ -7,14 +7,17 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useExpenseHead from '../../../composables/operations/useExpenseHead';
+import useVesselExpenseHead from '../../../composables/operations/useVesselExpenseHead';
 import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import {useRouter} from "vue-router";
 
-const { expenseHeads, getExpenseHeads, deleteExpenseHead, isLoading, isTableLoading, errors } = useExpenseHead();
+const { vesselExpenseHeads, getVesselExpenseHeads, deleteVesselExpenseHead, isLoading, isTableLoading, errors } = useVesselExpenseHead();
 const icons = useHeroIcon();
+const router = useRouter();
+
 const props = defineProps({
   page: {
     type: Number,
@@ -23,7 +26,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Charterer Invoice List');
+setTitle('Vessel Expense Head List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -36,7 +39,7 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": null,
+      "relation_name": "opsVessel",
       "field_name": "name",
       "search_param": "",
       "action": null,
@@ -45,27 +48,7 @@ let filterOptions = ref({
       "label": "Group",
       "filter_type": "input"
     },
-    {
-      "relation_name": "opsSubHeads",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Heads",
-      "filter_type": "input" 
-    },
-    {
-      "relation_name": null,
-      "field_name": '',
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Voyage Report Status",
-      "filter_type": null
-    },
-    
+   
   ]
 });
 
@@ -88,7 +71,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteExpenseHead(id);
+        deleteVesselExpenseHead(id);
     }
   })
 }
@@ -97,7 +80,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.expense-heads.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.vessel-expense-heads.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -105,7 +88,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getExpenseHeads(filterOptions.value)
+    getVesselExpenseHeads(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -126,44 +109,35 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Expense Head List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Expense Head</h2>
+    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-expense-heads.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap mb-5" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="expenseHeads?.data?.length" class="relative">
-              <tr v-for="(expenseHead, index) in expenseHeads.data" :key="expenseHead?.id">
+          <tbody v-if="vesselExpenseHeads?.data?.length" class="relative">
+              <tr v-for="(vesselExpenseHead, index) in vesselExpenseHeads.data" :key="vesselExpenseHead?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ expenseHead?.name }}</td>
-                  <td style="text-align: left !important;">
-                    <span v-for="(subhead,index) in expenseHead?.opsSubHeads" :key="index"
-                          class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                      {{ subhead?.name }}
-                    </span>
-                  </td>
+                  <td>{{ vesselExpenseHead?.opsVessel?.name }}</td>
                   
                   <td>
-                    <span v-if="expenseHead?.is_visible_in_voyage_report === 1" :class="expenseHead?.is_visible_in_voyage_report === 1 ? 'text-green-700 bg-green-100' : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">SHOW</span>
-                  </td>
-                  <td>
-                    <span :class="expenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ expenseHead?.business_unit }}</span>
+                    <span :class="vesselExpenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselExpenseHead?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { expenseHeadId: expenseHead.id } }"></action-button>
-                      <action-button @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-expense-heads.edit', params: { vesselExpenseHeadId: vesselExpenseHead.id } }"></action-button>
+                      <action-button @click="confirmDelete(vesselExpenseHead.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && expenseHeads?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselExpenseHeads?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!expenseHeads?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!vesselExpenseHeads?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -171,12 +145,12 @@ onMounted(() => {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!expenseHeads?.data?.length">
+            <tr v-else-if="!vesselExpenseHeads?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="expenseHeads" to="ops.expense-heads.index" :page="page"></Paginate>
+    <Paginate :data="vesselExpenseHeads" to="ops.vessel-expense-heads.index" :page="page"></Paginate>
   </div>
 </template>
