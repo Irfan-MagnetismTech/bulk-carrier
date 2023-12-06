@@ -46,6 +46,9 @@ class MntReportController extends Controller
             
             return $jobs;
             
+            return response()->success('All jobs are retrieved successfully', $jobs, 200);
+            
+            
         }
         catch (\Exception $e)
         {
