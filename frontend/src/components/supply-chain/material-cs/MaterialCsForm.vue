@@ -62,7 +62,7 @@
               <input
                 type="text"
                 readonly
-                :value="form.scmPr.ref_no"
+                :value="form.scmPr?.ref_no"
                 required
                 class="form-input vms-readonly-input"
                 name="si_no"

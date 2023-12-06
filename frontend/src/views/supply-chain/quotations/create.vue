@@ -18,11 +18,11 @@ const CSID = route.params.csId;
 const { getMaterialCs, materialCs, storeMaterialCs, materialObject, errors, isLoading, getPrWiseCs,showMaterialCs} = useMaterialCs();
 
 
-onMounted(() => {
-    showMaterialCs(CSID);
-});
+// onMounted(() => {
+//     showMaterialCs(CSID);
+// });
 
-const { storeQuotations ,quotation} = useQuotation();
+const { storeQuotations ,quotation,localQuotationLines,foreignQuotationLines} = useQuotation();
 const page = ref('create');
 const { setTitle } = Title();
 

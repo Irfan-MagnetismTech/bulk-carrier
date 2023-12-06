@@ -53,40 +53,40 @@ export default function useQuotation() {
         attachment: '',
         scmCsVendorMaterial: [
             {
-                scmMaterial: '',
-                scm_material_id: '',
-                brand: '',
-                model: '',
-                origin: '',
-                stock_type: '',
-                manufaturing_days: '',
-                unit: '',
-                offered_price: '',
-                negotiated_price: '',
-            }
+                scmMaterial: null,
+                scm_material_id: null,
+                brand: null,
+                model: null,
+                origin: null,
+                stock_type: null,
+                manufaturing_days: null,
+                unit: null,
+                offered_price: null,
+                negotiated_price: null,
+            },
         ],
     });
 
     const localQuotationLines = {
-        scmMaterial: '',
-        scm_material_id: '',
-        brand: '',
-        model: '',
-        unit: '',
-        negotiated_price: '',
+        scmMaterial: null,
+        scm_material_id: null,
+        brand: null,
+        model: null,
+        unit: null,
+        negotiated_price: null,
     } 
 
     const foreignQuotationLines = {
-        scmMaterial: '',
-        scm_material_id: '',
-        brand: '',
-        model: '',
-        origin: '',
-        stock_type: '',
-        manufaturing_days: '',
-        unit: '',
-        offered_price: '',
-        negotiated_price: '',
+        scmMaterial: null,
+        scm_material_id: null,
+        brand: null,
+        model: null,
+        origin: null,
+        stock_type: null,
+        manufaturing_days: null,
+        unit: null,
+        offered_price: null,
+        negotiated_price: null,
     } 
     const errors = ref('');
     const isLoading = ref(false);
@@ -96,7 +96,7 @@ export default function useQuotation() {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/get-quotations`,{
+            const {data, status} = await Api.get(`/${BASE}/quotations`,{
                 params: {
                     cs_id: csId,
                 },
@@ -118,10 +118,10 @@ export default function useQuotation() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-cs`, formData);
+            const { data, status } = await Api.post(`/${BASE}/quotations`, formData);
             materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-cs.index` });
+            router.push({ name: `${BASE}.quotations.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -137,7 +137,7 @@ export default function useQuotation() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/material-cs/${materialCsId}`);
+            const { data, status } = await Api.get(`/${BASE}/quotations/${materialCsId}`);
             materialCs.value = data.value;
 
         } catch (error) {
@@ -158,10 +158,10 @@ export default function useQuotation() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-cs/${materialCsId}`, formData);
+            const { data, status } = await Api.post(`/${BASE}/quotations/${materialCsId}`, formData);
             materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-cs.index` });
+            router.push({ name: `${BASE}.quotations.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -177,7 +177,7 @@ export default function useQuotation() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/material-cs/${materialCsId}`);
+            const { data, status } = await Api.delete( `/${BASE}/quotations/${materialCsId}`);
             notification.showSuccess(status);
             await getMaterialCs(filterParams.value);
         } catch (error) {
