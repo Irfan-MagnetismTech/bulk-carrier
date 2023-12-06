@@ -52,5 +52,38 @@ class MntReportController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+    
+    /**
+     * Display a list of items with all jobs
+     * @return Renderable
+     */
+    public function reportUpcomingJobs()
+    {
+        try {
+            $mntShipDepartmentId = request()->mnt_ship_department_id; // Replace with the actual ID of the MntShipDepartment
+
+            $jobs = MntItemGroup::with(['mntItems.mntJobs.mntJobLines','mntItems.mntJobs' => function($q){
+                                    $q->where('ops_vessel_id', request()->ops_vessel_id);
+                                }])
+                                ->where('mnt_ship_department_id', $mntShipDepartmentId)
+                                ->get()->toArray();
+            // $jobs = $jobs->values();
+            print_r($jobs);exit;
+            // $jobs =  $jobs->filter(function ($value) {
+                // var_dump($value->mntItems->mntJobs);exit;
+                // return $value->upcoming_job;
+            // });
+            $jobs = array_filter($jobs, function ($job) {
+                return $job["mntItems"]["mntJobs"]["mntJobLines"]["upcoming_job"];
+            });
+            
+            return $jobs;
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 }
