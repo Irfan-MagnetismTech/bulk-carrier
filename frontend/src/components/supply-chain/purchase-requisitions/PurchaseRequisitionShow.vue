@@ -52,7 +52,7 @@
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <span class="show-block">{{ form.business_unit?.name }}</span>
+    <span class="show-block">{{ form.business_unit }}</span>
   </div>
   <div class="input-group">
       <label class="label-group">
@@ -83,6 +83,11 @@
                     <!-- Click here to see
                 </a>
           </div> -->
+          <span class="attachment-block">
+            <template v-if="form.attachment">
+                      <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.attachment">Click Here To View Attachment.</a>
+            </template>
+          </span>
     </label>
     <label class="label-group">
         <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
@@ -117,7 +122,7 @@
   </div> -->
   <div id="">
 
-    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
+    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <div class=""> 
@@ -166,7 +171,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <span class="show-block">{{ form.scmPrLines[index].origin }}</span>
+                 <span class="show-block">{{ form.scmPrLines[index].country_name }}</span>
                </label>
             </td>
             <td>
