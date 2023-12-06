@@ -15,6 +15,7 @@ use Modules\Maintenance\Http\Controllers\MntCriticalVesselItemController;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
+use Modules\Maintenance\Http\Controllers\MntReportController;
 use Modules\Maintenance\Http\Controllers\MntRunHourController;
 use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
 use Modules\Maintenance\Http\Controllers\MntSurveyController;
@@ -95,4 +96,6 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     // getSurveyTypes
     Route::get('get-survey-types', [MntSurveyTypeController::class, 'mntSurveyTypes']);
 
+    // report all jobs
+    Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
 });
