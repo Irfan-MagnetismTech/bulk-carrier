@@ -619,19 +619,19 @@ export default [
         })
     },
     {
-        path: `/${BASE}/quotations/:csId/edit`,
+        path: `/${BASE}/quotations/:csId/:quotationId/edit`,
         name: `${BASE}.quotations.edit`,
         component: () => import(`../views/${PATH_BASE}/quotations/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-edit' },
     },
     {
-        path: `/${BASE}/quotations/:csId/show`,
+        path: `/${BASE}/quotations/:csId/:quotationId/show`,
         name: `${BASE}.quotations.show`,
         component: () => import(`../views/${PATH_BASE}/quotations/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-show'  },
     },
     {
-        path: `/${BASE}/quotations/:csId/index`,
+        path: `/${BASE}/quotations/:csId/:quotationId/index`,
         name: `${BASE}.quotations.index`,
         component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },

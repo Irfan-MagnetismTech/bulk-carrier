@@ -23,34 +23,34 @@ export default function useQuotation() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const quotation = ref({
-        scmCs: '',
-        scm_cs_id: '',
-        scm_vendor_id: '',
-        scmVendor: '',
-        vendor_type: '',
-        sourcing: '',
-        date_of_rfq: '',
-        quotations_received_date: '',
-        quotation_ref: '',
-        quotation_date: '',
-        quotation_validity: '',
-        payment_method: '',
-        currency: '',
-        carring_cost_bear_by: '',//local
-        unloading_cost_bear_by: '',//local
-        vat: '',//local
-        ait: '',//local
-        credit_term: '',//local
-        quotation_shipment_date: '',
-        estimated_shipment: '',//foreign
-        port_of_loading: '',//foreign
-        port_of_discharge: '',//foreign
-        port_of_shipment: '',//foreign
-        mode_of_shipment: '',//foreign
-        delivery_term: '',
-        terms_and_condition: '',
-        remarks: '',
-        attachment: '',
+        scmCs: null,
+        scm_cs_id: null,
+        scm_vendor_id: null,
+        scmVendor: null,
+        vendor_type: null,
+        sourcing: null,
+        date_of_rfq: null,
+        quotations_received_date: null,
+        quotation_ref: null,
+        quotation_date: null,
+        quotation_validity: null,
+        payment_method: null,
+        currency: null,
+        carring_cost_bear_by: null,//local
+        unloading_cost_bear_by: null,//local
+        vat: null,//local
+        ait: null,//local
+        credit_term: null,//local
+        quotation_shipment_date: null,
+        estimated_shipment: null,//foreign
+        port_of_loading: null,//foreign
+        port_of_discharge: null,//foreign
+        port_of_shipment: null,//foreign
+        mode_of_shipment: null,//foreign
+        delivery_term: null,
+        terms_and_condition: null,
+        remarks: null,
+        attachment: null,
         scmCsVendorMaterial: [
             {
                 scmMaterial: null,
@@ -109,6 +109,7 @@ export default function useQuotation() {
             loader.hide();
         }
     }
+    
     async function storeQuotations(form) {
 
         const loader = $loading.show(LoaderConfig);
@@ -131,7 +132,7 @@ export default function useQuotation() {
         }
     }
 
-    async function showQuotations(materialCsId) {
+    async function showQuotations(materialCsId,) {
         console.log('tag', materialCsId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;

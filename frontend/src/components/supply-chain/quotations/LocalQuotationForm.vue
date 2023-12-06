@@ -104,7 +104,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Carrying Charge Bear By<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.quotation_shipment_date" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+          <input type="text" v-model="form.carring_cost_bear_by" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
   </div>
@@ -120,11 +120,11 @@
         <span class="label-item-title">VAT<span class="text-red-500">*</span></span>
           <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
-          <input type="text" v-model="form.port_of_discharge" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
+          <input type="text" v-model="form.vat" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
       </label>
       <label class="label-group">
         <span class="label-item-title">AIT<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.mode_of_shipment" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+          <input type="text" v-model="form.ait" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
