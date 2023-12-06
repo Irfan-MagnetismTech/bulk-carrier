@@ -268,4 +268,26 @@ class OpsExpenseHeadController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+
+    public function getExpenseHeads() {
+        $expenseHeads = OpsExpenseHead::with('opsSubHeads')
+                        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+                                $q->where('business_unit', request()->business_unit);  
+                            })
+                        ->whereNull('head_id')
+                        ->get(['id', 'head_id', 'name']);
+
+        $expenseHeads->map(function($item) {
+            $item['is_checked'] = false;
+
+            $item->opsSubHeads->map(function($subhead) {
+                $subhead['is_checked'] = false;
+                return $subhead;
+            });
+
+            return $item;
+        });
+
+        return response()->json($expenseHeads);
+    }
 }

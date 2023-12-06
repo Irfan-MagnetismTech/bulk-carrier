@@ -7,7 +7,7 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
-const { expenseHeads, searchExpenseHeads, showHead, isLoading, errors } = useExpenseHead();
+const { expenseHeads, getAllExpenseHeads, showHead, isLoading, errors } = useExpenseHead();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
 const subheads = ref([]);
@@ -17,72 +17,81 @@ const props = defineProps({
     required: false,
     default: {}
   },
+  formType: { type: String, required : false },
   heads: { type: [Object, Array], required: true },
   errors: { type: [Object, Array], required: false },
 });
 
-function addSubHead() {
-  let obj = {
-    head_id: '',
-    head_id_name: '',
-    name: '',
-  };
-  props.form.sub_head.push(obj);
-}
-
-function removeSubHead(index){
-  props.form.sub_head.splice(index, 1);
-}
-
-function getSubHead(index) {
-  console.log(expenseHeads.value[index])
-  subheads.value = expenseHeads.value[index].opsSubHeads
-  // console.log(props.form.heads[index])
-  // if(props.form.heads.includes(headId)) {
-  //   subheads.value.map(({id})=>{ 
-  //     props.form.heads.push(id)
-  //   });
-  // }
-}
-
 function fetchExpenseHeads(searchParam, loading) {
-  searchExpenseHeads(searchParam, props.form.business_unit, loading).then(() => {
-      props.form.heads = expenseHeads.value
+    getAllExpenseHeads(props.form.business_unit, loading).then(() => {
+      if(props.formType == 'create') {
+        props.form.heads = expenseHeads.value
+      }
     })
 }
 
-function checkSubHead(headId, headIndex) {
-  console.log(headId)
-
-
-  // if(props.form.heads.includes(headId)) {
-  //   props.heads[headIndex].subheads.map(({id})=>{ 
-  //     props.form.heads.push(id)
-  //   });
-  // }
-}
 
 watch(() => props.form.opsVessel, (newValue, oldValue) => {
-  props.form.ops_vessel_id = null;
+    props.form.ops_vessel_id = null;
+    // props.form.ops_vessel_id = newValue?.id;
+    if(newValue){
+      props.form.ops_vessel_id = newValue?.id;
+    }
 
-  if(newValue !== oldValue && oldValue != '' && newValue != undefined){
-    props.form.ops_vessel_id = newValue;
-  }
 });
 
-watch(() => props.form.business_unit, (value) => {
-  if (value) {
-    props.form.heads = []
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+
+  props.form.business_unit = newValue;
+
+  if(newValue !== oldValue && oldValue != null && newValue != undefined){
     props.form.opsVessel = null;
-    vessels.value = []
+    props.form.heads = []
+  }
+
+  vessels.value = []
+
+  if (newValue) {    
     getVesselList(props.form.business_unit);
     fetchExpenseHeads('', false)
-    
   }
+  
 }, {deep: true});
 
-onMounted(() => {
-})
+function chooseSubHead(headIndex) {
+  Object.entries(props.form.heads[headIndex].opsSubHeads).forEach(([subheadIndex, subheadData]) => {
+    console.log("May be Looping Subhead ", "subheadIndex", subheadIndex, "subheadData", subheadData)
+    if (subheadIndex !== 'is_checked') {
+      if(props.form.heads[headIndex].is_checked){
+        props.form.heads[headIndex].opsSubHeads[subheadIndex].is_checked = true;
+      } else {
+        props.form.heads[headIndex].opsSubHeads[subheadIndex].is_checked = false;
+      }
+    }
+  });
+}
+
+function checkSubhead(headIndex, subHeadIndex) {
+  const sum = Object.values(props.form.heads[headIndex].opsSubHeads).reduce((sum, obj) => {
+    //console.log("ASAS " , obj)
+    // return sum + obj.property;
+    if(obj){
+      if(!obj.is_checked){
+        return sum + 1;
+      } else{
+        return sum + 0;
+      }
+    } else{
+      return sum + 0;
+    }
+  },0);
+
+  if(sum === 0){
+    props.form.heads[headIndex].is_checked = true;
+  } else {
+    props.form.heads[headIndex].is_checked = false;
+  }
+}
 
 </script>
 <template>
@@ -106,27 +115,6 @@ onMounted(() => {
   </div>
   <!-- South Sectors -->
   <div class="relative" v-if="form?.heads?.length > 0">
-    <!-- <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400"> -->
-      <!-- <legend class="px-2 text-gray-700 dark:text-gray-300">Groups <span class="text-red-500">*</span></legend> -->
-
-        <fieldset class="hidden w-1/2 mx-2 px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400">
-          <legend class="px-2 text-gray-700 dark:text-gray-300">Cost Groups <span class="text-red-500">*</span></legend>
-
-          <div v-for="(singleHead,index) in expenseHeads" :key="index" class="mb-2">
-            <label class="mb-2 text-gray-600 dark:text-gray-400">
-              <input type="checkbox" @change="checkSubHead(singleHead.id, index)" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType">
-              {{ singleHead?.name }}
-            </label>
-
-            <div v-for="(subhead,index) in singleHead.opsSubHeads" :key="index" class="ml-6">
-              <label class="mb-2 text-gray-600 dark:text-gray-400">
-                <input type="checkbox" v-model="form.heads" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" :value="singleHead?.id">
-                <span class="ml-2 font-medium hover:text-purple-00 hover:cursor-pointer">{{ subhead?.name }}</span>
-              </label>
-            </div>
-          </div>
-
-        </fieldset>
 
 
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -135,13 +123,13 @@ onMounted(() => {
             <div :id="'cost_' + index" :class="index%2===0 ? 'bg-gray-100' : 'bg-yellow-100'" style="position: relative" class="px-2 py-2 border sm:rounded-lg mb-1" v-for="(costGroup, index) in form.heads" :key="index">
 
               <label class="flex items-center mb-2 text-gray-600 dark-disabled:text-gray-400">
-                <input type="checkbox" :class="'menu_' + menuIndex" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+                <input @change="chooseSubHead(index)" type="checkbox" v-model="form.heads[index].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
                 <span class="ml-2 font-bold">{{ costGroup.name }}</span>
               </label>
 
-              <template v-for="(subhead,subjectIndex) in costGroup?.opsSubHeads" :key="subjectIndex">
+              <template v-for="(subhead,subIndex) in form.heads[index]?.opsSubHeads" :key="subIndex">
                 <label class="flex ml-6 items-center mb-2 text-gray-600 dark-disabled:text-gray-400">
-                  <input type="checkbox" :class="'menu_' + menuIndex" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+                  <input @change="checkSubhead(index, subIndex)" type="checkbox" v-model="form.heads[index].opsSubHeads[subIndex].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
                   <span class="ml-2 font-bold">{{ subhead?.name }}</span>
                 </label>
               </template>

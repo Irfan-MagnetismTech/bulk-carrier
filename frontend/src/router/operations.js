@@ -503,4 +503,30 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Bunker Requisitons */
+	{
+		path: `/${BASE}/bunker-requisitions`,
+		name: `${BASE}.bunker-requisitions.index`,
+		component: () => import(`../views/${ViEWBASE}/bunker-requisitions/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/create`,
+		name: `${BASE}.bunker-requisitions.create`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/:bunkerRequisitionId/edit`,
+		name: `${BASE}.bunker-requisitions.edit`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/approved/:bunkerRequisitionId`,
+		name: `${BASE}.bunker-requisitions.approved`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/approved.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

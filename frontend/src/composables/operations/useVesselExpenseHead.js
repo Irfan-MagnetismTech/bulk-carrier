@@ -84,13 +84,13 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function showVesselExpenseHead(VesselExpenseHeadId) {
+	async function showVesselExpenseHead(vesselExpenseHeadId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/vessel-expense-heads/${VesselExpenseHeadId}`);
+			const { data, status } = await Api.get(`/ops/vessel-expense-heads/${vesselExpenseHeadId}`);
 			vesselExpenseHead.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -103,15 +103,16 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function updateVesselExpenseHead(form, vesselExpenseHeadId) {
+	async function updateVesselExpenseHead(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
+		form.type = 'update';
 
 		try {
 
-			const { data, status } = await Api.put(
-				`/ops/vessel-expense-heads/${vesselExpenseHeadId}`,
+			const { data, status } = await Api.post(
+				`/ops/vessel-expense-heads`,
 				form
 			);
 			// VesselExpenseHead.value = data.value;
@@ -127,14 +128,15 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function deleteVesselExpenseHead(VesselExpenseHeadId) {
+
+	async function deleteVesselExpenseHead(vesselExpenseHeadId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/vessel-expense-heads/${VesselExpenseHeadId}`);
+			const { data, status } = await Api.delete( `/ops/vessel-expense-heads/${vesselExpenseHeadId}`);
 			notification.showSuccess(status);
 			await getVesselExpenseHeads(filterParams.value);
 		} catch (error) {

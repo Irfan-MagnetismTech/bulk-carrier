@@ -169,6 +169,24 @@ export default function useExpenseHead() {
 		}
 	}
 
+	async function getAllExpenseHeads(business_unit, loading) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-expense-heads?business_unit=${business_unit}`);
+			expenseHeads.value = data;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			if(loading) {
+				loading(false)				
+			}
+			//NProgress.done();
+		}
+	}
+
 	return {
 		expenseHeads,
 		expenseHead,
@@ -178,6 +196,7 @@ export default function useExpenseHead() {
 		updateExpenseHead,
 		deleteExpenseHead,
 		searchExpenseHeads,
+		getAllExpenseHeads,
 		isTableLoading,
 		isLoading,
 		errors,
