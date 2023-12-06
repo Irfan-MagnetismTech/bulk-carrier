@@ -72,7 +72,6 @@ class ScmAdjustmentController extends Controller
                 foreach ($request->scmAdjustmentLines as $key => $value) {
                     $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
                 }
-
                 $dataForStockLedger = array_merge(...$dataForStock);
 
                 $adjustment->stockable()->createMany($dataForStockLedger);
@@ -115,6 +114,7 @@ class ScmAdjustmentController extends Controller
     public function update(ScmAdjustmentRequest $request, ScmAdjustment $adjustment): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $adjustment->update($request->all());
 
             $adjustment->scmAdjustmentLines()->delete();
@@ -132,7 +132,6 @@ class ScmAdjustmentController extends Controller
                 foreach ($request->scmAdjustmentLines as $key => $value) {
                     $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
                 }
-
                 $dataForStockLedger = array_merge(...$dataForStock);
 
                 $adjustment->stockable()->createMany($dataForStockLedger);
