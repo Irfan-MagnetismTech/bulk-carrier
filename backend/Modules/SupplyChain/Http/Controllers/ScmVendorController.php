@@ -107,7 +107,7 @@ class ScmVendorController extends Controller
     public function searchVendor(Request $request): JsonResponse
     {
         $vendor = ScmVendor::query()
-            ->with('scmVendorContactPersons')
+            ->with('scmVendorContactPersons','scmVendorContactPerson')
             // ->where('name', 'like', "%$request->searchParam%")
             ->orderByDesc('name')
             // ->limit(10)

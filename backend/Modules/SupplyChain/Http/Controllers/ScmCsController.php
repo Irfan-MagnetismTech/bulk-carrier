@@ -8,8 +8,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
+use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\UniqueId;
 
@@ -33,6 +35,7 @@ class ScmCsController extends Controller
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
 
+            
             return response()->success('Data list', $scmCs, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
@@ -51,6 +54,9 @@ class ScmCsController extends Controller
         try {
             DB::beginTransaction();
             $scmMi = ScmCs::create($requestData);
+            //throw exception if creating fail
+
+
             DB::commit();
             return response()->success('Data created succesfully', $scmMi, 201);
         } catch (\Exception $e) {
@@ -126,4 +132,73 @@ class ScmCsController extends Controller
 
         return response()->success('Data list', $scmCs, 200);
     }
+
+    public function storeQuotation(ScmQuotationRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
+            $scmCs = ScmCs::find($request->scm_cs_id);
+            $requestData = $request->only(
+                'scm_cs_id',
+                'scm_vendor_id',
+                'vendor_type',
+                'sourcing',
+                'date_of_rfq',
+                'quotations_received_date',
+                'quotation_ref',
+                'quotation_date',
+                'quotation_validity',
+                'payment_method',
+                'currency',
+                'carring_cost_bear_by',
+                'unloading_cost_bear_by',
+                'vat',
+                'ait',
+                'credit_term',
+                'quotation_shipment_date',
+                'estimated_shipment',
+                'port_of_loading',
+                'port_of_discharge',
+                'port_of_shipment',
+                'mode_of_shipment',
+                'delivery_term',
+                'terms_and_condition',
+                'remarks',
+            );
+
+            $scmCsVendor = ScmCsVendor::create($requestData);
+            $scmMaterial = [];
+            foreach ($request->scmCsVendorMaterial as $key => $value) {
+                $scmMaterial[] = $value->scm_material_id;
+            }
+            $scmCs->scmCsMaterials()->createMany($scmMaterial);
+            $ScmCsVendorMaterilArray = $this->setScmVendorMaterial()
+            DB::commit();
+            return response()->success('Data created succesfully', $scmMi, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+
+   
+    private function setScmVendorMaterial($scmVendorId, $materialId, $materialQty)
+    {
+        $scmVendorMaterial = ScmCsMaterialVendor::create([
+            'scm_material_id' => ,
+            brand: null,
+            model: null,
+            origin: null,
+            stock_type: null,
+            manufaturing_days: null,
+            unit: null,
+            offered_price: null,
+            negotiated_price: null,
+        ]);
+        return $scmVendorMaterial;
+    }
+
+
 }

@@ -41,4 +41,19 @@ class ScmCs extends Model
     {
         return $this->belongsTo(ScmWarehouse::class);
     }   
+
+    public function scmCsVendors()
+    {
+        return $this->hasMany(ScmCsVendor::class);
+    }
+
+    public function scmCsMaterialVendors()
+    {
+        return $this->hasMany(ScmCsMaterialVendor::class);
+    }
+
+    public function scmCsMaterials()
+    {
+        return $this->hasMany(ScmCsMaterial::class);
+    }
 }
