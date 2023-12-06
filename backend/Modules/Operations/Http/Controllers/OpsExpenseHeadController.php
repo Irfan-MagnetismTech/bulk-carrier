@@ -271,8 +271,11 @@ class OpsExpenseHeadController extends Controller
 
     public function getExpenseHeads() {
         $expenseHeads = OpsExpenseHead::with('opsSubHeads')
-                    ->whereNull('head_id')
-                    ->get(['id', 'head_id', 'name']);
+                        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
+                                $q->where('business_unit', request()->business_unit);  
+                            })
+                        ->whereNull('head_id')
+                        ->get(['id', 'head_id', 'name']);
 
         $expenseHeads->map(function($item) {
             $item['is_checked'] = false;
