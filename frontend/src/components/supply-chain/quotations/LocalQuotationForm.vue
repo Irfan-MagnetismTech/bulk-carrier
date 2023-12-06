@@ -20,7 +20,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @search="searchVendor" @change="setVendorOtherData(form.scmVendor)">
+          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="setVendorOtherData(form.scmVendor)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -138,7 +138,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Credit Term<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+          <input type="text" v-model="form.credit_term" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
@@ -300,6 +300,10 @@ import { useRoute } from 'vue-router';
         props.form.scmCsVendorMaterial[index].unit = value.unit;
         props.form.scmCsVendorMaterial[index].scm_material_id = value.id;
     }
+
+  function setVendorOtherData() {
+        props.form.scm_vendor_id = props.form.scmVendor?.id;
+      }
 
 // function fetchStoreIssue(search, loading = false) {
 //     // if (search.length > 0) {
