@@ -18,6 +18,8 @@ return new class extends Migration
 			$table->unsignedBigInteger('ops_vessel_id');
             $table->string('year_month', 7);
 			$table->integer('working_days');
+			$table->integer('total_crews');
+			$table->string('remarks')->nullable();            
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });

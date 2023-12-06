@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwCrewAssignment;
+use Modules\Crew\Http\Requests\CrwCrewAssignmentRequest;
 
 class CrwCrewAssignmentController extends Controller
 {
@@ -35,7 +36,7 @@ class CrwCrewAssignmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwCrewAssignmentRequest $request)
     {
         try {
             $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
@@ -73,7 +74,7 @@ class CrwCrewAssignmentController extends Controller
      * @param  \App\Models\CrwCrewAssignment  $crwCrewAssignment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewAssignment $crwCrewAssignment)
+    public function update(CrwCrewAssignmentRequest $request, CrwCrewAssignment $crwCrewAssignment)
     {
         try {
             $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');

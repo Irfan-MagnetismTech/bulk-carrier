@@ -12,20 +12,13 @@ export default function useCrwAttendance() {
     const notification = useNotification();
     const crwAttendance = ref({
         ops_vessel_id: "",
+        ops_vessel_name : "",
         year_month: "",
+        total_crews: 0,
         working_days: "",
         business_unit: "",
-        crwAttendanceLines: [            
-            {
-                crw_crew_id : "",
-                crw_crew_name : "",
-                crw_crew_assignment_id : "",
-                // attendance_line_composite : "",
-                present_days : "",
-                absent_days : "",
-                payable_days : "",
-            },
-        ],
+        crwAttendanceLines: [],
+
     });
 
     const filterParams = ref(null);
@@ -124,6 +117,9 @@ export default function useCrwAttendance() {
             color: "#7e3af2",
         });
         isLoading.value = true;
+        form : {
+
+        }
 
         try {
             const { data, status } = await Api.put(`/crw/crw-attendances/${crwAttendanceId}`, form);

@@ -135,10 +135,7 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.put(
-                `/crw/crw-crew-assignments/${crewAssignId}`,
-                form
-            );
+            const { data, status } = await Api.put(`/crw/crw-crew-assignments/${crewAssignId}`, form);
             crewAssign.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.crewAssigns.index" });

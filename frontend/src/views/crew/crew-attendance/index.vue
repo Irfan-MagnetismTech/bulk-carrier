@@ -149,7 +149,7 @@ onMounted(() => {
           <tr v-for="(crwAttendance,index) in crwAttendances?.data" :key="index">
             <td> {{ index + 1 }} </td>
             <td> {{ crwAttendance?.opsVessel?.name }} </td>
-            <td> ?? </td>
+            <td> {{ crwAttendance?.total_crews }} </td>
             <td> {{ crwAttendance?.year_month }} </td>
             <td>{{ crwAttendance?.working_days }}</td>
             <td>

@@ -4,6 +4,7 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watch, watchEffect} from "vue";
 import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import Store from "../../store";
 import usePort from "../../composables/operations/usePort";
 import RemarksComponent from "../utils/RemarksComponent.vue";
@@ -136,13 +137,14 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Duration (Months) <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.duration" placeholder="Ex: 6" class="form-input" autocomplete="off" required />
+      <input type="number" v-model="form.duration" min="1" max="120" placeholder="Ex: 6" class="form-input" autocomplete="off" required />
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>  
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 <style lang="postcss" scoped>

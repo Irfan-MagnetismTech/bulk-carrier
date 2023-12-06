@@ -12,6 +12,7 @@ const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { getVesselAssignedCrews, vesselAssignedCrews } = useCrewCommonApiRequest();
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+
 const props = defineProps({
   form: {
     required: false,
@@ -28,19 +29,17 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 
-watch(() => props.form.ops_vessel_name, (value) => {
+watch(() => props.form.opsVessel, (value) => {
   if(value){
-    getVesselAssignedCrews(value.id); 
+    props.form.ops_vessel_name = value ?? '';
   }
 });
 
 watch(() => vesselAssignedCrews.value, (items) => {
-  // foreach( item in items){
-
-  // }
-
+  props.form.total_crews = items.length;
   items.forEach(function(item){
     props.form.crwAttendanceLines.push({
+      crwCrewAssignment : item, 
       crw_crew_assignment_id : item.id,
       crw_crew_assignment_name : item,
       crw_crew_id : item.crwCrew.id,
@@ -52,14 +51,16 @@ watch(() => vesselAssignedCrews.value, (items) => {
   }); 
   // console.log(vesselAssignedCrews); 
 });
-
+function vesselChanged(){
+  props.form.crwAttendanceLines = []; 
+  getVesselAssignedCrews(props.form.ops_vessel_name.id); 
+}
 
 onMounted(() => {
   props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
-  });
-
+  });  
 });
 
 </script>
@@ -75,7 +76,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Vessel Name <span class="text-red-500">*</span></span>
-      <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+      <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_name" label="name" class="block form-input" @update:modelValue="vesselChanged">
         <template #search="{attributes, events}">
           <input
               class="vs__search"
@@ -89,7 +90,7 @@ onMounted(() => {
 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Total Crews </span>
-      <input type="text" v-model.trim="form.total_crews" placeholder="Total Crews" class="form-input vms-readonly-input" autocomplete="off" required readonly/>
+      <input type="text" :value="form.total_crews" class="form-input vms-readonly-input" autocomplete="off" required readonly/>
     </label>
 
     <label class="block w-full mt-2 text-sm">
@@ -99,7 +100,7 @@ onMounted(() => {
     
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Working Days <span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.working_days" placeholder="Working Days" class="form-input" autocomplete="off" required />
+      <input type="number" v-model.trim="form.working_days" min="0" max="31" placeholder="Working Days" class="form-input" autocomplete="off" required />
     </label>
   </div>
 
@@ -123,22 +124,22 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
         <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwAttendanceLine, index) in form.crwAttendanceLines" :key="crwAttendanceLine.id">
           <td class="px-1 py-1">
-            <input type="text" v-model.trim="form.crwAttendanceLines[index].crew_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="text" v-model.trim="form.crwAttendanceLines[index].contact" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.pre_mobile_no"  class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="text" v-model.trim="form.crwAttendanceLines[index].current_rank" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" placeholder="Present Days" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input" autocomplete="off" required />
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" placeholder="Absent Days" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" min="0" max="31" class="form-input" autocomplete="off" required />
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].payable_days" placeholder="Payable Days" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].payable_days" min="0" :max="form.working_days" class="form-input" autocomplete="off" required />
           </td>
         </tr>
       </tbody>

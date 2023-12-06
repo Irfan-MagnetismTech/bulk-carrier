@@ -25,7 +25,7 @@ return new class extends Migration
 			$table->date('completion_date')->nullable();   
 			$table->date('completion_remarks')->nullable();   
 			$table->string('remarks')->nullable();            
-			$table->enum('business_unit', ['PSML', 'TSLL']);
+			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();
         });
     }

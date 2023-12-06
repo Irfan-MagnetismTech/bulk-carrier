@@ -32,7 +32,12 @@ onMounted(() => {
           <crew-attendance-form v-model:form="crwAttendance" :errors="errors"></crew-attendance-form>
 
             <!-- Submit button -->
-            <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
+            <button type="submit" 
+            :class="{'cursor-not-allowed': crwAttendance.crwAttendanceLines.length < 1}" 
+            :disabled="crwAttendance.crwAttendanceLines.length < 1"  
+            class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              Update
+            </button>
         </form>
     </div>
 </template>
