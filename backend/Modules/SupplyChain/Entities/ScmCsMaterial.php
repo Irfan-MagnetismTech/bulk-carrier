@@ -9,5 +9,7 @@ class ScmCsMaterial extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'scm_cs_id', 'scm_material_id', 'quantity',
+    ];
 }

@@ -63,7 +63,7 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "ref_no",
+      "field_name": "quotation_ref",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -210,7 +210,7 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(quotation,index) in (quotations?.data ? quotations?.data : quotations)" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>{{ quotation?.ref_no }}</td>
+              <td>{{ quotation?.quotation_ref }}</td>
               <td>{{ quotation?.effective_date }}</td>
               <td>{{ quotation?.expire_date }}</td>
               <td>{{ quotation?.purchase_center }}</td>
@@ -219,11 +219,9 @@ function confirmDelete(id) {
                 <span :class="quotation?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
               </td>
               <td>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                 
-                  <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> -->
-                  <!-- <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: quotation.id } }"></action-button>
-                  <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
+                <div class="grid grid-flow-col-dense gap-x-2">                 
+                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <!-- <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
                 </div>
               </td>
             </tr>

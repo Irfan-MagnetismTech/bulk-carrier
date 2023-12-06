@@ -72,9 +72,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
-    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
-    // get-quotations
-    Route::get('get-quotations', [ScmCsController::class, "getQuotations"])->name('getQuotations');   
+    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');   
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
@@ -89,4 +87,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
     Route::get('get-pr-cs-wise-po-data', [ScmPoController::class, "getPoOrPoCsWisePrData"]);
     Route::get('stock', [SupplyChainController::class, "getCurrentStock"]);
+
+    // CS quotation
+    Route::post('quotations', [ScmCsController::class, "storeQuotation"])->name('quotations.create');
+    Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
 });

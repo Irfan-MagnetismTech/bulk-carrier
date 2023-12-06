@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
@@ -35,7 +36,7 @@ class ScmCsController extends Controller
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
 
-            
+
             return response()->success('Data list', $scmCs, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
@@ -79,8 +80,6 @@ class ScmCsController extends Controller
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
-    
-       
     }
 
     /**
@@ -126,8 +125,8 @@ class ScmCsController extends Controller
     public function getQuotations(Request $request)
     {
         $scmCs = ScmCsVendor::query()
-            ->with('scmPr', 'scmWarehouse')
-            ->where('id',$request->cs_id)
+            ->with('scmCs', 'scmVendor', 'scmCsMaterialVendors')
+            ->where('scm_cs_id', $request->cs_id)
             ->get();
 
         return response()->success('Data list', $scmCs, 200);
@@ -136,7 +135,6 @@ class ScmCsController extends Controller
     public function storeQuotation(ScmQuotationRequest $request)
     {
         try {
-            DB::beginTransaction();
             // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
             $scmCs = ScmCs::find($request->scm_cs_id);
             $requestData = $request->only(
@@ -167,38 +165,35 @@ class ScmCsController extends Controller
                 'remarks',
             );
 
+            DB::beginTransaction();
+
             $scmCsVendor = ScmCsVendor::create($requestData);
-            $scmMaterial = [];
+
             foreach ($request->scmCsVendorMaterial as $key => $value) {
-                $scmMaterial[] = $value->scm_material_id;
+                $csMaterial = ScmCsMaterial::create([
+                    'scm_cs_id' => $scmCs->id,
+                    'scm_material_id' => $value['scm_material_id']
+                ]);
+
+                ScmCsMaterialVendor::create([
+                    'scm_cs_id' => $scmCs->id,
+                    'scm_cs_vendor_id' => $scmCsVendor->id,
+                    'scm_cs_material_id' => $csMaterial->id,
+                    'brand' => $request->scmCsVendorMaterial[$key]['brand'] ?? null,
+                    'origin' => $request->scmCsVendorMaterial[$key]['origin'] ?? null,
+                    'stock_type' => $request->scmCsVendorMaterial[$key]['stock_type'] ?? null,
+                    'manufaturing_days' => $request->scmCsVendorMaterial[$key]['manufaturing_days'] ?? null,
+                    'unit' => $request->scmCsVendorMaterial[$key]['unit'] ?? null,
+                    'offered_price' => $request->scmCsVendorMaterial[$key]['offered_price'] ?? null,
+                    'negotiated_price' => $request->scmCsVendorMaterial[$key]['negotiated_price'] ?? null,
+                ]);
             }
-            $scmCs->scmCsMaterials()->createMany($scmMaterial);
-            $ScmCsVendorMaterilArray = $this->setScmVendorMaterial()
+
             DB::commit();
-            return response()->success('Data created succesfully', $scmMi, 201);
+            return response()->success('Data created succesfully', $scmCsVendor, 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
-
     }
-
-   
-    private function setScmVendorMaterial($scmVendorId, $materialId, $materialQty)
-    {
-        $scmVendorMaterial = ScmCsMaterialVendor::create([
-            'scm_material_id' => ,
-            brand: null,
-            model: null,
-            origin: null,
-            stock_type: null,
-            manufaturing_days: null,
-            unit: null,
-            offered_price: null,
-            negotiated_price: null,
-        ]);
-        return $scmVendorMaterial;
-    }
-
-
 }
