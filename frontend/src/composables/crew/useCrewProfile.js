@@ -47,6 +47,11 @@ export default function useCrewProfile() {
         attachment: '',
         employee_type: 'Crew',
         is_officer: 0,
+        is_training_data_required: true,
+        is_experience_data_required: true,
+        is_other_data_required: true,
+        is_reference_data_required: true,
+        is_nominee_data_required: true,
         educations: [
             {
                 exam_title: '',
