@@ -64,6 +64,7 @@ watch(
 );
 
 let filterOptions = ref( {
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -79,6 +80,14 @@ let filterOptions = ref( {
     {
       "relation_name": null,
       "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
+      "field_name": "business_unit",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -182,6 +191,15 @@ onMounted(() => {
                 </div>
               </th>
               <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Business Unit</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
                   Action
               </th>
             </tr>
@@ -207,7 +225,9 @@ onMounted(() => {
 
               <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
 
-
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
               <th>
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
@@ -220,6 +240,9 @@ onMounted(() => {
 
                   <td>{{ port?.code }}</td>
                   <td>{{ port?.name }}</td>
+                  <td>
+                    <span :class="port?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ port?.business_unit }}</span>
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'edit'" :to="{ name: 'ops.configurations.ports.edit', params: { portId: port.id } }"></action-button>

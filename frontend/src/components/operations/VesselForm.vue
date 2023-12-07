@@ -280,7 +280,7 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { materials, getBunkerList } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
@@ -320,8 +320,12 @@ function removeBunker(index){
 //       searchPorts(search, loading)
 // }
 
+watch(() => props.form.business_unit, (value) => {
+  searchPorts("", props.form.business_unit);
+}, { deep : true })
+
+
 onMounted(() => {
-  getPortList();
   getMaritimeCertificateList();
   getBunkerList();
   // getCurrencies();

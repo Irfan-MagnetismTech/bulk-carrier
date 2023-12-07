@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('ops_customer_invoice_id')->constrained('ops_customer_invoices')->onDelete('cascade');
             $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
             $table->foreignId('ops_voyage_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->float('amount')->nullable();
+            $table->float('amount', 20, 2)->nullable();
             $table->timestamps();
         });
     }

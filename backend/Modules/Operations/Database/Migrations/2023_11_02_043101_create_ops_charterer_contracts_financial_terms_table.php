@@ -24,13 +24,13 @@ return new class extends Migration
             $table->date('valid_from')->nullable();
             $table->date('valid_till')->nullable();
             $table->string('status')->nullable();
-            $table->float('approximate_load_amount')->nullable();
-            $table->float('per_mt_charge')->nullable();
-            $table->float('per_day_charge')->nullable();
-            $table->float('cleaning_fee')->nullable();
-            $table->float('cancellation_fee')->nullable();
-            $table->float('others_fee')->nullable();
-            $table->float('per_ton_charge')->nullable();
+            $table->float('approximate_load_amount', 20, 2)->nullable();
+            $table->float('per_mt_charge', 20, 2)->nullable();
+            $table->float('per_day_charge', 20, 2)->nullable();
+            $table->float('cleaning_fee', 20, 2)->nullable();
+            $table->float('cancellation_fee', 20, 2)->nullable();
+            $table->float('others_fee', 20, 2)->nullable();
+            $table->float('per_ton_charge', 20, 2)->nullable();
             $table->string('bunker_provider')->nullable();
             
             $table->timestamps();

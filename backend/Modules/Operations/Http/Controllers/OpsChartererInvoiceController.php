@@ -86,7 +86,7 @@ class OpsChartererInvoiceController extends Controller
     public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
     {
         $charterer_invoice->load('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors',
-        'opsChartererContract.opsVessel');
+        'opsChartererContract.opsVessel', 'opsChartererInvoiceVoyages.opsVoyage.opsCargoType');
         
         try
         {
@@ -174,7 +174,7 @@ class OpsChartererInvoiceController extends Controller
 
     public function getVoyageByContract(Request $request): JsonResponse
     {
-        $voyages= OpsVoyage::with('opsVoyageSectors','opsContractAssign')->whereHas('opsContractAssign',function($item){
+        $voyages= OpsVoyage::with('opsVoyageSectors','opsCargoType','opsContractAssign')->whereHas('opsContractAssign',function($item){
             return $item->where('ops_charterer_contract_id', request()->contract_id);
         })
         ->get();

@@ -565,7 +565,7 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const editInitiated = ref(false);
 
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes, isLoading, checkValidation } = useBulkNoonReport();
@@ -654,14 +654,15 @@ function removeEngineType(index) {
 watch(() => props.form.business_unit, (value) => {
   vessels.value = []
   voyages.value = []
-if(props?.formType != 'edit') {
-  props.form.opsVoyage = null;
-  props.form.ops_voyage_id = null;
-  props.form.opsVessel = null;
-  props.form.ops_vessel_id = null;
-}
+  if(props?.formType != 'edit') {
+    props.form.opsVoyage = null;
+    props.form.ops_voyage_id = null;
+    props.form.opsVessel = null;
+    props.form.ops_vessel_id = null;
+  }
 
-getVesselList(props.form.business_unit);
+  getVesselList(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
 
 }, { deep : true })
 
@@ -710,7 +711,6 @@ if(props?.formType == 'edit' && editInitiated.value != true) {
 
 onMounted(() => {
   getVesselList(props.form.business_unit);
-  getPortList();
   getBunkerConsumptionHeadList();
   getEngineTemparatureTypeList();
 });
