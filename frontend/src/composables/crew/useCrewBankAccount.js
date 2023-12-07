@@ -1,29 +1,27 @@
 import { useLoading } from "vue-loading-overlay";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Api from "../../apis/Api";
-import useNotification from "../../composables/useNotification.js";
+import Api from "../../apis/Api.js";
+import useNotification from "../useNotification.js";
 
-export default function useCrewAssign() {
+export default function useCrewBankAccount() {
     const router = useRouter();
-    const crewAssigns = ref([]);
+    const crewBankAccounts = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const crewAssign = ref({
-        business_unit: "",
-        ops_vessel_id: "",
-        ops_vessel_name: "",
-        // ops_vessel_flag: "",
-        crw_crew_id: "",
+    const crewBankAccount = ref({
+        crw_crew_id : "", 
         crw_crew_name: "",
-        crw_crew_contact: "",
-        position_onboard: "",
-        joining_date: "",
-        joining_port_code: "",
-        joining_port_name: "",
-        duration: "",
-        remarks: "",
+        bank_name : "", 
+        branch_name : "", 
+        routing_number : "", 
+        account_name : "", 
+        account_number : "", 
+        benificiary_name : "", 
+        attachment : "", 
+        is_active : "", 
+        business_unit : "", 
     });
 
     const indexPage = ref(null);
@@ -33,7 +31,7 @@ export default function useCrewAssign() {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getCrewAssigns(filterOptions) {
+    async function getCrewBankAccounts(filterOptions) {
         let loader = null;
         if (!filterOptions.isFilter) {
             loader = $loading.show({
@@ -52,8 +50,7 @@ export default function useCrewAssign() {
         filterParams.value = filterOptions;
 
         try {
-            const { data, status } = await Api.get(
-                "/crw/crw-crew-assignments",
+            const { data, status } = await Api.get("/crw/crw-bank-accounts",
                 {
                     params: {
                         page: filterOptions.page,
@@ -62,7 +59,7 @@ export default function useCrewAssign() {
                     },
                 }
             );
-            crewAssigns.value = data.value;
+            crewBankAccounts.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -78,22 +75,21 @@ export default function useCrewAssign() {
         }
     }
 
-    async function storeCrewAssign(form) {
-        const loader = $loading.show({
-            "can-cancel": false,
-            loader: "dots",
-            color: "#7e3af2",
-        });
+    async function storeCrewBankAccount(form) {
+        const loader = $loading.show({"can-cancel": false, loader: "dots", color: "#7e3af2"});
         isLoading.value = true;
 
+        let formData = new FormData();
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        formData.append('data', JSON.stringify(form));
+
         try {
-            const { data, status } = await Api.post(
-                "/crw/crw-crew-assignments",
-                form
-            );
-            crewAssign.value = data.value;
+            const { data, status } = await Api.post("/crw/crw-bank-accounts", formData);
+            crewBankAccount.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crewAssigns.index" });
+            await router.push({ name: "crw.crewBankAccounts.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -103,7 +99,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function showCrewAssign(crewAssignId) {
+    async function showCrewBankAccount(crewBankAccountId) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -112,10 +108,9 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(
-                `/crw/crw-crew-assignments/${crewAssignId}`
+            const { data, status } = await Api.get(`/crw/crw-bank-accounts/${crewBankAccountId}`
             );
-            crewAssign.value = data.value;
+            crewBankAccount.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -126,19 +121,22 @@ export default function useCrewAssign() {
         }
     }
 
-    async function updateCrewAssign(form, crewAssignId) {
-        const loader = $loading.show({
-            "can-cancel": false,
-            loader: "dots",
-            color: "#7e3af2",
-        });
+    async function updateCrewBankAccount(form, crewBankAccountId) {
+        const loader = $loading.show({ "can-cancel": false, loader: "dots", color: "#7e3af2" });
         isLoading.value = true;
 
+        let formData = new FormData();
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
         try {
-            const { data, status } = await Api.put(`/crw/crw-crew-assignments/${crewAssignId}`, form);
-            crewAssign.value = data.value;
+            const { data, status } = await Api.post(`/crw/crw-bank-accounts/${crewBankAccountId}`, formData);
+            crewBankAccount.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.crewAssigns.index" });
+            await router.push({ name: "crw.crewBankAccounts.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -148,7 +146,7 @@ export default function useCrewAssign() {
         }
     }
 
-    async function deleteCrewAssign(crewAssignId) {
+    async function deleteCrewBankAccount(crewBankAccountId) {
         const loader = $loading.show({
             "can-cancel": false,
             loader: "dots",
@@ -157,11 +155,9 @@ export default function useCrewAssign() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete(
-                `/crw/crw-crew-assignments/${crewAssignId}`
-            );
+            const { data, status } = await Api.delete(`/crw/crw-bank-accounts/${crewBankAccountId}`);
             notification.showSuccess(status);
-            await getCrewAssigns(filterParams.value);
+            await getCrewBankAccounts(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -172,13 +168,13 @@ export default function useCrewAssign() {
     }
 
     return {
-        crewAssigns,
-        crewAssign,
-        getCrewAssigns,
-        storeCrewAssign,
-        showCrewAssign,
-        updateCrewAssign,
-        deleteCrewAssign,
+        crewBankAccounts,
+        crewBankAccount,
+        getCrewBankAccounts,
+        storeCrewBankAccount,
+        showCrewBankAccount,
+        updateCrewBankAccount,
+        deleteCrewBankAccount,
         isTableLoading,
         isLoading,
         errors,

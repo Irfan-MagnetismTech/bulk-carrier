@@ -73,5 +73,6 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::post('get-crews', [CrwCommonController::class, 'getCrews']);
     Route::post('get-crew-documents', [CrwCommonController::class, 'getCrewDocuments']);
     Route::post('get-crew-document-renewals', [CrwCommonController::class, 'getCrewDocumentRenewals']);
+    Route::post('get-vessel-assigned-crews', [CrwCommonController::class, 'getVesselAssignedCrews']);    
 
 });

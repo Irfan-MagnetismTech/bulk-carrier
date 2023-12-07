@@ -24,9 +24,9 @@ class CrwIncidentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants')->globalSearch($request->all());
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants','opsVessel')->globalSearch($request->all());
 
-            return response()->success('Retrieved Succesfully', $crwIncidents, 200);
+            return response()->success('Retrieved Successfully', $crwIncidents, 200);
         }
         catch (QueryException $e)
         {
