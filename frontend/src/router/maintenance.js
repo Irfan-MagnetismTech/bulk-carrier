@@ -498,6 +498,18 @@ export default [
 	},
 	/* Upcoming Jobs */
 
+	
+	/* Overdue Jobs */
+	{
+		path: `/${BASE}/reports/overdue-jobs`,
+		name: `${BASE}.reports.overdue-jobs`,
+		component: () => import(`../views/${VIEWBASE}/reports/overdue-jobs-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'overdue-jobs-report' },
+	},
+	/* Overdue Jobs */
+
+
+
 	/* Report End */
 
 
