@@ -480,12 +480,24 @@ export default [
 	/* Survey End */
 
 	/* Report Start */
+	/* All Jobs */
 	{
 		path: `/${BASE}/reports/all-jobs`,
 		name: `${BASE}.reports.all-jobs`,
 		component: () => import(`../views/${VIEWBASE}/reports/all-jobs-report/report.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'all-jobs-report' },
 	},
+	/* All Jobs */
+	
+	/* Upcoming Jobs */
+	{
+		path: `/${BASE}/reports/upcoming-jobs`,
+		name: `${BASE}.reports.upcoming-jobs`,
+		component: () => import(`../views/${VIEWBASE}/reports/upcoming-jobs-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'upcoming-jobs-report' },
+	},
+	/* Upcoming Jobs */
+
 	/* Report End */
 
 
