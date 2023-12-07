@@ -1,284 +1,398 @@
 <template>
-   <div class="flex items-center justify-between w-full my-3" v-once>
-      <h2 class="text-2xl font-semibold text-gray-700">Voyage Boat Note Details</h2>
-      <default-button :title="'Voyage Boat Note Index'" :to="{ name: 'ops.voyage-boat-notes.index' }" :icon="icons.DataBase"></default-button>
+  <div class="flex items-center justify-between w-full my-3" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Charterer Invoice</h2>
+    <default-button :title="'Charterer Invoice List'" :to="{ name: 'ops.charterer-invoices.index' }" :icon="icons.DataBase"></default-button>
+  </div>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit</span>
+
+        <span class="show-block">
+          {{ chartererInvoice.business_unit }}
+        </span>
+      </label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+
     </div>
 
-    <div id="basic-info">
-      <h4 class="text-md font-semibold">Basic Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          
-          <label class="block w-full mt-2 text-sm">
-            <span class="show-block">{{ voyageBoatNote.business_unit }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
+    <h4 class="text-md font-semibold mt-3">Basic Info</h4>
 
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name</span>
-              <span class="show-block">{{ voyageBoatNote.contract_name }}</span>
-
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Type</span>
-              <span class="show-block">{{ voyageBoatNote.contract_type }}</span>
-
-          </label>
-
-
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
-              
-              <span class="show-block">{{ voyageBoatNote.opsVessel?.name }}</span>
-
-          </label>
-
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner</span>
-              <span class="show-block">{{ voyageBoatNote.opsVessel?.owner_name }}</span>
-
-          </label>
-
-          
-          
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ voyageBoatNote.opsChartererProfile?.name }}</span>
-
-
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
-              <span class="show-block">{{ voyageBoatNote.opsChartererProfile?.owner_code }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
-
-          <span class="show-block">{{ voyageBoatNote.country }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
-            <span class="show-block">{{ voyageBoatNote.address }}</span>
-
-        </label>
-        
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
-              <span class="show-block">{{ voyageBoatNote.billing_address }}</span>
-
-        </label>
-        
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-              <span class="show-block">{{ voyageBoatNote.email }}</span>
-
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner</span>
+              <span class="show-block">
+                {{ chartererInvoice.opsChartererProfile?.name_and_code }}
+              </span>
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No.</span>
-            <span class="show-block">{{ voyageBoatNote.contact_no }}</span>
-
+              <span class="text-gray-700 dark-disabled:text-gray-300">Contract</span>
+              <span class="show-block">
+                {{ chartererInvoice.opsChartererContract?.contract_name }}
+              </span>
         </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Attachment </span>
-              <a download href="" class="block text-blue-500 hover:text-blue-700 ease-linear duration-200 font-semibold mt-2.5">Download Attachment</a>
-
-          </label>
-      </div>
     </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
+              <input type="text" readonly :value="chartererInvoice.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
+        </label>
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="chartererInvoice.contract_type == 'Day Wise'">
+          <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 dark-disabled:text-gray-300">Bill From</span>
+                <input type="date" v-model.trim="chartererInvoice.bill_from" class="form-input" autocomplete="off" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till</span>
+                <input type="date" v-model.trim="chartererInvoice.bill_till" class="form-input" autocomplete="off" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
+                <span class="show-block !justify-center">
+                    {{ chartererInvoice?.total_days }}
+                </span>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 dark-disabled:text-gray-300">Charge Per Day</span>
+                <span class="show-block !justify-end">
+                    {{ numberFormat(chartererInvoice?.per_day_charge) }}
+                </span>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
+                <span class="show-block !justify-end">
+                    {{ numberFormat(chartererInvoice?.total_amount) }}
+                </span>
+          </label>
+    </div>
+
+    <div id="sectors" class="mt-5" v-if="chartererInvoice.contract_type == 'Voyage Wise'">
+        <h4 class="text-md font-semibold my-3">Voyage Data</h4>
+
+        <table class="w-full whitespace-no-wrap" >
+          <thead v-once>
+              <tr class="w-full">
+                <th class="">Voyage</th>
+                <th class="">
+                  <nobr>Cargo Type</nobr>
+                </th>
+                <th class="">
+                  <nobr>Cargo Quantity</nobr>
+                </th>
+                <th class="">
+                  <nobr>Rate Per MT</nobr>
+                </th>
+                <th>
+                  <nobr>Total Amount</nobr>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(sector, index) in chartererInvoice.opsChartererInvoiceVoyages" :key="index">
+                <td class="!w-1/4">
+                  <label class="block w-full mt-2 text-sm">
+                  
+                    <span class="show-block">
+                      {{ chartererInvoice.opsChartererInvoiceVoyages[index].opsVoyage?.voyage_sequence }}
+                    </span>
+                  </label>
+                </td>
+                <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
+                      </span>
+                  
+                  </label>
+                </td>
+                <td>
+                    <label class="block w-full mt-2 text-sm">
+                    <input type="number" step="0.001" v-model.trim="chartererInvoice.opsChartererInvoiceVoyages[index].cargo_quantity" readonly class="form-input text-right" autocomplete="off" />
+                  </label>
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="number" step="0.001" v-model.trim="chartererInvoice.opsChartererInvoiceVoyages[index].rate_per_mt" readonly class="form-input text-right" autocomplete="off" />
+                  
+                  </label>
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="text" v-model.trim="chartererInvoice.opsChartererInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+            
+          </table>     
+        
+    </div>
+
     
-    <div id="bank-account-info">
-      <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bank Name</span>
-              <span class="show-block">{{ voyageBoatNote.bank_name }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bank Branch </span>
-              <span class="show-block">{{ voyageBoatNote.bank_branch_name }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Account No</span>
-            <span class="show-block">{{ voyageBoatNote.bank_account_no }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Account Name</span>
-              <span class="show-block">{{ voyageBoatNote.bank_account_name }}</span>
-
-          </label>
-          
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Swift Code</span>
-              <span class="show-block">{{ voyageBoatNote.swift_code }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Routing No</span>
-            <span class="show-block">{{ voyageBoatNote.routing_no }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-              <span class="show-block">{{ voyageBoatNote.currency }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
-      </div>
-    </div>
-
-    <div id="local-agent-info">
-      <h4 class="text-md font-semibold mt-4">Local Agent Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].port_code }}</span>
-          </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Agent Name</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_name }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Name </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_billing_name }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_billing_email }}</span>
-            
-        </label>
-      </div>
-    </div>
-
-    <div id="contract-validity">
-      <h4 class="text-md font-semibold mt-4">Contract Validity and Billing</h4>
-      <div v-if="voyageBoatNote.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Credit Days</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.credit_days }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Cycle </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.billing_cycle }}</span>
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid From</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.valid_from }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid Till</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.valid_till }}</span>
-
-        </label>
-      </div>
-      <div v-if="voyageBoatNote.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.opsCargoTariff?.tariff_name }}</span>
-
-          </label>
-        
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
-              <span class="show-block">{{ voyageBoatNote.status }}</span>
-
-          </label>
-          <label v-if="voyageBoatNote.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.approximate_load_amount }}</span>
-
-          </label>
-          <label v-else class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
-      </div>
-    </div>
-
-    <div id="rates-fess" class="mb-10">
-      <h4 class="text-md font-semibold mt-4">Rates and Fees</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label v-if="voyageBoatNote.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per Day Charge</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.per_day_charge }}</span>
-
-        </label>
-        <label v-if="voyageBoatNote.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per MT Charge</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.per_ton_charge }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cleaning Fee </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.cleaning_fee }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Cancellation Fee <small>(%)</small></span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.cancellation_fee }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Others Fee</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.others_fee }}</span>
-
-        </label>
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300 font-semibold">Bunker Provider</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="">
-            <input type="radio" checked disabled />
-            {{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms?.bunker_provider }}</span>
-
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Other</legend>
+        <div id="sectors" class="mt-5">
+          <table class="w-full whitespace-no-wrap" >
+            <thead v-once>
+                <tr class="w-full">
+                  <th class="">Particulars</th>
+                  <th class="">Currency</th>
+                  <th class="">Unit</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th>Exchange Rate (To USD)</th>
+                  <th>Exchange Rate (To BDT)</th>
+                  <th>Amount USD</th>
+                  <th>Amount BDT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(sector, index) in chartererInvoice.opsChartererInvoiceOthers" :key="index">
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceOthers[index].particular }}
+                      </span>
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceOthers[index].currency }}
+                      </span>
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceOthers[index].cost_unit }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceOthers[index].quantity }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceOthers[index].rate) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceOthers[index].exchange_rate_usd) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceOthers[index].exchange_rate_bdt) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceOthers[index].amount_usd) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceOthers[index].amount_bdt) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
               
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
+            </table>     
+          
+        </div>
+    </fieldset>
+      
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services Taken From Charterer</legend>
+        <div id="sectors" class="mt-5">
+
+          <table class="w-full whitespace-no-wrap" >
+              <thead v-once>
+                <tr class="w-full">
+                  <th>Particulars</th>
+                  <th>Currency</th>
+                  <th>Unit</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th>Exchange Rate (To USD)</th>
+                  <th>Exchange Rate (USD To BDT)</th>
+                  <th>Amount USD</th>
+                  <th>Amount BDT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in chartererInvoice.opsChartererInvoiceServices" :key="index">
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceServices[index].particular }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceServices[index].currency }}
+                      </span>
+                     
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block">
+                        {{ chartererInvoice.opsChartererInvoiceServices[index].particular }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].quantity) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].rate) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].exchange_rate_usd) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].exchange_rate_bdt) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].amount_usd) }}
+                      </span>
+                      
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="show-block !justify-end">
+                        {{ numberFormat(chartererInvoice.opsChartererInvoiceServices[index].amount_bdt) }}
+                      </span>
+                     
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>     
+          
+        </div>
+      </fieldset>
+
+      <div id="sectors" class="mt-5">
+        <table class="w-full whitespace-no-wrap" >
+          <thead v-once>
+                <tr class="w-full">
+                  <th>Subtotal</th>
+                  <th>Total Service Fee (Deduction)</th>
+                  <th>Discount (Deduction)</th>
+                  <th>Grand Total</th>
+                </tr>
+              </thead>
+          <tbody>
+                <tr>
+                  <td>
+                    <span class="show-block !justify-end">
+                      {{ numberFormat(chartererInvoice.sub_total_amount) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="show-block !justify-end">
+                      {{ numberFormat(chartererInvoice.service_fee_deduction_amount) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="show-block !justify-end">
+                      {{ numberFormat(chartererInvoice.discounted_amount) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="show-block !justify-end">
+                      {{ numberFormat(chartererInvoice.grand_total) }}
+                    </span>
+                  </td>
+                </tr>
+            </tbody>
+        </table>
       </div>
-    </div>
+  </div>
 </template>
 <script setup>
-import { ref, watchEffect, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import useVoyageBoatNote from '../../../composables/operations/useVoyageBoatNote';
+import ChartererInvoiceForm from '../../../components/operations/ChartererInvoiceForm.vue';
+import useChartererInvoice from '../../../composables/operations/useChartererInvoice';
 import Title from "../../../services/title";
-import useHeroIcon from "../../../assets/heroIcon";
-import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import useHeroIcon from "../../../assets/heroIcon";
+import useHelper from '../../../composables/useHelper';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
-const voyageBoatNoteId = route.params.voyageBoatNoteId;
-const { voyageBoatNote, showVoyageBoatNote, errors } = useVoyageBoatNote();
+const chartererInvoiceId = route.params.chartererInvoiceId;
+const { chartererInvoice, showChartererInvoice, errors } = useChartererInvoice();
 const { numberFormat } = useHelper();
-
 const { setTitle } = Title();
 
-setTitle('Voyage Boat Note Details');
+setTitle('Charterer Invoice');
+
+function CalculateAll() {
+  chartererInvoice.value.sub_total_amount = parseFloat(chartererInvoice.value.grand_total) + +parseFloat(chartererInvoice.value.service_fee_deduction_amount) + parseFloat(chartererInvoice.value.discounted_amount)
+}
 
 onMounted(() => {
-    showVoyageBoatNote(voyageBoatNoteId)
+  showChartererInvoice(chartererInvoiceId).then(() => {
+    CalculateAll();
+  })
 });
 </script>

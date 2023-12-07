@@ -50,32 +50,41 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
-        <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
+        <!-- <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type</span>
               <input type="text" readonly :value="form.opsChartererContract?.opsChartererContractsFinancialTerms?.opsCargoTariff?.opsCargoType.cargo_type" class="form-input bg-gray-100" autocomplete="off" />
-        </label>
+        </label> -->
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type == 'Day Wise'">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill From <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_from" class="form-input bg-gray-100" autocomplete="off" />
+              <input type="date" v-model.trim="form.bill_from" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_till" class="form-input bg-gray-100" autocomplete="off" />
+              <input type="date" v-model.trim="form.bill_till" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
-              <input type="text" readonly v-model.trim="form.total_days" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="show-block !justify-center">
+                  {{ form?.total_days }}
+              </span>
+              <input type="text" readonly v-model.trim="form.total_days" class="!hidden form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charge Per Day</span>
-              <input type="text" readonly :value="form?.per_day_charge" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="show-block !justify-end">
+                  {{ numberFormat(form?.per_day_charge) }}
+              </span>
+              <input type="text" readonly :value="form?.per_day_charge" class="!hidden form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
-              <input type="text" readonly v-model.trim="form.total_amount" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="show-block !justify-end">
+                  {{ numberFormat(form?.total_amount) }}
+              </span>
+              <input type="text" readonly v-model.trim="form.total_amount" class="!hidden form-input bg-gray-100" autocomplete="off" />
         </label>
     </div>
 
@@ -117,9 +126,18 @@
         <thead v-once>
             <tr class="w-full">
               <th class="">Voyage <span class="text-red-500">*</span></th>
-              <th class="">Cargo Quantity</th>
-              <th class="">Rate Per MT</th>
-              <th>Total Amount</th>
+              <th class="">
+                <nobr>Cargo Type</nobr>
+              </th>
+              <th class="">
+                <nobr>Cargo Quantity</nobr>
+              </th>
+              <th class="">
+                <nobr>Rate Per MT</nobr>
+              </th>
+              <th>
+                <nobr>Total Amount</nobr>
+              </th>
               <th>Details</th>
               <th class="py-3 text-center align-center">Action</th>
             </tr>
@@ -144,6 +162,15 @@
               </td>
               <td>
                   <label class="block w-full mt-2 text-sm">
+                    <span class="show-block">
+                      {{ form.opsChartererInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
+                    </span>
+                  <!-- <input type="text" v-model.trim="form.opsChartererInvoiceVoyages[index].opsVoyage.opsCargoType.cargo_type" readonly class="form-input text-right" autocomplete="off" /> -->
+                  <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
+                </label>
+              </td>
+              <td>
+                  <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].cargo_quantity" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
@@ -157,7 +184,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsChartererInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -211,7 +238,7 @@
             <tr v-for="(sector, index) in form.opsChartererInvoiceOthers">
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].particular" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].particular" class="form-input" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -227,7 +254,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" class="form-input" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                  
                 </label>
@@ -312,7 +339,7 @@
             <tr v-for="(item, index) in form.opsChartererInvoiceServices">
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsChartererInvoiceServices[index].particular" class="form-input text-right" autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsChartererInvoiceServices[index].particular" class="form-input" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
@@ -328,7 +355,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].cost_unit" class="form-input text-right" autocomplete="off" />
+                  <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].cost_unit" class="form-input" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
@@ -430,33 +457,42 @@
     </div>
     </fieldset>
     <div id="sectors" class="mt-5">
-    <table class="w-full whitespace-no-wrap" >
-      <thead v-once>
-            <tr class="w-full">
-              <th>Subtotal</th>
-              <th>Total Service Fee (Deduction)</th>
-              <th>Discount (Deduction)</th>
-              <th>Grand Total</th>
-            </tr>
-          </thead>
-      <tbody>
-            <tr>
-              <td>
-                <input type="text" readonly :value="props.form.sub_total_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
-              </td>
-              <td>
-                <input type="text" readonly :value="props.form.service_fee_deduction_amount" class="form-input bg-gray-100 text-right" autocomplete="off" />
-              </td>
-              <td>
-                <input type="text" v-model="props.form.discounted_amount" class="form-input text-right" autocomplete="off" />
-              </td>
-              <td>
-                <input type="text" readonly :value="props.form.grand_total" class="form-input bg-gray-100 text-right" autocomplete="off" />
-              </td>
-            </tr>
-        </tbody>
-    </table>
-  </div>
+      <table class="w-full whitespace-no-wrap" >
+        <thead v-once>
+              <tr class="w-full">
+                <th>Subtotal</th>
+                <th>Total Service Fee (Deduction)</th>
+                <th>Discount (Deduction)</th>
+                <th>Grand Total</th>
+              </tr>
+            </thead>
+        <tbody>
+              <tr>
+                <td>
+                  <span class="show-block !justify-end">
+                    {{ numberFormat(props.form.sub_total_amount) }}
+                  </span>
+                  <input type="text" readonly :value="props.form.sub_total_amount" class="!hidden form-input bg-gray-100 text-right" autocomplete="off" />
+                </td>
+                <td>
+                  <span class="show-block !justify-end">
+                    {{ numberFormat(props.form.service_fee_deduction_amount) }}
+                  </span>
+                  <input type="text" readonly :value="props.form.service_fee_deduction_amount" class="!hidden form-input bg-gray-100 text-right" autocomplete="off" />
+                </td>
+                <td>
+                  <input type="text" v-model="props.form.discounted_amount" class="form-input text-right" autocomplete="off" />
+                </td>
+                <td>
+                  <span class="show-block !justify-end">
+                    {{ numberFormat(props.form.grand_total) }}
+                  </span>
+                  <input type="text" readonly :value="props.form.grand_total" class="!hidden form-input bg-gray-100 text-right" autocomplete="off" />
+                </td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
@@ -532,7 +568,7 @@
         </footer>
       </div>
     </form>
-  </div>
+    </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
@@ -548,12 +584,14 @@ import LoaderComponent from "../../components/utils/LoaderComponent.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
+import useHelper from "../../composables/useHelper";
 
 const editInitiated = ref(false);
 
 const { currencies, getCurrencies } = useBusinessInfo();
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
 const { getChartererContractsByCharterOwner, chartererContracts,getContractWiseVoyage,voyages } = useChartererContract();
+const { numberFormat } = useHelper();
 // const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
 const props = defineProps({
