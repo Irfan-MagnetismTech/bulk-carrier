@@ -273,7 +273,33 @@ export default [
                         subSubMenu: [],
                     },
                 ]
-            }                   
+            },
+            
+            {
+                route: '',
+                label: 'Reports',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'mnt.reports.all-jobs',
+                        label: 'All Jobs',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                             
+                    
+                ]
+            },
+            
+            
                 
             
         ]
