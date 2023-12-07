@@ -528,7 +528,7 @@ function tytytyasd(indx) {
                     </label>
                     
           </div>
-          <div class="flex flex-col justify-center w-3/4 md:flex-row md:gap-2">
+          <div class="flex flex-col justify-center w-2/4 md:flex-row md:gap-2">
 
            
             <label class="block w-full mt-2 text-sm">
