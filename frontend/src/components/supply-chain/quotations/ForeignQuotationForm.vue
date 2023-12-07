@@ -1,7 +1,7 @@
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="{edit}" v-model="form.business_unit"></business-unit-input>
+    <!-- <business-unit-input :page="{edit}" v-model="form.business_unit"></business-unit-input> -->
   </div>
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
@@ -180,14 +180,14 @@
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmCsVendorMaterial" :key="index">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmCsMaterialVendors" :key="index">
               <td class="!w-72">
                 <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsVendorMaterial[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="changeMaterial(form.scmCsVendorMaterial[index].scmMaterial,index)">
+                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
                   <template #search="{attributes, events}"> 
                       <input
                           class="vs__search"
-                          :required="!form.scmCsVendorMaterial[index].scmMaterial"
+                          :required="!form.scmCsMaterialVendors[index].scmMaterial"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -196,44 +196,44 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmCsVendorMaterial[index].unit" class=" form-input">
+                  <input type="text" readonly v-model="form.scmCsMaterialVendors[index].unit" class=" form-input">
                 </label>
                 
               </td>
             
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].brand" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].brand" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].model" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].model" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].origin" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].origin" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].stock_type" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].stock_type" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].manufacturing_days" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].manufacturing_days" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].offered_price" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].offered_price" class="form-input">
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsVendorMaterial[index].negotiated_price" class="form-input">
+                  <input type="text" v-model="form.scmCsMaterialVendors[index].negotiated_price" class="form-input">
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
@@ -294,12 +294,12 @@
 
     const addLine = () => {
       const line = cloneDeep(props.lineObj);  
-      props.form.scmCsVendorMaterial.push(line);
+      props.form.scmCsMaterialVendors.push(line);
     };
 
 
     const removeLine = (index) => {
-      props.form.scmCsVendorMaterial.splice(index, 1);
+      props.form.scmCsMaterialVendors.splice(index, 1);
     };
 
     const PRIORITY = ['High', 'Medium', 'Low']
@@ -311,8 +311,8 @@
 
 
     function changeMaterial(value,index) {
-        props.form.scmCsVendorMaterial[index].unit = value.unit;
-        props.form.scmCsVendorMaterial[index].scm_material_id = value.id;
+        props.form.scmCsMaterialVendors[index].unit = value.unit;
+        props.form.scmCsMaterialVendors[index].scm_material_id = value.id;
     }
 
     const route = useRoute();

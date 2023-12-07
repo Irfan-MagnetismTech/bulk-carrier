@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('scm_vendor_id');
             $table->string('quotation_ref');
             $table->date('quotation_date');
+            $table->date('quotations_received_date');
             $table->string('quotation_attachment');
             $table->string('quotation_validity');
             $table->string('payment_method')->comment('cash,credit,lc,advance');

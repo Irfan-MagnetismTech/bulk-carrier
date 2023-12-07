@@ -51,7 +51,7 @@ export default function useQuotation() {
         terms_and_condition: null,
         remarks: null,
         attachment: null,
-        scmCsVendorMaterial: [
+        scmCsMaterialVendors: [
             {
                 scmMaterial: null,
                 scm_material_id: null,
@@ -132,14 +132,13 @@ export default function useQuotation() {
         }
     }
 
-    async function showQuotations(materialCsId,) {
-        console.log('tag', materialCsId);
+    async function showQuotation(csId,quotationId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/quotations/${materialCsId}`);
-            materialCs.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/quotations/${quotationId}`);
+            quotation.value = data.value;
 
         } catch (error) {
             const { data, status } = error.response;
@@ -150,7 +149,7 @@ export default function useQuotation() {
         }
     }
 
-    async function updateQuotations(form, materialCsId) {
+    async function updateQuotations(form, csId,quotationId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -159,28 +158,29 @@ export default function useQuotation() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/quotations/${materialCsId}`, formData);
-            materialCs.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/quotations/${quotationId}`, formData);
+            quotation.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.quotations.index` });
+            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
+            console.log('tag', error)
+            // const { data, status } = error.response;
+            // errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function deleteQuotations(materialCsId) {
+    async function deleteQuotations(csId,quotationId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/quotations/${materialCsId}`);
+            const { data, status } = await Api.delete( `/${BASE}/quotations/${quotationId}`);
             notification.showSuccess(status);
-            await getMaterialCs(filterParams.value);
+            await getQuotations(csId);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -250,7 +250,7 @@ export default function useQuotation() {
         materialCsLists,
         filteredMaterialCs,
         storeQuotations,
-        showQuotations,
+        showQuotation,
         updateQuotations,
         deleteQuotations,
         filteredQuotations,

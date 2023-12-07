@@ -91,4 +91,6 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     // CS quotation
     Route::post('quotations', [ScmCsController::class, "storeQuotation"])->name('quotations.create');
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
+    Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
+    Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 });

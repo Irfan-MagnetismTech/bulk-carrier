@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('scm_cs_material_id');
             $table->bigInteger('scm_material_id');
             $table->string('brand');
+            $table->string('model');
             $table->string('origin');
             $table->string('stock_type')->comment('ready_stock,manufacturer');
             $table->string('manufacturing_days')->comment('if stock type manufacturer');

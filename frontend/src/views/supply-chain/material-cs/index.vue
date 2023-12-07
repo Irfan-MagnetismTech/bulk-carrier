@@ -179,7 +179,6 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Material CS List</h2>
-    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.material-cs.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">

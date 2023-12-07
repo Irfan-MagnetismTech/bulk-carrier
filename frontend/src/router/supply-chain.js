@@ -631,7 +631,7 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-show'  },
     },
     {
-        path: `/${BASE}/quotations/:csId/:quotationId/index`,
+        path: `/${BASE}/quotations/:csId/index`,
         name: `${BASE}.quotations.index`,
         component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
