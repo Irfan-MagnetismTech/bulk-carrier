@@ -47,18 +47,18 @@ watch(() => props.form.scm_mrr_name, (value) => {
   }
 });
 
-watch(() => props.form.scm_material_name, (value) => {
-  if(value){
-    props.form.scm_material_id = value?.id ?? '';
-  }
-});
+// watch(() => props.form.scm_material_name, (value) => {
+//   if(value){
+//     props.form.scm_material_id = value?.id ?? '';
+//   }
+// });
 
 // v-select for change unit depend on material start
-watch(() => props.form.acc_parent_account_name, (value) => {
-  if(value){
-    props.form.acc_parent_account_id = value?.id ?? '';
-  }
-});
+// watch(() => props.form.acc_parent_account_name, (value) => {
+//   if(value){
+//     props.form.acc_parent_account_id = value?.id ?? '';
+//   }
+// });
 
 function fixedAssetCosts() {
   let obj = {
@@ -93,29 +93,37 @@ watch(
 );
 
 //reset data
-watch(() => props.form.business_unit, (newValue, oldValue) => {
-  if(newValue !== oldValue && oldValue != ''){
-    props.form.acc_cost_center_name = '';
-    props.form.scm_mrr_name = '';
-    props.form.scm_material_name = '';
-    props.form.acc_parent_account_name = '';
-  }
-});
+// watch(() => props.form.business_unit, (newValue, oldValue) => {
+//   if(newValue !== oldValue && oldValue != ''){
+//     props.form.acc_cost_center_name = '';
+//     props.form.scm_mrr_name = '';
+//     props.form.scm_material_name = '';
+//     props.form.acc_parent_account_name = '';
+//   }
+// });
+//
+// watch(() => props.form.acc_cost_center_name, (newValue, oldValue) => {
+//   if(newValue !== oldValue && oldValue != ''){
+//     props.form.scm_mrr_name = '';
+//     props.form.scm_material_name = '';
+//   }
+// });
 
-watch(() => props.form.acc_cost_center_name, (newValue, oldValue) => {
-  if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_mrr_name = '';
-    props.form.scm_material_name = '';
-  }
-});
-
-watch(() => props.form.scm_mrr_name, (newValue, oldValue) => {
-  if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_material_name = '';
-  }
-});
+// watch(() => props.form.scm_mrr_name, (newValue, oldValue) => {
+//   if(newValue !== oldValue && oldValue != ''){
+//     props.form.scm_material_name = '';
+//   }
+// });
 
 //reset data
+
+function changeAccountName(){
+  props.form.material_account_name = props.form.scm_material_name?.account?.account_name;
+}
+
+watch(() => props.form.scmMaterial, (newValue, oldValue) => {
+      props.form.material_account_name = newValue?.account?.account_name;
+ })
 
 onMounted(() => {
   watchEffect(() => {
@@ -158,7 +166,7 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Name <span class="text-red-500">*</span></span>
-        <v-select :options="allMaterialLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.scm_material_name" label="name"  class="block w-full rounded form-input">
+        <v-select :options="allMaterialLists" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scm_material_name" label="name"  class="block w-full rounded form-input" @update:modelValue="changeAccountName">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.scm_material_name" v-bind="attributes" v-on="events"/>
           </template>
@@ -167,23 +175,10 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="label-group">
-        <span class="label-item-title"> Brand </span>
-        <input type="text" class="label-item-input" placeholder="Brand" v-model.trim="form.brand" />
-      </label>
-
-      <label class="label-group">
-        <span class="label-item-title"> Model </span>
-        <input type="text" class="label-item-input" placeholder="Model" v-model.trim="form.model" />
-      </label>
-
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Serial </span>
-        <input type="text" class="label-item-input" placeholder="Serial" v-model.trim="form.serial" />
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Account Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.material_account_name" placeholder="Account Name" class="form-input vms-readonly-input" autocomplete="off" required readonly />
       </label>
-    </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Category <span class="text-red-500">*</span></span>
         <v-select :options="allFixedAssetCategoryList" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_parent_account_name" label="account_name"  class="block w-full rounded form-input" required>
@@ -192,17 +187,28 @@ onMounted(() => {
           </template>
         </v-select>
       </label>
-
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.total_installment" placeholder="Account Name" class="form-input vms-readonly-input" autocomplete="off" required readonly />
-      </label>
-
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Tag <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.asset_tag" placeholder="Asset Tag" class="form-input" autocomplete="off" required />
       </label>
     </div>
+
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="label-group">
+      <span class="label-item-title"> Brand </span>
+      <input type="text" class="label-item-input" placeholder="Brand" v-model.trim="form.brand" />
+    </label>
+
+    <label class="label-group">
+      <span class="label-item-title"> Model </span>
+      <input type="text" class="label-item-input" placeholder="Model" v-model.trim="form.model" />
+    </label>
+
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Serial </span>
+      <input type="text" class="label-item-input" placeholder="Serial" v-model.trim="form.serial" />
+    </label>
+  </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
