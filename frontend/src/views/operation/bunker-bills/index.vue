@@ -7,7 +7,7 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 // import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useBunkerRequisition from '../../../composables/operations/useBunkerRequisition';
+import useBunkerBill from '../../../composables/operations/useBunkerBill';
 import Store from "../../../store";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import {useRouter} from "vue-router/dist/vue-router";
@@ -19,7 +19,7 @@ const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
 
-const { bunkerRequisitions, getBunkerRequisitions, deleteBunkerRequisition, isLoading, isTableLoading, errors } = useBunkerRequisition();
+const { bunkerBills, getBunkerBills, deleteBunkerBill, isLoading, isTableLoading, errors } = useBunkerBill();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Bunker Requisition List');
+setTitle('Bunker Bill List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -47,7 +47,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteBunkerRequisition(id);
+      deleteBunkerBill(id);
     }
   })
 }
@@ -56,7 +56,7 @@ watch(
     () => businessUnit.value,
     (newBusinessUnit, oldBusinessUnit) => {
       if (newBusinessUnit !== oldBusinessUnit) {
-        router.push({ name: "ops.bunker-requisitions.index", query: { page: 1 } })
+        router.push({ name: "ops.bills.index", query: { page: 1 } })
       }
     }
 );
@@ -69,39 +69,27 @@ let filterOptions = ref( {
   
     {
       "rel_type": null,
-      "relation_name": "opsVoyage",
-      "field_name": "voyage_sequence",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Voyage",
-      "filter_type": "input"
-    },
-    
-    {
-      "rel_type": null,
-      "relation_name": "opsVessel",
+      "relation_name": "scmVendor",
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vendor",
       "filter_type": "input"
     },
+    
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "requisition_no",
+      "field_name": "vendor_bill_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Requisition No.",
+      "label": "Bill No.",
       "filter_type": "input"
     },
-    
     {
       "rel_type": null,
       "relation_name": null,
@@ -126,7 +114,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.bunker-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.bunker-bills.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -134,7 +122,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getBunkerRequisitions(filterOptions.value)
+    getBunkerBills(filterOptions.value)
       .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -159,8 +147,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Bunker Requisition List</h2>
-    <default-button :title="'Create Bunker Requisition'" :to="{ name: 'ops.bunker-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Bunker Bill List</h2>
+    <default-button :title="'Create Bunker Bill'" :to="{ name: 'ops.bunker-bills.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
   <div id="customDataTable">
@@ -168,31 +156,31 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap" >
           <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="bunkerRequisitions?.data?.length" class="relative">
-              <tr v-for="(bunkerRequisition, index) in bunkerRequisitions.data" :key="bunkerRequisition?.id">
+          <tbody v-if="bunkerBills?.data?.length" class="relative">
+              <tr v-for="(bunkerBill, index) in bunkerBills.data" :key="bunkerBill?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ bunkerRequisition?.opsVoyage?.voyage_sequence }}</td>
-                  <td>{{ bunkerRequisition?.opsVessel?.name }}</td>
+                  <td>{{ bunkerBill?.scmVendor?.name }}</td>
+                  <td>{{ bunkerBill?.vendor_bill_no }}</td>
 
-                  <td>{{ bunkerRequisition?.requisition_no }}</td>
-                  <td>{{ bunkerRequisition?.remarks }}</td>
+                  <!-- <td>{{ bunkerBill?.date }}</td> -->
+                  <td>{{ bunkerBill?.remarks }}</td>
                   <td>
-                    <span :class="bunkerRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerRequisition?.business_unit }}</span>
+                    <span :class="bunkerBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerBill?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <!-- <action-button :action="'show'" :to="{ name: 'ops.bunker-requisitions.show', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button> -->
                       <!-- <action-button :action="'approved'" :to="{ name: 'ops.bunker-requisitions.approved', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button> -->
-                      <action-button :action="'edit'" :to="{ name: 'ops.bunker-requisitions.edit', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button>
-                      <action-button @click="confirmDelete(bunkerRequisition.id)" :action="'delete'"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.bunker-bills.edit', params: { bunkerBillId: bunkerBill.id } }"></action-button>
+                      <action-button @click="confirmDelete(bunkerBill.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bunkerRequisitions?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && bunkerBills?.data?.length"></LoaderComponent>
           </tbody>
           
-          <tfoot v-if="!bunkerRequisitions?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!bunkerBills?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="8">Loading...</td>
           </tr>
@@ -201,13 +189,13 @@ onMounted(() => {
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
-          <tr v-else-if="!bunkerRequisitions?.data?.length">
+          <tr v-else-if="!bunkerBills?.data?.length">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="bunkerRequisitions" to="ops.bunker-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="bunkerBills" to="ops.bunker-bills.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

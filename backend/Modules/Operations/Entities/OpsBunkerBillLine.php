@@ -12,6 +12,7 @@ class OpsBunkerBillLine extends Model
     protected $fillable = [
         'ops_bunker_bill_id',
         'pr_no',
-        'amount'
+        'description',
+        'amount',
     ];
 }

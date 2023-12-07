@@ -52,6 +52,7 @@ class OpsBunkerBillController extends Controller
     */
     public function store(OpsBunkerBillRequest $request): JsonResponse
     {
+        // dd($request);
         try {
             DB::beginTransaction();
             $bunker_bill_info = $request->except(
@@ -92,6 +93,7 @@ class OpsBunkerBillController extends Controller
     public function show(OpsBunkerBill $bunker_bill): JsonResponse
     {
         $bunker_bill->load('scmVendor','opsBunkerBillLines');
+        
         try
         {
             return response()->success('Data retrieved successfully.', $bunker_bill, 200);
