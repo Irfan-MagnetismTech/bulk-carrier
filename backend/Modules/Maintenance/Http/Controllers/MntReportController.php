@@ -22,20 +22,6 @@ class MntReportController extends Controller
             $mntShipDepartmentId = request()->mnt_ship_department_id; // Replace with the actual ID of the MntShipDepartment
             $opsVesselId = request()->ops_vessel_id; // Replace with the actual ID of the MntShipDepartment
 
-            $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId) {
-                $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
-                    $query->where('mnt_ship_department_id', $mntShipDepartmentId);
-                });
-            })->with(['mntItems' => function ($query) use ($mntShipDepartmentId) {
-                $query->whereHas('mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId) {
-                    $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
-                        $query->where('mnt_ship_department_id', $mntShipDepartmentId);
-                    });
-                });
-                $query->with(['mntJobs.mntJobLines']);
-            }])->get();
-            // ----------------------------------------
-
             $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
                 $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
                     $query->where('mnt_ship_department_id', $mntShipDepartmentId);
@@ -73,23 +59,47 @@ class MntReportController extends Controller
     {
         try {
             $mntShipDepartmentId = request()->mnt_ship_department_id; // Replace with the actual ID of the MntShipDepartment
-
-            $jobs = MntItemGroup::with(['mntItems.mntJobs.mntJobLines','mntItems.mntJobs' => function($q){
-                                    $q->where('ops_vessel_id', request()->ops_vessel_id);
-                                }])
-                                ->where('mnt_ship_department_id', $mntShipDepartmentId)
-                                ->get()->toArray();
-            // $jobs = $jobs->values();
-            print_r($jobs);exit;
-            // $jobs =  $jobs->filter(function ($value) {
-                // var_dump($value->mntItems->mntJobs);exit;
-                // return $value->upcoming_job;
-            // });
-            $jobs = array_filter($jobs, function ($job) {
-                return $job["mntItems"]["mntJobs"]["mntJobLines"]["upcoming_job"];
+            $opsVesselId = request()->ops_vessel_id;
+                    
+            $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                    $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                })
+                ->where('ops_vessel_id', $opsVesselId);
+            })->with(['mntItems' => function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                $query->whereHas('mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                    $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                        $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                    })
+                    ->where('ops_vessel_id', $opsVesselId);
+                });
+                $query->with(['mntJobs.mntJobLines','mntJobs'=>function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                    $query->where('ops_vessel_id', $opsVesselId);
+                }
+                ]);
+                $query->orderBy('item_code','asc');
+            }])->get();
+                        
+            // Filter the result in PHP based on the appended attribute
+            $filteredItemGroups = $mntItemGroups->filter(function ($itemGroup) {
+                return $itemGroup->mntItems->contains(function ($mntItem) {
+                    return $mntItem->mntJobs->contains(function ($mntJob) {
+                        return $mntJob->mntJobLines->contains('upcoming_job', true);
+                    });
+                });
             });
             
-            return $jobs;
+            $filteredJobLines = $mntItemGroups->filter(function ($itemGroup) {
+                return $itemGroup->mntItems->filter(function ($mntItem) {
+                    return $mntItem->mntJobs->contains(function ($mntJob) {
+                        return $mntJob->mntJobLines->filter(function ($mntJobLine) {
+                            return $mntJobLine->upcoming_job === true;
+                        });
+                    });
+                });
+            });
+            
+            return response()->success('Upcoming jobs are retrieved successfully', $filteredJobLines, 200);
             
         }
         catch (\Exception $e)
