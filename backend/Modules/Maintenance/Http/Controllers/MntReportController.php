@@ -48,7 +48,11 @@ class MntReportController extends Controller
                     })
                     ->where('ops_vessel_id', $opsVesselId);
                 });
-                $query->with(['mntJobs.mntJobLines']);
+                $query->with(['mntJobs.mntJobLines','mntJobs'=>function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                    $query->where('ops_vessel_id', $opsVesselId);
+                }
+                ]);
+                $query->orderBy('item_code','asc');
             }])->get();
 
             return response()->success('All jobs are retrieved successfully', $mntItemGroups, 200);
