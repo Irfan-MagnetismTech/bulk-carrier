@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('unloading_point')->nullable();
             $table->date('date')->nullable();
             $table->dateTime('discharge_date')->nullable();
-            $table->float('quantity')->nullable();
+            $table->float('quantity', 20, 2)->nullable();
             $table->text('attachment')->nullable();
             $table->timestamps();
         });

@@ -112,20 +112,18 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
         let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
         if (materialArray.indexOf(material_key) === -1) {
           materialArray.push(material_key);
+          props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].total_price);
+          setMaterialOtherData(line, index);
+          props.form.sub_total = parseFloat(total.toFixed(2));
+          calculateNetAmount();
         } else {
           alert("Duplicate Material Found");
           props.form.scmPoLines.splice(index, 1);
         }  
-        props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-        total += parseFloat(props.form.scmPoLines[index].total_price);
-        if (line.scmMaterial) {
-          setMaterialOtherData(line, index);
-        }
+       
+         
       });
-      props.form.sub_total = parseFloat(total.toFixed(2));
-      calculateNetAmount();
-
-  
 }, { deep: true });
     
   function calculateNetAmount(){
@@ -257,21 +255,21 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="pb-10 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap" id="table">
+        <table class="w-full" id="table">
           <thead>
           <tr class="table_head_tr">
-            <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Unit</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Brand</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Model</th>
+            <th class="py-3 align-center min-w-[150px] md:min-w-[200px] lg:min-w-[250px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+            <th class="py-3 align-center min-w-[30px] md:min-w-[55px] lg:min-w-[80px]">Unit</th>
+            <th class="py-3 align-center">Brand</th>
+            <th class="py-3 align-center">Model</th>
             <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
-            <th class="py-3 align-cente min-w-[70px] md:min-w-[110px] lg:min-w-[125px]r">Total Price</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Qty</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Rate</th>
+            <th class="py-3 align-cente min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -451,11 +449,11 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
 
-    #customDataTable::-webkit-scrollbar:horizontal {
+    #customDataTableMat::-webkit-scrollbar:horizontal {
       height: 1rem!important; 
     }
   
-    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+    #customDataTableMat::-webkit-scrollbar-thumb:horizontal{
       background-color: rgb(132, 109, 175); 
       border-radius: 12rem!important;
       width: 0.5rem!important;
@@ -463,12 +461,12 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-track:horizontal{
+    #customDataTableMat::-webkit-scrollbar-track:horizontal{
       background: rgb(148, 144, 155)!important; 
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-button:horizontal {
+    #customDataTableMat::-webkit-scrollbar-button:horizontal {
       background-color: rgb(0, 0, 0); 
       border-radius: 12rem!important;
       width: 1.3rem!important;

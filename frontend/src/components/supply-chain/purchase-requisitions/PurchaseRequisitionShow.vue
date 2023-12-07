@@ -38,7 +38,7 @@
   const dynamicMinHeight = ref(0);
 
   const setMinHeight = () => {
-    dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+    // dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
   
   };
 
@@ -52,23 +52,23 @@
 
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <span class="show-block">{{ form.business_unit?.name }}</span>
+    <span class="show-block">{{ form.business_unit }}</span>
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">PR Ref <span class="text-red-500">*</span></span>
+          <span class="label-item-title">PR Ref</span>
           <span class="show-block">{{ form.ref_no }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warehouse</span>
           <span class="show-block">{{ form.scmWarehouse?.name }}</span>
       </label>
       <label class="label-group">
-          <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Raised Date</span>
           <span class="show-block">{{ form.raised_date }}</span>
       </label>
       <label class="label-group">
-          <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Critical Spares</span>
           <span class="show-block">{{ form.is_critical == 1 ? 'YES' : 'NO' }}</span>
       </label>
   </div>
@@ -83,13 +83,18 @@
                     <!-- Click here to see
                 </a>
           </div> -->
+          <span class="attachment-block">
+            <template v-if="form.attachment">
+                      <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.attachment">Click Here To View Attachment.</a>
+            </template>
+          </span>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Purchase Center</span>
         <span class="show-block">{{ form.purchase_center }}</span>
     </label>
       <label class="label-group">
-          <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Approved Date</span>
           <span class="show-block">{{ form.approved_date }}</span>
       </label>
   </div>
@@ -117,7 +122,7 @@
   </div> -->
   <div id="">
 
-    <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
+    <!-- <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <div class=""> 
@@ -166,7 +171,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <span class="show-block">{{ form.scmPrLines[index].origin }}</span>
+                 <span class="show-block">{{ form.scmPrLines[index].country_name }}</span>
                </label>
             </td>
             <td>
@@ -204,6 +209,80 @@
         </table>
       </div>
       </fieldset>
+    </div> -->
+    <div class="border border-gray-200 rounded-md my-3 p-2">
+      <div class="">
+        <h4 class="text-md font-semibold mb-2">Materials</h4>
+        
+        <div v-for="(ScmPrLine, index) in form.scmPrLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
+          <label class="block w-1/2 mt-2 text-sm">
+
+          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name</span>
+         </label>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <span class="show-block">{{ form.scmPrLines[index].scmMaterial?.material_name_and_code }}</span>
+          <label class="block w-full mt-2 text-sm">
+                        <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
+                                  <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
+                          </a>
+          </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+                    
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Unit</span>
+                      <span class="show-block">{{ form.scmPrLines[index].unit }}</span>
+                  </label>
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Brand </span>
+                      <span class="show-block">{{ form.scmPrLines[index].brand }}</span>
+                    </label>
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
+                      <span class="show-block">{{ form.scmPrLines[index].model }}</span>
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Required Date </span>
+                      <span class="show-block">{{ form.scmPrLines[index].required_date}}</span>
+                    </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Specification </span>
+
+                      <span class="show-block">{{ form.scmPrLines[index].specification }}</span>
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Origin </span>
+                      <span class="show-block">{{ form.scmPrLines[index].country_name }}</span>
+                    </label>
+                   
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Drawing No </span>
+                      <span class="show-block">{{ form.scmPrLines[index].drawing_no }}</span> 
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Part No </span>
+                      <span class="show-block">{{ form.scmPrLines[index].part_no }}</span> 
+                    </label>
+                    
+          </div>
+          <div class="flex flex-col justify-center w-3/4 md:flex-row md:gap-2">
+
+           
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Rob </span>
+              <span class="show-block">{{ form.scmPrLines[index].rob }}</span>
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Quantity </span>
+              <span class="show-block">{{ form.scmPrLines[index].quantity }}</span> </label>
+            </div>
+        </div>      
+      </div>
     </div>
   </div>
 

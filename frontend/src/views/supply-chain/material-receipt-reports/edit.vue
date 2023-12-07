@@ -28,7 +28,7 @@ onMounted(() => {
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3" v-once>
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Material Receipt Report</h2>
-        <default-button :title="'Opening Stock List'" :to="{ name: 'scm.material-receipt-reports.index' }" :icon="icons.DataBase"></default-button>
+        <default-button :title="'MRR List'" :to="{ name: 'scm.material-receipt-reports.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="updateMaterialReceiptReport(materialReceiptReport, materialReceiptReportId)">

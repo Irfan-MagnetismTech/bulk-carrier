@@ -208,7 +208,7 @@ export default function useChartererContract() {
 		try {
 			const { data, status } = await Api.delete( `/ops/charterer-contracts/${chartererContractId}`);
 			notification.showSuccess(status);
-			await getChartererContracts();
+			await getChartererContracts(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

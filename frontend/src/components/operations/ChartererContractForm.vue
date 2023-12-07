@@ -197,7 +197,7 @@
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          <div v-if="form.contract_type == 'Voyage Wise'" class="w-full">
+          <!-- <div v-if="form.contract_type == 'Voyage Wise'" class="w-full">
             <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff <span class="text-red-500">*</span></span>
                 <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsChartererContractsFinancialTerms.opsCargoTariff" label="tariff_name" class="block form-input">
@@ -212,7 +212,7 @@
                 </v-select>
                 <input type="hidden" v-model="form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id" />
             </label>
-          </div>
+          </div> -->
         
             <label class="block mt-2 text-sm w-1/2">
 
@@ -223,7 +223,7 @@
 				          <option>Inactive</option>
 				        </select>
           </label>
-          <label v-if="form.contract_type == 'Day Wise'" class="block w-1/2 mt-2 text-sm">
+          <label v-if="form.contract_type == 'Voyage Wise'" class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
             <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
           </label>
@@ -287,7 +287,7 @@ import useCargoTariff from "../../composables/operations/useCargoTariff";
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
 const { cargoTariffs, getAllCargoTariffs } = useCargoTariff();
 
@@ -314,13 +314,14 @@ watch(() => props.form.business_unit, (value) => {
     props.form.vessel_owner = ''
     props.form.opsChartererProfile = null;
     props.form.ops_charterer_profile_id = null;
-    props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
-    props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
+    // props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
+    // props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
   }
 
   getVesselList(props.form.business_unit);
   getAllChartererProfiles(props.form.business_unit);
   getAllCargoTariffs(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
   
 }, { deep : true })
 
@@ -341,8 +342,8 @@ watch(() => props.form.contract_type, (value) => {
           props.form.opsChartererContractsFinancialTerms.approximate_load_amount = null;
 
           
-          props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
-          props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
+          // props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
+          // props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
       }
 }, { deep : true })
 
@@ -376,13 +377,13 @@ watch(() => props.form.opsVessel, (value) => {
 }, { deep: true})
 
 
-watch(() => props.form.opsChartererContractsFinancialTerms.opsCargoTariff, (value) => {
-  if(value) {
-    props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = value?.id
-  } else {
-    props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null
-  }
-}, { deep: true })
+// watch(() => props.form.opsChartererContractsFinancialTerms.opsCargoTariff, (value) => {
+//   if(value) {
+//     props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = value?.id
+//   } else {
+//     props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null
+//   }
+// }, { deep: true })
 
 watch(() => props.form.opsChartererProfile, (value) => {
   if(value) {
@@ -425,7 +426,6 @@ function replaceThings(value) {
 
 onMounted(() => {
   getCurrencies();
-  getPortList();
 })
 
 </script>

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('type')->default('expense')->comment('expense');
             $table->string('invoice_id')->nullable();
             $table->string('currency')->nullable();
-            $table->string('rate')->nullable();
-            $table->float('amount')->nullable();
-            $table->float('amount_bdt')->nullable();    
+            $table->float('rate', 20, 2)->nullable();
+            $table->float('amount', 20, 2)->nullable();
+            $table->float('amount_bdt', 20, 2)->nullable();    
             $table->string('attachment')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
