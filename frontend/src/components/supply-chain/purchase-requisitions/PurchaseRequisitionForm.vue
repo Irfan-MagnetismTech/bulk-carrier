@@ -128,7 +128,7 @@
   const dynamicMinHeight = ref(0);
 
   const setMinHeight = () => {
-    dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
+    // dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
   
   };
 
@@ -320,7 +320,7 @@ watch(() => props.form.scmPrLines, (newLines) => {
         </div>
   </div>
   <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
-
+<!-- 
     <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
@@ -347,8 +347,8 @@ watch(() => props.form.scmPrLines, (newLines) => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ScmPrLine, index) in form.scmPrLines" :key="index">
             <td class="">
-              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
-             <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+            <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmPrLines[index].scmMaterial,index)"> -->
+             <!-- <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -356,20 +356,20 @@ watch(() => props.form.scmPrLines, (newLines) => {
                         v-bind="attributes"
                         v-on="events"
                         />
-                </template>
+                </template> -->
                   <!-- <template #option="{ option, onOptionClick }">
                    
 
                  </template> -->
-            </v-select>
+            <!-- </v-select>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
                </label>
               
-            </td>
-            <td>
+            </td> -->
+            <!-- <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
                </label>
@@ -393,9 +393,9 @@ watch(() => props.form.scmPrLines, (newLines) => {
                </label>
               
             </td>
-            <td>
+            <td> -->
               <!--     <input type="text" v-model="form.scmPrLines[index].sample" class="form-input"> -->
-              <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
+            <!--   <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
                       <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
                </a>
             </td>
@@ -441,6 +441,107 @@ watch(() => props.form.scmPrLines, (newLines) => {
         </table>
       </div>
       </fieldset>
+    </div> -->
+
+
+    <div class="border border-gray-200 rounded-md my-3 p-2">
+      <div class="">
+        <h4 class="text-md font-semibold mb-2">Materials</h4>
+        
+        <div v-for="(ScmPrLine, index) in form.scmPrLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
+          <label class="block w-1/2 mt-2 text-sm">
+
+          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name <span class="text-red-500">*</span></span>
+         </label>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+            <label class="block w-1/2 mt-2 text-sm">
+              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmPrLines[index].scmMaterial"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+            </label>
+          <label class="block w-full mt-2 text-sm">
+                        <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
+                                  <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
+                          </a>
+          </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+                    
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Unit <span class="text-red-500">*</span></span>
+                      <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+                  </label>
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Brand </span>
+                      <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+                    </label>
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
+                      <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
+                      <input type="date" v-model="form.scmPrLines[index].required_date" required class="form-input">
+                    </label>
+          </div>
+          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Specification </span>
+
+                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input text-right" autocomplete="off"/>
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Origin </span>
+
+                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input text-right" autocomplete="off"/>
+                    </label>
+                   
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Drawing No </span>
+
+                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                    </label>
+                    <label class="block w-full mt-2 text-sm">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Part No </span>
+
+                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                    </label>
+                    
+          </div>
+          <div class="flex flex-col justify-center w-3/4 md:flex-row md:gap-2">
+
+           
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Rob </span>
+
+              <input type="number" v-model="form.scmPrLines[index].rob" readonly placeholder="" class="form-input text-right vms-readonly-input" autocomplete="off"/>
+            </label>
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Quantity <span class="text-red-500">*</span></span>
+
+              <input type="number" v-model="form.scmPrLines[index].quantity" required min="1" placeholder="" class="form-input text-right" autocomplete="off"/>
+            </label>
+            </div>
+          <div class="flex justify-center items-center my-3">
+                    <button type="button" @click="addMaterial()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+                      Add More
+                    </button>
+                    <button type="button" v-if="index>0" @click="removeMaterial(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
+                      Remove
+                    </button> 
+          </div>
+        </div>      
+      </div>
     </div>
   </div>
 
