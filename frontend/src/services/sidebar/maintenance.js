@@ -294,6 +294,20 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+                    
+                    {
+                        route: 'mnt.reports.upcoming-jobs',
+                        label: 'Upcoming Jobs',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
+
                              
                     
                 ]

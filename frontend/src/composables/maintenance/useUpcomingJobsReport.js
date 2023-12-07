@@ -6,9 +6,9 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useAllJobsReport() {
+export default function useUpcomingJobsReport() {
     const router = useRouter();
-    const allJobs = ref([]);
+    const upcomingJobs = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const formParams = ref( {
@@ -28,12 +28,12 @@ export default function useAllJobsReport() {
     const errors = ref(null);
     const isLoading = ref(false);
     
-    async function allJobsReport(form) {
+    async function upcomingJobsReport(form) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
         try {
-            const { data, status } = await Api.get('/mnt/report-all-jobs', { params: form });
-            allJobs.value = data.value;
+            const { data, status } = await Api.get('/mnt/report-upcoming-jobs', { params: form });
+            upcomingJobs.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -45,13 +45,13 @@ export default function useAllJobsReport() {
         }
     }
 
-    function downloadAllJobsReport(form) {
+    function downloadUpcomingJobsReport(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         axios({
-            url: '/mnt/download-report-all-jobs',
+            url: '/mnt/download-report-upcoming-jobs',
             data: form,
             method: 'POST',
             responseType: 'blob', // important
@@ -82,9 +82,9 @@ export default function useAllJobsReport() {
 
     return {
         formParams,
-        allJobs,
-        allJobsReport,
-        downloadAllJobsReport,
+        upcomingJobs,
+        upcomingJobsReport,
+        downloadUpcomingJobsReport,
         isLoading,
         errors,
     };
