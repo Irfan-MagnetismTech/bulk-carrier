@@ -207,7 +207,6 @@ function changeTab(tabNumber, buttonType = null){
   }
 }
 
-
 onMounted(() => {
   watchEffect(() => {
     getCrewRankLists(props.form.business_unit);

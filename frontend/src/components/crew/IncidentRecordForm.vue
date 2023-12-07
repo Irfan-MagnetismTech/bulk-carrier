@@ -5,7 +5,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
-const { vessels, getVesselsWithoutPaginate } = useVessel();
+const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { crews, getCrews } = useCrewCommonApiRequest();
 
 const props = defineProps({
@@ -26,7 +26,7 @@ watch(() => props.form, (value) => {
     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
     value?.crwIncidentParticipants?.forEach((line, index) => {
       props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
-      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwRank?.name ?? '';
+      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwCurrentRank?.name ?? '';
 
       // const selectedCrew = crews.value.find(crew => crew.id === line.scmMaterial.id);
       // if (selectedMaterial) {
@@ -51,6 +51,13 @@ function removeItem(index){
   props.form.crwIncidentParticipants.splice(index, 1);
 }
 
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.ops_vessel_name = '';
+  }
+});
+
 onMounted(() => {
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
@@ -70,7 +77,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -125,7 +132,7 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-        <th class="px-4 py-3 w-1/6 align-bottom">Crew Name <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 w-2/6 align-bottom">Crew Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 w-1/6 align-bottom">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 w-1/6 align-bottom">Injury Status <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Notes</th>
@@ -136,7 +143,7 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(incidentParticipant, index) in form.crwIncidentParticipants" :key="incidentParticipant.id">
         <td class="px-1 py-1">
-          <v-select :options="crews" placeholder="--Choose an option--" v-model="form.crwIncidentParticipants[index].crw_crew_name" label="name" class="block form-input">
+          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" class="block form-input">
             <template #search="{attributes, events}">
               <input
                   class="vs__search"
