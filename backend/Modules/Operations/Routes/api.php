@@ -100,6 +100,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
     Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
+    Route::get('show-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'showVesselExpenseHeads']);
     
     // end for search api route
     
