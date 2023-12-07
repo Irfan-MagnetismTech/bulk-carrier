@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('cargo_quantity')->nullable();
             $table->string('initial_loading_point')->nullable();
             $table->string('final_loading_point')->nullable();
-            $table->double('rate_per_mt')->nullable();
-            $table->double('total_amount')->nullable();
+            $table->float('rate_per_mt', 20, 2)->nullable();
+            $table->float('total_amount', 20, 2)->nullable();
             $table->timestamps();
         });
     }

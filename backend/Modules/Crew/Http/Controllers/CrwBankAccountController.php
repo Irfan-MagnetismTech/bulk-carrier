@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwBankAccount;
 use App\Services\FileUploadService;
+use Modules\Crew\Http\Requests\CrwBankAccountRequest;
 
 class CrwBankAccountController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
     
-    }    
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,10 +39,10 @@ class CrwBankAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwBankAccountRequest $request)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'is_active', 'business_unit');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'business_unit');
             $crwBankAccountData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-bank-account');
 
             $crwBankAccount     = CrwBankAccount::create($crwBankAccountData);
@@ -63,7 +64,7 @@ class CrwBankAccountController extends Controller
     public function show(CrwBankAccount $crwBankAccount)
     {
         try {
-            return response()->success('Retrieved Succesfully', $crwBankAccount->loan('crwCrew'), 200);
+            return response()->success('Retrieved Succesfully', $crwBankAccount->load('crwCrew'), 200);
         }
         catch (QueryException $e)
         {
@@ -78,10 +79,10 @@ class CrwBankAccountController extends Controller
      * @param  \App\Models\CrwBankAccount  $crwBankAccount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwBankAccount $crwBankAccount)
+    public function update(CrwBankAccountRequest $request, CrwBankAccount $crwBankAccount)
     {
         try {
-            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'is_active', 'business_unit');
+            $crwBankAccountData = $request->only('crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'business_unit');
             $crwBankAccountData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-bank-account', $crwBankAccount->attachment);
 
             $crwBankAccount->update($crwBankAccountData);

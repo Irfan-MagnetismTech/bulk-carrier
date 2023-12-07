@@ -84,21 +84,21 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
     </label>
   </div>
 
-  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen pb-20" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
-          <tr class="table_head_tr">
-            <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Unit</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Brand</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Model</th>
+            <tr class="table_head_tr">
+            <th class="py-3 align-center min-w-[150px] md:min-w-[200px] lg:min-w-[250px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+            <th class="py-3 align-center min-w-[30px] md:min-w-[55px] lg:min-w-[80px]">Unit</th>
+            <th class="py-3 align-center">Brand</th>
+            <th class="py-3 align-center">Model</th>
             <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
-            <th class="py-3 align-cente min-w-[70px] md:min-w-[95px] lg:min-w-[120px]r">Total Price</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Qty</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Rate</th>
+            <th class="py-3 align-cente min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Total Price</th>
           </tr>
           </thead>
 
@@ -241,4 +241,27 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
     .add_button {
       @apply px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple;
     }
+
+    #customDataTableMat::-webkit-scrollbar:horizontal {
+      height: 1rem!important; 
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    #customDataTableMat::-webkit-scrollbar-button:horizontal {
+      background-color: rgb(0, 0, 0); 
+      border-radius: 12rem!important;
+      width: 1.3rem!important;
+    } 
 </style>

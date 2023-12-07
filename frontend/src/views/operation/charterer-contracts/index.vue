@@ -86,8 +86,8 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
-			"relation_name": "opsChartererProfile",
-			"field_name": "owner_code",
+			"relation_name": null,
+			"field_name": "contract_name",
 			"search_param": "",
 			"action": null,
 			"order_by": null,
@@ -211,7 +211,7 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                    <nobr>Charterer Owner Code</nobr>
+                    <nobr>Contract Name</nobr>
                     <div class="flex flex-col cursor-pointer">
                       <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
                       <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -284,7 +284,7 @@ onMounted(() => {
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ chartererContract?.contract_type }}</td>
                   <td>{{ chartererContract?.opsChartererProfile?.name }}</td>
-                  <td>{{ chartererContract?.opsChartererProfile?.owner_code }}</td>
+                  <td>{{ chartererContract?.contract_name }}</td>
                   <td>{{ chartererContract?.country }}</td>
                   <td>{{ chartererContract?.email }}</td>
                   <td>{{ chartererContract?.contact_no }}</td>

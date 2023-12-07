@@ -148,7 +148,6 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
-    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Bill Lines</legend>

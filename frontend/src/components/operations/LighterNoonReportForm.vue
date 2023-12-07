@@ -172,7 +172,7 @@ import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 
 const editInitiated = ref(false);
 
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
@@ -195,6 +195,8 @@ watch(() => props.form.business_unit, (value) => {
   }
   
   getVesselList(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
+
 
 }, { deep : true })
 
@@ -253,9 +255,6 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
-onMounted(() => {
-  getPortList();
-});
 </script>
 <style lang="postcss" scoped>
 .input-group {
