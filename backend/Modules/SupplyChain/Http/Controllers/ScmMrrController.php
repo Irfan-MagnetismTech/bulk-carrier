@@ -181,7 +181,7 @@ class ScmMrrController extends Controller
                 ->limit(10)
                 ->get();
         }
-        return response()->success('Search Result', $materialReceiptReport, 200);
+        
         $materialReceiptReport = $materialReceiptReport->map(function ($item) {
             $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
                 return $item1->scmMaterial;
