@@ -43,12 +43,12 @@ return new class extends Migration
             $table->date('launching_date')->nullable();
             $table->string('mmsi')->nullable();
             $table->year('year_built')->nullable();
-            $table->float('capacity')->nullable();
+            $table->float('capacity', 20, 2)->nullable();
             $table->string('total_cargo_hold')->nullable();
-            $table->float('tues_capacity')->nullable();
-            $table->float('overall_length')->nullable();
-            $table->float('overall_width')->nullable();
-            $table->float('depth_moulded')->nullable();
+            $table->float('tues_capacity', 20, 2)->nullable();
+            $table->float('overall_length', 20, 2)->nullable();
+            $table->float('overall_width', 20, 2)->nullable();
+            $table->float('depth_moulded', 20, 2)->nullable();
             $table->string('bhp')->nullable();
             $table->string('email')->nullable();
             $table->string('lbc')->nullable();

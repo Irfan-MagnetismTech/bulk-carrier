@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('ops_charterer_profile_id')->constrained('ops_charterer_profiles')->onDelete('cascade');
             $table->enum('note_type', ['Delivery', 'Re-delivery']);
             $table->date('effective_date');
-            $table->float('exchange_rate')->nullable();
+            $table->float('exchange_rate', 20, 2)->nullable();
             $table->string('currency');
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 

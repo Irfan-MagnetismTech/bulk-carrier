@@ -16,7 +16,8 @@ class OpsPort extends Model
      */
     protected $fillable = [
         'code',
-        'name'
+        'name',
+        'business_unit'
     ];
     
     
