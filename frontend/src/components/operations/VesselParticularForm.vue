@@ -217,7 +217,7 @@
     
   </div>
 
-  <div class="flex flex-col justify-center w-full">
+  <div class="w-full">
     <h2 class="text-gray-600 dark-disabled:text-gray-300 text-2xl font-semibold py-3 text-center">
       Attachment (Vessel Particular For Charterer)
     </h2>
