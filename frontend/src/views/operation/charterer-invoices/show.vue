@@ -387,7 +387,10 @@ const { setTitle } = Title();
 setTitle('Charterer Invoice');
 
 function CalculateAll() {
-  chartererInvoice.value.sub_total_amount = parseFloat(chartererInvoice.value.grand_total) + +parseFloat(chartererInvoice.value.service_fee_deduction_amount) + parseFloat(chartererInvoice.value.discounted_amount)
+  console.log(parseFloat(chartererInvoice.value.grand_total))
+  console.log(parseFloat(chartererInvoice.value.service_fee_deduction_amount))
+  console.log(parseFloat(chartererInvoice.value.discounted_amount))
+  chartererInvoice.value.sub_total_amount = parseFloat(chartererInvoice.value.grand_total) + +parseFloat(chartererInvoice.value.service_fee_deduction_amount ?? 0) + parseFloat(chartererInvoice.value.discounted_amount ?? 0)
 }
 
 onMounted(() => {

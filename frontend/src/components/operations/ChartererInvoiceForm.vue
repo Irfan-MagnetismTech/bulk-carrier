@@ -148,7 +148,7 @@
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsChartererInvoiceVoyages[index].opsVoyage" label="voyage_no" class="block form-input">
+                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsChartererInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"

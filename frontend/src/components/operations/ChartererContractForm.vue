@@ -223,7 +223,7 @@
 				          <option>Inactive</option>
 				        </select>
           </label>
-          <label v-if="form.contract_type == 'Day Wise'" class="block w-1/2 mt-2 text-sm">
+          <label v-if="form.contract_type == 'Voyage Wise'" class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
             <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.approximate_load_amount" placeholder="Approximate Load Amount" class="form-input" autocomplete="off" />
           </label>
