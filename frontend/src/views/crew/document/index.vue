@@ -12,7 +12,6 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
-import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -144,7 +143,7 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody>
+          <tbody class="relative">
           <tr v-for="(crwDocument,index) in crewDocuments?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td class="text-left">{{ crwDocument?.full_name }}</td>
@@ -176,7 +175,7 @@ onMounted(() => {
             <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
           </td>
         </tr>
-        <tr v-else-if="!crewDocuments?.data?.data?.length">
+        <tr v-else-if="!crewDocuments?.data?.length">
           <td colspan="7">No data found.</td>
         </tr>
         </tfoot>

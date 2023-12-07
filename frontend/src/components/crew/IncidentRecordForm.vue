@@ -52,7 +52,6 @@ function removeItem(index){
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
     getCrews(props.form.business_unit);
