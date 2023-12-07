@@ -483,7 +483,7 @@ export default [
 	{
 		path: `/${BASE}/reports/all-jobs`,
 		name: `${BASE}.reports.all-jobs`,
-		component: () => import(`../views/${VIEWBASE}/reports/all-jobs-report/report-form.vue`),
+		component: () => import(`../views/${VIEWBASE}/reports/all-jobs-report/report.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'all-jobs-report' },
 	},
 	/* Report End */
