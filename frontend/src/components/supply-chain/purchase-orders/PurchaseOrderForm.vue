@@ -255,21 +255,21 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     </label>
   </div>
 
-  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap" id="table">
+        <table class="w-full" id="table">
           <thead>
           <tr class="table_head_tr">
-            <th class="py-3 align-center min-w-[200px] md:min-w-[250px] lg:min-w-[300px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Unit</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Brand</th>
-            <th class="py-3 align-center min-w-[50px] md:min-w-[75x] lg:min-w-[100px]">Model</th>
+            <th class="py-3 align-center min-w-[150px] md:min-w-[200px] lg:min-w-[250px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+            <th class="py-3 align-center min-w-[30px] md:min-w-[55px] lg:min-w-[80px]">Unit</th>
+            <th class="py-3 align-center">Brand</th>
+            <th class="py-3 align-center">Model</th>
             <th class="py-3 align-center">Required Date</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Qty</th>
-            <th class="py-3 align-center min-w-[70px] md:min-w-[95px] lg:min-w-[120px]">Rate</th>
-            <th class="py-3 align-cente min-w-[70px] md:min-w-[110px] lg:min-w-[125px]r">Total Price</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Qty</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Rate</th>
+            <th class="py-3 align-cente min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Total Price</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
