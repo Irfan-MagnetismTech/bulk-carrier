@@ -92,6 +92,31 @@ watch(
     { deep: true }
 );
 
+//reset data
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.acc_cost_center_name = '';
+    props.form.scm_mrr_name = '';
+    props.form.scm_material_name = '';
+    props.form.acc_parent_account_name = '';
+  }
+});
+
+watch(() => props.form.acc_cost_center_name, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_mrr_name = '';
+    props.form.scm_material_name = '';
+  }
+});
+
+watch(() => props.form.scm_mrr_name, (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.scm_material_name = '';
+  }
+});
+
+//reset data
+
 onMounted(() => {
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
