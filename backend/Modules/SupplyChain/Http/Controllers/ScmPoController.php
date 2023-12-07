@@ -2,15 +2,17 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
@@ -80,19 +82,19 @@ class ScmPoController extends Controller
 
             $scmPoLines = $purchaseOrder->scmPoLines->map(function ($item) {
                 $data = [
-                    'scm_material_id'=> $item->scmMaterial->id,
-                    'scmMaterial'=> $item->scmMaterial,
-                    'unit'=> $item->unit,
-                    'brand'=> $item->brand,
-                    'model'=> $item->model,
-                    'required_date'=> $item->required_date,
-                    'quantity'=> $item->quantity,
-                    'rate'=> $item->rate ?? 0,
-                    'total_price'=> $item->total_price,
-                    'net_rate'=> $item->net_rate,
-                    'po_composite_key'=> $item->po_composite_key,
-                    'pr_composite_key'=> $item->pr_composite_key,
-                    'max_quantity'=> $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
+                    'scm_material_id' => $item->scmMaterial->id,
+                    'scmMaterial' => $item->scmMaterial,
+                    'unit' => $item->unit,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'required_date' => $item->required_date,
+                    'quantity' => $item->quantity,
+                    'rate' => $item->rate ?? 0,
+                    'total_price' => $item->total_price,
+                    'net_rate' => $item->net_rate,
+                    'po_composite_key' => $item->po_composite_key,
+                    'pr_composite_key' => $item->pr_composite_key,
+                    'max_quantity' => $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
                 ];
 
                 return $data;
@@ -140,13 +142,28 @@ class ScmPoController extends Controller
      */
     public function destroy(ScmPo $purchaseOrder): JsonResponse
     {
+        // return response()->json($purchaseOrder->getAllMethods(), 422);
         try {
+            if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id" => ["This data could not be deleted as it has reference to other table"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
+
             $purchaseOrder->scmPoTerms()->delete();
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
-        } catch (\Exception $e) {
+        } catch (QueryException  $e) {
+            if ($e->errorInfo[1] == 1451) {
+                // Custom error response for foreign key constraint violation
+                return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
+            }
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -306,7 +323,7 @@ class ScmPoController extends Controller
         return response()->success('Search result', $scmPo, 200);
     }
 
-   public function searchPoForLc(Request $request): JsonResponse
+    public function searchPoForLc(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
