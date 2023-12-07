@@ -14,7 +14,7 @@ class CrwBankAccountRequest extends FormRequest
     public function rules(): array {
 
         return [
-            'crw_crew_id'      => 'required|exists:related_table,id',
+            'crw_crew_id'      => 'required',
             'bank_name'        => 'required|string|max:255',
             'branch_name'      => 'required|string|max:255',
             'routing_number'   => 'string|max:255',
