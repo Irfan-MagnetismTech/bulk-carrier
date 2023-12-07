@@ -76,15 +76,17 @@ export default function useCrewBankAccount() {
     }
 
     async function storeCrewBankAccount(form) {
-        const loader = $loading.show({
-            "can-cancel": false,
-            loader: "dots",
-            color: "#7e3af2",
-        });
+        const loader = $loading.show({"can-cancel": false, loader: "dots", color: "#7e3af2"});
         isLoading.value = true;
 
+        let formData = new FormData();
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        formData.append('data', JSON.stringify(form));
+
         try {
-            const { data, status } = await Api.post("/crw/crw-bank-accounts", form);
+            const { data, status } = await Api.post("/crw/crw-bank-accounts", formData);
             crewBankAccount.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.crewBankAccounts.index" });
@@ -120,15 +122,18 @@ export default function useCrewBankAccount() {
     }
 
     async function updateCrewBankAccount(form, crewBankAccountId) {
-        const loader = $loading.show({
-            "can-cancel": false,
-            loader: "dots",
-            color: "#7e3af2",
-        });
+        const loader = $loading.show({ "can-cancel": false, loader: "dots", color: "#7e3af2" });
         isLoading.value = true;
 
+        let formData = new FormData();
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
+        formData.append('data', JSON.stringify(form));
+        formData.append('_method', 'PUT');
+
         try {
-            const { data, status } = await Api.put(`/crw/crw-bank-accounts/${crewBankAccountId}`, form);
+            const { data, status } = await Api.post(`/crw/crw-bank-accounts/${crewBankAccountId}`, formData);
             crewBankAccount.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.crewBankAccounts.index" });

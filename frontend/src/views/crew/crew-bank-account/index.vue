@@ -30,7 +30,7 @@ const debouncedValue = useDebouncedRef('', 800);
 
 const { setTitle } = Title();
 
-setTitle('Crew Assigns');
+setTitle('Crew Bank Accounts');
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -90,16 +90,16 @@ let filterOptions = ref( {
       "label": "Account Number",
       "filter_type": "input"
     },
-    {
-      "relation_name": null,
-      "field_name": "status",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Status",
-      "filter_type": "input"
-    },    
+    // {
+    //   "relation_name": null,
+    //   "field_name": "status",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Status",
+    //   "filter_type": "input"
+    // },    
   ]
 });
 
@@ -163,7 +163,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Crew Assign List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Crew Bank Account List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.crewBankAccounts.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
@@ -173,25 +173,25 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(crwAssign,index) in crewBankAccounts?.data" :key="index">
+            <tr v-for="(crewBankAccount,index) in crewBankAccounts?.data" :key="index">
               <td> {{ index + 1 }} </td>
-              <td> {{ crwAssign?.crwCrew?.full_name }} </td>
-              <td> {{ crwAssign?.crwCrew?.pre_mobile_no }} </td>
-              <td> {{ crwAssign?.position_onboard }} </td>
-              <td> {{ crwAssign?.joining_date }} </td>
-              <td> {{ crwAssign?.joining_port_code }} </td>
-              <td> {{ crwAssign?.duration }}  </td>
-              <td>   
-                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }} 
+              <td> {{ crewBankAccount?.crwCrew?.full_name }} </td>
+              <td> {{ crewBankAccount?.crwCrew?.pre_mobile_no }} </td>
+              <td> {{ crewBankAccount?.bank_name }} </td>
+              <td> {{ crewBankAccount?.account_name }} </td>
+              <td> {{ crewBankAccount?.account_number }} </td>
+              <!-- <td>   
+                <span :class="crewBankAccount?.is_active === 1 ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> 
+                  {{ crewBankAccount?.is_active === 1 ? "Active" : "Deactive" }} 
                 </span>              
-              </td>
+              </td> -->
               <td>
-                <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
+                <span :class="crewBankAccount?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewBankAccount?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
-                  <action-button :action="'edit'" :to="{ name: 'crw.crewBankAccounts.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
-                  <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'crw.crewBankAccounts.edit', params: { crewBankAccountId: crewBankAccount?.id } }"></action-button>
+                  <action-button @click="confirmDelete(crewBankAccount?.id)" :action="'delete'"></action-button>
                 </nobr>
               </td>
             </tr>
