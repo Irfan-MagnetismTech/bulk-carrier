@@ -14,16 +14,16 @@ class CrwBankAccountRequest extends FormRequest
     public function rules(): array {
 
         return [
-            // 'bank_name'       => ['required', 'string', 'max:255'],
-            // 'branch_name'     => ['required', 'string', 'max:255'],
-            // 'account_type'    => ['required', 'string', 'max:255'],
-            // 'account_name'    => ['required', 'string', 'max:255'],
-            // 'account_number'  => ['required', 'string', 'max:255'],
-            // 'routing_number'  => ['required', 'string', 'max:255'],
-            // 'contact_number'  => ['required', 'string', 'max:255'],
-            // 'opening_date'    => ['required'],
-            // 'opening_balance' => ['required', 'numeric', 'max:9999999999.99'],
-
+            'crw_crew_id'      => 'required|exists:related_table,id',
+            'bank_name'        => 'required|string|max:255',
+            'branch_name'      => 'required|string|max:255',
+            'routing_number'   => 'string|max:255',
+            'account_name'     => 'required|string|max:255',
+            'account_number'   => 'required|string|max:255',
+            'benificiary_name' => 'required|string|max:255',
+            'attachment'       => 'required|string|max:255',
+            'is_active'        => 'required|boolean',
+            'business_unit'    => 'required|in:PSML,TSLL',
         ];
     }
 

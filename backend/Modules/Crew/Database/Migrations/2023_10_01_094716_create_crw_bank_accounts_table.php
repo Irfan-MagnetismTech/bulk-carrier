@@ -17,13 +17,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('crw_crew_id');
 			$table->string('bank_name');
-			$table->string('account_holder');
-			$table->text('address');
-			$table->string('account_no');
-			$table->string('currency');
-			$table->string('swift_code')->nullable();
+			$table->string('branch_name');
+			$table->string('routing_number')->nullable();
+			$table->string('account_name'); // account holder name 
+			$table->string('account_number');
 			$table->string('benificiary_name');
-			$table->string('benificiary_attachment');
+			$table->string('attachment')->nullable();
 			$table->tinyInteger('is_active');
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
