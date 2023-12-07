@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Entities\MntJob;
 
@@ -19,32 +20,39 @@ class MntReportController extends Controller
     {
         try {
             $mntShipDepartmentId = request()->mnt_ship_department_id; // Replace with the actual ID of the MntShipDepartment
+            $opsVesselId = request()->ops_vessel_id; // Replace with the actual ID of the MntShipDepartment
 
-            // $jobs = MntJob::with(['mntItem.mntItemGroup','mntJobLines'])
-            //                 ->where('ops_vessel_id', request()->ops_vessel_id)          
-            //                 ->whereHas('mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
-            //                         $query->where('mnt_ship_department_id', $mntShipDepartmentId);
-            //                     })
-            //                 ->get();
-            $jobs = MntItemGroup::with(['mntItems.mntJobs.mntJobLines','mntItems.mntJobs' => function($q){
-                                    $q->where('ops_vessel_id', request()->ops_vessel_id);
-                                }])
-                                ->where('mnt_ship_department_id', $mntShipDepartmentId)
-                                ->get();
+            $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId) {
+                $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                    $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                });
+            })->with(['mntItems' => function ($query) use ($mntShipDepartmentId) {
+                $query->whereHas('mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId) {
+                    $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                        $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                    });
+                });
+                $query->with(['mntJobs.mntJobLines']);
+            }])->get();
+            // ----------------------------------------
 
+            $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                    $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                })
+                ->where('ops_vessel_id', $opsVesselId);
+            })->with(['mntItems' => function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                $query->whereHas('mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
+                    $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
+                        $query->where('mnt_ship_department_id', $mntShipDepartmentId);
+                    })
+                    ->where('ops_vessel_id', $opsVesselId);
+                });
+                $query->with(['mntJobs.mntJobLines']);
+            }])->get();
 
-            // $jobs = MntJob::whereHas('mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
-            //     $query->where('mnt_ship_department_id', $mntShipDepartmentId);
-            // })->with('mntJobLines')->get();
-                            
+            return response()->success('All jobs are retrieved successfully', $mntItemGroups, 200);
             
-            // To get the return value dynamically
-            // $returnField = request()->return_field ?? '';
-            // if ($returnField == "mntItem" || $returnField == "mntJobLines") {
-            //     $jobs = $jobs->pluck($returnField)->flatten();
-            // }
-            
-            return $jobs;
             
         }
         catch (\Exception $e)
