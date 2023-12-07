@@ -199,25 +199,22 @@
 
         </label>
       </div>
-      <div v-if="chartererContract.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff </span>
-              <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.opsCargoTariff?.tariff_name }}</span>
-
-          </label>
+        
         
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
               <span class="show-block">{{ chartererContract.status }}</span>
 
           </label>
-          <label v-if="chartererContract.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
+          <label v-if="chartererContract.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
             <span class="show-block">{{ chartererContract.opsChartererContractsFinancialTerms.approximate_load_amount }}</span>
 
           </label>
           <label v-else class="block w-full mt-2 text-sm"></label>
+          <label class="block w-full mt-2 text-sm"></label>
           <label class="block w-full mt-2 text-sm"></label>
       </div>
     </div>
