@@ -35,6 +35,23 @@ class OpsBunker extends Model
         'status',
     ];
 
+    //     /**
+    //  * The accessors to append to the model's array form.
+    //  *
+    //  * @var string[]
+    //  */
+    // protected $appends = ['description'];
+
+    // /**
+    //  * Concatenate the code and name of the port.
+    //  *
+    //  * @return string
+    //  */
+    // public function getMaterialNameQuantityAttribute()
+    // {
+    //     return $this->scmMaterial->name . ' - ' . $this->quantity;
+    // }
+
     public function scmVendor()
     {
         return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');
