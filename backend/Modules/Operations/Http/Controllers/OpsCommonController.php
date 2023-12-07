@@ -33,7 +33,7 @@ class OpsCommonController extends Controller
     public function getPortWithoutPaginate(){
         try
         {
-            $ports = OpsPort::all();            
+            $ports = OpsPort::all();
             return response()->success('Data retrieved successfully.', $ports, 200);
         }
         catch (QueryException $e)

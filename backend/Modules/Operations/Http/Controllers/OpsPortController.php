@@ -138,6 +138,9 @@ class OpsPortController extends Controller
                     $query->where('name', 'like', '%' . request()->name_or_code . '%');
                     $query->orWhere('code', 'like', '%' . request()->name_or_code . '%');
                 })
+                ->when(isset($request->business_unit) && $request->business_unit != "ALL", function ($q) use ($request) {
+                    $q->where('business_unit', $request->business_unit);
+                })
                 ->limit(10)
                 ->get();
 

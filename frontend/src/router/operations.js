@@ -503,6 +503,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/vessel-expense-heads/:vesselExpenseHeadId/show`,
+		name: `${BASE}.vessel-expense-heads.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Bunker Requisitons */
 	{
 		path: `/${BASE}/bunker-requisitions`,
