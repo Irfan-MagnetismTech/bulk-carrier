@@ -1,6 +1,8 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
+        <label class="block w-1/2 text-sm">
+          <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Port/Ghat Code <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.code" placeholder="Port/Ghat Code" class="form-input" required autocomplete="off" />
@@ -17,6 +19,7 @@
 <script setup>
 import Error from "../../Error.vue";
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const props = defineProps({
     form: {
@@ -24,6 +27,7 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
+    formType: { type: String, required : false },
 });
 </script>
 <style lang="postcss" scoped>

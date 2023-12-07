@@ -452,7 +452,14 @@ watch(() => props.form.business_unit, (value) => {
   if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')){
     props.form.ops_customer_name = null;
     props.form.ops_vessel_name = null;
+
+    props.form.opsVoyageSectors = [];
+    props.form.opsVoyageSectors.push({... props.voyageSectorObject });
   }
+
+
+  fetchPorts("", false);
+
 })
 
 const bunkerReset = ref([]);
@@ -551,12 +558,11 @@ function fetchBunker(search, loading) {
 
 function fetchPorts(search, loading) {
       // loading(true);
-      searchPorts(search, loading)
+      searchPorts(search, props.form.business_unit, loading)
 }
 
 onMounted(() => {
   fetchCargoTypes("", false);
-  fetchPorts("", false);
     watchEffect(() => {
       if(props.form.business_unit && props.form.business_unit != 'ALL'){
         fetchCustomers("", false);
