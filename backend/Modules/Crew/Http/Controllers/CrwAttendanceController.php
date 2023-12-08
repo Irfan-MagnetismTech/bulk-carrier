@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwAttendance;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Modules\Crew\Http\Requests\CrwAttendanceRequest;
 
 class CrwAttendanceController extends Controller
 {
@@ -19,7 +20,7 @@ class CrwAttendanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwAttendances = CrwAttendance::with('crwAttendanceLines')->globalSearch($request->all());
+            $crwAttendances = CrwAttendance::with('opsVessel:id,name', 'crwAttendanceLines')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwAttendances, 200);
         }
@@ -35,17 +36,16 @@ class CrwAttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwAttendanceRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year_month', 'working_days', 'total_crews', 'remarks', 'business_unit');
                 $crwAttendance     = CrwAttendance::create($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);
-
-                return response()->success('Created Succesfully', $crwAttendance, 201);
             });
+            return response()->success('Created Succesfully', [], 201);
         }
         catch (QueryException $e)
         {
@@ -62,7 +62,7 @@ class CrwAttendanceController extends Controller
     public function show(CrwAttendance $crwAttendance)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAttendance->load('crwAttendanceLines'), 200);
+            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines.crwCrewAssignment.crwCrew'), 200);
         }
         catch (QueryException $e)
         {
@@ -77,18 +77,18 @@ class CrwAttendanceController extends Controller
      * @param  \App\Models\CrwAttendance  $crwAttendance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwAttendance $crwAttendance)
+    public function update(CrwAttendanceRequest $request, CrwAttendance $crwAttendance)
     {
         try {
             DB::transaction(function () use ($request, $crwAttendance)
             {
-                $crwAttendanceData = $request->only('ops_vessel_id', 'year', 'month_no', 'working_days', 'business_unit');
+                $crwAttendanceData = $request->only('ops_vessel_id', 'year_month', 'working_days', 'total_crews', 'remarks', 'business_unit');
                 $crwAttendance->update($crwAttendanceData);
                 $crwAttendance->crwAttendanceLines()->delete();
                 $crwAttendance->crwAttendanceLines()->createMany($request->crwAttendanceLines);
-
-                return response()->success('Updated succesfully', $crwAttendance, 202);
             });
+            return response()->success('Updated succesfully', $crwAttendance, 202);
+
         }
         catch (QueryException $e)
         {
