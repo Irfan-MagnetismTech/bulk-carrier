@@ -175,7 +175,6 @@
               <th class="py-3 align-center">Manufacturing Days</th>
               <th class="py-3 align-center">Offer Price</th>
               <th class="py-3 align-center">Negotitated Price</th>
-              <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
 
@@ -183,7 +182,7 @@
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmCsMaterialVendors" :key="index">
               <td class="!w-72">
                 <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
+                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
                   <template #search="{attributes, events}"> 
                       <input
                           class="vs__search"
@@ -236,18 +235,6 @@
                   <input type="text" v-model="form.scmCsMaterialVendors[index].negotiated_price" class="form-input">
                 </label>
               </td>
-              <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeLine(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addLine()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-              </td>
             </tr>
             </tbody>
           </table>
@@ -269,7 +256,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
-    import cloneDeep from 'lodash/cloneDeep';
+    import { merge ,cloneDeep} from 'lodash';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import useVendor from '../../../composables/supply-chain/useVendor';
@@ -279,7 +266,7 @@
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
-    const {materialCs,showMaterialCs } = useMaterialCs();
+    const { materialCs, showMaterialCs } = useMaterialCs();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -318,9 +305,24 @@
     const route = useRoute();
     const CSID = route.params.csId;
         
+    // watch(() => materialCs.value, (newVal, oldVal) => {
+    //   props.form.scmCs = newVal;
+    //   props.form.scm_cs_id = newVal?.id;
+    // });
+
+
     watch(() => materialCs.value, (newVal, oldVal) => {
       props.form.scmCs = newVal;
       props.form.scm_cs_id = newVal?.id;
+      if (props.formType != "edit") {
+        props.form.scmCsMaterialVendors = [];
+        materialCs.value.scmCsMaterials.forEach((line, index) => {
+          const objLine = cloneDeep(props.lineObj); 
+          let data = merge(objLine, {scmMaterial: line.scmMaterial,scm_material_id: line.scm_material_id, unit:line.unit,quantity:line.quantity})
+          props.form.scmCsMaterialVendors.push(data);
+          console.log(index, data);
+        });
+      }
     });
 // function fetchStoreIssue(search, loading = false) {
 //     // if (search.length > 0) {

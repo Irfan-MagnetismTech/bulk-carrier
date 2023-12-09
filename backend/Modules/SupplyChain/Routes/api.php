@@ -72,7 +72,9 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
-    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');   
+    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse'); 
+    Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
+    Route::post('selected-supplier', [ScmCsController::class, "selectedSupplierstore"])->name('selectedSupplier.store');
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));

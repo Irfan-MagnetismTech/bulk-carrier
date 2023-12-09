@@ -36,7 +36,7 @@ class ScmPrController extends Controller
     {
         try {
             $scm_prs = ScmPr::query()
-                ->with('scmPrLines', 'scmWarehouse')
+                ->with('scmPrLines', 'scmWarehouse','scmPo','scmMrr','scmCs')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_prs, 200);
@@ -272,7 +272,7 @@ class ScmPrController extends Controller
     {
         if(request()->filled('pr_id')){
         $pr_data = ScmPr::query()
-            ->with('scmPrLines')
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
             ->find($request->pr_id);
 
             $data = [
@@ -285,6 +285,7 @@ class ScmPrController extends Controller
                 "pr_no" => $pr_data->ref_no,
                 "purchase_center" => $pr_data->purchase_center,
                 "business_unit" => $pr_data->business_unit,
+                "scmCsMaterials" => $pr_data->scmPrLines,
             ];
          }else{
             $data = [

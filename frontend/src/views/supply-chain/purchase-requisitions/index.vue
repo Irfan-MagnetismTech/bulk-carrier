@@ -244,7 +244,7 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                    <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CSS</button>
+                    <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button>
                     <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                     <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
                     <action-button :action="'show'" :to="{ name: 'scm.purchase-requisitions.show', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>

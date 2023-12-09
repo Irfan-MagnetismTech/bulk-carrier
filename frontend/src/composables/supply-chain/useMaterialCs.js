@@ -17,6 +17,7 @@ export default function useMaterialCs() {
     const quotations = ref([]);
     const filteredMaterialCsLines = ref([]);
     const $loading = useLoading();
+    const prMaterialList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -37,7 +38,22 @@ export default function useMaterialCs() {
         purchase_center: '',
         business_unit: '',
         required_days: '',
+        scmCsMaterials: [
+            {
+                scm_material_id: '',
+                scmMaterial: '',
+                unit : '',
+                quantity : '',
+            }
+        ]
     });
+
+    const materialObj = {
+        scm_material_id: '',
+        scmMaterial: '',
+        unit: '',
+        quantity: '',
+    }
 
 
     const errors = ref('');
@@ -213,6 +229,24 @@ export default function useMaterialCs() {
             loader.hide();
         }
     }
+
+    async function getPrWiseMaterialList(prId) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+                params: {
+                    pr_id: prId,
+                },
+            });
+            prMaterialList.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
  
 
     return {
@@ -228,6 +262,9 @@ export default function useMaterialCs() {
         getPrWiseCs,
         getQuotations,
         quotations,
+        materialObj,
+        prMaterialList,
+        getPrWiseMaterialList,
         // getSiWiseData,
         isTableLoading,
         isLoading,

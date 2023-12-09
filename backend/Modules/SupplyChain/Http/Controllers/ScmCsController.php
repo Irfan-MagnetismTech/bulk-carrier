@@ -13,6 +13,7 @@ use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
+use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\UniqueId;
 
@@ -55,6 +56,15 @@ class ScmCsController extends Controller
         try {
             DB::beginTransaction();
             $scmMi = ScmCs::create($requestData);
+
+            foreach ($request->scmCsMaterials as $key => $value) {
+                ScmCsMaterial::create([
+                    'scm_cs_id' => $scmMi->id,
+                    'scm_material_id' => $value['scm_material_id'],
+                    'unit' => $value['unit'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
             //throw exception if creating fail
 
 
@@ -74,7 +84,8 @@ class ScmCsController extends Controller
     public function show($id)
     {
         $materialCs = ScmCs::find($id);
-        $materialCs->load('scmPr', 'scmWarehouse');
+        // $materialCs->load('scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial','scmPr', 'scmWarehouse');
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
@@ -95,6 +106,17 @@ class ScmCsController extends Controller
         try {
             DB::beginTransaction();
             $materialCs->update($requestData);
+            $materialCs->scmCsMaterials->each(function ($item) {
+                $item->delete();
+            });
+            foreach ($request->scmCsMaterials as $key => $value) {
+                ScmCsMaterial::create([
+                    'scm_cs_id' => $materialCs->id,
+                    'scm_material_id' => $value['scm_material_id'],
+                    'unit' => $value['unit'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
             DB::commit();
             return response()->success('Data updated succesfully', $materialCs, 202);
         } catch (\Exception $e) {
@@ -113,6 +135,9 @@ class ScmCsController extends Controller
         $materialCs = ScmCs::find($id);
         try {
             DB::beginTransaction();
+            $materialCs->scmCsMaterials->each(function ($item) {
+                $item->delete();
+            });
             $materialCs->delete();
             DB::commit();
             return response()->success('Data deleted succesfully', null, 203);
@@ -170,14 +195,14 @@ class ScmCsController extends Controller
             $scmCsVendor = ScmCsVendor::create($requestData);
 
             foreach ($request->scmCsMaterialVendors as $key => $value) {
-                $csMaterial = ScmCsMaterial::create([
-                    'scm_cs_id' => $scmCs->id,
+                $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCs->id,
                     'scm_material_id' => $value['scm_material_id']
-                ]);
+                ])->first();
 
                 ScmCsMaterialVendor::create([
                     'scm_cs_id' => $scmCs->id,
                     'scm_cs_vendor_id' => $scmCsVendor->id,
+                    'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
                     'scm_cs_material_id' => $csMaterial->id,
                     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
                     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
@@ -246,19 +271,19 @@ class ScmCsController extends Controller
 
             $scmCsVendor->update($requestData);
             $scmCsVendor->scmCsMaterialVendors->each(function ($item) {
-                $item->scmCsMaterial->delete();
                 $item->delete();
             });
            
             foreach ($request->scmCsMaterialVendors as $key => $value) {
-                $csMaterial = ScmCsMaterial::create([
+                $csMaterial = ScmCsMaterial::where([
                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
                     'scm_material_id' => $value['scm_material_id']
-                ]);
+                ])->first();
 
                 ScmCsMaterialVendor::create([
                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
                     'scm_cs_vendor_id' => $scmCsVendor->id,
+                    'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
                     'scm_cs_material_id' => $csMaterial->id,
                     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
                     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
@@ -276,6 +301,50 @@ class ScmCsController extends Controller
 }
             DB::commit();
             return response()->success('Data updated succesfully', $scmCsVendor, 202);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getCsData($csId)
+    {
+        $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmPr', 'scmWarehouse')->find($csId);
+        $CsVendor = ScmCsVendor::with('scmVendor')->where('scm_cs_id', $csId)->get()->groupBy('scm_vendor_id');
+        $scmCs['scmCsVendor'] = $CsVendor;
+        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id','scm_vendor_id']); 
+        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial; 
+        $csMaterial = ScmCsMaterial::with('scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy('scm_material_id');
+        $scmCs['scmCsMaterial'] = $csMaterial; 
+
+        try {
+            return response()->success('Detail data', $scmCs, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function selectedSupplierstore(SupplierSelectionRequest $request)
+    {
+       
+        $data = $request->only('id', 'selection_ground','auditor_remarks_date','auditor_remarks','scmCsVendor');
+       
+        try {
+            $cs = ScmCs::find($data['id']);
+                $cs->update(
+                    [
+                    'selection_ground' => $data['selection_ground'],
+                    'auditor_remarks_date' => $data['auditor_remarks_date'],
+                    'auditor_remarks' => $data['auditor_remarks'],
+                    ]
+                );
+                foreach ($data['scmCsVendor'] as $key => $value) {
+                    $csVendor = ScmCsVendor::find($value[0]['id']);
+                    $csVendor->update(['is_selected' => $value[0]['is_selected']]);
+                }
+       
+            DB::commit();
+            return response()->success('Data updated succesfully', $cs, 202);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);

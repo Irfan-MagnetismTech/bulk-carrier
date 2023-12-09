@@ -637,5 +637,10 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
-    
+    {
+        path: `/${BASE}/material-cs/:csId/supplier-selection`,
+        name: `${BASE}.supplier-selection`,
+        component: () => import(`../views/${PATH_BASE}/supplier-selection/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection' },
+    },
 ];

@@ -9,18 +9,22 @@ import useDebouncedRef from '../../../composables/useDebouncedRef';
 import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
-import { useRouter } from 'vue-router';
+import { useRouter , useRoute} from 'vue-router';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import useQuotation from '../../../composables/supply-chain/useQuotation';
 
-const { getMaterialCs, materialCs,materialCsLists, deleteMaterialCs, isLoading,errors,isTableLoading} = useMaterialCs();
+const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading } = useMaterialCs();
+const {getQuotations,quotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const router = useRouter();
+const route = useRoute();
+
 const props = defineProps({
   page: {
     type: Number,
@@ -28,8 +32,22 @@ const props = defineProps({
   },
 });
 // Code for global search start
-
+const CSID = route.params.csId;
 const icons = useHeroIcon();
+onMounted(() => {
+  watchPostEffect(() => {
+    getQuotations(CSID)
+      .then(() => {
+        const customDataTable = document.getElementById("customDataTable");
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching SR:", error);
+      });
+  });
+});
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -45,7 +63,7 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "ref_no",
+      "field_name": "quotation_ref",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -105,56 +123,48 @@ const paginatedPage = ref(1);
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
-onMounted(() => {
-  watchPostEffect(() => {
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-      router.push({ name: 'scm.material-cs.index', query: { page: filterOptions.value.page } });
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
-    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
-      filterOptions.value.isFilter = true;
-    }
-    getMaterialCs(filterOptions.value)
-      .then(() => {
-        paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching SR:", error);
-    });
-});
+// onMounted(() => {
+//   watchPostEffect(() => {
+//     // if(currentPage.value == props.page && currentPage.value != 1) {
+//     //   filterOptions.value.page = 1;
+//     //   router.push({ name: 'scm.material-cs.index', query: { page: filterOptions.value.page } });
+//     // } else {
+//     //   filterOptions.value.page = props.page;
+//     // }
+//     // currentPage.value = props.page;
+//     // if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+//     //   filterOptions.value.isFilter = true;
+//     // }
+//     getQuotation(filterOptions.value)
+//       .then(() => {
+//         // paginatedPage.value = filterOptions.value.page;
+//       const customDataTable = document.getElementById("customDataTable");
+//       if (customDataTable) {
+//         tableScrollWidth.value = customDataTable.scrollWidth;
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching SR:", error);
+//     });
+// });
 
-});
+// });
 // Code for global search end here
 
-const navigateToQuotation = (csId) => {
-  const routeOptions = {
-    name: 'scm.quotations.index',
-    params: {
-      csId: csId
-    }
-  };
-  router.push(routeOptions);
-};  
 
-const navigateSupplierSelection = (csId) => {
-  const routeOptions = {
-    name: 'scm.supplier-selection',
-    params: {
-      csId: csId
-    }
-    // query: {
-    //   csId: csId
-    // }
-  };
-  router.push(routeOptions);
-};
+
+// const navigateToMRRCreate = (materialCsId) => {
+//   const pr_id = materialCsId; 
+//   const po_id = null;
+//   const routeOptions = {
+//     name: 'scm.material-receipt-reports.create',
+//     query: {
+//       pr_id: pr_id,
+//       po_id: po_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };
 
 
 function confirmDelete(id) {
@@ -178,13 +188,14 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Material CS List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
+    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
+          <thead v-once>
           <tr class="w-full">
             <th>#</th>
             <th>Ref No</th>
@@ -194,32 +205,29 @@ function confirmDelete(id) {
             <th>Business Unit</th>
             <th>Action</th>
           </tr>
-          </thead> -->
-          <FilterComponent :filterOptions = "filterOptions"/>
+          </thead>
+          <!-- <FilterComponent :filterOptions = "filterOptions"/> -->
           <tbody>
-            <tr v-for="(materialCsdata,index) in (materialCsLists?.data ? materialCsLists?.data : materialCsLists)" :key="index">
-              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialCsdata?.ref_no }}</td>
-              <td>{{ materialCsdata?.effective_date }}</td>
-              <td>{{ materialCsdata?.expire_date }}</td>
-              <td>{{ materialCsdata?.purchase_center }}</td>
-              <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
+            <tr v-for="(quotation,index) in (quotations?.data ? quotations?.data : quotations)" :key="index">
+              <td>{{ index + 1 }}</td>
+              <td>{{ quotation?.quotation_ref }}</td>
+              <td>{{ quotation?.effective_date }}</td>
+              <td>{{ quotation?.expire_date }}</td>
+              <td>{{ quotation?.purchase_center }}</td>
+              <td>{{ quotation?.scmWarehouse?.name?? '' }}</td>
               <td>
-                <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
+                <span :class="quotation?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
               </td>
               <td>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create Quotations</button>
-                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Select Supplier</button>
-                  <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> 
-                  <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                <div class="grid grid-flow-col-dense gap-x-2">                 
+                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <!-- <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
                 </div>
               </td>
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialCs?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!materialCsLists?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
               <tr v-if="isLoading">
               </tr>
               <tr v-else-if="isTableLoading">
@@ -227,17 +235,17 @@ function confirmDelete(id) {
                     <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                   </td>
               </tr>
-              <tr v-else-if="!materialCsLists?.data?.length">
+              <tr v-else-if="!quotations?.data?.length">
                 <td colspan="7">No Data found.</td>
               </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="materialCsLists" to="scm.material-cs.index" :page="page"></Paginate>
+    <Paginate :data="quotations" to="scm.quotations-cs.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   
   
 
-  <ErrorComponent :errors="errors"></ErrorComponent>  
+  <!-- <ErrorComponent :errors="errors"></ErrorComponent>   -->
 </template>

@@ -126,6 +126,64 @@
             :errors="errors.remarks" />
     </label>
   </div>  
+  <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <div class=""> 
+        <table class="!w-full">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th style="" class="py-3 align-center">Material Name </th>
+            <th style="" class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center">Quantity</th>
+            <th class="py-3 text-center align-center">Action</th>
+          </tr>
+          </thead>
+
+          <!-- <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800" v-if="form.scmWarehouse != null"> -->
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
+            <td class="!w-72">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.scmCsMaterials[index].scmMaterial"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+              </v-select>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" readonly v-model="form.scmCsMaterials[index].unit" class="vms-readonly-input form-input">
+               </label>
+              
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmCsMaterials[index].quantity" readonly class="form-input">
+              </label>
+            </td>
+            <td class="px-1 py-1 text-center">
+              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        </div>  
+      </fieldset>
+    </div>
 </template>
 
 
@@ -143,20 +201,19 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
+    import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
     const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
+    const { getPrWiseMaterialList, prMaterialList } = useMaterialCs();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
-      page: {
-      required: false,
-      default: {}
-    },
-
+      page: { required: false, default: {} },
+      materialObj: { type: Object, required: false },
     }); 
 
     const PRIORITY = ['High', 'Medium', 'Low']
@@ -167,7 +224,15 @@
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 
+    function addMaterial() {
+      const clonedObj = cloneDeep(props.materialObj);
+      props.form.scmCsMaterials.push(clonedObj);
+    }
 
+    function removeMaterial(index){
+      props.form.scmCsMaterials.splice(index, 1);
+}
+    
 function fetchStoreIssue(search, loading = false) {
     // if (search.length > 0) {
     //   loading(true);
@@ -186,6 +251,10 @@ function setStoreIssueOtherData(datas) {
       getSiWiseSir(datas.id);    
 }
 
+function materialChange(index) {
+    props.form.scmCsMaterials[index].unit = props.form.scmCsMaterials[index].scmMaterial.unit;
+    props.form.scmCsMaterials[index].scm_material_id = props.form.scmCsMaterials[index].scmMaterial.id; 
+}
 
 
 // watch(() => props.form.scmSi, (new Val,oldVal) => {
@@ -302,6 +371,9 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
+  watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+    getPrWiseMaterialList(props.form.scm_pr_id);
+    });
 });
 
 const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];

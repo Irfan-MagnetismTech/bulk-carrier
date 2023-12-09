@@ -110,7 +110,7 @@ export default function useQuotation() {
         }
     }
     
-    async function storeQuotations(form) {
+    async function storeQuotations(form,csId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -122,7 +122,7 @@ export default function useQuotation() {
             const { data, status } = await Api.post(`/${BASE}/quotations`, formData);
             materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.quotations.index` });
+            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);

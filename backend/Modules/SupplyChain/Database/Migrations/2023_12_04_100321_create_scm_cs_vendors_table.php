@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('vendor_type')->comment('supplier,manufacturer,dealer');
             $table->date('quotation_shipment_date');
             $table->date('estimated_shipment');
-            $table->bigInteger('port_of_shipment');
-            $table->bigInteger('port_of_discharge');
+            $table->string('port_of_shipment');
+            $table->string('port_of_discharge');
             $table->string('currency');
             $table->string('mode_of_shipment')->comment('air,land,sea');
             $table->string('terms_and_condition');
