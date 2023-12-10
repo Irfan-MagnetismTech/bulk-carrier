@@ -15,5 +15,5 @@ class CrwIncidentParticipant extends Model
     public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
-    }      
+    }
 }
