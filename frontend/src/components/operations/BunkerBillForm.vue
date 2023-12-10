@@ -25,11 +25,11 @@
           </template>
         </v-select>
         <input type="hidden" v-model.trim="form.scm_vendor_id" /> -->
-        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader"  v-model="form.opsVendor" label="name" class="block form-input">
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader"  v-model="form.scmVendor" label="name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.opsVendor"
+                    :required="!form.scmVendor"
                     v-bind="attributes"
                     v-on="events"
                     />
@@ -52,11 +52,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.attachment) }}</p></span>
             <input type="file" @change="attachFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.smr_file_path) }}</p></span>
             <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
     </div>
@@ -161,9 +161,9 @@ const {  bunkerRequisitions, searchBunkerRequisitionsByVendor } = useBunkerRequi
 // const { materials, getBunkerList } = useMaterial();
 
 watch(() => props.form.business_unit, (value) => {
-  // console.log(props.form.ops_voyage_id);
+  // console.log(props.form.ops_vendor_id);
   if(props?.formType != 'edit') {
-    props.form.opsVoyage = null;
+    props.form.scmVendor = null;
     props.form.opsBunkerBillLines = null;
     props.form.scm_vendor_id = null;
   }
@@ -173,7 +173,15 @@ function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
 }
 
-watch(() => props.form.opsVendor, (value) => {
+function getFileName(filePath) {
+  if(filePath){
+    const pathSegments = filePath.split('/');
+    return pathSegments[pathSegments.length - 1];
+  }
+  return filePath;
+}
+
+watch(() => props.form.scmVendor, (value) => {
   vendor.value = null;
   if(value) {
     props.form.scm_vendor_id = value?.id
@@ -206,13 +214,14 @@ watch(() => vendor, (value) => {
   if(props.form.scm_vendor_id != undefined){
     searchBunkerRequisitionsByVendor(props.form.scm_vendor_id)
     .then(() => {
-      bunkerReset.value = bunkerRequisitions?.value;
+      // bunkerReset.value = bunkerRequisitions?.value;
       console.log(bunkerReset.value);
       if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
         props.form.opsBunkerBillLines = bunkerReset.value
-      } else {
-        editInitiated.value = true
       }
+      // else{
+      //   editInitiated.value = true;
+      // }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
