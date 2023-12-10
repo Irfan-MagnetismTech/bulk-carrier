@@ -33,12 +33,12 @@
   
   setTitle('Edit Survey Item');
 
-  watch(surveyItem, (value) => {
-    surveyItem.value.mnt_survey_function_name = value?.mntSurveyItemCat?.mntSurveyFunction;
+  // watch(surveyItem, (value) => {
+  //   surveyItem.value.mnt_survey_function_name = value?.mntSurveyItemCat?.mntSurveyFunction;
 
-    surveyItem.value.mnt_survey_item_cat_name = value?.mntSurveyItemCat;
-    surveyItem.value.mntItemCategories = value?.mntSurveyItemCat?.mntSurveyFunction?.mntSurveyItemCats;
-  });
+  //   surveyItem.value.mnt_survey_item_cat_name = value?.mntSurveyItemCat;
+  //   surveyItem.value.mntItemCategories = value?.mntSurveyItemCat?.mntSurveyFunction?.mntSurveyItemCats;
+  // });
   
   onMounted(() => {
       showSurveyItem(surveyItemId);

@@ -76,7 +76,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Function",
+      "label": "Critical Function",
       "filter_type": "input"
     },
     
@@ -88,7 +88,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Category",
+      "label": "Critical Category",
       "filter_type": "input"
     },
     
@@ -100,7 +100,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Item",
+      "label": "Critical Item",
       "filter_type": "input"
     },
 
@@ -202,9 +202,9 @@ onMounted(() => {
           <tr class="w-full">
             <th class="w-1/12">#</th>
             <th class="w-2/12">Vessel</th>
-            <th class="w-2/12">Cri. Function</th>
-            <th class="w-2/12">Cri. Category</th>
-            <th class="w-2/12">Cri. Item</th>
+            <th class="w-2/12">Critical Function</th>
+            <th class="w-2/12">Critical Category</th>
+            <th class="w-2/12">Critical Item</th>
             <th class="w-2/12">Business Unit</th>
             <th class="w-1/12">Action</th>
           </tr>
