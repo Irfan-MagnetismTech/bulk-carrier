@@ -14,8 +14,11 @@ class OpsVoyageBudgetEntry extends Model
         'ops_voyage_id',
         'ops_voyage_budget_id',
         'ops_expense_head_id',
-        'perticular',
-        'percentage',
+        'perticular', // not needed
+        'percentage', // not needed
+        'type',
+        'quantity',
+        'rate',
         'currency',
         'amount',
         'exchange_rate_bdt',
