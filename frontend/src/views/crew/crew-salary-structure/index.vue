@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
+import useCrewSalaryStructure from "../../../composables/crew/useCrewSalaryStructure";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -15,7 +16,6 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
-import useCrewBankAccount from "../../../composables/crew/useCrewBankAccount";
 
 const props = defineProps({
   page: {
@@ -24,13 +24,13 @@ const props = defineProps({
   },
 });
 
-const { crewBankAccounts, getCrewBankAccounts, deleteCrewBankAccount, isLoading, isTableLoading } = useCrewBankAccount();
+const { crewSalaryStructures, getCrewSalaryStructures, deleteCrewSalaryStructure, isLoading, isTableLoading } = useCrewSalaryStructure();
 
 const debouncedValue = useDebouncedRef('', 800);
 
 const { setTitle } = Title();
 
-setTitle('Crew Bank Accounts');
+setTitle('Crew Salary Structures');
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -40,6 +40,26 @@ let filterOptions = ref( {
   "page": props.page,
   "isFilter": false,
   "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "effective_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Effective Date",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "currency",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Currency",
+      "filter_type": "input"
+    },
     {
       "relation_name": "crwCrew",
       "field_name": "full_name",
@@ -62,44 +82,44 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "bank_name",
+      "field_name": "gross_salary",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Bank Name",
+      "label": "Gross Salary",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "account_name",
+      "field_name": "addition",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Account Name",
+      "label": "Addition",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "account_number",
+      "field_name": "deduction",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Account Number",
+      "label": "Deduction",
       "filter_type": "input"
     },
-    // {
-    //   "relation_name": null,
-    //   "field_name": "status",
-    //   "search_param": "",
-    //   "action": null,
-    //   "order_by": null,
-    //   "date_from": null,
-    //   "label": "Status",
-    //   "filter_type": "input"
-    // },
+    {
+      "relation_name": null,
+      "field_name": "net_amount",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Net Amount",
+      "filter_type": "input"
+    },
   ]
 });
 
@@ -121,7 +141,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteCrewBankAccount(id);
+      deleteCrewSalaryStructure(id);
     }
   })
 }
@@ -130,7 +150,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'crw.crewBankAccounts.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'crw.crewSalaryStructures.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -139,7 +159,7 @@ onMounted(() => {
       filterOptions.value.isFilter = true;
     }
 
-    getCrewBankAccounts(filterOptions.value)
+    getCrewSalaryStructures(filterOptions.value)
         .then(() => {
           const customDataTable = document.getElementById("customDataTable");
           paginatedPage.value = filterOptions.value.page;
@@ -163,7 +183,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Crew Bank Account List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Crew Salary Structure List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.crewSalaryStructures.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
@@ -172,46 +192,44 @@ onMounted(() => {
 
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody>
-            <tr v-for="(crewBankAccount,index) in crewBankAccounts?.data" :key="index">
-              <td> {{ index + 1 }} </td>
-              <td> {{ crewBankAccount?.crwCrew?.full_name }} </td>
-              <td> {{ crewBankAccount?.crwCrew?.pre_mobile_no }} </td>
-              <td> {{ crewBankAccount?.bank_name }} </td>
-              <td> {{ crewBankAccount?.account_name }} </td>
-              <td> {{ crewBankAccount?.account_number }} </td>
-              <!-- <td>
-                <span :class="crewBankAccount?.is_active === 1 ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
-                  {{ crewBankAccount?.is_active === 1 ? "Active" : "Deactive" }}
-                </span>
-              </td> -->
-              <td>
-                <span :class="crewBankAccount?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewBankAccount?.business_unit }}</span>
-              </td>
-              <td>
-                <nobr>
-                  <action-button :action="'edit'" :to="{ name: 'crw.crewBankAccounts.edit', params: { crewBankAccountId: crewBankAccount?.id } }"></action-button>
-                  <action-button @click="confirmDelete(crewBankAccount?.id)" :action="'delete'"></action-button>
-                </nobr>
-              </td>
-            </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewBankAccounts?.data?.length"></LoaderComponent>
-          </tbody>
-          <tfoot v-if="!crewBankAccounts?.data?.length" class="relative h-[250px]">
-            <tr v-if="isLoading">
-              <td colspan="11"></td>
-            </tr>
-            <tr v-else-if="isTableLoading">
-              <td colspan="11">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
-              </td>
-            </tr>
-            <tr v-else-if="!crewBankAccounts?.data?.data?.length">
-              <td colspan="11">No data found.</td>
-            </tr>
-          </tfoot>
+        <tbody class="relative">
+        <tr v-for="(crewSalaryStructureData,index) in crewSalaryStructures?.data" :key="index">
+          <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+          <td>{{ crewSalaryStructureData?.effective_date }}</td>
+          <td>{{ crewSalaryStructureData?.currency }}</td>
+          <td>Crew name</td>
+          <td>Crew contact no</td>
+          <td>{{ crewSalaryStructureData?.gross_salary }}</td>
+          <td>{{ crewSalaryStructureData?.addition }}</td>
+          <td>{{ crewSalaryStructureData?.deduction }}</td>
+          <td>{{ crewSalaryStructureData?.net_amount }}</td>
+          <td>
+            <span :class="crewSalaryStructureData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewSalaryStructureData?.business_unit }}</span>
+          </td>
+          <td>
+            <nobr>
+              <action-button :action="'edit'" :to="{ name: 'crw.crewSalaryStructures.edit', params: { crewSalaryStructureId: crewSalaryStructureData?.id } }"></action-button>
+              <action-button @click="confirmDelete(crewSalaryStructureData?.id)" :action="'delete'"></action-button>
+            </nobr>
+          </td>
+        </tr>
+        <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewSalaryStructures?.data?.length"></LoaderComponent>
+        </tbody>
+        <tfoot v-if="!crewSalaryStructures?.data?.length" class="relative h-[250px]">
+        <tr v-if="isLoading">
+          <td colspan="11"></td>
+        </tr>
+        <tr v-else-if="isTableLoading">
+          <td colspan="11">
+            <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
+          </td>
+        </tr>
+        <tr v-else-if="!crewSalaryStructures?.data?.data?.length">
+          <td colspan="11">No data found.</td>
+        </tr>
+        </tfoot>
       </table>
     </div>
-    <Paginate :data="crewBankAccounts" to="crw.crewBankAccounts.index" :page="page"></Paginate>
+    <Paginate :data="crewSalaryStructure" to="crw.crewSalaryStructures.index" :page="page"></Paginate>
   </div>
 </template>

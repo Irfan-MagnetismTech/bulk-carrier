@@ -334,7 +334,34 @@ export default [
         name: `${BASE}.crwAttendances.show`,
         component: () => import(`../views/crew/crew-attendance/show.vue`),
         meta: { requiresAuth: true, role: "all", permission: '' },
-    },  
+    },
+
+    /* Crew Salary Structure Routes */
+    {
+        path: `/${BASE}/crew-salary-structures`,
+        name: `${BASE}.crewSalaryStructures.index`,
+        component: () => import(`../views/crew/crew-salary-structure/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-salary-structures/create`,
+        name: `${BASE}.crewSalaryStructures.create`,
+        component: () => import(`../views/crew/crew-salary-structure/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/edit`,
+        name: `${BASE}.crewSalaryStructures.edit`,
+        component: () => import(`../views/crew/crew-salary-structure/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
+        name: `${BASE}.crewSalaryStructures.show`,
+        component: () => import(`../views/crew/crew-salary-structure/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew Bank Accounts Routes */
     {

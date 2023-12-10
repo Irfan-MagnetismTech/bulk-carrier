@@ -146,7 +146,7 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(bill,index) in agencyBills?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ bill?.crwAgency?.agency_name }}</td>
             <td>{{ bill?.crwAgency?.phone }}</td>
             <td>{{ bill?.invoice_amount }}</td>
