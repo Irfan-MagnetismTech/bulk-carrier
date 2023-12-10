@@ -69,7 +69,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model="form.business_unit"></business-unit-input>
+    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -77,7 +77,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--"  v-model="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -91,24 +91,24 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
-        <input type="datetime-local" v-model="form.date_time" class="form-input" autocomplete="off" required />
+        <input type="datetime-local" v-model.trim="form.date_time" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.date_time" :errors="errors.date_time" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Type <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.type" placeholder="Ex: Collision, Robbery" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.type" placeholder="Ex: Collision, Robbery" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.type" :errors="errors.type" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Location <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.location" placeholder="Ex: Deck, Engine room" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.location" placeholder="Ex: Deck, Engine room" class="form-input" autocomplete="off" required />
         <Error v-if="errors?.location" :errors="errors.location" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Reported Person<span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.reported_by" placeholder="Reporting person" class="form-input" autocomplete="off" required />
+      <input type="text" v-model.trim="form.reported_by" placeholder="Reporting person" class="form-input" autocomplete="off" required />
       <Error v-if="errors?.reported_by" :errors="errors.reported_by" />
     </label>
     <label class="block w-full mt-2 text-sm">
@@ -122,7 +122,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Description <span class="text-red-500">*</span></span>
-      <textarea v-model="form.description" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
+      <textarea v-model.trim="form.description" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
       <Error v-if="errors?.description" :errors="errors.description" />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -143,7 +143,7 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(incidentParticipant, index) in form.crwIncidentParticipants" :key="incidentParticipant.id">
         <td class="px-1 py-1">
-          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" class="block form-input">
+          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" class="block form-input">
             <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -156,13 +156,13 @@ onMounted(() => {
           <Error v-if="errors?.crwIncidentParticipants[index].crw_crew_name" :errors="errors.crwIncidentParticipants[index].crw_crew_name" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwIncidentParticipants[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" required />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwIncidentParticipants[index].injury_status" placeholder="Injury status" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].injury_status" placeholder="Injury status" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model="form.crwIncidentParticipants[index].notes" placeholder="Notes" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].notes" placeholder="Notes" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1 text-center">
           <button v-if="index!==0" type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
