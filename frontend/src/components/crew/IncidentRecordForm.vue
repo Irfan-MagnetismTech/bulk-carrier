@@ -21,20 +21,19 @@ const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
 
-watch(() => props.form, (value) => {
-  if(value){
-    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
-    value?.crwIncidentParticipants?.forEach((line, index) => {
-      props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
-      props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwCurrentRank?.name ?? '';
-
-      // const selectedCrew = crews.value.find(crew => crew.id === line.scmMaterial.id);
-      // if (selectedMaterial) {
-      //   props.form.scmOpeningStockLines[index].unit = selectedMaterial.unit;
-      // }
-    });
-  }
-}, {deep: true});
+// watch(() => props.form, (value) => {
+//   if(value){
+//     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+//     props.form.ops_vessel_name = value?.opsVessel;
+//     value?.crwIncidentParticipants?.forEach((line, index) => {
+//       props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
+//
+//       props.form.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
+//
+//       props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwCurrentRank?.name ?? '';
+//     });
+//   }
+// }, {deep: true});
 
 function addItem() {
   let obj = {
@@ -58,6 +57,15 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   }
 });
 
+function changeVessel(){
+  props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+}
+
+function changeCrew(index){
+  props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
+  props.form.crwIncidentParticipants[index].crw_crew_contact = props.form.crwIncidentParticipants[index]?.crw_crew_name?.pre_mobile_no ?? '';
+}
+
 onMounted(() => {
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
@@ -77,7 +85,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.ops_vessel_name" label="name" class="block form-input">
+        <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.ops_vessel_name" @update:modelValue="changeVessel" label="name" class="block form-input">
           <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -131,9 +139,9 @@ onMounted(() => {
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Candidate List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+      <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 w-2/6 align-bottom">Crew Name <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 w-1/6 align-bottom">Rank <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 w-1/6 align-bottom">Contact No. <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 w-1/6 align-bottom">Injury Status <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Notes</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
@@ -143,7 +151,7 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(incidentParticipant, index) in form.crwIncidentParticipants" :key="incidentParticipant.id">
         <td class="px-1 py-1">
-          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" class="block form-input">
+          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" @update:modelValue="changeCrew(index)" class="block form-input">
             <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -156,7 +164,7 @@ onMounted(() => {
           <Error v-if="errors?.crwIncidentParticipants[index].crw_crew_name" :errors="errors.crwIncidentParticipants[index].crw_crew_name" />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_contact" placeholder="Contact no" class="form-input vms-readonly-input" autocomplete="off" disabled />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwIncidentParticipants[index].injury_status" placeholder="Injury status" class="form-input" autocomplete="off" required />

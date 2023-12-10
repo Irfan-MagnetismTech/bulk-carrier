@@ -24,7 +24,7 @@ export default function useIncidentRecord() {
             {
                 crw_crew_id: '',
                 crw_crew_name: null,
-                crw_crew_rank: '',
+                crw_crew_contact: '',
                 injury_status: '',
                 notes: '',
             }
