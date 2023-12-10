@@ -33,6 +33,7 @@ export default function useFixedAsset() {
         location : '',
         business_unit : '',
         acquisition_cost: '',
+        material_account_name: '',
         fixedAssetCosts: [
             {
                 particular: '',

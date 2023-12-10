@@ -11,20 +11,28 @@ class CrwCrewAssignmentRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            //
+            'ops_vessel_id'      => 'required|integer',
+            'crw_crew_id'        => 'required|integer',
+            'position_onboard'   => 'required|string|max:255',
+            'joining_date'       => 'required|date',
+            'joining_port_code'  => 'required|string|max:10',
+            'duration'           => 'required|numeric|max:120',
+            // 'status'             => 'required|in:Onboard,Complete',
+            // 'completion_date'    => 'nullable|date',
+            // 'completion_remarks' => 'nullable|string|max:255',
+            // 'remarks'            => 'nullable|string|max:255',
+            'business_unit'      => 'required|in:PSML,TSLL',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [
             //
         ];

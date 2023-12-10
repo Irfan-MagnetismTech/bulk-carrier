@@ -8,37 +8,48 @@ import Swal from 'sweetalert2';
 
 export default function useCriticalSpareList() {
     const router = useRouter();
-    const criticalSparelists = ref([]);
+    const criticalSpareLists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const criticalSpareList = ref( {
         ops_vessel_id: '',
-        ops_vessel_name: '',
+        ops_vessel: '',
         reference_no: '',
         record_date: '',
         business_unit: '',
-        mntCriticalSpListLine: [],
+        mntCriticalSpListLines: [],
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getCriticalSpareLists(page, businessUnit) {
+    async function getCriticalSpareLists(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/critical-spare-lists',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             criticalSpareLists.value = data.value;
@@ -47,14 +58,26 @@ export default function useCriticalSpareList() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
             //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
     async function storeCriticalSpareList(form) {
 
+        if (!form.mntCriticalSpListLines?.length) {
+            Swal.fire("No Critical Spare Part Found.");
+            return null;
+        }
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -62,7 +85,7 @@ export default function useCriticalSpareList() {
             const { data, status } = await Api.post('/mnt/critical-spare-lists', form);
             criticalSpareList.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.critical-spare-lists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -101,9 +124,9 @@ export default function useCriticalSpareList() {
                 `/mnt/critical-spare-lists/${criticalSpareListId}`,
                 form
             );
-            criticalSpareList.value = data.value;
+            // criticalSpareList.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.critical-spare-lists.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -114,18 +137,19 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function deleteCriticalSpareList(criticalSparelistId) {
+    async function deleteCriticalSpareList(criticalSpareListId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSparelistId}`);
+            const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSpareListId}`);
             notification.showSuccess(status);
-            await getCriticalSpareListItems(indexPage.value, indexBusinessUnit.value);
+            await getCriticalSpareLists(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -137,7 +161,7 @@ export default function useCriticalSpareList() {
 
     
     return {
-        criticalSparelists,
+        criticalSpareLists,
         criticalSpareList,
         getCriticalSpareLists,
         storeCriticalSpareList,
@@ -145,6 +169,7 @@ export default function useCriticalSpareList() {
         updateCriticalSpareList,
         deleteCriticalSpareList,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

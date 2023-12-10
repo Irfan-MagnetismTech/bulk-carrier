@@ -47,7 +47,7 @@ class CrwCrewProfileRequest extends FormRequest
             'nationality'                    => 'required|string|max:255',
             'nid_no'                         => 'string|max:255',
             'passport_no'                    => 'string|max:255',
-            'passport_issue_date'            => 'date',
+            'passport_issue_date'            => 'nullable|date',
             'blood_group'                    => 'string|max:255',
             'height'                         => 'string|max:255',
             'weight'                         => 'string|max:255',
@@ -73,6 +73,7 @@ class CrwCrewProfileRequest extends FormRequest
             'educations.*.achievement'       => 'string|max:255',
 
             // Validation rules for trainings_array
+            'trainings'                      => 'nullable|array',
             'trainings.*.training_title'     => 'required|string|max:255',
             'trainings.*.covered_topic'      => 'required|string|max:255',
             'trainings.*.year'               => 'required|date_format:Y',
@@ -81,6 +82,7 @@ class CrwCrewProfileRequest extends FormRequest
             'trainings.*.location'           => 'string|max:255',
 
             // Validation rules for experiences_array
+            'experiences'                    => 'nullable|array',
             'experiences.*.employer_name'    => 'required|string|max:255',
             'experiences.*.from_date'        => 'required|date',
             'experiences.*.till_date'        => 'required|date',
@@ -88,6 +90,7 @@ class CrwCrewProfileRequest extends FormRequest
             'experiences.*.reason_for_leave' => 'string|max:255',
 
             // Validation rules for languages_array
+            'languages'                      => 'nullable|array',
             'languages.*.language_name'      => 'required|string|max:255',
             'languages.*.writing'            => 'required|string|max:255',
             'languages.*.reading'            => 'required|string|max:255',
@@ -95,6 +98,7 @@ class CrwCrewProfileRequest extends FormRequest
             'languages.*.listening'          => 'required|string|max:255',
 
             // Validation rules for references_array
+            'references'                     => 'nullable|array',
             'references.*.name'              => 'required|string|max:255',
             'references.*.organization'      => 'required|string|max:255',
             'references.*.designation'       => 'required|string|max:255',
@@ -105,6 +109,7 @@ class CrwCrewProfileRequest extends FormRequest
             'references.*.relation'          => 'required|string|max:255',
 
             // Validation rules for nominees_array
+            'nominees'                     => 'nullable|array',
             'nominees.*.name'                => 'required|string|max:255',
             'nominees.*.profession'          => 'required|string|max:255',
             'nominees.*.address'             => 'required|string|max:255',

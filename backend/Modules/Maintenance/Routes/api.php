@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Modules\Maintenance\Entities\MntCriticalFunction;
 use Modules\Maintenance\Entities\MntCriticalItemCat;
 use Modules\Maintenance\Entities\MntCriticalSpList;
+use Modules\Maintenance\Entities\MntSurveyItem;
+use Modules\Maintenance\Entities\MntSurveyType;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemController;
@@ -13,8 +15,12 @@ use Modules\Maintenance\Http\Controllers\MntCriticalVesselItemController;
 use Modules\Maintenance\Http\Controllers\MntItemController;
 use Modules\Maintenance\Http\Controllers\MntItemGroupController;
 use Modules\Maintenance\Http\Controllers\MntJobController;
+use Modules\Maintenance\Http\Controllers\MntReportController;
 use Modules\Maintenance\Http\Controllers\MntRunHourController;
 use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
+use Modules\Maintenance\Http\Controllers\MntSurveyController;
+use Modules\Maintenance\Http\Controllers\MntSurveyItemController;
+use Modules\Maintenance\Http\Controllers\MntSurveyTypeController;
 use Modules\Maintenance\Http\Controllers\MntWorkRequisitionController;
 
 /*
@@ -41,7 +47,10 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'critical-item-cats' => MntCriticalItemCatController::class,
         'critical-items' => MntCriticalItemController::class,
         'critical-vessel-items' => MntCriticalVesselItemController::class,
-        'critical-sp-lists' => MntCriticalSpListController::class,
+        'critical-spare-lists' => MntCriticalSpListController::class,
+        'survey-items' => MntSurveyItemController::class,
+        'survey-types' => MntSurveyTypeController::class,
+        'surveys' => MntSurveyController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
@@ -82,5 +91,11 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-critical-items', [MntCriticalItemController::class, 'getCriticalItems']);
     // getCriticalVesselItems
     Route::get('get-critical-vessel-items', [MntCriticalVesselItemController::class, 'getCriticalVesselItems']);
+    // getSurveyItems 
+    Route::get('get-survey-items', [MntSurveyItemController::class, 'mntSurveyItems']);
+    // getSurveyTypes
+    Route::get('get-survey-types', [MntSurveyTypeController::class, 'mntSurveyTypes']);
 
+    // report all jobs
+    Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
 });

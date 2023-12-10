@@ -24,14 +24,14 @@ export default function useCrewProfile() {
         last_name: '',
         father_name: '',
         mother_name: '',
-        date_of_birth: '',
+        date_of_birth: null,
         gender: '',
         religion: '',
         marital_status: '',
         nationality: 'Bangladeshi',
         nid_no: '',
         passport_no: '',
-        passport_issue_date: '',
+        passport_issue_date: null,
         blood_group: '',
         height: '',
         weight: '',
@@ -47,6 +47,11 @@ export default function useCrewProfile() {
         attachment: '',
         employee_type: 'Crew',
         is_officer: 0,
+        is_training_data_required: true,
+        is_experience_data_required: true,
+        is_other_data_required: true,
+        is_reference_data_required: true,
+        is_nominee_data_required: true,
         educations: [
             {
                 exam_title: '',
@@ -158,6 +163,22 @@ export default function useCrewProfile() {
 
     async function storeCrewProfile(form) {
 
+        if(!form.is_training_data_required){
+            form.trainings = [];
+        }
+        if(!form.is_experience_data_required){
+            form.experiences = [];
+        }
+        if(!form.is_other_data_required){
+            form.languages = [];
+        }
+        if(!form.is_reference_data_required){
+            form.references = [];
+        }
+        if(!form.is_nominee_data_required){
+            form.nominees = [];
+        }
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -206,6 +227,22 @@ export default function useCrewProfile() {
 
     async function updateCrewProfile(form, profileId) {
 
+        if(!form.is_training_data_required){
+            form.trainings = [];
+        }
+        if(!form.is_experience_data_required){
+            form.experiences = [];
+        }
+        if(!form.is_other_data_required){
+            form.languages = [];
+        }
+        if(!form.is_reference_data_required){
+            form.references = [];
+        }
+        if(!form.is_nominee_data_required){
+            form.nominees = [];
+        }
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -224,7 +261,6 @@ export default function useCrewProfile() {
                 `/crw/crw-crew-profiles/${profileId}`,
                 formData
             );
-            crewProfile.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.profiles.index" });
         } catch (error) {

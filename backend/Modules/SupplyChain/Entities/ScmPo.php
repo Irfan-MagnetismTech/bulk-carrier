@@ -2,12 +2,15 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use ReflectionClass;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPoTerm;
 use Modules\SupplyChain\Entities\ScmVendor;
+use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +21,7 @@ class ScmPo extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no','scm_pr_id', 'scm_cs_id', 'date', 'scm_vendor_id', 'scm_warehouse_id', 'acc_cost_center_id', 'currency', 'foreign_to_bdt', 'discount', 'vat', 'business_unit', 'created_by', 'sub_total', 'total_amount', 'net_amount', 'foreign_to_usd', 'pr_date', 'purchase_center', 'remarks',
+        'ref_no', 'scm_pr_id', 'scm_cs_id', 'date', 'scm_vendor_id', 'scm_warehouse_id', 'acc_cost_center_id', 'currency', 'foreign_to_bdt', 'discount', 'vat', 'business_unit', 'created_by', 'sub_total', 'total_amount', 'net_amount', 'foreign_to_usd', 'pr_date', 'purchase_center', 'remarks',
     ];
 
     public function scmPoLines(): HasMany
@@ -49,5 +52,58 @@ class ScmPo extends Model
     public function scmCs(): BelongsTo
     {
         return $this->belongsTo(ScmCs::class);
+    }
+
+    public function scmLcRecords(): HasMany
+    {
+        return $this->hasMany(ScmLcRecord::class);
+    }
+
+    public function scmMrrs(): HasMany
+    {
+        return $this->hasMany(ScmMrr::class);
+    }
+
+    // public function getAllMethods()
+    // {
+    //     $reflection = new ReflectionClass($this);
+    //     $methods = [];
+
+    //     foreach ($reflection->getMethods() as $method) {
+    //         // Exclude methods from the base Model class
+    //         if ($method->class === get_class($this)) {
+    //             $methods[] = $method->name;
+    //         }
+    //     }
+
+    //     return $methods;
+    // }
+
+    public function getAllMethods($returnType = null)
+    {
+        $reflection = new ReflectionClass($this);
+        $methods = [];
+
+        foreach ($reflection->getMethods() as $method) {
+            // Exclude methods from the base Model class
+            if ($method->class === get_class($this)) {
+                // if ($returnType === null || $this->hasReturnType($method, $returnType)) {
+                    $methods[] = $method->name;
+                // }
+            }
+        }
+
+        return $methods;
+    }
+
+    private function hasReturnType($method, $expectedType)
+    {
+        if (!$method->hasReturnType()) {
+            return false;
+        }
+
+        $actualType = $method->getReturnType()->getName();
+
+        return $actualType;
     }
 }

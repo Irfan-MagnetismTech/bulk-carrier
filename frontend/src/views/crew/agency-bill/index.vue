@@ -142,7 +142,6 @@ onMounted(() => {
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
@@ -174,7 +173,7 @@ onMounted(() => {
             <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
           </td>
         </tr>
-        <tr v-else-if="!agencyBills?.data?.data?.length">
+        <tr v-else-if="!agencyBills?.data?.length">
           <td colspan="7">No data found.</td>
         </tr>
         </tfoot>
