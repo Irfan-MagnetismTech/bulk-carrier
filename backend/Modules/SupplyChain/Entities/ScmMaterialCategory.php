@@ -65,7 +65,6 @@ class ScmMaterialCategory extends Model
         return $this->parent->children()->where('id', '!=', $this->id);
     }
 
-
     public function getAllAncestors(): BelongsTo
     {
         return $this->parent()->with('getAllAncestors');
@@ -82,7 +81,7 @@ class ScmMaterialCategory extends Model
             ->where('business_unit', 'PSML')
             ->withDefault();
     }
-
+    
     public function account_tsll(): MorphOne
     {
         return $this->morphOne(AccAccount::class, 'accountable')

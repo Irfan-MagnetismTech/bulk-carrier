@@ -2,9 +2,13 @@
 
 namespace Modules\SupplyChain\Entities;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\GlobalSearchTrait;
+use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmCsVendor;
+use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmCs extends Model
@@ -40,7 +44,7 @@ class ScmCs extends Model
     public function scmWarehouse()
     {
         return $this->belongsTo(ScmWarehouse::class);
-    }   
+    }
 
     public function scmCsVendors()
     {

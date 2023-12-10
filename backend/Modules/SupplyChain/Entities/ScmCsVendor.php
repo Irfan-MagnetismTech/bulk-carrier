@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

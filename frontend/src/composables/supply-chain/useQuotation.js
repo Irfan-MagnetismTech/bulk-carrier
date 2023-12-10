@@ -120,7 +120,7 @@ export default function useQuotation() {
 
         try {
             const { data, status } = await Api.post(`/${BASE}/quotations`, formData);
-            materialCs.value = data.value;
+            // materialCs.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
