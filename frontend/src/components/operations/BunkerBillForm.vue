@@ -214,11 +214,14 @@ watch(() => vendor, (value) => {
   if(props.form.scm_vendor_id != undefined){
     searchBunkerRequisitionsByVendor(props.form.scm_vendor_id)
     .then(() => {
-      bunkerReset.value = bunkerRequisitions?.value;
+      // bunkerReset.value = bunkerRequisitions?.value;
       console.log(bunkerReset.value);
       if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
         props.form.opsBunkerBillLines = bunkerReset.value
-      } 
+      }
+      // else{
+      //   editInitiated.value = true;
+      // }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
