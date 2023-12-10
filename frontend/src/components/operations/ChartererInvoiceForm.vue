@@ -228,7 +228,7 @@
               <th>Quantity</th>
               <th>Rate</th>
               <th>Exchange Rate (To USD)</th>
-              <th>Exchange Rate (To BDT)</th>
+              <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
               <th class="py-3 text-center align-center">Action</th>

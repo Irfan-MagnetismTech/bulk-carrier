@@ -216,30 +216,27 @@ class OpsVesselExpenseHeadController extends Controller
         try {
             $vessel_expense_heads = OpsVesselExpenseHead::where('ops_vessel_id', $request->ops_vessel_id)->with(['opsExpenseHead' => function($query){
                 $query->select('id', 'name');
-            }])->pluck('ops_expense_head_id')->toArray();
+            }])->pluck('ops_expense_head_id')->values()->toArray();
 
-            $expenseHeads = OpsExpenseHead::with('opsSubHeads')
+            $headIds = OpsExpenseHead::wherein('id', $vessel_expense_heads)->pluck('head_id')->unique()->values()->toArray();
+            $expenseHeads = OpsExpenseHead::wherein('id', $headIds)
+                    ->with('opsSubHeads')
                     ->whereNull('head_id')
                     ->get(['id', 'head_id', 'name']);
 
-            $expenseHeads->map(function($item) use($vessel_expense_heads) {
-                $item['is_checked'] = (in_array($item['id'], $vessel_expense_heads)) ? true : false;
+            $output = $expenseHeads->map(function($item) use($vessel_expense_heads) {
+                $result = $item->opsSubHeads->map(function($subhead) use($vessel_expense_heads) {
+                    if(in_array($subhead['id'], $vessel_expense_heads)) {
+                        return $subhead;
+                    }
+                })->filter();
 
-                $item->opsSubHeads->map(function($subhead) use($vessel_expense_heads) {
-                    $subhead['is_checked'] = (in_array($subhead['id'], $vessel_expense_heads)) ? true : false;
-                    return $subhead;
-                })->reject(function($item) {
-                    return $item['is_checked'] == false;
-                });
-
+                data_forget($item, 'opsSubHeads');
+                $item->opsSubHeads = $result;
                 return $item;
             });
             
-            $data = [
-                'heads' => $expenseHeads
-            ];
-            
-            return response()->success('Data retrieved successfully.', $data, 200);
+            return response()->success('Data retrieved successfully.', $output, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

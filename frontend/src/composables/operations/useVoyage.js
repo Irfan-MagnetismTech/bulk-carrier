@@ -274,7 +274,7 @@ export default function useVoyage() {
 		//NProgress.start();
 		isVoyageLoading.value = true;
 		try {
-			const { data, status } = await Api.get(`/ops/get-search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&vessel_id=${vesselId}`);
+			const { data, status } = await Api.get(`/ops/get-search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&ops_vessel_id=${vesselId}`);
 			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {

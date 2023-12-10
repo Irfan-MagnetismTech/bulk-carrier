@@ -17,6 +17,8 @@ export default function useVoyageBudget() {
 		business_unit: null,
 		opsVessel: null,
 		ops_vessel_id: null,
+		opsVoyage: null,
+		ops_voyage_id: null,
         name: '',
 		heads: [],
     });
