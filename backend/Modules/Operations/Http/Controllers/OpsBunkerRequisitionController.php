@@ -82,8 +82,7 @@ class OpsBunkerRequisitionController extends Controller
     */
     public function show(OpsBunkerRequisition $bunker_requisition): JsonResponse
     {
-        // return response()->json(request()->all(), 402);
-        $bunker_requisition->load('opsBunkers.scmMaterial');
+        $bunker_requisition->load('opsBunkers.scmMaterial','opsVoyage');
 
         $bunker_requisition->opsBunkers->map(function($bunker){
             $bunker->id = $bunker->scmMaterial->id;
@@ -131,6 +130,7 @@ class OpsBunkerRequisitionController extends Controller
             $bunker_requisition->opsBunkers()->delete();
             $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
+
             return response()->success('Data updated successfully.', $bunker_requisition, 202);
         }
         catch (QueryException $e)
@@ -172,7 +172,7 @@ class OpsBunkerRequisitionController extends Controller
     */
     public function approved(OpsBunkerRequisitionRequest $request, OpsBunkerRequisition $bunker_requisition): JsonResponse
     {
-        dd($request);
+        // dd($bunker_requisition);
         try {
             DB::beginTransaction();
             $bunkerRequisitionInfo = $request->except(
@@ -181,6 +181,7 @@ class OpsBunkerRequisitionController extends Controller
             );
 
             $bunkerRequisitionInfo['approved_by']= Auth::user()->id;
+            $bunkerRequisitionInfo['status']= 'Approved';
             $bunker_requisition->update($bunkerRequisitionInfo);
             $bunker_requisition->opsBunkers()->delete();
             $bunker_requisition->opsBunkers()->createMany($request->opsBunkers);
@@ -214,7 +215,7 @@ class OpsBunkerRequisitionController extends Controller
 
     public function getApprovedBunkerRequisitionByVendor(Request $request){
         try {
-            $bunker_requisitions = OpsBunkerRequisition::with('opsBunkers')
+            $bunker_requisitions = OpsBunkerRequisition::with('opsBunkers','opsVoyage')
             ->when(request()->filled('scm_vendor_id'), function ($query) {
                 $query->whereHas('opsBunkers', function ($item) {
                     $item->where('scm_vendor_id', request()->scm_vendor_id);
@@ -243,10 +244,11 @@ class OpsBunkerRequisitionController extends Controller
                 $requisiton->is_readonly = true;
                 $requisiton['pr_no'] = $requisiton->requisition_no;
                 $requisiton['description'] = implode(',', $nameQuantityArray);
-                $requisiton['amount']=  $requisiton->opsBunkers->sum('amount');
+                $requisiton['amount_bdt']=  $requisiton->opsBunkers->sum('amount_bdt');
+                $requisiton['amount_usd']=  $requisiton->opsBunkers->sum('amount_usd');
     
             });
-
+            // dd($bunker_requisitions);
             // $bunker_requisitions['total'] = $bunker_requisitions->sum('total_amount');
 
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);

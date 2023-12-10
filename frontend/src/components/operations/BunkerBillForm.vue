@@ -14,17 +14,6 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
-        <!-- <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmVendor"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-        </v-select>
-        <input type="hidden" v-model.trim="form.scm_vendor_id" /> -->
         <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader"  v-model="form.scmVendor" label="name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -69,7 +58,10 @@
             <th class="!w-12">SL.</th>
             <th class="!w-16">PR NO.</th>
             <th class="!w-80">Description</th>
-            <th class="!w-20">Amount</th>
+            <th class="!w-20">Exchange Rate (To USD)</th>
+            <th class="!w-20">Exchange Rate (To BDT)</th>
+            <th class="!w-20">Amount(USD)</th>
+            <th class="!w-20">Amount(BDT)</th>
             <th class="w-16">
               <button type="button" @click="addBunker()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -94,9 +86,25 @@
                 <input type="text" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].description" placeholder="Description" class="form-input" autocomplete="off"/>
               </label>
             </td>
+
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].amount" placeholder="Amount" class="form-input" autocomplete="off"/>
+                <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate(BDT)" class="form-input" autocomplete="off"/>
+              </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_usd" placeholder="Exchange Rate(USD)" class="form-input" autocomplete="off"/>
+              </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].amount_usd" placeholder="Amount(USD)" class="form-input" autocomplete="off"/>
+              </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].amount_bdt" placeholder="Amount(BDT)" class="form-input" autocomplete="off"/>
               </label>
             </td>
             <td :class="{hidden : form.opsBunkerBillLines[index]?.is_readonly}">
@@ -108,21 +116,30 @@
             </td>
           </tr>
           <tr>
-              <td :colspan="3">Sub Total</td>
+              <td :colspan="5">Sub Total</td>
+              <td>
+                <input type="number" step="0.001" required :value="props.form.sub_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
+              </td>
               <td>
                 <input type="number" step="0.001" required :value="props.form.sub_total" placeholder="Sub Total" class="form-input" autocomplete="off"/>
               </td>
               <td></td>
           </tr>
           <tr>
-              <td :colspan="3">Discount</td>
+              <td :colspan="5">Discount</td>
+              <td>
+                <input type="number" step="0.001" required v-model="props.form.discount_usd" placeholder="Discount(USD)" class="form-input" autocomplete="off"/>
+              </td>
               <td>
                 <input type="number" step="0.001" required v-model="props.form.discount" placeholder="Discount" class="form-input" autocomplete="off"/>
               </td>
               <td></td>
           </tr>
           <tr>
-              <td :colspan="3">Grand Total</td>
+              <td :colspan="5">Grand Total</td>
+              <td>
+                <input type="number" step="0.001" required :value="props.form.grand_total_usd" placeholder="Grand Total(USD)" class="form-input" autocomplete="off"/>
+              </td>
               <td>
                 <input type="number" step="0.001" required :value="props.form.grand_total" placeholder="Grand Total" class="form-input" autocomplete="off"/>
               </td>
@@ -144,6 +161,7 @@ import useMaterial from '../../composables/supply-chain/useMaterial';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 import DropZoneV2 from '../../components/DropZoneV2.vue';
+import useBusinessInfo from '../../composables/useBusinessInfo';
 
 const editInitiated = ref(false);
 const props = defineProps({
@@ -156,6 +174,7 @@ const props = defineProps({
     formType: { type: Object, required: false }
 });
 
+const { currencies, getCurrencies } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 const {  bunkerRequisitions, searchBunkerRequisitionsByVendor } = useBunkerRequisition();
 // const { materials, getBunkerList } = useMaterial();
@@ -219,9 +238,9 @@ watch(() => vendor, (value) => {
       if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
         props.form.opsBunkerBillLines = bunkerReset.value
       }
-      // else{
-      //   editInitiated.value = true;
-      // }
+      else{
+        editInitiated.value = true;
+      }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
@@ -230,24 +249,24 @@ watch(() => vendor, (value) => {
 },{deep:true});
 
 
-watch(() => props.form.opsBunkerBillLines, (value) => {
-  let sub_total = 0.0;
-  // console.log('sub total');
-  if(value){
-    props.form.opsBunkerBillLines.forEach((line, index) => {
-      sub_total += parseFloat(props.form.opsBunkerBillLines[index].amount);
-      props.form.sub_total = parseFloat(sub_total.toFixed(2));
-    });
-    console.log(props.form.sub_total);
-    CalculateAll();
-  }
-}, { deep: true });
+// watch(() => props.form.opsBunkerBillLines, (value) => {
+//   let sub_total = 0.0;
+//   // console.log('sub total');
+//   if(value){
+//     props.form.opsBunkerBillLines.forEach((line, index) => {
+//       sub_total += parseFloat(props.form.opsBunkerBillLines[index].amount_bdt);
+//       props.form.sub_total = parseFloat(sub_total.toFixed(2));
+//     });
+//     console.log(props.form.sub_total);
+//     CalculateAll();
+//   }
+// }, { deep: true });
 
-watch(() => props?.form?.discount, (newVal, oldVal) => {
-  console.log(newVal);
-  props.form.grand_total = (props.form.sub_total * 1 ) - newVal;
-  CalculateAll();
-});
+// watch(() => props?.form?.discount, (newVal, oldVal) => {
+//   console.log(newVal);
+//   props.form.grand_total = (props.form.sub_total * 1 ) - newVal;
+//   CalculateAll();
+// });
 
 function CalculateAll() { 
   props.form.grand_total = (props.form.sub_total * 1) - (props.form.discount * 1 );
