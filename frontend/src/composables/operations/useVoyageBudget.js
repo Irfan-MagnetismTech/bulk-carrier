@@ -6,17 +6,19 @@ import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
 
-export default function useVesselExpenseHead() {
+export default function useVoyageBudget() {
 	const router = useRouter();
-	const vesselExpenseHeads = ref([]);
+	const voyageBudgets = ref([]);
 	const $loading = useLoading();
     const isTableLoading = ref(false);
 	const notification = useNotification();
 
-	const vesselExpenseHead = ref( {
+	const voyageBudget = ref( {
 		business_unit: null,
 		opsVessel: null,
 		ops_vessel_id: null,
+		opsVoyage: null,
+		ops_voyage_id: null,
         name: '',
 		heads: [],
     });
@@ -24,7 +26,7 @@ export default function useVesselExpenseHead() {
     const isLoading = ref(false);
     const filterParams = ref(null);
 
-	async function getVesselExpenseHeads(filterOptions) {
+	async function getVoyageBudgets(filterOptions) {
 		//NProgress.start();
 		let loader = null;
         if (!filterOptions.isFilter) {
@@ -40,14 +42,14 @@ export default function useVesselExpenseHead() {
         filterParams.value = filterOptions;
 
 		try {
-			const {data, status} = await Api.get(`/ops/vessel-expense-heads`,{
+			const {data, status} = await Api.get(`/ops/voyage-budgets`,{
                 params: {
                    page: filterOptions.page,
                    items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }
             });
-			vesselExpenseHeads.value = data.value;
+			voyageBudgets.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -64,16 +66,16 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function storeVesselExpenseHead(form) {
+	async function storeVoyageBudget(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
 
-			const { data, status } = await Api.post('/ops/vessel-expense-heads', form);
+			const { data, status } = await Api.post('/ops/voyage-budgets', form);
 			notification.showSuccess(status);
-			router.push({ name: 'ops.vessel-expense-heads.index' });
+			router.push({ name: 'ops.voyage-budgets.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -84,14 +86,14 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function showVesselExpenseHead(vesselExpenseHeadId) {
+	async function showVoyageBudget(voyageBudgetId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/vessel-expense-heads/${vesselExpenseHeadId}`);
-			vesselExpenseHead.value = data.value;
+			const { data, status } = await Api.get(`/ops/voyage-budgets/${voyageBudgetId}`);
+			voyageBudget.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -103,7 +105,7 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function updateVesselExpenseHead(form) {
+	async function updateVoyageBudget(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -112,12 +114,12 @@ export default function useVesselExpenseHead() {
 		try {
 
 			const { data, status } = await Api.post(
-				`/ops/vessel-expense-heads`,
+				`/ops/voyage-budgets`,
 				form
 			);
-			// VesselExpenseHead.value = data.value;
+			// VoyageBudget.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.vessel-expense-heads.index' });
+			router.push({ name: 'ops.voyage-budgets.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -129,16 +131,16 @@ export default function useVesselExpenseHead() {
 	}
 
 
-	async function deleteVesselExpenseHead(vesselExpenseHeadId) {
+	async function deleteVoyageBudget(voyageBudgetId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/vessel-expense-heads/${vesselExpenseHeadId}`);
+			const { data, status } = await Api.delete( `/ops/voyage-budgets/${voyageBudgetId}`);
 			notification.showSuccess(status);
-			await getVesselExpenseHeads(filterParams.value);
+			await getVoyageBudgets(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -149,12 +151,12 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function searchVesselExpenseHeads(searchParam, loading) {
+	async function searchVoyageBudgets(searchParam, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-vessel-expense-heads?name=${searchParam}`);
-			vesselExpenseHeads.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-voyage-budgets?name=${searchParam}`);
+			voyageBudgets.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -165,35 +167,15 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function showVesselWiseExpenseHead(ops_vessel_id) {
-		//NProgress.start();
-		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		// isLoading.value = true;
-
-		try {
-			const { data, status } = await Api.get(`/ops/show-vessel-expense-heads?ops_vessel_id=${ops_vessel_id}`);
-			vesselExpenseHeads.value = data.value;
-			notification.showSuccess(status);
-		} catch (error) {
-			const { data, status } = error.response;
-			notification.showError(status);
-		} finally {
-			// loader.hide();
-			// isLoading.value = false;
-			//NProgress.done();
-		}
-	}
-
 	return {
-		vesselExpenseHeads,
-		vesselExpenseHead,
-		getVesselExpenseHeads,
-		storeVesselExpenseHead,
-		showVesselExpenseHead,
-		showVesselWiseExpenseHead,
-		updateVesselExpenseHead,
-		deleteVesselExpenseHead,
-		searchVesselExpenseHeads,
+		voyageBudgets,
+		voyageBudget,
+		getVoyageBudgets,
+		storeVoyageBudget,
+		showVoyageBudget,
+		updateVoyageBudget,
+		deleteVoyageBudget,
+		searchVoyageBudgets,
 		isTableLoading,
 		isLoading,
 		errors,

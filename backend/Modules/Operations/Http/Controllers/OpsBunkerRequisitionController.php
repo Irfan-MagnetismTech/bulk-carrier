@@ -82,13 +82,23 @@ class OpsBunkerRequisitionController extends Controller
     */
     public function show(OpsBunkerRequisition $bunker_requisition): JsonResponse
     {
-        $bunker_requisition->load('opsVessel','opsVoyage','opsBunkers.scmMaterial');
-        $bunker_requisition->opsBunkers->map(function($bunker) {
+        // return response()->json(request()->all(), 402);
+        $bunker_requisition->load('opsBunkers.scmMaterial');
+
+        $bunker_requisition->opsBunkers->map(function($bunker){
             $bunker->id = $bunker->scmMaterial->id;
+            $bunker['name_quantity'] = $bunker->scmMaterial['name'] . '-' . $bunker->quantity;
             $bunker->name = $bunker->scmMaterial->name;
-            $bunker->is_readonly = true;
+            $bunker->is_readonly = true;                
             return $bunker;
         });
+
+        $nameQuantityArray = [];
+        foreach ($bunker_requisition->opsBunkers as $bunker) {
+            $nameQuantityArray[] = $bunker['name_quantity'];
+        }
+        $bunker_requisition['description'] = implode(',', $nameQuantityArray);
+        $bunker_requisition['total_amount']=  $bunker_requisition->opsBunkers->sum('amount');
         try
         {
             return response()->success('Data retrieved successfully.', $bunker_requisition, 200);
@@ -188,13 +198,56 @@ class OpsBunkerRequisitionController extends Controller
     public function getBunkerRequisitionByReqNo(Request $request){
         try {
             $bunker_requisitions = OpsBunkerRequisition::query()
-        ->when(isset(request()->requisition_no), function($query){
+            ->when(isset(request()->requisition_no), function($query){
                 $query->where('requisition_no', 'like', '%' . request()->requisition_no . '%');                
             })
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
                 $query->where('business_unit', request()->business_unit);  
             })
             ->get();
+
+            return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getApprovedBunkerRequisitionByVendor(Request $request){
+        try {
+            $bunker_requisitions = OpsBunkerRequisition::with('opsBunkers')
+            ->when(request()->filled('scm_vendor_id'), function ($query) {
+                $query->whereHas('opsBunkers', function ($item) {
+                    $item->where('scm_vendor_id', request()->scm_vendor_id);
+                });
+            })
+            ->when(isset(request()->id), function($query){
+                $query->where('id',  request()->id);                
+            })
+            ->get();
+
+            $bunker_requisitions->map(function($requisiton) {
+                
+                $requisiton->opsBunkers->map(function($bunker) {
+                    $bunker->id = $bunker->scmMaterial->id;
+                    $bunker->name_quantity = $bunker->scmMaterial->name . '-'. $bunker->quantity;
+                    $bunker->name = $bunker->scmMaterial->name;
+                    $bunker->is_readonly = true;                
+                    return $bunker;
+                });
+
+                $nameQuantityArray = [];
+
+                foreach ($requisiton->opsBunkers as $bunker) {
+                    $nameQuantityArray[] = $bunker['name_quantity'];
+                }
+                $requisiton->is_readonly = true;
+                $requisiton['pr_no'] = $requisiton->requisition_no;
+                $requisiton['description'] = implode(',', $nameQuantityArray);
+                $requisiton['amount']=  $requisiton->opsBunkers->sum('amount');
+    
+            });
+
+            // $bunker_requisitions['total'] = $bunker_requisitions->sum('total_amount');
 
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
         } catch (QueryException $e){

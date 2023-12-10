@@ -536,13 +536,34 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 
+	
+	/* Bunker Bills */
+	{
+		path: `/${BASE}/bunker-bills`,
+		name: `${BASE}.bunker-bills.index`,
+		component: () => import(`../views/${ViEWBASE}/bunker-bills/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bunker-bills/create`,
+		name: `${BASE}.bunker-bills.create`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-bills/:bunkerBillId/edit`,
+		name: `${BASE}.bunker-bills.edit`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Expense Heads */
 	{
 		path: `/${BASE}/voyage-budgets`,
 		name: `${BASE}.voyage-budgets.index`,
 		component: () => import(`../views/${ViEWBASE}/voyage-budgets/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: '' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
 		path: `/${BASE}/voyage-budgets/create`,
@@ -562,4 +583,5 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyage-budgets/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	
 ];

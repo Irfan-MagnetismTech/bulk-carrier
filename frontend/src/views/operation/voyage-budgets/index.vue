@@ -7,14 +7,14 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useVesselExpenseHead from '../../../composables/operations/useVesselExpenseHead';
+import useVoyageBudget from '../../../composables/operations/useVoyageBudget';
 import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import {useRouter} from "vue-router";
 
-const { vesselExpenseHeads, getVesselExpenseHeads, deleteVesselExpenseHead, isLoading, isTableLoading, errors } = useVesselExpenseHead();
+const { voyageBudgets, getVoyageBudgets, deleteVoyageBudget, isLoading, isTableLoading, errors } = useVoyageBudget();
 const icons = useHeroIcon();
 const router = useRouter();
 
@@ -71,7 +71,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteVesselExpenseHead(id);
+        deleteVoyageBudget(id);
     }
   })
 }
@@ -80,7 +80,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.vessel-expense-heads.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.voyage-budgets.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -88,7 +88,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getVesselExpenseHeads(filterOptions.value)
+    getVoyageBudgets(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -110,7 +110,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Expense Head</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.voyage-budgets.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   
 
@@ -119,26 +119,26 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap mb-5" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="vesselExpenseHeads?.data?.length" class="relative">
-              <tr v-for="(vesselExpenseHead, index) in vesselExpenseHeads.data" :key="vesselExpenseHead?.id">
+          <tbody v-if="voyageBudgets?.data?.length" class="relative">
+              <tr v-for="(voyageBudget, index) in voyageBudgets.data" :key="voyageBudget?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ vesselExpenseHead?.opsVessel?.name }}</td>
+                  <td>{{ voyageBudget?.opsVessel?.name }}</td>
                   
                   <td>
-                    <span :class="vesselExpenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselExpenseHead?.business_unit }}</span>
+                    <span :class="voyageBudget?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBudget?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.vessel-expense-heads.show', params: { vesselExpenseHeadId: vesselExpenseHead.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-expense-heads.edit', params: { vesselExpenseHeadId: vesselExpenseHead.id } }"></action-button>
-                      <action-button @click="confirmDelete(vesselExpenseHead.id)" :action="'delete'"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.voyage-budgets.show', params: { voyageBudgetId: voyageBudget.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.voyage-budgets.edit', params: { voyageBudgetId: voyageBudget.id } }"></action-button>
+                      <action-button @click="confirmDelete(voyageBudget.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselExpenseHeads?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && voyageBudgets?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!vesselExpenseHeads?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!voyageBudgets?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -146,12 +146,12 @@ onMounted(() => {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!vesselExpenseHeads?.data?.length">
+            <tr v-else-if="!voyageBudgets?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="vesselExpenseHeads" to="ops.vessel-expense-heads.index" :page="page"></Paginate>
+    <Paginate :data="voyageBudgets" to="ops.voyage-budgets.index" :page="page"></Paginate>
   </div>
 </template>
