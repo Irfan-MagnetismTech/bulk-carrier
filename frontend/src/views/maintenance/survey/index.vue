@@ -1,7 +1,7 @@
 <script setup>
-import {onMounted, ref, watchEffect,watch, watchPostEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useCriticalSpareList from "../../../composables/maintenance/useCriticalSpareList";
+import useSurvey from "../../../composables/maintenance/useSurvey";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -16,6 +16,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -25,9 +26,9 @@ const props = defineProps({
   },
 });
 
-const { criticalSpareLists, getCriticalSpareLists, deleteCriticalSpareList, isLoading,isTableLoading, errors } = useCriticalSpareList();
+const { surveys, getSurveys, deleteSurvey, isLoading, isTableLoading, errors } = useSurvey();
 const { setTitle } = Title();
-setTitle('Critical Spare List');
+setTitle('Survey List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -37,7 +38,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to delete this critical spare!",
+    text: "You want to delete this survey!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -45,7 +46,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteCriticalSpareList(id);
+      deleteSurvey(id);
     }
   })
 }
@@ -66,58 +67,95 @@ let filterOptions = ref( {
       "date_from": null,
       "label": "Vessel",
       "filter_type": "input"
-    },   
-    
-    
+    },  
+     
     {
       "rel_type": null,
-      "relation_name": null,
-      "field_name": "record_date",
+      "relation_name": "mntSurveyItem",
+      "field_name": "item_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Record Date",
-      "filter_type": "date"
+      "label": "Survey Item",
+      "filter_type": "input"
+    },  
+
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "short_code",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Short Code",
+    //   "filter_type": "input"
+    // },
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "survey_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Survey Name",
+      "filter_type": "input"
     },
     
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "reference_no",
+      "field_name": "range_date_from",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Reference No",
-      "filter_type": "input"
+      "label": "Range Date (From)",
+      "filter_type": "date"
     },
 
     
-    // {
-    //   "rel_type": null,
-    //   "relation_name": null,
-    //   "field_name": "specification",
-    //   "search_param": "",
-    //   "action": null,
-    //   "order_by": null,
-    //   "date_from": null,
-    //   "label": "Specification",
-    //   "filter_type": "input"
-    // },
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "range_date_to",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Range Date (To)",
+      "filter_type": "date"
+    },
+
     
-    // {
-    //   "rel_type": null,
-    //   "relation_name": null,
-    //   "field_name": "notes",
-    //   "search_param": "",
-    //   "action": null,
-    //   "order_by": null,
-    //   "date_from": null,
-    //   "label": "Notes",
-    //   "filter_type": "input"
-    // },
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "assigned_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Assigned Date",
+      "filter_type": "date"
+    },
+
     
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "due_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Due Date",
+      "filter_type": "date"
+    },
+
     
   ]
 });
@@ -125,11 +163,12 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'mnt.critical-vessel-items.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'mnt.surveys.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -137,7 +176,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-  getCriticalSpareLists(filterOptions.value)
+  getSurveys(filterOptions.value)
     .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -147,7 +186,7 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching critical spare List:", error);
+      console.error("Error fetching surveys:", error);
     });
 });
 
@@ -158,51 +197,51 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Critical Spare List</h2>
-    <default-button :title="'Create Critical Item'" :to="{ name: 'mnt.critical-spare-lists.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Survey List</h2>
+    <default-button :title="'Create Survey'" :to="{ name: 'mnt.surveys.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <div class="relative w-full">
-      <select @change="setBusinessUnit($event)" class="form-control business_filter_input border-transparent focus:ring-0"
-      :disabled="defaultBusinessUnit === 'TSLL' || defaultBusinessUnit === 'PSML'"
-      >
-        <option value="ALL" :selected="businessUnit === 'ALL'">ALL</option>
-        <option value="PSML" :selected="businessUnit === 'PSML'">PSML</option>
-        <option value="TSLL" :selected="businessUnit === 'TSLL'">TSLL</option>
-      </select>
-    </div> -->
-    <!-- Search -->
-    <!-- <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" placeholder="Search..." class="search" />
-    </div> -->
-  </div>
-
+  
   <div id="customDataTable">
+
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          
+          <!-- <thead v-once>
+          <tr class="w-full">
+            <th class="w-1/12">#</th>
+            <th class="w-2/12">Vessel</th>
+            <th class="w-2/12">Cri. Function</th>
+            <th class="w-2/12">Cri. Category</th>
+            <th class="w-2/12">Cri. Item</th>
+            <th class="w-2/12">Business Unit</th>
+            <th class="w-1/12">Action</th>
+          </tr>
+          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-          <tr v-for="(criticalSpareList,index) in criticalSpareLists?.data" :key="index">
+          <tr v-for="(survey,index) in surveys?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ criticalSpareList?.opsVessel?.name }}</td>
-            <td><nobr>{{ criticalSpareList?.record_date }}</nobr></td>
-            <td>{{ criticalSpareList?.reference_no }}</td>
-            <td><span :class="criticalSpareList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalSpareList?.business_unit }}</span></td>
+            <td>{{ survey?.opsVessel?.name }}</td>
+            <td>{{ survey?.mntSurveyItem?.item_name }}</td>
+            <!-- <td>{{ survey?.mntSurveyType?.survey_type_name }}</td> -->
+            <!-- <td>{{ survey?.short_code }}</td> -->
+            <td>{{ survey?.survey_name }}</td>
+            <td><nobr>{{ survey?.range_date_from }}</nobr></td>
+            <td><nobr>{{ survey?.range_date_to }}</nobr></td>
+            <td><nobr>{{ survey?.assigned_date }}</nobr></td>
+            <td><nobr>{{ survey?.due_date }}</nobr></td>
+  
+            <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td>
             <td>
               <nobr>
-                <action-button :action="'edit'" :to="{ name: 'mnt.critical-spare-lists.edit', params: { criticalSpareListId: criticalSpareList?.id } }"></action-button>
-                <action-button @click="confirmDelete(criticalSpareList?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.surveys.edit', params: { surveyId: survey?.id } }"></action-button>
+                <action-button @click="confirmDelete(survey?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>
-          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && criticalSpareLists?.data?.length"></LoaderComponent>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && surveys?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!criticalSpareLists?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!surveys?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
             <td colspan="7">Loading...</td>
           </tr>
@@ -211,13 +250,13 @@ onMounted(() => {
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
-          <tr v-else-if="!criticalSpareLists?.data?.length">
-            <td colspan="7">No critical spare found.</td>
+          <tr v-else-if="!surveys?.data?.length">
+            <td colspan="7">No survey found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="criticalSpareLists" to="mnt.critical-spare-lists.index" :page="page"></Paginate>
+    <Paginate :data="surveys" to="mnt.surveys.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
-import {onMounted, ref, watchEffect,watch, watchPostEffect} from "vue";
+import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useCriticalSpareList from "../../../composables/maintenance/useCriticalSpareList";
+import useSurveyItem from "../../../composables/maintenance/useSurveyItem";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -16,6 +16,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -25,9 +26,9 @@ const props = defineProps({
   },
 });
 
-const { criticalSpareLists, getCriticalSpareLists, deleteCriticalSpareList, isLoading,isTableLoading, errors } = useCriticalSpareList();
+const { surveyItems, getSurveyItems, deleteSurveyItem, isLoading, isTableLoading, errors } = useSurveyItem();
 const { setTitle } = Title();
-setTitle('Critical Spare List');
+setTitle('Survey Item List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -37,7 +38,7 @@ const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to delete this critical spare!",
+    text: "You want to delete this survey Item!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -45,54 +46,29 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteCriticalSpareList(id);
+      deleteSurveyItem(id);
     }
   })
 }
 
 let filterOptions = ref( {
-  "business_unit": businessUnit.value,
+  "business_unit": null,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
   "filter_options": [
-    {
-      "rel_type": null,
-      "relation_name": "opsVessel",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Vessel",
-      "filter_type": "input"
-    },   
-    
     
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "record_date",
+      "field_name": "item_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Record Date",
-      "filter_type": "date"
-    },
-    
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "reference_no",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Reference No",
+      "label": "Item Name",
       "filter_type": "input"
     },
-
     
     // {
     //   "rel_type": null,
@@ -105,6 +81,7 @@ let filterOptions = ref( {
     //   "label": "Specification",
     //   "filter_type": "input"
     // },
+
     
     // {
     //   "rel_type": null,
@@ -117,6 +94,7 @@ let filterOptions = ref( {
     //   "label": "Notes",
     //   "filter_type": "input"
     // },
+
     
     
   ]
@@ -125,11 +103,12 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'mnt.critical-vessel-items.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'mnt.survey-items.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -137,7 +116,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-  getCriticalSpareLists(filterOptions.value)
+  getSurveyItems(filterOptions.value)
     .then(() => {
       paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -147,9 +126,13 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching critical spare List:", error);
+      console.error("Error fetching survey items:", error);
     });
-});
+  });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -158,8 +141,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Critical Spare List</h2>
-    <default-button :title="'Create Critical Item'" :to="{ name: 'mnt.critical-spare-lists.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Survey Item List</h2>
+    <default-button :title="'Create Survey Item'" :to="{ name: 'mnt.survey-items.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- <div class="relative w-full">
@@ -184,40 +167,50 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          
+          <!-- <thead v-once>
+          <tr class="w-full">
+            <th class="w-1/12">#</th>
+            <th class="w-2/12">Function Name</th>
+            <th class="w-2/12">Category Name</th>
+            <th class="w-2/12">Item Name</th>
+            <th class="w-2/12">Specification</th>
+            <th class="w-2/12">Notes</th>
+            <th class="w-1/12">Action</th>
+          </tr>
+          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-          <tr v-for="(criticalSpareList,index) in criticalSpareLists?.data" :key="index">
+          <tr v-for="(surveyItem,index) in surveyItems?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ criticalSpareList?.opsVessel?.name }}</td>
-            <td><nobr>{{ criticalSpareList?.record_date }}</nobr></td>
-            <td>{{ criticalSpareList?.reference_no }}</td>
-            <td><span :class="criticalSpareList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalSpareList?.business_unit }}</span></td>
+            <td>{{ surveyItem?.item_name }}</td>
+            <!-- <td>{{ surveyItem?.specification }}</td>
+            <td>{{ surveyItem?.notes }}</td> -->
+            <!-- <td><span :class="surveyItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ surveyItem?.business_unit }}</span></td> -->
             <td>
               <nobr>
-                <action-button :action="'edit'" :to="{ name: 'mnt.critical-spare-lists.edit', params: { criticalSpareListId: criticalSpareList?.id } }"></action-button>
-                <action-button @click="confirmDelete(criticalSpareList?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'mnt.survey-items.edit', params: { surveyItemId: surveyItem?.id } }"></action-button>
+                <action-button @click="confirmDelete(surveyItem?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>
-          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && criticalSpareLists?.data?.length"></LoaderComponent>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && surveyItems?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!criticalSpareLists?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!surveyItems?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
-          <tr v-else-if="!criticalSpareLists?.data?.length">
-            <td colspan="7">No critical spare found.</td>
+          <tr v-else-if="!surveyItems?.data?.length">
+            <td colspan="5">No survey item found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="criticalSpareLists" to="mnt.critical-spare-lists.index" :page="page"></Paginate>
+    <Paginate :data="surveyItems" to="mnt.survey-items.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

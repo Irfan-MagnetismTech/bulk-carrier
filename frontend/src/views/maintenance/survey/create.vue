@@ -1,28 +1,28 @@
 <script setup>
 // import UserForm from '../../../components/authorization/UserForm.vue';
-import CriticalVesselItemForm from '../../../components/maintenance/critical-vessel-item/CriticalVesselItemForm.vue';
-import useCriticalVesselItem from '../../../composables/maintenance/useCriticalVesselItem';
+import SurveyForm from '../../../components/maintenance/survey/SurveyForm.vue';
+import useSurvey from '../../../composables/maintenance/useSurvey';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 const icons = useHeroIcon();
-const { criticalVesselItem, storeCriticalVesselItem, isLoading, errors } = useCriticalVesselItem();
+const { survey, storeSurvey, isLoading, errors } = useSurvey();
 const { setTitle } = Title();
 const page = 'create';
 
-setTitle('Create Critical Vessel Item');
+setTitle('Create Survey');
 </script>
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-3 sm:flex-row" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create New Critical Vessel Item </h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create New Survey </h2>
         
-        <default-button :title="'Critical Vessel Item List'" :to="{ name: 'mnt.critical-vessel-items.index' }" :icon="icons.DataBase"></default-button>
+        <default-button :title="'Survey List'" :to="{ name: 'mnt.surveys.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-        <form @submit.prevent="storeCriticalVesselItem(criticalVesselItem)">
+        <form @submit.prevent="storeSurvey(survey)">
             <!-- Booking Form -->
-            <critical-vessel-item-form :page="page"  v-model:form="criticalVesselItem" :errors="errors"></critical-vessel-item-form>
+            <survey-form :page="page"  v-model:form="survey" :errors="errors"></survey-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

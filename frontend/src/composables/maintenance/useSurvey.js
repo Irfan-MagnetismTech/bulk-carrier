@@ -6,18 +6,25 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useCriticalSpareList() {
+export default function useSurvey() {
     const router = useRouter();
-    const criticalSpareLists = ref([]);
+    const surveys = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const criticalSpareList = ref( {
+    const survey = ref({
         ops_vessel_id: '',
         ops_vessel: '',
-        reference_no: '',
-        record_date: '',
+        mnt_survey_item_id: '',
+        mnt_survey_item: '',
+        mnt_survey_type_id: '',
+        mnt_survey_type: '',
+        short_code: '',
+        survey_name: '',
+        range_date_from: '',
+        range_date_to: '',
+        assigned_date: '',
+        due_date: '',
         business_unit: '',
-        mntCriticalSpListLines: [],
     });
 
     const filterParams = ref(null);
@@ -26,11 +33,8 @@ export default function useCriticalSpareList() {
     const isLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getCriticalSpareLists(filterOptions) {
-        //NProgress.start();
+    async function getSurveys(filterOptions) {
         let loader = null;
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        // isLoading.value = true;
         if (!filterOptions.isFilter) {
             loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
             isLoading.value = true;
@@ -45,14 +49,14 @@ export default function useCriticalSpareList() {
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/mnt/critical-spare-lists',{
+            const {data, status} = await Api.get('/mnt/surveys',{
                 params: {
                     page: filterOptions.page,
                     items_per_page: filterOptions.items_per_page,
                     data: JSON.stringify(filterOptions)
                 },
             });
-            criticalSpareLists.value = data.value;
+            surveys.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -72,20 +76,16 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function storeCriticalSpareList(form) {
+    async function storeSurvey(form) {
 
-        if (!form.mntCriticalSpListLines?.length) {
-            Swal.fire("No Critical Spare Part Found.");
-            return null;
-        }
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/mnt/critical-spare-lists', form);
-            criticalSpareList.value = data.value;
+            const { data, status } = await Api.post('/mnt/surveys', form);
+            survey.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.surveys.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -95,14 +95,13 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function showCriticalSpareList(criticalSpareListId) {
-        //NProgress.start();
+    async function showSurvey(surveyId) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/critical-spare-lists/${criticalSpareListId}`);
-            criticalSpareList.value = data.value;
+            const { data, status } = await Api.get(`/mnt/surveys/${surveyId}`);
+            survey.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -114,19 +113,19 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function updateCriticalSpareList(form, criticalSpareListId) {
+    async function updateSurvey(form, surveyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/critical-spare-lists/${criticalSpareListId}`,
+                `/mnt/surveys/${surveyId}`,
                 form
             );
-            // criticalSpareList.value = data.value;
+            survey.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.surveys.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -137,15 +136,15 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function deleteCriticalSpareList(criticalSpareListId) {
+    async function deleteSurvey(surveyId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSpareListId}`);
+            const { data, status } = await Api.delete( `/mnt/surveys/${surveyId}`);
             notification.showSuccess(status);
-            await getCriticalSpareLists(filterParams.value);
+            await getSurveys(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             // notification.showError(status);
@@ -157,17 +156,16 @@ export default function useCriticalSpareList() {
     }
 
     
-    
 
     
     return {
-        criticalSpareLists,
-        criticalSpareList,
-        getCriticalSpareLists,
-        storeCriticalSpareList,
-        showCriticalSpareList,
-        updateCriticalSpareList,
-        deleteCriticalSpareList,
+        surveys,
+        survey,
+        getSurveys,
+        storeSurvey,
+        showSurvey,
+        updateSurvey,
+        deleteSurvey,
         isLoading,
         isTableLoading,
         errors,

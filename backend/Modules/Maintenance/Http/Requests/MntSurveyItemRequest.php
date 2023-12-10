@@ -3,8 +3,9 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class MntCriticalSpListRequest extends FormRequest
+class MntSurveyItemRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +15,7 @@ class MntCriticalSpListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reference_no' => 'required',
-            'record_date' => 'required',
-            'mntCriticalSpListLines.*.*.rob' => 'integer|min:1',
+            'item_name'  => ['required', Rule::unique('mnt_survey_items')->ignore($this->route('survey_item'), 'id')],
         ];
     }
 
@@ -28,9 +27,7 @@ class MntCriticalSpListRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'mntCriticalSpListLines.*.rob.required' => 'ROB is required for row no. :position',
-            'mntCriticalSpListLines.*.rob.integer' => 'ROB should be a number for row no. :position',
-            'mntCriticalSpListLines.*.rob.min' => 'ROB should have minimum 1 for row no. :position',
+            //
         ];
     }
 

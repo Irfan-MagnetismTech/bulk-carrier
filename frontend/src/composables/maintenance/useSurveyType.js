@@ -6,33 +6,34 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useCriticalSpareList() {
+export default function useSurveyType() {
     const router = useRouter();
-    const criticalSpareLists = ref([]);
+    const surveyTypes = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const criticalSpareList = ref( {
-        ops_vessel_id: '',
-        ops_vessel: '',
-        reference_no: '',
-        record_date: '',
-        business_unit: '',
-        mntCriticalSpListLines: [],
+    const surveyType = ref( {
+        survey_type_name: '',
+        due_period: '',
+        window_period: '',
     });
 
+    // const indexPage = ref(null);
+    // const indexBusinessUnit = ref(null);
     const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isSurveyTypeLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getCriticalSpareLists(filterOptions) {
+    async function getSurveyTypes(filterOptions) {
         //NProgress.start();
-        let loader = null;
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         // isLoading.value = true;
+        let loader = null;
+        
         if (!filterOptions.isFilter) {
-            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
             isLoading.value = true;
             isTableLoading.value = false;
         }
@@ -42,17 +43,19 @@ export default function useCriticalSpareList() {
             loader?.hide();
         }
 
+        // indexPage.value = page;
+        // indexBusinessUnit.value = businessUnit;
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/mnt/critical-spare-lists',{
+            const {data, status} = await Api.get('/mnt/survey-types',{
                 params: {
                     page: filterOptions.page,
                     items_per_page: filterOptions.items_per_page,
                     data: JSON.stringify(filterOptions)
                 },
             });
-            criticalSpareLists.value = data.value;
+            surveyTypes.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -60,7 +63,6 @@ export default function useCriticalSpareList() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
-            //NProgress.done();
             if (!filterOptions.isFilter) {
                 loader?.hide();
                 isLoading.value = false;
@@ -69,23 +71,20 @@ export default function useCriticalSpareList() {
                 isTableLoading.value = false;
                 loader?.hide();
             }
+            //NProgress.done();
         }
     }
 
-    async function storeCriticalSpareList(form) {
+    async function storeSurveyType(form) {
 
-        if (!form.mntCriticalSpListLines?.length) {
-            Swal.fire("No Critical Spare Part Found.");
-            return null;
-        }
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post('/mnt/critical-spare-lists', form);
-            criticalSpareList.value = data.value;
+            const { data, status } = await Api.post('/mnt/survey-types', form);
+            surveyType.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.survey-types.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -95,14 +94,14 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function showCriticalSpareList(criticalSpareListId) {
+    async function showSurveyType(surveyTypeId) {
         //NProgress.start();
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/mnt/critical-spare-lists/${criticalSpareListId}`);
-            criticalSpareList.value = data.value;
+            const { data, status } = await Api.get(`/mnt/survey-types/${surveyTypeId}`);
+            surveyType.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -114,19 +113,19 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function updateCriticalSpareList(form, criticalSpareListId) {
+    async function updateSurveyType(form, surveyTypeId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
             const { data, status } = await Api.put(
-                `/mnt/critical-spare-lists/${criticalSpareListId}`,
+                `/mnt/survey-types/${surveyTypeId}`,
                 form
             );
-            // criticalSpareList.value = data.value;
+            surveyType.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "mnt.critical-spare-lists.index" });
+            await router.push({ name: "mnt.survey-types.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -137,15 +136,15 @@ export default function useCriticalSpareList() {
         }
     }
 
-    async function deleteCriticalSpareList(criticalSpareListId) {
+    async function deleteSurveyType(surveyTypeId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/mnt/critical-spare-lists/${criticalSpareListId}`);
+            const { data, status } = await Api.delete( `/mnt/survey-types/${surveyTypeId}`);
             notification.showSuccess(status);
-            await getCriticalSpareLists(filterParams.value);
+            await getSurveyTypes(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             // notification.showError(status);
@@ -156,20 +155,39 @@ export default function useCriticalSpareList() {
         }
     }
 
-    
+    async function getSurveyTypesWithoutPagination() {
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get('/mnt/get-survey-types');
+            surveyTypes.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
     
 
     
     return {
-        criticalSpareLists,
-        criticalSpareList,
-        getCriticalSpareLists,
-        storeCriticalSpareList,
-        showCriticalSpareList,
-        updateCriticalSpareList,
-        deleteCriticalSpareList,
+        surveyTypes,
+        surveyType,
+        getSurveyTypes,
+        storeSurveyType,
+        showSurveyType,
+        updateSurveyType,
+        deleteSurveyType,
+        getSurveyTypesWithoutPagination,
         isLoading,
         isTableLoading,
+        isSurveyTypeLoading,
         errors,
     };
 }
