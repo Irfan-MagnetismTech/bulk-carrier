@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BunkerRequisitionForm from '../../../components/operations/BunkerRequisitionForm.vue';
 import useBunkerRequisition from '../../../composables/operations/useBunkerRequisition';
@@ -32,6 +32,10 @@ const { setTitle } = Title();
 setTitle('Edit Purchase Requistion');
 
 const formType = 'edit';
+
+watch(bunkerRequisition, (value) => {
+   bunkerRequisition.value.opsVoyage = value?.opsVoyage;
+});
 
 onMounted(() => {
   showBunkerRequisition(bunkerRequisitionId);

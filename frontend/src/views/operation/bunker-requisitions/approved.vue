@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BunkerRequisitionApproveForm from '../../../components/operations/BunkerRequisitionApproveForm.vue';
 import useBunkerRequisition from '../../../composables/operations/useBunkerRequisition';
@@ -32,7 +32,9 @@ const { setTitle } = Title();
 setTitle('Approve Purchase Requistion');
 
 const formType = 'approve';
-
+watch(bunkerRequisition, (value) => {
+   bunkerRequisition.value.opsVoyage = value?.opsVoyage;
+});
 onMounted(() => {
   showBunkerRequisition(bunkerRequisitionId);
 });
