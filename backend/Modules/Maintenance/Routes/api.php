@@ -99,4 +99,5 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     // report all jobs
     Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
     Route::get('report-upcoming-jobs', [MntReportController::class, 'reportUpcomingJobs']);
+    Route::get('report-overdue-jobs', [MntReportController::class, 'reportOverdueJobs']);
 });
