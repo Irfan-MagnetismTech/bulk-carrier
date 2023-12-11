@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MntCriticalItemSp extends Model
 {
@@ -20,5 +21,10 @@ class MntCriticalItemSp extends Model
     public function mntCriticalVesselItem () : BelongsTo
     {
         return $this->belongsTo(MntCriticalVesselItem::class);
+    }
+
+    public function mntCriticalSpListLines () : HasOne
+    {
+        return $this->hasOne(MntCriticalSpListLine::class);
     }
 }

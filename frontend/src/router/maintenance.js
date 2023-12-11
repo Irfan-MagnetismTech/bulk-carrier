@@ -390,8 +390,103 @@ export default [
 
 	/* Critical Spare List End */
 
+	
+	/* Survey Items Start */
+	{
+		path: `/${BASE}/survey-items`,
+		name: `${BASE}.survey-items.index`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/survey-items/create`,
+		name: `${BASE}.survey-items.create`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-create' },
+	},
+	{
+		path: `/${BASE}/survey-items/:surveyItemId/edit`,
+		name: `${BASE}.survey-items.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-edit' },
+	},
+	{
+		path: `/${BASE}/survey-items/:surveyItemId`,
+		name: `${BASE}.survey-items.show`,
+		component: () => import(`../views/${VIEWBASE}/survey-item/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-item-show'  },
+	},
 
+	/* Survey Items End */
+	
+	
+	/* Survey Types Start */
+	{
+		path: `/${BASE}/survey-types`,
+		name: `${BASE}.survey-types.index`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/survey-types/create`,
+		name: `${BASE}.survey-types.create`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-create' },
+	},
+	{
+		path: `/${BASE}/survey-types/:surveyTypeId/edit`,
+		name: `${BASE}.survey-types.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-edit' },
+	},
+	{
+		path: `/${BASE}/survey-types/:surveyTypeId`,
+		name: `${BASE}.survey-types.show`,
+		component: () => import(`../views/${VIEWBASE}/survey-type/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-type-show'  },
+	},
 
+	/* Survey Types End */
+	
+	/* Survey Start */
+	{
+		path: `/${BASE}/surveys`,
+		name: `${BASE}.surveys.index`,
+		component: () => import(`../views/${VIEWBASE}/survey/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/surveys/create`,
+		name: `${BASE}.surveys.create`,
+		component: () => import(`../views/${VIEWBASE}/survey/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-create' },
+	},
+	{
+		path: `/${BASE}/surveys/:surveyId/edit`,
+		name: `${BASE}.surveys.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-edit' },
+	},
+	{
+		path: `/${BASE}/surveys/:surveyId`,
+		name: `${BASE}.surveys.show`,
+		component: () => import(`../views/${VIEWBASE}/survey/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-show'  },
+	},
+
+	/* Survey End */
+
+	/* Report Start */
+	{
+		path: `/${BASE}/reports/all-jobs`,
+		name: `${BASE}.reports.all-jobs`,
+		component: () => import(`../views/${VIEWBASE}/reports/all-jobs-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'all-jobs-report' },
+	},
+	/* Report End */
 
 
 

@@ -124,7 +124,7 @@ function showCrewDocumentRenewModal(crwDocumentId){
 }
 
 function closeCrewDocumentRenewModal(){
-  isCrewDocumentRenewModalOpen.value = 0;
+  isCrewDocumentRenewScheduleModalOpen.value = 0;
 }
 
 const selectedRenewFile = (event) => {

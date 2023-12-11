@@ -31,4 +31,9 @@ class MntCriticalItem extends Model
     public function mntCriticalItemSps() : HasManyThrough {
         return $this->hasManyThrough(MntCriticalItemSp::class, MntCriticalVesselItem::class);
     }
+    
+
+    public function mntCriticalSpListLines() : HasManyThrough {
+        return $this->hasManyThrough(MntCriticalSpListLine::class, MntCriticalVesselItem::class);
+    }
 }

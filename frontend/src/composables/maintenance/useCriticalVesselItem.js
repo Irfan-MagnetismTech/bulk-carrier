@@ -13,14 +13,14 @@ export default function useCriticalVesselItem() {
     const notification = useNotification();
     const criticalVesselItem = ref({
         ops_vessel_id: '',
-        ops_vessel_name: '',
+        ops_vessel: '',
         mnt_critical_function_id: '',
-        mnt_critical_function_name: '',
+        mnt_critical_function: '',
         mnt_critical_item_cat_id: '',
-        mnt_critical_item_cat_name: '',
+        mnt_critical_item_cat: '',
         mnt_critical_item_id: '',
-        mnt_critical_item_name: '',
-        is_critical: null,
+        mnt_critical_item: '',
+        is_critical: 0,
         notes: '',
         business_unit: '',
         
@@ -29,25 +29,36 @@ export default function useCriticalVesselItem() {
         mntCriticalItems: [],
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isTableLoading = ref(false);
 
-    async function getCriticalVesselItems(page, businessUnit) {
+    async function getCriticalVesselItems(filterOptions) {
         //NProgress.start();
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/mnt/critical-vessel-items',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             criticalVesselItems.value = data.value;
@@ -56,9 +67,17 @@ export default function useCriticalVesselItem() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            // loader.hide();
+            // isLoading.value = false;
             //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -71,7 +90,7 @@ export default function useCriticalVesselItem() {
             const { data, status } = await Api.post('/mnt/critical-vessel-items', form);
             criticalVesselItem.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-vessel-items.index" });
+            await router.push({ name: "mnt.critical-vessel-items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -112,7 +131,7 @@ export default function useCriticalVesselItem() {
             );
             criticalVesselItem.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: "mnt.critical-vessel-items.index" });
+            await router.push({ name: "mnt.critical-vessel-items.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -131,10 +150,11 @@ export default function useCriticalVesselItem() {
         try {
             const { data, status } = await Api.delete( `/mnt/critical-vessel-items/${criticalVesselItemId}`);
             notification.showSuccess(status);
-            await getCriticalVesselItems(indexPage.value, indexBusinessUnit.value);
+            await getCriticalVesselItems(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            // notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;
@@ -177,6 +197,7 @@ export default function useCriticalVesselItem() {
         deleteCriticalVesselItem,
         getVesselWiseCriticalVesselItems,
         isLoading,
+        isTableLoading,
         errors,
     };
 }

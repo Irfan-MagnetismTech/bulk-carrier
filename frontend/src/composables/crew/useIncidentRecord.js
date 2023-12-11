@@ -7,6 +7,7 @@ import useNotification from '../../composables/useNotification.js';
 export default function useIncidentRecord() {
     const router = useRouter();
     const incidentRecords = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const incidentRecord = ref( {
@@ -30,25 +31,32 @@ export default function useIncidentRecord() {
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getIncidentRecords(page,businessUnit) {
+    async function getIncidentRecords(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-incidents',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             incidentRecords.value = data.value;
@@ -57,8 +65,14 @@ export default function useIncidentRecord() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
@@ -138,7 +152,7 @@ export default function useIncidentRecord() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-incidents/${incidentRecordId}`);
             notification.showSuccess(status);
-            await getIncidentRecords(indexPage.value, indexBusinessUnit.value);
+            await getIncidentRecords(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -156,6 +170,7 @@ export default function useIncidentRecord() {
         showIncidentRecord,
         updateIncidentRecord,
         deleteIncidentRecord,
+        isTableLoading,
         isLoading,
         errors,
     };
