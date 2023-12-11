@@ -61,7 +61,7 @@ export default function useBulkNoonReport() {
 		remarks: '',
 		status: '',
 		sea_condition: '',
-		business_unit: '',
+		business_unit: 'PSML',
 		opsVoyage: '',
 		opsVessel: '',
 		opsBulkNoonReportPorts: [{...portObject}],
