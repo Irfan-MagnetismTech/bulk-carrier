@@ -112,6 +112,7 @@ class OpsChartererContractController extends Controller
         */
     public function update(OpsChartererContractRequest $request, OpsChartererContract $charterer_contract): JsonResponse
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $charterer_contract_info = $request->except(
