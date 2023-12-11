@@ -721,7 +721,7 @@ watch(() => props.form.opsBulkNoonReportEngineInputs, (value) => {
       return item !== null
   })
 
-
+  
   if ((newEngineInputs.length !== new Set(newEngineInputs).size )|| (newEngineUnits.length !== new Set(newEngineUnits).size)) {
     isEngineInputDuplicate.value = true;
   } else {

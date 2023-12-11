@@ -7,21 +7,37 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Name <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.name" placeholder="Certificate Name" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.name" placeholder="Certificate Name" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input" required autocomplete="off" />
+            <select v-model.trim="form.type" class="form-input" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Renewable">Renewable</option>
+                <option value="Permanent">Permanent</option>
+              </select>
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.validity" placeholder="Validity Period" class="form-input" required autocomplete="off" />
+            <select v-model.trim="form.validity" class="form-input" required>
+                <option  v-if="form.type!='Permanent'" value="" disabled>Select</option>
+                <option  v-if="form.type!='Permanent'" value="3">3 Months</option>
+                <option  v-if="form.type!='Permanent'" value="6">6 Months</option>
+                <option  v-if="form.type!='Permanent'" value="12">1 Year</option>
+                <option  v-if="form.type!='Permanent'" value="24">2 Years</option>
+                <option  v-if="form.type!='Permanent'" value="36">3 Years</option>
+                <option  v-if="form.type!='Permanent'" value="48">4 Years</option>
+                <option  v-if="form.type!='Permanent'" value="60">5 Years</option>
+                <option  v-if="form.type!='Permanent'" value="120">10 Years</option>
+                <option value="0" v-if="form.type=='Permanent'">Permanent</option>
+              </select>
         </label>
     </div>
 
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
+import { ref, watch } from "vue";
 import Error from "../Error.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const props = defineProps({
@@ -30,7 +46,19 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
+    formType: { type: String, required : false },
+
 });
+
+watch(() => props.form.type, (value) => {
+  if(value) {
+    if(value == 'Permanent') {
+      props.form.validity = '0'
+    } else {
+      props.form.validity = ''
+    }
+  }
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {
