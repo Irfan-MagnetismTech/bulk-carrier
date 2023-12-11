@@ -36,4 +36,8 @@ class MntCriticalVesselItem extends Model
     public function mntCriticalItemSps() : HasMany {
         return $this->hasMany(MntCriticalItemSp::class);
     }
+
+    public function mntCriticalSpListLines() : HasMany {
+        return $this->hasMany(MntCriticalSpListLine::class);
+    }
 }

@@ -110,6 +110,7 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let materialArray = [];
       newVal?.forEach((line, index) => {
         let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+        console.log('material', material_key, 'index', index);
         if (materialArray.indexOf(material_key) === -1) {
           materialArray.push(material_key);
           props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
