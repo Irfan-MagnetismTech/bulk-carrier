@@ -24,10 +24,10 @@ watch(
     () => props.form,
     (newEntries, oldEntries) => {
       props.form.crw_crew_id = props.form?.crw_crew_name?.id;
-      let total_net_amount = 0.0;
-      total_net_amount += parseFloat((newEntries.gross_salary + newEntries.addition) - newEntries.deduction);
-      if(!isNaN(total_net_amount)) {
-        props.form.net_amount = total_net_amount;
+      let total_net_salary = 0.0;
+      total_net_salary += parseFloat((newEntries.gross_salary + newEntries.addition) - newEntries.deduction);
+      if (!isNaN(total_net_salary)) {
+        props.form.net_amount = total_net_salary;
       }
     },
     { deep: true }

@@ -119,15 +119,8 @@ export default function useCrewSalaryStructure() {
         const loader = $loading.show({ "can-cancel": false, loader: "dots", color: "#7e3af2" });
         isLoading.value = true;
 
-        let formData = new FormData();
-        if(form.attachment){
-            formData.append('attachment', form.attachment);
-        }
-        formData.append('data', JSON.stringify(form));
-        formData.append('_method', 'PUT');
-
         try {
-            const { data, status } = await Api.post(`/crw/crw-salary-structures/${crewSalaryStructureId}`, formData);
+            const { data, status } = await Api.put(`/crw/crw-salary-structures/${crewSalaryStructureId}`, form);
             crewSalaryStructure.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.crewSalaryStructures.index" });

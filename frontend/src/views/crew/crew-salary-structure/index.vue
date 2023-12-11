@@ -197,8 +197,8 @@ onMounted(() => {
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
           <td>{{ crewSalaryStructureData?.effective_date }}</td>
           <td>{{ crewSalaryStructureData?.currency }}</td>
-          <td>Crew name</td>
-          <td>Crew contact no</td>
+          <td>{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
+          <td>{{ crewSalaryStructureData?.crwCrew?.pre_mobile_no }}</td>
           <td>{{ crewSalaryStructureData?.gross_salary }}</td>
           <td>{{ crewSalaryStructureData?.addition }}</td>
           <td>{{ crewSalaryStructureData?.deduction }}</td>
