@@ -161,7 +161,7 @@ class ScmMrrController extends Controller
     {
         if ($request->has('searchParam')) {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial')
+                ->with('scmMrrLines.scmMaterial.account')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
@@ -181,7 +181,7 @@ class ScmMrrController extends Controller
                 ->limit(10)
                 ->get();
         }
-
+        
         $materialReceiptReport = $materialReceiptReport->map(function ($item) {
             $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
                 return $item1->scmMaterial;

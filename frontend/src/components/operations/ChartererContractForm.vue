@@ -118,7 +118,7 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Account Name</span>
               <input type="text" v-model.trim="form.bank_account_name" placeholder="Account Name" class="form-input" autocomplete="off" />
-          </label>
+        </label>
           
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -131,8 +131,8 @@
             <input type="text" v-model.trim="form.routing_no" placeholder="Routing No" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-                <select v-model="form.currency" class="form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
+                <select v-model="form.currency" class="form-input" required>
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>

@@ -2,12 +2,12 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.ops_vessel_name"
+                      :required="!form.ops_vessel"
                       v-bind="attributes"
                       v-on="events"
                   />
@@ -18,37 +18,56 @@
         </label>
       
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Record Date <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Record Date <span class="text-red-500">*</span></span>
         <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/>
         <Error v-if="errors?.record_date" :errors="errors.record_date" />
       </label>
       
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark:text-gray-300">Reference No <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.reference_no" placeholder="Reference No" class="form-input" required/>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Reference No <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" required/>
         <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
       </label>
     </div>
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark:border-gray-400" >
-      <legend class="px-2 text-gray-700 dark:text-gray-300">Spare Parts <span class="text-red-500">*</span></legend>
-      <table class="w-full whitespace-no-wrap" id="table">
+    
+    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400" >
+      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Critical Spare Parts <span class="text-red-500">*</span></legend>
+      <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLines?.length">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-            <th class="w-6/12 px-4 py-3 align-bottom">Spare Parts Name<span class="text-red-500">*</span></th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Unit <span class="text-red-500">*</span></th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob <span class="text-red-500">*</span></th>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th class="w-4/12 px-4 py-3 align-bottom">Spare Parts Name</th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Unit</th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob</th>
             <th class="w-2/12 px-4 py-3 align-bottom"> Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom"> Remarks </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-          <tr class="text-gray-700 dark:text-gray-400" v-for="(criticalVesselItem, index) in criticalVesselItems" :key="index">
-            <td class="px-1 py-1"><input type="text" class="form-input" required readonly  :value="criticalVesselItem.item_name" placeholder="Spare Parts Name"  /></td>
-            <td class="px-1 py-1"><input type="text" class="form-input" required readonly  :value="criticalVesselItem.item_name" placeholder="Spare Parts Name"  /></td>
-            <!-- /************ntc*************** */ -->
-          </tr>
+        <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          
+          <template  v-for="(criticalVesselItem, index) in form.mntCriticalSpListLines" :key="index">
+              <tr class="text-gray-700 dark-disabled:text-gray-400" v-if="criticalVesselItem?.mntCriticalItemSps?.length">
+                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.mntCriticalItem?.specification">({{ criticalVesselItem?.mntCriticalItem?.specification }})</span></strong> </td>
+              </tr>
+              <tr class="text-gray-700 dark-disabled:text-gray-400"  v-for="(mntCriticalItemSp, mntCriticalItemSpIndex) in criticalVesselItem?.mntCriticalItemSps" :key="mntCriticalItemSpIndex">
+                <td>{{ mntCriticalItemSp?.sp_name }}</td>
+                <td>{{ mntCriticalItemSp?.unit }}</td>
+                <td>{{ mntCriticalItemSp?.min_rob }}</td>
+                <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="Rob" class="form-input" required/></td>
+                <td><input type="text" v-model.trim="mntCriticalItemSp.remarks" placeholder="Remarks" class="form-input"/></td>
+                
+              </tr>
+          </template>
         </tbody>
       </table>
+      <div v-else class="py-10  text-center rounded-md">
+          <p class="text-md font-bold">{{ form.ops_vessel_id ? 'No Critical Spare Part Found' : 'Please Select Vessel' }}</p>
+        </div>
+      <div>
+
+      </div>
     </fieldset>
+    <LoaderComponent :isLoading = isCriticalVesselItemLoading ></LoaderComponent>
+    <ErrorComponent :errors="errors"></ErrorComponent>
     
 </template>
 <script setup>
@@ -63,6 +82,8 @@ import useCriticalItemCategory from "../../../composables/maintenance/useCritica
 import useCriticalItem from "../../../composables/maintenance/useCriticalItem";
 import useCriticalVesselItem from "../../../composables/maintenance/useCriticalVesselItem";
 import useVessel from "../../../composables/operations/useVessel";
+import LoaderComponent from "../../utils/LoaderComponent.vue";
+import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
@@ -81,18 +102,30 @@ const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { criticalFunctions, getCriticalFunctionsWithoutPagination } = useCriticalFunction();
 const { criticalFunctionWiseItemCategories, getCriticalFunctionWiseItemCategories, isLoading } = useCriticalItemCategory();
 const { criticalItemCategoryWiseItems, getCriticalItemCategoryWiseItems } = useCriticalItem();
-const { criticalVesselItems, getVesselWiseCriticalVesselItems } = useCriticalVesselItem();
+const { criticalVesselItems, getVesselWiseCriticalVesselItems, isLoading: isCriticalVesselItemLoading } = useCriticalVesselItem();
 
-watch(() => props.form.ops_vessel_name, (newValue, oldValue) => {
-  props.form.ops_vessel_id = newValue?.id;
-  if( props.form.ops_vessel_id)
-  getVesselWiseCriticalVesselItems( props.form.ops_vessel_id); /****** */
-});
+// watch(() => props.form.ops_vessel, (newValue, oldValue) => {
+//   props.form.ops_vessel_id = newValue?.id;
+//   if( props.form.ops_vessel_id)
+//   getVesselWiseCriticalVesselItems( props.form.ops_vessel_id); /****** */
+// });
+
+function vesselChange() {
+  props.form.ops_vessel_id = props.form.ops_vessel?.id;
+  criticalVesselItems.value = [];
+
+  if (props.form.ops_vessel_id)
+    getVesselWiseCriticalVesselItems(props.form.ops_vessel_id);
+}
 
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 });
+watch(() => criticalVesselItems.value, (value) => {
+  props.form.mntCriticalSpListLines = value;
+});
+
 
 
 
@@ -122,10 +155,10 @@ onMounted(() => {
   @apply block w-full mt-2 text-sm;
 }
 .label-item-title {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-700 dark-disabled:text-gray-300;
 }
 .label-item-input {
-  @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
+  @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
 >>> {

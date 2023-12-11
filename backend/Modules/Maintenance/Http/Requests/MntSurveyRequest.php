@@ -4,7 +4,7 @@ namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MntCriticalSpListLineRequest extends FormRequest
+class MntSurveyRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,15 @@ class MntCriticalSpListLineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id'  => 'required',
+            'mnt_survey_item_id' => 'required',
+            'mnt_survey_type_id' => 'required',
+            'short_code' => 'required',
+            'survey_name' => 'required',
+            'range_date_from' => 'required',
+            'range_date_to' => 'required',
+            'assigned_date' => 'required',
+            'due_date' => 'required',
         ];
     }
 
