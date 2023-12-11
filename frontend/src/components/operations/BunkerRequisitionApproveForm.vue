@@ -33,7 +33,6 @@
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
-              <th class="w-16">SL</th>
               <th>Bunker Name/Particulars</th>
               <th class="w-40">Unit</th>
               <th class="w-40">Supplier</th>
@@ -48,9 +47,6 @@
           </thead>
           <tbody>
             <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
-              <td>
-                {{ index+1 }}
-              </td>
               <td>                
                 <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
               </td>
@@ -79,7 +75,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm ">
-                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right !bg-gray-100" readonly autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" />
                 </label>
               </td>
               <td>

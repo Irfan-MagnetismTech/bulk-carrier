@@ -18,7 +18,7 @@ class OpsCargoTariffRequest extends FormRequest
     {
         // dd(count($this->opsCargoTariffLines));
         return [
-            'tariff_name'       => ['required', 'string', 'max:255'],
+            'tariff_name'       => ['required', 'string', 'max:255',Rule::unique('ops_cargo_tariffs')->ignore($this->route('cargo-tariff'), 'id')],
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'loading_point'     => ['required', 'string', 'max:255'],
             'unloading_point'   => ['required', 'string', 'max:255'],

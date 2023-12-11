@@ -215,7 +215,7 @@ class OpsBunkerRequisitionController extends Controller
 
     public function getApprovedBunkerRequisitionByVendor(Request $request){
         try {
-            $bunker_requisitions = OpsBunkerRequisition::with('opsBunkers','opsVoyage')
+            $bunker_requisitions = OpsBunkerRequisition::with('opsBunkers')
             ->when(request()->filled('scm_vendor_id'), function ($query) {
                 $query->whereHas('opsBunkers', function ($item) {
                     $item->where('scm_vendor_id', request()->scm_vendor_id);
