@@ -14,7 +14,7 @@
       
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -158,9 +158,9 @@ watch(() => voyage, (value) => {
 
   } else {
       props.form.opsVoyageBoatNoteLines = [
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Receipt Copy' }))
     ];
   }
     

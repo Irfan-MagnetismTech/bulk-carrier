@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -23,7 +23,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -76,7 +76,9 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Last Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Last Port <span class="pl-1 text-red-500">*</span>
+           <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+          </span>
           <v-select :options="ports" placeholder="Search Port" v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -91,7 +93,9 @@
         </label>
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Next Port <span class="text-red-500">*</span></span>
+          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Next Port <span class="pl-1 text-red-500">*</span>
+           <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+          </span>
           <v-select :options="ports" placeholder="Search Port" v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -106,7 +110,7 @@
         </label>
     </div>
 
-    <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+    <RemarksComponet v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
 
     <div id="bunkers" class="mt-5" v-if="form.opsBunkers?.length > 0">
       <h4 class="text-md font-semibold my-3">Bunker Info</h4>
@@ -169,8 +173,10 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import usePort from '../../composables/operations/usePort';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import useHeroIcon from "../../assets/heroIcon";
 
-const editInitiated = ref(false);
+
+const icons = useHeroIcon();
 
 const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
@@ -185,20 +191,8 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-
-watch(() => props.form.business_unit, (value) => {
-  if(props?.formType != 'edit') {
-    props.form.opsVoyage = null;
-    props.form.ops_voyage_id = null;
-    props.form.opsVessel = null;
-    props.form.ops_vessel_id = null;
-  }
-  
-  getVesselList(props.form.business_unit);
-  searchPorts("", props.form.business_unit);
-
-
-}, { deep : true })
+const editInitiated = ref(false);
+const isPortDuplicate = ref(false);
 
 watch(() => props.form.opsVoyage, (value) => {
   
@@ -227,12 +221,16 @@ watch(() => props.form.lastPort, (value) => {
   if(value) {
     props.form.last_port = value?.code
   }
+
+  isPortDuplicate.value = (props.form.last_port == props.form.next_port) ? true : false;
 }, { deep: true })
 
 watch(() => props.form.nextPort, (value) => {
   if(value) {
     props.form.next_port = value?.code
   }
+
+  isPortDuplicate.value = (props.form.last_port == props.form.next_port) ? true : false;
 }, { deep: true })
 
 
@@ -255,6 +253,11 @@ watch(() => props.form, (value) => {
   }
 }, {deep: true});
 
+
+onMounted(() => {
+    getVesselList(props.form.business_unit);
+  searchPorts("", props.form.business_unit);
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {

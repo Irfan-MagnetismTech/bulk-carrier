@@ -54,7 +54,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" >
+            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -72,7 +72,7 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
-                <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" />
+                <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
             </label>
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
@@ -118,7 +118,7 @@
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
-          <RemarksComponent v-model="form.remarks" :maxlength="250" :fieldLabel="'Remarks'"></RemarksComponent>
+          <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
         </div>
       </div>
     </div>
@@ -456,7 +456,6 @@ watch(() => props.form.business_unit, (value) => {
     props.form.opsVoyageSectors = [];
     props.form.opsVoyageSectors.push({... props.voyageSectorObject });
   }
-
 
   fetchPorts("", false);
 
