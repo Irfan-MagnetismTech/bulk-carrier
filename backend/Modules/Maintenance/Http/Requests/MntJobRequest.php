@@ -18,8 +18,8 @@ class MntJobRequest extends FormRequest
     {
         return [
             'ops_vessel_id' => 'required',
-            'mnt_item_id' => ['required', Rule::unique('mnt_jobs')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->id)],
-            'mntJobLines.*.job_description' => 'required|max:100',
+            'mnt_item_id' => ['required', Rule::unique('mnt_jobs')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->route('job'), 'id')],
+            'mntJobLines.*.job_description' => ['required', 'max:100', 'distinct'],
             'mntJobLines.*.cycle' => 'required|integer|min:1',
             'mntJobLines.*.cycle_unit' => 'required|in:Hours,Days,Weeks,Months',
             'mntJobLines.*.min_limit' => 'required|integer|lt:mntJobLines.*.cycle',
@@ -38,6 +38,7 @@ class MntJobRequest extends FormRequest
         return [
             'mnt_item_id.unique' => 'Jobs for selected items on selected vessel already exists.',
             'mntJobLines.*.job_description.required' => 'Job description is a required field for line no. :position',
+            'mntJobLines.*.job_description.distinct' => 'Job description has a duplicate value in line no. :position',
             'mntJobLines.*.job_description.max' => 'Job description must not exceed 255 characters for line no. :position',
             'mntJobLines.*.cycle.required' => 'Please enter Cycle number for line no. :position',
             'mntJobLines.*.cycle.min' => 'Cycle number should be minimum 1 for line no. :position',
