@@ -27,7 +27,7 @@ class OpsChartererContractRequest extends FormRequest
         return [
             'contract_type'                 => ['required', 'string', 'max:255'],
 
-            'contract_name'                 => ['required','string', 'max:255', Rule::unique('ops_charterer_contracts')->where('ops_charterer_profile_id',$this->ops_charterer_profile_id)->ignore($this->id)],
+            'contract_name'                 => ['required','string', 'max:255', Rule::unique('ops_charterer_contracts')->where('ops_charterer_profile_id',$this->ops_charterer_profile_id)->ignore($this->route('charterer_contract'), 'id')],
 
             'ops_vessel_id'                 => ['required', 'numeric'],
             'ops_charterer_profile_id'      => ['nullable', 'numeric'],

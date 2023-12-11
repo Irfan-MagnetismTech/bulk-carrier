@@ -5,6 +5,7 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -60,6 +61,33 @@ class OpsVoyageController extends Controller
                 'opsVoyagePortSchedules',
                 'opsBunkers',
             );
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
 
             $voyage = OpsVoyage::create($voyageInfo);
             $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
@@ -128,6 +156,33 @@ class OpsVoyageController extends Controller
                 'opsVoyagePortSchedules',
                 'opsBunkers',
             );
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
 
             $voyage->update($voyageInfo);  
 
