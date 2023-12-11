@@ -2,6 +2,8 @@
 
 namespace Modules\SupplyChain\Http\Requests;
 
+use App\Rules\CheckUniqueArray;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ScmVendorRequest extends FormRequest
@@ -16,6 +18,14 @@ class ScmVendorRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'scmVendorContactPersons.*.email' => ['required', 'email', 'max:255'],
+            'scmVendorContactPersons.*.phone' => [
+                'required',
+                'max:255',
+                Rule::unique('scm_vendor_contact_persons', 'phone')
+                    ->ignore($this->vendor?->scmVendorContactPersons->first()->id, 'id'),
+            ],
+            'scmVendorContactPersons.*.name' => ['required', 'string', 'max:255'],
+
         ];
     }
 
@@ -32,6 +42,8 @@ class ScmVendorRequest extends FormRequest
             'scmVendorContactPersons.*.email.required' => 'Email is required',
             'scmVendorContactPersons.*.email.email' => 'Email is not valid',
             'scmVendorContactPersons.*.email.max' => 'Email is too long',
+            'scmVendorContactPersons.*.phone.required' => 'Phone is required',
+            'scmVendorContactPersons.*.phone.unique' => 'Phone is already taken',
         ];
     }
 

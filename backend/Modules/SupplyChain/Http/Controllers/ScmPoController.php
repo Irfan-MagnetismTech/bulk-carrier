@@ -145,12 +145,12 @@ class ScmPoController extends Controller
         // return response()->json($purchaseOrder->getAllMethods(), 422);
         try {
             if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
-                $error = array(
+                $error = [
                     "message" => "Data could not be deleted!",
                     "errors" => [
                         "id" => ["This data could not be deleted as it has reference to other table"]
                     ]
-                );
+                ];
                 return response()->json($error, 422);
             }
 
