@@ -3,7 +3,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Description</span>
@@ -24,6 +24,7 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
+    formType: { type: String, required : false },
 });
 </script>
 <style lang="postcss" scoped>
