@@ -26,7 +26,7 @@ export default function useLighterNoonReport() {
 		date: '',
 		last_port: '',
 		next_port: '',
-		business_unit: '',
+		business_unit: 'TSLL',
 		remarks: '',
 	});
 	const errors = ref(null);
