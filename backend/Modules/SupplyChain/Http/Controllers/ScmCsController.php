@@ -150,7 +150,7 @@ class ScmCsController extends Controller
     public function getQuotations(Request $request)
     {
         $scmCs = ScmCsVendor::query()
-            ->with('scmCs', 'scmVendor', 'scmCsMaterialVendors')
+            ->with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors')
             ->where('scm_cs_id', $request->cs_id)
             ->get();
 

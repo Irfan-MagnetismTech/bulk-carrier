@@ -198,11 +198,10 @@ function confirmDelete(id) {
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
-            <th>Ref No</th>
+            <th>Quotation No</th>
             <th>Date</th>
-            <th>Warehouse</th>
-            <th>Department</th>
-            <th>Business Unit</th>
+            <th>Vendor Name</th>
+            <th>Vendor Contact</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -211,13 +210,9 @@ function confirmDelete(id) {
             <tr v-for="(quotation,index) in (quotations?.data ? quotations?.data : quotations)" :key="index">
               <td>{{ index + 1 }}</td>
               <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ quotation?.effective_date }}</td>
-              <td>{{ quotation?.expire_date }}</td>
-              <td>{{ quotation?.purchase_center }}</td>
-              <td>{{ quotation?.scmWarehouse?.name?? '' }}</td>
-              <td>
-                <span :class="quotation?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
-              </td>
+              <td>{{ quotation?.quotation_date }}</td>
+              <td>{{ quotation?.scmVendor?.name }}</td>
+              <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.phone }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>

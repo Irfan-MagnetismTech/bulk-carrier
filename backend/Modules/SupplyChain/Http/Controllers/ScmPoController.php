@@ -208,30 +208,6 @@ class ScmPoController extends Controller
 
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
-
-        // {
-        //     scmWarehouse: '', //ok
-        //     scm_warehouse_id: '', //ok
-        //     pr_no: null,  //ok
-        //     scm_pr_id: null, //ok
-        //     scmPr: null, //ok
-        //     pr_date: '', //ok
-        //     cs_no: '',//if cs
-        //     scm_cs_id: '',//if cs
-        //     scmCs: null,//if cs
-        //     scmPoLines: [
-        //                     {
-        //                         scmMaterial: '',
-        //                         scm_material_id: '',
-        //                         unit: '',
-        //                         brand: '',
-        //                         model: '',
-        //                         quantity: 0.0,
-        //                         rate: 0.0,//if cs
-        //                         total_price: 0.0,//if cs
-        //                     }
-        //                 ], 
-        //     }
         try {
             if ($request->pr_id != null) {
                 $scmPr = ScmPr::query()

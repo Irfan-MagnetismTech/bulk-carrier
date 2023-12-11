@@ -60,7 +60,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Date",
+      "label": "Effective Date",
       "filter_type": "input"
     },
     {
@@ -70,7 +70,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Date",
+      "label": "Expire Date",
       "filter_type": "input"
     },
     {
@@ -80,7 +80,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
+      "label": "Purchase Center",
       "filter_type": "input" 
     },
     {
@@ -209,7 +209,7 @@ function confirmDelete(id) {
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create Quotations</button>
+                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Quotations</button>
                   <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Select Supplier</button>
                   <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> 
                   <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
