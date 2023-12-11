@@ -11,7 +11,7 @@ class CrwSalaryStructure extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-	protected $fillable = ['crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit'];
+	protected $fillable = ['crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks'];
 
 	public function crwSalaryStructureBreakdowns(){
 		return $this->hasMany(CrwSalaryStructureBreakdown::class);
