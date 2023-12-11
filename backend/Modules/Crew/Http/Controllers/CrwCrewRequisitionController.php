@@ -33,7 +33,6 @@ class CrwCrewRequisitionController extends Controller
                 $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
-
             });
             return response()->success('Created Successfully', '', 201);
         }

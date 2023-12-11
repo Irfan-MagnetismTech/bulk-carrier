@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwAgencyRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class CrwAgencyRequest extends FormRequest
     {
         $data      = request('data');
         $dataArray = json_decode($data, true);
-        $logo = is_object(request('logo')) ? request('logo') : null;
+        $logo      = is_object(request('logo')) ? request('logo') : null;
         $mergeData = array_merge($dataArray, ['logo' => $logo]);
 
         $this->replace($mergeData);
@@ -25,7 +26,7 @@ class CrwAgencyRequest extends FormRequest
             'business_license_no'                  => 'nullable|string|max:255',
             'company_reg_no'                       => 'nullable|string|max:255',
             'address'                              => 'required|string|max:255',
-            'phone'                                => 'required|string|max:255',
+            'phone'                                => ['required', 'string', 'max:255', Rule::unique('crw_agencies')->where('business_unit', $this->business_unit)->ignore($this->id)],
             'email'                                => 'required|email|max:255',
             'website'                              => 'nullable|url|max:255',
             'logo'                                 => 'nullable|image|mimes:jpeg,png,gif,svg|max:2048',
