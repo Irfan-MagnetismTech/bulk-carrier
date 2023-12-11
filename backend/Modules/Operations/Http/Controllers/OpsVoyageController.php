@@ -5,6 +5,7 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -71,6 +72,21 @@ class OpsVoyageController extends Controller
                         ];
                     return response()->json($error, 422);
                 }
+            }
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
             }
 
             $voyage = OpsVoyage::create($voyageInfo);
@@ -151,6 +167,21 @@ class OpsVoyageController extends Controller
                         ];
                     return response()->json($error, 422);
                 }
+            }
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
             }
 
             $voyage->update($voyageInfo);  
