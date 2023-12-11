@@ -241,7 +241,7 @@ export default function useMaterialReceiptReport() {
         }
     }
 
-    async function getMaterialList(pr_id, po_id = null,warehouse_id) {
+    async function getMaterialList(pr_id, po_id = null,warehouse_id,mrr_id = null) {
         //NProgress.start();
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -252,6 +252,7 @@ export default function useMaterialReceiptReport() {
                     scm_pr_id: pr_id,
                     scm_po_id: po_id,
                     scm_warehouse_id: warehouse_id,
+                    scm_mrr_id: mrr_id,
                 },
             });
             materialList.value = data.value;

@@ -146,7 +146,12 @@ watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
     if(newVal){
       props.form.scm_pr_no = newVal.ref_no;
     }
-    getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id);
+    if (props.formType == 'edit') {
+      getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id,props.form.id);
+    } else {
+      
+      getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id);
+    }
   });
   watch(() => props?.form?.scmCs, (newVal, oldVal) => {
     if(newVal){
