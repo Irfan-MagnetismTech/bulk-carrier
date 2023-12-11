@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwSalaryStructure;
+use Modules\Crew\Http\Requests\CrwSalaryStructureRequest;
 
 class CrwSalaryStructureController extends Controller
 {
@@ -34,7 +35,7 @@ class CrwSalaryStructureController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwSalaryStructureRequest $request)
     {
         try {
             $crwSalaryStructureData = $request->only('crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks');
@@ -72,7 +73,7 @@ class CrwSalaryStructureController extends Controller
      * @param  \App\Models\CrwSalaryStructure  $crwSalaryStructure
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwSalaryStructure $crwSalaryStructure)
+    public function update(CrwSalaryStructureRequest $request, CrwSalaryStructure $crwSalaryStructure)
     {
         try {
             $crwSalaryStructureData = $request->only('crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks');
