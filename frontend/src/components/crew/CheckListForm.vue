@@ -5,6 +5,8 @@ import {onMounted, ref} from "vue";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -12,6 +14,7 @@ const props = defineProps({
     default: {}
   },
   errors: { type: [Object, Array], required: false },
+  duplicateIndexArray: { type: [Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -47,8 +50,8 @@ onMounted(() => {
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Checklist Item <span class="text-red-500">*</span></legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
-        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-          <th class="px-4 py-3 align-bottom">Item <span class="text-red-500">*</span></th>
+        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <th class="px-4 py-3 align-bottom">Item Name <span class="text-red-500">*</span></th>
           <th class="px-4 py-3 align-bottom">Remarks</th>
           <th class="px-4 py-3 text-center align-bottom">Action</th>
         </tr>
@@ -57,7 +60,23 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
         <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(chkList, index) in form.crwCrewChecklistLines" :key="chkList.id">
           <td class="px-1 py-1">
-            <input type="text" v-model.trim="form.crwCrewChecklistLines[index].item_name" placeholder="Item Name" class="form-input" autocomplete="off" required />
+            <div style="position: relative;">
+              <input
+                  type="text"
+                  v-model.trim="form.crwCrewChecklistLines[index].item_name"
+                  placeholder="Item Name"
+                  class="form-input"
+                  autocomplete="off"
+                  required
+              />
+              <span
+                  v-show="duplicateIndexArray.includes(index)"
+                  class="text-yellow-600 pl-1"
+                  title="Duplicate Item Name"
+                  v-html="icons.ExclamationTriangle"
+                  style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;"
+              ></span>
+            </div>
           </td>
           <td class="px-1 py-1">
             <input type="text" v-model.trim="form.crwCrewChecklistLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />

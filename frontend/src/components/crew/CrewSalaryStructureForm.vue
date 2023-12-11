@@ -91,7 +91,7 @@ onMounted(() => {
       <input type="number" step=".01" v-model.trim="form.deduction" class="form-input text-right" autocomplete="off"/>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Net Salary <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Net Amount <span class="text-red-500">*</span></span>
       <input type="text" v-model.trim="form.net_amount" class="form-input vms-readonly-input" autocomplete="off" readonly required/>
     </label>              
   </div>
