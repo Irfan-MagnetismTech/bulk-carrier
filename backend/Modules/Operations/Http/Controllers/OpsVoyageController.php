@@ -61,6 +61,18 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
             $voyage = OpsVoyage::create($voyageInfo);
             $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
@@ -128,6 +140,18 @@ class OpsVoyageController extends Controller
                 'opsVoyagePortSchedules',
                 'opsBunkers',
             );
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
 
             $voyage->update($voyageInfo);  
 

@@ -36,8 +36,8 @@ class OpsBulkNoonReportRequest extends FormRequest
             'sea_condition'         => ['nullable', 'string'],
             'business_unit'         => ['nullable', 'string'],
 
-            'opsBulkNoonReportEngineInputs.*.engine_unit'     => ['required', 'string', 'max:255',Rule::unique('ops_bulk_noon_report_engine_inputs', 'engine_unit')
-            ->ignore($this->bulk_noon_report?->opsBulkNoonReportEngineInputs->first()->id, 'id')],
+            // 'opsBulkNoonReportEngineInputs.*.engine_unit'     => ['required', 'string', 'max:255',Rule::unique('ops_bulk_noon_report_engine_inputs', 'engine_unit')
+            // ->ignore($this->bulk_noon_report?->opsBulkNoonReportEngineInputs->first()->id, 'id')],
         ];
     }
 
@@ -68,7 +68,7 @@ class OpsBulkNoonReportRequest extends FormRequest
             // 'sea_condition.required' => 'Sea condition is required',
             
             'remarks.max' => 'Remarks may not be greater than :max characters.',
-            'opsBulkNoonReportEngineInputs.*.engine_unit.unique' => 'Engine Unit is already take for row is :position.',
+            // 'opsBulkNoonReportEngineInputs.*.engine_unit.unique' => 'Engine Unit is already take for row is :position.',
         ];
     }
 
