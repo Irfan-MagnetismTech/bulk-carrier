@@ -14,14 +14,12 @@ export default function useBunkerBill() {
 	const bunkerObject = {
         pr_no : null,
         description: null,
-        amount: null,
-        exchange_rate_bdt: null,
-        exchange_rate_usd: null,
+        // amount: null,
+        // exchange_rate_bdt: null,
+        // exchange_rate_usd: null,
         amount_usd: null,
         amount_bdt: null,
         sub_total: null,
-        discount: null,
-        grand_total: null,
 	}
 
 	const bunkerBill = ref({	

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ops_ports', function (Blueprint $table) {
             $table->id();
             $table->string('code', 255)->unique();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->integer('is_active')->default(1);
             $table->timestamps();

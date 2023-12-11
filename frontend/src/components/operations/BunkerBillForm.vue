@@ -58,8 +58,8 @@
             <th class="!w-12">SL.</th>
             <th class="!w-16">PR NO.</th>
             <th class="!w-80">Description</th>
-            <th class="!w-20">Exchange Rate (To USD)</th>
-            <th class="!w-20">Exchange Rate (To BDT)</th>
+            <!-- <th class="!w-20">Exchange Rate (To USD)</th>
+            <th class="!w-20">Exchange Rate (To BDT)</th> -->
             <th class="!w-20">Amount(USD)</th>
             <th class="!w-20">Amount(BDT)</th>
             <th class="w-16">
@@ -76,7 +76,7 @@
             <td>
               {{ index+1 }}
             </td>
-            <td>             
+            <td>
               <label class="block w-full mt-2 text-sm">
                 <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" placeholder="Requisition No." class="form-input" autocomplete="off"/>
               </label>
@@ -87,7 +87,7 @@
               </label>
             </td>
 
-            <td>
+            <!-- <td>
               <label class="block w-full mt-2 text-sm">
                 <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate(BDT)" class="form-input" autocomplete="off"/>
               </label>
@@ -96,7 +96,7 @@
               <label class="block w-full mt-2 text-sm">
                 <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_usd" placeholder="Exchange Rate(USD)" class="form-input" autocomplete="off"/>
               </label>
-            </td>
+            </td> -->
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input type="number" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].amount_usd" placeholder="Amount(USD)" class="form-input" autocomplete="off"/>
@@ -116,32 +116,32 @@
             </td>
           </tr>
           <tr>
-              <td :colspan="5">Sub Total</td>
+              <td :colspan="3">Sub Total</td>
               <td>
                 <input type="number" step="0.001" required :value="props.form.sub_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
               </td>
               <td>
-                <input type="number" step="0.001" required :value="props.form.sub_total" placeholder="Sub Total" class="form-input" autocomplete="off"/>
+                <input type="number" step="0.001" required :value="props.form.sub_total_bdt" placeholder="Sub Total" class="form-input" autocomplete="off"/>
               </td>
               <td></td>
           </tr>
           <tr>
-              <td :colspan="5">Discount</td>
+              <td :colspan="3">Discount</td>
               <td>
                 <input type="number" step="0.001" required v-model="props.form.discount_usd" placeholder="Discount(USD)" class="form-input" autocomplete="off"/>
               </td>
               <td>
-                <input type="number" step="0.001" required v-model="props.form.discount" placeholder="Discount" class="form-input" autocomplete="off"/>
+                <input type="number" step="0.001" required v-model="props.form.discount_bdt" placeholder="Discount" class="form-input" autocomplete="off"/>
               </td>
               <td></td>
           </tr>
           <tr>
-              <td :colspan="5">Grand Total</td>
+              <td :colspan="3">Grand Total</td>
               <td>
                 <input type="number" step="0.001" required :value="props.form.grand_total_usd" placeholder="Grand Total(USD)" class="form-input" autocomplete="off"/>
               </td>
               <td>
-                <input type="number" step="0.001" required :value="props.form.grand_total" placeholder="Grand Total" class="form-input" autocomplete="off"/>
+                <input type="number" step="0.001" required :value="props.form.grand_total_bdt" placeholder="Grand Total(BDT)" class="form-input" autocomplete="off"/>
               </td>
               <td></td>
           </tr>
@@ -233,8 +233,7 @@ watch(() => vendor, (value) => {
   if(props.form.scm_vendor_id != undefined){
     searchBunkerRequisitionsByVendor(props.form.scm_vendor_id)
     .then(() => {
-      // bunkerReset.value = bunkerRequisitions?.value;
-      console.log(bunkerReset.value);
+      bunkerReset.value = bunkerRequisitions?.value;
       if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
         props.form.opsBunkerBillLines = bunkerReset.value
       }
@@ -247,6 +246,19 @@ watch(() => vendor, (value) => {
     });
   }
 },{deep:true});
+
+
+watch(() => props?.form?.opsBunkerBillLines, (newVal, oldVal) => {
+      let sub_total_usd = 0.0;
+      let sub_total_bdt = 0.0;
+      newVal?.forEach((line, index) => {
+        sub_total_usd += line.amount_usd;
+        sub_total_bdt += line.amount_bdt;
+      });
+  props.form.sub_total_usd = sub_total_usd;
+  props.form.sub_total_bdt = sub_total_bdt;
+  CalculateAll();
+}, { deep: true });
 
 
 // watch(() => props.form.opsBunkerBillLines, (value) => {
@@ -262,14 +274,23 @@ watch(() => vendor, (value) => {
 //   }
 // }, { deep: true });
 
-// watch(() => props?.form?.discount, (newVal, oldVal) => {
-//   console.log(newVal);
-//   props.form.grand_total = (props.form.sub_total * 1 ) - newVal;
-//   CalculateAll();
-// });
+watch(() => props?.form?.discount_usd, (newVal, oldVal) => {
+  console.log(newVal);
+  props.form.grand_total_usd = (props.form.sub_total_usd * 1 ) - newVal;
+  CalculateAll();
+});
 
-function CalculateAll() { 
-  props.form.grand_total = (props.form.sub_total * 1) - (props.form.discount * 1 );
+watch(() => props?.form?.discount_bdt, (newVal, oldVal) => {
+  console.log(newVal);
+  props.form.grand_total_bdt = (props.form.sub_total_bdt * 1 ) - newVal;
+  CalculateAll();
+});
+
+
+
+function CalculateAll() {
+  props.form.grand_total_usd = (props.form.sub_total_usd * 1) - (props.form.discount_usd * 1 );
+  props.form.grand_total_bdt = (props.form.sub_total_bdt * 1) - (props.form.discount_bdt * 1 );
 }
 
 
