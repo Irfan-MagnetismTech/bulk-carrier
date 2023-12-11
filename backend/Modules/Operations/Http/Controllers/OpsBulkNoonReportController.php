@@ -78,6 +78,7 @@ class OpsBulkNoonReportController extends Controller
                             'errors'=>[
                                 'next_port'=>['Last Port and Next Port can not be same for the row is .'.++$key,
                         ]]];
+                        
                         return response()->json($error, 422);
                     }
                 }
