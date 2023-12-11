@@ -13,13 +13,11 @@ class CrwRequisitionRequest extends FormRequest
      * @return array
      */
     public function rules(): array {
-        $id = $this->route('crw_requisition');
-        // dd($id);
-
+        
         return [
             'applied_date'                                => ['required'],
             'total_required_manpower'                     => ['required', 'numeric', 'max:2000',
-                                                                Rule::unique('crw_crew_requisitions')->where('ops_vessel_id', $this->ops_vessel_id)->where('applied_date', $this->applied_date)->ignore($id)],
+                                                                Rule::unique('crw_crew_requisitions')->where('ops_vessel_id', $this->ops_vessel_id)->where('applied_date', $this->applied_date)->ignore($this->id)],
             'business_unit'                               => ['required', 'string', 'max:255'],
             'crwCrewRequisitionLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
         ];

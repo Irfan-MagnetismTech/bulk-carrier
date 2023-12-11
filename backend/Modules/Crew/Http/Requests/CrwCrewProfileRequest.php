@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwCrewProfileRequest extends FormRequest
 {
@@ -53,11 +54,11 @@ class CrwCrewProfileRequest extends FormRequest
             'weight'                         => 'string|max:255',
             'pre_address'                    => 'required|string|max:255',
             'pre_city'                       => 'required|string|max:255',
-            'pre_mobile_no'                  => 'required|string|max:255',
+            'pre_mobile_no'                  => ['required', 'string', 'max:255', Rule::unique('crw_crew_profiles')->where('business_unit', $this->business_unit)->ignore($this->id)],
             'pre_email'                      => 'email|max:255',
             'per_address'                    => 'required|string|max:255',
             'per_city'                       => 'required|string|max:255',
-            'per_mobile_no'                  => 'required|string|max:255',
+            'per_mobile_no'                  => ['required', 'string', 'max:255', Rule::unique('crw_crew_profiles')->where('business_unit', $this->business_unit)->ignore($this->id)],            
             'per_email'                      => 'email|max:255',
             'picture'                        => 'nullable|image|mimes:jpeg,png,gif,svg|max:2048',
             'attachment'                     => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
@@ -127,7 +128,8 @@ class CrwCrewProfileRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'pre_mobile_no.unique'         => 'The Present Contact:mobile no has already been taken.',
+            'per_mobile_no.unique'         => 'The Permanent Contact:mobile no has already been taken.',
         ];
     }
 
