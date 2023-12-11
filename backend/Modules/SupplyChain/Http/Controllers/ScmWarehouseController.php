@@ -78,6 +78,8 @@ class ScmWarehouseController extends Controller
         try {
             $warehouse->update($request->all());
 
+            $warehouse->scmWarehouseContactPersons()->delete();
+
             $warehouse->scmWarehouseContactPersons()->createMany($request->scmWarehouseContactPersons);
 
             return response()->success('Data updated sucessfully!', $warehouse, 202);
