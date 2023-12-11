@@ -26,7 +26,7 @@ return new class extends Migration
 			$table->decimal('net_amount', 16, 2);
 			$table->tinyInteger('is_active');
 			$table->enum('business_unit', ['PSML', 'TSLL']);
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }
