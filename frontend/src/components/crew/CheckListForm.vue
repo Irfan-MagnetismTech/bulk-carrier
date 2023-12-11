@@ -22,6 +22,7 @@ function addCheckListItem() {
   let obj = {
     item_name: '',
     remarks: '',
+    isItemNameDuplicate: false
   };
   props.form.crwCrewChecklistLines.push(obj);
 }
@@ -70,7 +71,7 @@ onMounted(() => {
                   required
               />
               <span
-                  v-show="duplicateIndexArray.includes(index)"
+                  v-show="chkList.isItemNameDuplicate"
                   class="text-yellow-600 pl-1"
                   title="Duplicate Item Name"
                   v-html="icons.ExclamationTriangle"

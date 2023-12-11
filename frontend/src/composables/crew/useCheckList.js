@@ -10,7 +10,6 @@ export default function useCheckList() {
     const checklists = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const duplicateIndexArray = ref([]);
     const checkList = ref( {
         effective_date: '',
         remarks: '',
@@ -19,6 +18,7 @@ export default function useCheckList() {
             {
                 item_name: '',
                 remarks: '',
+                isItemNameDuplicate: false
             }
         ]
     });
@@ -76,7 +76,7 @@ export default function useCheckList() {
 
     async function storeCheckList(form) {
 
-        const isUnique = checkUniqueArray(form.crwCrewChecklistLines);
+        const isUnique = checkUniqueArray(form);
         if(isUnique){
             const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
             isLoading.value = true;
@@ -116,7 +116,7 @@ export default function useCheckList() {
 
     async function updateCheckList(form, checkListId) {
 
-        const isUnique = checkUniqueArray(form.crwCrewChecklistLines);
+        const isUnique = checkUniqueArray(form);
         if(isUnique){
             const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
             isLoading.value = true;
@@ -157,19 +157,19 @@ export default function useCheckList() {
         }
     }
 
-    function checkUniqueArray(lines){
+    function checkUniqueArray(form){
         const itemNamesSet = new Set();
         let isHasError = false;
         const messages = ref([]);
-        const hasDuplicates = lines.some((item,index) => {
+        const hasDuplicates = form.crwCrewChecklistLines.some((item,index) => {
             if (itemNamesSet.has(item.item_name)) {
                 let data = `Duplicate Item Name [line no: ${index + 1}]`;
-                duplicateIndexArray.value.push(index);
                 messages.value.push(data);
-                //return true; // Duplicate found
+                form.crwCrewChecklistLines[index].isItemNameDuplicate = true;
+            } else {
+                form.crwCrewChecklistLines[index].isItemNameDuplicate = false;
             }
             itemNamesSet.add(item.item_name);
-            //return false; // No duplicate yet
         });
 
         if (messages.value.length > 0) {
@@ -188,10 +188,10 @@ export default function useCheckList() {
                         `,
                     customClass: "swal-width",
                 });
-                isHasError = true;
+                return false;
             }
         } else {
-            return isHasError;
+            return true;
         }
     }
 
@@ -206,7 +206,6 @@ export default function useCheckList() {
         isLoading,
         isTableLoading,
         checkUniqueArray,
-        duplicateIndexArray,
         errors,
     };
 }

@@ -7,8 +7,10 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import useHeroIcon from "../../assets/heroIcon";
 const { vessels, searchVessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -24,6 +26,7 @@ function addItem() {
     crw_rank_id: '',
     required_manpower: '',
     remarks: '',
+    isRankNameDuplicate: false
   };
   props.form.crwCrewRequisitionLines.push(obj);
 }
@@ -37,6 +40,25 @@ watch(() => props.form, (value) => {
     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
   }
 }, {deep: true});
+
+watch(
+    () => props.form,
+    (newEntries, oldEntries) => {
+
+      if(newEntries?.crwCrewRequisitionLines?.length > 0) {
+        let total_manpower = 0.0;
+        newEntries?.crwCrewRequisitionLines?.forEach((item) => {
+          if(item.required_manpower) {
+            total_manpower += parseFloat(item.required_manpower);
+          }
+        });
+        if(!isNaN(total_manpower)) {
+          props.form.total_required_manpower = total_manpower;
+        }
+      }
+    },
+    { deep: true }
+);
 
 // watch(() => props.form.business_unit, (newValue, oldValue) => {
 //   businessUnit.value = newValue;
@@ -81,7 +103,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Total Crew <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.total_required_manpower" placeholder="Ex: 14" class="form-input" autocomplete="off" />
+        <input type="number" v-model="form.total_required_manpower" class="form-input vms-readonly-input" readonly autocomplete="off" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -93,7 +115,7 @@ onMounted(() => {
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom w-64">Rank <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Required Manpower <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom w-48">Required Manpower <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>
       </tr>
@@ -102,13 +124,26 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(requiredCrewLine, index) in form.crwCrewRequisitionLines" :key="requiredCrewLine.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model="form.crwCrewRequisitionLines[index].crw_rank_id" required>
-            <option value="" disabled>Select</option>
-            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
-          </select>
+          <div style="position: relative;">
+            <select class="form-input" v-model.trim="form.crwCrewRequisitionLines[index].crw_rank_id" required>
+              <option value="" disabled>Select</option>
+              <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
+            </select>
+            <span
+                v-show="requiredCrewLine.isRankNameDuplicate"
+                class="text-yellow-600 pl-1"
+                title="Duplicate Rank Name"
+                v-html="icons.ExclamationTriangle"
+                style="position: absolute; top: 50%; transform: translateY(-50%); right: 30px;"
+            ></span>
+          </div>
+<!--          <select class="form-input" v-model="form.crwCrewRequisitionLines[index].crw_rank_id" required>-->
+<!--            <option value="" disabled>Select</option>-->
+<!--            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>-->
+<!--          </select>-->
         </td>
         <td class="px-1 py-1">
-          <input type="number" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" autocomplete="off" />
+          <input type="number" v-model="form.crwCrewRequisitionLines[index].required_manpower" placeholder="Ex: 2" class="form-input" required autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model="form.crwCrewRequisitionLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
