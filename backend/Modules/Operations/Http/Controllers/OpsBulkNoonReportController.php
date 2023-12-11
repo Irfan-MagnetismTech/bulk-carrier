@@ -67,9 +67,21 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportEngineInputs',
             );
 
+
             $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);
 
             if(isset($request->opsBulkNoonReportPorts)){
+                foreach($request->opsBulkNoonReportPorts as $key=>$data){
+                    if($data->last_port == $data->next_port){
+                        $error= [
+                            'message'=>'Last Port and Next Port can not be same for the row is .'.++$key,
+                            'errors'=>[
+                                'next_port'=>['Last Port and Next Port can not be same for the row is .'.++$key,
+                        ]]];
+                        return response()->json($error, 422);
+                    }
+                }
+
                 $bulk_noon_report->opsBulkNoonReportPorts()->createMany($request->opsBulkNoonReportPorts);
             }
 
