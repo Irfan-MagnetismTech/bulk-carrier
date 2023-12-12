@@ -195,14 +195,14 @@ onMounted(() => {
                   <td>{{ deliveryRedelivery?.note_type }}</td>
                   <td>
                     {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_usd ? currentObject.amount_usd : 0);
+  return accumulator + (currentObject.amount_usd ? parseFloat(currentObject.amount_usd) : 0);
 }, 0)) || 0) }}
 
                   </td>
                   <td>
                   
 {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_bdt ? currentObject.amount_bdt : 0);
+  return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
 }, 0)) || 0) }}
 
 

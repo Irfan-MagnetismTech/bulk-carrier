@@ -227,9 +227,14 @@ class OpsVesselExpenseHeadController extends Controller
             $output = $expenseHeads->map(function($item) use($vessel_expense_heads) {
                 $result = $item->opsSubHeads->map(function($subhead) use($vessel_expense_heads) {
                     if(in_array($subhead['id'], $vessel_expense_heads)) {
+                        $subhead['ops_expense_head_id'] = $subhead['id'];
+                        $subhead['type'] = 'subhead';
                         return $subhead;
                     }
-                })->filter();
+                })->filter()->values()->all();
+
+                $item['ops_expense_head_id'] = $item['id'];
+                $item['type'] = 'head';
 
                 data_forget($item, 'opsSubHeads');
                 $item->opsSubHeads = $result;

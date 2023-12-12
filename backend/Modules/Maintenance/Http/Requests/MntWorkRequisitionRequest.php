@@ -16,7 +16,7 @@ class MntWorkRequisitionRequest extends FormRequest
     {
         return [
         'ops_vessel_id' => 'required',
-        'reference_no' => ['required', Rule::unique('mnt_work_requisitions')->ignore($this->id)],
+        'reference_no' => ['required', Rule::unique('mnt_work_requisitions')->ignore($this->route('work_requisition'), 'id')],
         'requisition_date' => 'required|date',
         'est_start_date' => 'required|date|after_or_equal:requisition_date',
         'est_completion_date' => 'required|date|after_or_equal:est_start_date',

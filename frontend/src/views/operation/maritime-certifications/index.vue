@@ -107,7 +107,20 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Validity Period",
-      "filter_type": "input"
+      "filter_type": "dropdown",
+      "select_options": [
+          { value: "", label: "All" ,defaultSelected: true},
+          { value: "3", label: "3 Months" ,defaultSelected: false},
+          { value: "6", label: "6 Months" ,defaultSelected: false},
+          { value: "12", label: "1 Year" ,defaultSelected: false},
+          { value: "24", label: "2 Years" ,defaultSelected: false},
+          { value: "36", label: "3 Years" ,defaultSelected: false},
+          { value: "48", label: "4 Years" ,defaultSelected: false},
+          { value: "60", label: "5 Years" ,defaultSelected: false},
+          { value: "120", label: "10 Years" ,defaultSelected: false},
+          { value: "0", label: "Permanent" ,defaultSelected: false},
+         
+        ]
     },
   ]
 });
@@ -188,7 +201,17 @@ onMounted(() => {
                   <td>{{ maritimeCertificate?.authority }}</td>
                   <td>{{ maritimeCertificate?.name }}</td>
                   <td>{{ maritimeCertificate?.type }}</td>
-                  <td>{{ maritimeCertificate?.validity }}</td>
+                  <td>
+                    <span v-if="maritimeCertificate?.validity=='0'">Permanent</span>  
+                    <span v-if="maritimeCertificate?.validity=='3'">3 Months</span>  
+                    <span v-if="maritimeCertificate?.validity=='6'">6 Months</span>  
+                    <span v-if="maritimeCertificate?.validity=='12'">1 Years</span>  
+                    <span v-if="maritimeCertificate?.validity=='24'">2 Years</span>  
+                    <span v-if="maritimeCertificate?.validity=='36'">3 Years</span>  
+                    <span v-if="maritimeCertificate?.validity=='48'">4 Years</span>  
+                    <span v-if="maritimeCertificate?.validity=='60'">5 Years</span>  
+                    <span v-if="maritimeCertificate?.validity=='120'">10 Years</span>  
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'edit'" :to="{ name: 'ops.maritime-certifications.edit', params: { maritimeCertificateId: maritimeCertificate.id } }"></action-button>

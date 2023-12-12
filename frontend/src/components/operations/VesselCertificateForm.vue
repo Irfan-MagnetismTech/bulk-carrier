@@ -4,7 +4,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+        <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -20,7 +20,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Certificate <span class="text-red-500">*</span></span>
-        <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsMaritimeCertification" label="name" class="block form-input">
+        <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsMaritimeCertification" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"

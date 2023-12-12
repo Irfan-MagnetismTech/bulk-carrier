@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useCheckList() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function useCheckList() {
             {
                 item_name: '',
                 remarks: '',
+                isItemNameDuplicate: false
             }
         ]
     });
@@ -74,20 +76,23 @@ export default function useCheckList() {
 
     async function storeCheckList(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
-            checkList.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.checklists.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.post('/crw/crw-crew-checklists', form);
+                checkList.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.checklists.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -111,23 +116,26 @@ export default function useCheckList() {
 
     async function updateCheckList(form, checkListId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.put(
-                `/crw/crw-crew-checklists/${checkListId}`,
-                form
-            );
-            checkList.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.checklists.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.put(
+                    `/crw/crw-crew-checklists/${checkListId}`,
+                    form
+                );
+                checkList.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.checklists.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -149,6 +157,44 @@ export default function useCheckList() {
         }
     }
 
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.crwCrewChecklistLines.some((item,index) => {
+            if (itemNamesSet.has(item.item_name)) {
+                let data = `Duplicate Item Name [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.crwCrewChecklistLines[index].isItemNameDuplicate = true;
+            } else {
+                form.crwCrewChecklistLines[index].isItemNameDuplicate = false;
+            }
+            itemNamesSet.add(item.item_name);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         checklists,
         checkList,
@@ -159,6 +205,7 @@ export default function useCheckList() {
         deleteCheckList,
         isLoading,
         isTableLoading,
+        checkUniqueArray,
         errors,
     };
 }

@@ -24,7 +24,7 @@ class CrwIncidentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants','opsVessel')->globalSearch($request->all());
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants.crwCrew','opsVessel')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwIncidents, 200);
         }
@@ -51,9 +51,9 @@ class CrwIncidentController extends Controller
 
                 $crwIncident     = CrwIncident::create($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
-
-                return response()->success('Created Successfully', $crwIncidentData, 201);
             });
+
+            return response()->success('Created Successfully', null, 201);
         }
         catch (QueryException $e)
         {
@@ -70,7 +70,7 @@ class CrwIncidentController extends Controller
     public function show(CrwIncident $crwIncident)
     {
         try {
-            return response()->success('Retrieved successfully', $crwIncident->load('crwIncidentParticipants.crwCrew.crwRank','opsVessel:id,name'), 200);
+            return response()->success('Retrieved successfully', $crwIncident->load('crwIncidentParticipants.crwCrew','opsVessel:id,name'), 200);
         }
         catch (QueryException $e)
         {
@@ -97,9 +97,9 @@ class CrwIncidentController extends Controller
                 $crwIncident->update($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->delete();
                 $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
-
-                return response()->success('Updated successfully', $crwIncident, 202);
             });
+            
+            return response()->success('Updated successfully', $crwIncident, 202);
         }
         catch (QueryException $e)
         {

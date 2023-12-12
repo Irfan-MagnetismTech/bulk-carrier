@@ -21,9 +21,10 @@ setTitle('Edit Incident Record');
 watch(incidentRecord, (value) => {
   if(value) {
     incidentRecord.value.ops_vessel_name = value?.opsVessel;
+    incidentRecord.value.ops_vessel_id = value?.opsVessel?.id;
     value?.crwIncidentParticipants?.forEach((line, index) => {
       incidentRecord.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
-      incidentRecord.value.crwIncidentParticipants[index].crw_crew_rank = value?.crwIncidentParticipants[index]?.crwCrew?.crwRank?.name ?? '';
+      incidentRecord.value.crwIncidentParticipants[index].crw_crew_contact = value?.crwIncidentParticipants[index]?.crwCrew?.pre_mobile_no ?? '';
     });
   }
 });

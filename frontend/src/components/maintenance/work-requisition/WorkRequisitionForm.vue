@@ -221,12 +221,33 @@
     </div>
 
     <div class="mt-3">
-      <ul class="flex flex-wrap gap-1 text-gray-700 dark-disabled:text-gray-300">
-        <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'all_jobs' }" @click="currentTab('all_jobs')">All Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'overdue_jobs' }" @click="currentTab('overdue_jobs')">Overdue Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'upcoming_jobs' }" @click="currentTab('upcoming_jobs')">Upcoming Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'added_jobs' }" @click="currentTab('added_jobs')">Added Jobs</button></li>
-      </ul>
+      <div class="flex justify-between items-center gap-1">
+        <ul class="flex flex-wrap gap-1 text-gray-700 dark-disabled:text-gray-300">
+          <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'all_jobs' }" @click="currentTab('all_jobs')">All Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'overdue_jobs' }" @click="currentTab('overdue_jobs')">Overdue Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'upcoming_jobs' }" @click="currentTab('upcoming_jobs')">Upcoming Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'added_jobs' }" @click="currentTab('added_jobs')">Added Jobs</button></li>
+        </ul>
+        <div class="flex flex-col border-2 p-2 text-xs">
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-yellow-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Pending</span>
+          </div>
+          
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-blue-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Work in progress</span>
+          </div>
+
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-green-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Done / Not assigned</span>
+          </div>
+
+
+
+        </div>
+      </div>
       <div class="mt-1">
         <div v-if="itemWiseJobLines[tab]?.length || (tab === 'added_jobs' && form.added_job_lines?.length)">
           <table class="w-full whitespace-no-wrap" id="table">
@@ -255,9 +276,9 @@
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" :class="{
-                      'bg-yellow-600': jobLine.mnt_work_requisition_status == 0,
-                      'bg-blue-600': jobLine.mnt_work_requisition_status == 1,
-                      'bg-green-600': jobLine.mnt_work_requisition_status == 2 || jobLine.mnt_work_requisition_status == null,
+                      'bg-yellow-700': jobLine.mnt_work_requisition_status == 0,
+                      'bg-blue-700': jobLine.mnt_work_requisition_status == 1,
+                      'bg-green-700': jobLine.mnt_work_requisition_status == 2 || jobLine.mnt_work_requisition_status == null,
                   }" class="text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>

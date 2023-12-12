@@ -87,7 +87,7 @@ onMounted(() => {
         <span class="text-gray-700 dark-disabled:text-gray-300">Parent Account </span>
         <v-select :options="balanceIncomeAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.parent_account_name" label="account_name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
-            <input class="vs__search w-full" style="width: 50%" :required="!form.parent_account_name" v-bind="attributes" v-on="events"/>
+            <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
 <!--        <select class="form-input" v-model="form.parent_account_id" autocomplete="off">-->

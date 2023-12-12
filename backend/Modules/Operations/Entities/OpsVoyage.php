@@ -23,6 +23,7 @@ class OpsVoyage extends Model
         'sail_date',
         'transit_date',
         'remarks',
+        'is_billed',
         'business_unit'
     ];
 
@@ -63,5 +64,10 @@ class OpsVoyage extends Model
 
     public function opsContractAssign() {
         return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id','id');
+    }
+
+    public function opsChartererInvoices()
+    {
+        return $this->hasMany(OpsChartererInvoice::class, 'ops_charterer_profile_id', 'id');
     }
 }

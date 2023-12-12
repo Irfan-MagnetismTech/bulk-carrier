@@ -26,7 +26,7 @@ class OpsLighterNoonReportRequest extends FormRequest
             'last_port'             => ['required', 'string', 'max:255'],
             'next_port'             => ['required', 'string', 'max:255'],
             'business_unit'         => ['required', 'string', 'max:255'],
-            'remarks'               => ['max:300'],
+            'remarks'               => ['nullable','max:500'],
         ];
     }
 

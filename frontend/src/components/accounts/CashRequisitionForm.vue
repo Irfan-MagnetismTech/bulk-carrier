@@ -76,8 +76,6 @@ watch(
 );
 
 onMounted(() => {
-  console.log(props.form); 
-  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
     searchPr(props.form.business_unit,props.form.acc_cost_center_id,null)

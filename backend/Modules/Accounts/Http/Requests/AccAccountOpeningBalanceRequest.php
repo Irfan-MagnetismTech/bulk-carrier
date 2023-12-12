@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccAccountOpeningBalanceRequest extends FormRequest
 {
@@ -14,6 +15,12 @@ class AccAccountOpeningBalanceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'acc_account_id' => ['required', 
+                            Rule::unique('acc_account_opening_balances')
+                            ->where('business_unit', $this->business_unit)
+                            ->where('acc_cost_center_id', $this->acc_cost_center_id)
+                            ->ignore($this->id),
+                        ],
             'dr_amount' => ['required', 'numeric', 'max:9999999999.99'],
             'cr_amount' => ['required', 'numeric', 'max:9999999999.99'],
         ];
@@ -27,7 +34,7 @@ class AccAccountOpeningBalanceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'acc_account_id.unique'     => 'A record with the combination of cost center and business unit already exists.',
         ];
     }
 
