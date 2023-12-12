@@ -62,7 +62,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Document Name",
-      "filter_type": null, 
+      "filter_type": null,
     },
     {
       "relation_name": "crwCrewDocumentRenewal",
@@ -214,9 +214,9 @@ filterOptions.value.filter_options.forEach((option, index) => {
               </nobr>
             </td>
           </tr>
-          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewDocumentRenewSchedules?.data?.length"></LoaderComponent>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewDocumentRenewSchedules?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!crewDocumentRenewSchedules?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!crewDocumentRenewSchedules?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
              <td colspan="8"></td>
           </tr>
