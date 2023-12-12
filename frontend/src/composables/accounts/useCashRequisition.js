@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useCashRequisition() {
     const router = useRouter();
@@ -30,6 +31,7 @@ export default function useCashRequisition() {
                 particular: '',
                 amount: '',
                 remarks: '',
+                isParticularDuplicate: false
             }
         ]
     });
@@ -91,20 +93,24 @@ export default function useCashRequisition() {
 
     async function storeCashRequisition(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.post('/acc/acc-cash-requisitions', form);
-            cashRequisition.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "acc.cash-requisitions.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.post('/acc/acc-cash-requisitions', form);
+                cashRequisition.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "acc.cash-requisitions.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -128,20 +134,24 @@ export default function useCashRequisition() {
 
     async function updateCashRequisition(form, cashRequisitionId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.put(`/acc/acc-cash-requisitions/${cashRequisitionId}`, form);
-            cashRequisition.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "acc.cash-requisitions.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.put(`/acc/acc-cash-requisitions/${cashRequisitionId}`, form);
+                cashRequisition.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "acc.cash-requisitions.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -163,6 +173,44 @@ export default function useCashRequisition() {
         }
     }
 
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.accCashRequisitionLines.some((item,index) => {
+            if (itemNamesSet.has(item.particular)) {
+                let data = `Duplicate Particular [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.accCashRequisitionLines[index].isParticularDuplicate = true;
+            } else {
+                form.accCashRequisitionLines[index].isParticularDuplicate = false;
+            }
+            itemNamesSet.add(item.particular);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         cashRequisitions,
         cashRequisition,
@@ -171,6 +219,7 @@ export default function useCashRequisition() {
         showCashRequisition,
         updateCashRequisition,
         deleteCashRequisition,
+        checkUniqueArray,
         isLoading,
         isTableLoading,
         errors,
