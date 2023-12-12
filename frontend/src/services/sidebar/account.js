@@ -157,7 +157,7 @@ export default [
                     },
                     {
                         route: 'acc.depreciations.index',
-                        label: 'Depreciation',
+                        label: 'Depreciations',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
