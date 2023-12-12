@@ -107,7 +107,7 @@ export default [
             },
             {
                 route: '',
-                label: 'Loans',
+                label: 'Loan Management',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -157,7 +157,7 @@ export default [
                     },
                     {
                         route: 'acc.depreciations.index',
-                        label: 'Depreciation',
+                        label: 'Depreciations',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,

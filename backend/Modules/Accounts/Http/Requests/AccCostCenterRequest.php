@@ -14,9 +14,7 @@ class AccCostCenterRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'name'          => ['required', 'string', 'max:255',
-                                    Rule::unique('acc_cost_centers')->where('business_unit', $this->business_unit)->ignore($this->id),
-                            ],
+            'name'          => ['required', 'string', 'max:255', Rule::unique('acc_cost_centers')->where('business_unit', $this->business_unit)->ignore($this->id)],
             'short_name'    => ['required', 'string', 'max:6'],
             'type'          => ['required', 'string', 'max:255'],
             'business_unit' => ['required', 'string', 'max:255'],

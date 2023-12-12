@@ -70,7 +70,7 @@ class OpsBulkNoonReportController extends Controller
 
             if(isset($request->opsBulkNoonReportPorts)){
                 foreach($request->opsBulkNoonReportPorts as $key=>$data){
-                    if($data->last_port == $data->next_port){
+                    if($data['last_port'] == $data['next_port']){
                         $error= [
                             'message'=>'Last Port and Next Port can not be same for the row is .'.++$key,
                             'errors'=>[
