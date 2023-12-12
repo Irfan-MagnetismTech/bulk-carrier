@@ -7,6 +7,8 @@ import {onMounted, ref, watchEffect} from "vue";
 import Store from "../../store";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -25,6 +27,7 @@ function addItem() {
     candidate_contact: '',
     candidate_email: '',
     remarks: '',
+    isRankNameDuplicate: false
   };
   props.form.crwRecruitmentApprovalLines.push(obj);
 }
@@ -97,7 +100,7 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-        <th class="px-4 py-3 align-bottom">Rank <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom w-52">Rank <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Candidate Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Contact <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Email</th>
@@ -108,10 +111,23 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crewRcrApprovalLine, index) in form.crwRecruitmentApprovalLines" :key="crewRcrApprovalLine.id">
         <td class="px-1 py-1">
-          <select class="form-input" v-model.trim="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
-            <option value="" disabled>Select</option>
-            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
-          </select>
+          <div style="position: relative;">
+            <select class="form-input" v-model.trim="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
+              <option value="" disabled>Select</option>
+              <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
+            </select>
+            <span
+                v-show="crewRcrApprovalLine.isRankNameDuplicate"
+                class="text-yellow-600 pl-1"
+                title="Duplicate Rank Name"
+                v-html="icons.ExclamationTriangle"
+                style="position: absolute; top: 50%; transform: translateY(-50%); right: 30px;"
+            ></span>
+          </div>
+<!--          <select class="form-input" v-model.trim="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>-->
+<!--            <option value="" disabled>Select</option>-->
+<!--            <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>-->
+<!--          </select>-->
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwRecruitmentApprovalLines[index].candidate_name" placeholder="Candidate Name" class="form-input" autocomplete="off" required />

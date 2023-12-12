@@ -22,4 +22,8 @@ class CrwCrewRequisition extends Model
     {
         return $this->belongsTo(OpsVessel::class);
     }
+
+	public function vesselRequiredCrew(){
+        return $this->belongsTo(vesselRequiredCrew::class, 'ops_vessel_id', 'ops_vessel_id');
+	}
 }

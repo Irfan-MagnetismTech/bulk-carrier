@@ -1,3 +1,6 @@
+import useDebouncedRef from "./useDebouncedRef";
+import {ref} from "vue";
+import Swal from "sweetalert2";
 
 export default function useHelper() {
 
@@ -43,8 +46,46 @@ export default function useHelper() {
         document.body.removeChild(link);
     }
 
+    function checkUniqueArray(lines){
+        const itemNamesSet = new Set();
+        const messages = ref([]);
+        let isHasError = false;
+        const hasDuplicates = lines.some((item,index) => {
+            if (itemNamesSet.has(item.item_name)) {
+                let data = `Duplicate entry [line :${index + 1}]`;
+                messages.value.push(data);
+                return true; // Duplicate found
+            }
+            itemNamesSet.add(item.item_name);
+            return false; // No duplicate yet
+        });
+
+        if (hasDuplicates) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                isHasError = true;
+            }
+        } else {
+            return isHasError;
+        }
+    }
+
   return {
     numberFormat,
-    downloadFile
+    downloadFile,
+    checkUniqueArray
   };
 }

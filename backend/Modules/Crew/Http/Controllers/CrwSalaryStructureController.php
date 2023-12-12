@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwSalaryStructure;
+use Modules\Crew\Http\Requests\CrwSalaryStructureRequest;
 
 class CrwSalaryStructureController extends Controller
 {
@@ -18,7 +19,7 @@ class CrwSalaryStructureController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns')->globalSearch($request->all());
+            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns','crwCrew')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwSalaryStructures, 200);
         }
@@ -34,17 +35,13 @@ class CrwSalaryStructureController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwSalaryStructureRequest $request)
     {
         try {
-            DB::transaction(function () use ($request)
-            {
-                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
-                $crwSalaryStructure     = CrwSalaryStructure::create($crwSalaryStructureData);
-                $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
+            $crwSalaryStructureData = $request->only('crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks');
+            $crwSalaryStructure     = CrwSalaryStructure::create($crwSalaryStructureData);
 
-                return response()->success('Created Succesfully', $crwSalaryStructure, 201);
-            });
+            return response()->success('Created Successfully', null, 201);
         }
         catch (QueryException $e)
         {
@@ -61,7 +58,7 @@ class CrwSalaryStructureController extends Controller
     public function show(CrwSalaryStructure $crwSalaryStructure)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwSalaryStructure->load('crwSalaryStructureBreakdowns'), 200);
+            return response()->success('Retrieved successfully', $crwSalaryStructure->load('crwSalaryStructureBreakdowns','crwCrew'), 200);
         }
         catch (QueryException $e)
         {
@@ -76,18 +73,13 @@ class CrwSalaryStructureController extends Controller
      * @param  \App\Models\CrwSalaryStructure  $crwSalaryStructure
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwSalaryStructure $crwSalaryStructure)
+    public function update(CrwSalaryStructureRequest $request, CrwSalaryStructure $crwSalaryStructure)
     {
         try {
-            DB::transaction(function () use ($request, $crwSalaryStructure)
-            {
-                $crwSalaryStructureData = $request->only('crw_crew_id', 'increment_sequence', 'effective_date', 'promotion_id', 'currency', 'gross_salary', 'is_active', 'business_unit');
-                $crwSalaryStructure->update($crwSalaryStructureData);
-                $crwSalaryStructure->crwSalaryStructureBreakdowns()->delete();
-                $crwSalaryStructure->crwSalaryStructureBreakdowns()->createMany($request->crwSalaryStructureBreakdowns);
+            $crwSalaryStructureData = $request->only('crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks');
+            $crwSalaryStructure->update($crwSalaryStructureData);
 
-                return response()->success('Updated succesfully', $crwSalaryStructure, 202);
-            });
+            return response()->success('Updated successfully', $crwSalaryStructure, 202);
         }
         catch (QueryException $e)
         {

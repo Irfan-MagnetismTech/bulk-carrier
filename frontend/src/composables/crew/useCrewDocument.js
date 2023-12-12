@@ -100,6 +100,8 @@ export default function useCrewDocument() {
                     id: form.id,
                     document_name: form.document_name,
                     issuing_authority: form.issuing_authority,
+                    business_unit: form.business_unit,
+                    crw_crew_profile_id: form.crw_crew_profile_id,
                 }
                 // for edit
                 const { data, status } = await Api.put(`/crw/crw-crew-documents/${form.id}`, editData);
