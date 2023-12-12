@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccBankAccountRequest extends FormRequest
 {
@@ -17,7 +18,11 @@ class AccBankAccountRequest extends FormRequest
             'branch_name'     => ['required', 'string', 'max:255'],
             'account_type'    => ['required', 'string', 'max:255'],
             'account_name'    => ['required', 'string', 'max:255'],
-            'account_number'  => ['required', 'string', 'max:255'],
+            'account_number'  => ['required', 'string', 'max:255',
+                                Rule::unique('acc_bank_accounts')
+                                ->where('business_unit', $this->business_unit) 
+                                ->ignore($this->id),
+                             ],
             'routing_number'  => ['required', 'string', 'max:255'],
             'contact_number'  => ['required', 'string', 'max:255'],
             'opening_date'    => ['required'],
@@ -32,7 +37,7 @@ class AccBankAccountRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'account_number.unique'         => 'The Account Number field is exists within this business unit .',
         ];
     }
 

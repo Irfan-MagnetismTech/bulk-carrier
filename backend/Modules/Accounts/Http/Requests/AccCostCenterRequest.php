@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccCostCenterRequest extends FormRequest
 {
@@ -13,7 +14,9 @@ class AccCostCenterRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'name'          => ['required', 'string', 'max:255'],
+            'name'          => ['required', 'string', 'max:255',
+                                    Rule::unique('acc_cost_centers')->where('business_unit', $this->business_unit)->ignore($this->id),
+                            ],
             'short_name'    => ['required', 'string', 'max:6'],
             'type'          => ['required', 'string', 'max:255'],
             'business_unit' => ['required', 'string', 'max:255'],
@@ -29,6 +32,7 @@ class AccCostCenterRequest extends FormRequest
         return [
             'name.max'            => 'The Cost Center Name field cannot exceed 255 characters.',
             'name.required'       => 'The Cost Center Name field is required.',
+            'name.unique'         => 'The Cost Center Name field is exists within this business unit.',
 
             'short_name.max'      => 'The Short Name field cannot exceed 6 characters.',
             'short_name.required' => 'The Short Name field is required.',
