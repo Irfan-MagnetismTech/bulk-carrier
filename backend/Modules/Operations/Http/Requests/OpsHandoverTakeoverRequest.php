@@ -18,7 +18,7 @@ class OpsHandoverTakeoverRequest extends FormRequest
             'ops_charterer_profile_id'  => ['required'],
             'note_type'                 => ['required', 'string', 'max:255'],
             'effective_date'            => ['required', 'string', 'max:255'],
-            'exchange_rate'             => ['required', 'numeric'],
+            // 'exchange_rate'             => ['required', 'numeric'],
             'currency'                  => ['required', 'string', 'max:255'],
             'remarks'                  => ['nullable', 'string', 'max:255'],
         ];
