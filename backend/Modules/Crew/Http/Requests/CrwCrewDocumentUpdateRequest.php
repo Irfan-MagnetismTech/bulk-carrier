@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwCrewDocumentUpdateRequest extends FormRequest
 {
@@ -13,7 +14,10 @@ class CrwCrewDocumentUpdateRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'document_name'            => 'required|string|max:255',
+            'document_name'            => ['required', 'string', 'max:255', 
+                                            Rule::unique('crw_crew_documents')->where('business_unit', $this->business_unit)
+                                            ->where('crw_crew_profile_id', $this->crw_crew_profile_id)->ignore($this->id)
+                                        ],
             'issuing_authority'        => 'required|string|max:255',
         ];
     }
