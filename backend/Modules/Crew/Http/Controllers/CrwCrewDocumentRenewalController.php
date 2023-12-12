@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwCrewDocument;
 use Modules\Crew\Entities\CrwCrewDocumentRenewal;
+use Modules\Crew\Http\Requests\CrwCrewDocumentRenewRequest;
 
 class CrwCrewDocumentRenewalController extends Controller
 {
@@ -21,11 +22,10 @@ class CrwCrewDocumentRenewalController extends Controller
     /**
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(CrwCrewDocumentRenewRequest $request)
     {
         try {
             $renewData               = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment', 'crw_crew_document_id');
-            $renewData               = json_decode($request->get('data'), true);
             $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document');
             $crwCrewDocumentRenewal  = CrwCrewDocumentRenewal::create($renewData);
 
@@ -63,12 +63,10 @@ class CrwCrewDocumentRenewalController extends Controller
      * @param  \App\Models\CrwCrewDocument  $crwCrewDocument
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwCrewDocumentRenewal $crwCrewDocumentRenewal)
+    public function update(CrwCrewDocumentRenewRequest $request, CrwCrewDocumentRenewal $crwCrewDocumentRenewal)
     {
         try {
             $renewData = $request->only('issue_date', 'expire_date', 'reference_no', 'attachment', 'crw_crew_document_id');
-
-            $renewData = json_decode($request->get('data'),true);
             $renewData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-document', $crwCrewDocumentRenewal->attachment);
 
             $crwCrewDocumentRenewal->update($renewData);
