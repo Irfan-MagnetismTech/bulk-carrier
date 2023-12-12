@@ -79,7 +79,7 @@ class OpsVesselCertificateController extends Controller
             ]
         )->first();
 
-        if(!empty($request->isRenew)) {
+        if(empty($request->isRenew)) {
             if(!empty($exist)){
                 $error= [
                     'message'=>'This certificate is already assigned to this vessel.',
