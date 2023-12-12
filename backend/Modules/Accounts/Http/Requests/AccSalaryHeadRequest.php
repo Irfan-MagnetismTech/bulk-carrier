@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccSalaryHeadRequest extends FormRequest
 {
@@ -13,7 +14,11 @@ class AccSalaryHeadRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255',
+                        Rule::unique('acc_salary_heads')
+                        ->where('business_unit', $this->business_unit) 
+                        ->ignore($this->id),
+                     ],
         ];
     }
 
@@ -24,7 +29,8 @@ class AccSalaryHeadRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'name.required'       => 'The Salary Head field is required.',
+            'name.unique'         => 'The Salary Head field is exists within this business unit.',
         ];
     }
 

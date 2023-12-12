@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccAccountRequest extends FormRequest
 {
@@ -13,7 +14,9 @@ class AccAccountRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'account_name' => ['required', 'string', 'max:255'],
+            'account_name' => ['required', 'string', 'max:255',
+                                Rule::unique('acc_accounts')->where('business_unit', $this->business_unit)->ignore($this->id),
+                            ],
         ];
     }
 
@@ -24,6 +27,7 @@ class AccAccountRequest extends FormRequest
      */
     public function messages(): array {
         return [
+            'account_name.unique'   => 'The Account name field is exists within this business unit.',
             'account_name.required' => 'The Account Name field is required.',
             'account_name.max'      => 'The Account Name field must not exceed 2000.',
         ];
