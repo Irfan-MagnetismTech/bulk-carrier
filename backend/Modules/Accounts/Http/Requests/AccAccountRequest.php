@@ -14,9 +14,7 @@ class AccAccountRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'account_name' => ['required', 'string', 'max:255',
-                                Rule::unique('acc_accounts')->where('business_unit', $this->business_unit)->ignore($this->id),
-                            ],
+            'account_name' => ['required', 'string', 'max:255', Rule::unique('acc_accounts')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
     }
 

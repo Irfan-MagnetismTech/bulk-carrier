@@ -191,7 +191,7 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="label-group">
-      <span class="label-item-title"> Narration <span class="text-red-500"></span></span>
+      <span class="label-item-title"> Narration <span class="text-red-500">*</span></span>
       <textarea type="text" class="label-item-input" placeholder="Narration" v-model.trim="form.narration" required></textarea>
     </label>
   </div>
