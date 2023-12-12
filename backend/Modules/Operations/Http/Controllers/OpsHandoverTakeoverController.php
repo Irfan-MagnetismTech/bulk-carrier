@@ -59,8 +59,8 @@ class OpsHandoverTakeoverController extends Controller
                 'opsBunkers',
             );
             $check= OpsHandoverTakeover::where('ops_vessel_id', $request->ops_vessel_id)->latest()->first();
-            dd($check);
-            if($check->note_type == $request->note_type){
+        
+            if($check?->note_type == $request->note_type){
                 $error= [
                         'message'=>'You can not perform this action. This vessel is in '.strtolower($request->note_type). ' status.',
                         'errors'=>[
