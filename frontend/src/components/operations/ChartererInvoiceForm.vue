@@ -700,7 +700,9 @@ function CalculateAll() {
 
 function isActiveTill() {
   // console.log(props.form.bill_till, props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till);
-  // return props.form.bill_till != props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till;
+  if(props.formType == 'edit') {
+    return props.form.bill_till != props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till;
+  }
 }
 //watch opsChartererInvoiceServices
 watch(() => props?.form?.opsChartererInvoiceServices, (newVal, oldVal) => {
