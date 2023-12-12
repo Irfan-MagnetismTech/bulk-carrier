@@ -298,6 +298,7 @@ function changeRate(index) {
             <th class="py-3 align-center">PO Qty</th>
             <th class="py-3 align-center">PR Qty</th>
             <th class="py-3 align-center">Current Stock</th>
+            <th class="py-3 align-center">Remaining Qty</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 align-center">Rate</th>
             <th class="py-3 text-center align-center">Action</th>
@@ -350,6 +351,11 @@ function changeRate(index) {
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" v-model="form.scmMrrLines[index].current_stock" readonly class="form-input vms-readonly-input">
+              </label>
+            </td>
+            <td>
+              <label class="block mt-2 text-sm !w-24">
+                 <input type="number" :value="form.scmMrrLines[index].max_quantity" min=1 required readonly class="form-input"">
               </label>
             </td>
             <td>
