@@ -30,7 +30,7 @@ class OpsVoyageBoatNoteRequest extends FormRequest
             'vessel_draft'       => ['nullable', 'numeric'],
             'water_density'      => ['nullable', 'numeric'],
             'opsVoyageBoatNoteLines.*.voyage_note_type' =>  ['nullable', 'string'],
-            'opsVoyageBoatNoteLines.*.quantity' =>  ['nullable', 'integer'],
+            'opsVoyageBoatNoteLines.*.quantity' =>  ['nullable', 'numeric'],
         ];
     }
 
