@@ -7,7 +7,9 @@ import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import useMaterialReceiptReport from "../../composables/supply-chain/useMaterialReceiptReport";
 import ErrorComponent from '../utils/ErrorComponent.vue';
+import useHeroIcon from "../../assets/heroIcon";
 const { vessels, searchVessels } = useVessel();
+const icons = useHeroIcon();
 
 const { allAccountLists, allBankLists, allCostCenterLists,  allFixedAssetCategoryList, getFixedAssetCategory, getAccount, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
@@ -65,6 +67,7 @@ function fixedAssetCosts() {
     particular: '',
     amount: '',
     remarks: '',
+    isParticularDuplicate: false
   };
   props.form.fixedAssetCosts.push(obj);
 }
@@ -249,7 +252,24 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetCost, index) in form.fixedAssetCosts" :key="fixedAssetCost.id">
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.fixedAssetCosts[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
+              <div style="position: relative;">
+                <input
+                    type="text"
+                    v-model.trim="form.fixedAssetCosts[index].particular"
+                    placeholder="Particular"
+                    class="form-input"
+                    autocomplete="off"
+                    required
+                />
+                <span
+                    v-show="fixedAssetCost.isParticularDuplicate"
+                    class="text-yellow-600 pl-1"
+                    title="Duplicate Particular"
+                    v-html="icons.ExclamationTriangle"
+                    style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;"
+                ></span>
+              </div>
+<!--              <input type="text" v-model.trim="form.fixedAssetCosts[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />-->
             </td>
             <td class="px-1 py-1">
               <input type="number" step=".01" v-model.trim="form.fixedAssetCosts[index].amount" class="form-input !text-right" autocomplete="off" required />

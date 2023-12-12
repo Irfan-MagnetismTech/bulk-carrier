@@ -141,7 +141,11 @@ watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
   onMounted(() => {
     getCurrencies()
     watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+      if (props.formType == 'edit') {
+        getMaterialList(props.form.scm_pr_id,props.form.id);
+      } else {
       getMaterialList(props.form.scm_pr_id);
+      }
     });
     fetchVendor('');
   }); 

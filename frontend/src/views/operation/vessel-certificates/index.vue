@@ -96,14 +96,27 @@ let filterOptions = ref( {
     
     {
       "rel_type": null,
-      "relation_name": "opsMaritimeCertification",
+      "relation_name": null,
       "field_name": "validity",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Validity Period",
-      "filter_type": "input"
+      "filter_type": "dropdown",
+      "select_options": [
+          { value: "", label: "All" ,defaultSelected: true},
+          { value: "3", label: "3 Months" ,defaultSelected: false},
+          { value: "6", label: "6 Months" ,defaultSelected: false},
+          { value: "12", label: "1 Year" ,defaultSelected: false},
+          { value: "24", label: "2 Years" ,defaultSelected: false},
+          { value: "36", label: "3 Years" ,defaultSelected: false},
+          { value: "48", label: "4 Years" ,defaultSelected: false},
+          { value: "60", label: "5 Years" ,defaultSelected: false},
+          { value: "120", label: "10 Years" ,defaultSelected: false},
+          { value: "0", label: "Permanent" ,defaultSelected: false},
+         
+        ]
     },
     
     {
@@ -208,7 +221,15 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.name }}
                 </td>
                 <td>
-                  {{ item?.opsMaritimeCertification?.validity }}
+                  <span v-if=" item?.opsMaritimeCertification?.validity=='0'">Permanent</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='3'">3 Months</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='6'">6 Months</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='12'">1 Years</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='24'">2 Years</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='36'">3 Years</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='48'">4 Years</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='60'">5 Years</span>  
+                    <span v-if=" item?.opsMaritimeCertification?.validity=='120'">10 Years</span>  
                 </td>
                 <td>
                   <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('MM-DD-YYYY') : null }}</nobr>

@@ -34,7 +34,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr','scmMrrs')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -294,7 +294,13 @@ class ScmPoController extends Controller
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
-                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
+                if (request()->po_id) {
+                    $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                } else {
+                    $data['po_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity') + $data['po_quantity'];
+                $data['po_quantity'] = $data['po_quantity'] ?? 0;
                 return $data;
             });
         return response()->success('data list', $prMaterials, 200);

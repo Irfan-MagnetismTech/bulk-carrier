@@ -50,7 +50,7 @@ class OpsChartererInvoiceRequest extends FormRequest
             'ops_charterer_contract_id.required' => 'Charterer owner code is required',
             'contract_type.required' => 'Contract type is required',
             'bill_from.required' => 'Contract type is required',
-            'opsChartererInvoiceVoyages.*.ops_voyage_id.required' => 'Voyage is required for row is :position.',
+            'opsChartererInvoiceVoyages.*.ops_voyage_id.required' => 'Voyage is required for row :position.',
         ];
     }
 

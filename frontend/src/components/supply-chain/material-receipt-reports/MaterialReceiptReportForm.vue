@@ -146,7 +146,12 @@ watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
     if(newVal){
       props.form.scm_pr_no = newVal.ref_no;
     }
-    getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id);
+    if (props.formType == 'edit') {
+      getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id,props.form.id);
+    } else {
+      
+      getMaterialList(props.form.scm_pr_id,props.form.scm_po_id,props.form.scm_warehouse_id);
+    }
   });
   watch(() => props?.form?.scmCs, (newVal, oldVal) => {
     if(newVal){
@@ -235,12 +240,11 @@ function changeRate(index) {
           <!-- <Error v-if="errors?.scm_cs_no" :errors="errors.scm_cs_no"  /> -->
       </label>
       <label class="label-group" v-if="form.type == 'CASH'">
-          <span class="label-item-title">Cash Requisition<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Cash Requisition</span>
           <v-select :options="filteredCashRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.accCashRequisition" label="id" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.accCashRequisition"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -280,7 +284,7 @@ function changeRate(index) {
     </label>
   </div>
   
-  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll" :style="{ minHeight: dynamicMinHeight + 'px!important' }" > 
+  <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
         <div class=""> 
@@ -303,7 +307,7 @@ function changeRate(index) {
           <!-- <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800" v-if="form.scmWarehouse != null"> -->
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMrrLine, index) in form.scmMrrLines" :key="index">
-            <td class="!w-72">
+            <td class="!w-60">
               <v-select :options="materialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmMrrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -323,13 +327,13 @@ function changeRate(index) {
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].brand" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].brand" class="form-input" readonly>
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].model" class="form-input">
+                 <input type="text" v-model="form.scmMrrLines[index].model" class="form-input" readonly>
                </label>
               
             </td>
@@ -349,13 +353,13 @@ function changeRate(index) {
               </label>
             </td>
             <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].quantity" min=1 required class="form-input" :max="form.scmMrrLines[index].max_quantity" :class="{'border-2': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity}">
+              <label class="block mt-2 text-sm !w-24">
+                 <input type="number" v-model="form.scmMrrLines[index].quantity" min=1 required class="form-input" :max="form.scmMrrLines[index].max_quantity" :class="{'border-2': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMrrLines[index].quantity > form.scmMrrLines[index].max_quantity}">
               </label>
             </td> 
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMrrLines[index].rate" class="form-input" :min="form.type === 'CASH' ? 1 : null" :required="form.type === 'CASH'" @change="changeRate(index)" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
+                 <input type="number" v-model="form.scmMrrLines[index].rate" class="form-input" :min="form.type === 'CASH' ? 1 : null" :required="form.type === 'CASH'" @change="changeRate(index)" :readonly="form.type !== 'CASH'" :class="{'vms-readonly-input': form.type !== 'CASH'}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">

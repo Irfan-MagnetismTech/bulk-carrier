@@ -31,8 +31,8 @@
           </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-                <select v-model="form.currency" class="form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
+                <select v-model="form.currency" class="form-input" required>
                   <option value="">Select Currency</option>
                   <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
                 </select>
@@ -104,7 +104,7 @@
             <input type="text" v-model.trim="form.contact_no" placeholder="Contact No." class="form-input bg-gray-100" readonly autocomplete="off" />
         </label>
       </div>
-      <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+      <RemarksComponet v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
       
     </div>
 

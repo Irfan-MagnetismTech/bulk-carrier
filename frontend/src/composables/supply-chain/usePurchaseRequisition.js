@@ -222,7 +222,7 @@ export default function usePurchaseRequisition() {
 
     async function searchPr(business_unit, cost_center_id = null, searchParam = '') {
         //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
+        //const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {

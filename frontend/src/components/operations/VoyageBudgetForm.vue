@@ -41,6 +41,16 @@ function fetchVesselExpenseHeads(ops_vessel_id, loading) {
 function fetchVesselWiseVoyages(ops_vessel_id, loading) {
   searchVoyages("", props.form.business_unit, loading, ops_vessel_id)
 }
+
+watch(() => props.form.opsVoyage, (newValue, oldValue) => {
+    props.form.ops_voyage_id = null;
+    if(newValue){
+      props.form.ops_voyage_id = newValue?.id;
+      
+    }
+
+});
+
 watch(() => props.form.opsVessel, (newValue, oldValue) => {
     props.form.ops_vessel_id = null;
     // props.form.ops_vessel_id = newValue?.id;
@@ -114,7 +124,7 @@ onMounted(() => {
   </div>
   <!-- South Sectors -->
 
-  <div class="relative" v-if="form?.heads?.length > 0">
+  <div class="relative my-3" v-if="form?.heads?.length > 0">
 
     <div class="dt-responsive table-responsive">
       <table class="w-full whitespace-no-wrap" >
@@ -122,7 +132,7 @@ onMounted(() => {
             <tr class="w-full">
               <th class="">Expesne Head</th>
               <th class="">Currency</th>
-              <th class="">Unit</th>
+              <!-- <th class="">Unit</th> -->
               <th>Quantity</th>
               <th>Rate</th>
               <th>Exchange Rate (To USD)</th>
@@ -137,13 +147,13 @@ onMounted(() => {
               <template v-if="costGroup.opsSubHeads.length > 0">
                 <tr v-once>
                   <td colspan="9" class="bg-green-100 font-semibold !text-left">
-                      {{ costGroup?.name }}
+                      <nobr>{{ costGroup?.name }}</nobr>
                   </td>
                 </tr>
                 <tr v-for="(subhead, subIndex) in costGroup.opsSubHeads" :key="subIndex" class="text-gray-700 dark:text-gray-400">
                   <td class="px-1 py-1">
                     <span class="show-block">
-                      {{ subhead?.name }}
+                      <nobr>{{ subhead?.name }}</nobr>
                     </span>
                   </td>
                   <td>
@@ -152,19 +162,67 @@ onMounted(() => {
                       <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
                     </select>
                   </td>
+                  <!-- <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].unit" placeholder="Unit" class="form-input" autocomplete="off" />
+                  </td> -->
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].quantity" placeholder="Quantity" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].exchange_rate_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].exchange_rate_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].amount_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].amount_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
                 </tr>
               </template>
               <template v-else>
                 <tr v-once>
                   <td colspan="9" class="bg-green-100 font-semibold !text-left">
-                      {{ costGroup?.name }}
+                      <nobr>{{ costGroup?.name }}</nobr>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <span class="show-block">
-                      {{ costGroup?.name }}
+                      <nobr>{{ costGroup?.name }}</nobr>
                     </span>
+                  </td>
+                  <td>
+                    <select v-model.trim="form.heads[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
+                      <option selected value="" disabled>Select Currency</option>
+                      <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
+                    </select>
+                  </td>
+                  <!-- <td>
+                    <input type="text" v-model="form.heads[index].unit" placeholder="Unit" class="form-input" autocomplete="off" />
+                  </td> -->
+                  <td>
+                    <input type="text" v-model="form.heads[index].quantity" placeholder="Quantity" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].exchange_rate_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].exchange_rate_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].amount_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.heads[index].amount_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
                   </td>
                 </tr>
               </template>
@@ -174,27 +232,6 @@ onMounted(() => {
         </table>
     </div>
 
-        <!-- <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Cost Group and Cost Heads <span class="text-red-500">*</span></legend>
-          <div class="mt-2">
-            <div :id="'cost_' + index" :class="index%2===0 ? 'bg-gray-100' : 'bg-yellow-100'" style="position: relative" class="px-2 py-2 border sm:rounded-lg mb-1" v-for="(costGroup, index) in form.heads" :key="index">
-
-              <label class="flex items-center mb-2 text-gray-600 dark-disabled:text-gray-400">
-                <input type="checkbox" v-model="form.heads[index].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
-                <span class="ml-2 font-bold">{{ costGroup.name }}</span>
-              </label>
-
-              <template v-for="(subhead,subIndex) in form.heads[index]?.opsSubHeads" :key="subIndex">
-                <label class="flex ml-6 items-center mb-2 text-gray-600 dark-disabled:text-gray-400">
-                  <input type="checkbox" v-model="form.heads[index].opsSubHeads[subIndex].is_checked" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
-                  <span class="ml-2 font-bold">{{ subhead?.name }}</span>
-                </label>
-              </template>
-              
-            </div>
-          </div>
-        </fieldset> -->
-
   </div>
 
 
@@ -202,7 +239,7 @@ onMounted(() => {
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
-  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1 text-xs
 }
 
 .input-group {
@@ -218,9 +255,7 @@ onMounted(() => {
 .label-item-input {
   @apply block w-full mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-900;
 }
-.form-input {
-  @apply block mt-1 text-sm rounded dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray;
-}
+
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;

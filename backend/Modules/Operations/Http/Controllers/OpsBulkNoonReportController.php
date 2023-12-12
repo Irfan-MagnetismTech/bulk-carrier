@@ -67,12 +67,45 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportEngineInputs',
             );
 
-            $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);
 
+            if(isset($request->opsBulkNoonReportPorts)){
+                foreach($request->opsBulkNoonReportPorts as $key=>$data){
+                    if($data->last_port == $data->next_port){
+                        $error= [
+                            'message'=>'Last Port and Next Port can not be same for the row is .'.++$key,
+                            'errors'=>[
+                                'next_port'=>['Last Port and Next Port can not be same for the row is .'.++$key,
+                        ]]];
+
+                        return response()->json($error, 422);
+                    }
+                }
+
+            }
+            
+            if(isset($request->opsBulkNoonReportEngineInputs)){
+                $engines= [];
+                foreach($request->opsBulkNoonReportEngineInputs as $key=>$engine){
+                    $engines[]=$engine['engine_unit'];
+                }
+    
+                
+                if (count($engines) !== count(array_unique($engines))) {
+                    $error= [
+                        'message'=>'In Engine Inputs - Engine unit can not be same.',
+                        'errors'=>[
+                            'engine_unit'=>['In Engine Inputs - Engine unit  can not be same.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+                
+            $bulk_noon_report = OpsBulkNoonReport::create($bulk_noon_report_info);
             if(isset($request->opsBulkNoonReportPorts)){
                 $bulk_noon_report->opsBulkNoonReportPorts()->createMany($request->opsBulkNoonReportPorts);
             }
-
+            
             if(isset($request->opsBulkNoonReportCargoTanks)){
                 $bulk_noon_report->opsBulkNoonReportCargoTanks()->createMany($request->opsBulkNoonReportCargoTanks);
             }
@@ -165,7 +198,38 @@ class OpsBulkNoonReportController extends Controller
                 'opsBulkNoonReportDistance',
                 'opsBulkNoonReportEngineInputs',
             );
-            
+            if(isset($request->opsBulkNoonReportPorts)){
+                foreach($request->opsBulkNoonReportPorts as $key=>$data){
+                    if($data->last_port == $data->next_port){
+                        $error= [
+                            'message'=>'Last Port and Next Port can not be same for the row is .'.++$key,
+                            'errors'=>[
+                                'next_port'=>['Last Port and Next Port can not be same for the row is .'.++$key,
+                        ]]];
+
+                        return response()->json($error, 422);
+                    }
+                }
+
+            }
+            if(isset($request->opsBulkNoonReportEngineInputs)){
+                $engines= [];
+                foreach($request->opsBulkNoonReportEngineInputs as $key=>$engine){
+                    $engines[]=$engine['engine_unit'];
+                }
+    
+                
+                if (count($engines) !== count(array_unique($engines))) {
+                    $error= [
+                        'message'=>'In Engine Inputs - Engine unit can not be same.',
+                        'errors'=>[
+                            'engine_unit'=>['In Engine Inputs - Engine unit  can not be same.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
             $bulk_noon_report->update($bulk_noon_report_info);
             
             $bulk_noon_report->opsBulkNoonReportPorts()->delete();

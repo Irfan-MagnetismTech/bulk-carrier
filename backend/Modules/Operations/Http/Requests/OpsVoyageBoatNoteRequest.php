@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OpsVoyageBoatNoteRequest extends FormRequest
@@ -23,7 +24,7 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_voyage_id'      => ['required'],
+            'ops_voyage_id'      => ['required', Rule::unique('ops_voyage-boat-notes')->ignore($this->route('voyage_boat_note'), 'id')],
             'ops_vessel_id'      => ['required'],
             'type'               => ['nullable'],
             'vessel_draft'       => ['nullable', 'numeric'],
@@ -42,6 +43,7 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     {
         return [
             'ops_voyage_id.required' => 'Voyage is required.',
+            'ops_voyage_id.unique' => 'Voyage is already taken.',
             'ops_vessel_id.required' => 'Vessel is required.',
             'vessel_draft.numeric' => 'Draft must be numeric.',
             'water_density.numeric' => 'Density must be numeric.',

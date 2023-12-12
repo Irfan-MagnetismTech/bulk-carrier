@@ -52,23 +52,34 @@ class OpsHandoverTakeoverController extends Controller
     */
     public function store(OpsHandoverTakeoverRequest $request): JsonResponse
     {
-    try {
-        DB::beginTransaction();
-        $handover_takeover_info = $request->except(
-            '_token',
-            'opsBunkers',
-        );
-
-        $handover_takeover = OpsHandoverTakeover::create($handover_takeover_info);            
-        $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
-        DB::commit();
-        return response()->success('Data added successfully.', $handover_takeover, 201);
-    }
-    catch (QueryException $e)
-    {
-        DB::rollBack();
-        return response()->error($e->getMessage(), 500);
-    }
+        try {
+            DB::beginTransaction();
+            $handover_takeover_info = $request->except(
+                '_token',
+                'opsBunkers',
+            );
+            $check= OpsHandoverTakeover::where('ops_vessel_id', $request->ops_vessel_id)->latest()->first();
+        
+            if($check?->note_type == $request->note_type){
+                $error= [
+                        'message'=>'You can not perform this action. This vessel is in '.strtolower($request->note_type). ' status.',
+                        'errors'=>[
+                            'note_type'=>['You can not perform this action. This vessel is in '.strtolower($request->note_type). ' status.',
+                ]]];
+                return response()->json($error, 422);
+            }
+            
+            $handover_takeover = OpsHandoverTakeover::create($handover_takeover_info);            
+            $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
+            DB::commit();
+            return response()->success('Data added successfully.', $handover_takeover, 201);
+        }
+        catch (QueryException $e)
+        {
+            // dd($e->getMessage());
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
  
     /**

@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('perticular')->nullable();
             $table->string('percentage')->nullable();
             $table->string('currency')->nullable();
+            $table->string('type');
+            $table->float('quantity', 20, 2);
+            $table->float('rate', 20, 2);
             $table->float('amount', 20, 2)->nullable();
             $table->float('exchange_rate_bdt', 20, 2)->nullable();
             $table->float('exchange_rate_usd', 20, 2)->nullable();

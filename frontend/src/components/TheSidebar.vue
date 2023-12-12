@@ -17,7 +17,7 @@ const thisHeight = ref(0);
 
 function revealChild(items,elementIndex) {
   mainSidebar.value.forEach((element, index) => {
-    //only element is_show is true when elementIndex is equal to index else false
+        //only element is_show is true when elementIndex is equal to index else false
     if(elementIndex === index){
       element.is_open= !element.is_open;
       element.is_active = !element.is_active;
@@ -56,6 +56,16 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
   });
 }
 
+function replaceLastOccurrence(mainString, search, replacement) {
+    var lastIndex = mainString.lastIndexOf(search);
+
+    if (lastIndex === -1) {
+        return mainString;
+    }
+
+    return mainString.slice(0, lastIndex) + replacement + mainString.slice(lastIndex + search.length);
+}
+
 </script>
 <template>
     <div class="ml-2 py-2 text-gray-500 dark-disabled:text-gray-400">
@@ -85,7 +95,7 @@ function toggleActiveClass(elementIndex,elementSubIndex,elementGrandSubIndex) {
                     <ul v-if="elementSubMenu?.subSubMenu?.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" style="height: 100%" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark-disabled:text-gray-400 dark-disabled:bg-gray-900 grand-child" aria-label="submenu">
                       <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150  dark-disabled:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
                         <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark-disabled:hover:text-gray-200 dark-disabled:text-gray-400">
-                          -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.route === currentRoute.name}">{{ elementSubSubMenu.label }}</span>
+                          -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.route === currentRoute.name ? true : currentRoute.name.includes(replaceLastOccurrence(elementSubSubMenu.route, '.index',''))}">{{ elementSubSubMenu.label }} </span>
                         </router-link>
                       </li>
                     </ul>
