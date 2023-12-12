@@ -13,7 +13,7 @@ export default [
         subMenu: [
             {
                 route: 'crw.ranks.index',
-                label: 'Rank List',
+                label: 'Ranks',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -63,7 +63,7 @@ export default [
             },
             {
                 route: 'crw.crewRequisitions.index',
-                label: 'Crew Requisition',
+                label: 'Crew Requisitions',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -73,7 +73,7 @@ export default [
             },
             {
                 route: 'crw.recruitmentApprovals.index',
-                label: 'Recruitment Approval',
+                label: 'Recruitment Approvals',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
@@ -92,7 +92,7 @@ export default [
                 subSubMenu: [
                     {
                         route: 'crw.agencies.index',
-                        label: 'Agency List',
+                        label: 'Profiles',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -102,7 +102,7 @@ export default [
                     },
                     {
                         route: 'crw.agencyContracts.index',
-                        label: 'Contract List',
+                        label: 'Contracts',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -112,7 +112,7 @@ export default [
                     },
                     {
                         route: 'crw.agencyBills.index',
-                        label: 'Agency Bills',
+                        label: 'Bills',
                         preIcon: '',
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -124,7 +124,7 @@ export default [
             },
             {
                 route: 'crw.profiles.index',
-                label: 'Crew Profile',
+                label: 'Crew Profiles',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
