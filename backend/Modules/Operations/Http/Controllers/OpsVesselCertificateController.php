@@ -72,6 +72,22 @@ class OpsVesselCertificateController extends Controller
     */
     public function store(OpsVesselCertificateRequest $request): JsonResponse
     {
+        $exist = OpsVesselCertificate::where(
+            [
+                'ops_vessel_id' => $request->ops_vessel_id,
+                'ops_maritime_certification_id' => $request->ops_maritime_certification_id
+            ]
+        )->first();
+
+        if(!empty($exist)){
+            $error= [
+                'message'=>'This certificate is already assigned to this vessel.',
+                'errors'=>[
+                    'next_port'=>['This certificate is already assigned to this vessel.',
+            ]]];
+
+            return response()->json($error, 422);
+        }
         try {
             DB::beginTransaction();
             $vesselCertificate = $request->except(
