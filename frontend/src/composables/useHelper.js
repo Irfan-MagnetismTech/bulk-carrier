@@ -30,14 +30,14 @@ export default function useHelper() {
       * 
       */
        
-  const downloadFile = (data, fileName,headers) => {
-        // const fileType = headers['content-type'];
-        // const fileExtension = fileTypeToExtension[fileType] || 'unknown';
-        // const fileName = `materials.${fileExtension}`;
-        const url = window.URL.createObjectURL(new Blob([data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName);
+  const downloadFile = (data, fileName, headers) => {
+    // const fileType = headers['content-type'];
+    // const fileExtension = fileTypeToExtension[fileType] || 'unknown';
+    // const fileName = `materials.${fileExtension}`;
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName + '.xlsx');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
