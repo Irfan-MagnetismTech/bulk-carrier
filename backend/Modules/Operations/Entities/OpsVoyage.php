@@ -23,6 +23,7 @@ class OpsVoyage extends Model
         'sail_date',
         'transit_date',
         'remarks',
+        'is_billed',
         'business_unit'
     ];
 

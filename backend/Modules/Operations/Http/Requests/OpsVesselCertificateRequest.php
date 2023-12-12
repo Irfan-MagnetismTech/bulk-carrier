@@ -23,7 +23,7 @@ class OpsVesselCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id' => ['required', 'numeric', 'max:50'],
+            'ops_vessel_id' => ['required', 'numeric', 'max:50', Rule::unique('ops_vessel_certificates')->ignore($this->route('vessel_certificate'), 'id')],
             'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
             'issue_date' => ['required'],
             'expire_date' => Rule::requiredIf(function () {
