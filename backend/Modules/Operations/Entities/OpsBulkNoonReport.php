@@ -63,6 +63,7 @@ class OpsBulkNoonReport extends Model
     {
         return $this->hasMany(OpsBulkNoonReportPort::class, 'ops_bulk_noon_report_id', 'id');
     }
+    
     public function opsBulkNoonReportCargoTanks()
     {
         return $this->hasMany(OpsBulkNoonReportCargoTank::class, 'ops_bulk_noon_report_id', 'id');

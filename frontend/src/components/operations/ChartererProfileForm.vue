@@ -14,7 +14,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.owner_code" placeholder="Charterer Owner Code" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.owner_code" maxlength="10" placeholder="Charterer Owner Code" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
         </label>
         
         
