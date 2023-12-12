@@ -20,7 +20,6 @@ return [
     'currencies' => [
         'BDT',
         'USD',
-        'INR',
     ],
     
     'lc_cost_heads' => [
