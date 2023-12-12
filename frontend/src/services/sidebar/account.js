@@ -107,7 +107,7 @@ export default [
             },
             {
                 route: '',
-                label: 'Loans',
+                label: 'Loan Management',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,
