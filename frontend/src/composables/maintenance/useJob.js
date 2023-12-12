@@ -88,6 +88,7 @@ export default function useItemGroup() {
 
     async function storeJob(form) {
 
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -126,6 +127,7 @@ export default function useItemGroup() {
 
     async function updateJob(form, jobId) {
 
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -134,7 +136,7 @@ export default function useItemGroup() {
                 `/mnt/jobs/${jobId}`,
                 form
             );
-            job.value = data.value;
+                        job.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "mnt.jobs.index" });
         } catch (error) {
@@ -191,6 +193,46 @@ export default function useItemGroup() {
             isLoading.value = false;
             isJobLoading.value = false;
             //NProgress.done();
+        }
+    }
+
+    function checkUniqueArray(form){
+        const jobDescriptionSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.mntJobLines.some((jobLine, index) => {
+            // mntWorkRequisitionMaterials.filter(val => val.material_name_and_code === mntWorkRequisitionMaterial.material_name_and_code)?.length > 1;
+            // if (jobDescriptionSet.has(jobLine.job_description)) {
+            if (form.mntJobLines.filter(val => val.job_description === jobLine.job_description)?.length > 1) {
+                let data = `Duplicate Job Description [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.mntJobLines[index].isJobDescriptionDuplicate = true;
+            } else {
+                form.mntJobLines[index].isJobDescriptionDuplicate = false;
+            }
+            // jobDescriptionSet.add(jobLine.job_description);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
