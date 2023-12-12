@@ -79,15 +79,18 @@ class OpsVesselCertificateController extends Controller
             ]
         )->first();
 
-        if(!empty($exist)){
-            $error= [
-                'message'=>'This certificate is already assigned to this vessel.',
-                'errors'=>[
-                    'next_port'=>['This certificate is already assigned to this vessel.',
-            ]]];
-
-            return response()->json($error, 422);
+        if(!empty($request->isRenew)) {
+            if(!empty($exist)){
+                $error= [
+                    'message'=>'This certificate is already assigned to this vessel.',
+                    'errors'=>[
+                        'next_port'=>['This certificate is already assigned to this vessel.',
+                ]]];
+    
+                return response()->json($error, 422);
+            }
         }
+        
         try {
             DB::beginTransaction();
             $vesselCertificate = $request->except(

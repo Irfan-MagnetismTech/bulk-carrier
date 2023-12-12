@@ -114,6 +114,7 @@ watch(dropZoneFile, (value) => {
 onMounted(() => {
   showVessel(vesselId);
   showMaritimeCertificate(marineCertificateId);
+  props.form.isRenew='renew';
   // marineCertificateId
 });
 </script>
