@@ -22,10 +22,10 @@
     <div v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 ">Report Type </span>
-            <select v-model="form.type" class="form-input">
+            <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
+            <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
               <option value="" disabled selected>Select Option</option>
               <option value="Noon Report">Noon Report</option>
               <option value="Arrival Report">Arrival Report</option>
@@ -45,7 +45,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
-                <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+                <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
@@ -59,7 +59,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
                 <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
-                <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+                <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
@@ -109,7 +109,9 @@
         <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700">Last Port <span class="text-red-500">*</span></span>
+                    <span class="text-gray-700 flex">Last Port <span class="text-red-500">*</span>
+                      <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+                    </span>
                     <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
                       <template #search="{attributes, events}">
                           <input
@@ -123,7 +125,9 @@
                     <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700">Next Port <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 flex">Next Port <span class="text-red-500">*</span>
+                <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+              </span>
               <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -154,10 +158,9 @@
             </label>
           </div>
 
-          <RemarksComponet v-model="form.opsBulkNoonReportPorts[index].remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+          <RemarksComponet v-model="form.opsBulkNoonReportPorts[index].remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
 
-
-          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
+          <div class="hidden flex flex-col justify-center w-full md:flex-row md:gap-2 my-3">
             <button type="button" @click="addPort()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -410,7 +413,10 @@
                         <option value="engine_unit">Engine Unit</option>
                         <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
                     </select>
-                    <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit">
+                    <span class="text-red-500 pl-1" v-if="item.type=='engine_unit'">*</span>
+                    <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit" required>
+                    <span v-show="isEngineInputDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+
                   </div>
                 </td>
                 <td>
@@ -562,9 +568,9 @@ import useBulkNoonReport from "../../composables/operations/useBulkNoonReport";
 import cloneDeep from 'lodash/cloneDeep';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import useHeroIcon from "../../assets/heroIcon";
 
-const editInitiated = ref(false);
-
+const icons = useHeroIcon();
 const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
@@ -585,6 +591,9 @@ const props = defineProps({
 const isBunkerConsumptionModalOpen = ref(0);
 const bunkerConsumptionDetails = ref([{type: ''}]);
 const currentConsumptionIndex = ref(null);
+const editInitiated = ref(false);
+const isPortDuplicate = ref(false);
+const isEngineInputDuplicate = ref(false);
 
 const openTab = ref(1);
 const toggleTabs = (tabNumber) => {
@@ -651,20 +660,7 @@ function removeEngineType(index) {
   props.form.opsBulkNoonReportEngineInputs.splice(index, 1);
 }
 
-watch(() => props.form.business_unit, (value) => {
-  vessels.value = []
-  voyages.value = []
-  if(props?.formType != 'edit') {
-    props.form.opsVoyage = null;
-    props.form.ops_voyage_id = null;
-    props.form.opsVessel = null;
-    props.form.ops_vessel_id = null;
-  }
 
-  getVesselList(props.form.business_unit);
-  searchPorts("", props.form.business_unit);
-
-}, { deep : true })
 
 watch(() => props.form.opsVoyage, (value) => {
   props.form.ops_voyage_id = null;
@@ -684,11 +680,55 @@ watch(() => props.form.opsVessel, (value) => {
 }, { deep: true })
 
 watch(() => props.form.opsBulkNoonReportPorts, (value) => {
+  var portCodes = [];
+
   for(const port in value) {
     value[port].last_port = value[port]?.lastPort?.code
     value[port].next_port = value[port]?.nextPort?.code
+
+
+    const lastPortCode = value[port]?.lastPort?.code;
+    const nextPortCode = value[port]?.nextPort?.code;
+
+    portCodes.push(lastPortCode);
+    portCodes.push(nextPortCode);
+
   }
+
+  if (portCodes.length !== new Set(portCodes).size) {
+      isPortDuplicate.value = true;
+    } else {
+      isPortDuplicate.value = false;
+    }
+
 }, {deep: true} )
+
+watch(() => props.form.opsBulkNoonReportEngineInputs, (value) => {
+  var engineInputs = [];
+  var engineUnits = [];
+
+  for(const engineInputIndex in value) {
+    engineInputs.push(value[engineInputIndex].type)
+    engineUnits.push(value[engineInputIndex].engine_unit)
+  }
+
+  let newEngineInputs = engineInputs.filter(function(item) {
+      return item !== 'engine_unit'
+  })
+
+  let newEngineUnits = engineUnits.filter(function(item) {
+      return item !== null
+  })
+
+  
+  if ((newEngineInputs.length !== new Set(newEngineInputs).size )|| (newEngineUnits.length !== new Set(newEngineUnits).size)) {
+    isEngineInputDuplicate.value = true;
+  } else {
+    isEngineInputDuplicate.value = false;
+  }
+
+
+}, { deep: true })
 
 watch(() => vessel, (value) => {
 if(value?.value) {
@@ -713,6 +753,7 @@ onMounted(() => {
   getVesselList(props.form.business_unit);
   getBunkerConsumptionHeadList();
   getEngineTemparatureTypeList();
+  searchPorts("", props.form.business_unit);
 });
 </script>
 <style lang="postcss" scoped>

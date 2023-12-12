@@ -15,19 +15,19 @@ return new class extends Migration
     {
         Schema::create('ops_customers', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('legal_name');
+            $table->string('code')->unique();
+            $table->string('legal_name')->unique();
             $table->string('name');
             $table->string('postal_address')->nullable();
             $table->string('city')->nullable();
             $table->string('post_code')->nullable();
             $table->string('country');
             $table->string('tax_id')->nullable();
-            $table->string('business_license_no')->nullable();
+            $table->string('business_license_no')->unique()->nullable();
             $table->string('bin_gst_sst_type')->nullable();
-            $table->string('bin_gst_sst_no')->nullable();
+            $table->string('bin_gst_sst_no')->unique()->nullable();
             $table->string('phone');
-            $table->string('company_reg_no')->nullable();
+            $table->string('company_reg_no')->unique()->nullable();
             $table->string('email_general')->nullable();
             $table->string('email_agreement')->nullable();
             $table->string('email_invoice')->nullable();

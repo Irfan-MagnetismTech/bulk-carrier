@@ -80,7 +80,7 @@ class MntCriticalVesselItemController extends Controller
     {
         try {
             
-            $mntCriticalVesselItem = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction','mntCriticalItemSps'])->find($id);
+            $mntCriticalVesselItem = MntCriticalVesselItem::with(['opsVessel:id,name','mntCriticalItem.mntCriticalItemCat.mntCriticalFunction.mntCriticalItemCats','mntCriticalItem.mntCriticalItemCat.mntCriticalItems','mntCriticalItemSps'])->find($id);
             
             return response()->success('Critical vessel item found successfully', $mntCriticalVesselItem, 200);
             
@@ -145,6 +145,16 @@ class MntCriticalVesselItemController extends Controller
         try {
             DB::beginTransaction();
             $mntCriticalVesselItem = MntCriticalVesselItem::findorfail($id);
+            
+            if ($mntCriticalVesselItem->mntCriticalSpListLines()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it is in use."]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             // Delete critical item spare parts
             $mntCriticalVesselItem->mntCriticalItemSps()->delete();
             // Delete critical item
@@ -165,12 +175,12 @@ class MntCriticalVesselItemController extends Controller
     public function getCriticalVesselItems() {
         try {
 
-            $criticalVesselItems = MntCriticalVesselItem::with(['mntCriticalItem.mntCriticalItemSps'])            
+            $criticalVesselItems = MntCriticalVesselItem::with(['mntCriticalItem','mntCriticalItemSps'])            
                                 ->when(request()->has('ops_vessel_id'), function($q){
                                     $q->where('ops_vessel_id', request()->ops_vessel_id); 
                                 })
                                 ->where('is_critical', 1)
-                                ->get()->pluck('mntCriticalItem');
+                                ->get();
 
             return response()->success('Critical vessel items are retrieved successfully', $criticalVesselItems, 200);
             

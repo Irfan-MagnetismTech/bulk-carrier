@@ -6,6 +6,7 @@ use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsPort;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Maintenance\Entities\MntCriticalVesselItem;
 
 class OpsVessel extends Model
 {
@@ -78,5 +79,10 @@ class OpsVessel extends Model
     public function portOfRegistry()
     {
         return $this->belongsTo(OpsPort::class, 'port_of_registry', 'code');
+    }
+
+    public function mntCriticalVesselItems ()
+    {
+        return $this->hasMany(MntCriticalVesselItem::class)->where("is_critical", 1);
     }
 }

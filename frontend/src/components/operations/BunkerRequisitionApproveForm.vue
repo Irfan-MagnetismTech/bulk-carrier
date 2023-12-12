@@ -33,18 +33,20 @@
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
-              <th class="w-16">SL</th>
               <th>Bunker Name/Particulars</th>
               <th class="w-40">Unit</th>
               <th class="w-40">Supplier</th>
+              <th class="w-40">Currency</th>
               <th class="w-40">Quantity</th>
+              <th class="w-40">Rate</th> 
+              <th class="w-20">Exchange Rate (To USD)</th>
+              <th class="w-20">Exchange Rate (USD To BDT)</th>              
+              <th class="w-40">Amount(USD)</th>
+              <th class="w-40">Amount(BDT)</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
-              <td>
-                {{ index+1 }}
-              </td>
               <td>                
                 <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
               </td>
@@ -64,8 +66,41 @@
                 </v-select> -->
               </td>
               <td>
+                <label class="block w-full mt-2 text-sm">
+                  <select v-model.trim="form.opsBunkers[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
+                    <option selected value="" disabled>Select Currency</option>
+                     <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
+                  </select>
+                </label>
+              </td>
+              <td>
                 <label class="block w-full mt-2 text-sm ">
-                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right !bg-gray-100" readonly autocomplete="off" />
+                  <input type="text" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm ">
+                  <input type="text" v-model.trim="form.opsBunkers[index].rate" placeholder="Rate" class="form-input text-right" autocomplete="off" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm ">
+                  <input type="text" v-model.trim="form.opsBunkers[index].exchange_rate_usd" placeholder="To USD" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsBunkers,index)"/>
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm ">
+                  <input type="text" v-model.trim="form.opsBunkers[index].exchange_rate_bdt" placeholder="To BDT" class="form-input text-right" autocomplete="off" :readonly="isBDTCurrency(form.opsBunkers,index)"/>
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm ">
+                  <input type="text" v-model.trim="form.opsBunkers[index].amount_usd" placeholder="Amount(USD)" class="form-input text-right !bg-gray-100" readonly autocomplete="off"/>
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm ">
+                  <input type="text" v-model.trim="form.opsBunkers[index].amount_bdt" placeholder="Amount(BDT)" class="form-input text-right !bg-gray-100" readonly autocomplete="off" />
                 </label>
               </td>
             </tr>
@@ -89,9 +124,12 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import LoaderComponent from "../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../utils/ErrorComponent.vue";
+import useBusinessInfo from '../../composables/useBusinessInfo';
 
 const editInitiated = ref(false);
 
+
+const { currencies, getCurrencies } = useBusinessInfo();
 const { voyage, voyages, showVoyage, searchVoyages, isVoyageLoading } = useVoyage();
 const { vessel, showVessel, isVesselLoading } = useVessel();
 
@@ -119,6 +157,60 @@ watch(() => props.form.opsVoyage, (value) => {
     showVoyage(value?.id)
   }
 }, { deep: true });
+
+
+const isUSDCurrency = (item,index) => {
+  const currency = item[index].currency;
+  return currency === 'USD';
+};
+
+const isBDTCurrency = (item,index) => {
+  const currency = item[index].currency;
+  return currency === 'BDT';
+};
+
+const SetCurrencyData = (e,index) => {
+  console.log(e.target.value,index);
+}
+
+watch(() => props?.form?.opsBunkers, (newVal, oldVal) => {
+      let total_bdt = 0.0;
+      let total_usd = 0.0;
+      newVal?.forEach((line, index) => {
+        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        console.log(amount_bdt, '-', amount_usd);
+        total_bdt += amount_bdt;
+        total_usd += amount_usd;
+        props.form.amount_usd = total_usd;
+        props.form.amount_bdt = total_bdt;
+      });
+}, { deep: true });
+
+
+const calculateInCurrency = (item,index) => {
+  const currency = item.currency;
+  if(currency == 'USD'){
+    item.amount_usd = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * item?.exchange_rate_bdt).toFixed(2));
+  } else if(currency == 'BDT'){
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * item?.exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity).toFixed(2));
+  }
+  else {
+    // item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * item?.exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * item?.exchange_rate_usd * item?.exchange_rate_bdt).toFixed(2));
+  }
+  return {amount: item.amount, amount_usd: item.amount_usd, amount_bdt: item.amount_bdt};
+}
+
+
+
+onMounted(() => {
+  getCurrencies();
+})
+
+
 
 
 const bunkerReset = ref([]);

@@ -36,4 +36,9 @@ class OpsChartererProfile extends Model
     {
         return $this->name . ' - ' . $this->owner_code;
     }
+
+    public function opsChartererInvoices()
+    {
+        return $this->hasMany(OpsChartererInvoice::class, 'ops_charterer_profile_id', 'id');
+    }
 }

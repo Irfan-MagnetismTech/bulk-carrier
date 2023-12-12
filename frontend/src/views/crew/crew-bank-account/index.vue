@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useCrewBankAccount from "../../../composables/crew/useCrewBankAccount";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -16,6 +15,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
+import useCrewBankAccount from "../../../composables/crew/useCrewBankAccount";
 
 const props = defineProps({
   page: {
@@ -99,7 +99,7 @@ let filterOptions = ref( {
     //   "date_from": null,
     //   "label": "Status",
     //   "filter_type": "input"
-    // },    
+    // },
   ]
 });
 
@@ -180,10 +180,10 @@ onMounted(() => {
               <td> {{ crewBankAccount?.bank_name }} </td>
               <td> {{ crewBankAccount?.account_name }} </td>
               <td> {{ crewBankAccount?.account_number }} </td>
-              <!-- <td>   
-                <span :class="crewBankAccount?.is_active === 1 ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> 
-                  {{ crewBankAccount?.is_active === 1 ? "Active" : "Deactive" }} 
-                </span>              
+              <!-- <td>
+                <span :class="crewBankAccount?.is_active === 1 ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
+                  {{ crewBankAccount?.is_active === 1 ? "Active" : "Deactive" }}
+                </span>
               </td> -->
               <td>
                 <span :class="crewBankAccount?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewBankAccount?.business_unit }}</span>

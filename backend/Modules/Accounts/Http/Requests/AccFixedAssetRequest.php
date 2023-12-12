@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccFixedAssetRequest extends FormRequest
 {
@@ -21,7 +22,11 @@ class AccFixedAssetRequest extends FormRequest
             'serial'                       => 'max:255',
             'acc_parent_account_id'        => 'required|integer',
             'acc_account_id'               => 'required|integer',
-            'asset_tag'                    => 'nullable|string|max:255',
+            'asset_tag'                    => ['required', 'string', 'max:255',
+                                                Rule::unique('acc_fixed_assets')
+                                                ->where('business_unit', $this->business_unit)
+                                                ->ignore($this->id),
+                                            ],
             'location'                     => 'nullable|string|max:255',
             'acquisition_date'             => 'required|date',
             'useful_life'                  => 'required|numeric|min:1',
@@ -42,7 +47,7 @@ class AccFixedAssetRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'asset_tag.unique'         => 'The asset tag field is exists within this business unit.',
         ];
     }
 

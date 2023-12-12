@@ -85,6 +85,8 @@ export default function useItem() {
 
     async function storeItem(form) {
 
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
@@ -122,6 +124,7 @@ export default function useItem() {
     }
 
     async function updateItem(form, itemId) {
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -273,6 +276,42 @@ export default function useItem() {
             //NProgress.done();
         }
     }    
+
+    function checkUniqueArray(form){
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.description.some((des, index) => {
+            if (form.description.filter(val => val.key === des.key)?.length > 1) {
+                let data = `Duplicate Key [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.description[index].isKeyDuplicate = true;
+            } else {
+                form.description[index].isKeyDuplicate = false;
+            }
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
     
 
     return {

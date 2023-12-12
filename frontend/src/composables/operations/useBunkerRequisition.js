@@ -193,7 +193,23 @@ export default function useBunkerRequisition() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false);
+			isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
+
+	async function searchBunkerRequisitionsByVendor(searchParam) {
+		//NProgress.start();
+		try {
+			const { data, status } = await Api.get(`/ops/search-bunker-requisitions-by-vendor?scm_vendor_id=${searchParam}`);
+			bunkerRequisitions.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			isLoading.value = false;
 			//NProgress.done();
 		}
 	}
@@ -208,6 +224,7 @@ export default function useBunkerRequisition() {
 		deleteBunkerRequisition,
 		searchBunkerRequisitions,
 		approvedBunkerRequisition,
+		searchBunkerRequisitionsByVendor,
 		isLoading,
 		isTableLoading,
 		errors,

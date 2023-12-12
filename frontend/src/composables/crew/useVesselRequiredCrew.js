@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useVesselRequiredCrew() {
     const router = useRouter();
@@ -22,6 +23,7 @@ export default function useVesselRequiredCrew() {
                 required_manpower: '',
                 eligibility: '',
                 remarks: '',
+                isRankNameDuplicate: false
             }
         ]
     });
@@ -78,20 +80,24 @@ export default function useVesselRequiredCrew() {
 
     async function storeVesselRequiredCrew(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-vessel-required-crews', form);
-            vesselRequiredCrew.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.vesselRequiredCrews.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.post('/crw/crw-vessel-required-crews', form);
+                vesselRequiredCrew.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.vesselRequiredCrews.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -115,23 +121,27 @@ export default function useVesselRequiredCrew() {
 
     async function updateVesselRequiredCrew(form, VesselRequiredCrewId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.put(
-                `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`,
-                form
-            );
-            vesselRequiredCrew.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.vesselRequiredCrews.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.put(
+                    `/crw/crw-vessel-required-crews/${VesselRequiredCrewId}`,
+                    form
+                );
+                vesselRequiredCrew.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.vesselRequiredCrews.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -153,6 +163,44 @@ export default function useVesselRequiredCrew() {
         }
     }
 
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.crwVesselRequiredCrewLines.some((item,index) => {
+            if (itemNamesSet.has(item.crw_rank_id)) {
+                let data = `Duplicate Rank Name [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.crwVesselRequiredCrewLines[index].isRankNameDuplicate = true;
+            } else {
+                form.crwVesselRequiredCrewLines[index].isRankNameDuplicate = false;
+            }
+            itemNamesSet.add(item.crw_rank_id);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         vesselRequiredCrews,
         vesselRequiredCrew,
@@ -161,6 +209,7 @@ export default function useVesselRequiredCrew() {
         showVesselRequiredCrew,
         updateVesselRequiredCrew,
         deleteVesselRequiredCrew,
+        checkUniqueArray,
         isLoading,
         isTableLoading,
         errors,

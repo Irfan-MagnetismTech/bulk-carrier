@@ -263,12 +263,13 @@ export default function usePurchaseOrder() {
     }
 
     
-    async function getMaterialList(prId) {
+    async function getMaterialList(prId,poId = null) {
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
                 params: {
                     pr_id: prId,
+                    po_id: poId,
                 },
             });
             prMaterialList.value = data.value;

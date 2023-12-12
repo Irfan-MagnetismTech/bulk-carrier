@@ -54,4 +54,16 @@ class OpsChartererContract extends Model
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');
     }
+
+    public function opsChartererInvoices()
+    {
+        return $this->hasMany(OpsChartererInvoice::class, 'ops_charterer_contract_id', 'id');
+    }
+
+    public function dayWiseInvoices()
+    {
+        return $this->hasMany(OpsChartererInvoice::class, 'ops_charterer_contract_id', 'id')
+                    ->where('contract_type', 'Day Wise')
+                    ->latest('bill_till');
+    }
 }

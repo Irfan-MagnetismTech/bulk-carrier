@@ -100,6 +100,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileByNameorCode']);
     Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
     Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
+    Route::get('show-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'showVesselExpenseHeads']);
     
     // end for search api route
     
@@ -119,12 +120,13 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
     Route::get('search-voyage-budgets', [OpsVoyageBudgetController::class, 'getVoyageBudgetByTitle']);
     Route::get('search-bunker-requisitions', [OpsBunkerRequisitionController::class, 'getBunkerRequisitionByReqNo']);
+    Route::get('search-bunker-requisitions-by-vendor', [OpsBunkerRequisitionController::class, 'getApprovedBunkerRequisitionByVendor']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);
     Route::get('vessel-certificate-history', [OpsVesselController::class, 'getVesselCertificateHistory']);
     Route::get('vessel-certificates-renew', [OpsVesselCertificateController::class, 'getIndexRenew']);
-    Route::put('bunker-requisitions-approved/{id}', [OpsBunkerRequisitionController::class, 'approved']);
+    Route::put('bunker-requisitions-approved/{bunker_requisition}', [OpsBunkerRequisitionController::class, 'approved']);
         
         
     // report routes

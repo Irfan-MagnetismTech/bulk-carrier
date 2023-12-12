@@ -50,6 +50,21 @@ class OpsVoyageBudgetController extends Controller
     */
     public function store(OpsVoyageBudgetRequest $request): JsonResponse
     {
+
+        $budgetLines = [];
+
+        collect($request->heads)->map(function($head) use(&$budgetLines) {
+
+            if($head['opsSubHeads']) {
+                collect($head['opsSubHeads'])->map(function($subHead) use(&$budgetLines) {
+                    array_push($budgetLines, $subHead);
+                });
+            } else {
+                array_push($budgetLines, $head);
+            }
+        });
+
+        // return response()->json($budgetLines);
         try {
             DB::beginTransaction();
             $voyage_budget_info = $request->except(
@@ -58,7 +73,7 @@ class OpsVoyageBudgetController extends Controller
             );
 
             $voyage_budget = OpsVoyageBudget::create($voyage_budget_info);
-            $voyage_budget->opsVoyageBudgetEntries()->createMany($request->opsVoyageBudgetEntries);
+            $voyage_budget->opsVoyageBudgetEntries()->createMany($budgetLines);
             DB::commit();
             return response()->success('Data added successfully.', $voyage_budget, 201);
         }

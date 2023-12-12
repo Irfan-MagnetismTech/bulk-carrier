@@ -2,3 +2,4 @@ frontend/.vscode/settings.json
 .idea/
 package-lock.json
 .vscode
+frontend/src/config/env.js

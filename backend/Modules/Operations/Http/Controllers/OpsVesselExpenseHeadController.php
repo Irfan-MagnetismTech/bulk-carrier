@@ -211,4 +211,39 @@ class OpsVesselExpenseHeadController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function showVesselExpenseHeads(Request $request) {
+        try {
+            $vessel_expense_heads = OpsVesselExpenseHead::where('ops_vessel_id', $request->ops_vessel_id)->with(['opsExpenseHead' => function($query){
+                $query->select('id', 'name');
+            }])->pluck('ops_expense_head_id')->values()->toArray();
+
+            $headIds = OpsExpenseHead::wherein('id', $vessel_expense_heads)->pluck('head_id')->unique()->values()->toArray();
+            $expenseHeads = OpsExpenseHead::wherein('id', $headIds)
+                    ->with('opsSubHeads')
+                    ->whereNull('head_id')
+                    ->get(['id', 'head_id', 'name']);
+
+            $output = $expenseHeads->map(function($item) use($vessel_expense_heads) {
+                $result = $item->opsSubHeads->map(function($subhead) use($vessel_expense_heads) {
+                    if(in_array($subhead['id'], $vessel_expense_heads)) {
+                        $subhead['ops_expense_head_id'] = $subhead['id'];
+                        $subhead['type'] = 'subhead';
+                        return $subhead;
+                    }
+                })->filter()->values()->all();
+
+                $item['ops_expense_head_id'] = $item['id'];
+                $item['type'] = 'head';
+
+                data_forget($item, 'opsSubHeads');
+                $item->opsSubHeads = $result;
+                return $item;
+            });
+            
+            return response()->success('Data retrieved successfully.', $output, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

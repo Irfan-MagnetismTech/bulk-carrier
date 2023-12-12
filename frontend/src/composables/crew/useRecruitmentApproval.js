@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useRecruitmentApproval() {
     const router = useRouter();
@@ -28,6 +29,7 @@ export default function useRecruitmentApproval() {
                 candidate_contact: '',
                 candidate_email: '',
                 remarks: '',
+                isRankNameDuplicate: false
             }
         ]
     });
@@ -85,20 +87,24 @@ export default function useRecruitmentApproval() {
 
     async function storeRecruitmentApproval(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
-            recruitmentApproval.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.post('/crw/crw-recruitment-approvals', form);
+                recruitmentApproval.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.recruitmentApprovals.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -122,23 +128,27 @@ export default function useRecruitmentApproval() {
 
     async function updateRecruitmentApproval(form, recruitmentApprovalId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        try {
-            const { data, status } = await Api.put(
-                `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
-                form
-            );
-            recruitmentApproval.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.recruitmentApprovals.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+
+            try {
+                const { data, status } = await Api.put(
+                    `/crw/crw-recruitment-approvals/${recruitmentApprovalId}`,
+                    form
+                );
+                recruitmentApproval.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.recruitmentApprovals.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -160,6 +170,44 @@ export default function useRecruitmentApproval() {
         }
     }
 
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.crwRecruitmentApprovalLines.some((item,index) => {
+            if (itemNamesSet.has(item.crw_rank_id)) {
+                let data = `Duplicate Rank Name [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.crwRecruitmentApprovalLines[index].isRankNameDuplicate = true;
+            } else {
+                form.crwRecruitmentApprovalLines[index].isRankNameDuplicate = false;
+            }
+            itemNamesSet.add(item.crw_rank_id);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         recruitmentApprovals,
         recruitmentApproval,
@@ -168,6 +216,7 @@ export default function useRecruitmentApproval() {
         showRecruitmentApproval,
         updateRecruitmentApproval,
         deleteRecruitmentApproval,
+        checkUniqueArray,
         isLoading,
         isTableLoading,
         errors,

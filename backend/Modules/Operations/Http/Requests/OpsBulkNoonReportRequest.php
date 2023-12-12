@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OpsBulkNoonReportRequest extends FormRequest
@@ -19,7 +20,7 @@ class OpsBulkNoonReportRequest extends FormRequest
             'ship_master'       => ['nullable', 'string'],
             'chief_engineer'    => ['nullable', 'string'],
             'wind_condition'    => ['nullable', 'string'],
-            'type'              => ['nullable', 'string'],
+            'type'              => ['required', 'string'],
             'date_time'         => ['nullable'],
             'gtm_time'          => ['nullable'],
             'location'          => ['nullable', 'string'],
@@ -30,10 +31,13 @@ class OpsBulkNoonReportRequest extends FormRequest
             'fw_production'         => ['nullable', 'string'],
             'fw_consumption'        => ['nullable', 'string'],
             'fw_today_noon_rob'     => ['nullable', 'string'],
-            'remarks'               => ['nullable', 'string', 'max:255'],
+            'remarks'               => ['nullable', 'string', 'max:500'],
             'status'                => ['nullable', 'string'],
             'sea_condition'         => ['nullable', 'string'],
             'business_unit'         => ['nullable', 'string'],
+
+            // 'opsBulkNoonReportEngineInputs.*.engine_unit'     => ['required', 'string', 'max:255',Rule::unique('ops_bulk_noon_report_engine_inputs', 'engine_unit')
+            // ->ignore($this->bulk_noon_report?->opsBulkNoonReportEngineInputs->first()->id, 'id')],
         ];
     }
 
@@ -45,12 +49,13 @@ class OpsBulkNoonReportRequest extends FormRequest
     public function messages(): array
     {
         return [
+
             // 'ops_vessel_id.required' => 'Vessel is required',
             // 'ops_voyage_id.required' => 'Voyage is required',
             // 'ship_master.required' => 'Ship master is required',
             // 'chief_engineer.required' => 'Chief engineer is required',
             // 'wind_condition.required' => 'Wind condition is required',
-            // 'type.required' => 'Type is required',
+            'type.required' => 'Report type is required',
             // 'date_time.required' => 'Date and Time is required',
             // 'gtm_time.required' => 'GTM Time is required',
             // 'location.required' => 'Location is required',
@@ -63,6 +68,7 @@ class OpsBulkNoonReportRequest extends FormRequest
             // 'sea_condition.required' => 'Sea condition is required',
             
             'remarks.max' => 'Remarks may not be greater than :max characters.',
+            // 'opsBulkNoonReportEngineInputs.*.engine_unit.unique' => 'Engine Unit is already take for row is :position.',
         ];
     }
 

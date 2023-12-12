@@ -1,7 +1,7 @@
 /* readonly field */
 .vms-readonly-input {
     background-color: #e7e6e6;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
 }
 
 .tox-notifications-container {

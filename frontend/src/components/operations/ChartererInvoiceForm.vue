@@ -12,7 +12,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @option:selected="profileChanged">
+              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @update:modelValue="profileChanged">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -25,7 +25,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @option:selected="chartererContractChange">
+              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @update:modelValue="chartererContractChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -59,11 +59,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type == 'Day Wise'">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill From <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_from" class="form-input" autocomplete="off" />
+              <input type="date" v-model.trim="form.bill_from" class="form-input" autocomplete="off" readonly/>
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_till" class="form-input" autocomplete="off" />
+              <input type="date" v-model.trim="form.bill_till" class="form-input" autocomplete="off" :readonly="isActiveTill()" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
@@ -228,7 +228,7 @@
               <th>Quantity</th>
               <th>Rate</th>
               <th>Exchange Rate (To USD)</th>
-              <th>Exchange Rate (To BDT)</th>
+              <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
               <th class="py-3 text-center align-center">Action</th>
@@ -699,6 +699,13 @@ function CalculateAll() {
 
   props.form.grand_total = (props.form.sub_total_amount * 1) - (props.form.service_fee_deduction_amount * 1 )- (props.form.discounted_amount * 1);
 }
+
+function isActiveTill() {
+  // console.log(props.form.bill_till, props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till);
+  if(props.formType == 'edit') {
+    return props.form.bill_till != props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till;
+  }
+}
 //watch opsChartererInvoiceServices
 watch(() => props?.form?.opsChartererInvoiceServices, (newVal, oldVal) => {
       let total_bdt = 0.0;
@@ -771,30 +778,29 @@ watch(() => props.form.business_unit, (value) => {
 // })
 
 function profileChanged() {
-  let val = props.form.opsChartererProfile;
-  props.form.ops_charterer_profile_id = val.id;
+  let val = props.form.opsChartererProfile ?? null;
+  props.form.ops_charterer_profile_id = val?.id ?? null;
 }
 
 
 
 watch(() => props.form.ops_charterer_profile_id, (value) => {
-
     if (editInitiated.value) {
       props.form.ops_charterer_contract_id = '';
       props.form.opsChartererContract = null;
   }
-    
-    getChartererContractsByCharterOwner(value);
+   value ? getChartererContractsByCharterOwner(value) : chartererContracts.value = [];
 })
 
 function chartererContractChange() {
-  let val = props.form.opsChartererContract;
-  props.form.ops_charterer_contract_id = val.id;
-  props.form.contract_type = val.contract_type;
+  let val = props.form.opsChartererContract ?? null;
+  props.form.ops_charterer_contract_id = val?.id ?? null;
+  props.form.contract_type = val?.contract_type ?? null;
   if(val.contract_type == 'Voyage Wise') {
     getContractWiseVoyage(val.id);
     props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
   } else {
+    props.form.bill_from = props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till ? moment(props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till).add(1, 'days').format('YYYY-MM-DD') : moment(props.form.opsChartererContract.opsChartererContractsFinancialTerms.valid_from).format('YYYY-MM-DD');
     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
     voyages.value = [];
   }

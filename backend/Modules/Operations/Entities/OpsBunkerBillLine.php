@@ -12,6 +12,12 @@ class OpsBunkerBillLine extends Model
     protected $fillable = [
         'ops_bunker_bill_id',
         'pr_no',
-        'amount'
+        'rate',
+        'exchange_rate_bdt',
+        'exchange_rate_usd',
+        'amount',
+        'amount_bdt',
+        'amount_usd',
+        'description',
     ];
 }
