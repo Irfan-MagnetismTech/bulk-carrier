@@ -16,7 +16,7 @@ class CrwVesselRequiredCrewRequest extends FormRequest
 
         return [
             'total_crew'                                     => ['required', 'numeric', 'max:2000'],
-            'effective_date'                                 => ['required', Rule::unique('crw_vessel_required_crews')->where('effective_date', $this->effective_date)->ignore($this->id)],
+            'effective_date'                                 => ['required', Rule::unique('crw_vessel_required_crews')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->id)],
             'business_unit'                                  => ['required', 'string', 'max:255'],
             'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
             'crwVesselRequiredCrewLines.*.eligibility'       => ['required', 'string', 'max:700'],
