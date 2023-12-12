@@ -34,7 +34,7 @@ class CrwAgencyRequest extends FormRequest
             'business_unit'                        => 'required|in:PSML,TSLL',
             'crwAgencyContactPersons'              => 'required|array',
             'crwAgencyContactPersons.*.name'       => 'required|string|max:255',
-            'crwAgencyContactPersons.*.contact_no' => 'required|string|max:255',
+            'crwAgencyContactPersons.*.contact_no' => 'required|string|max:255|distinct',
             'crwAgencyContactPersons.*.email'      => 'nullable|email|max:255',
             'crwAgencyContactPersons.*.position'   => 'nullable|string|max:255',
             'crwAgencyContactPersons.*.purpose'    => 'nullable|string|max:255',
@@ -48,11 +48,12 @@ class CrwAgencyRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'crwAgencyContactPersons.*.name.max'       => 'Contact person [line :position] name field must not be greater than :max characters.',
-            'crwAgencyContactPersons.*.contact_no.max' => 'Contact person [line :position] contact_no field must not be greater than :max characters.',
-            'crwAgencyContactPersons.*.email.max'      => 'Contact person [line :position] email field must not be greater than :max characters.',
-            'crwAgencyContactPersons.*.position.max'   => 'Contact person [line :position] position field must not be greater than :max characters.',
-            'crwAgencyContactPersons.*.purpose.max'    => 'Contact person [line :position] purpose field must not be greater than :max characters.',
+            'crwAgencyContactPersons.*.name.max'          => 'Contact person [line :position] name field must not be greater than :max characters.',
+            'crwAgencyContactPersons.*.contact_no.unique' => 'Contact person [line :position] contact_no field has a duplicate value.',
+            'crwAgencyContactPersons.*.contact_no.max'    => 'Contact person [line :position] contact_no field must not be greater than :max characters.',
+            'crwAgencyContactPersons.*.email.max'         => 'Contact person [line :position] email field must not be greater than :max characters.',
+            'crwAgencyContactPersons.*.position.max'      => 'Contact person [line :position] position field must not be greater than :max characters.',
+            'crwAgencyContactPersons.*.purpose.max'       => 'Contact person [line :position] purpose field must not be greater than :max characters.',
         ];
     }
 
