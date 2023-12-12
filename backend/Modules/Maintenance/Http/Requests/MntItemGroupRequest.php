@@ -15,6 +15,7 @@ class MntItemGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'mnt_ship_department_id' => 'required',
             'name'  => ['required','max:30', Rule::unique('mnt_item_groups')->where('business_unit', $this->business_unit)->ignore($this->id)],
             'short_code' => ['required','max:5', Rule::unique('mnt_item_groups')->where('business_unit', $this->business_unit)->ignore($this->id)],
         ];
