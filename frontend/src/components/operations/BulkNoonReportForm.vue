@@ -712,7 +712,6 @@ watch(() => props.form.opsBulkNoonReportEngineInputs, (value) => {
     engineUnits.push(value[engineInputIndex].engine_unit)
   }
 
-
   let newEngineInputs = engineInputs.filter(function(item) {
       return item !== 'engine_unit'
   })
