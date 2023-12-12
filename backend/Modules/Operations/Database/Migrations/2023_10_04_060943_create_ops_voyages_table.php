@@ -27,6 +27,7 @@ return new class extends Migration
             $table->dateTime('sail_date')->nullable();
             $table->dateTime('transit_date')->nullable();
             $table->text('remarks')->nullable();
+            $table->boolean('is_billed')->default(0);
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });

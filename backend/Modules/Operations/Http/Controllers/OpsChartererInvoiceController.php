@@ -86,8 +86,7 @@ class OpsChartererInvoiceController extends Controller
     public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
     {
         $charterer_invoice->load('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors',
-        'opsChartererContract.opsVessel', 'opsChartererInvoiceVoyages.opsVoyage.opsCargoType');
-        
+        'opsChartererContract.opsVessel', 'opsChartererInvoiceVoyages.opsVoyage.opsCargoType','opsChartererContract.opsChartererInvoices','opsChartererContract.dayWiseInvoices');
         try
         {
             return response()->success('Data retrieved successfully.', $charterer_invoice, 200);

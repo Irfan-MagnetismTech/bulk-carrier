@@ -13,8 +13,8 @@ export default function useMaritimeCertificate() {
 	const notification = useNotification();
 	const maritimeCertificate = ref({
 		name: null,
-		type: null,
-		validity: null,
+		type: '',
+		validity: '',
 		authority: null,
 	});
 

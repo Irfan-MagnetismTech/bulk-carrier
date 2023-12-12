@@ -16,8 +16,10 @@ class OpsBunkerRequisition extends Model
         'ops_voyage_id',
         'requisition_no',
         'created_by',
+        'approved_by',
         'remarks',
         'status',
+        'note',
         'business_unit',
     ];
 

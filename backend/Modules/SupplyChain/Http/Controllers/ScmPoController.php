@@ -34,7 +34,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr','scmMrrs')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -145,12 +145,12 @@ class ScmPoController extends Controller
         // return response()->json($purchaseOrder->getAllMethods(), 422);
         try {
             if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
-                $error = array(
+                $error = [
                     "message" => "Data could not be deleted!",
                     "errors" => [
                         "id" => ["This data could not be deleted as it has reference to other table"]
                     ]
-                );
+                ];
                 return response()->json($error, 422);
             }
 
@@ -294,7 +294,13 @@ class ScmPoController extends Controller
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
-                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
+                if (request()->po_id) {
+                    $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                } else {
+                    $data['po_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity') + $data['po_quantity'];
+                $data['po_quantity'] = $data['po_quantity'] ?? 0;
                 return $data;
             });
         return response()->success('data list', $prMaterials, 200);

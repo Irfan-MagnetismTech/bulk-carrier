@@ -43,7 +43,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Short Code </span>
-          <input type="text" v-model.trim="form.short_code" placeholder="Vessel Short Code" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.short_code" maxlength="10" placeholder="Vessel Short Code" class="form-input" autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'"  />
       </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Call Sign </span>

@@ -21,7 +21,14 @@ class ScmWarehouseRequest extends FormRequest
             'short_code' => ['required', Rule::unique('scm_warehouses')->ignore($this->warehouse, 'short_code'), 'max:255'],
             'scmWarehouseContactPersons.*.name' => ['required', 'max:255'],
             'scmWarehouseContactPersons.*.designation' => ['required', 'max:255'],
-            'scmWarehouseContactPersons.*.phone' => ['required', 'max:255'],
+
+            'scmWarehouseContactPersons.*.phone' => [
+                'required',
+                'max:255',
+                Rule::unique('scm_warehouse_contact_persons', 'phone')
+                    ->ignore($this?->warehouse?->id, 'scm_warehouse_id'),
+            ],
+
             'scmWarehouseContactPersons.*.email' => ['required', 'email', 'max:255'],
         ];
     }
@@ -56,6 +63,7 @@ class ScmWarehouseRequest extends FormRequest
 
             'scmWarehouseContactPersons.*.phone.required' => 'Phone is required',
             'scmWarehouseContactPersons.*.phone.max' => 'Phone is too long',
+            'scmWarehouseContactPersons.*.phone.unique' => 'Phone is already taken',
 
             'scmWarehouseContactPersons.*.email.required' => 'Email is required',
             'scmWarehouseContactPersons.*.email.email' => 'Email is not valid',

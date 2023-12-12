@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('ops_charterer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('company_legal_name');
+            $table->string('company_legal_name')->unique();
             $table->string('name');
-            $table->string('owner_code');
+            $table->string('owner_code')->unique();
             $table->string('country');
             $table->string('contact_no');
             $table->string('address');

@@ -112,6 +112,7 @@ class OpsChartererContractController extends Controller
         */
     public function update(OpsChartererContractRequest $request, OpsChartererContract $charterer_contract): JsonResponse
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $charterer_contract_info = $request->except(
@@ -180,7 +181,7 @@ class OpsChartererContractController extends Controller
     public function getChartererContractByProfile(Request $request){
         try {
             $charterer = OpsChartererContract::query()->with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererContractsFinancialTerms.opsVoyage',
-            'opsChartererContractsLocalAgents.opsPort')
+            'opsChartererContractsLocalAgents.opsPort','opsChartererInvoices','dayWiseInvoices')
             ->when(isset(request()->ops_charterer_profile_id), function ($query) {
                     $query->where('ops_charterer_profile_id',request()->charterer_profile_id);
             })
