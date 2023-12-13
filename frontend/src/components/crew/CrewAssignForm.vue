@@ -135,7 +135,7 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Duration (Months) <span class="text-red-500">*</span></span>
-      <input type="number" v-model="form.duration" placeholder="Ex: 6" class="form-input" autocomplete="off" required />
+      <input type="number" v-model.trim="form.duration" placeholder="Ex: 6" class="form-input" autocomplete="off" required />
     </label>
   </div>
 

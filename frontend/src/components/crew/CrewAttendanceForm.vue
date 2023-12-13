@@ -9,7 +9,7 @@ import Store from "../../store";
 import RemarksComponent from "../utils/RemarksComponent.vue";
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
-const { getVesselAssignedCrews, vesselAssignedCrews } = useCrewCommonApiRequest();
+const { getVesselAssignedCrews, vesselAssignedCrews, isLoading } = useCrewCommonApiRequest();
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -57,7 +57,6 @@ function vesselChanged(){
 }
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
   });  
@@ -76,7 +75,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Vessel Name <span class="text-red-500">*</span></span>
-      <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_name" label="name" class="block form-input" @update:modelValue="vesselChanged">
+      <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--" v-model="form.ops_vessel_name" label="name" class="block form-input" @update:modelValue="vesselChanged">
         <template #search="{attributes, events}">
           <input
               class="vs__search"
@@ -113,12 +112,12 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-          <th class="px-4 py-3 align-bottom"> Crew Name </th>
-          <th class="px-4 py-3 align-bottom"> Crew Contact </th>
-          <th class="px-4 py-3 align-bottom"> Onboard Position </th>
-          <th class="px-4 py-3 align-bottom"> Present Days <span class="text-red-500">*</span></th>
-          <th class="px-4 py-3 align-bottom"> Absent Days <span class="text-red-500">*</span></th>
-          <th class="px-4 py-3 align-bottom"> Payable Days <span class="text-red-500">*</span></th>
+          <th class="px-4 py-3 align-bottom no-wrap"> Crew Name </th>
+          <th class="px-4 py-3 align-bottom no-wrap"> Crew Contact </th>
+          <th class="px-4 py-3 align-bottom no-wrap"> Onboard Position </th>
+          <th class="px-4 py-3 align-bottom no-wrap w-24"> Present Days <span class="text-red-500">*</span></th>
+          <th class="px-4 py-3 align-bottom no-wrap w-24"> Absent Days <span class="text-red-500">*</span></th>
+          <th class="px-4 py-3 align-bottom no-wrap w-24"> Payable Days <span class="text-red-500">*</span></th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -136,13 +135,21 @@ onMounted(() => {
             <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input" autocomplete="off" required />
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" min="0" max="31" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" readonly required />
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].payable_days" min="0" :max="form.working_days" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].payable_days" min="0" class="form-input vms-readonly-input" autocomplete="off" readonly required />
           </td>
         </tr>
       </tbody>
+      <tfoot v-if="!form.crwAttendanceLines.length">
+      <tr v-if="isLoading">
+        <td colspan="6">Loading...</td>
+      </tr>
+      <tr v-else-if="!form.crwAttendanceLines.length">
+        <td colspan="6">No data found.</td>
+      </tr>
+      </tfoot>
     </table>
   </fieldset>
   <ErrorComponent :errors="errors"></ErrorComponent>

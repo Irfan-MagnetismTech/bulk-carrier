@@ -78,7 +78,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Position Onboard",
-      "filter_type": "input"
+      "filter_type": "input",
+      "nobr_tag": true
     },
     {
       "relation_name": null,
@@ -98,7 +99,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Joining Port Code",
-      "filter_type": "input"
+      "filter_type": "input",
+      "br_tag": true
     },
     {
       "relation_name": null,
@@ -108,7 +110,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Duration (Months)",
-      "filter_type": "input"
+      "filter_type": "input",
+      "br_tag": true
     },
     {
       "relation_name": null,
@@ -202,10 +205,10 @@ onMounted(() => {
               <td> {{ crwAssign?.joining_date }} </td>
               <td> {{ crwAssign?.joining_port_code }} </td>
               <td> {{ crwAssign?.duration }}  </td>
-              <td>   
-                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }} 
+              <td>
+                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }}
                 </span>
-              
+
               </td>
               <td>
                 <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
