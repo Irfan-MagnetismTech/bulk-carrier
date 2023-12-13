@@ -45,8 +45,8 @@ watch(() => vesselAssignedCrews.value, (items) => {
       crw_crew_id : item.crwCrew.id,
       attendance_line_composite : "BDCGP",
       present_days : "",
-      absent_days : "",
-      payable_days : "",
+      absent_days : 0,
+      payable_days : 0,
     })
   }); 
   // console.log(vesselAssignedCrews); 
@@ -54,6 +54,19 @@ watch(() => vesselAssignedCrews.value, (items) => {
 function vesselChanged(){
   props.form.crwAttendanceLines = []; 
   getVesselAssignedCrews(props.form.ops_vessel_name.id); 
+}
+
+function setPresentDays(){
+  props.form.working_days = Math.min(props.form.working_days, 31);
+  props.form.crwAttendanceLines?.forEach((item,index) => {
+    props.form.crwAttendanceLines[index].present_days = props.form.working_days;
+    props.form.crwAttendanceLines[index].payable_days = parseFloat(props.form.crwAttendanceLines[index].present_days) - parseFloat(props.form.crwAttendanceLines[index].absent_days);
+  });
+}
+
+function calculatePayableDays(index){
+  props.form.crwAttendanceLines[index].absent_days = Math.min(props.form.crwAttendanceLines[index].absent_days,props.form.working_days);
+  props.form.crwAttendanceLines[index].payable_days = parseFloat(props.form.crwAttendanceLines[index].present_days) - parseFloat(props.form.crwAttendanceLines[index].absent_days);
 }
 
 onMounted(() => {
@@ -99,7 +112,7 @@ onMounted(() => {
     
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Working Days <span class="text-red-500">*</span></span>
-      <input type="number" v-model.trim="form.working_days" min="0" max="31" placeholder="Working Days" class="form-input" autocomplete="off" required />
+      <input type="number" v-model.trim="form.working_days" min="0" max="31" placeholder="Working Days" class="form-input" autocomplete="off" @input="setPresentDays" required />
     </label>
   </div>
 
@@ -126,16 +139,16 @@ onMounted(() => {
             <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.pre_mobile_no"  class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.pre_mobile_no" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
             <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input" autocomplete="off" required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required readonly />
           </td>
           <td class="px-1 py-1">
-            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" readonly required />
+            <input type="number" v-model.trim="form.crwAttendanceLines[index].absent_days" min="0" max="31" class="form-input" autocomplete="off" @input="calculatePayableDays(index)" required />
           </td>
           <td class="px-1 py-1">
             <input type="number" v-model.trim="form.crwAttendanceLines[index].payable_days" min="0" class="form-input vms-readonly-input" autocomplete="off" readonly required />
