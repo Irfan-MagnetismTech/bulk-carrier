@@ -39,7 +39,7 @@ class ScmPrController extends Controller
         try {
             $scm_prs = ScmPr::query()
                 ->with(
-                    'scmPrLines',
+                    'scmPrLines.scmMaterial',
                     'scmWarehouse',
                     'scmPos',
                     'scmMrrs',

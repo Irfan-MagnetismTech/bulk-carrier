@@ -1,6 +1,6 @@
 {
     "editor.cursorSmoothCaretAnimation": "explicit",
-    "editor.cursorStyle": "underline",
+    "editor.cursorStyle": "line",
     "editor.formatOnType": true,
     "diffEditor.codeLens": false
 }
