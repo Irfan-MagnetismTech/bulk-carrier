@@ -83,7 +83,7 @@ export default [
             },
             {
                 route: '',
-                label: 'Agencies',
+                label: 'Agency',
                 preIcon: '',
                 postIcon: icons.DownArrow,
                 is_active: false,

@@ -68,7 +68,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Crew Contact",
-      "filter_type": "input"
+      "filter_type": "input", 
+      "nobr_tag": true
     },
     {
       "relation_name": null,
@@ -78,7 +79,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Position Onboard",
-      "filter_type": "input"
+      "filter_type": "input",
+      "nobr_tag": true
     },
     {
       "relation_name": null,
@@ -88,7 +90,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Joining Date",
-      "filter_type": "input"
+      "filter_type": "input",
+      "nobr_tag": true
     },
     {
       "relation_name": 'opsPort',
@@ -98,7 +101,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Joining Port Code",
-      "filter_type": "input"
+      "filter_type": "input",
+      "nobr_tag": true
     },
     {
       "relation_name": null,
@@ -108,7 +112,8 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Duration (Months)",
-      "filter_type": "input"
+      "filter_type": "input",
+      "nobr_tag": true
     },
     {
       "relation_name": null,
@@ -195,17 +200,17 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
               <td> {{ index + 1 }} </td>
-              <td> {{ crwAssign?.opsVessel?.name }} </td>
-              <td> {{ crwAssign?.crwCrew?.full_name }} </td>
-              <td> {{ crwAssign?.crwCrew?.pre_mobile_no }} </td>
-              <td> {{ crwAssign?.position_onboard }} </td>
-              <td> {{ crwAssign?.joining_date }} </td>
-              <td> {{ crwAssign?.joining_port_code }} </td>
+              <td> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.crwCrew?.pre_mobile_no }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.joining_date }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.joining_port_code }} </nobr> </td>
               <td> {{ crwAssign?.duration }}  </td>
-              <td>   
-                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }} 
+              <td>
+                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }}
                 </span>
-              
+
               </td>
               <td>
                 <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>

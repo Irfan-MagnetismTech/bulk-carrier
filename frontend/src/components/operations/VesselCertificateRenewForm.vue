@@ -92,12 +92,15 @@ const { vessel, searchVessels, showVessel } = useVessel();
 const { maritimeCertificate, showMaritimeCertificate } = useMaritimeCertificate();
 
 watch(() => vessel, (value) => {
+  props.form.isRenew='renew';
+
   props.form.vessel_name = value?.value?.name;
   props.form.ops_vessel_id = value?.value?.id;
   props.form.business_unit = value?.value?.business_unit
 }, {deep: true})
 
 watch(() => maritimeCertificate, (value) => {
+
   props.form.ops_maritime_certification_id = value?.value?.id;
 
   props.form.certificate_name = value?.value?.name;
@@ -114,7 +117,6 @@ watch(dropZoneFile, (value) => {
 onMounted(() => {
   showVessel(vesselId);
   showMaritimeCertificate(marineCertificateId);
-  props.form.isRenew='renew';
   // marineCertificateId
 });
 </script>
