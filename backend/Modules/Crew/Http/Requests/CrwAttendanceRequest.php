@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwAttendanceRequest extends FormRequest
 {
@@ -13,8 +14,12 @@ class CrwAttendanceRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'ops_vessel_id'                                  => 'required',
-            'year_month'                                     => 'required|date_format:Y-m',
+            'ops_vessel_id'                            => 'required',            
+            'year_month'                               => ['required', 'date', 'date_format:Y-m',
+                                                            Rule::unique('crw_attendances')
+                                                                ->where('ops_vessel_id', $this->ops_vessel_id)
+                                                                ->ignore($this->id)],
+
             'working_days'                                   => 'required|integer',
             'total_crews'                                    => 'required|integer',
             'remarks'                                        => 'nullable|string|max:500',
@@ -35,7 +40,7 @@ class CrwAttendanceRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'year_month.unique'   => 'A record with the combination of month-year and vessel name already exists.',
         ];
     }
 
