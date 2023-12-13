@@ -50,6 +50,21 @@ class ScmMaterialCategory extends Model
         return $category;
     }
 
+    // get total count of parent categories layer
+    public function getLayerCount(): int
+    {
+        $count = 0;
+        $category = $this;
+
+        while ($category->parent) {
+            $category = $category->parent;
+            $count++;
+        }
+
+        return $count;
+    }
+
+
     public function getAllDescendants(): HasMany
     {
         return $this->children()->with('getAllDescendants');
@@ -58,6 +73,11 @@ class ScmMaterialCategory extends Model
     public function isLeafNode(): bool
     {
         return $this->children()->count() === 0;
+    }
+
+    public function withoutChild(): HasMany
+    {
+        return $this->whereDoesNotHave('children');
     }
 
     public function getAllSiblings(): HasMany
