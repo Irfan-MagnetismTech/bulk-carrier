@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwCrewAssignmentRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class CrwCrewAssignmentRequest extends FormRequest
     public function rules(): array {
         return [
             'ops_vessel_id'      => 'required|integer',
-            'crw_crew_id'        => 'required|integer',
+            'crw_crew_id'        => ['required', 'integer', Rule::unique('crw_crew_assignments')->where('status', "Onboard")->ignore($this->id)],
             'position_onboard'   => 'required|string|max:255',
             'joining_date'       => 'required|date',
             'joining_port_code'  => 'required|string|max:10',
@@ -34,7 +35,7 @@ class CrwCrewAssignmentRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_id.unique'        => 'Complete the current onboard job before assigning a new job to this crew member.',
         ];
     }
 

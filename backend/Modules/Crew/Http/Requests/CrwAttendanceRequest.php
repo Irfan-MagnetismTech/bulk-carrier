@@ -17,7 +17,7 @@ class CrwAttendanceRequest extends FormRequest
             'year_month'                                     => 'required|date_format:Y-m',
             'working_days'                                   => 'required|integer',
             'total_crews'                                    => 'required|integer',
-            'remarks'                                        => 'string|max:500',
+            'remarks'                                        => 'nullable|string|max:500',
             'business_unit'                                  => 'required|in:PSML,TSLL',
             'crwAttendanceLines.*.crw_crew_id'               => 'required|integer',
             'crwAttendanceLines.*.crw_crew_assignment_id'    => 'required|integer',
