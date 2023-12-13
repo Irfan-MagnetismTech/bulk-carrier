@@ -355,7 +355,7 @@ function changeRate(index) {
             </td>
             <td>
               <label class="block mt-2 text-sm !w-24">
-                 <input type="number" :value="form.scmMrrLines[index].max_quantity" min=1 required readonly class="form-input"">
+                 <input type="number" :value="form.scmMrrLines[index].max_quantity" min=1 required readonly class="form-input">
               </label>
             </td>
             <td>
