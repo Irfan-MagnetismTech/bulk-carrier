@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 import { merge } from 'lodash';
 
@@ -21,7 +22,7 @@ export default function useStoreIssue() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const storeIssue = ref( {
         ref_no: '',

@@ -7,6 +7,7 @@ import Store from '../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function useMovementRequisition() {
@@ -21,7 +22,7 @@ export default function useMovementRequisition() {
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const movementRequisition = ref( {
         ref_no: '',
