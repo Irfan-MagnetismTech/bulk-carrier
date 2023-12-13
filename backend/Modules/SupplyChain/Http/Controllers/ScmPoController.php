@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -209,7 +210,7 @@ class ScmPoController extends Controller
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
         try {
-            if ($request->pr_id != null) {
+            if ($request->cs_id != null) {
                 $scmPr = ScmPr::query()
                     ->with([
                         'scmWarehouse',
@@ -243,10 +244,21 @@ class ScmPoController extends Controller
                     })
                 ];
             } else {
-                // $scmCs = ScmCs::query()
-                // ->with('scmWarehouse', 'scmPr')
-                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
-                // ->get();
+                $scmCs = ScmCs::query()
+                ->with('scmWarehouse', 'scmPr')
+                ->find('id', $request->cs_id);
+
+                $data = [
+                    'scmWarehouse' => $scmCs->scmWarehouse,
+                    'scm_warehouse_id' => $scmCs->scm_warehouse_id,
+                    'pr_no' => $scmCs->scmPr->ref_no,
+                    'cs_no' => $scmCs->ref_no,
+                    'scm_pr_id' => $scmCs->scmPr->id,
+                    'scmPr' => $scmCs->scmPr,
+                    'pr_date' => $scmCs->scmPr->raised_date,
+                    'business_unit' => $scmCs->scmPr->business_unit,
+                    'purchase_center' => $scmCs->scmPr->purchase_center,
+                ];
             }
 
             return response()->success('data', $data, 200);

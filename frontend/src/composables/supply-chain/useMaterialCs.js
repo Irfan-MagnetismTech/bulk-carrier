@@ -76,7 +76,7 @@ export default function useMaterialCs() {
         try {
             const {data, status} = await Api.get(`/${BASE}/material-cs`,{
                 params: {
-                   data: JSON.stringify(filterOptions)
+                    data: JSON.stringify(filterOptions)
                 }
             });
             materialCsLists.value = data.value;

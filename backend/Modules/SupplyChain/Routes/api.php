@@ -21,6 +21,7 @@ use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
+use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([

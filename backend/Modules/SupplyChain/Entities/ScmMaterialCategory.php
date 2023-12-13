@@ -59,6 +59,11 @@ class ScmMaterialCategory extends Model
     {
         return $this->children()->count() === 0;
     }
+    
+    public function scopeLeafNodes($query): object
+    {
+        return $query->whereDoesntHave('children');
+    }
 
     public function getAllSiblings(): HasMany
     {
@@ -87,5 +92,19 @@ class ScmMaterialCategory extends Model
         return $this->morphOne(AccAccount::class, 'accountable')
             ->where('business_unit', 'TSLL')
             ->withDefault();
+    }
+
+    
+    public function getChildrenLayerCount(): int
+    {
+        $count = 0;
+        $currentCategory = $this;
+
+        while ($currentCategory->parent) {
+            $currentCategory = $currentCategory->parent;
+            $count++;
+        }
+
+        return $count;
     }
 }

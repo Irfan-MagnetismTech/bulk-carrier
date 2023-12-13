@@ -34,16 +34,35 @@ export default function useHelper() {
       */
        
   const downloadFile = (data, fileName, headers) => {
+    //get fileextension
+    const fileTypeToExtension = {
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+        'application/vnd.ms-excel': 'xls',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+        'application/msword': 'doc',
+        'application/pdf': 'pdf',
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'text/csv': 'csv',
+        'text/plain': 'txt',
+        'application/zip': 'zip',
+        'application/x-rar-compressed': 'rar',
+    };
+    
+      const fileType = headers['content-type'];
+      const fileExtension = fileTypeToExtension[fileType] || 'unknown';
+      const fName = `${fileName}.${fileExtension}`;
     // const fileType = headers['content-type'];
     // const fileExtension = fileTypeToExtension[fileType] || 'unknown';
     // const fileName = `materials.${fileExtension}`;
     const url = window.URL.createObjectURL(new Blob([data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', fileName + '.xlsx');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    link.setAttribute('download', fName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     }
 
     function checkUniqueArray(lines){

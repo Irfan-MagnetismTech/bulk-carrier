@@ -33,10 +33,10 @@ class ScmCsController extends Controller
     public function index()
     {
         try {
+           
             $scmCs = ScmCs::query()
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
-
 
             return response()->success('Data list', $scmCs, 200);
         } catch (\Exception $e) {

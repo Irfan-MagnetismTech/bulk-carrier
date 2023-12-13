@@ -156,6 +156,19 @@ const navigateSupplierSelection = (csId) => {
   router.push(routeOptions);
 };
 
+const navigateToPOCreate = (csId) => {
+  const pr_id = null; 
+  const cs_id = csId;
+  const routeOptions = {
+    name: 'scm.purchase-orders.create',
+    query: {
+      pr_id: null,
+      cs_id: cs_id
+    }
+  };
+  router.push(routeOptions);
+};  
+
 
 function confirmDelete(id) {
         Swal.fire({
@@ -209,6 +222,7 @@ function confirmDelete(id) {
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
+                  <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Quotations</button>
                   <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Select Supplier</button>
                   <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> 

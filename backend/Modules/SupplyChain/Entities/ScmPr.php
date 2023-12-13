@@ -4,9 +4,6 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmCs;
-use Modules\SupplyChain\Entities\ScmPo;
-use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmMrr;
