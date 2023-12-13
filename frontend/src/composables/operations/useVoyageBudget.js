@@ -20,6 +20,7 @@ export default function useVoyageBudget() {
 		opsVoyage: null,
 		ops_voyage_id: null,
         name: '',
+		currency: '',
 		heads: [],
     });
     const errors = ref('');
