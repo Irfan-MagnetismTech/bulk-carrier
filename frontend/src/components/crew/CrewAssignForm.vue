@@ -7,6 +7,7 @@ import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequ
 import Store from "../../store";
 import usePort from "../../composables/operations/usePort";
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import ErrorComponent from '../utils/ErrorComponent.vue';
 
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { crews, getCrews, crwRankLists, getCrewRankLists } = useCrewCommonApiRequest();
@@ -141,7 +142,8 @@ onMounted(() => {
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
-  </div>  
+  </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 <style lang="postcss" scoped>

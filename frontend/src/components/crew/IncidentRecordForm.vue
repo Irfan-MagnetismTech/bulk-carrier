@@ -7,6 +7,10 @@ import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { crews, getCrews } = useCrewCommonApiRequest();
+import ErrorComponent from '../utils/ErrorComponent.vue';
+import RemarksComponent from "../utils/RemarksComponent.vue";
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -42,6 +46,7 @@ function addItem() {
     crw_crew_rank: '',
     injury_status: '',
     notes: '',
+    isCrewNameDuplicate: false,
   };
   props.form.crwIncidentParticipants.push(obj);
 }
@@ -95,45 +100,37 @@ onMounted(() => {
             />
           </template>
         </v-select>
-        <Error v-if="errors?.ops_vessel_name" :errors="errors.ops_vessel_name" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
         <input type="datetime-local" v-model.trim="form.date_time" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.date_time" :errors="errors.date_time" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Type <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.type" placeholder="Ex: Collision, Robbery" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.type" :errors="errors.type" />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Location <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.location" placeholder="Ex: Deck, Engine room" class="form-input" autocomplete="off" required />
-        <Error v-if="errors?.location" :errors="errors.location" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Reported Person<span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.reported_by" placeholder="Reporting person" class="form-input" autocomplete="off" required />
-      <Error v-if="errors?.reported_by" :errors="errors.reported_by" />
+      <input type="text" v-model.trim="form.reported_by" placeholder="Reported person" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300 text-sm font-medium text-gray-900 dark-disabled:text-white">Attachment </span>
       <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" type="file">
-      <Error v-if="errors?.attachment" :errors="errors.attachment" />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Description <span class="text-red-500">*</span></span>
-      <textarea v-model.trim="form.description" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>
-      <Error v-if="errors?.description" :errors="errors.description" />
+      <RemarksComponent v-model.trim="form.description" :maxlength="500" :fieldLabel="'Description'" :isRequired="true"></RemarksComponent>
+<!--      <textarea v-model.trim="form.description" placeholder="Type here....." class="form-input" autocomplete="off" required></textarea>-->
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
     <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Candidate List</legend>
@@ -151,17 +148,25 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(incidentParticipant, index) in form.crwIncidentParticipants" :key="incidentParticipant.id">
         <td class="px-1 py-1">
-          <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" @update:modelValue="changeCrew(index)" class="block form-input">
-            <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.crwIncidentParticipants[index].crw_crew_name"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-            </template>
-          </v-select>
-          <Error v-if="errors?.crwIncidentParticipants[index].crw_crew_name" :errors="errors.crwIncidentParticipants[index].crw_crew_name" />
+          <div style="position: relative;">
+            <v-select :options="crews" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.crwIncidentParticipants[index].crw_crew_name" label="full_name" @update:modelValue="changeCrew(index)" class="block form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.crwIncidentParticipants[index].crw_crew_name"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+            <span
+                v-show="incidentParticipant.isCrewNameDuplicate"
+                class="text-yellow-600 pl-1"
+                title="Duplicate Rank Name"
+                v-html="icons.ExclamationTriangle"
+                style="position: absolute; top: 50%; transform: translateY(-50%); right: 30px;"
+            ></span>
+          </div>
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_contact" placeholder="Contact no" class="form-input vms-readonly-input" autocomplete="off" disabled />
@@ -188,6 +193,7 @@ onMounted(() => {
       </tbody>
     </table>
   </fieldset>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{

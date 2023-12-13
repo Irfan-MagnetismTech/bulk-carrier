@@ -65,7 +65,10 @@ function setPresentDays(){
 }
 
 function calculatePayableDays(index){
-  props.form.crwAttendanceLines[index].absent_days = Math.min(props.form.crwAttendanceLines[index].absent_days,props.form.working_days);
+  if(parseFloat(props.form.crwAttendanceLines[index].absent_days) > parseFloat(props.form.working_days)){
+    props.form.crwAttendanceLines[index].absent_days = props.form.working_days;
+  }
+  //props.form.crwAttendanceLines[index].absent_days = Math.min(props.form.crwAttendanceLines[index].absent_days,props.form.working_days) ?? '';
   props.form.crwAttendanceLines[index].payable_days = parseFloat(props.form.crwAttendanceLines[index].present_days) - parseFloat(props.form.crwAttendanceLines[index].absent_days);
 }
 
