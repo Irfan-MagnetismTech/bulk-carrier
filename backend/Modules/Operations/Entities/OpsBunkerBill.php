@@ -33,4 +33,8 @@ class OpsBunkerBill extends Model
     {
         return $this->hasMany(OpsBunkerBillLine::class, 'ops_bunker_bill_id', 'id');
     }
+    public function opsBunkerBillLineItems()
+    {
+        return $this->hasMany(OpsBunkerBillLineItem::class, 'ops_bunker_bill_id', 'id');
+    }
 }

@@ -11,15 +11,34 @@ export default function useBunkerBill() {
 	const bunkerBills = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
+	// const bunkerObject = {
+    //     pr_no : null,
+    //     description: null,
+    //     // amount: null,
+    //     // exchange_rate_bdt: null,
+    //     // exchange_rate_usd: null,
+    //     amount_usd: null,
+    //     amount_bdt: null,
+    //     sub_total: null,
+	// }
+
 	const bunkerObject = {
         pr_no : null,
         description: null,
         // amount: null,
-        // exchange_rate_bdt: null,
-        // exchange_rate_usd: null,
+        exchange_rate_bdt: null,
+        exchange_rate_usd: null,
         amount_usd: null,
         amount_bdt: null,
-        sub_total: null,
+		opsBunkerBillLineItems:[]
+	}
+
+	const bunkerObjectItem = {
+        particular: null,
+		quantity : null,
+		rate : null,
+        amount_usd: null,
+        amount_bdt: null,
 	}
 
 	const bunkerBill = ref({	
@@ -34,7 +53,7 @@ export default function useBunkerBill() {
         discount : null,
         grand_total : null,
 		scmVendor: [],
-		opsBunkerBillLines: [],
+		opsBunkerBillLines: [{...bunkerObject}],
 	});
 
 	const filterParams = ref(null);
@@ -229,6 +248,8 @@ export default function useBunkerBill() {
 		deleteBunkerBill,
 		searchBunkerBills,
 		approvedBunkerBill,
+		bunkerObject,
+		bunkerObjectItem,
 		isLoading,
 		isTableLoading,
 		errors,
