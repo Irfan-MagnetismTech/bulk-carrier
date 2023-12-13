@@ -24,13 +24,13 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_voyage_id'      => ['required', Rule::unique('ops_voyage-boat-notes')->ignore($this->route('voyage_boat_note'), 'id')],
+            'ops_voyage_id'      => ['required', Rule::unique('ops_voyage_boat_notes')->ignore($this->route('voyage_boat_note'), 'id')],
             'ops_vessel_id'      => ['required'],
             'type'               => ['nullable'],
             'vessel_draft'       => ['nullable', 'numeric'],
             'water_density'      => ['nullable', 'numeric'],
             'opsVoyageBoatNoteLines.*.voyage_note_type' =>  ['nullable', 'string'],
-            'opsVoyageBoatNoteLines.*.quantity' =>  ['nullable', 'integer'],
+            'opsVoyageBoatNoteLines.*.quantity' =>  ['nullable', 'numeric'],
         ];
     }
 

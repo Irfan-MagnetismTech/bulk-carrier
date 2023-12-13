@@ -14,9 +14,7 @@ class AccBalanceAndIncomeLineRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'line_text'     => ['required', 'string', 'max:255',
-                                Rule::unique('acc_balance_and_income_lines')->ignore($this->id),
-                            ],
+            'line_text'     => ['required', 'string', 'max:255', Rule::unique('acc_balance_and_income_lines')->ignore($this->id)],
             'business_unit' => ['required', 'string', 'max:255'],
         ];
     }

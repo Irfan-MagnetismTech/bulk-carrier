@@ -3,6 +3,7 @@
 namespace Modules\Accounts\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccLoanRequest extends FormRequest
 {
@@ -16,7 +17,9 @@ class AccLoanRequest extends FormRequest
             'loanable_type'     => 'required|string',
             'loanable_id'       => 'required|integer',
             'loan_type'         => 'required|string',
-            'loan_number'       => 'required|string',
+            'loan_number'       => ['required','string',
+                                    Rule::unique('acc_loans')->ignore($this->id),
+                                ],
             'loan_name'         => 'required|string',
             'total_sanctioned'  => 'required|numeric|min:0',
             'sanctioned_limit'  => 'required|numeric|min:0',
@@ -39,7 +42,7 @@ class AccLoanRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'loan_number.unique'         => 'The Loan Number field is exists.',
         ];
     }
 

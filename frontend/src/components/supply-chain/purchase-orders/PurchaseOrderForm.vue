@@ -272,6 +272,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             <th class="py-3 align-center">Brand</th>
             <th class="py-3 align-center">Model</th>
             <th class="py-3 align-center">Required Date</th>
+            <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Remaining Qty</th>
             <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Qty</th>
             <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Rate</th>
             <th class="py-3 align-cente min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Total Price</th>
@@ -304,6 +305,9 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             </td>
             <td>
               <input type="date" v-model="form.scmPoLines[index].required_date" class="form-input">
+            </td>
+            <td>
+              <input type="text" readonly :value="form.scmPoLines[index].max_quantity" min=1 class="form-input" :max="form.scmPoLines[index].max_quantity">
             </td>
             <td>
               <input type="number" required v-model="form.scmPoLines[index].quantity" min=1 class="form-input" :max="form.scmPoLines[index].max_quantity" :class="{'border-2': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].quantity > form.scmPoLines[index].max_quantity}">
