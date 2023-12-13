@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useIncidentRecord() {
     const router = useRouter();
@@ -27,6 +28,7 @@ export default function useIncidentRecord() {
                 crw_crew_contact: '',
                 injury_status: '',
                 notes: '',
+                isCrewNameDuplicate: false,
             }
         ]
     });
@@ -78,24 +80,28 @@ export default function useIncidentRecord() {
 
     async function storeIncidentRecord(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-incidents', formData);
-            incidentRecord.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            let formData = new FormData();
+            formData.append('attachment', form.attachment);
+            formData.append('data', JSON.stringify(form));
+
+            try {
+                const { data, status } = await Api.post('/crw/crw-incidents', formData);
+                incidentRecord.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.incidentRecords.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -119,28 +125,32 @@ export default function useIncidentRecord() {
 
     async function updateIncidentRecord(form, incidentRecordId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
-        formData.append('_method', 'PUT');
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post(
-                `/crw/crw-incidents/${incidentRecordId}`,
-                formData
-            );
-            incidentRecord.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            let formData = new FormData();
+            formData.append('attachment', form.attachment);
+            formData.append('data', JSON.stringify(form));
+            formData.append('_method', 'PUT');
+
+            try {
+                const { data, status } = await Api.post(
+                    `/crw/crw-incidents/${incidentRecordId}`,
+                    formData
+                );
+                incidentRecord.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.incidentRecords.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -162,6 +172,44 @@ export default function useIncidentRecord() {
         }
     }
 
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.crwIncidentParticipants.some((item,index) => {
+            if (itemNamesSet.has(item.crw_crew_name)) {
+                let data = `Duplicate Crew Name [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.crwIncidentParticipants[index].isCrewNameDuplicate = true;
+            } else {
+                form.crwIncidentParticipants[index].isCrewNameDuplicate = false;
+            }
+            itemNamesSet.add(item.crw_crew_name);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         incidentRecords,
         incidentRecord,
@@ -170,6 +218,7 @@ export default function useIncidentRecord() {
         showIncidentRecord,
         updateIncidentRecord,
         deleteIncidentRecord,
+        checkUniqueArray,
         isTableLoading,
         isLoading,
         errors,

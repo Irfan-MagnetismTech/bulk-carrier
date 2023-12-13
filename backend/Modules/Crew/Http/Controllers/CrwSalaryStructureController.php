@@ -41,7 +41,7 @@ class CrwSalaryStructureController extends Controller
             $crwSalaryStructureData = $request->only('crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks');
             $crwSalaryStructure     = CrwSalaryStructure::create($crwSalaryStructureData);
 
-            return response()->success('Created Successfully', null, 201);
+            return response()->success('Created Successfully', [], 201);
         }
         catch (QueryException $e)
         {

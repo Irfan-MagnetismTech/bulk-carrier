@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwIncident;
 use App\Services\FileUploadService;
+use Modules\Crew\Http\Requests\CrwIncidentRequest;
 
 class CrwIncidentController extends Controller
 {
@@ -40,20 +41,19 @@ class CrwIncidentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrwIncidentRequest $request)
     {
         try {
             DB::transaction(function () use ($request)
             {
                 $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
-                $crwIncidentData = json_decode($request->get('data'),true);
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident');
 
                 $crwIncident     = CrwIncident::create($crwIncidentData);
-                $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
+                $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);
             });
 
-            return response()->success('Created Successfully', null, 201);
+            return response()->success('Created Successfully', [], 201);
         }
         catch (QueryException $e)
         {
@@ -85,18 +85,17 @@ class CrwIncidentController extends Controller
      * @param  \App\Models\CrwIncident  $crwIncident
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CrwIncident $crwIncident)
+    public function update(CrwIncidentRequest $request, CrwIncident $crwIncident)
     {
         try {
             DB::transaction(function () use ($request, $crwIncident)
             {
                 $crwIncidentData = $request->only('ops_vessel_id', 'date_time', 'type', 'location', 'reported_by', 'description', 'business_unit');
-                $crwIncidentData = json_decode($request->get('data'),true);
                 $crwIncidentData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'crw/crew-incident', $crwIncident->attachment);
 
                 $crwIncident->update($crwIncidentData);
                 $crwIncident->crwIncidentParticipants()->delete();
-                $crwIncident->crwIncidentParticipants()->createMany($crwIncidentData['crwIncidentParticipants']);
+                $crwIncident->crwIncidentParticipants()->createMany($request->crwIncidentParticipants);
             });
             
             return response()->success('Updated successfully', $crwIncident, 202);
