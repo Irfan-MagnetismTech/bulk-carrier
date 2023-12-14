@@ -102,8 +102,8 @@ watch(() => props.form.currency, (newValue, oldValue) => {
 
     if(editInitiated.value == 1 || props.formType == 'create') {
     
-    props.form.exchange_rate_usd = null;
-    props.form.exchange_rate_bdt = null;
+    props.form.exchange_rate_usd = '';
+    props.form.exchange_rate_bdt = '';
 
     if(props.form.currency === 'USD') {
       isUSDCurrency.value = true;

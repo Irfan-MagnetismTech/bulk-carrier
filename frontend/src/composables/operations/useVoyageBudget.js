@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useVoyageBudget() {
 	const router = useRouter();
@@ -29,6 +30,8 @@ export default function useVoyageBudget() {
 		ops_voyage_id: null,
         name: '',
 		currency: '',
+		exchange_rate_usd: '',
+		exchange_rate_bdt: '',
 		opsVoyageBudgetEntries: [
 			{...expenseHeadObject}
 		],
@@ -118,8 +121,22 @@ export default function useVoyageBudget() {
 
 	async function updateVoyageBudget(form, voyageBudgetId) {
 		//NProgress.start();
+		if((form.currency == 'USD' && form.exchange_rate_usd != '') || form.currency == 'BDT' && form.exchange_rate_bdt != '') {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Currency Mismatch
+					`,
+				customClass: "swal-width",
+			});
+			return;
+		}
+
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
+
+		
 
 		try {
 
