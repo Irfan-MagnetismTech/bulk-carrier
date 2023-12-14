@@ -275,7 +275,7 @@ watch(() => props.form.scmVendor, (value) => {
   if(value){
     searchBunkerRequisitionsByVendor(value.id)
     .then(() => {
-      props.form.opsBunkerBillLines = bunkerRequisitions?.value;
+      // props.form.opsBunkerBillLines = bunkerRequisitions?.value;
       console.log(bunkerRequisitions?.value);
     })
     .catch((error) => {
