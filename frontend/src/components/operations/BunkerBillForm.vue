@@ -62,7 +62,7 @@
     <div class="mt-3 md:mt-8">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
-      <div v-for="(requisiton, index) in form.opsBunkerBillLines" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
+      <div v-for="(requisiton, index) in form.opsBunkerBillLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
         <div  class="flex flex-col justify-center md:flex-row w-full md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
@@ -76,7 +76,7 @@
                       />
               </template>
             </v-select>
-            <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" class="form-input" autocomplete="off"/>
+            <!-- <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" class="form-input" autocomplete="off"/> -->
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate (USD) <span class="text-red-500">*</span></span>

@@ -260,13 +260,39 @@ class OpsVoyageController extends Controller
             })
             ->when(isset(request()->ops_vessel_id) && (request()->ops_vessel_id != 'null'), function($query) {
                 $query->where('ops_vessel_id', request()->ops_vessel_id);
-            })->with('opsVoyageSectors')
+            })
+            ->with('opsVoyageSectors')
             ->get();
+
+            $voyages = $voyages->map(function($voyage) {
+                $voyage->opsVoyageSectors->map(function($sector) {
+                    $sector['quantity'] = $this->chooseQuantity($sector);
+
+                    return $sector;
+                });
+
+                return $voyage;
+            });
 
             return response()->success('Data retrieved successfully.', $voyages, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function chooseQuantity($item) {
+        $cargo_quantity = 0;
+            if ($item->final_received_qty > 0) {
+                $cargo_quantity = $item->final_received_qty;
+            } elseif ($item->final_survey_qty > 0) {
+                $cargo_quantity = $item->final_survey_qty;
+            } elseif ($item->boat_note_qty > 0) {
+                $cargo_quantity = $item->boat_note_qty;
+            } elseif ($item->initial_survey_qty > 0) {
+                $cargo_quantity = $item->initial_survey_qty;
+            }
+
+            return $cargo_quantity;
     }
 
 
