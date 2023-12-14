@@ -267,68 +267,47 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
-    // /* Crew Assigns Routes */
-    // {
-    //     path: `/${BASE}/crew-assigns`,
-    //     name: `${BASE}.crewAssigns.index`,
-    //     component: () => import(`../views/crew/crew-assign/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/crew-assigns/create`,
-    //     name: `${BASE}.crewAssigns.create`,
-    //     component: () => import(`../views/crew/crew-assign/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-    // {
-    //     path: `/${BASE}/crew-assigns/:crewAssignId/edit`,
-    //     name: `${BASE}.crewAssigns.edit`,
-    //     component: () => import(`../views/crew/crew-assign/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-
-    /* Crew Incident Records Routes */
-    // {
-    //     path: `/${BASE}/incident-records`,
-    //     name: `${BASE}.incidentRecords.index`,
-    //     component: () => import(`../views/crew/incident-record/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/incident-records/create`,
-    //     name: `${BASE}.incidentRecords.create`,
-    //     component: () => import(`../views/crew/incident-record/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-    // {
-    //     path: `/${BASE}/incident-records/:incidentRecordId/edit`,
-    //     name: `${BASE}.incidentRecords.edit`,
-    //     component: () => import(`../views/crew/incident-record/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
+    /* Crew Assigns Routes */
+    {
+        path: `/${BASE}/crew-assigns`,
+        name: `${BASE}.crewAssigns.index`,
+        component: () => import(`../views/crew/crew-assign/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-assigns/create`,
+        name: `${BASE}.crewAssigns.create`,
+        component: () => import(`../views/crew/crew-assign/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-assigns/:crewAssignId/edit`,
+        name: `${BASE}.crewAssigns.edit`,
+        component: () => import(`../views/crew/crew-assign/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 
     /* Crew Attendance Routes */
-    // {
-    //     path: `/${BASE}/crw-attendances`,
-    //     name: `${BASE}.crwAttendances.index`,
-    //     component: () => import(`../views/crew/crew-attendance/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/crw-attendances/create`,
-    //     name: `${BASE}.crwAttendances.create`,
-    //     component: () => import(`../views/crew/crew-attendance/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-    // {
-    //     path: `/${BASE}/crw-attendances/:crwAttendanceId/edit`,
-    //     name: `${BASE}.crwAttendances.edit`,
-    //     component: () => import(`../views/crew/crew-attendance/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
+    {
+        path: `/${BASE}/crw-attendances`,
+        name: `${BASE}.crwAttendances.index`,
+        component: () => import(`../views/crew/crew-attendance/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crw-attendances/create`,
+        name: `${BASE}.crwAttendances.create`,
+        component: () => import(`../views/crew/crew-attendance/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crw-attendances/:crwAttendanceId/edit`,
+        name: `${BASE}.crwAttendances.edit`,
+        component: () => import(`../views/crew/crew-attendance/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
     // {
     //     path: `/${BASE}/crw-attendances/:crwAttendanceId/show`,
     //     name: `${BASE}.crwAttendances.show`,
@@ -336,26 +315,47 @@ export default [
     //     meta: { requiresAuth: true, role: "all", permission: '' },
     // },
 
+    /* Crew Incident Records Routes */
+    {
+        path: `/${BASE}/incident-records`,
+        name: `${BASE}.incidentRecords.index`,
+        component: () => import(`../views/crew/incident-record/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/incident-records/create`,
+        name: `${BASE}.incidentRecords.create`,
+        component: () => import(`../views/crew/incident-record/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/incident-records/:incidentRecordId/edit`,
+        name: `${BASE}.incidentRecords.edit`,
+        component: () => import(`../views/crew/incident-record/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* Crew Salary Structure Routes */
-    // {
-    //     path: `/${BASE}/crew-salary-structures`,
-    //     name: `${BASE}.crewSalaryStructures.index`,
-    //     component: () => import(`../views/crew/crew-salary-structure/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/crew-salary-structures/create`,
-    //     name: `${BASE}.crewSalaryStructures.create`,
-    //     component: () => import(`../views/crew/crew-salary-structure/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-    // {
-    //     path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/edit`,
-    //     name: `${BASE}.crewSalaryStructures.edit`,
-    //     component: () => import(`../views/crew/crew-salary-structure/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
+    {
+        path: `/${BASE}/crew-salary-structures`,
+        name: `${BASE}.crewSalaryStructures.index`,
+        component: () => import(`../views/crew/crew-salary-structure/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-salary-structures/create`,
+        name: `${BASE}.crewSalaryStructures.create`,
+        component: () => import(`../views/crew/crew-salary-structure/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/edit`,
+        name: `${BASE}.crewSalaryStructures.edit`,
+        component: () => import(`../views/crew/crew-salary-structure/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
     // {
     //     path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
     //     name: `${BASE}.crewSalaryStructures.show`,
@@ -364,25 +364,25 @@ export default [
     // },
 
     /* Crew Bank Accounts Routes */
-    // {
-    //     path: `/${BASE}/crew-bank-accounts`,
-    //     name: `${BASE}.crewBankAccounts.index`,
-    //     component: () => import(`../views/crew/crew-bank-account/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/crew-bank-accounts/create`,
-    //     name: `${BASE}.crewBankAccounts.create`,
-    //     component: () => import(`../views/crew/crew-bank-account/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
-    // {
-    //     path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/edit`,
-    //     name: `${BASE}.crewBankAccounts.edit`,
-    //     component: () => import(`../views/crew/crew-bank-account/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: '' },
-    // },
+    {
+        path: `/${BASE}/crew-bank-accounts`,
+        name: `${BASE}.crewBankAccounts.index`,
+        component: () => import(`../views/crew/crew-bank-account/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-bank-accounts/create`,
+        name: `${BASE}.crewBankAccounts.create`,
+        component: () => import(`../views/crew/crew-bank-account/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/edit`,
+        name: `${BASE}.crewBankAccounts.edit`,
+        component: () => import(`../views/crew/crew-bank-account/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
     // {
     //     path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
     //     name: `${BASE}.crewBankAccounts.show`,

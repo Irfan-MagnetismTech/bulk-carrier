@@ -483,7 +483,7 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 
-	/* Expense Heads */
+	/* Vessel Expense Heads */
 	{
 		path: `/${BASE}/vessel-expense-heads`,
 		name: `${BASE}.vessel-expense-heads.index`,
@@ -509,6 +509,7 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
 	/* Bunker Requisitons */
 	{
 		path: `/${BASE}/bunker-requisitions`,
@@ -557,7 +558,7 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
-	/* Expense Heads */
+	/* Voyage Budgets */
 	{
 		path: `/${BASE}/voyage-budgets`,
 		name: `${BASE}.voyage-budgets.index`,

@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Database\QueryException;
@@ -33,26 +34,39 @@ class ScmMaterialCategoryController extends Controller
      */
     public function store(ScmMaterialCategoryRequest $request): JsonResponse
     {
+
+        $category = ScmMaterialCategory::find($request->parent_id);
+
+        if ($category && $category->getLayerCount() >= 2) {
+            $error = [
+                "message" => "Data could not be created!",
+                "errors" => [
+                    "id" => ["Category cannot have more than two layers!"],
+                ]
+            ];
+            return response()->json($error, 422);
+        }
+
         try {
             $material_category = ScmMaterialCategory::create($request->all());
             // for account creation start
-            if($request->parent_id == null || $request->parent_id == ""){
+            if ($request->parent_id == null || $request->parent_id == "") {
                 $psmlData = [
-                    'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
-                    'account_name'=> $material_category->name,
-                    'account_code'=> config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $material_category->id,
+                    'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                    'account_name' => $material_category->name,
+                    'account_code' => config('accounts.account_types.Assets') . ' - ' . config('accounts.balance_income_balance_header.current_assets') . ' - ' . config('accounts.balance_income_line.inventory') . ' - ' . $material_category->id,
                     // 'account_code'=> "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material_category->id",
-                    'account_type'=> config('accounts.account_types.Assets'),
-                    'business_unit'=> 'PSML',
+                    'account_type' => config('accounts.account_types.Assets'),
+                    'business_unit' => 'PSML',
                 ];
 
                 $tsllData = [
-                    'acc_balance_and_income_line_id'=> config('accounts.balance_income_line.inventory'),
-                    'account_name'=> $material_category->name,
-                    'account_code'=> config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $material_category->id,
+                    'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                    'account_name' => $material_category->name,
+                    'account_code' => config('accounts.account_types.Assets') . ' - ' . config('accounts.balance_income_balance_header.current_assets') . ' - ' . config('accounts.balance_income_line.inventory') . ' - ' . $material_category->id,
                     // 'account_code'=> "config('accounts.account_types.Assets') - 5 - config('accounts.balance_income_line.inventory') - $material_category->id",
-                    'account_type'=> config('accounts.account_types.Assets'),
-                    'business_unit'=> 'TSLL',
+                    'account_type' => config('accounts.account_types.Assets'),
+                    'business_unit' => 'TSLL',
                 ];
 
                 $material_category->account()->create($psmlData);
