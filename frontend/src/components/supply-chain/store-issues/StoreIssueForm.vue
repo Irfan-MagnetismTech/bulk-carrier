@@ -141,8 +141,7 @@
                 v-model="form.scmSiLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @option:selected="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)"
-                @update:modelValue="oomudueupdate"
+                @update:modelValue="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)"
                 >
                 <template #search="{attributes, events}">
                     <input
@@ -182,9 +181,13 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input
-                   type="text"
+                   type="number"
                    v-model="form.scmSiLines[index].quantity"
-                   class="form-input">
+                   :max="form.scmSiLines[index].max_quantity"
+                   min="1"
+                   class="form-input"
+                   :class="{'border-2': form.scmSiLines[index].quantity > form.scmSiLines[index].max_quantity,'border-red-500 bg-red-100': form.scmSiLines[index].quantity > form.scmSiLines[index].max_quantity}"
+                   >
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -287,6 +290,7 @@
 function setMaterialOtherData(datas, index) {
       props.form.scmSiLines[index].unit = datas.unit;
       props.form.scmSiLines[index].scm_material_id = datas.id;
+      
       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id).then(() => {
        props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
     });
@@ -327,8 +331,13 @@ function unsetMaterialOtherData(index) {
 
 
 //watch scmSr changes
-  watch(() => props.form.scmSr, (newValue, oldValue) => {
+watch(() => props.form.scmSr, (newValue, oldValue) => {
+      if (props.formType == 'edit') { 
+
+      } else {
+        
       fetchSrWiseMaterials(props.form.scm_sr_id);
+      }
     });
 
 

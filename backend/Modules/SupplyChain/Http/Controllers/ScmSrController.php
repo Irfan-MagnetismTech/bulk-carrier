@@ -145,7 +145,14 @@ class ScmSrController extends Controller
             ->map(function ($item) {
                 $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
                 $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
-                $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+                if(request()->si_id){
+                    $data = $item->scmSiLines->where('scm_si_id', request()->si_id)->where('sr_composite_key', $item->sr_composite_key)->first()->quantity;
+                    $cStock = $currentStock + $data;
+                    $srQty = $srQty + $data;
+                    $maxQty = $cStock > $srQty ? $srQty : $cStock;
+                }else{
+                    $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+                }
 
                 $data = $item->scmMaterial;
                 $data['unit'] = $item->unit;

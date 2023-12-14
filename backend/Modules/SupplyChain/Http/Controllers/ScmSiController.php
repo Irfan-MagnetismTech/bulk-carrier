@@ -107,7 +107,7 @@ class ScmSiController extends Controller
                     'quantity' => $scmSiLine->quantity,
                     'sr_quantity' => $scmSiLine->scmSrLine->quantity,
                     'current_stock' => (new CurrentStock)->count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id),
-                    'max_quantity' => $scmSiLine->scmSrLine->scmSiLines->sum('quantity') - $scmSiLine->quantity,
+                    'max_quantity' => $scmSiLine->scmSrLine->quantity - $scmSiLine->scmSrLine->scmSiLines->sum('quantity') + $scmSiLine->quantity,
                     'sr_composite_key' => $scmSiLine->sr_composite_key ?? null,
                 ];
 
