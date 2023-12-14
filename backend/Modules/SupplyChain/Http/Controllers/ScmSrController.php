@@ -91,6 +91,8 @@ class ScmSrController extends Controller
     public function update(ScmSrRequest $request, ScmSr $storeRequisition): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $storeRequisition->update($request->all());
 
             $storeRequisition->scmSrLines()->delete();
@@ -99,8 +101,11 @@ class ScmSrController extends Controller
 
             $storeRequisition->scmSrLines()->createMany($linesData);
 
+            DB::commit();
+
             return response()->success('Data updated sucessfully!', $storeRequisition, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
         }
@@ -114,12 +119,16 @@ class ScmSrController extends Controller
     public function destroy(ScmSr $storeRequisition): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $storeRequisition->scmSrLines()->delete();
             $storeRequisition->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -139,7 +148,7 @@ class ScmSrController extends Controller
     public function getMaterialBySrId(Request $request): JsonResponse
     {
         $srMaterials = ScmSrLine::query()
-            ->with('scmMaterial','scmSr')
+            ->with('scmMaterial', 'scmSr')
             ->where('scm_sr_id', request()->sr_id)
             ->get()
             ->map(function ($item) {
@@ -165,5 +174,4 @@ class ScmSrController extends Controller
             });
         return response()->success('data list', $srMaterials, 200);
     }
-
 }
