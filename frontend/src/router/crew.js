@@ -308,12 +308,12 @@ export default [
         component: () => import(`../views/crew/crew-attendance/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    {
-        path: `/${BASE}/crw-attendances/:crwAttendanceId/show`,
-        name: `${BASE}.crwAttendances.show`,
-        component: () => import(`../views/crew/crew-attendance/show.vue`),
-        meta: { requiresAuth: true, role: "all", permission: '' },
-    },
+    // {
+    //     path: `/${BASE}/crw-attendances/:crwAttendanceId/show`,
+    //     name: `${BASE}.crwAttendances.show`,
+    //     component: () => import(`../views/crew/crew-attendance/show.vue`),
+    //     meta: { requiresAuth: true, role: "all", permission: '' },
+    // },
 
     /* Crew Incident Records Routes */
     {
@@ -356,12 +356,12 @@ export default [
         component: () => import(`../views/crew/crew-salary-structure/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    {
-        path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
-        name: `${BASE}.crewSalaryStructures.show`,
-        component: () => import(`../views/crew/crew-salary-structure/show.vue`),
-        meta: { requiresAuth: true, role: "all", permission: '' },
-    },
+    // {
+    //     path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
+    //     name: `${BASE}.crewSalaryStructures.show`,
+    //     component: () => import(`../views/crew/crew-salary-structure/show.vue`),
+    //     meta: { requiresAuth: true, role: "all", permission: '' },
+    // },
 
     /* Crew Bank Accounts Routes */
     {
@@ -383,10 +383,10 @@ export default [
         component: () => import(`../views/crew/crew-bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    {
-        path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
-        name: `${BASE}.crewBankAccounts.show`,
-        component: () => import(`../views/crew/crew-bank-account/show.vue`),
-        meta: { requiresAuth: true, role: "all", permission: '' },
-    },
+    // {
+    //     path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
+    //     name: `${BASE}.crewBankAccounts.show`,
+    //     component: () => import(`../views/crew/crew-bank-account/show.vue`),
+    //     meta: { requiresAuth: true, role: "all", permission: '' },
+    // },
 ];
