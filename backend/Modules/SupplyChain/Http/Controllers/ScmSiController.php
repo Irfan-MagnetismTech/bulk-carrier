@@ -36,7 +36,7 @@ class ScmSiController extends Controller
     {
         try {
             $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy')
-            ->globalSearch(request()->all());
+                ->globalSearch(request()->all());
 
 
             return response()->success('Data list', $storeIssues, 200);
@@ -134,16 +134,19 @@ class ScmSiController extends Controller
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
         try {
-            $storeIssue->update($requestData);
+            DB::beginTransaction();
 
+            $storeIssue->update($requestData);
             $storeIssue->scmSiLines()->delete();
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
-
             $storeIssue->scmSiLines()->createMany($linesData);
+
+            DB::commit();
 
             return response()->success('Data updated sucessfully!', $storeIssue, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
         }
@@ -157,11 +160,16 @@ class ScmSiController extends Controller
     public function destroy(ScmSi $storeIssue): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $storeIssue->scmSiLines()->delete();
             $storeIssue->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
+            DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
         }
@@ -181,7 +189,7 @@ class ScmSiController extends Controller
             } else {
                 $purchase_requisition = [];
             }
-            
+
             return response()->success('Search result', $store_issue, 200);
         } catch (\Exception $e) {
 
@@ -199,8 +207,8 @@ class ScmSiController extends Controller
                         'scmSrLines.scmMaterial',
                     ])
                     ->where('id', $request->sr_id)
-                    ->first();                
-                    
+                    ->first();
+
                 $data = [
                     'scmWarehouse' => $scmSr->scmWarehouse,
                     'scm_warehouse_id' => $scmSr->scm_warehouse_id,
@@ -267,24 +275,24 @@ class ScmSiController extends Controller
     {
         try {
             $siMaterials = ScmSiLine::query()
-                        ->with('scmMaterial','scmSirLines','scmSrLine')
-                        ->where('scm_si_id', request()->si_id)
-                        ->get()
-                        ->map(function ($item) {
-                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
-                        $siQty = $item->quantity - $item->scmSirLines->sum('quantity');
-                        $maxQty = $currentStock > $siQty ? $siQty : $currentStock;
+                ->with('scmMaterial', 'scmSirLines', 'scmSrLine')
+                ->where('scm_si_id', request()->si_id)
+                ->get()
+                ->map(function ($item) {
+                    $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
+                    $siQty = $item->quantity - $item->scmSirLines->sum('quantity');
+                    $maxQty = $currentStock > $siQty ? $siQty : $currentStock;
 
-                        $data = $item->scmMaterial;
-                        $data['unit'] = $item->unit;
-                        $data['si_quantity'] = $item->quantity;
-                        $data['quantity'] = $item->quantity;
-                        $data['current_stock'] = $currentStock;
-                        $data['max_quantity'] = $siQty;
-                        $data['si_composite_key'] = $item->si_composite_key;
-                        $data['sr_composite_key'] = $item->sr_composite_key;
-                        return $data;
-                    });
+                    $data = $item->scmMaterial;
+                    $data['unit'] = $item->unit;
+                    $data['si_quantity'] = $item->quantity;
+                    $data['quantity'] = $item->quantity;
+                    $data['current_stock'] = $currentStock;
+                    $data['max_quantity'] = $siQty;
+                    $data['si_composite_key'] = $item->si_composite_key;
+                    $data['sr_composite_key'] = $item->sr_composite_key;
+                    return $data;
+                });
 
             return response()->success('data', $siMaterials, 200);
         } catch (\Exception $e) {
