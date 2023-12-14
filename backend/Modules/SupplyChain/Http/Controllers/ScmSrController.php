@@ -118,7 +118,7 @@ class ScmSrController extends Controller
      */
     public function destroy(ScmSr $storeRequisition): JsonResponse
     {
-        if ($storeRequisition->scmLcRecords()->count() > 0 || $storeRequisition->scmMrrs()->count() > 0) {
+        if ($storeRequisition->scmSis()->count() > 0) {
             $error = [
                 "message" => "Data could not be deleted!",
                 "errors" => [
