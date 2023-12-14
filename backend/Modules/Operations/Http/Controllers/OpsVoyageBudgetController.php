@@ -50,21 +50,21 @@ class OpsVoyageBudgetController extends Controller
     */
     public function store(OpsVoyageBudgetRequest $request): JsonResponse
     {
+        
+        $isExist = OpsVoyageBudget::where([
+            'ops_voyage_id' => $request->ops_voyage_id,
+            'ops_vessel_id' => $request->ops_vessel_id
+        ])->first();
 
-        $budgetLines = [];
+        if($isExist){
+            $error= [
+                    'errors'=>[
+                        'message'=>['Budget is already set for this voyage.',
+            ]]];
+            return response()->json($error, 422);
+        }
 
-        collect($request->heads)->map(function($head) use(&$budgetLines) {
 
-            if($head['opsSubHeads']) {
-                collect($head['opsSubHeads'])->map(function($subHead) use(&$budgetLines) {
-                    array_push($budgetLines, $subHead);
-                });
-            } else {
-                array_push($budgetLines, $head);
-            }
-        });
-
-        // return response()->json($budgetLines);
         try {
             DB::beginTransaction();
             $voyage_budget_info = $request->except(
@@ -73,7 +73,7 @@ class OpsVoyageBudgetController extends Controller
             );
 
             $voyage_budget = OpsVoyageBudget::create($voyage_budget_info);
-            $voyage_budget->opsVoyageBudgetEntries()->createMany($budgetLines);
+            $voyage_budget->opsVoyageBudgetEntries()->createMany($request->opsVoyageBudgetEntries);
             DB::commit();
             return response()->success('Data added successfully.', $voyage_budget, 201);
         }

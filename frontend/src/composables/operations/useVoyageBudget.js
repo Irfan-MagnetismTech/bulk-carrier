@@ -13,6 +13,14 @@ export default function useVoyageBudget() {
     const isTableLoading = ref(false);
 	const notification = useNotification();
 
+	const expenseHeadObject = {
+		ops_expense_head_id: '',
+		quantity: '',
+		amount: '',
+		amount_usd: '',
+		amount_bdt: ''
+	}
+
 	const voyageBudget = ref( {
 		business_unit: null,
 		opsVessel: null,
@@ -21,7 +29,9 @@ export default function useVoyageBudget() {
 		ops_voyage_id: null,
         name: '',
 		currency: '',
-		heads: [],
+		opsVoyageBudgetEntries: [
+			{...expenseHeadObject}
+		],
     });
     const errors = ref('');
     const isLoading = ref(false);
@@ -106,16 +116,15 @@ export default function useVoyageBudget() {
 		}
 	}
 
-	async function updateVoyageBudget(form) {
+	async function updateVoyageBudget(form, voyageBudgetId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
-		form.type = 'update';
 
 		try {
 
-			const { data, status } = await Api.post(
-				`/ops/voyage-budgets`,
+			const { data, status } = await Api.put(
+				`/ops/voyage-budgets/${voyageBudgetId}`,
 				form
 			);
 			// VoyageBudget.value = data.value;
@@ -169,6 +178,7 @@ export default function useVoyageBudget() {
 	}
 
 	return {
+		expenseHeadObject,
 		voyageBudgets,
 		voyageBudget,
 		getVoyageBudgets,
