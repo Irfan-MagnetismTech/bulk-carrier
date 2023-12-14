@@ -121,7 +121,6 @@
 
     <div id="sectors" class="mt-5" v-if="form.contract_type == 'Voyage Wise'">
       <h4 class="text-md font-semibold my-3">Voyage Data</h4>
-
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">

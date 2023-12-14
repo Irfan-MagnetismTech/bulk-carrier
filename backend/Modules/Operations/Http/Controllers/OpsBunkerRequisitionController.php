@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\Operations\Entities\OpsBunker;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\Auth;
 use Modules\Operations\Entities\OpsBunkerRequisition;
 use Modules\Operations\Http\Requests\OpsBunkerRequisitionRequest;
 
@@ -226,32 +227,39 @@ class OpsBunkerRequisitionController extends Controller
             })
             ->get();
 
-            $bunker_requisitions->map(function($requisiton) {
-                
-                $requisiton->opsBunkers->map(function($bunker) {
+            
+            $bunkerRequisitionInfo = $bunker_requisitions->except(
+                'opsBunkers',
+            );
+            // dd($bunker_requisitions);
+            // $bunker_requisitions['total'] = $bunker_requisitions->sum('total_amount');
+
+            return response()->success('Data retrieved successfully.', $bunkerRequisitionInfo, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function getApprovedBunkerRequisitionByPRNo(Request $request){
+        // dd($request->all());
+        try {
+            $bunkers = OpsBunkerRequisition::with('opsBunkers')
+            ->where('requisition_no', request()->pr_no)
+            ->first();
+            if(count($bunkers->opsBunkers)>0){
+                $bunkers->opsBunkers->map(function($bunker) {
                     $bunker->id = $bunker->scmMaterial->id;
                     $bunker->name_quantity = $bunker->scmMaterial->name . '-'. $bunker->quantity;
                     $bunker->name = $bunker->scmMaterial->name;
                     $bunker->is_readonly = true;                
                     return $bunker;
                 });
+            }
 
-                $nameQuantityArray = [];
+            // dd($bunkers);
 
-                foreach ($requisiton->opsBunkers as $bunker) {
-                    $nameQuantityArray[] = $bunker['name_quantity'];
-                }
-                $requisiton->is_readonly = true;
-                $requisiton['pr_no'] = $requisiton->requisition_no;
-                $requisiton['description'] = implode(',', $nameQuantityArray);
-                $requisiton['amount_bdt']=  $requisiton->opsBunkers->sum('amount_bdt');
-                $requisiton['amount_usd']=  $requisiton->opsBunkers->sum('amount_usd');
-    
-            });
-            // dd($bunker_requisitions);
-            // $bunker_requisitions['total'] = $bunker_requisitions->sum('total_amount');
-
-            return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
+            return response()->success('Data retrieved successfully.', $bunkers, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

@@ -14,7 +14,17 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
-        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader"  v-model="form.scmVendor" label="name" class="block form-input">
+        <!-- <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader"  v-model="form.scmVendor" label="name" class="block form-input">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.scmVendor"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select> -->
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="vendorChange">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -24,8 +34,7 @@
                     />
             </template>
         </v-select>
-        <input type="hidden" v-model="form.scm_vendor_id" />
-        
+        <input type="hidden" v-model="form.scm_vendor_id" />        
       </label>
 
       <label class="block w-full mt-2 text-sm">
@@ -55,19 +64,19 @@
       
       <div v-for="(requisiton, index) in form.opsBunkerBillLines" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
         <div  class="flex flex-col justify-center md:flex-row w-full md:gap-2">
-          <label class="block w-full mt-2 text-sm">  
+          <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="prs" placeholder="Search PR No." :loading="isPortLoading"  v-model="form.opsBunkerBillLines[index].pr_no" label="PR. No." class="block form-input">
+            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.opsBunkerBillLines[index].pr_no" label="requisition_no" class="block form-input" @update:modelValue="getBunkers(index)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.opsBunkerBillLines[index].pr_no"
+                      :required="!form.opsBunkerBillLines[index].requisition_no"
                       v-bind="attributes"
                       v-on="events"
                       />
               </template>
             </v-select>
-            <input type="hidden" :readonly="form.opsBunkerBillLines[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkerBillLines[index].description" placeholder="Description" class="form-input" autocomplete="off"/>
+            <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" class="form-input" autocomplete="off"/>
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate (USD) <span class="text-red-500">*</span></span>
@@ -78,7 +87,7 @@
             <input type="text"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate (BDT)" class="form-input" autocomplete="off"/>
           </label>          
         </div>
-        <div class="dt-responsive table-responsive">
+        <div class="dt-responsive table-responsive" v-if="form.opsBunkerBillLines[index].opsBunkerBillLineItems">
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <thead>
               <tr>
@@ -90,7 +99,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(detail, index) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="index">
+              <tr v-for="(detail, index) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="index" v-if="form.opsBunkerBillLines[index].pr_no">
                 <td>
                   <input type="text" readonly v-model.trim="detail.name" class="form-input text-right"/>
                 </td>
@@ -123,7 +132,38 @@
                     Remove
                   </button> 
         </div>
-      </div>      
+      </div> 
+      <div v-if="form.opsBunkerBillLines">
+        <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (USD) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required :value="props.form.sub_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Discount (USD) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required v-model="props.form.discount_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (USD) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required :value="props.form.grand_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
+          </label>   
+        </div>
+        <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (BDT) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required v-model="props.form.discount_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required :value="props.form.grand_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>    
+        </div>
+      </div>
+      
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 
@@ -155,7 +195,7 @@ const props = defineProps({
 
 const { currencies, getCurrencies } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
-const {  bunkerRequisitions, searchBunkerRequisitionsByVendor } = useBunkerRequisition();
+const {  bunkerRequisitions, requisitionBunker, searchBunkerRequisitionsByVendor , searchBunkersByPrNo} = useBunkerRequisition();
 // const { materials, getBunkerList } = useMaterial();
 
 watch(() => props.form.business_unit, (value) => {
@@ -165,7 +205,7 @@ watch(() => props.form.business_unit, (value) => {
     props.form.opsBunkerBillLines = null;
     props.form.scm_vendor_id = null;
   }
-}, { deep : true })
+}, { deep : true });
 
 function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
@@ -179,6 +219,14 @@ function getFileName(filePath) {
   return filePath;
 }
 
+
+function vendorChange() {
+  let val = props.form.scmVendor ?? null;
+  // console.log(val.id);
+  props.form.ops_vendor_id = val?.id ?? null;
+  searchBunkerRequisitionsByVendor(val.id);
+}
+
 watch(() => props.form.scmVendor, (value) => {
   vendor.value = null;
   if(value) {
@@ -190,12 +238,9 @@ watch(() => props.form.scmVendor, (value) => {
 
 
 function addBunker() {
-  // props.bunkerObject.amount_bdt=0;
-  // props.bunkerObject.amount_usd=0;
-  // props.bunkerObject.opsBunkerBillLineItems=props.bunkerObjectItem
-  // const bunker = cloneDeep(props.bunkerObject);
-  props.form.opsBunkerBillLines.push({... props.bunkerObject });
-  
+  const bunker = cloneDeep(props.bunkerObject);
+  props.form.opsBunkerBillLines.push(bunker);
+  // props.form.opsBunkerBillLines.push({... props.bunkerObject });  
 }
 
 function removeBunker(index){
@@ -212,13 +257,23 @@ function attachSMRFile(e) {
   props.form.smr_file_path = smr_file_path;
 }
 
-const bunkerReset = ref([]);
-watch(() => props.form.scm_vendor_id, (newValue, oldValue) => {
-  props.form.scm_vendor_id = newValue;
-  // console.log('sdfsdf',editInitiated.value);
-  if(newValue !== oldValue && oldValue != '' && newValue != undefined){
-    console.log(newValue);
-    searchBunkerRequisitionsByVendor(newValue)
+
+function getBunkers(index) {
+  // console.log(index);
+  // console.log(props.form.opsBunkerBillLines[index]);
+  searchBunkersByPrNo(props.form.opsBunkerBillLines[index].pr_no.requisition_no).then(()=>{
+    if(requisitionBunker?.value){
+      props.form.opsBunkerBillLines[index].opsBunkerBillLineItems= requisitionBunker?.value?.opsBunkers;
+    }
+  })
+  
+}
+
+
+
+watch(() => props.form.scmVendor, (value) => {  
+  if(value){
+    searchBunkerRequisitionsByVendor(value.id)
     .then(() => {
       props.form.opsBunkerBillLines = bunkerRequisitions?.value;
       console.log(bunkerRequisitions?.value);
@@ -226,21 +281,23 @@ watch(() => props.form.scm_vendor_id, (newValue, oldValue) => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
+    // console.log(bunkerRequisitions);
   }
-},{deep:true});
+  editInitiated.value = true;
+})
 
 watch(() => props.form.opsBunkerBillLines, (value) => {
   // let lines= props.form.opsBunkerBillLines;
-  console.log(value);
-  if(props?.formType == 'edit' && editInitiated.value != true) {
-    if(props.form.opsBunkerBillLines?.length < 1) {
-      props.form.opsBunkerBillLines.push({... props.opsBunkerBillLines });
-    }
+  // console.log(value);
+  // if(props?.formType == 'edit' && editInitiated.value != true) {
+  // }
+  if(props.form.opsBunkerBillLines?.length < 1) {
+    props.form.opsBunkerBillLines.push({... props.opsBunkerBillLines });
   }
   for(const linesIndex in value) {
     props.form.opsBunkerBillLines[linesIndex].exchange_rate_bdt=0;
     props.form.opsBunkerBillLines[linesIndex].exchange_rate_usd=0;
-    props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems = cloneDeep(props.form.opsBunkerBillLines[linesIndex].opsBunkers);
+    // props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems = cloneDeep(props.form.opsBunkerBillLines[linesIndex].opsBunkers);
   }
 
   // console.log(props.form.opsBunkerBillLines);
@@ -248,12 +305,15 @@ watch(() => props.form.opsBunkerBillLines, (value) => {
 
 
 watch(() => props?.form?.opsBunkerBillLines, (newVal, oldVal) => {
+    // console.log(newVal);
       let sub_total_usd = 0.0;
       let sub_total_bdt = 0.0;
-      newVal?.forEach((line, index) => {
-        sub_total_usd += line.amount_usd;
-        sub_total_bdt += line.amount_bdt;
-      });
+      if(newVal){
+        newVal?.forEach((line, index) => {
+          sub_total_usd += line?.amount_usd;
+          sub_total_bdt += line?.amount_bdt;
+        });
+      }
   props.form.sub_total_usd = sub_total_usd;
   props.form.sub_total_bdt = sub_total_bdt;
   CalculateAll();
@@ -265,6 +325,7 @@ watch(() => props.form.opsBunkerBillLines, (value) => {
   if(value){
     let total_usd= 0;
     let total_bdt= 0;
+    // console.log(value);
     for(const linesIndex in value) {
       let exchange_rate_bdt= props.form.opsBunkerBillLines[linesIndex].exchange_rate_bdt;
       let exchange_rate_usd= props.form.opsBunkerBillLines[linesIndex].exchange_rate_usd;
@@ -272,20 +333,23 @@ watch(() => props.form.opsBunkerBillLines, (value) => {
         total_usd+=props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems[index].amount_usd = parseFloat((item?.rate * item?.quantity * exchange_rate_usd).toFixed(2));
         total_bdt+=props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems[index].amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_bdt).toFixed(2));
       });
+      // console.log()
       props.form.opsBunkerBillLines[linesIndex].amount_usd=total_usd.toFixed(2);
       props.form.opsBunkerBillLines[linesIndex].amount_bdt=total_bdt.toFixed(2);
+      total_usd= 0;
+      total_bdt= 0;
     }
   }
 }, { deep: true });
 
 watch(() => props?.form?.discount_usd, (newVal, oldVal) => {
-  console.log(newVal);
+  // console.log(newVal);
   props.form.grand_total_usd = (props.form.sub_total_usd * 1 ) - newVal;
   CalculateAll();
 });
 
 watch(() => props?.form?.discount_bdt, (newVal, oldVal) => {
-  console.log(newVal);
+  // console.log(newVal);
   props.form.grand_total_bdt = (props.form.sub_total_bdt * 1 ) - newVal;
   CalculateAll();
 });

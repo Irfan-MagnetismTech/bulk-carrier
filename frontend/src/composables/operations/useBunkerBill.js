@@ -110,7 +110,7 @@ export default function useBunkerBill() {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
-
+		console.log(form);
 		let formData = new FormData();
 		formData.append('attachment', form.attachment);
 		formData.append('smr_file_path', form.smr_file_path);
@@ -178,6 +178,7 @@ export default function useBunkerBill() {
 		}
 	}
 
+
 	async function approvedBunkerBill(form, bunkerBillId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
@@ -200,6 +201,7 @@ export default function useBunkerBill() {
 			//NProgress.done();
 		}
 	}
+	
 
 	async function deleteBunkerBill(bunkerBillId) {
 		

@@ -52,7 +52,7 @@ class OpsBunkerBillController extends Controller
     */
     public function store(OpsBunkerBillRequest $request): JsonResponse
     {
-        // dd($request);
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $bunker_bill_info = $request->except(

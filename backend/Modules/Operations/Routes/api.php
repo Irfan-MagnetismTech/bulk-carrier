@@ -121,6 +121,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-voyage-budgets', [OpsVoyageBudgetController::class, 'getVoyageBudgetByTitle']);
     Route::get('search-bunker-requisitions', [OpsBunkerRequisitionController::class, 'getBunkerRequisitionByReqNo']);
     Route::get('search-bunker-requisitions-by-vendor', [OpsBunkerRequisitionController::class, 'getApprovedBunkerRequisitionByVendor']);
+    Route::get('search-bunker-requisitions-by-pr-no', [OpsBunkerRequisitionController::class, 'getApprovedBunkerRequisitionByPRNo']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);

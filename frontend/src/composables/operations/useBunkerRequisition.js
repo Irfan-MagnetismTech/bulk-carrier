@@ -26,7 +26,7 @@ export default function useBunkerRequisition() {
 		opsVoyage: null,
 		opsBunkers: [],
 	});
-
+	const requisitionBunker = ref(null);
 	const filterParams = ref(null);
 	const errors = ref(null);
 	const isLoading = ref(false);
@@ -187,6 +187,7 @@ export default function useBunkerRequisition() {
 
 		try {
 			const { data, status } = await Api.get(`/ops/search-bunker-requisitions?requisition_no=${searchParam}`);
+			
 			bunkerRequisitions.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -214,9 +215,26 @@ export default function useBunkerRequisition() {
 		}
 	}
 
+	async function searchBunkersByPrNo(searchParam) {
+		//NProgress.start();
+		try {
+			const { data, status } = await Api.get(`/ops/search-bunker-requisitions-by-pr-no?pr_no=${searchParam}`);
+			
+			requisitionBunker.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		bunkerRequisitions,
 		bunkerRequisition,
+		requisitionBunker,
 		getBunkerRequisitions,
 		storeBunkerRequisition,
 		showBunkerRequisition,
@@ -225,6 +243,7 @@ export default function useBunkerRequisition() {
 		searchBunkerRequisitions,
 		approvedBunkerRequisition,
 		searchBunkerRequisitionsByVendor,
+		searchBunkersByPrNo,
 		isLoading,
 		isTableLoading,
 		errors,
