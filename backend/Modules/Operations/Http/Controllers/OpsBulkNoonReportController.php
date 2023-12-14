@@ -114,7 +114,7 @@ class OpsBulkNoonReportController extends Controller
                 foreach ($request->opsBulkNoonReportConsumptions as $consumptionData) {
                     $consumption = $bulk_noon_report->opsBulkNoonReportConsumptions()->create($consumptionData);
                     if(isset($consumptionData['opsBulkNoonReportConsumptionHeads'])) {
-
+                        
                         $consumptionHeadData = collect($consumptionData['opsBulkNoonReportConsumptionHeads'])->map(function($item) use($bulk_noon_report) {
                             $item['ops_bulk_noon_report_id'] = $bulk_noon_report->id;
                             return $item;

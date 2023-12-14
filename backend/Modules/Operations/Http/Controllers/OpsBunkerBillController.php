@@ -32,7 +32,7 @@ class OpsBunkerBillController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $bunker_bills = OpsBunkerBill::with('scmVendor','opsBunkerBillLines')
+            $bunker_bills = OpsBunkerBill::with('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems')
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $bunker_bills, 200);
@@ -73,7 +73,22 @@ class OpsBunkerBillController extends Controller
             }
 
             $bunker_bill = OpsBunkerBill::create($bunker_bill_info);
-            $bunker_bill->opsBunkerBillLines()->createMany($request->opsBunkerBillLines);
+
+            if(isset($request->opsBunkerBillLines)){
+                foreach ($request->opsBunkerBillLines as $lineData) {
+                    $line = $bunker_bill->opsBunkerBillLines()->create($lineData);
+                    if(isset($lineData['opsBunkerBillLineItems'])) {
+                        
+                        $lineItemData = collect($lineData['opsBunkerBillLineItems'])->map(function($item) use($bunker_bill) {
+                            $item['ops_bunker_bill_id'] = $bunker_bill->id;
+                            return $item;
+                        })->toArray();
+
+                        $line->opsBulkNoonReportConsumptionHeads()->createMany($lineItemData);
+                    }
+                }
+            }
+            
             DB::commit();
             return response()->success('Data added successfully.', $bunker_bill, 201);
         }
@@ -92,7 +107,7 @@ class OpsBunkerBillController extends Controller
     */
     public function show(OpsBunkerBill $bunker_bill): JsonResponse
     {
-        $bunker_bill->load('scmVendor','opsBunkerBillLines');
+        $bunker_bill->load('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems');
         
         try
         {
@@ -165,6 +180,7 @@ class OpsBunkerBillController extends Controller
                 $this->fileUpload->deleteFile($bunker_bill->smr_file_path);
             }
             $bunker_bill->opsBunkerBillLines()->delete();
+            $bunker_bill->opsBunkerBillLineItems()->delete();
             $bunker_bill->delete();
 
             return response()->json([
