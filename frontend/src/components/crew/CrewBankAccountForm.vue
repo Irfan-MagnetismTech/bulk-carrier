@@ -38,7 +38,6 @@ watch(() => props.form.crwCrew, (value) => {
 
 
 onMounted(() => {
-  props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCrews(props.form.business_unit);
   });
@@ -74,31 +73,31 @@ onMounted(() => {
 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Bank Name <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.bank_name" class="form-input" autocomplete="off" required/>
+      <input type="text" v-model.trim="form.bank_name" class="form-input" placeholder="Bank Name" autocomplete="off" required/>
     </label>
 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Branch Name <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.branch_name" class="form-input" autocomplete="off" required/>
+      <input type="text" v-model.trim="form.branch_name" class="form-input" placeholder="Branch Name" autocomplete="off" required/>
     </label>
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2"> 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Account Name <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_name" class="form-input" autocomplete="off" required/>
+      <input type="text" v-model.trim="form.account_name" class="form-input" placeholder="Account Name" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Account Number <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_number" class="form-input" autocomplete="off" required/>
+      <input type="text" v-model.trim="form.account_number" class="form-input" placeholder="Account Number" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Routing Number </span>
-      <input type="text" v-model="form.routing_number" class="form-input" autocomplete="off"/>
+      <input type="text" v-model.trim="form.routing_number" class="form-input" placeholder="Routing Number" autocomplete="off"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Benificiary Name <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.benificiary_name" class="form-input" autocomplete="off" required/>
+      <input type="text" v-model.trim="form.benificiary_name" class="form-input" placeholder="Benificiary Name" autocomplete="off" required/>
     </label>              
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2"> 

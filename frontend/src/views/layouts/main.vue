@@ -184,4 +184,8 @@ table, th,td{
     .show-block {
       @apply flex items-center w-full mt-1 text-sm rounded dark-disabled:text-gray-300 border border-gray-600 dark-disabled:bg-gray-700 bg-white p-2 min-h-[2.4rem]
     }
+
+.no-wrap {
+  white-space: nowrap;
+}
 </style>

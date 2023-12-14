@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwSalaryStructureRequest extends FormRequest
 {
@@ -13,7 +14,11 @@ class CrwSalaryStructureRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'crw_crew_id'        => 'required|integer|exists:crw_crew_profiles,id',
+            'crw_crew_id'        => ['required','integer','exists:crw_crew_profiles,id',
+                                        Rule::unique('crw_salary_structures')
+                                        ->where('gross_salary', $this->gross_salary)
+                                        ->ignore($this->id)],
+
             'promotion_id'       => 'nullable|integer|exists:promotion_table,id',
             'increment_sequence' => 'nullable|integer',
             'effective_date'     => 'required|date',
@@ -34,7 +39,7 @@ class CrwSalaryStructureRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_id.unique'   => 'A record with the combination of crew name and gross salary already exists.',
         ];
     }
 
