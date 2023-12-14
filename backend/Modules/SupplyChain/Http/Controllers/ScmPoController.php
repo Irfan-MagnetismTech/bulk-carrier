@@ -155,12 +155,18 @@ class ScmPoController extends Controller
                 return response()->json($error, 422);
             }
 
+            DB::beginTransaction();
+
             $purchaseOrder->scmPoTerms()->delete();
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (QueryException  $e) {
+            DB::rollBack();
+            
             if ($e->errorInfo[1] == 1451) {
                 // Custom error response for foreign key constraint violation
                 return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);

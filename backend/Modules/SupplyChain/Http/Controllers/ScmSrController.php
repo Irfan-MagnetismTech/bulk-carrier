@@ -118,6 +118,16 @@ class ScmSrController extends Controller
      */
     public function destroy(ScmSr $storeRequisition): JsonResponse
     {
+        if ($storeRequisition->scmLcRecords()->count() > 0 || $storeRequisition->scmMrrs()->count() > 0) {
+            $error = [
+                "message" => "Data could not be deleted!",
+                "errors" => [
+                    "id" => ["This data could not be deleted as it has reference to other table"]
+                ]
+            ];
+            return response()->json($error, 422);
+        }
+
         try {
             DB::beginTransaction();
 
