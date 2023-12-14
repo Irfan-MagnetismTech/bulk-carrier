@@ -44,7 +44,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {
 
-    if(newValue !== oldValue && oldValue != null && newValue != undefined && props.form.ops_vessel_id != null) {
+    if(editInitiated.value == 1 || props.formType == 'create') {  
       props.form.ops_voyage_id = newValue?.id;
     }
 
