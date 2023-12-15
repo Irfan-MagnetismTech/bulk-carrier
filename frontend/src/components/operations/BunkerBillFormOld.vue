@@ -40,11 +40,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.attachment) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span></span>
             <input type="file" @change="attachFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.smr_file_path) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span></span>
             <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
         </label>
     </div>
@@ -168,6 +168,7 @@ import useMaterial from '../../composables/supply-chain/useMaterial';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 import DropZoneV2 from '../../components/DropZoneV2.vue';
+import cloneDeep from 'lodash/cloneDeep';
 import useBusinessInfo from '../../composables/useBusinessInfo';
 
 const editInitiated = ref(false);
@@ -185,6 +186,7 @@ const props = defineProps({
 const { currencies, getCurrencies } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 const {  bunkerRequisitions, requisitionBunker, searchBunkerRequisitionsByVendor , searchBunkersByPrNo} = useBunkerRequisition();
+// const { materials, getBunkerList } = useMaterial();
 
 watch(() => props.form.business_unit, (value) => {
   // console.log(props.form.ops_vendor_id);
@@ -199,23 +201,153 @@ function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
 }
 
+function vendorChange() {
+  let val = props.form.scmVendor ?? null;
+  // console.log(val.id);
+  props.form.ops_vendor_id = val?.id ?? null;
+  searchBunkerRequisitionsByVendor(val.id);
+}
+
 watch(() => props.form.scmVendor, (value) => {
   vendor.value = null;
   if(value) {
     props.form.scm_vendor_id = value?.id
     showVendor(value?.id)
   }
+
 }, { deep: true });
 
 
-watch(() => props.form.business_unit, (newValue, oldValue) => {
-  if(newValue) {
-    fetchVendors("", false)
+function addBunker() {
+  const bunker = cloneDeep(props.bunkerObject);
+  props.form.opsBunkerBillLines.push(bunker);
+  // props.form.opsBunkerBillLines.push({... props.bunkerObject });  
+}
+
+function removeBunker(index){
+  props.form.opsBunkerBillLines.splice(index, 1);
+}
+
+function attachFile(e) {
+  let attachment = e.target.files[0];
+  props.form.attachment = attachment;
+}
+
+function attachSMRFile(e) {
+  let smr_file_path = e.target.files[0];
+  props.form.smr_file_path = smr_file_path;
+}
+
+
+function getBunkers(index) {
+  // console.log(index);
+  // console.log(props.form.opsBunkerBillLines[index]);
+  searchBunkersByPrNo(props.form.opsBunkerBillLines[index].pr_no.requisition_no).then(()=>{
+    if(requisitionBunker?.value){
+      props.form.opsBunkerBillLines[index].opsBunkerBillLineItems= requisitionBunker?.value?.opsBunkers;
+    }
+  })
+  
+}
+
+
+watch(() => props.form.scmVendor, (value) => {  
+  if(value){
+    searchBunkerRequisitionsByVendor(value.id)
+    .then(() => {
+      // props.form.opsBunkerBillLines = bunkerRequisitions?.value;
+      console.log(bunkerRequisitions?.value);
+    })
+    .catch((error) => {
+      console.error("Error fetching data.", error);
+    });
+    // console.log(bunkerRequisitions);
   }
+  editInitiated.value = true;
 })
 
+watch(() => props.form.opsBunkerBillLines, (value) => {
+  // let lines= props.form.opsBunkerBillLines;
+  // console.log(value);
+  // if(props?.formType == 'edit' && editInitiated.value != true) {
+  // }
+  if(props.form.opsBunkerBillLines?.length < 1) {
+    props.form.opsBunkerBillLines.push({... props.opsBunkerBillLines });
+  }
+  for(const linesIndex in value) {
+    props.form.opsBunkerBillLines[linesIndex].exchange_rate_bdt=0;
+    props.form.opsBunkerBillLines[linesIndex].exchange_rate_usd=0;
+    // props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems = cloneDeep(props.form.opsBunkerBillLines[linesIndex].opsBunkers);
+  }
+
+  // console.log(props.form.opsBunkerBillLines);
+});
+
+
+watch(() => props?.form?.opsBunkerBillLines, (newVal, oldVal) => {
+    // console.log(newVal);
+      let sub_total_usd = 0.0;
+      let sub_total_bdt = 0.0;
+      if(newVal){
+        newVal?.forEach((line, index) => {
+          sub_total_usd += line?.amount_usd;
+          sub_total_bdt += line?.amount_bdt;
+        });
+      }
+  props.form.sub_total_usd = sub_total_usd;
+  props.form.sub_total_bdt = sub_total_bdt;
+  CalculateAll();
+}, { deep: true });
+
+
+watch(() => props.form.opsBunkerBillLines, (value) => {
+  let sub_total = 0.0;
+  if(value){
+    let total_usd= 0;
+    let total_bdt= 0;
+    // console.log(value);
+    for(const linesIndex in value) {
+      let exchange_rate_bdt= props.form.opsBunkerBillLines[linesIndex].exchange_rate_bdt;
+      let exchange_rate_usd= props.form.opsBunkerBillLines[linesIndex].exchange_rate_usd;
+      props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems?.forEach((item, index) => {
+        total_usd+=props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems[index].amount_usd = parseFloat((item?.rate * item?.quantity * exchange_rate_usd).toFixed(2));
+        total_bdt+=props.form.opsBunkerBillLines[linesIndex].opsBunkerBillLineItems[index].amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_bdt).toFixed(2));
+      });
+      // console.log()
+      props.form.opsBunkerBillLines[linesIndex].amount_usd=total_usd.toFixed(2);
+      props.form.opsBunkerBillLines[linesIndex].amount_bdt=total_bdt.toFixed(2);
+      total_usd= 0;
+      total_bdt= 0;
+    }
+  }
+}, { deep: true });
+
+watch(() => props?.form?.discount_usd, (newVal, oldVal) => {
+  // console.log(newVal);
+  props.form.grand_total_usd = (props.form.sub_total_usd * 1 ) - newVal;
+  CalculateAll();
+});
+
+watch(() => props?.form?.discount_bdt, (newVal, oldVal) => {
+  // console.log(newVal);
+  props.form.grand_total_bdt = (props.form.sub_total_bdt * 1 ) - newVal;
+  CalculateAll();
+});
+
+
+
+function CalculateAll() {
+  props.form.grand_total_usd = (props.form.sub_total_usd * 1) - (props.form.discount_usd * 1 );
+  props.form.grand_total_bdt = (props.form.sub_total_bdt * 1) - (props.form.discount_bdt * 1 );
+}
+
+
 onMounted(() => {
-  // fetchVendors("", false)
+    watchEffect(() => {
+      if(props.form.business_unit && props.form.business_unit != 'ALL'){
+        fetchVendors("", false);
+      }
+    });
 });
 </script>
 <style lang="postcss" scoped>
