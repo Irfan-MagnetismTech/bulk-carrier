@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
-              <input type="date" v-model="form.assign_date" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+              <input type="date" v-model="form.assign_date" required class="form-input">
       </label>
 
     </div>

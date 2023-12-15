@@ -51,7 +51,8 @@ class OpsContractAssignController extends Controller
      * @param OpsContractAssignRequest $request
      * @return JsonResponse
      */
-    public function store(OpsContractAssignRequest $request): JsonResponse
+    // public function store(OpsContractAssignRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         // dd($request);
         try {
