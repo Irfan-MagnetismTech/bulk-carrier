@@ -49,10 +49,10 @@
         </label>
     </div>
 
-    <div class="mt-3 md:mt-8">
+    <div class="mt-3 md:mt-8" v-if="form?.opsBunkerBillLines?.length > 0">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
-      <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index">
+      <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
           <label class="block w-1/2 mt-2 text-sm"></label>
@@ -109,24 +109,24 @@
                   </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems">
                   <td>
 
                   </td>
                   <td>
-                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
                   </td>
                   <td>
-                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" placeholder="Rate" class="form-input" autocomplete="off" />
                   </td>
-                  <td v-if="isOtherCurrency">
-                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                      <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                  <td v-if="isOtherCurrency[index]">
+                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
                   </td>
                   <td>
-                      <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
                   </td>
                 </tr>
               </tbody>
@@ -135,12 +135,12 @@
         </div>
 
         <div class="flex justify-center items-center my-3">
-                    <button type="button" @click="addPortSchedule()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
-                      Add More
-                    </button>
-                    <button type="button" v-if="index>0" @click="removePortSchedule(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
-                      Remove
-                    </button> 
+            <button type="button" @click="addBunkerRequisition()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+              Add More
+            </button>
+            <button type="button" v-if="index>0" @click="removeBunkerRequisition(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
+              Remove
+            </button> 
           </div>
 
       </div>
@@ -160,6 +160,7 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 import DropZoneV2 from '../../components/DropZoneV2.vue';
 import useBusinessInfo from '../../composables/useBusinessInfo';
+import cloneDeep from 'lodash/cloneDeep';
 
 const editInitiated = ref(false);
 const props = defineProps({
@@ -169,7 +170,6 @@ const props = defineProps({
     },
     errors: { type: [Object, Array], required: false },
     bunkerObject: { type: Object, required: false },
-    bunkerObjectItem: { type: Object, required: false },
     formType: { type: Object, required: false }
 });
 
@@ -181,8 +181,11 @@ watch(() => props.form.business_unit, (value) => {
   // console.log(props.form.ops_vendor_id);
   if(props?.formType != 'edit') {
     props.form.scmVendor = null;
-    props.form.opsBunkerBillLines = null;
+    props.form.opsBunkerBillLines = [];
     props.form.scm_vendor_id = null;
+
+    props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+
   }
 }, { deep : true });
 
@@ -204,6 +207,47 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     fetchVendors("", false)
   }
 })
+
+function addBunkerRequisition() {
+  props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+}
+
+function removeBunkerRequisition(index) {
+  props.form.opsBunkerBillLines.splice(index, 1);
+}
+
+const isUSDCurrency = (index) => {
+    if(props.form.opsBunkerBillLines[index].currency === 'USD') {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+const isBDTCurrency = (index) => {
+  if(props.form.opsBunkerBillLines[index].currency === 'BDT') {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+const isOtherCurrency = (index) => {
+  if(props.form.opsBunkerBillLines[index].currency !== 'BDT' || props.form.opsBunkerBillLines[index].currency !== 'USD') {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+const isNotBDTCurrency = (index) => {
+  if(props.form.opsBunkerBillLines[index].currency !== 'BDT') {
+      return true;
+    } else {
+      return false;
+    }
+}
+
 
 onMounted(() => {
   getCurrencies();
