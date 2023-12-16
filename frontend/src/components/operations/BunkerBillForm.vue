@@ -59,7 +59,7 @@
 
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input" @update:modelValue="getBunkers(index)">
+            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input" @update:modelValue="getBunkers(index)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -175,23 +175,41 @@ const props = defineProps({
 
 const { currencies, getCurrencies } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
-const {  bunkerRequisitions, requisitionBunker, searchBunkerRequisitionsByVendor , searchBunkersByPrNo} = useBunkerRequisition();
+const {  bunkerRequisitions, searchBunkerRequisitions, isLoading: bunkerLoader } = useBunkerRequisition();
 
-watch(() => props.form.business_unit, (value) => {
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+
+
   // console.log(props.form.ops_vendor_id);
-  if(props?.formType != 'edit') {
-    props.form.scmVendor = null;
-    props.form.opsBunkerBillLines = [];
-    props.form.scm_vendor_id = null;
 
-    props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+    if(newValue) {
+      fetchVendors("", false)
+      fetchBunkerRequisition("", false)
 
-  }
+
+      props.form.scmVendor = null;
+      props.form.opsBunkerBillLines = [];
+      props.form.scm_vendor_id = null;
+
+      props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+    }
+  // if(props?.formType != 'edit') {
+    
+
+    
+
+  // }
 }, { deep : true });
 
 function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
 }
+
+
+function fetchBunkerRequisition(searchParam, loading) {
+  searchBunkerRequisitions(searchParam, props.form.business_unit, loading)
+}
+
 
 watch(() => props.form.scmVendor, (newValue, oldValue) => {
     vendor.value = null;
@@ -201,12 +219,6 @@ watch(() => props.form.scmVendor, (newValue, oldValue) => {
   // }
 }, { deep: true });
 
-
-watch(() => props.form.business_unit, (newValue, oldValue) => {
-  if(newValue) {
-    fetchVendors("", false)
-  }
-})
 
 function addBunkerRequisition() {
   props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
