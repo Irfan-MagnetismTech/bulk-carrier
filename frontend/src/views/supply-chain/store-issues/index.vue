@@ -75,14 +75,33 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "department_id",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
-      "filter_type": "input" 
+      "label": "Department",
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          label: "All",
+          value: "",
+          defaultSelected : true
+        },
+        {
+          label: "Store Department",
+          value: 1
+        },
+        {
+          label: "Engine Department",
+          value: 2
+        },
+        {
+          label: "Provision Department",
+          value: 3
+        }
+      ]
     }
   ]
 });
@@ -164,7 +183,10 @@ function confirmDelete(id) {
             deleteStoreIssue(id);
           }
         })
-      }
+}
+
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
+      
 </script>
 
 <template>
@@ -196,14 +218,13 @@ function confirmDelete(id) {
               <td>{{ storeIssue?.ref_no }}</td>
               <td>{{ storeIssue?.date }}</td>
               <td>{{ storeIssue?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ storeIssue?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ DEPARTMENTS[storeIssue.department_id] ?? '' }}</td>
               <td>
                 <span :class="storeIssue?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeIssue?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToPOCreate(storeIssue.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(storeIssue.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.store-issues.show', params: { storeIssueId: storeIssue.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.store-issues.edit', params: { storeIssueId: storeIssue.id } }"></action-button>
                   <action-button @click="confirmDelete(storeIssue.id)" :action="'delete'"></action-button>
                 </div>

@@ -7,48 +7,25 @@
   <div class="input-group !w-1/4">
       <label class="label-group">
           <span class="label-item-title">MR Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <span class="show-block">{{ form.ref_no }}</span>
       </label>
   </div>
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <span class="show-block">{{ form.date }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.delivery_date" required class="form-input" name="delivery_date" :id="'delivery_date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <span class="show-block">{{ form.delivery_date }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="fromWarehouseKey" placeholder="-- Search Here --" @search="fetchFromWarehouse"  v-model="form.fromWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.fromWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
+        <span class="label-item-title">From Warehouse</span>
+        <span class="show-block">{{ form.fromWarehouse.name }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="toWarehouseKey" placeholder="-- Search Here --" @search="fetchToWarehouse" v-model="form.toWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.toWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+        <span class="label-item-title">To Warehouse</span>
+        <span class="show-block">{{ form.toWarehouse.name }}</span>
       </label>
      
      
@@ -56,20 +33,18 @@
 
   <div class="input-group !w-2/4">
     <label class="label-group">
-        <span class="label-item-title">Requested By <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.requested_by" required class="form-input" name="requested_by" :id="'requested_by'" />
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+        <span class="label-item-title">Requested By</span>
+        <span class="show-block">{{ form.requested_by }}</span>
       </label>
       <label class="label-group">
         <span class="label-item-title">Material Required For<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.requested_for" required class="form-input" name="requested_by" :id="'required_for'" />
+        <span class="show-block">{{ form.requested_for }}</span>
       </label>
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <span class="label-item-title">Remarks</span>
+          <span class="show-block">{{ form.remarks }}</span>
     </label>
   </div>
 
@@ -79,7 +54,7 @@
     <div id="">
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
         <table class="whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -88,58 +63,37 @@
             <th class="py-3 align-center">Present Stock</th>
             <th class="py-3 align-center">Available Stock</th>
             <th class="py-3 align-center">Qty</th>
-            <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMmrLine, index) in form.scmMmrLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmMmrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmMmrLines[index].scmMaterial"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
+            <span class="show-block">{{ form.scmMmrLines[index].scmMaterial
+              .material_name_and_code }}</span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmMmrLines[index].unit" class="vms-readonly-input form-input">
+                 <span class="show-block">{{ form.scmMmrLines[index].unit }}</span>
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].present_stock" class="form-input">
+                <span class="show-block">{{ form.scmMmrLines[index].present_stock }}</span>
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].available_stock" class="form-input">
+                <span class="show-block">{{ form.scmMmrLines[index].available_stock }}</span>
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].quantity" class="form-input">
+                <span class="show-block">{{ form.scmMmrLines[index].quantity }}</span>
               </label>
-            </td>
-            <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
             </td>
           </tr>
           </tbody>

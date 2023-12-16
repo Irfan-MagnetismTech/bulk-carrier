@@ -224,7 +224,7 @@ export default function useStoreIssue() {
         }
     }
 
-    async function fetchSiWiseMaterials(siId) {
+    async function fetchSiWiseMaterials(siId,sirId = null) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -233,6 +233,7 @@ export default function useStoreIssue() {
             const {data, status} = await Api.get(`/${BASE}/get-si-wise-materials`,{
                 params: {
                     si_id: siId,
+                    sir_id: sirId,
                 },
             });
             siWiseMaterials.value = data.value;

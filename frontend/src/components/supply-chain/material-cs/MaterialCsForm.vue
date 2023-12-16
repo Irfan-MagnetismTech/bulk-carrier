@@ -233,23 +233,23 @@
       props.form.scmCsMaterials.splice(index, 1);
 }
     
-function fetchStoreIssue(search, loading = false) {
-    // if (search.length > 0) {
-    //   loading(true);
-      searchStoreIssue(search, /*loading,*/ props.form.business_unit);
-    // }
-  }
+// function fetchStoreIssue(search, loading = false) {
+//     // if (search.length > 0) {
+//     //   loading(true);
+//       searchStoreIssue(search, /*loading,*/ props.form.business_unit);
+//     // }
+//   }
 
-function setStoreIssueOtherData(datas) {
-      props.form.scm_si_id = datas.id;
-      props.form.si_no = datas.ref_no;
-      props.form.acc_cost_center_id = datas.acc_cost_center_id;
-      props.form.scm_warehouse_id = datas.scm_warehouse_id;
-      props.form.scmWarehouse = datas.scmWarehouse;
-      props.form.scm_warehouse_name = datas.scmWarehouse.name;
-      props.form.scm_department_id = datas.scm_department_id;
-      getSiWiseSir(datas.id);    
-}
+// function setStoreIssueOtherData(datas) {
+//       props.form.scm_si_id = datas.id;
+//       props.form.si_no = datas.ref_no;
+//       props.form.acc_cost_center_id = datas.acc_cost_center_id;
+//       props.form.scm_warehouse_id = datas.scm_warehouse_id;
+//       props.form.scmWarehouse = datas.scmWarehouse;
+//       props.form.scm_warehouse_name = datas.scmWarehouse.name;
+//       props.form.scm_department_id = datas.scm_department_id;
+//       getSiWiseSir(datas.id);    
+// }
 
 function materialChange(index) {
     props.form.scmCsMaterials[index].unit = props.form.scmCsMaterials[index].scmMaterial.unit;
@@ -293,14 +293,14 @@ function materialChange(index) {
 //   props.form.scmSirLines = filteredStoreIssueReturnLines.value;
 // });
 //watch filteredStoreIssueReturnLines
-watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
-  props.form.scmSirLines = newVal;
-});
-function setMaterialOtherData(datas, index) {
-      props.form.scmSirLines[index].unit = datas.unit;
-      props.form.scmSirLines[index].scm_material_id = datas.id;
+// watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
+//   props.form.scmSirLines = newVal;
+// });
+// function setMaterialOtherData(datas, index) {
+//       props.form.scmSirLines[index].unit = datas.unit;
+//       props.form.scmSirLines[index].scm_material_id = datas.id;
           
-}
+// }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
@@ -329,32 +329,32 @@ function setMaterialOtherData(datas, index) {
   // }
 
 
-    function fetchMaterials(search, loading = false) {
-      // loading(true);
-      fetchSiWiseMaterials(props.form.scm_si_id);
-  }
+  //   function fetchMaterials(search, loading = false) {
+  //     // loading(true);
+  //     fetchSiWiseMaterials(props.form.scm_si_id);
+  // }
 
-  watch(() => props.form.scmSi, (newVal, oldVal) => {
-    fetchMaterials(newVal?.id)
-    props.form.department_id = newVal?.department_id;
-    props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-    props.form.scmWarehouse = newVal?.scmWarehouse;
-  });
+  // watch(() => props.form.scmSi, (newVal, oldVal) => {
+  //   fetchMaterials(newVal?.id)
+  //   props.form.department_id = newVal?.department_id;
+  //   props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
+  //   props.form.scmWarehouse = newVal?.scmWarehouse;
+  // });
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
-   if(newValue !== oldValue && oldValue != ''){
-    props.form.scm_warehouse_id = '';
-    props.form.acc_cost_center_id = '';
-    props.form.scmWarehouse = null;
-    props.form.scmSi = null;
-    props.form.scm_si_id = null;
-    props.form.si_no = null,
-    props.form.scmDepartment= null,
-    props.form.scm_department_id = null,
-    props.form.scmSirLines = [];
-    filteredStoreIssues.value = [];
-   } 
-     fetchStoreIssue('');
+  //  if(newValue !== oldValue && oldValue != ''){
+  //   props.form.scm_warehouse_id = '';
+  //   props.form.acc_cost_center_id = '';
+  //   props.form.scmWarehouse = null;
+  //   props.form.scmSi = null;
+  //   props.form.scm_si_id = null;
+  //   props.form.si_no = null,
+  //   props.form.scmDepartment= null,
+  //   props.form.scm_department_id = null,
+  //   props.form.scmSirLines = [];
+  //   filteredStoreIssues.value = [];
+  //  } 
+    //  fetchStoreIssue('');
 });
 
 function tableWidth() {

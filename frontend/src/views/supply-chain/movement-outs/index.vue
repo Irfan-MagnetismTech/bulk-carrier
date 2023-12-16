@@ -80,19 +80,9 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Date",
+      "label": "Transfer Date",
       "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "required_date",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Required Date",
-      "filter_type": "input"
-    },
+    }
   ]
 });
 
@@ -219,15 +209,12 @@ function confirmDelete(id) {
               <td>{{ movementOut?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementOut?.toWarehouse?.name?? '' }}</td>
               <td>{{ movementOut?.date }}</td>
-              <td>{{ movementOut?.required_date }}</td>
               <td>
                 <span :class="movementOut?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementOut?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToSICreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
-                  <!-- <button @click="navigateToPOCreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(movementOut.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.movement-outs.show', params: { movementOutId: movementOut.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.movement-outs.edit', params: { movementOutId: movementOut.id } }"></action-button>
                   <action-button @click="confirmDelete(movementOut.id)" :action="'delete'"></action-button>
                 </div>

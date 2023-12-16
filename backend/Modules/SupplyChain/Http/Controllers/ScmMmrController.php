@@ -26,18 +26,18 @@ class ScmMmrController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        try {
+        try {   
             $movementRequisitions = ScmMmr::with(
-                'fromWarehouse',
-                'toWarehouse',
-                'createdBy',
-                'scmMmrLines.scmMaterial',
-            )->latest()->paginate(10);
+            'fromWarehouse',
+            'toWarehouse',
+            'createdBy',
+            'scmMmrLines.scmMaterial')
+            ->globalSearch(request()->all());
 
             return response()->success('Data list', $movementRequisitions, 200);
         } catch (\Exception $e) {
@@ -48,7 +48,7 @@ class ScmMmrController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @return JsonResponse
      */
     public function store(ScmMmrRequest $request): JsonResponse
@@ -78,7 +78,7 @@ class ScmMmrController extends Controller
 
     /**
      * Show the specified resource.
-     * 
+     *
      * @param ScmMmr $movementRequisition
      * @return JsonResponse
      */
@@ -113,7 +113,7 @@ class ScmMmrController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @param ScmMmrRequest $request
      * @param ScmMmr $movementRequisition
      * @return JsonResponse
@@ -138,7 +138,7 @@ class ScmMmrController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @param ScmMmr $movementRequisition
      * @return JsonResponse
      */
@@ -154,7 +154,7 @@ class ScmMmrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
     /**
      * Retrieves the current stock data for a given warehouse.
      *
@@ -264,7 +264,7 @@ class ScmMmrController extends Controller
                 $data['mmr_composite_key'] = $item->mmr_composite_key;
                 return $data;
 
-                
+
             });
 
             return response()->success('data', $mmrMaterials, 200);

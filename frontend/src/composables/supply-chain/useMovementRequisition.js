@@ -36,7 +36,7 @@ export default function useMovementRequisition() {
         from_cost_center_id: '',
         to_cost_center_id: '',
         requested_by: '',
-        required_for: '',
+        requested_for: '',
         remarks: '',
         business_unit: '',
         scmMmrLines: [

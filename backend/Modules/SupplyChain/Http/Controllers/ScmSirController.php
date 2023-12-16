@@ -34,8 +34,8 @@ class ScmSirController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $storeIssuereturns = ScmSir::with('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy')->latest()->paginate(10);
-
+            $storeIssuereturns = ScmSir::with('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy')
+            ->globalSearch(request()->all());
             return response()->success('Data list', $storeIssuereturns, 200);
         } catch (\Exception $e) {
 
@@ -144,11 +144,14 @@ class ScmSirController extends Controller
             $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSi');
 
             $scmSirLines = $storeIssueReturn->scmSirLines->map(function ($scmSirLine) use ($storeIssueReturn) {
+                $maxQuantity = $scmSirLine->scmSiLine->quantity - $scmSirLine->scmSiLine->scmSirLines->sum('quantity') + $scmSirLine->quantity;
                 $lines = [
                     'scm_material_id' => $scmSirLine->scm_material_id,
                     'scmMaterial' => $scmSirLine->scmMaterial,
                     'unit' => $scmSirLine->unit,
                     'quantity' => $scmSirLine->quantity,
+                    'si_quantity' => $scmSirLine->scmSiLine->quantity ?? null,
+                    'max_quantity' => $maxQuantity,
                     // 'sr_quantity' => $scmSirLine->scmSrLine->quantity,
                     // 'current_stock' => (new CurrentStock)->count($scmSirLine->scm_material_id, $storeIssue->scm_warehouse_id),
                     'sr_composite_key' => $scmSirLine->sr_composite_key ?? null,
@@ -159,7 +162,7 @@ class ScmSirController extends Controller
             });
 
             data_forget($storeIssueReturn, 'scmSirLines');
-            
+
             $storeIssueReturn->scmSirLines = $scmSirLines;
 
             return response()->success('Data updated sucessfully!', $storeIssueReturn, 200);
@@ -187,6 +190,7 @@ class ScmSirController extends Controller
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSirLines, $storeIssueReturn->id, 'scm_material_id', 'sir');
 
             $storeIssueReturn->scmSirLines()->createMany($linesData);
+
 
             return response()->success('Data updated sucessfully!', $storeIssueReturn, 202);
         } catch (\Exception $e) {
@@ -226,17 +230,17 @@ class ScmSirController extends Controller
 
             $data = [
                 'scmSirLines' => $scmSi->scmSiLines->map(function ($item) {
+                    $maxQuantity = $item->quantity - $item->scmSirLines->sum('quantity');
                     return [
                         'scmMaterial' => $item->scmMaterial,
                         'scm_material_id' => $item->scmMaterial->id,
                         'unit' => $item->scmMaterial->unit,
                         'quantity' => $item->quantity,
                         'notes' => '',
+                        'max_quantity' => $maxQuantity,
                         'si_quantity' => $item->quantity,
                         'sr_composite_key' => $item->sr_composite_key,
                         'si_composite_key' => $item->si_composite_key,
-                        // 'rate' => $item->rate,
-                        // 'total_price' => $item->total_price
                     ];
                 })
             ];

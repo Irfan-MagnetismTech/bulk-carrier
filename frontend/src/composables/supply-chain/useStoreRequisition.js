@@ -186,11 +186,16 @@ export default function useStoreRequisition() {
         }
     }
 
-    const fetchSrWiseMaterials = async (storeRequisitionId) => {
+    const fetchSrWiseMaterials = async (storeRequisitionId,storeIssueId = null) => {
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const { data, status } = await Api.get(`/${BASE}/search-sr-wise-material`, {params: {sr_id: storeRequisitionId}});
+            const { data, status } = await Api.get(`/${BASE}/search-sr-wise-material`, {
+                params: {
+                    sr_id: storeRequisitionId,
+                    si_id: storeIssueId
+                }
+            });
             srWiseMaterials.value = data.value;
         } catch (error) {
             const { data, status } = error.response;

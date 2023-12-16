@@ -7,34 +7,25 @@
   <div class="input-group !w-1/4">
       <label class="label-group">
           <span class="label-item-title">MO Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <span class="show-block">{{ form.ref_no }}</span>
       </label>
   </div>
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
-          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --"  @option:selected="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmMmr"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
+        <span class="show-block">{{ form.scmMmr.ref_no }}</span>
       </label>
       <label class="label-group">
         <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.from_warehouse_name" required class="form-input vms-readonly-input" name="from_warehouse_name" :id="'delivery_date'" readonly/>
+        <span class="show-block">{{ form.from_warehouse_name }}</span>
       </label>
       <label class="label-group">
         <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.to_warehouse_name" required class="form-input vms-readonly-input" readonly name="to_warehouse_name" :id="'to_warehouse_name'" />
+        <span class="show-block">{{ form.to_warehouse_name }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <span class="show-block">{{ form.date }}</span>
       </label>
   </div>
 
@@ -52,50 +43,28 @@
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">MR Quantity</th>
             <th class="py-3 align-center">Qty</th>
-            <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMoLine, index) in form.scmMoLines" :key="index">
             <td class="!w-72">
-              <v-select :options="mmrWiseMaterials" placeholder="--Choose an option--" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @option:selected="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmMoLines[index].scmMaterial"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
+            <span class="show-block">{{ form.scmMoLines[index].scmMaterial.material_name_and_code }}</span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmMoLines[index].unit" class="vms-readonly-input form-input">
+                 <span class="show-block">{{ form.scmMoLines[index].unit }}</span>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMoLines[index].mmr_quantity" class="form-input vms-readonly-input" readonly>
+                 <span class="show-block">{{ form.scmMoLines[index].mmr_quantity }}</span>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmMoLines[index].quantity" class="form-input" :max="form.scmMoLines[index].mmr_quantity">
+                 <span class="show-block">{{ form.scmMoLines[index].quantity }}</span>
               </label>
-            </td>
-            <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
             </td>
           </tr>
           </tbody>

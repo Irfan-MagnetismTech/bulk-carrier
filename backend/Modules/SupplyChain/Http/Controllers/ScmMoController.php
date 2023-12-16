@@ -35,7 +35,8 @@ class ScmMoController extends Controller
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
-            )->latest()->paginate(10);
+            )
+            ->globalSearch(request()->all());
 
             return response()->success('Data list', $movementOuts, 200);
         } catch (\Exception $e) {
@@ -59,7 +60,7 @@ class ScmMoController extends Controller
             $scmMo = ScmMo::create($requestData);
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
-            
+
 
             $scmMo->scmMoLines()->createMany($linesData);
 
@@ -110,7 +111,7 @@ class ScmMoController extends Controller
                     'max_quantity' =>  $scmMoLine->scmMmrLine->quantity + $scmMoLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity'),
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
                     'mmr_composite_key' => $scmMoLine->mmr_composite_key ?? null,
-                    
+
                 ];
 
                 return $lines;

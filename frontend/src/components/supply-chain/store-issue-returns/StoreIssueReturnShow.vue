@@ -7,72 +7,26 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
     <label class="label-group">
-          <span class="label-item-title">SIR Ref<span class="text-red-500">*</span></span>
-          <input
-            type="text"
-            readonly
-            v-model="form.ref_no"
-            required
-            class="form-input vms-readonly-input"
-            name="ref_no"
-            :id="'ref_no'" />
-         <!-- <Error
-            v-if="errors?.ref_no"
-            :errors="errors.ref_no" /> -->
+          <span class="label-item-title">SIR Ref</span>
+            <span class="show-block">{{ form.ref_no }}</span>
       </label>
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-        <input
-          type="date"
-          v-model="form.date"
-          required
-          class="form-input"
-          name="date"
-          :id="'date'" />
-        <!-- <Error
-          v-if="errors?.date"
-          :errors="errors.date" /> -->
+        <span class="label-item-title">Date</span>
+        <span class="show-block">{{ form.date }}</span>
     </label>
       <label class="label-group">
-          <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
-            <v-select
-                :options="filteredStoreIssues"
-                placeholder="--Choose an option--"
-                @option:selected="setStoreIssueOtherData(form.scmSi)"
-                v-model="form.scmSi"
-                label="ref_no"
-                class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmSi"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-          <!-- <Error
-            v-if="errors?.scm_si_id"
-            :errors="errors.scm_si_id" /> -->
+          <span class="label-item-title">SI Ref</span>
+          <span class="show-block">{{ form.scmSi.ref_no }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <input
-            type="text"
-            readonly
-            :value="form?.scmWarehouse?.name"
-            required
-            class="form-input vms-readonly-input"
-            name="scmwarehouse_name"
-            :id="'scm_warehouse_id'" />
-         
+        <span class="label-item-title">Warehouse </span>
+        <span class="show-block">{{ form?.scmWarehouse?.name }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Issue To </span>
+        <span class="show-block">{{ DEPARTMENTS[form.department_id] }}</span>
       </label>
      
   </div>
@@ -81,7 +35,8 @@
  
   <div class="input-group !w-3/4">
     <label class="label-group">
-       <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+      <span class="label-item-title">Remarks</span>
+       <span class="show-block">{{ form.remarks }}</span>
     </label>
   </div>
 
@@ -91,7 +46,7 @@
     <div id="">
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials </legend>
         <table class="whitespace-no-wrap">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -99,7 +54,6 @@
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">SI Qty</th>
             <th class="py-3 align-center">Qty</th>
-            <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
@@ -109,73 +63,22 @@
             v-for="(scmSirLine, index) in form.scmSirLines"
             :key="index">
             <td class="!w-72">
-              <v-select
-                :options="siWiseMaterials"
-                placeholder="--Choose an option--"
-                v-model="form.scmSirLines[index].scmMaterial"
-                label="material_name_and_code"
-                class="block form-input"
-                @option:selected="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmSirLines[index].scmMaterial"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
+              <span class="show-block">{{ form.scmSirLines[index].scmMaterial.material_name_and_code }}</span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input
-                   type="text"
-                   readonly
-                   v-model="form.scmSirLines[index].unit"
-                   class="vms-readonly-input form-input">
+                   <span class="show-block">{{ form.scmSirLines[index].unit }}</span>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input
-                   type="number"
-                   :value="form.scmSirLines[index].si_quantity"
-                    readonly
-                    class="vms-readonly-input form-input"
-                   >
+                   <span class="show-block">{{ form.scmSirLines[index].si_quantity }}</span>
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input
-                   type="number"
-                   v-model="form.scmSirLines[index].quantity"
-                   :max="form.scmSirLines[index].max_quantity"
-                    min="1"
-                   class="form-input"
-                   :class="{'border-2': form.scmSirLines[index].quantity > form.scmSirLines[index].max_quantity,'border-red-500 bg-red-100': form.scmSirLines[index].quantity > form.scmSirLines[index].max_quantity}"
-                   >
+                   <span class="show-block">{{ form.scmSirLines[index].quantity }}</span>
               </label>
-            </td>
-            <td class="px-1 py-1 text-center">
-             <button
-                v-if="index!=0"
-                type="button"
-                @click="removeMaterial(index)"
-                class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-             <button
-                v-else
-                type="button"
-                @click="addMaterial()"
-                class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
             </td>
           </tr>
           </tbody>

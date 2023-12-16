@@ -280,15 +280,20 @@ class ScmSiController extends Controller
                 ->get()
                 ->map(function ($item) {
                     $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
+                    if(request()->sir_id){
+                        $qty = $item->scmSirLines->where('scm_sir_id', request()->sir_id)->where('si_composite_key', $item->si_composite_key)->first()->quantity;
+                    }else{
+                        $qty = 0;
+                    }
                     $siQty = $item->quantity - $item->scmSirLines->sum('quantity');
-                    $maxQty = $currentStock > $siQty ? $siQty : $currentStock;
+                    $maxQty = $siQty + $qty;
 
                     $data = $item->scmMaterial;
                     $data['unit'] = $item->unit;
                     $data['si_quantity'] = $item->quantity;
                     $data['quantity'] = $item->quantity;
                     $data['current_stock'] = $currentStock;
-                    $data['max_quantity'] = $siQty;
+                    $data['max_quantity'] = $maxQty;
                     $data['si_composite_key'] = $item->si_composite_key;
                     $data['sr_composite_key'] = $item->sr_composite_key;
                     return $data;
