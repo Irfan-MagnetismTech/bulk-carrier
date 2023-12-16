@@ -51,6 +51,10 @@ class OpsContractAssign extends Model
     {
         return $this->belongsTo(OpsChartererContract::class, 'ops_charterer_contract_id' , 'id');
     }
+
+    public function opsContractTariffs() {
+        return $this->hasMany(OpsContractTariff::class, 'ops_contract_assign_id', 'id');
+    }
 }
 
 

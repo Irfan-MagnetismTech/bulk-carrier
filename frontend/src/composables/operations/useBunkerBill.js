@@ -34,6 +34,7 @@ export default function useBunkerBill() {
 	}
 
 	const bunkerObjectItem = {
+		currency: '',
         particular: null,
 		quantity : null,
 		rate : null,

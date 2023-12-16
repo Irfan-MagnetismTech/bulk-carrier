@@ -55,10 +55,20 @@ class OpsContractAssignController extends Controller
     public function store(Request $request): JsonResponse
     {
         // dd($request);
+        // return response()->json($request->opsVoyage['opsContractTariffs']);
         try {
-            DB::beginTransaction();
+            // DB::beginTransaction();
+            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
+                $item['ops_voyage_sector_id'] = $item['id'];
+                return $item;
+            })->toArray();
+            
+
+            // return response()->json($tariffs);
+
             $contract_assigns = OpsContractAssign::create($request->all());
-            DB::commit();   
+            $contract_assigns->opsContractTariffs()->createMany($tariffs);
+            // DB::commit();   
             return response()->success('Data added successfully.', $contract_assigns, 201);
         }
         catch (QueryException $e)

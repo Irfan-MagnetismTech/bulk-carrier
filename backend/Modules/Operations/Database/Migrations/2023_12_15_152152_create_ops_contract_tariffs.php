@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Modules\Operations\Entities\OpsCargoTariff;
+use Modules\Operations\Entities\OpsContractAssign;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsVoyageSector;
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(OpsVessel::class);
             $table->foreignIdFor(OpsCargoTariff::class);
             $table->foreignIdFor(OpsVoyageSector::class);
+            $table->foreignIdFor(OpsContractAssign::class);
             $table->string('loading_point');
             $table->string('unloading_point');
             $table->string('tariff_month');

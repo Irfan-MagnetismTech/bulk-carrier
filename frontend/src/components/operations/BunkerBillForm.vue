@@ -14,7 +14,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
-        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="vendorChange">
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -52,15 +52,18 @@
     <div class="mt-3 md:mt-8">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
-      <div v-for="(requisiton, index) in form.opsBunkerBillLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
-        <div  class="flex flex-col justify-center md:flex-row w-full md:gap-2">
+      <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index">
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
+          <label class="block w-1/2 mt-2 text-sm"></label>
+
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.opsBunkerBillLines[index].pr_no" label="requisition_no" class="block form-input" @update:modelValue="getBunkers(index)">
+            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input" @update:modelValue="getBunkers(index)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.opsBunkerBillLines[index].requisition_no"
+                      :required="!form.opsBunkerBillLines[index].opsBunkerRequisition"
                       v-bind="attributes"
                       v-on="events"
                       />
@@ -68,90 +71,78 @@
             </v-select>
             <!-- <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" class="form-input" autocomplete="off"/> -->
           </label>
+          <label class="block w-1/2 mt-2 text-sm"></label>
+
+        </div>
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate (USD) <span class="text-red-500">*</span></span>
-            <input type="text"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_usd" placeholder="Exchange Rate (USD)" class="form-input" autocomplete="off"/>
+              <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
+              <select v-model.trim="form.opsBunkerBillLines[index].currency" class="form-input" required>
+                <option selected value="" disabled>Select Currency</option>
+                <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
+              </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate (BDT) <span class="text-red-500">*</span></span>
-            <input type="text"  step="0.001" required v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate (BDT)" class="form-input" autocomplete="off"/>
-          </label>          
+            <span class="text-gray-700">Exchange Rate (To USD) </span>
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+          </label>
+          <label class="block w-full mt-2 text-sm"></label>
         </div>
-        <div class="dt-responsive table-responsive" v-if="form.opsBunkerBillLines[index].opsBunkerBillLineItems">
-          <table id="dataTable" class="w-full table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Particular</th>
-                <th>Quantity</th>
-                <th>Rate</th>
-                <th>Amount(USD)</th>
-                <th>Amount(BDT)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(detail, index) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="index" v-if="form.opsBunkerBillLines[index].pr_no">
-                <td>
-                  <input type="text" readonly v-model.trim="detail.name" class="form-input text-right"/>
-                </td>
-                <td>
-                  <input type="text" v-model.trim="detail.quantity" class="form-input text-right"/>
-                </td>
-                <td>
-                  <input type="text" v-model.trim="detail.rate" class="form-input text-right"/>
-                </td>
-                <td>
-                  <input type="text" readonly v-model.trim="detail.amount_usd" class="form-input text-right"/>
-                </td>
-                <td>
-                  <input type="text" readonly v-model.trim="detail.amount_bdt" class="form-input text-right"/>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3">Total</td>
-                <td><input type="text" readonly v-model="form.opsBunkerBillLines[index].amount_usd" class="form-input text-right"/></td>
-                <td><input type="text" readonly v-model="form.opsBunkerBillLines[index].amount_bdt" class="form-input text-right"/></td>
-              </tr>
-            </tbody>
-          </table>
+
+        <div class="relative my-3">
+
+          <div class="dt-responsive table-responsive">
+            <table class="w-full whitespace-no-wrap" >
+              <thead>
+                  <tr class="w-full">
+                    <th class="w-72">Bunker</th>
+                    <th class="w-20">Quantity</th>
+                    <th>Rate</th>
+                    <th v-if="isOtherCurrency[index]">Amount </th>
+                    <th>Amount USD</th>
+                    <th>Amount BDT</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                  </td>
+                  <td v-if="isOtherCurrency">
+                    <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                      <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                  </td>
+                  <td>
+                      <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
         <div class="flex justify-center items-center my-3">
-                  <button type="button" @click="addBunker()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
-                    Add More
-                  </button>
-                  <button type="button" v-if="index>0" @click="removeBunker(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
-                    Remove
-                  </button> 
-        </div>
-      </div> 
-      <div v-if="form.opsBunkerBillLines">
-        <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (USD) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required :value="props.form.sub_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
-          </label>   
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Discount (USD) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required v-model="props.form.discount_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
-          </label>   
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (USD) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required :value="props.form.grand_total_usd" placeholder="Sub Total(USD)" class="form-input" autocomplete="off"/>
-          </label>   
-        </div>
-        <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (BDT) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
-          </label>   
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required v-model="props.form.discount_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
-          </label>   
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required :value="props.form.grand_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
-          </label>    
-        </div>
+                    <button type="button" @click="addPortSchedule()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+                      Add More
+                    </button>
+                    <button type="button" v-if="index>0" @click="removePortSchedule(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
+                      Remove
+                    </button> 
+          </div>
+
       </div>
       
     </div>
@@ -199,12 +190,12 @@ function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
 }
 
-watch(() => props.form.scmVendor, (value) => {
-  vendor.value = null;
-  if(value) {
-    props.form.scm_vendor_id = value?.id
-    showVendor(value?.id)
-  }
+watch(() => props.form.scmVendor, (newValue, oldValue) => {
+    vendor.value = null;
+  // if(value) {
+    props.form.scm_vendor_id = newValue?.id
+  //   showVendor(value?.id)
+  // }
 }, { deep: true });
 
 
@@ -215,8 +206,8 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 })
 
 onMounted(() => {
-  // fetchVendors("", false)
-});
+  getCurrencies();
+})
 </script>
 <style lang="postcss" scoped>
 .input-group {
