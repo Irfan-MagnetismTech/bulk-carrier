@@ -235,6 +235,7 @@ function setMaterialOtherData(datas, index) {
 
 
 watch(() => props.form.scmMoLines, (newLines) => {
+  if (newLines) {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
 
@@ -249,6 +250,7 @@ watch(() => props.form.scmMoLines, (newLines) => {
       }
     }
   });
+}
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 

@@ -266,6 +266,7 @@ watch(() => stockData.value, (newValue) => {
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
 watch(() => props.form.scmMmrLines, (newLines) => {
+  if (newLines) {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
 
@@ -281,7 +282,8 @@ watch(() => props.form.scmMmrLines, (newLines) => {
       }
     }
   });
-  // previousLines.value = cloneDeep(newLines);
+    // previousLines.value = cloneDeep(newLines);
+  }
 }, { deep: true });
 
 
