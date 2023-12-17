@@ -55,7 +55,6 @@ class ScmSiController extends Controller
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmSi::class, 'SI');
 
-
         try {
             DB::beginTransaction();
 
