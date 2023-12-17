@@ -88,8 +88,8 @@ class OpsContractAssignController extends Controller
     {
         $contract_assign->load('opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
         
-        $voyageInfo = $contract_assign->opsVoyage->map(function ($voyage) {
-            $result =$voyage->opsContractTariffs->map(function ($sector) {
+        $voyageInfo = $contract_assign->opsVoyage()->get()->map(function ($voyage) {
+            $result =$voyage->opsContractTariffs()->get()->map(function ($sector) {
 
                 if (isset($sector->cargoTariffs)) {
                     $sectorInfo = $sector->opsCargoTariffs()->get()->map(function ($tariff) {
