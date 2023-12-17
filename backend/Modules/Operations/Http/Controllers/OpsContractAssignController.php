@@ -57,18 +57,16 @@ class OpsContractAssignController extends Controller
         // dd($request);
         // return response()->json($request->opsVoyage['opsContractTariffs']);
         try {
-            // DB::beginTransaction();
+            DB::beginTransaction();
             $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
                 $item['ops_voyage_sector_id'] = $item['id'];
                 return $item;
             })->toArray();
             
 
-            // return response()->json($tariffs);
-
             $contract_assigns = OpsContractAssign::create($request->all());
             $contract_assigns->opsContractTariffs()->createMany($tariffs);
-            // DB::commit();   
+            DB::commit();   
             return response()->success('Data added successfully.', $contract_assigns, 201);
         }
         catch (QueryException $e)
@@ -108,7 +106,14 @@ class OpsContractAssignController extends Controller
         // dd($request);
         try {
             DB::beginTransaction();
+            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
+                $item['ops_voyage_sector_id'] = $item['id'];
+                return $item;
+            })->toArray();
+
+            $contract_assign->opsContractTariffs()->delete();
             $contract_assign->update($request->all());
+            $contract_assign->opsContractTariffs()->createMany($tariffs);
             DB::commit();  
             return response()->success('Data updated Successfully.', $contract_assign, 202);
         }
@@ -129,6 +134,7 @@ class OpsContractAssignController extends Controller
     {
         try {
             $contract_assign->delete($contract_assign);
+            $contract_assign->opsContractTariffs()->delete();
 
             return response()->json([
                 'value' => '',
