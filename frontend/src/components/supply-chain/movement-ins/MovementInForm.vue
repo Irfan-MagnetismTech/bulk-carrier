@@ -231,7 +231,7 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    import Store from "../../store";
+    // import Store from "../../store";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
     import useMovementIn from '../../../composables/supply-chain/useMovementIn';
@@ -259,9 +259,9 @@
 
     const mmrKey = ref(0);
 
-    const USER = Store.getters.getCurrentUser;
-    const ROLE = USER?.role ?? null;
-    const PERMISSIONS = USER?.permissions ?? [];
+    // const USER = Store.getters.getCurrentUser;
+    // const ROLE = USER?.role ?? null;
+    // const PERMISSIONS = USER?.permissions ?? [];
 
 
     function addMaterial() {
