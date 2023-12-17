@@ -83,9 +83,9 @@ export default function useAdministrativeSalary() {
 
             try {
                 const { data, status } = await Api.post('/acc/acc-advance-adjustments', formData);
-                advanceAdjustment.value = data.value;
+                administrativeSalary.value = data.value;
                 notification.showSuccess(status);
-                await router.push({ name: "acc.advance-adjustments.index" });
+                await router.push({ name: "acc.administrative-salaries.index" });
             } catch (error) {
                 const { data, status } = error.response;
                 errors.value = notification.showError(status, data);
@@ -96,14 +96,14 @@ export default function useAdministrativeSalary() {
         }
     }
 
-    async function showAdvanceAdjustment(advanceAdjustmentId) {
+    async function showAdministrativeSalary(administrativeSalaryId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-advance-adjustments/${advanceAdjustmentId}`);
-            advanceAdjustment.value = data.value;
+            const { data, status } = await Api.get(`/acc/acc-advance-adjustments/${administrativeSalaryId}`);
+            administrativeSalary.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -114,7 +114,7 @@ export default function useAdministrativeSalary() {
         }
     }
 
-    async function updateAdvanceAdjustment(form, advanceAdjustmentId) {
+    async function updateAdministrativeSalary(form, administrativeSalaryId) {
 
         const isUnique = checkUniqueArray(form);
 
@@ -123,8 +123,8 @@ export default function useAdministrativeSalary() {
             isLoading.value = true;
 
             try {
-                const { data, status } = await Api.put(`/acc/acc-advance-adjustments/${advanceAdjustmentId}`, form);
-                advanceAdjustment.value = data.value;
+                const { data, status } = await Api.put(`/acc/acc-advance-adjustments/${administrativeSalaryId}`, form);
+                administrativeSalary.value = data.value;
                 notification.showSuccess(status);
                 await router.push({ name: "acc.advance-adjustments.index" });
             } catch (error) {
@@ -137,15 +137,15 @@ export default function useAdministrativeSalary() {
         }
     }
 
-    async function deleteAdvanceAdjustment(advanceAdjustmentId) {
+    async function deleteAdministrativeSalary(administrativeSalaryId) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-advance-adjustments/${advanceAdjustmentId}`);
+            const { data, status } = await Api.delete( `/acc/acc-advance-adjustments/${administrativeSalaryId}`);
             notification.showSuccess(status);
-            await getAdvanceAdjustments(filterParams.value);
+            await getAdministrativeSalaries(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -203,13 +203,13 @@ export default function useAdministrativeSalary() {
     }
 
     return {
-        advanceAdjustments,
-        advanceAdjustment,
-        getAdvanceAdjustments,
-        storeAdvanceAdjustment,
-        showAdvanceAdjustment,
-        updateAdvanceAdjustment,
-        deleteAdvanceAdjustment,
+        administrativeSalaries,
+        administrativeSalary,
+        getAdministrativeSalaries,
+        storeAdministrativeSalary,
+        showAdministrativeSalary,
+        updateAdministrativeSalary,
+        deleteAdministrativeSalary,
         checkUniqueArray,
         isLoading,
         isTableLoading,
