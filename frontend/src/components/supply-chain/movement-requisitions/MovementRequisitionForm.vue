@@ -114,19 +114,19 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].present_stock" class="form-input">
+                 <input type="text" readonly v-model="form.scmMmrLines[index].present_stock" class="vms-readonly-input form-input">
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].available_stock" class="form-input">
+                 <input type="text" readonly v-model="form.scmMmrLines[index].available_stock" class="vms-readonly-input form-input">
                </label>
               
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].quantity" class="form-input">
+                 <input type="number" v-model="form.scmMmrLines[index].quantity" class="form-input" min="1">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
