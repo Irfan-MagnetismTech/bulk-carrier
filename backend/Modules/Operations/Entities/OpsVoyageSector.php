@@ -14,6 +14,7 @@ class OpsVoyageSector extends Model
         'ops_voyage_id',
         'loading_point',
         'unloading_point',
+        'pol_pod',
         'rate',
         'initial_survey_qty',
         'approx_amount',

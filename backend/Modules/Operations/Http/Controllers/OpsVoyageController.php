@@ -63,6 +63,7 @@ class OpsVoyageController extends Controller
             );
 
             foreach($request->opsVoyageSectors as $key=>$sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
                 if($sector['loading_point'] == $sector['unloading_point']){
                     $error= [
                         'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
@@ -158,6 +159,7 @@ class OpsVoyageController extends Controller
             );
 
             foreach($request->opsVoyageSectors as $key=>$sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
                 if($sector['loading_point'] == $sector['unloading_point']){
                     $error= [
                         'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
@@ -264,17 +266,46 @@ class OpsVoyageController extends Controller
             ->with(['opsVoyageSectors.cargoTariffs.opsCargoTariffLines'])
             ->get();
 
-            $voyages = $voyages->map(function($voyage) {
-                $voyage->opsVoyageSectors->map(function($sector) {
-                    $sector['quantity'] = $this->chooseQuantity($sector);
+            // $voyages = $voyages->map(function($voyage) {
+            //     $voyage->opsVoyageSectors->map(function($sector) {
+            //         $sector['quantity'] = $this->chooseQuantity($sector);
+                    
+            //         return $sector;
+            //     });
 
+            //     return $voyage;
+            // });
+
+            $voyageInfo = $voyages->map(function ($voyage) {
+                $result =$voyage->opsVoyageSectors->map(function ($sector) {
+                    if (isset($sector->cargoTariffs)) {
+                        $sectorInfo = $sector->cargoTariffs()->get()->map(function ($tariff) {
+                            $tariff['jan'] = $tariff->opsCargoTariffLines->sum('jan');
+                            $tariff['feb'] = $tariff->opsCargoTariffLines->sum('feb');
+                            $tariff['mar'] = $tariff->opsCargoTariffLines->sum('mar');
+                            $tariff['apr'] = $tariff->opsCargoTariffLines->sum('apr');
+                            $tariff['may'] = $tariff->opsCargoTariffLines->sum('may');
+                            $tariff['jun'] = $tariff->opsCargoTariffLines->sum('jun');
+                            $tariff['jul'] = $tariff->opsCargoTariffLines->sum('jul');
+                            $tariff['aug'] = $tariff->opsCargoTariffLines->sum('aug');
+                            $tariff['sep'] = $tariff->opsCargoTariffLines->sum('sep');
+                            $tariff['oct'] = $tariff->opsCargoTariffLines->sum('oct');
+                            $tariff['nov'] = $tariff->opsCargoTariffLines->sum('nov');
+                            $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
+                            
+                            return $tariff;
+                        });
+                        data_forget($sector, 'cargoTariffs');
+                        $sector->cargoTariffs = $sectorInfo;
+                    }
+                    $sector['quantity'] = $this->chooseQuantity($sector);
                     return $sector;
                 });
-
+            
                 return $voyage;
             });
 
-            return response()->success('Data retrieved successfully.', $voyages, 200);
+            return response()->success('Data retrieved successfully.', $voyageInfo, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }
