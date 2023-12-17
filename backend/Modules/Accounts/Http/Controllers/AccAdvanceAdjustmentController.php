@@ -42,14 +42,13 @@ class AccAdvanceAdjustmentController extends Controller
     {
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
-            // $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'acc/advance-adjustment');
 
-            $accAdvanceAdjustmentData= $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment);
+            $accAdvanceAdjustmentLines = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment);
 
-            DB::transaction(function () use ($request, $accAdvanceAdjustmentData)
+            DB::transaction(function () use ($accAdvanceAdjustmentData, $accAdvanceAdjustmentLines)
             {
                 $accAdvanceAdjustment = AccAdvanceAdjustment::create($accAdvanceAdjustmentData);
-                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($request->accAdvanceAdjustmentLines);
+                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($accAdvanceAdjustmentLines);
             });
 
             return response()->success('Created Successfully', [], 201);
@@ -83,13 +82,13 @@ class AccAdvanceAdjustmentController extends Controller
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
 
-            $accAdvanceAdjustmentData = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment , $accAdvanceAdjustment->accAdvanceAdjustmentLines);
+            $accAdvanceAdjustmentLines = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment, $accAdvanceAdjustment->accAdvanceAdjustmentLines);
 
-            DB::transaction(function () use ($request, $accAdvanceAdjustmentData, $accAdvanceAdjustment)
+            DB::transaction(function () use ($accAdvanceAdjustmentData, $accAdvanceAdjustment, $accAdvanceAdjustmentLines)
             {
                 $accAdvanceAdjustment->update($accAdvanceAdjustmentData);
                 $accAdvanceAdjustment->accAdvanceAdjustmentLines()->delete();
-                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($request->accAdvanceAdjustmentLines);
+                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($accAdvanceAdjustmentLines);
             });
 
             return response()->success('Updated Successfully', [], 202);
