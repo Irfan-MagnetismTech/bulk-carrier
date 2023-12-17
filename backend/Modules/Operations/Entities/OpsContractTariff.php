@@ -19,6 +19,7 @@ class OpsContractTariff extends Model
         'tariff_month',
         'quantity',
         'total_rate',
+        'pol_pod'
     ];
 
     public function opsVessel()

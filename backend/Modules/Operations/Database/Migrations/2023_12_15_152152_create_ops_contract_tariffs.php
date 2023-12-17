@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('tariff_month');
             $table->double('quantity', 20,2);
             $table->double('total_rate', 20,2);
+            $table->string('pol_pod');
             $table->timestamps();
         });
     }

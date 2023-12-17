@@ -65,7 +65,10 @@ class OpsContractAssignController extends Controller
             })->toArray();
             
 
-            $contract_assigns = OpsContractAssign::create($request->all());
+            $info = $request->all();
+            $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
+
+            $contract_assigns = OpsContractAssign::create($info);
             $contract_assigns->opsContractTariffs()->createMany($tariffs);
             DB::commit();   
             return response()->success('Data added successfully.', $contract_assigns, 201);
@@ -111,21 +114,16 @@ class OpsContractAssignController extends Controller
                 });
                 data_forget($sector, 'cargoTariffs');
                 
-                
-                // dd($sectorInfo);
-
                 $sector['cargoTariffs'] = $sectorInfo;
                 
             }
-            // $sector['quantity'] = $this->chooseQuantity($sector);
-
-            // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
             return $sector;
         });
+                $contract_assign->opsVoyage->opsContractTariffs->map(function($item) use($contract_assign) {
 
-
-                data_forget($contract_assign->opsVoyage, 'opsContractTariffs');
-                $contract_assign->opsVoyage->opsContractTariffs = $contract_assign->opsVoyage->opsVoyageSectors;
+                    $item['cargoTariffs'] = $contract_assign->opsVoyage->opsVoyageSectors->where('pol_pod', $item['pol_pod'])?->first()?->cargoTariffs;
+                    return $item;
+                });
    
         
         try {     
@@ -153,8 +151,11 @@ class OpsContractAssignController extends Controller
                 return $item;
             })->toArray();
 
+            $info = $request->all();
+            $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
+
             $contract_assign->opsContractTariffs()->delete();
-            $contract_assign->update($request->all());
+            $contract_assign->update($info);
             $contract_assign->opsContractTariffs()->createMany($tariffs);
             DB::commit();  
             return response()->success('Data updated Successfully.', $contract_assign, 202);
