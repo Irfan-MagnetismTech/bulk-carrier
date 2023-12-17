@@ -5,30 +5,18 @@ import Api from "../../apis/Api.js";
 import useNotification from '../useNotification.js';
 import Swal from "sweetalert2";
 
-export default function useAdvanceAdjustment() {
+export default function useAdministrativeSalary() {
     const router = useRouter();
-    const advanceAdjustments = ref([]);
+    const administrativeSalaries = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
-    const advanceAdjustment = ref( {
-        acc_cost_center_name : '',
-        acc_cost_center_id : '',
-        acc_cash_requisition_id : '',
-        acc_cash_requisition_name : '',
-        adjustment_date : '',
-        total_bill_amount : '',
-        total_cash_amount : 0,
-        adjustment_amount : '',
-        acc_requisition_date: '',
-        acc_requisition_amount: '',
+    const administrativeSalary = ref( {
+        date_month: '',
         business_unit : '',
         accAdvanceAdjustmentLines: [
             {
-                acc_advance_adjustment_id: '',
-                particular: '',
+                particulars: '',
                 amount: '',
-                attachment: null,
-                remarks: '',
                 isParticularDuplicate: false
             }
         ]
@@ -39,7 +27,7 @@ export default function useAdvanceAdjustment() {
     const isLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getAdvanceAdjustments(filterOptions) {
+    async function getAdministrativeSalaries(filterOptions) {
         let loader = null;
         if (!filterOptions.isFilter) {
             loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
@@ -55,14 +43,14 @@ export default function useAdvanceAdjustment() {
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/acc/acc-advance-adjustments',{
+            const {data, status} = await Api.get('/acc/acc-administrative-salaries',{
                 params: {
                     page: filterOptions.page || 1,
                     items_per_page: filterOptions.items_per_page,
                     data: JSON.stringify(filterOptions)
                 }
             });
-            advanceAdjustments.value = data.value;
+            administrativeSalaries.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -79,7 +67,7 @@ export default function useAdvanceAdjustment() {
         }
     }
 
-    async function storeAdvanceAdjustment(form) {
+    async function storeAdministrativeSalary(form) {
 
         const isUnique = checkUniqueArray(form);
         if(isUnique){

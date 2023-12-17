@@ -76,11 +76,15 @@ watch(
         if(!isNaN(total_bill_amount)) {
           props.form.total_bill_amount = total_bill_amount;
         }
-        props.form.adjustment_amount = parseFloat(props.form.total_bill_amount + props.form.total_cash_amount);
+        //props.form.adjustment_amount = parseFloat(props.form.total_bill_amount + props.form.total_cash_amount);
       }
     },
     { deep: true }
 );
+
+function calcTotalAdjustmentAmount(){
+  props.form.adjustment_amount = parseFloat(props.form.total_bill_amount + props.form.total_cash_amount);
+}
 
 function setAdvanceAdjustmentFile($e,index){
   props.form.accAdvanceAdjustmentLines[index].attachment = $e.target.files[0];
@@ -191,7 +195,7 @@ onMounted(() => {
           <tr class="text-gray-700 dark-disabled:text-gray-400">
             <td class="px-1 py-1 font-bold !text-right" colspan="3">Total Cash Amount</td>
             <td class="px-1 py-1 font-bold text-right">
-              <input type="number" step=".01" v-model.trim="form.total_cash_amount" class="block w-full rounded form-input !text-right">
+              <input type="number" step=".01" @input="calcTotalAdjustmentAmount" v-model.trim="form.total_cash_amount" class="block w-full rounded form-input !text-right">
             </td>
             <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
