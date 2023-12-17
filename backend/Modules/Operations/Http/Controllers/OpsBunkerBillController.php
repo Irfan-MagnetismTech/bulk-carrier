@@ -56,8 +56,8 @@ class OpsBunkerBillController extends Controller
         $bunkerBillLines = $request->opsBunkerBillLines;
 
         // return response()->json(count($bunkerBillLines));
-        // try {
-        //     DB::beginTransaction();
+        try {
+            DB::beginTransaction();
             $bunker_bill_info = $request->except(
                 '_token',
                 'attachment',
@@ -65,15 +65,15 @@ class OpsBunkerBillController extends Controller
                 'opsBunkerBillLines',
             );
             
-            // if(isset($request->attachment)){
-            //     $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/bunker_bills');
-            //     $bunker_bill_info['attachment'] = $attachment;
-            // }
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/bunker_bills');
+                $bunker_bill_info['attachment'] = $attachment;
+            }
             
-            // if(isset($request->smr_file_path)){                
-            //     $smr_file_path = $this->fileUpload->handleFile($request->smr_file_path, 'ops/bunker_bills/srm_file');
-            //     $bunker_bill_info['smr_file_path'] = $smr_file_path;
-            // }
+            if(isset($request->smr_file_path)){                
+                $smr_file_path = $this->fileUpload->handleFile($request->smr_file_path, 'ops/bunker_bills/srm_file');
+                $bunker_bill_info['smr_file_path'] = $smr_file_path;
+            }
 
             // return response()->json($bunker_bill_info);
             $bunker_bill_info['vendor_bill_no'] = rand(1,10);
@@ -99,17 +99,17 @@ class OpsBunkerBillController extends Controller
                 }
             }
 
-        return response()->json(count($bunkerBillLines));
+        // return response()->json(count($bunkerBillLines));
 
             
-        //     DB::commit();
-        //     return response()->success('Data added successfully.', $bunker_bill, 201);
-        // }
-        // catch (QueryException $e)
-        // {
-        //     DB::rollBack();
-        //     return response()->error($e->getMessage(), 500);
-        // }
+            DB::commit();
+            return response()->success('Data added successfully.', $bunker_bill, 201);
+        }
+        catch (QueryException $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -120,7 +120,7 @@ class OpsBunkerBillController extends Controller
     */
     public function show(OpsBunkerBill $bunker_bill): JsonResponse
     {
-        $bunker_bill->load('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems');
+        $bunker_bill->load('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems', 'opsBunkerBillLines.opsBunkerRequisition');
         
         try
         {
