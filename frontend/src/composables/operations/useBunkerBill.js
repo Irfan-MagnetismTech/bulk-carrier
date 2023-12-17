@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useBunkerBill() {
 	const router = useRouter();
@@ -115,10 +116,33 @@ export default function useBunkerBill() {
 	}
 
 	async function storeBunkerBill(form) {
+		let showAlert = false;
+		form.opsBunkerBillLines.reduce((acc, billLine) => {
+			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+			  if(!(lineItem.amount_bdt > 0)) {
+				
+				showAlert = true;
+			  }
+			}, 0);
+		  }, 0);
+
+		  if (showAlert) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `BDT Amount Must Be Present. 
+					`,
+				customClass: "swal-width",
+			});
+			return;
+		  } 
+
 		//NProgress.start();
-		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		// isLoading.value = true;
-		console.log("dfdf", form);
+
+
+		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
+	
 		let formData = new FormData();
 		formData.append('attachment', form.attachment);
 		formData.append('smr_file_path', form.smr_file_path);

@@ -1,18 +1,18 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
-        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
+            <input type="date" v-model.trim="form.date" placeholder="Date" class="form-input" required autocomplete="off" />
+        </label>
         <label class="block w-full mt-2 text-sm"></label>
         <label class="block w-full mt-2 text-sm"></label>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model.trim="form.date" placeholder="Date" class="form-input" required autocomplete="off" />
-      </label>
+    <div class="flex flex-col w-full md:flex-row md:gap-2">
+      
 
-      <label class="block w-full mt-2 text-sm">
+      <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
         <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
             <template #search="{attributes, events}">
@@ -27,15 +27,11 @@
         <input type="hidden" v-model="form.scm_vendor_id" />        
       </label>
 
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Bill No. <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.vendor_bill_no" placeholder="Bill No." class="form-input" required autocomplete="off" />
-      </label>
+      </label> -->
 
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Remarks <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.remarks" placeholder="Remarks" class="form-input" required autocomplete="off" />
-      </label>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
@@ -185,7 +181,7 @@
         </div>
       </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
-
+    <RemarksComponet v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
 </template>
 <script setup>
 import { ref, watch, onMounted, watchEffect } from 'vue';
@@ -199,6 +195,7 @@ import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 import DropZoneV2 from '../../components/DropZoneV2.vue';
 import useBusinessInfo from '../../composables/useBusinessInfo';
 import cloneDeep from 'lodash/cloneDeep';
+import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 
 const editInitiated = ref(false);
 const props = defineProps({
