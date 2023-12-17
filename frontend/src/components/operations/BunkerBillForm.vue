@@ -105,8 +105,8 @@
                 <template v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="itemIndex">
                   <tr class="w-full" v-if="itemIndex==0">
                     <th class="w-72">Bunker</th>
-                    <th class="w-20">Quantity</th>
-                    <th>Rate</th>
+                    <th class="w-20">Quantity <span class="text-red-500">*</span></th>
+                    <th>Rate <span class="text-red-500">*</span></th>
                     <th v-if="isOtherCurrency(index)">Amount </th>
                     <th>Amount USD</th>
                     <th>Amount BDT</th>
@@ -125,10 +125,10 @@
                         </select>
                     </td>
                     <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity"  @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" required @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate"  @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" required @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
                     </td>
                     <td v-if="isOtherCurrency(index)">
                       <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
@@ -137,7 +137,7 @@
                         <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
                       <button type="button" @click="removeBillItems(index, itemIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -165,6 +165,25 @@
       </div>
       
     </div>
+
+    <div v-if="form.opsBunkerBillLines" class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+        <h4 class="text-md font-semibold uppercase mb-2">Bunker Bill Summary</h4>
+        
+        <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (BDT) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" readonly :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) </span>
+              <input type="number" step="0.001"  v-model="props.form.discount_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>   
+          <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" required readonly :value="props.form.grand_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>    
+        </div>
+      </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 
 </template>
@@ -245,8 +264,6 @@ function removeBillItems(index, itemIndex) {
 function addBillItems(index, itemIndex) {
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.push({});
 }
-
-
 
 const isUSDCurrency = (index) => {
     if(props.form.opsBunkerBillLines[index].currency === 'USD') {
@@ -350,6 +367,8 @@ const calculatePrAmounts = (billLineIndex) => {
      });
     }
    
+    CalculateAll()
+
 }
 
 
@@ -388,6 +407,22 @@ const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, ite
 
   return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
 }
+
+function CalculateAll() {
+
+  let totalAmount = props.form.opsBunkerBillLines.reduce((acc, billLine) => {
+    return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+      return innerAcc + (lineItem.amount_bdt || 0);
+    }, 0);
+  }, 0);
+
+  props.form.sub_total_bdt = totalAmount
+  props.form.grand_total_bdt = props.form.sub_total_bdt - props.form.discount_bdt;
+
+}
+watch(() => props.form.discount_bdt, (newValue, oldValue) => {
+  props.form.grand_total_bdt = props.form.sub_total_bdt - props.form.discount_bdt;
+}, { deep: true })
 
 onMounted(() => {
   getCurrencies();

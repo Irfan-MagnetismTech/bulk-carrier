@@ -57,6 +57,9 @@ export default function useBunkerBill() {
         sub_total : null,
         discount : null,
         grand_total : null,
+		grand_total_bdt: null,
+		sub_total_bdt: null,
+		discount_bdt: null,
 		scmVendor: [],
 		opsBunkerBillLines: [{...bunkerObject}],
 	});
