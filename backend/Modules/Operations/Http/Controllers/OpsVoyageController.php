@@ -295,28 +295,28 @@ class OpsVoyageController extends Controller
                             $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
                             
 
-                            // $tariff = $tariff->only([
-                            //     'id',
-                            //     'tariff_name',
-                            //     'ops_vessel_id',
-                            //     'ops_cargo_type_id',
-                            //     'loading_point',
-                            //     'unloading_point',
-                            //     'pol_pod',
-                            //     'business_unit',
-                            //     'jan',
-                            //     'feb',
-                            //     'mar',
-                            //     'apr',
-                            //     'may',
-                            //     'jun',
-                            //     'jul',
-                            //     'aug',
-                            //     'sep',
-                            //     'oct',
-                            //     'nov',
-                            //     'dec',
-                            // ]);
+                            $tariff = $tariff->only([
+                                'id',
+                                'tariff_name',
+                                'ops_vessel_id',
+                                'ops_cargo_type_id',
+                                'loading_point',
+                                'unloading_point',
+                                'pol_pod',
+                                'business_unit',
+                                'jan',
+                                'feb',
+                                'mar',
+                                'apr',
+                                'may',
+                                'jun',
+                                'jul',
+                                'aug',
+                                'sep',
+                                'oct',
+                                'nov',
+                                'dec',
+                            ]);
                             return $tariff;
                         });
                         data_forget($sector, 'cargoTariffs');

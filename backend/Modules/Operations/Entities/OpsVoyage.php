@@ -77,4 +77,8 @@ class OpsVoyage extends Model
     {
         return $this->hasMany(OpsChartererInvoice::class, 'ops_charterer_profile_id', 'id');
     }
+
+    public function opsContractTariffs() {
+        return $this->hasMany(OpsContractTariff::class, 'ops_voyage_id', 'id');
+    }
 }
