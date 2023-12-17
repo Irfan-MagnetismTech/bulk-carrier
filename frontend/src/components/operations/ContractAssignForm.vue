@@ -17,7 +17,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -230,20 +230,36 @@ if(value) {
   }
 }, { deep: true })
 
-watch(() => props.form.opsVessel, (value) => {
+// watch(() => props.form.opsVessel, (value) => {
 
-if(value) {
+// if(value) {
+//   props.form.ops_vessel_id = value?.id
+
+//   voyages.value = [];
+//   props.form.opsVoyage = null;
+
+//   let loadStatus = true;
+//   showVessel(value?.id, loadStatus);
+//   getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
+//   getCargoTariffsByVessel(props.form.ops_vessel_id);
+// }
+// }, { deep: true })
+
+function opsVesselChange() {
+  const value = props.form.opsVessel;
   props.form.ops_vessel_id = value?.id
-
+  
   voyages.value = [];
   props.form.opsVoyage = null;
-
-  let loadStatus = true;
-  showVessel(value?.id, loadStatus);
-  getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
-  getCargoTariffsByVessel(props.form.ops_vessel_id);
+  
+  if(value) {
+    let loadStatus = true;
+    showVessel(value?.id, loadStatus);
+    getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
+    getCargoTariffsByVessel(props.form.ops_vessel_id);
+  }
 }
-}, { deep: true })
+
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
