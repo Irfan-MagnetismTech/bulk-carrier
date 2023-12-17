@@ -5,8 +5,103 @@ namespace Modules\Accounts\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Accounts\Entities\AccAdvanceAdjustment;
+use Modules\Accounts\Http\Requests\AccCashRequisitionRequest;
 
 class AccAdvanceAdjustmentController extends Controller
 {
-    
+    /**
+     * @param Request $request
+     */
+    public function index(Request $request)
+    {
+        return AccAdvanceAdjustment::all(); 
+        try {
+            $accAdvanceAdjustments = AccAdvanceAdjustment::with('accAdvanceAdjustmentLines', 'costCenter', 'accCashRequisition')
+                ->globalSearch($request->all());
+
+            return response()->success('Retrieved Succesfully', $accAdvanceAdjustments, 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param AccCashRequisitionRequest $request
+     */
+    public function store(Request $request)
+    {
+        try {
+            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+
+            DB::transaction(function () use ($request, $accAdvanceAdjustmentData)
+            {
+                $accAdvanceAdjustment = AccAdvanceAdjustment::create($accAdvanceAdjustmentData);
+                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($request->accAdvanceAdjustmentLines);
+            });
+
+            return response()->success('Created Successfully', [], 201);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param AccAdvanceAdjustment $accAdvanceAdjustment
+     */
+    public function show(AccAdvanceAdjustment $accAdvanceAdjustment)
+    {
+        try {
+            return response()->success('Retrieved Succesfully', $accAdvanceAdjustment->load('accAdvanceAdjustmentLines', 'costCenter', 'accCashRequisition'), 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param AccCashRequisitionRequest $request
+     * @param AccAdvanceAdjustment $accAdvanceAdjustment
+     */
+    public function update(Request $request, AccAdvanceAdjustment $accAdvanceAdjustment)
+    {
+        try {
+            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+
+            DB::transaction(function () use ($request, $accAdvanceAdjustmentData, $accAdvanceAdjustment)
+            {
+                $accAdvanceAdjustment->update($accAdvanceAdjustmentData);
+                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->delete();
+                $accAdvanceAdjustment->accAdvanceAdjustmentLines()->createMany($request->accAdvanceAdjustmentLines);
+            });
+
+            return response()->success('Updated Successfully', [], 202);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param AccAdvanceAdjustment $accAdvanceAdjustment
+     */
+    public function destroy(AccAdvanceAdjustment $accAdvanceAdjustment)
+    {
+        try {
+            $accAdvanceAdjustment->delete();
+
+            return response()->success('Deleted Successfully', null, 204);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 }
