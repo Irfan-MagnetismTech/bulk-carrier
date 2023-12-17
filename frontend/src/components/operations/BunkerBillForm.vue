@@ -41,11 +41,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.attachment) }}</p></span>
-            <input type="file" @change="attachFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <input type="file" @change="attachFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.smr_file_path) }}</p></span>
-            <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="form-input" autocomplete="off" />
+            <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
     </div>
 
@@ -100,39 +100,54 @@
 
           <div class="dt-responsive table-responsive">
             <table class="w-full whitespace-no-wrap" >
-              <thead>
-                  <tr class="w-full">
+             
+              <tbody v-if="form.opsBunkerBillLines[index]?.opsBunkerBillLineItems?.length > 0">
+                <template v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="itemIndex">
+                  <tr class="w-full" v-if="itemIndex==0">
                     <th class="w-72">Bunker</th>
                     <th class="w-20">Quantity</th>
                     <th>Rate</th>
-                    <th v-if="isOtherCurrency[index]">Amount </th>
+                    <th v-if="isOtherCurrency(index)">Amount </th>
                     <th>Amount USD</th>
                     <th>Amount BDT</th>
+                    <th>
+                      <button type="button" @click="addBillItems(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </th>
                   </tr>
-              </thead>
-              <tbody v-if="form.opsBunkerBillLines[index]?.opsBunkerBillLineItems?.length > 0">
-                <tr v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="itemIndex">
-                  <td>
-                    <span class="show-block">
-                      {{ form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].name }}
-                    </span>
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity"  @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate"  @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td v-if="isOtherCurrency[index]">
-                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
-                  </td>
-                </tr>
+                  <tr>
+                    <td>
+                        <select class="form-input" @change="updateBunkerBillLineItems(index, itemIndex)" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material">
+                          <option v-for="(item, index) in form.opsBunkerBillLines[index].requisitionBunkers" :key="index">{{ item.name }}</option>
+                        </select>
+                    </td>
+                    <td>
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity"  @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
+                    </td>
+                    <td>
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate"  @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
+                    </td>
+                    <td v-if="isOtherCurrency(index)">
+                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                    </td>
+                    <td>
+                      <button type="button" @click="removeBillItems(index, itemIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
@@ -223,6 +238,16 @@ function removeBunkerRequisition(index) {
   props.form.opsBunkerBillLines.splice(index, 1);
 }
 
+function removeBillItems(index, itemIndex) {
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.splice(itemIndex, 1);
+}
+
+function addBillItems(index, itemIndex) {
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.push({});
+}
+
+
+
 const isUSDCurrency = (index) => {
     if(props.form.opsBunkerBillLines[index].currency === 'USD') {
       return true;
@@ -240,7 +265,7 @@ const isBDTCurrency = (index) => {
 }
 
 const isOtherCurrency = (index) => {
-  if(props.form.opsBunkerBillLines[index].currency !== 'BDT' || props.form.opsBunkerBillLines[index].currency !== 'USD') {
+  if(props.form.opsBunkerBillLines[index].currency !== '' && props.form.opsBunkerBillLines[index].currency !== 'BDT' && props.form.opsBunkerBillLines[index].currency !== 'USD') {
       return true;
     } else {
       return false;
@@ -270,10 +295,19 @@ const isNotBDTCurrency = (index) => {
 const initiateBunkerRequisitionItem = (billLineIndex) => {
   props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
   let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
-  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = requisition[0]?.opsBunkers;
+  props.form.opsBunkerBillLines[billLineIndex].requisitionBunkers = requisition[0]?.opsBunkers;
 
-  // calculatePrAmounts(billLineIndex, props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems)
+  let initValue = requisition[0]?.opsBunkers.map((item) => {
+    item.requisition_material = item.name
+    return item;
+  })
+
+  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = cloneDeep(initValue);
+
+  // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
+
 }
+
 
 const allCurrencies = ref([]);
 
@@ -317,6 +351,20 @@ const calculatePrAmounts = (billLineIndex) => {
     }
    
 }
+
+
+function updateBunkerBillLineItems(index, itemIndex) {
+
+  let requisition = props.form.opsBunkerBillLines[index].requisitionBunkers.filter((requisition) => requisition.name === props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material)
+  
+  console.log(index, itemIndex, requisition)
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate = null
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity = requisition[0].quantity
+
+  calculatePrAmounts(index)
+
+}
+
 
 const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, item) => {
 

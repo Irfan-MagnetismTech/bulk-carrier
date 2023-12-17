@@ -42,7 +42,8 @@ export default function useBunkerBill() {
         exchange_rate_usd: null,
         amount_usd: null,
         amount_bdt: null,
-		opsBunkerBillLineItems:[]
+		opsBunkerBillLineItems:[],
+		requisitionBunkers: []
 	}
 
 	const bunkerBill = ref({	
