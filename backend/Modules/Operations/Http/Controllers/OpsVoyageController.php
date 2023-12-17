@@ -278,6 +278,7 @@ class OpsVoyageController extends Controller
 
             $voyageInfo = $voyages->map(function ($voyage) {
                 $result =$voyage->opsVoyageSectors->map(function ($sector) {
+
                     if (isset($sector->cargoTariffs)) {
                         $sectorInfo = $sector->cargoTariffs()->get()->map(function ($tariff) {
                             $tariff['jan'] = $tariff->opsCargoTariffLines->sum('jan');
@@ -293,13 +294,47 @@ class OpsVoyageController extends Controller
                             $tariff['nov'] = $tariff->opsCargoTariffLines->sum('nov');
                             $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
                             
+
+                            // $tariff = $tariff->only([
+                            //     'id',
+                            //     'tariff_name',
+                            //     'ops_vessel_id',
+                            //     'ops_cargo_type_id',
+                            //     'loading_point',
+                            //     'unloading_point',
+                            //     'pol_pod',
+                            //     'business_unit',
+                            //     'jan',
+                            //     'feb',
+                            //     'mar',
+                            //     'apr',
+                            //     'may',
+                            //     'jun',
+                            //     'jul',
+                            //     'aug',
+                            //     'sep',
+                            //     'oct',
+                            //     'nov',
+                            //     'dec',
+                            // ]);
                             return $tariff;
                         });
                         data_forget($sector, 'cargoTariffs');
+
+
+
                         $sector->cargoTariffs = $sectorInfo;
                     }
                     $sector['quantity'] = $this->chooseQuantity($sector);
-                    
+                    $sector = $sector->only([
+                        'ops_voyage_id',
+                        'loading_point',
+                        'unloading_point',
+                        'rate',
+                        'quantity',
+                        'cargoTariffs',
+                    ]);
+                    // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
                     return $sector;
                 });
                 data_forget($voyage, 'opsVoyageSectors');

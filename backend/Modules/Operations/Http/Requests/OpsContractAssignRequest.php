@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class OpsContractAssignRequest extends FormRequest
 {
     protected function prepareForValidation(){
-        $data=  request('info');        
+        $data=  request('info');
         $this->replace(json_decode($data, true));
     }
     /**

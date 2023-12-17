@@ -20,4 +20,15 @@ class OpsContractTariff extends Model
         'quantity',
         'total_rate',
     ];
+
+    public function opsCargoTariff()
+    {
+        return $this->belongsTo(OpsCargoTariff::class, 'ops_cargo_tariff_id' , 'id');
+    }
+
+    public function opsVoyageSectors()
+    {
+        return $this->hasMany(OpsVoyageSector::class);
+    }
+
 }

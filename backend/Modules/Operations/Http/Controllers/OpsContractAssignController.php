@@ -51,8 +51,8 @@ class OpsContractAssignController extends Controller
      * @param OpsContractAssignRequest $request
      * @return JsonResponse
      */
-    // public function store(OpsContractAssignRequest $request): JsonResponse
-    public function store(Request $request): JsonResponse
+    public function store(OpsContractAssignRequest $request): JsonResponse
+    // public function store(Request $request): JsonResponse
     {
         // dd($request);
         // return response()->json($request->opsVoyage['opsContractTariffs']);
@@ -85,7 +85,7 @@ class OpsContractAssignController extends Controller
      */
     public function show(OpsContractAssign $contract_assign): JsonResponse
     {
-        $contract_assign->load('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
+        $contract_assign->load('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract','opsContractTariffs.opsCargoTariff');
         try {            
             return response()->success('Data retrieved successfully.', $contract_assign, 200);
         } catch (QueryException $e){
