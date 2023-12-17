@@ -9,9 +9,15 @@ use Illuminate\Support\Facades\DB;
 use Modules\Accounts\Entities\AccAdvanceAdjustment;
 use Modules\Accounts\Http\Requests\AccAdvanceAdjustmentRequest;
 use Modules\Accounts\Http\Requests\AccCashRequisitionRequest;
+use App\Services\FileUploadService;
 
 class AccAdvanceAdjustmentController extends Controller
 {
+    public function __construct(private FileUploadService $fileUpload)
+    {
+
+    }
+
     /**
      * @param Request $request
      */
@@ -36,6 +42,9 @@ class AccAdvanceAdjustmentController extends Controller
     {
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+            // $crwAgencyContractData['attachment'] = $this->fileUpload->handleFile($request->attachment, 'acc/advance-adjustment');
+
+            $accAdvanceAdjustmentData= $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment);
 
             DB::transaction(function () use ($request, $accAdvanceAdjustmentData)
             {
@@ -73,6 +82,8 @@ class AccAdvanceAdjustmentController extends Controller
     {
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+
+            $accAdvanceAdjustmentData = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment , $accAdvanceAdjustment->accAdvanceAdjustmentLines);
 
             DB::transaction(function () use ($request, $accAdvanceAdjustmentData, $accAdvanceAdjustment)
             {
