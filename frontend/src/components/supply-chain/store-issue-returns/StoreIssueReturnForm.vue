@@ -251,7 +251,7 @@ function setStoreIssueOtherData(datas) {
       props.form.scm_warehouse_id = datas.scm_warehouse_id;
       props.form.scmWarehouse = datas.scmWarehouse;
       props.form.scm_warehouse_name = datas.scmWarehouse.name;
-      props.form.scm_department_id = datas.scm_department_id;
+      props.form.department_id = datas.department_id;
       getSiWiseSir(datas.id);   
 }
 
@@ -350,7 +350,7 @@ watch(() => props.form.scmSi, (newVal, oldVal) => {
     props.form.scm_si_id = null;
     props.form.si_no = null,
     props.form.scmDepartment= null,
-    props.form.scm_department_id = null,
+    props.form.department_id = null,
     props.form.scmSirLines = [];
     filteredStoreIssues.value = [];
    } 
