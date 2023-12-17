@@ -185,7 +185,15 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
-    
+    /* Bank Reconciliation Routes */
+    {
+        path: `/${BASE}/bank-reconciliation`,
+        name: `${BASE}.bank-reconciliation.index`,
+        component: () => import(`../views/${VIEW_BASE}/bank-reconciliation/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+
     /* Loan Routes */
     {
         path: `/${BASE}/loans`,
@@ -320,17 +328,33 @@ export default [
         component: () => import(`../views/${BASE}/cash-requisition/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    
 
-
-    /* Bank Reconciliation Routes */
+    /* Advance Adjustments */
     {
-        path: `/${BASE}/bank-reconciliation`,
-        name: `${BASE}.bank-reconciliation.index`,
-        component: () => import(`../views/${VIEW_BASE}/bank-reconciliation/index.vue`),
+        path: `/${BASE}/advance-adjustments`,
+        name: `${BASE}.advance-adjustments.index`,
+        component: () => import(`../views/${VIEW_BASE}/advance-adjustment/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    },    
+    },
+    {
+        path: `/${BASE}/advance-adjustments/create`,
+        name: `${BASE}.advance-adjustments.create`,
+        component: () => import(`../views/${VIEW_BASE}/advance-adjustment/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/advance-adjustments/:advanceAdjustmentId/edit`,
+        name: `${BASE}.advance-adjustments.edit`,
+        component: () => import(`../views/${VIEW_BASE}/advance-adjustment/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/advance-adjustments/:advanceAdjustmentId`,
+        name: `${BASE}.advance-adjustments.show`,
+        component: () => import(`../views/${BASE}/advance-adjustment/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
 
     /* AIS Report Routes */
     {
