@@ -86,72 +86,47 @@ class OpsContractAssignController extends Controller
      */
     public function show(OpsContractAssign $contract_assign): JsonResponse
     {
-        $contract_assign->load('opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
-        
-        $voyageInfo = $contract_assign->opsVoyage()->get()->map(function ($voyage) {
-            $result =$voyage->opsContractTariffs()->get()->map(function ($sector) {
+        $contract_assign->load('opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageSectors.cargoTariffs.opsCargoTariffLines','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
+       
+        $contract_assign->opsVoyage->opsVoyageSectors->map(function ($sector) {
 
-                if (isset($sector->cargoTariffs)) {
-                    $sectorInfo = $sector->opsCargoTariffs()->get()->map(function ($tariff) {
-                        $tariff['jan'] = $tariff->opsCargoTariffLines->sum('jan');
-                        $tariff['feb'] = $tariff->opsCargoTariffLines->sum('feb');
-                        $tariff['mar'] = $tariff->opsCargoTariffLines->sum('mar');
-                        $tariff['apr'] = $tariff->opsCargoTariffLines->sum('apr');
-                        $tariff['may'] = $tariff->opsCargoTariffLines->sum('may');
-                        $tariff['jun'] = $tariff->opsCargoTariffLines->sum('jun');
-                        $tariff['jul'] = $tariff->opsCargoTariffLines->sum('jul');
-                        $tariff['aug'] = $tariff->opsCargoTariffLines->sum('aug');
-                        $tariff['sep'] = $tariff->opsCargoTariffLines->sum('sep');
-                        $tariff['oct'] = $tariff->opsCargoTariffLines->sum('oct');
-                        $tariff['nov'] = $tariff->opsCargoTariffLines->sum('nov');
-                        $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
-                        
+            if (isset($sector->cargoTariffs)) {
+                // dd($sector->cargoTariffs);
+                $sectorInfo = $sector->cargoTariffs()->get()->map(function ($tariff) {
+                    $tariff['jan'] = $tariff->opsCargoTariffLines->sum('jan');
+                    $tariff['feb'] = $tariff->opsCargoTariffLines->sum('feb');
+                    $tariff['mar'] = $tariff->opsCargoTariffLines->sum('mar');
+                    $tariff['apr'] = $tariff->opsCargoTariffLines->sum('apr');
+                    $tariff['may'] = $tariff->opsCargoTariffLines->sum('may');
+                    $tariff['jun'] = $tariff->opsCargoTariffLines->sum('jun');
+                    $tariff['jul'] = $tariff->opsCargoTariffLines->sum('jul');
+                    $tariff['aug'] = $tariff->opsCargoTariffLines->sum('aug');
+                    $tariff['sep'] = $tariff->opsCargoTariffLines->sum('sep');
+                    $tariff['oct'] = $tariff->opsCargoTariffLines->sum('oct');
+                    $tariff['nov'] = $tariff->opsCargoTariffLines->sum('nov');
+                    $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
+                    
+                    
+                    return $tariff;
+                });
+                data_forget($sector, 'cargoTariffs');
+                
+                
+                // dd($sectorInfo);
 
-                        $tariff = $tariff->only([
-                            'id',
-                            'tariff_name',
-                            'ops_vessel_id',
-                            'ops_cargo_type_id',
-                            'loading_point',
-                            'unloading_point',
-                            'pol_pod',
-                            'business_unit',
-                            'jan',
-                            'feb',
-                            'mar',
-                            'apr',
-                            'may',
-                            'jun',
-                            'jul',
-                            'aug',
-                            'sep',
-                            'oct',
-                            'nov',
-                            'dec',
-                        ]);
-                        return $tariff;
-                    });
-                    data_forget($sector, 'opsCargoTariffs');
+                $sector['cargoTariffs'] = $sectorInfo;
+                
+            }
+            // $sector['quantity'] = $this->chooseQuantity($sector);
 
-                    $sector->cargoTariffs = $sectorInfo;
-                }
-                $sector['quantity'] = $this->chooseQuantity($sector);
-                $sector = $sector->only([
-                    'ops_voyage_id',
-                    'loading_point',
-                    'unloading_point',
-                    'rate',
-                    'quantity',
-                    'cargoTariffs',
-                ]);
-                // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
-                return $sector;
-            });
-            data_forget($voyage, 'opsContractTariffs');
-            $voyage->opsContractTariffs = $result;
-        
-            return $voyage;
+            // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
+            return $sector;
         });
+
+
+                data_forget($contract_assign->opsVoyage, 'opsContractTariffs');
+                $contract_assign->opsVoyage->opsContractTariffs = $contract_assign->opsVoyage->opsVoyageSectors;
+   
         
         try {     
             return response()->success('Data retrieved successfully.', $contract_assign, 200);
