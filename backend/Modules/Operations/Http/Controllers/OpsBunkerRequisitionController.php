@@ -206,6 +206,7 @@ class OpsBunkerRequisitionController extends Controller
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
                 $query->where('business_unit', request()->business_unit);  
             })
+            ->with('opsBunkers')
             ->get();
 
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
