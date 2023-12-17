@@ -250,7 +250,6 @@ function updateBunkerBillLineItems(index, itemIndex) {
 
   let requisition = props.form.opsBunkerBillLines[index].requisitionBunkers.filter((requisition) => requisition.name === props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material)
   
-
   console.log(requisition)
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity = requisition[0].quantity
 }
@@ -303,10 +302,16 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
   props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
   let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
   props.form.opsBunkerBillLines[billLineIndex].requisitionBunkers = requisition[0]?.opsBunkers;
-  // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = requisition[0]?.opsBunkers;
-  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
 
-  // calculatePrAmounts(billLineIndex, props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems)
+  let initValue = requisition[0]?.opsBunkers.map((item) => {
+    item.requisition_material = item.name
+    return item;
+  })
+
+  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = initValue;
+
+  // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
+
 }
 
 const allCurrencies = ref([]);
