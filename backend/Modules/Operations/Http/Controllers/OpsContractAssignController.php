@@ -58,8 +58,9 @@ class OpsContractAssignController extends Controller
         // return response()->json($request->opsVoyage['opsContractTariffs']);
         try {
             DB::beginTransaction();
-            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
+            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) use($request) {
                 $item['ops_voyage_sector_id'] = $item['id'];
+                $item['ops_vessel_id'] = $request->ops_vessel_id;
                 return $item;
             })->toArray();
             
