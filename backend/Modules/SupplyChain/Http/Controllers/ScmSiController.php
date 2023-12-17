@@ -54,8 +54,6 @@ class ScmSiController extends Controller
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
         $requestData['ref_no'] = $this->uniqueId->generate(ScmSi::class, 'SI');
-        return response()->json($requestData, 422);
-
 
         try {
             DB::beginTransaction();
