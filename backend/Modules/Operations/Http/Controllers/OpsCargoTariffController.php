@@ -107,6 +107,8 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
+
+            
                        
             $cargo_tariff->update($cargoTariffInfo);            
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);

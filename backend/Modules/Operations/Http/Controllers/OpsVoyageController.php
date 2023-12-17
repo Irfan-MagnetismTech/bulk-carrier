@@ -261,7 +261,7 @@ class OpsVoyageController extends Controller
             ->when(isset(request()->ops_vessel_id) && (request()->ops_vessel_id != 'null'), function($query) {
                 $query->where('ops_vessel_id', request()->ops_vessel_id);
             })
-            ->with('opsVoyageSectors')
+            ->with(['opsVoyageSectors.cargoTariffs.opsCargoTariffLines'])
             ->get();
 
             $voyages = $voyages->map(function($voyage) {
