@@ -14,8 +14,13 @@ export default function useAdvanceAdjustment() {
         acc_cost_center_name : '',
         acc_cost_center_id : '',
         acc_cash_requisition_id : '',
+        acc_cash_requisition_name : '',
         adjustment_date : '',
+        total_bill_amount : '',
+        total_cash_amount : '',
         adjustment_amount : '',
+        acc_requisition_date: '',
+        acc_requisition_amount: '',
         business_unit : '',
         accAdvanceAdjustmentLines: [
             {
@@ -79,11 +84,18 @@ export default function useAdvanceAdjustment() {
         const isUnique = checkUniqueArray(form);
 
         if(isUnique){
+            let formData = new FormData();
+            form.accAdvanceAdjustmentLines.map((element, index) => {
+                formData.append('attachments['+index+']', element.attachment ?? null);
+                element.attachment=null;
+            });
+            formData.append('data', JSON.stringify(form));
+
             const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
             isLoading.value = true;
 
             try {
-                const { data, status } = await Api.post('/acc/acc-advance-adjustments', form);
+                const { data, status } = await Api.post('/acc/acc-advance-adjustments', formData);
                 advanceAdjustment.value = data.value;
                 notification.showSuccess(status);
                 await router.push({ name: "acc.advance-adjustments.index" });
