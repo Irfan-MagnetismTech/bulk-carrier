@@ -222,8 +222,9 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
       props.form.opsBunkerBillLines = [];
       props.form.scm_vendor_id = null;
 
-      props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
-    }
+      if(props.formType != 'edit') {}
+        props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+      }
 }, { deep : true });
 
 
@@ -305,18 +306,24 @@ const isNotBDTCurrency = (index) => {
 //   }
 // }, { deep: true })
 
+const getFileName  = (filename) => {
+  return filename;
+}
 
 const initiateBunkerRequisitionItem = (billLineIndex) => {
-  props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
-  let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
-  props.form.opsBunkerBillLines[billLineIndex].requisitionBunkers = requisition[0]?.opsBunkers;
+ 
+  if(props.formType=='create') {
+    props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
+    let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
+    props.form.opsBunkerBillLines[billLineIndex].requisitionBunkers = requisition[0]?.opsBunkers;
 
-  let initValue = requisition[0]?.opsBunkers.map((item) => {
-    item.requisition_material = item.name
-    return item;
-  })
+    let initValue = requisition[0]?.opsBunkers.map((item) => {
+      item.requisition_material = item.name
+      return item;
+    })
 
-  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = cloneDeep(initValue);
+    props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = cloneDeep(initValue);
+  }
 
   // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
 
@@ -423,6 +430,7 @@ watch(() => props.form.discount_bdt, (newValue, oldValue) => {
 
 onMounted(() => {
   getCurrencies();
+  fetchBunkerRequisition("", false)
 })
 </script>
 <style lang="postcss" scoped>
