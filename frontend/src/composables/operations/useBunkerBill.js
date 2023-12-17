@@ -34,6 +34,7 @@ export default function useBunkerBill() {
 	}
 
 	const bunkerObject = {
+		currency: '',
         pr_no : null,
         description: null,
         // amount: null,
@@ -41,9 +42,7 @@ export default function useBunkerBill() {
         exchange_rate_usd: null,
         amount_usd: null,
         amount_bdt: null,
-		opsBunkerBillLineItems:[{
-			...bunkerObjectItem
-		}]
+		opsBunkerBillLineItems:[]
 	}
 
 	const bunkerBill = ref({	

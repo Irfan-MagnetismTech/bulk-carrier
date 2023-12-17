@@ -54,9 +54,15 @@
       
       <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
-        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
+        <!-- <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
           <label class="block w-1/2 mt-2 text-sm"></label>
 
+          
+          <label class="block w-1/2 mt-2 text-sm"></label>
+
+        </div> -->
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
             <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input"
@@ -73,11 +79,6 @@
             </v-select>
             <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].ops_bunker_requisition_id" class="form-input" autocomplete="off"/>
           </label>
-          <label class="block w-1/2 mt-2 text-sm"></label>
-
-        </div>
-
-        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
               <select v-model.trim="form.opsBunkerBillLines[index].currency" class="form-input" required @change="calculatePrAmounts(index)">
@@ -87,13 +88,12 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @keypress="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" @keypress="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
           </label>
-          <label class="block w-full mt-2 text-sm"></label>
         </div>
 
         <div class="relative my-3">
@@ -110,18 +110,18 @@
                     <th>Amount BDT</th>
                   </tr>
               </thead>
-              <tbody>
-                <tr v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems">
+              <tbody v-if="form.opsBunkerBillLines[index]?.opsBunkerBillLineItems?.length > 0">
+                <tr v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="itemIndex">
                   <td>
                     <span class="show-block">
                       {{ form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].name }}
                     </span>
                   </td>
                   <td>
-                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity"  @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
                   </td>
                   <td>
-                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                    <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate"  @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
                   </td>
                   <td v-if="isOtherCurrency[index]">
                     <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
@@ -275,22 +275,39 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
   // calculatePrAmounts(billLineIndex, props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems)
 }
 
+const allCurrencies = ref([]);
 
 const calculatePrAmounts = (billLineIndex) => {
-  console.log("inside calculation")
 
-    let currency = props.form.opsBunkerBillLines[billLineIndex].currency;
+  let currency = props.form.opsBunkerBillLines[billLineIndex].currency;
+
+  const existingCurrency = allCurrencies.value.find(item => item.id === billLineIndex);
+
+  if (existingCurrency) {
+
+    if(currency != existingCurrency?.currency) {
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd = '';
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt = '';
+    }
+
+    existingCurrency.currency = currency;
+
+    
+  } else {
+    // Push a new object with id and currency properties
+    allCurrencies.value.push({
+      id: billLineIndex,
+      currency: currency
+    });
+  }
+
+
     let exchange_rate_bdt = (props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt > 0) ? props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt : 0;
     let exchange_rate_usd = (props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd > 0) ? props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd : 0;
 
     if(props.form.opsBunkerBillLines[billLineIndex]?.opsBunkerBillLineItems?.length > 0) {
 
-  console.log("inside double")
-
-
       props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems.forEach((line, index) => {
-  console.log("inside triple")
-
           const { amount, amount_usd, amount_bdt } = calculateInCurrency(currency, exchange_rate_bdt, exchange_rate_usd, line);
           // console.log(amount, amount_usd, amount_bdt)
           props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[index].amount_usd = amount_usd
