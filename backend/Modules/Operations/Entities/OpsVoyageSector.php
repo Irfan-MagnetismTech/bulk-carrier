@@ -44,5 +44,13 @@ class OpsVoyageSector extends Model
         return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
     }
 
+    public function cargoTariffs() {
+        return $this->belongsTo(OpsCargoTariff::class, 'pol_pod','pol_pod');
+    }
+
+    // public function unloadingPointTariff() {
+    //     return $this->belongsTo(OpsCargoTariff::class, 'unloading_point', 'unloading_point');
+    // }
+
 
 }
