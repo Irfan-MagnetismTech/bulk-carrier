@@ -18,9 +18,9 @@ class OpsBunkerBill extends Model
         'remarks',
         'attachment',
         'smr_file_path',
-        'sub_total',
-        'discount',
-        'grand_total',
+        'sub_total_bdt',
+        'discount_bdt',
+        'grand_total_bdt',
         'business_unit',
     ];
 
