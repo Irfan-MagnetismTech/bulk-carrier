@@ -299,8 +299,11 @@ class OpsVoyageController extends Controller
                         $sector->cargoTariffs = $sectorInfo;
                     }
                     $sector['quantity'] = $this->chooseQuantity($sector);
+                    
                     return $sector;
                 });
+                data_forget($voyage, 'opsVoyageSectors');
+                $voyage->opsContractTariffs = $result;
             
                 return $voyage;
             });
