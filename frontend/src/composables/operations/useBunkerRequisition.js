@@ -182,11 +182,12 @@ export default function useBunkerRequisition() {
 		}
 	}
 
-	async function searchBunkerRequisitions(searchParam, loading) {
+	async function searchBunkerRequisitions(searchParam, business_unit, loading) {
 		//NProgress.start();
+        isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-bunker-requisitions?requisition_no=${searchParam}`);
+			const { data, status } = await Api.get(`/ops/search-bunker-requisitions?requisition_no=${searchParam}&business_unit=${business_unit}`);
 			
 			bunkerRequisitions.value = data.value;
 			notification.showSuccess(status);

@@ -206,7 +206,15 @@ class OpsBunkerRequisitionController extends Controller
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
                 $query->where('business_unit', request()->business_unit);  
             })
+            ->with('opsBunkers')
             ->get();
+
+            $bunker_requisitions->map(function($req) {
+                return $req->opsBunkers->map(function($bunker) {
+                    $bunker['name'] = $bunker->scmMaterial->name;
+                    return $bunker;
+                });
+            });
 
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);
         } catch (QueryException $e){

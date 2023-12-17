@@ -247,7 +247,7 @@
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
-        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
+        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
           <label class="block w-1/2 mt-2 text-sm">
 
 <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>

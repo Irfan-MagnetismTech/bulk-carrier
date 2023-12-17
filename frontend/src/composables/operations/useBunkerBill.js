@@ -22,7 +22,19 @@ export default function useBunkerBill() {
     //     sub_total: null,
 	// }
 
+	
+
+	const bunkerObjectItem = {
+		currency: '',
+        particular: null,
+		quantity : null,
+		rate : null,
+        amount_usd: null,
+        amount_bdt: null,
+	}
+
 	const bunkerObject = {
+		currency: '',
         pr_no : null,
         description: null,
         // amount: null,
@@ -31,14 +43,6 @@ export default function useBunkerBill() {
         amount_usd: null,
         amount_bdt: null,
 		opsBunkerBillLineItems:[]
-	}
-
-	const bunkerObjectItem = {
-        particular: null,
-		quantity : null,
-		rate : null,
-        amount_usd: null,
-        amount_bdt: null,
 	}
 
 	const bunkerBill = ref({	
@@ -108,9 +112,9 @@ export default function useBunkerBill() {
 
 	async function storeBunkerBill(form) {
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
-		console.log(form);
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+		console.log("dfdf", form);
 		let formData = new FormData();
 		formData.append('attachment', form.attachment);
 		formData.append('smr_file_path', form.smr_file_path);

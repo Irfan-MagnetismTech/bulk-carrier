@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
-              <input type="date" v-model="form.assign_date" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+              <input type="date" v-model="form.assign_date" required class="form-input">
       </label>
 
     </div>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif <span class="text-red-500">*</span></span>
               <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
@@ -59,7 +59,7 @@
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
-      </label>
+      </label> -->
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
               <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
@@ -105,6 +105,36 @@
               </v-select>
               <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
+    </div>
+    <div v-if="form.business_unit=='TSLL' && form.opsVoyage">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Sector <span class="text-red-500">*</span></legend>
+        <table class="w-full whitespace-no-wrap" id="table">
+          <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
+              <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
+              <th class="w-2/12 px-4 py-3 align-bottom">Quantity</th>
+              <th class="w-2/12 px-4 py-3 align-bottom">Tariff</th>
+              <th class="w-2/12 px-4 py-3 align-bottom">Rate</th>
+              <th class="w-2/12 px-4 py-3 align-bottom text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(opsVoyageSector, index) in form.opsVoyage?.opsVoyageSectors" :key="index">
+              <td><input type="text" :value="opsVoyageSector?.loading_point" placeholder="Loading Point" class="form-input vms-readonly-input" readonly /></td>
+              
+              <td><input type="text" :value="opsVoyageSector?.unloading_point" placeholder="Unloading Point" class="form-input vms-readonly-input" readonly /></td>
+              
+              <td><input type="text" :value="opsVoyageSector?.quantity" placeholder="Unloading Point" class="form-input vms-readonly-input" readonly /></td>
+              <td></td>
+              <td></td>
+              <td></td>
+
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
