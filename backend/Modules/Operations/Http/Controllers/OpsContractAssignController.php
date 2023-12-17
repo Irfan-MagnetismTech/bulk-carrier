@@ -86,8 +86,10 @@ class OpsContractAssignController extends Controller
      */
     public function show(OpsContractAssign $contract_assign): JsonResponse
     {
-        $contract_assign->load('opsVessel','opsVoyage','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract','opsContractTariffs.opsCargoTariff');
-        try {            
+        $contract_assign->load('opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
+        
+        
+        try {     
             return response()->success('Data retrieved successfully.', $contract_assign, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
