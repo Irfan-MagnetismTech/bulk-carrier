@@ -246,13 +246,7 @@ function addBillItems(index, itemIndex) {
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.push({});
 }
 
-function updateBunkerBillLineItems(index, itemIndex) {
 
-  let requisition = props.form.opsBunkerBillLines[index].requisitionBunkers.filter((requisition) => requisition.name === props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material)
-  
-  console.log(requisition)
-  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity = requisition[0].quantity
-}
 
 const isUSDCurrency = (index) => {
     if(props.form.opsBunkerBillLines[index].currency === 'USD') {
@@ -308,11 +302,12 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
     return item;
   })
 
-  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = initValue;
+  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = cloneDeep(initValue);
 
   // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
 
 }
+
 
 const allCurrencies = ref([]);
 
@@ -356,6 +351,20 @@ const calculatePrAmounts = (billLineIndex) => {
     }
    
 }
+
+
+function updateBunkerBillLineItems(index, itemIndex) {
+
+  let requisition = props.form.opsBunkerBillLines[index].requisitionBunkers.filter((requisition) => requisition.name === props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material)
+  
+  console.log(index, itemIndex, requisition)
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate = null
+  props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity = requisition[0].quantity
+
+  calculatePrAmounts(index)
+
+}
+
 
 const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, item) => {
 
