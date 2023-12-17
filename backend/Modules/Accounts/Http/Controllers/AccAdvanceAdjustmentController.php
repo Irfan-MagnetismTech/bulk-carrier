@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Accounts\Entities\AccAdvanceAdjustment;
+use Modules\Accounts\Http\Requests\AccAdvanceAdjustmentRequest;
 use Modules\Accounts\Http\Requests\AccCashRequisitionRequest;
 
 class AccAdvanceAdjustmentController extends Controller
@@ -16,7 +17,6 @@ class AccAdvanceAdjustmentController extends Controller
      */
     public function index(Request $request)
     {
-        return AccAdvanceAdjustment::all(); 
         try {
             $accAdvanceAdjustments = AccAdvanceAdjustment::with('accAdvanceAdjustmentLines', 'costCenter', 'accCashRequisition')
                 ->globalSearch($request->all());
@@ -32,7 +32,7 @@ class AccAdvanceAdjustmentController extends Controller
     /**
      * @param AccCashRequisitionRequest $request
      */
-    public function store(Request $request)
+    public function store(AccAdvanceAdjustmentRequest $request)
     {
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
@@ -69,7 +69,7 @@ class AccAdvanceAdjustmentController extends Controller
      * @param AccCashRequisitionRequest $request
      * @param AccAdvanceAdjustment $accAdvanceAdjustment
      */
-    public function update(Request $request, AccAdvanceAdjustment $accAdvanceAdjustment)
+    public function update(AccAdvanceAdjustmentRequest $request, AccAdvanceAdjustment $accAdvanceAdjustment)
     {
         try {
             $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
