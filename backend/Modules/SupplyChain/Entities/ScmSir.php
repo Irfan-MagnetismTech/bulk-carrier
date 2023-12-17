@@ -18,7 +18,7 @@ class ScmSir extends Model
     use HasFactory, StockLedger, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no', 'scm_si_id', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'business_unit', 'created_by',
+        'ref_no', 'scm_si_id', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'business_unit', 'created_by', 'remarks',
     ];
 
     public function scmSirLines(): HasMany
