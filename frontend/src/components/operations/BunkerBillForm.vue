@@ -59,7 +59,9 @@
 
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input">
+            <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input"
+            @update:modelValue="initiateBunkerRequisitionItem(index)"
+            >
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -69,7 +71,7 @@
                       />
               </template>
             </v-select>
-            <!-- <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].pr_no" class="form-input" autocomplete="off"/> -->
+            <input type="hidden"  step="0.001" required v-model="form.opsBunkerBillLines[index].ops_bunker_requisition_id" class="form-input" autocomplete="off"/>
           </label>
           <label class="block w-1/2 mt-2 text-sm"></label>
 
@@ -78,18 +80,18 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-              <select v-model.trim="form.opsBunkerBillLines[index].currency" class="form-input" required>
+              <select v-model.trim="form.opsBunkerBillLines[index].currency" class="form-input" required @change="calculatePrAmounts(index)">
                 <option selected value="" disabled>Select Currency</option>
                 <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
               </select>
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @keypress="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" @keypress="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm"></label>
         </div>
@@ -111,7 +113,9 @@
               <tbody>
                 <tr v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems">
                   <td>
-
+                    <span class="show-block">
+                      {{ form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].name }}
+                    </span>
                   </td>
                   <td>
                     <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
@@ -179,13 +183,9 @@ const {  bunkerRequisitions, searchBunkerRequisitions, isLoading: bunkerLoader }
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
 
-
-  // console.log(props.form.ops_vendor_id);
-
     if(newValue) {
       fetchVendors("", false)
       fetchBunkerRequisition("", false)
-
 
       props.form.scmVendor = null;
       props.form.opsBunkerBillLines = [];
@@ -193,13 +193,8 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
       props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
     }
-  // if(props?.formType != 'edit') {
-    
-
-    
-
-  // }
 }, { deep : true });
+
 
 function fetchVendors(searchParam, loading) {
   searchVendor(searchParam, props.form.business_unit, loading)
@@ -260,6 +255,74 @@ const isNotBDTCurrency = (index) => {
     }
 }
 
+// watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
+//   console.log("sdf")
+//   if(props.form?.opsBunkerBillLines?.length > 0) {
+
+//     for(const billLineIndex in props.form.opsBunkerBillLines) {
+      
+//     }
+
+//   }
+// }, { deep: true })
+
+
+const initiateBunkerRequisitionItem = (billLineIndex) => {
+  props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
+  let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
+  props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = requisition[0]?.opsBunkers;
+
+  // calculatePrAmounts(billLineIndex, props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems)
+}
+
+
+const calculatePrAmounts = (billLineIndex) => {
+  console.log("inside calculation")
+
+    let currency = props.form.opsBunkerBillLines[billLineIndex].currency;
+    let exchange_rate_bdt = (props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt > 0) ? props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt : 0;
+    let exchange_rate_usd = (props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd > 0) ? props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd : 0;
+
+    if(props.form.opsBunkerBillLines[billLineIndex]?.opsBunkerBillLineItems?.length > 0) {
+
+  console.log("inside double")
+
+
+      props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems.forEach((line, index) => {
+  console.log("inside triple")
+
+          const { amount, amount_usd, amount_bdt } = calculateInCurrency(currency, exchange_rate_bdt, exchange_rate_usd, line);
+          // console.log(amount, amount_usd, amount_bdt)
+          props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[index].amount_usd = amount_usd
+          props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[index].amount_bdt = amount_bdt
+          props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[index].amount = amount
+     });
+    }
+   
+}
+
+const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, item) => {
+
+  console.log(currency, exchange_rate_bdt, exchange_rate_usd, item)
+
+  item.amount = null;
+
+  if(currency == 'USD'){
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_bdt).toFixed(2));
+  } else if(currency == 'BDT'){
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity).toFixed(2));
+  } else {
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_usd * exchange_rate_bdt).toFixed(2));
+  }
+
+  return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
+}
 
 onMounted(() => {
   getCurrencies();
