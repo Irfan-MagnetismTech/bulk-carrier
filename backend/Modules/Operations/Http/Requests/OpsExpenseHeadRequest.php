@@ -18,7 +18,7 @@ class OpsExpenseHeadRequest extends FormRequest
             'billing_type'                  => ['nullable', 'string', 'max:255'],
             'head_id'                       => ['nullable', 'numeric', 'max:50'],
             'name'                          => ['required', 'string', 'max:255'],
-            'is_visible_in_voyage_report'   => ['boolean'],
+            // 'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }
