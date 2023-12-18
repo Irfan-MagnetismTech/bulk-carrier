@@ -32,20 +32,12 @@
         <thead v-once>
             <tr class="w-full">
               <th class="">Voyage <span class="text-red-500">*</span></th>
-              <th class="">
-                <nobr>Cargo Type</nobr>
-              </th>
-              <th class="">
-                <nobr>Cargo Quantity</nobr>
-              </th>
-              <th class="">
-                <nobr>Rate Per MT</nobr>
-              </th>
-              <th>
-                <nobr>Total Amount</nobr>
-              </th>
-              <th>Details</th>
+              <th class=""><nobr>Vessel</nobr></th>
+              <th class=""><nobr>Cargo Type</nobr></th>
+              <th><nobr>Total Amount</nobr></th>
               <th class="py-3 text-center align-center">Action</th>
+              <th><nobr>Details</nobr></th>
+
             </tr>
           </thead>
           <tbody>
@@ -67,6 +59,9 @@
                 </label>
               </td>
               <td>
+
+              </td>
+              <td>
                   <label class="block w-full mt-2 text-sm">
                     <span class="show-block">
                       {{ form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
@@ -75,19 +70,8 @@
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
-              <td>
-                  <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].cargo_quantity" readonly class="form-input text-right" autocomplete="off" />
-                  <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].rate_per_mt" readonly class="form-input text-right" autocomplete="off" />
-                  <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                 
-                </label>
-              </td>
+             
+             
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model.trim="form.opsCustomerInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
