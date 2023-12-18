@@ -9,6 +9,7 @@ import useNotification from '../useNotification.js';
 export default function useContractAssign() {
 	const router = useRouter();
 	const contractAssigns = ref([]);
+	const contractTariff = ref({});
 	const $loading = useLoading();
 	const notification = useNotification();
 
@@ -189,15 +190,36 @@ export default function useContractAssign() {
 		}
 	}
 
+	async function getContractTariffByVoyage(opsVoyageId) { //Cr: Delowar Vai
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-contract-tariff-by-voyage?ops_voyage_id=${opsVoyageId}`);
+
+			contractTariff.value = data?.value;
+
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+			console.log(error)
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
 	return {
 		contractAssigns,
 		contractAssign,
+		contractTariff,
 		getContractAssigns,
 		storeContractAssign,
 		showContractAssign,
 		updateContractAssign,
 		deleteContractAssign,
 		searchContractAssigns,
+		getContractTariffByVoyage,
 		isLoading,
 		isTableLoading,
 		errors,
