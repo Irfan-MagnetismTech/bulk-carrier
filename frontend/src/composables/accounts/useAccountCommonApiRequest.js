@@ -14,6 +14,7 @@ export default function useAccountCommonApiRequest() {
     const allBankLists = ref([]);
     const allFixedAssetCategoryList = ref([]);
     const allCashRequisitionLists = ref([]);
+    const allSalaryHeadLists = ref([]);
     const generatedAccountCode = ref('');
     const $loading = useLoading();
     const notification = useNotification();
@@ -211,6 +212,27 @@ export default function useAccountCommonApiRequest() {
 
     }
 
+    async function getSalaryHead(name=null, businessUnit, loading=null) {
+
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-salary-heads', form);
+            allSalaryHeadLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
@@ -220,6 +242,7 @@ export default function useAccountCommonApiRequest() {
         allBankLists,
         allFixedAssetCategoryList,
         allCashRequisitionLists,
+        allSalaryHeadLists,
         generatedAccountCode,
         getBalanceIncomeLineLists,
         getBalanceIncomeAccountLists,
@@ -230,6 +253,7 @@ export default function useAccountCommonApiRequest() {
         getFixedAssetCategory,     
         getGeneratedAccountCode,
         getCashRequisition,
+        getSalaryHead,
         isLoading,
         errors,
     };

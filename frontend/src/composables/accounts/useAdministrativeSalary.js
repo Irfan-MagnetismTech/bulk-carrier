@@ -11,11 +11,14 @@ export default function useAdministrativeSalary() {
     const $loading = useLoading();
     const notification = useNotification();
     const administrativeSalary = ref( {
-        date_month: '',
+        acc_cost_center_id: '',
+        year_month: '',
+        total_salary: '',
+        remarks: '',
         business_unit : '',
-        accAdvanceAdjustmentLines: [
+        accSalaryLines: [
             {
-                particulars: '',
+                particular: '',
                 amount: '',
                 isParticularDuplicate: false
             }
@@ -43,7 +46,7 @@ export default function useAdministrativeSalary() {
         filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get('/acc/acc-administrative-salaries',{
+            const {data, status} = await Api.get('/acc/acc-salaries',{
                 params: {
                     page: filterOptions.page || 1,
                     items_per_page: filterOptions.items_per_page,
@@ -71,18 +74,12 @@ export default function useAdministrativeSalary() {
 
         const isUnique = checkUniqueArray(form);
         if(isUnique){
-            let formData = new FormData();
-            form.accAdvanceAdjustmentLines.map((element, index) => {
-                formData.append('attachments['+index+']', element.attachment ?? null);
-                element.attachment=null;
-            });
-            formData.append('data', JSON.stringify(form));
 
             const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
             isLoading.value = true;
 
             try {
-                const { data, status } = await Api.post('/acc/acc-advance-adjustments', formData);
+                const { data, status } = await Api.post('/acc/acc-salaries', form);
                 administrativeSalary.value = data.value;
                 notification.showSuccess(status);
                 await router.push({ name: "acc.administrative-salaries.index" });
@@ -102,7 +99,7 @@ export default function useAdministrativeSalary() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/acc/acc-advance-adjustments/${administrativeSalaryId}`);
+            const { data, status } = await Api.get(`/acc/acc-salaries/${administrativeSalaryId}`);
             administrativeSalary.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -123,10 +120,10 @@ export default function useAdministrativeSalary() {
             isLoading.value = true;
 
             try {
-                const { data, status } = await Api.put(`/acc/acc-advance-adjustments/${administrativeSalaryId}`, form);
+                const { data, status } = await Api.put(`/acc/acc-salaries/${administrativeSalaryId}`, form);
                 administrativeSalary.value = data.value;
                 notification.showSuccess(status);
-                await router.push({ name: "acc.advance-adjustments.index" });
+                await router.push({ name: "acc.administrative-salaries.index" });
             } catch (error) {
                 const { data, status } = error.response;
                 errors.value = notification.showError(status, data);
@@ -143,7 +140,7 @@ export default function useAdministrativeSalary() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/acc/acc-advance-adjustments/${administrativeSalaryId}`);
+            const { data, status } = await Api.delete( `/acc/acc-salaries/${administrativeSalaryId}`);
             notification.showSuccess(status);
             await getAdministrativeSalaries(filterParams.value);
         } catch (error) {
@@ -156,25 +153,17 @@ export default function useAdministrativeSalary() {
     }
 
     function checkUniqueArray(form){
-        if(form.acc_requisition_amount !== form.adjustment_amount){
-            Swal.fire({
-                icon: "",
-                title: "Correct Please!",
-                html: ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"><li>Requisition amount and Adjusted amount should be equal.</li></ul>`,
-                customClass: "swal-width",
-            });
-            return false;
-        }
+
         const itemNamesSet = new Set();
         let isHasError = false;
         const messages = ref([]);
-        const hasDuplicates = form.accAdvanceAdjustmentLines.some((item,index) => {
+        const hasDuplicates = form.accSalaryLines.some((item,index) => {
             if (itemNamesSet.has(item.particular)) {
                 let data = `Duplicate Particular [line no: ${index + 1}]`;
                 messages.value.push(data);
-                form.accAdvanceAdjustmentLines[index].isParticularDuplicate = true;
+                form.accSalaryLines[index].isParticularDuplicate = true;
             } else {
-                form.accAdvanceAdjustmentLines[index].isParticularDuplicate = false;
+                form.accSalaryLines[index].isParticularDuplicate = false;
             }
             itemNamesSet.add(item.particular);
         });
