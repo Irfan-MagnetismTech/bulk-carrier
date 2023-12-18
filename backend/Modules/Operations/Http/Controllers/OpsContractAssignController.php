@@ -242,15 +242,20 @@ class OpsContractAssignController extends Controller
     */
     public function getContractTariffByVoyage(Request $request): JsonResponse
     {
-        $contract_tariffs= OpsContractTariff::query()
-        ->when(isset(request()->ops_voyage_id), function ($query) {
-            $query->where('ops_voyage_id', request()->ops_voyage_id);
-        })
-        ->with(['opsCargoTariff', 'opsVoyage.opsVessel', 'opsVoyage.opsCargoType', 'opsVoyageSectors'])
-        ->get();
+        // $contract_tariffs= OpsContractTariff::query()
+        // ->when(isset(request()->ops_voyage_id), function ($query) {
+        //     $query->where('ops_voyage_id', request()->ops_voyage_id);
+        // })
+        // ->with(['opsCargoTariff', 'opsVoyage.opsVessel', 'opsVoyage.opsCargoType', 'opsVoyageSectors'])
+        // ->get();
 
+        $contract_tariffs= OpsVoyage::query()
+        ->when(isset(request()->ops_voyage_id), function ($query) {
+            $query->where('id', request()->ops_voyage_id);
+        })->with(['opsContractTariffs', 'opsCargoType', 'opsCargoTariff','opsVessel','opsVoyageSectors'])
+        ->first();
         
-        $contract_tariffs->map(function($contract){
+        $contract_tariffs->opsContractTariffs->map(function($contract){
             $contract['amount'] = $contract->total_rate * $contract->quantity;
             $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
                 if($contract->opsCargoTariff['pol_pod']==$item['pol_pod']){
@@ -260,7 +265,7 @@ class OpsContractAssignController extends Controller
             });
         });
 
-        $contract_tariffs['total_amount']=$contract_tariffs->sum('amount');
+        $contract_tariffs['total_amount']=$contract_tariffs->opsContractTariffs->sum('amount');
 
         try {            
             return response()->success('Data retrieved successfully.', $contract_tariffs, 200);
