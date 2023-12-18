@@ -10,7 +10,7 @@ class AccAdvanceAdjustment extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-    protected $fillable = ['acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit'];
+    protected $fillable = ['acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'cash_amount', 'business_unit'];
 
     public function accAdvanceAdjustmentLines()
     {
@@ -25,5 +25,5 @@ class AccAdvanceAdjustment extends Model
     public function accCashRequisition()
     {
         return $this->belongsTo(AccCashRequisition::class, 'acc_cash_requisition_id', 'id');
-    }    
+    }
 }

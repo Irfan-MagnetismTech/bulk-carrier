@@ -11,7 +11,7 @@ class AccAdvanceAdjustmentRequest extends FormRequest
     {
         $data        = request('data');
         $dataArray   = json_decode($data, true);
-        // $attachments = is_array(request('attachments')) ? request('attachments') : null;
+        //$attachments = is_array(request('attachments')) ? request('attachments') : null;
         $mergeData   = array_merge($dataArray, ['attachment' => request('attachments')]);
         // dd($dataArray, $mergeData);
 

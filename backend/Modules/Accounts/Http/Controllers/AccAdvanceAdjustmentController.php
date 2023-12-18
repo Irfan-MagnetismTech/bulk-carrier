@@ -41,7 +41,7 @@ class AccAdvanceAdjustmentController extends Controller
     public function store(AccAdvanceAdjustmentRequest $request)
     {
         try {
-            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'cash_amount', 'business_unit');
 
             $accAdvanceAdjustmentLines = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment);
 
@@ -80,7 +80,7 @@ class AccAdvanceAdjustmentController extends Controller
     public function update(AccAdvanceAdjustmentRequest $request, AccAdvanceAdjustment $accAdvanceAdjustment)
     {
         try {
-            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'business_unit');
+            $accAdvanceAdjustmentData = $request->only('acc_cost_center_id', 'acc_cash_requisition_id', 'adjustment_date', 'adjustment_amount', 'cash_amount', 'business_unit');
 
             $accAdvanceAdjustmentLines = $this->fileUpload->handleMultipleFiles('acc/advance-adjustment', $request->accAdvanceAdjustmentLines, $request->attachment, $accAdvanceAdjustment->accAdvanceAdjustmentLines);
 
