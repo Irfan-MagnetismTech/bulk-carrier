@@ -223,6 +223,10 @@ class OpsContractAssignController extends Controller
         ->with('opsVoyage')
         ->get();
 
+        $contract_assigns = $contract_assigns->map(function ($assign) {
+            return $assign->opsVoyage;
+        });
+
         try {            
             return response()->success('Data retrieved successfully.', $contract_assigns, 200);
         } catch (QueryException $e){
