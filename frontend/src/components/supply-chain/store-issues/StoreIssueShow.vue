@@ -33,7 +33,7 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Date</span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
   </div>
   
@@ -117,6 +117,7 @@
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import moment from 'moment';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();

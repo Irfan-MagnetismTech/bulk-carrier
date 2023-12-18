@@ -81,8 +81,8 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Present Stock</th>
-            <th class="py-3 align-center">Available Stock</th>
+            <th class="py-3 align-center">Present Stock <br/> <span class="!text-[8px]">( To )</span></th>
+            <th class="py-3 align-center">Available Stock <br/> <span class="!text-[8px]">( From )</span></th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>

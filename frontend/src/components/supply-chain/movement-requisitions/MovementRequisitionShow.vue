@@ -13,11 +13,11 @@
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.delivery_date }}</span>
+          <span class="show-block">{{ form.delivery_date ? moment(form.delivery_date).format('DD-MM-YYYY') : null }}</span>
       </label>
       <label class="label-group">
         <span class="label-item-title">From Warehouse</span>
@@ -120,6 +120,8 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
+    import moment from 'moment';
+
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
