@@ -65,7 +65,7 @@ class AccAdvanceAdjustmentController extends Controller
     public function show(AccAdvanceAdjustment $accAdvanceAdjustment)
     {
         try {
-            return response()->success('Retrieved Succesfully', $accAdvanceAdjustment->load('accAdvanceAdjustmentLines', 'costCenter', 'accCashRequisition'), 200);
+            return response()->success('Retrieved Successfully', $accAdvanceAdjustment->load('accAdvanceAdjustmentLines', 'costCenter', 'accCashRequisition'), 200);
         }
         catch (\Exception $e)
         {

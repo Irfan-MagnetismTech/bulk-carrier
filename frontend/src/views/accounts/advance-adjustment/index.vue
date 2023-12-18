@@ -167,6 +167,7 @@ onMounted(() => {
                 </td>
                 <td>
                   <nobr>
+                    <action-button :action="'show'" :to="{ name: 'acc.advance-adjustments.show', params: { advanceAdjustmentId: advanceAdjustment?.id } }"></action-button>
                     <action-button :action="'edit'" :to="{ name: 'acc.advance-adjustments.edit', params: { advanceAdjustmentId: advanceAdjustment?.id } }"></action-button>
                     <action-button @click="confirmDelete(advanceAdjustment?.id)" :action="'delete'"></action-button>
                   </nobr>

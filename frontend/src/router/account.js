@@ -352,7 +352,7 @@ export default [
     {
         path: `/${BASE}/advance-adjustments/:advanceAdjustmentId`,
         name: `${BASE}.advance-adjustments.show`,
-        component: () => import(`../views/${BASE}/advance-adjustment/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/advance-adjustment/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
@@ -379,7 +379,7 @@ export default [
     {
         path: `/${BASE}/administrative-salaries/:administrativeSalaryId`,
         name: `${BASE}.administrative-salaries.show`,
-        component: () => import(`../views/${BASE}/administrative-salary/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/administrative-salary/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 

@@ -1,44 +1,118 @@
 <script setup>
-import TransactionForm from '../../../components/accounts/TransactionForm.vue';
-import {ref} from "vue";
-import { onMounted } from '@vue/runtime-core';
-import Title from "../../../services/title";
-import useTransaction from '../../../composables/accounts/useTransaction';
-
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import useAdvanceAdjustment from '../../../composables/accounts/useAdvanceAdjustment.js';
+import Title from "../../../services/title";
+import useHeroIcon from "../../../assets/heroIcon";
+import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import env from '../../../config/env';
+
+const icons = useHeroIcon();
 
 const route = useRoute();
-const transactionId = route.params.transactionId;
-
-const { transaction, transactions, showTransaction, updateTransaction, bgColor, isLoading, errors } = useTransaction();
+const advanceAdjustmentId = route.params.advanceAdjustmentId;
+const { advanceAdjustment, showAdvanceAdjustment, errors } = useAdvanceAdjustment();
 
 const { setTitle } = Title();
 
-function handleColorSelected(color) {
-  bgColor.value = color;
-}
+setTitle('Advance Adjustment Details');
 
 onMounted(() => {
-  showTransaction(transactionId);
+  showAdvanceAdjustment(advanceAdjustmentId);
 });
-
-setTitle('Cash Requisition');
-
 </script>
+
 <template>
-  <!-- Heading -->
-  <div class="flex flex-col items-center justify-between w-full my-6 sm:flex-row" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200"> Cash Requisition Details </h2>
-    <router-link :to="{ name: 'accounts.cash-requisitions.index' }" class="flex items-center justify-between gap-1 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-[#0F6B61]  border border-transparent rounded-lg active:bg-[#0F6B61]  hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-      </svg>
-    </router-link>
+  <div class="flex items-center justify-between w-full my-3" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Advance Adjustment Details</h2>
+    <default-button :title="'Advance Adjustment List'" :to="{ name: 'acc.advance-adjustments.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 pointer-events-none" :style="{ 'background-color': bgColor }">
-    <form @submit.prevent="updateTransaction(transaction, transactionId)">
-      <transaction-form @bgColor="handleColorSelected" v-model:form="transaction" :errors="errors"></transaction-form>
-      <!-- Submit button -->
-    </form>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="flex md:gap-4">
+      <div class="w-full">
+        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Advance Adjustment Information</h2>
+        <table class="w-full">
+          <thead>
+          <tr>
+            <td class="!text-center bg-gray-200 font-bold" colspan="2">Basic Info</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="w-40">Business Unit</th>
+            <td><span :class="advanceAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ advanceAdjustment?.business_unit }}</span></td>
+          </tr>
+          <tr>
+            <th class="w-40">Adjustment Date</th>
+            <td>{{ advanceAdjustment?.adjustment_date }}</td>
+          </tr>
+          <tr>
+            <th class="w-40">Cash Requisition No.</th>
+            <td>{{ advanceAdjustment?.accCashRequisition?.id }}</td>
+          </tr>
+          <tr>
+            <th class="w-40">Cost Center Name</th>
+            <td>{{ advanceAdjustment?.costCenter?.name }}</td>
+          </tr>
+          <tr>
+            <th class="w-40">Adjustment Amount</th>
+            <td>{{ advanceAdjustment?.adjustment_amount }}</td>
+          </tr>
+          </tbody>
+        </table>
+        <table class="w-full mt-1" id="profileDetailTable">
+          <thead>
+          <tr>
+            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particulars</td>
+          </tr>
+          <tr>
+            <th>Sl.</th>
+            <th>Particular</th>
+            <th>Remarks</th>
+            <th>Amount</th>
+            <th>Attachment</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(adjustmentData,index) in advanceAdjustment?.accAdvanceAdjustmentLines" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ adjustmentData?.particular }}</td>
+            <td>{{ adjustmentData?.remarks }}</td>
+            <td>{{ adjustmentData?.amount }}</td>
+            <td>
+              <template v-if="adjustmentData?.attachment !== 'null'">
+                <a class="custom_link" :href="env.BASE_API_URL + '/' + adjustmentData?.attachment" target="_blank">Click to view</a>
+              </template>
+              <template v-else>
+                <span>Not Available</span>
+              </template>
+            </td>
+          </tr>
+          </tbody>
+          <tfoot v-if="!advanceAdjustment?.accAdvanceAdjustmentLines?.length">
+          <tr>
+            <td colspan="3">No data found.</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
+<style lang="postcss" scoped>
+th, td, tr {
+  @apply text-left border-gray-500
+}
+
+tfoot td{
+  @apply text-center
+}
+
+#profileDetailTable th{
+  text-align: center;
+}
+#profileDetailTable thead tr{
+  @apply bg-gray-200
+}
+
+</style>
