@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('department_id')->nullable();
             $table->date('date')->nullable();
             $table->string('business_unit')->comment('TSLL,PSML');
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();
         });
