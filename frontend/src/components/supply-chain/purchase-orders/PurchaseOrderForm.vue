@@ -33,14 +33,26 @@
     
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmPoLines.push(clonedObj);
+      // props.form.scmPoLines.push(clonedObj);
+      form.scmPoLine[index].scmPoMaterial.push(clonedObj);
       // setMinHeight();
     }
 
-    function removeMaterial(index){
-      props.form.scmPoLines.splice(index, 1);
+    function removeMaterial(index,itemIndex){
+      form.scmPoLine[index].scmPoMaterial.splice(itemIndex, 1);
       // setMinHeight();
     }
+
+    function addBlock() {
+      const clonedObj = cloneDeep(props.materialObject);
+      props.form.scmPoLines.push(clonedObj);
+      // setMinHeight();
+}
+
+function removeBlock(index) {
+  props.form.scmPoLines.splice(index, 1);
+  // setMinHeight();
+}
 
     function addTerms() {
           const clonedTermObj = cloneDeep(props.termsObject);
@@ -49,6 +61,10 @@
 
     function removeTerms(index){
       props.form.scmPoTerms.splice(index, 1);
+}
+
+function changePr(index) {
+  
 }
 
 const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
@@ -187,16 +203,16 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
-      <label class="label-group">
+      <!-- <label class="label-group">
         <span class="label-item-title">PR No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.pr_no" required readonly class="form-input vms-readonly-input" name="pr_no" :id="'pr_no'" />
-          <!-- <Error v-if="errors?.pr_no" :errors="errors.pr_no"  /> -->
-      </label>
+           <Error v-if="errors?.pr_no" :errors="errors.pr_no"  /> -->
+      <!-- </label>
       <label class="label-group">
           <span class="label-item-title">PR Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.pr_date" required readonly class="form-input vms-readonly-input" name="pr_date" :id="'pr_date'" />
-          <!-- <Error v-if="errors?.pr_date" :errors="errors.pr_date"  /> -->
-      </label>
+          <Error v-if="errors?.pr_date" :errors="errors.pr_date"  /> 
+      </label> -->
       
   </div>
   <div class="input-group">    
@@ -260,7 +276,137 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
     </label>
   </div>
 
-  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+
+  <div class="mt-3 md:mt-8" v-if="form?.scmPoLine?.length">
+      <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
+      
+      <div v-for="(scmPoLine, index) in form.scmPoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
+            <v-select :options="purchaseRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.scmPoLine[index].scmPr" label="ref_no" class="block form-input"
+            @update:modelValue="changePr(index)"
+            >
+            <!--  -->
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.scmPoLine[index].scmPr"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+            </v-select>
+          s</label>
+          <!-- <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
+              <select v-model.trim="form.opsBunkerBillLines[index].currency" class="form-input" required @change="calculatePrAmounts(index)">
+                <option selected value="" disabled>Select Currency</option>
+                <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
+              </select>
+          </label> -->
+          <!-- <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">Exchange Rate (To USD) </span>
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
+            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+          </label> -->
+        </div>
+
+        <div class="relative my-3">
+
+          <div class="dt-responsive table-responsive">
+            <table class="w-full whitespace-no-wrap" >
+             
+              <tbody v-if="form.scmPoLine[index]?.scmPoMaterial?.length > 0">
+                <template v-for="(lineItem, itemIndex) in form.scmPoLine[index]?.scmPoMaterial" :key="itemIndex">
+                  <tr class="w-full" v-if="itemIndex==0">
+                    <th class="py-3 align-center min-w-[150px] md:min-w-[200px] lg:min-w-[250px]">Material Name <br/> <span class="!text-[8px]">Material - Code</span></th>
+                    <th class="py-3 align-center min-w-[30px] md:min-w-[55px] lg:min-w-[80px]">Unit</th>
+                    <th class="py-3 align-center">Brand</th>
+                    <th class="py-3 align-center">Model</th>
+                    <th class="py-3 align-center">Required Date</th>
+                    <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Remaining Qty</th>
+                    <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Qty</th>
+                    <th class="py-3 align-center min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Rate</th>
+                    <th class="py-3 align-cente min-w-[50px] md:min-w-[90px] lg:min-w-[105px]">Total Price</th>
+                    <th>
+                      <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </th>
+                  </tr>
+                  <tr class="table_tr">
+                    <td class="">
+                      <v-select :options="prMaterialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLine[index].scmPoMaterial[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+                        <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.scmPoLine[index].scmPoMaterial[itemIndex].scmMaterial"
+                                v-bind="attributes"
+                                v-on="events"
+                                />
+                        </template>
+                    </v-select>
+                    </td>
+                    <td>
+                      <input type="text" readonly v-model="form.scmPoLine[index].scmPoMaterial[itemIndex].unit" class="vms-readonly-input form-input">
+                    </td>
+                    <td>
+                      <input type="text" v-model="form.scmPoLine[index].scmPoMaterial[itemIndex].brand" class="form-input">
+                    </td>
+                    <td>
+                      <input type="text" v-model="form.scmPoLine[index].scmPoMaterial[itemIndex].model" class="form-input">
+                    </td>
+                    <td>
+                      <input type="date" v-model="form.scmPoLine[index].scmPoMaterial[itemIndex].required_date" class="form-input">
+                    </td>
+                    <td>
+                      <input type="text" readonly :value="form.scmPoLine[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input" :max="form.scmPoLine[index]?.scmPoMaterial[itemIndex].max_quantity">
+                    </td>
+                    <td>
+                      <input type="number" required v-model="form.scmPoLine[index]?.scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLine[index]?.scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLine[index]?.scmPoMaterial[itemIndex].quantity > form.scmPoLine[index]?.scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLine[index]?.scmPoMaterial[itemIndex].quantity > form.scmPoLine[index]?.scmPoMaterial[itemIndex].max_quantity}">
+                    </td>
+                    <td>
+                      <input type="number" required v-model="form.scmPoLine[index]?.scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                    </td>
+                    <td>
+                      <input type="number" readonly v-model="form.scmPoLine[index]?.scmPoMaterial[itemIndex].total_price" class="form-input vms-readonly-input">
+                    </td>
+                    <td class="px-1 py-1 text-center">
+                      <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                        </svg>
+                      </button>
+                    </td>
+          </tr>
+         
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="flex justify-center items-center my-3">
+            <button type="button" @click="addBlock()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+              Add More
+            </button>
+            <button type="button" v-if="index>0" @click="removeBlock(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
+              Remove
+            </button> 
+          </div>
+
+      </div>
+      
+    </div>
+
+  <!-- <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
@@ -367,7 +513,7 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
         </table>
       </fieldset>
     </div>
-  </div>
+  </div> -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen">
