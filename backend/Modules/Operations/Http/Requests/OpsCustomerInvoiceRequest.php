@@ -6,6 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsCustomerInvoiceRequest extends FormRequest
 {
+
+    protected function prepareForValidation(){
+        $data=  request('info');
+        // dd(json_decode($data, true));
+        $this->replace(json_decode($data, true));
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,11 +21,11 @@ class OpsCustomerInvoiceRequest extends FormRequest
     {
         // dd($this);
         return [
-            // 'ops_customer_id'       => ['required', 'numeric', 'max:50'],
-            // 'sub_total'             => ['required', 'numeric'],
-            // 'discount'              => ['required', 'string'],
-            // 'grand_total'           => ['required', 'numeric'],
-            // 'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric', 'max:100000'],
+            'ops_customer_id'       => ['required', 'numeric', 'max:50'],
+            'sub_total'             => ['required', 'numeric'],
+            'discount'              => ['required', 'string'],
+            'grand_total'           => ['required', 'numeric'],
+            'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric', 'max:100000'],
         ];
     }
 
