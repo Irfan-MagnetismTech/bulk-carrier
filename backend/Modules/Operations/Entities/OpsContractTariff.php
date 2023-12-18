@@ -39,7 +39,7 @@ class OpsContractTariff extends Model
 
     public function opsVoyageSectors()
     {
-        return $this->hasMany(OpsVoyageSector::class);
+        return $this->belongsTo(OpsVoyageSector::class, 'ops_voyage_sector_id' , 'id');
     }
 
 }

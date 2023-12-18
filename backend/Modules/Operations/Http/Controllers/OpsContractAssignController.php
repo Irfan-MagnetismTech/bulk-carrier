@@ -55,6 +55,7 @@ class OpsContractAssignController extends Controller
     public function store(OpsContractAssignRequest $request): JsonResponse
     // public function store(Request $request): JsonResponse
     {
+        // dd($request->opsVoyage['opsContractTariffs']);
         // return response()->json($request->opsVoyage['opsContractTariffs']);
         try {
             DB::beginTransaction();
@@ -66,6 +67,8 @@ class OpsContractAssignController extends Controller
                     return $item;
                 })->toArray();
             }
+
+            // dd($tariffs);
             
 
             $info = $request->all();
@@ -151,23 +154,22 @@ class OpsContractAssignController extends Controller
      */
     public function update(OpsContractAssignRequest $request, OpsContractAssign $contract_assign): JsonResponse
     {
-        // dd($request);
+        // dd($request->opsVoyage['opsContractTariffs']);
         try {
             DB::beginTransaction();
-            if($request->business_unit== 'TSLL'){
-                $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
-                    $item['ops_voyage_sector_id'] = $item['id'];
-                    return $item;
-                })->toArray();
-            }
-
+            // if($request->business_unit== 'TSLL'){
+            //     $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
+            //         $item['ops_voyage_sector_id'] = $item['id'];
+            //         return $item;
+            //     })->toArray();
+            // }
             $info = $request->all();
             $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
 
             $contract_assign->update($info);
             if($request->business_unit== 'TSLL'){
                 $contract_assign->opsContractTariffs()->delete();
-                $contract_assign->opsContractTariffs()->createMany($tariffs);
+                $contract_assign->opsContractTariffs()->createMany($request->opsVoyage['opsContractTariffs']);
             }
 
             DB::commit();  
@@ -243,7 +245,7 @@ class OpsContractAssignController extends Controller
         ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
             $query->where('business_unit', request()->business_unit);
         })
-        ->with(['opsCargoTariff'])
+        ->with(['opsCargoTariff','opsVoyageSectors'])
         ->get();
 
         try {            
