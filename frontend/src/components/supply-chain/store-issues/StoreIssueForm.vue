@@ -298,6 +298,7 @@ function setMaterialOtherData(datas, index) {
       props.form.scmSiLines[index].max_quantity = datas.max_quantity;
       props.form.scmSiLines[index].remaining_quantity = datas.remaining_quantity;
       props.form.scmSiLines[index].sr_quantity = datas.sr_quantity;
+      props.form.scmSiLines[index].sr_composite_key = datas.sr_composite_key;
       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id).then(() => {
       props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
     });

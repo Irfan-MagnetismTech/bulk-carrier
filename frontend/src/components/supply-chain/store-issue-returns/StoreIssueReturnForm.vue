@@ -301,6 +301,8 @@ function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].scm_material_id = datas.id;
       props.form.scmSirLines[index].max_quantity = datas.max_quantity;
       props.form.scmSirLines[index].si_quantity = datas.si_quantity;
+      props.form.scmSirLines[index].si_composite_key = datas.si_composite_key;
+      props.form.scmSirLines[index].sr_composite_key = datas.sr_composite_key;
           
 }
 

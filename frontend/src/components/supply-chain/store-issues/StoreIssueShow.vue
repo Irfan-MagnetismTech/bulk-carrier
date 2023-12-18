@@ -58,7 +58,7 @@
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Sr Quantity</th>
-            <th class="py-3 align-center">Current Stock</th>
+            <!-- <th class="py-3 align-center">Current Stock</th> -->
             <th class="py-3 align-center">Qty</th>
           </tr>
           </thead>
@@ -81,11 +81,11 @@
                    <span class="show-block">{{ form.scmSiLines[index].sr_quantity }}</span>
                </label>
             </td>
-            <td>
+            <!-- <td>
               <label class="block w-full mt-2 text-sm">
                    <span class="show-block">{{ form.scmSiLines[index].current_stock }}</span>
                </label>
-            </td>
+            </td> -->
             <td>
               <label class="block w-full mt-2 text-sm">
                    <span class="show-block">{{ form.scmSiLines[index].quantity }}</span>

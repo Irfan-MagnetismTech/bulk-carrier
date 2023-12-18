@@ -263,22 +263,29 @@ function setMaterialOtherData(datas, index) {
 
 watch(() => props.form.scmMoLines, (newLines) => {
   if (newLines) {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmMoLines[index].unit = selectedMaterial.unit;
-          props.form.scmMoLines[index].scm_material_id = selectedMaterial.id;
+    const materialArray = [];
+    if (newLines && newLines.length) { 
+        newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+            if (materialArray.indexOf(material_key) === -1) {
+              materialArray.push(material_key);
+            } else {
+              alert("Duplicate Material Found");
+              props.form.scmMoLines.splice(index, 1);
+          } 
+        if (line.scmMaterial) {
+          const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              props.form.scmMoLines[index].unit = selectedMaterial.unit;
+              props.form.scmMoLines[index].scm_material_id = selectedMaterial.id;
+            }
+          }
         }
-      }
+      });
     }
-  });
 }
-  // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
 
