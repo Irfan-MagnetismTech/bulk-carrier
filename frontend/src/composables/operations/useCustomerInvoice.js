@@ -6,19 +6,19 @@ import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
 
-export default function useChartererInvoice() {
+export default function useCustomerInvoice() {
 	const router = useRouter();
-	const chartererInvoices = ref([]);
+	const customerInvoices = ref([]);
 	const $loading = useLoading();
     const isTableLoading = ref(false);
 	const notification = useNotification();
 
-	const chartererInvoice = ref({
-		business_unit: 'PSML',
-		ops_charterer_profile_id: null,
-		opsChartererProfile: null,
-		ops_charterer_contract_id: null,
-		opsChartererContract: null,
+	const customerInvoice = ref({
+		business_unit: 'TSLL',
+		ops_customer_profile_id: null,
+		opsCustomerProfile: null,
+		ops_customer_contract_id: null,
+		opsCustomerContract: null,
 		ops_voyage_id: null,
 		opsVoyage: null,
 		contract_type: null,
@@ -39,7 +39,7 @@ export default function useChartererInvoice() {
 		discounted_amount_usd: null,
 		grand_total: null,
 		grand_total_usd: null,
-		opsChartererInvoiceServices: [
+		opsCustomerInvoiceServices: [
 			{
 				charge_or_deduct: 'deduct',
 				particular: null,
@@ -54,7 +54,7 @@ export default function useChartererInvoice() {
 				amount_usd: 0,
 			},
 		],
-		opsChartererInvoiceOthers: [
+		opsCustomerInvoiceOthers: [
 			{
 				charge_or_deduct: 'charge',
 				particular: null,
@@ -69,7 +69,7 @@ export default function useChartererInvoice() {
 				amount_usd: 0,
 			},
 		],
-		opsChartererInvoiceVoyages: [{
+		opsCustomerInvoiceVoyages: [{
 			'ops_voyage_id': null,
 			'opsVoyage': null,
 			'cargo_quantity': 0,
@@ -79,7 +79,7 @@ export default function useChartererInvoice() {
 	});
 
 
-	const chartererInvoiceVoyageObject = {
+	const customerInvoiceVoyageObject = {
 		'ops_voyage_id': null,
 		'opsVoyage': null,
 		'cargo_quantity': 0,
@@ -119,7 +119,7 @@ export default function useChartererInvoice() {
     const isLoading = ref(false);
     const filterParams = ref(null);
 
-	async function getChartererInvoices(filterOptions) {
+	async function getCustomerInvoices(filterOptions) {
 		//NProgress.start();
 		let loader = null;
         if (!filterOptions.isFilter) {
@@ -135,14 +135,14 @@ export default function useChartererInvoice() {
         filterParams.value = filterOptions;
 
 		try {
-			const {data, status} = await Api.get(`/ops/charterer-invoices`,{
+			const {data, status} = await Api.get(`/ops/customer-invoices`,{
                 params: {
                    page: filterOptions.page,
                    items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }
             });
-			chartererInvoices.value = data.value;
+			customerInvoices.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -159,7 +159,7 @@ export default function useChartererInvoice() {
 		}
 	}
 
-	async function storeChartererInvoice(form) {
+	async function storeCustomerInvoice(form) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -169,9 +169,9 @@ export default function useChartererInvoice() {
 
 			formData.append('info', JSON.stringify(form));
 
-			const { data, status } = await Api.post('/ops/charterer-invoices', formData);
+			const { data, status } = await Api.post('/ops/customer-invoices', formData);
 			notification.showSuccess(status);
-			router.push({ name: 'ops.charterer-invoices.index' });
+			router.push({ name: 'ops.customer-invoices.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -182,14 +182,14 @@ export default function useChartererInvoice() {
 		}
 	}
 
-	async function showChartererInvoice(chartererInvoiceId) {
+	async function showCustomerInvoice(customerInvoiceId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.get(`/ops/charterer-invoices/${chartererInvoiceId}`);
-			chartererInvoice.value = data.value;
+			const { data, status } = await Api.get(`/ops/customer-invoices/${customerInvoiceId}`);
+			customerInvoice.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -201,7 +201,7 @@ export default function useChartererInvoice() {
 		}
 	}
 
-	async function updateChartererInvoice(form, chartererInvoiceId) {
+	async function updateCustomerInvoice(form, customerInvoiceId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -215,12 +215,12 @@ export default function useChartererInvoice() {
 			formData.append('_method', 'PUT');
 
 			const { data, status } = await Api.post(
-				`/ops/charterer-invoices/${chartererInvoiceId}`,
+				`/ops/customer-invoices/${customerInvoiceId}`,
 				formData
 			);
-			// chartererInvoice.value = data.value;
+			// customerInvoice.value = data.value;
 			notification.showSuccess(status);
-			router.push({ name: 'ops.charterer-invoices.index' });
+			router.push({ name: 'ops.customer-invoices.index' });
 		} catch (error) {
 			const { data, status } = error.response;
 			errors.value = notification.showError(status, data);
@@ -231,16 +231,16 @@ export default function useChartererInvoice() {
 		}
 	}
 
-	async function deleteChartererInvoice(chartererInvoiceId) {
+	async function deleteCustomerInvoice(customerInvoiceId) {
 		
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/charterer-invoices/${chartererInvoiceId}`);
+			const { data, status } = await Api.delete( `/ops/customer-invoices/${customerInvoiceId}`);
 			notification.showSuccess(status);
-			await getChartererInvoices(filterParams.value);
+			await getCustomerInvoices(filterParams.value);
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
@@ -251,12 +251,12 @@ export default function useChartererInvoice() {
 		}
 	}
 
-	async function searchChartererInvoices(searchParam, loading) {
+	async function searchCustomerInvoices(searchParam, loading) {
 		//NProgress.start();
 
 		try {
-			const { data, status } = await Api.get(`/ops/search-charterer-invoices?name=${searchParam}`);
-			chartererInvoices.value = data.value;
+			const { data, status } = await Api.get(`/ops/search-customer-invoices?name=${searchParam}`);
+			customerInvoices.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -268,15 +268,15 @@ export default function useChartererInvoice() {
 	}
 
 	return {
-		chartererInvoices,
-		chartererInvoice,
-		getChartererInvoices,
-		storeChartererInvoice,
-		showChartererInvoice,
-		updateChartererInvoice,
-		deleteChartererInvoice,
-		chartererInvoiceVoyageObject,
-		searchChartererInvoices,
+		customerInvoices,
+		customerInvoice,
+		getCustomerInvoices,
+		storeCustomerInvoice,
+		showCustomerInvoice,
+		updateCustomerInvoice,
+		deleteCustomerInvoice,
+		customerInvoiceVoyageObject,
+		searchCustomerInvoices,
 		serviceObject,
 		isTableLoading,
 		otherObject,

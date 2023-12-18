@@ -184,6 +184,16 @@ export default [
                     },
                 ],
             },
+            {
+                route: 'ops.customer-invoices.index',
+                label: 'Customer Invoices',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
 
             {
                 route: 'ops.expense-heads.index',
