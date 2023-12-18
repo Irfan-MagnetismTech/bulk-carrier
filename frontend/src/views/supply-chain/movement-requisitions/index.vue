@@ -227,7 +227,7 @@ function confirmDelete(id) {
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <action-button :action="'show'" :to="{ name: 'scm.movement-requisitions.show', params: { movementRequisitionId: movementRequisition.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.movement-requisitions.edit', params: { movementRequisitionId: movementRequisition.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.movement-requisitions.edit', params: { movementRequisitionId: movementRequisition.id } }" v-if="(movementRequisition?.scmMos.length <= 0)"></action-button>
                   <action-button @click="confirmDelete(movementRequisition.id)" :action="'delete'"></action-button>
                 </div>
               </td>

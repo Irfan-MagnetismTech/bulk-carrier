@@ -239,7 +239,7 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToPOCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.store-requisitions.show', params: { storeRequisitionId: storeRequisition.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { storeRequisitionId: storeRequisition.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { storeRequisitionId: storeRequisition.id } }" v-if="(storeRequisition?.scmSis.length <= 0)"></action-button>
                   <action-button @click="confirmDelete(storeRequisition.id)" :action="'delete'"></action-button>
                 </div>
               </nobr>

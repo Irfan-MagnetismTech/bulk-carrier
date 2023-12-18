@@ -70,7 +70,7 @@
                         v-on="events"
                         />
                 </template>
-            </v-select>
+              </v-select>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -94,7 +94,12 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmMoLines[index].quantity" class="form-input" :max="form.scmMoLines[index].max_quantity">
+               <input
+                 type="number"
+                 v-model="form.scmMoLines[index].quantity"
+                 class="form-input"
+                 :max="form.scmMoLines[index].max_quantity"
+                 :class="{'border-2': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -135,7 +140,7 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
-import useMovementOut from '../../../composables/supply-chain/useMovementOut';
+    import useMovementOut from '../../../composables/supply-chain/useMovementOut';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
@@ -246,11 +251,11 @@ function setMaterialOtherData(datas, index) {
       props.form.scmMoLines[index].scm_material_id = datas.id;
       getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
       props.form.scmMoLines[index].mmr_quantity = datas.mmr_quantity;
-  props.form.scmMoLines[index].quantity = datas.quantity;
-  props.form.scmMoLines[index].remaining_quantity = datas.remaining_quantity;
-  props.form.scmMoLines[index].current_stock = datas.current_stock;
-  props.form.scmMoLines[index].max_quantity = datas.max_quantity;
-  props.form.scmMoLines[index].mmr_composite_key = datas.mmr_composite_key;
+      props.form.scmMoLines[index].quantity = datas.quantity;
+      props.form.scmMoLines[index].remaining_quantity = datas.remaining_quantity;
+      props.form.scmMoLines[index].current_stock = datas.current_stock;
+      props.form.scmMoLines[index].max_quantity = datas.max_quantity;
+      props.form.scmMoLines[index].mmr_composite_key = datas.mmr_composite_key;
   
     }
 
