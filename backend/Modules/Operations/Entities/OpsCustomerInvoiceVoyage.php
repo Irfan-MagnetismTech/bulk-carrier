@@ -4,17 +4,17 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OpsCustomerInvoiceLine extends Model
+class OpsCustomerInvoiceVoyage extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'ops_customer_invoice_id',
-        'ops_vessel_id',
+        'ops_contract_tariff_id',
         'ops_voyage_id',
-        'amount'
+        'ops_vessel_id',  
+        'total_amount_bdt',
     ];
 
     public function opsVoyage()
@@ -26,7 +26,12 @@ class OpsCustomerInvoiceLine extends Model
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
-    
+
+    public function opsContractTariff()
+    {
+        return $this->belongsTo(OpsContractTariff::class, 'ops_contract_tariff_id' , 'id');
+    }
+
     public function opsCustomerInvoice()
     {
         return $this->belongsTo(OpsCustomerInvoice::class, 'ops_customer_invoice_id' , 'id');

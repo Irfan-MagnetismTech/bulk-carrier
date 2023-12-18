@@ -17,6 +17,7 @@ class OpsCargoTariff extends Model
         'ops_vessel_id',
         'loading_point',
         'unloading_point',
+        'pol_pod',
         'ops_cargo_type_id',
         'currency',
         'status',

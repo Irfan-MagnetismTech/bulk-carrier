@@ -23,6 +23,13 @@ return new class extends Migration
             $table->foreign('ops_expense_head_id')->references('id')->on('ops_expense_heads');
             $table->string('title');
             $table->float('total', 20, 2)->nullable();
+            $table->string('currency');
+            $table->float('exchange_rate_usd', 20, 2)->nullable();
+            $table->float('exchange_rate_bdt', 20, 2)->nullable();
+            $table->dateTime('effective_from')->nullable();
+            $table->dateTime('effective_till')->nullable();
+
+
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });
