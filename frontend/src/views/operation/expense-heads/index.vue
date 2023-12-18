@@ -53,7 +53,7 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Heads",
-      "filter_type": "input" 
+      "filter_type": null
     },
     {
       "relation_name": null,
@@ -156,8 +156,8 @@ onMounted(() => {
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { expenseHeadId: expenseHead.id } }"></action-button>
-                      
-                      <action-button v-if="!expenseHead?.is_readonly" @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
+                      <action-button @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
+                      <!-- <action-button v-if="!expenseHead?.is_readonly" @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button> -->
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>

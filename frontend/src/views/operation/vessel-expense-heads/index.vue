@@ -45,7 +45,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Group",
+      "label": "Vessel",
       "filter_type": "input"
     },
    
@@ -122,7 +122,7 @@ onMounted(() => {
           <tbody v-if="vesselExpenseHeads?.data?.length" class="relative">
               <tr v-for="(vesselExpenseHead, index) in vesselExpenseHeads.data" :key="vesselExpenseHead?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ vesselExpenseHead?.opsVessel?.name }}</td>
+                  <td class="!text-left">{{ vesselExpenseHead?.opsVessel?.name }}</td>
                   
                   <td>
                     <span :class="vesselExpenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselExpenseHead?.business_unit }}</span>
