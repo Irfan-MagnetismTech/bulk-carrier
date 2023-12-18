@@ -254,6 +254,8 @@ class OpsContractAssignController extends Controller
 
         $contract_tariffs->opsVoyageSectors->map(function($sector) use($contract_tariffs) {
             $sector['tariff_name'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->opsCargoTariff?->tariff_name;
+            $sector['tariff_id'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->opsCargoTariff?->id;
+            $sector['total_rate'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->total_rate;
             return $sector;
         });
         

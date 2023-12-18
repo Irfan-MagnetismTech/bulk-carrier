@@ -392,8 +392,8 @@
     </div>
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
-    <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 w-8/12 !mx-auto" role="dialog" id="modal">
+    <form @submit.prevent="" style="position: absolute;top: 0; width: 100%">
+      <div class="px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 w-10/12 !mx-auto" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -432,8 +432,10 @@
             <tbody>
 
               <tr v-for="(detail, index) in details" :key="index">
-                <td>
-                  {{ detail.tariff_name }}
+                <td v-if="detail.tariff_name">
+                  <router-link :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: detail?.tariff_id ?? null } }" target="_blank" class="font-semibold text-blue-600">
+                    <nobr>{{ detail.tariff_name }}</nobr>
+                  </router-link>
                 </td>
                 <td>
                   {{ detail.loading_point }}
@@ -766,5 +768,9 @@ function closeModel() {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+#dataTable tr, th, td {
+  @apply text-[12px]
 }
 </style>
