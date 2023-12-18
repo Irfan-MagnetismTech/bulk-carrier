@@ -7,14 +7,14 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
-import useChartererInvoice from '../../../composables/operations/useChartererInvoice';
+import useCustomerInvoice from '../../../composables/operations/useCustomerInvoice';
 import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useHelper from "../../../composables/useHelper";
 
-const { chartererInvoices, getChartererInvoices, deleteChartererInvoice, isLoading,isTableLoading ,errors } = useChartererInvoice();
+const { customerInvoices, getCustomerInvoices, deleteCustomerInvoice, isLoading,isTableLoading ,errors } = useCustomerInvoice();
 const { numberFormat } = useHelper();
 const icons = useHeroIcon();
 const props = defineProps({
@@ -25,7 +25,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Charterer Invoice List');
+setTitle('Customer Invoice List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -38,17 +38,17 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "opsChartererProfile",
+      "relation_name": "opsCustomerProfile",
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Charterer",
+      "label": "Customer",
       "filter_type": "input"
     },
     {
-      "relation_name": "opsChartererContract",
+      "relation_name": "opsCustomerContract",
       "field_name": "contract_name",
       "search_param": "",
       "action": null,
@@ -58,7 +58,7 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "opsChartererContract.opsVessel",
+      "relation_name": "opsCustomerContract.opsVessel",
       "field_name": "name",
       "search_param": "",
       "action": null,
@@ -109,7 +109,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteChartererInvoice(id);
+        deleteCustomerInvoice(id);
     }
   })
 }
@@ -126,7 +126,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getChartererInvoices(filterOptions.value)
+    getCustomerInvoices(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -147,8 +147,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Charterer Invoice List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.charterer-invoices.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Customer Invoice List</h2>
+    <default-button :title="'Customer Invoice'" :to="{ name: 'ops.customer-invoices.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   
 
@@ -157,29 +157,29 @@ onMounted(() => {
       
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
-          <tbody v-if="chartererInvoices?.data?.length" class="relative">
-              <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
+          <tbody v-if="customerInvoices?.data?.length" class="relative">
+              <tr v-for="(customerInvoice, index) in customerInvoices.data" :key="customerInvoice?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ chartererInvoice?.opsChartererProfile?.name }}</td>
-                  <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
-                  <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
-                  <td>{{ chartererInvoice?.contract_type }}</td>
-                  <td>{{ numberFormat(chartererInvoice?.grand_total) }}</td>
+                  <td>{{ customerInvoice?.opsCustomerProfile?.name }}</td>
+                  <td>{{ customerInvoice?.opsCustomerContract?.contract_name }}</td>
+                  <td>{{ customerInvoice?.opsCustomerContract?.opsVessel?.name }}</td>
+                  <td>{{ customerInvoice?.contract_type }}</td>
+                  <td>{{ numberFormat(customerInvoice?.grand_total) }}</td>
                   <!-- <td>
-                    <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
+                    <span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span>
                   </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.charterer-invoices.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
-                      <action-button @click="confirmDelete(chartererInvoice.id)" :action="'delete'"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.customer-invoices.show', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.customer-invoices.edit', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
+                      <action-button @click="confirmDelete(customerInvoice.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>
               </tr>
-              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && chartererInvoices?.data?.length"></LoaderComponent>
+              <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && customerInvoices?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!chartererInvoices?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!customerInvoices?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -187,12 +187,12 @@ onMounted(() => {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!chartererInvoices?.data?.length">
+            <tr v-else-if="!customerInvoices?.data?.length">
               <td colspan="8">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="chartererInvoices" to="ops.charterer-invoices.index" :page="page"></Paginate>
+    <Paginate :data="customerInvoices" to="ops.customer-invoices.index" :page="page"></Paginate>
   </div>
 </template>
