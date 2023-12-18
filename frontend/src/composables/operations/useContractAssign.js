@@ -88,9 +88,9 @@ export default function useContractAssign() {
 
 		try {
 			let formData = new FormData();
-			// formData.append('info', JSON.stringify(form));
+			formData.append('info', JSON.stringify(form));
 
-			const { data, status } = await Api.post('/ops/contract-assigns', form);
+			const { data, status } = await Api.post('/ops/contract-assigns', formData);
 			notification.showSuccess(status);
 			await router.push({ name: 'ops.contract-assigns.index' });
 		} catch (error) {

@@ -62,8 +62,12 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
-            foreach($request->opsVoyageSectors as $key=>$sector){
+            $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
                 $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
+                return $sector;
+            });
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
                 if($sector['loading_point'] == $sector['unloading_point']){
                     $error= [
                         'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
@@ -91,7 +95,7 @@ class OpsVoyageController extends Controller
             }
 
             $voyage = OpsVoyage::create($voyageInfo);
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->createMany($voyageSectors);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
             $voyage->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
@@ -158,6 +162,11 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
+            $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
+                return $sector;
+            });
+
             foreach($request->opsVoyageSectors as $key=>$sector){
                 $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
                 if($sector['loading_point'] == $sector['unloading_point']){
@@ -170,6 +179,7 @@ class OpsVoyageController extends Controller
                     return response()->json($error, 422);
                 }
             }
+
 
             $schedules= [];
             foreach($request->opsVoyagePortSchedules as $key=>$schedule){
@@ -189,7 +199,7 @@ class OpsVoyageController extends Controller
             $voyage->update($voyageInfo);  
 
             $voyage->opsVoyageSectors()->delete();
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->createMany($voyageSectors);
 
             $voyage->opsVoyagePortSchedules()->delete();
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
@@ -295,28 +305,6 @@ class OpsVoyageController extends Controller
                             $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
                             
 
-                            $tariff = $tariff->only([
-                                'id',
-                                'tariff_name',
-                                'ops_vessel_id',
-                                'ops_cargo_type_id',
-                                'loading_point',
-                                'unloading_point',
-                                'pol_pod',
-                                'business_unit',
-                                'jan',
-                                'feb',
-                                'mar',
-                                'apr',
-                                'may',
-                                'jun',
-                                'jul',
-                                'aug',
-                                'sep',
-                                'oct',
-                                'nov',
-                                'dec',
-                            ]);
                             return $tariff;
                         });
                         data_forget($sector, 'cargoTariffs');
@@ -326,14 +314,14 @@ class OpsVoyageController extends Controller
                         $sector->cargoTariffs = $sectorInfo;
                     }
                     $sector['quantity'] = $this->chooseQuantity($sector);
-                    $sector = $sector->only([
-                        'ops_voyage_id',
-                        'loading_point',
-                        'unloading_point',
-                        'rate',
-                        'quantity',
-                        'cargoTariffs',
-                    ]);
+                    // $sector = $sector->only([
+                    //     'ops_voyage_id',
+                    //     'loading_point',
+                    //     'unloading_point',
+                    //     'rate',
+                    //     'quantity',
+                    //     'cargoTariffs',
+                    // ]);
                     // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
                     return $sector;
                 });
