@@ -45,18 +45,10 @@
         </label>
     </div>
 
-    <div class="mt-3 md:mt-8" v-if="form?.opsBunkerBillLines?.length > 0">
+    <div class="mt-3 md:mt-8" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
       <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
-
-        <!-- <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
-          <label class="block w-1/2 mt-2 text-sm"></label>
-
-          
-          <label class="block w-1/2 mt-2 text-sm"></label>
-
-        </div> -->
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
@@ -64,6 +56,7 @@
             <v-select :options="bunkerRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.opsBunkerBillLines[index].opsBunkerRequisition" label="requisition_no" class="block form-input"
             @update:modelValue="initiateBunkerRequisitionItem(index)"
             >
+            <!--  -->
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -162,7 +155,7 @@
       
     </div>
 
-    <div v-if="form.opsBunkerBillLines" class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+    <div v-if="form.opsBunkerBillLines" class="w-full my-2 mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
         <h4 class="text-md font-semibold uppercase mb-2">Bunker Bill Summary</h4>
         
         <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
@@ -215,16 +208,18 @@ const {  bunkerRequisitions, searchBunkerRequisitions, isLoading: bunkerLoader }
 watch(() => props.form.business_unit, (newValue, oldValue) => {
 
     if(newValue) {
-      fetchVendors("", false)
-      fetchBunkerRequisition("", false)
+        fetchVendors("", false)
+        fetchBunkerRequisition("", false)
 
-      props.form.scmVendor = null;
-      props.form.opsBunkerBillLines = [];
-      props.form.scm_vendor_id = null;
+        
 
-      if(props.formType != 'edit') {}
-        props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
-      }
+        if(props.formType != 'edit') {
+          props.form.scmVendor = null;
+          props.form.opsBunkerBillLines = [];
+          props.form.scm_vendor_id = null;
+          props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+        }
+    }
 }, { deep : true });
 
 
@@ -253,10 +248,14 @@ function addBunkerRequisition() {
 
 function removeBunkerRequisition(index) {
   props.form.opsBunkerBillLines.splice(index, 1);
+  CalculateAll()
+
 }
 
 function removeBillItems(index, itemIndex) {
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.splice(itemIndex, 1);
+  CalculateAll()
+
 }
 
 function addBillItems(index, itemIndex) {
@@ -311,8 +310,11 @@ const getFileName  = (filename) => {
 }
 
 const initiateBunkerRequisitionItem = (billLineIndex) => {
+
+  console.log("Initialize Bunker Requisition Form")
+
  
-  if(props.formType=='create') {
+  // if(props.formType != 'edit') {
     props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
     let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
     props.form.opsBunkerBillLines[billLineIndex].requisitionBunkers = requisition[0]?.opsBunkers;
@@ -323,9 +325,10 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
     })
 
     props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = cloneDeep(initValue);
-  }
+  // }
 
-  // props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems = [{}];
+  CalculateAll()
+
 
 }
 
@@ -333,6 +336,7 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
 const allCurrencies = ref([]);
 
 const calculatePrAmounts = (billLineIndex) => {
+  console.log("Calculate PR Amount")
 
   let currency = props.form.opsBunkerBillLines[billLineIndex].currency;
 
@@ -391,6 +395,9 @@ function updateBunkerBillLineItems(index, itemIndex) {
 
 const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, item) => {
 
+  console.log("Calculating Currency")
+
+
   console.log(currency, exchange_rate_bdt, exchange_rate_usd, item)
 
   item.amount = null;
@@ -413,6 +420,8 @@ const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, ite
 }
 
 function CalculateAll() {
+
+  console.log("Calculate All")
 
   let totalAmount = props.form.opsBunkerBillLines.reduce((acc, billLine) => {
     return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {

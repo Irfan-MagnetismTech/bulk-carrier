@@ -18,12 +18,14 @@ return new class extends Migration
             $table->foreignId('ops_bunker_bill_id')->constrained('ops_bunker_bills')->onDelete('cascade');
             $table->foreignId('ops_bunker_bill_line_id')->constrained('ops_bunker_bill_lines')->onDelete('cascade');
             $table->string('particular')->nullable();
-            $table->float('rate', 20, 2)->nullable();
-            $table->float('exchange_rate_bdt', 20, 2)->nullable();
-            $table->float('exchange_rate_usd', 20, 2)->nullable();
-            $table->float('amount', 20, 2)->nullable();
-            $table->float('amount_bdt', 20, 2)->nullable();
-            $table->float('amount_usd', 20, 2)->nullable();
+            $table->string('requisition_material')->nullable();
+            $table->float('quantity', 20, 4)->nullable();
+            $table->float('rate', 20, 4)->nullable();
+            $table->float('exchange_rate_bdt', 20, 4)->nullable();
+            $table->float('exchange_rate_usd', 20, 4)->nullable();
+            $table->float('amount', 20, 4)->nullable();
+            $table->float('amount_bdt', 20, 4)->nullable();
+            $table->float('amount_usd', 20, 4)->nullable();
             $table->timestamps();
         });
     }

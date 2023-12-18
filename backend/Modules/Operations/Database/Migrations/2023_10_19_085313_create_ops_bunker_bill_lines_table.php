@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('ops_bunker_bill_id')->constrained('ops_bunker_bills')->onDelete('cascade');
             $table->foreignIdFor(OpsBunkerRequisition::class);
             $table->float('rate', 20, 4)->nullable();
+            $table->string('currency')->nullable();
             $table->float('exchange_rate_bdt', 20, 4)->nullable();
             $table->float('exchange_rate_usd', 20, 4)->nullable();
             $table->float('amount', 20, 4)->nullable();

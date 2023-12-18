@@ -13,6 +13,8 @@ class OpsBunkerBillLineItem extends Model
         'ops_bunker_bill_id',
         'ops_bunker_bill_line_id',
         'particular',
+        'requisition_material',
+        'quantity',
         'rate',
         'exchange_rate_bdt',
         'exchange_rate_usd',

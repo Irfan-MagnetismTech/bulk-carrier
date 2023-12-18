@@ -13,6 +13,7 @@ class OpsBunkerBillLine extends Model
         'ops_bunker_bill_id',
         'ops_bunker_requisition_id',
         'rate',
+        'currency',
         'exchange_rate_bdt',
         'exchange_rate_usd',
         'amount',
