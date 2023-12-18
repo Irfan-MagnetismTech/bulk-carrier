@@ -246,9 +246,9 @@ class OpsContractAssignController extends Controller
         ->when(isset(request()->ops_voyage_id), function ($query) {
             $query->where('ops_voyage_id', request()->ops_voyage_id);
         })
-        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
-            $query->where('business_unit', request()->business_unit);
-        })
+        // ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+        //     $query->where('business_unit', request()->business_unit);
+        // })
         ->with(['opsCargoTariff','opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageSectors'])
         ->get();
 
