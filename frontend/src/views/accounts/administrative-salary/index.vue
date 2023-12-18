@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useAdvanceAdjustment from "../../../composables/accounts/useAdvanceAdjustment";
+import useAdministrativeSalary from "../../../composables/accounts/useAdministrativeSalary";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -21,10 +21,10 @@ const props = defineProps({
   },
 });
 
-const { advanceAdjustments, getAdvanceAdjustments, deleteAdvanceAdjustment, isLoading, isTableLoading} = useAdvanceAdjustment();
+const { administrativeSalaries, getAdministrativeSalaries, deleteAdministrativeSalary, isLoading, isTableLoading} = useAdministrativeSalary();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Advance Adjustments');
+setTitle('Administrative Salary');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -38,52 +38,42 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "adjustment_date",
+      "field_name": "year_month",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Adjustment Date",
+      "label": "Month - Year",
       "filter_type": "input"
     },
+    // {
+    //   "relation_name": 'costCenter',
+    //   "field_name": "name",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Cost Center",
+    //   "filter_type": "input"
+    // },
     {
-      "relation_name": 'costCenter',
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "total_salary",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cost Center",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": 'accCashRequisition',
-      "field_name": "id",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Cash Requisition No.",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": 'accCashRequisition',
-      "field_name": "total_amount",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Requisition Amount",
+      "label": "Total Amount",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "adjustment_amount",
+      "field_name": "remarks",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Adjustment Amount",
+      "label": "Remarks",
       "filter_type": "input"
     },
   ]
@@ -104,7 +94,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteAdvanceAdjustment(id);
+      deleteAdministrativeSalary(id);
     }
   })
 }
@@ -113,7 +103,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'acc.advance-adjustments.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'acc.administrative-salaries.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -121,7 +111,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getAdvanceAdjustments(filterOptions.value)
+    getAdministrativeSalaries(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
         const customDataTable = document.getElementById("customDataTable");
@@ -143,8 +133,8 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700"> Advance Adjustment List </h2>
-    <default-button :title="'Create Advance Adjustment'" :to="{ name: 'acc.advance-adjustments.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700"> Administrative Salary List </h2>
+    <default-button :title="'Create Administrative Salary'" :to="{ name: 'acc.administrative-salaries.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
   <div id="customDataTable">
@@ -153,42 +143,40 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-                <tr v-for="(advanceAdjustment, index) in advanceAdjustments?.data" :key="index">
+                <tr v-for="(salaryData, index) in administrativeSalaries?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ advanceAdjustment?.adjustment_date }} </td>
-                  <td> {{ advanceAdjustment?.costCenter?.name }} </td>
-                  <td> {{ advanceAdjustment?.accCashRequisition?.id }} </td>
-                  <td> {{ advanceAdjustment?.accCashRequisition?.total_amount }} </td>
-                  <td> {{ advanceAdjustment?.adjustment_amount }} </td>
+                  <td> {{ salaryData?.year_month }} </td>
+                  <td> {{ salaryData?.total_salary }} </td>
+                  <td> {{ salaryData?.remarks }} </td>
                 <td>
-                  <span :class="advanceAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
-                    {{ advanceAdjustment?.business_unit }}
+                  <span :class="salaryData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
+                    {{ salaryData?.business_unit }}
                   </span>
                 </td>
                 <td>
                   <nobr>
-                    <action-button :action="'edit'" :to="{ name: 'acc.advance-adjustments.edit', params: { advanceAdjustmentId: advanceAdjustment?.id } }"></action-button>
-                    <action-button @click="confirmDelete(advanceAdjustment?.id)" :action="'delete'"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'acc.administrative-salaries.edit', params: { administrativeSalaryId: salaryData?.id } }"></action-button>
+                    <action-button @click="confirmDelete(salaryData?.id)" :action="'delete'"></action-button>
                   </nobr>
                 </td>
               </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && advanceAdjustments?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && administrativeSalaries?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!advanceAdjustments?.data?.length">
+          <tfoot v-if="!administrativeSalaries?.data?.length">
           <tr v-if="isLoading">
-            <td colspan="8"></td>
+            <td colspan="6"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="8">
+              <td colspan="6">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
           </tr>
-          <tr v-else-if="!advanceAdjustments?.data?.length">
-            <td colspan="8">No data found.</td>
+          <tr v-else-if="!administrativeSalaries?.data?.length">
+            <td colspan="6">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="advanceAdjustments" to="acc.advance-adjustments.index" :page="page"></Paginate>
+    <Paginate :data="administrativeSalaries" to="acc.administrative-salaries.index" :page="page"></Paginate>
   </div>
 </template>
