@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OpsExpenseHeadRequest extends FormRequest
@@ -17,7 +18,15 @@ class OpsExpenseHeadRequest extends FormRequest
         return [
             'billing_type'                  => ['nullable', 'string', 'max:255'],
             'head_id'                       => ['nullable', 'numeric', 'max:50'],
-            'name'                          => ['required', 'string', 'max:255'],
+            'name'                          => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('ops_expense_heads')->where(function ($query) {
+                    // Check if 'head_id' is not null
+                    return $this->head_id !== null;
+                }),
+            ],
             // 'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],
         ];
