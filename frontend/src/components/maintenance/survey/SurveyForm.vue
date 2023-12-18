@@ -77,14 +77,16 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/>
+        <!-- <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/> -->
+        <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" @update:model-value="setDueDate"></VueDatePicker>
         <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
       </label>
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Due Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/>
+        <!-- <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/> -->
+        <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" ></VueDatePicker>
         <Error v-if="errors?.due_date" :errors="errors.due_date" />
       </label>
 
@@ -149,6 +151,7 @@ function setRangeDateTo() {
 }
 
 function setDueDate() {
+  alert("onInput");
   if(props.form.assigned_date)
     props.form.due_date = moment(props.form.assigned_date).add(props.form?.mnt_survey_type?.due_period ?? 0, 'months').format('YYYY-MM-DD');
 }
