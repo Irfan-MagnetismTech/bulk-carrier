@@ -245,7 +245,7 @@ class OpsContractAssignController extends Controller
         ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
             $query->where('business_unit', request()->business_unit);
         })
-        ->with(['opsCargoTariff','opsVoyageSectors'])
+        ->with(['opsCargoTariff','opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageSectors'])
         ->get();
 
         try {            
