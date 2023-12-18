@@ -14,6 +14,8 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from 'moment';
+
 const { getMovementOuts, movementOuts, deleteMovementOut, isLoading,isTableLoading } = useMovementOut();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
@@ -153,7 +155,7 @@ onMounted(() => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -208,7 +210,7 @@ function confirmDelete(id) {
               <td>{{ movementOut?.ref_no }}</td>
               <td>{{ movementOut?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementOut?.toWarehouse?.name?? '' }}</td>
-              <td>{{ movementOut?.date }}</td>
+              <td>{{ movementOut?.date ? moment(movementOut?.date).format('DD-MM-YYYY') : null }}</td>
               <td>
                 <span :class="movementOut?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementOut?.business_unit }}</span>
               </td>

@@ -70,7 +70,7 @@
          
       </label>
       <label class="label-group">
-        <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Return From <span class="text-red-500">*</span></span>
           <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>

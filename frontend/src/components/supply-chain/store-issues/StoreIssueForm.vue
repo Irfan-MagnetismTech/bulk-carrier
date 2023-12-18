@@ -118,6 +118,7 @@
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Sr Quantity</th>
             <th class="py-3 align-center">Current Stock</th>
+            <th class="py-3 align-center">Remaining Quantity</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
@@ -169,6 +170,14 @@
                 <input
                    type="text" readonly
                    v-model="form.scmSiLines[index].current_stock"
+                   class="vms-readonly-input form-input">
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input
+                   type="text" readonly
+                   v-model="form.scmSiLines[index].remaining_quantity"
                    class="vms-readonly-input form-input">
                </label>
             </td>
@@ -287,8 +296,10 @@ function setMaterialOtherData(datas, index) {
       props.form.scmSiLines[index].unit = datas.unit;
       props.form.scmSiLines[index].scm_material_id = datas.id;
       props.form.scmSiLines[index].max_quantity = datas.max_quantity;
+      props.form.scmSiLines[index].remaining_quantity = datas.remaining_quantity;
+      props.form.scmSiLines[index].sr_quantity = datas.sr_quantity;
       getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id).then(() => {
-       props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
+      props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
     });
 }
 

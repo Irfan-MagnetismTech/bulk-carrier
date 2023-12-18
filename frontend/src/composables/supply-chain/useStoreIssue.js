@@ -47,6 +47,7 @@ export default function useStoreIssue() {
                 current_stock: 0.0,
                 sr_composite_key: '',
                 max_quantity: 0.0,
+                remaining_quantity: 0.0,
             }
         ],
     });
@@ -59,6 +60,7 @@ export default function useStoreIssue() {
             current_stock: 0.0,
             sr_composite_key: '',
             max_quantity: 0.0,
+            remaining_quantity: 0.0,
     }
 
     const errors = ref('');

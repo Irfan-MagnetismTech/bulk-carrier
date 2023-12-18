@@ -25,7 +25,7 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
   </div>
 
@@ -92,8 +92,9 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
-import useMovementOut from '../../../composables/supply-chain/useMovementOut';
-    
+    import useMovementOut from '../../../composables/supply-chain/useMovementOut';
+    import moment from 'moment';
+        
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { getFromAndToWarehouseWiseCurrentStock, stockData } = useStockLedger();

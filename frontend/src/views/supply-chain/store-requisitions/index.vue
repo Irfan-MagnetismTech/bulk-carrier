@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from 'moment';
 
 import { useRouter } from 'vue-router';
 const { getStoreRequisitions, storeRequisitions, deleteStoreRequisition, isLoading,isTableLoading ,errors} = useStoreRequisition();
@@ -225,7 +226,7 @@ function confirmDelete(id) {
             <tr v-for="(storeRequisition,index) in (storeRequisitions?.data ? storeRequisitions?.data : storeRequisitions)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeRequisition?.ref_no }}</td>
-              <td>{{ storeRequisition?.date }}</td>
+              <td>{{ storeRequisition?.date ? moment(storeRequisition?.date).format('DD-MM-YYYY') : null }}</td>
               <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>{{ DEPARTMENTS[storeRequisition.department_id] ?? '' }}</td>
               <td>
