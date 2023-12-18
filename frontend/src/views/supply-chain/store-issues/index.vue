@@ -226,7 +226,7 @@ const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision D
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <action-button :action="'show'" :to="{ name: 'scm.store-issues.show', params: { storeIssueId: storeIssue.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.store-issues.edit', params: { storeIssueId: storeIssue.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.store-issues.edit', params: { storeIssueId: storeIssue.id } }" v-if="(storeRequisition?.scmSirs.length <= 0)"></action-button>
                   <action-button @click="confirmDelete(storeIssue.id)" :action="'delete'"></action-button>
                 </div>
               </td>
