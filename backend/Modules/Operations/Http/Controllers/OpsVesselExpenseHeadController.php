@@ -59,8 +59,15 @@ class OpsVesselExpenseHeadController extends Controller
             DB::beginTransaction();
 
             $ops_vessel_id = $request->ops_vessel_id;
-            // OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->delete();
+            $isExist = OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->get();
 
+            if($isExist){
+                $error= [
+                        'errors'=>[
+                            'message'=>['Expense Head is already set for this vessel.',
+                ]]];
+                return response()->json($error, 422);
+            }
             $insertables = [];
 
             $heads = collect($request->heads);
