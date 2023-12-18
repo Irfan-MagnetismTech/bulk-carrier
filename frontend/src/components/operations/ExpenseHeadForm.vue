@@ -9,7 +9,7 @@
       <input type="text" v-model="form.name" required placeholder="Expediture Group" class="block w-full form-input" />
     </label>
     <label class="block w-full mt-2 text-sm" title="This will make this group available in every expenditure and budget input.">
-      <span class="text-gray-700  form-input">Voyage Report Visibility <span class="text-red-500">*</span></span>
+      <span class="text-gray-700  form-input">Voyage Report Visibility </span>
       <input type="checkbox" :checked="form.is_visible_in_voyage_report == 1" v-model="form.is_visible_in_voyage_report" class="ml-2 " />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
@@ -69,6 +69,7 @@ const props = defineProps({
     default: {}
   },
   errors: { type: [Object, Array], required: false },
+  formType: { type: String, required: false },
 
 });
 
