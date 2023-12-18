@@ -103,7 +103,8 @@ class OpsCustomerInvoiceController extends Controller
     */
     public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
     {
-        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariff','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        
         try
         {
         return response()->success('Data retrieved successfully.', $customer_invoice, 200);
