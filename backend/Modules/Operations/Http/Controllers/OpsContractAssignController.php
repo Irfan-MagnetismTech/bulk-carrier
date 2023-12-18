@@ -121,9 +121,10 @@ class OpsContractAssignController extends Controller
         });
 
         $contract_assign->opsVoyage->opsContractTariffs->map(function($item) use($contract_assign) {
-
+            // dd($item);
+            data_forget($item, 'opsCargoTariff');
             $item['cargoTariffs'] = $contract_assign->opsVoyage->opsVoyageSectors->where('pol_pod', $item['pol_pod'])?->first()?->cargoTariffs;
-            $item['opsCargoTariff'] = $contract_assign->opsVoyage->opsVoyageSectors->where('pol_pod', $item['pol_pod'])?->first()?->cargoTariffs;
+            $item['opsCargoTariff'] = $contract_assign->opsVoyage->opsVoyageSectors->where('pol_pod', $item['pol_pod'])?->first()?->cargoTariffs->first();
             return $item;
         });
    
