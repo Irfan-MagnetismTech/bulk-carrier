@@ -242,17 +242,14 @@ class OpsContractAssignController extends Controller
     */
     public function getContractTariffByVoyage(Request $request): JsonResponse
     {
-        // $contract_tariffs= OpsContractTariff::query()
-        // ->when(isset(request()->ops_voyage_id), function ($query) {
-        //     $query->where('ops_voyage_id', request()->ops_voyage_id);
-        // })
-        // ->with(['opsCargoTariff', 'opsVoyage.opsVessel', 'opsVoyage.opsCargoType', 'opsVoyageSectors'])
-        // ->get();
-
         $contract_tariffs= OpsVoyage::query()
         ->when(isset(request()->ops_voyage_id), function ($query) {
             $query->where('id', request()->ops_voyage_id);
-        })->with(['opsContractTariffs', 'opsCargoType', 'opsCargoTariff','opsVessel','opsVoyageSectors'])
+        })
+        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+            $query->where('business_unit', request()->business_unit);
+        })
+        ->with(['opsContractTariffs', 'opsCargoType', 'opsCargoTariff','opsVessel','opsVoyageSectors'])
         ->first();
         
         $contract_tariffs->opsContractTariffs->map(function($contract){
