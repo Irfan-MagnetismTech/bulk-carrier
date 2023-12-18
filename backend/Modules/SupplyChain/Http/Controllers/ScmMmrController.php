@@ -33,11 +33,13 @@ class ScmMmrController extends Controller
     {
         try {
             $movementRequisitions = ScmMmr::with(
-            'fromWarehouse',
-            'toWarehouse',
-            'createdBy',
-            'scmMmrLines.scmMaterial')
-            ->globalSearch(request()->all());
+                'fromWarehouse',
+                'toWarehouse',
+                'createdBy',
+                'scmMmrLines.scmMaterial',
+                'scmMos'
+            )
+                ->globalSearch(request()->all());
 
             return response()->success('Data list', $movementRequisitions, 200);
         } catch (\Exception $e) {
@@ -246,31 +248,29 @@ class ScmMmrController extends Controller
     {
         try {
             $mmrMaterials = ScmMmrLine::query()
-            ->with('scmMaterial','scmMmr')
-            ->where('scm_mmr_id', request()->mmr_id)
-            ->get()
-            ->map(function ($item) {
-                $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmMmr->from_warehouse_id);
-                $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
-                if(request()->mo_id){
-                    $mmrQty = $remainingQty + $item->scmMoLines->where('scm_mo_id',request()->mo_id)->where('mmr_composite_key',$item->mmr_composite_key)->first()->quantity;
-                    $maxQty = $currentStock > $mmrQty ? $mmrQty : $currentStock;
-                }else{
-                    $maxQty = $currentStock > $remainingQty ? $remainingQty : $currentStock;
-                }
+                ->with('scmMaterial', 'scmMmr')
+                ->where('scm_mmr_id', request()->mmr_id)
+                ->get()
+                ->map(function ($item) {
+                    $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmMmr->from_warehouse_id);
+                    $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
+                    if (request()->mo_id) {
+                        $mmrQty = $remainingQty + $item->scmMoLines->where('scm_mo_id', request()->mo_id)->where('mmr_composite_key', $item->mmr_composite_key)->first()->quantity;
+                        $maxQty = $currentStock > $mmrQty ? $mmrQty : $currentStock;
+                    } else {
+                        $maxQty = $currentStock > $remainingQty ? $remainingQty : $currentStock;
+                    }
 
-                $data = $item->scmMaterial;
-                $data['unit'] = $item->unit;
-                $data['mmr_quantity'] = $item->quantity;
-                $data['quantity'] =  $remainingQty;
-                $data['max_quantity'] =  $maxQty;
-                $data['mmr_composite_key'] = $item->mmr_composite_key;
-                $data['current_stock'] = $currentStock;
-                $data['remaining_quantity'] = $remainingQty;
-                return $data;
-
-
-            });
+                    $data = $item->scmMaterial;
+                    $data['unit'] = $item->unit;
+                    $data['mmr_quantity'] = $item->quantity;
+                    $data['quantity'] =  $remainingQty;
+                    $data['max_quantity'] =  $maxQty;
+                    $data['mmr_composite_key'] = $item->mmr_composite_key;
+                    $data['current_stock'] = $currentStock;
+                    $data['remaining_quantity'] = $remainingQty;
+                    return $data;
+                });
 
             return response()->success('data', $mmrMaterials, 200);
         } catch (\Exception $e) {
