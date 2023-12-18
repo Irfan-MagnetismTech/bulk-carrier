@@ -251,16 +251,23 @@ class OpsContractAssignController extends Controller
         })
         ->with(['opsContractTariffs', 'opsCargoType', 'opsCargoTariff','opsVessel','opsVoyageSectors'])
         ->first();
+
+        $contract_tariffs->opsVoyageSectors->map(function($sector) use($contract_tariffs) {
+            $sector['tariff_name'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->opsCargoTariff?->tariff_name;
+            return $sector;
+        });
         
         $contract_tariffs->opsContractTariffs->map(function($contract){
             $contract['amount'] = $contract->total_rate * $contract->quantity;
             $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
-                if($contract->opsCargoTariff['pol_pod']==$item['pol_pod']){
+                if($contract['pol_pod']==$item['pol_pod']){
                     $item['opsCargoTariff'] = $contract->opsCargoTariff;
                 }
                 return $item;
             });
         });
+
+       
 
         $contract_tariffs['total_amount']=$contract_tariffs->opsContractTariffs->sum('amount');
 

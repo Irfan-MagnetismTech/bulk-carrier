@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreignId('ops_customer_invoice_id')->constrained('ops_customer_invoices')->onDelete('cascade');
             $table->foreignIdFor(OpsVoyage::class);
             $table->foreignIdFor(OpsVessel::class);
-            $table->foreignIdFor(OpsContractTariff::class);
             $table->float('total_amount_bdt', 20, 4)->nullable();
             $table->timestamps();
         });

@@ -393,7 +393,7 @@
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+      <div class="px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 w-8/12 !mx-auto" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -420,34 +420,38 @@
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <thead>
               <tr>
-                <th>Loading Point</th>
-                <th>Unloading Point</th>
-                <th>Initial Survey Quantity</th>
-                <th>Final Receipt Quantity</th>
-                <th>Boat Note Quantity</th>
-                <th>Final Survey Quantity</th>
+                <th><nobr>Tariff Name</nobr></th>
+                <th><nobr>Loading Point</nobr></th>
+                <th><nobr>Unloading Point</nobr></th>
+                <th><nobr>Initial Survey Quantity</nobr></th>
+                <th><nobr>Final Receipt Quantity</nobr></th>
+                <th><nobr>Boat Note Quantity</nobr></th>
+                <th><nobr>Final Survey Quantity</nobr></th>
               </tr>
             </thead>
             <tbody>
 
               <tr v-for="(detail, index) in details" :key="index">
                 <td>
-                  <input type="text" readonly :value="detail.loading_point" class="form-input text-right"/>
+                  {{ detail.tariff_name }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.unloading_point" class="form-input text-right"/>
+                  {{ detail.loading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.initial_survey_qty" class="form-input text-right"/>
+                  {{ detail.unloading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_received_qty" class="form-input text-right"/>
+                  {{ detail.initial_survey_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.boat_note_qty" class="form-input text-right"/>
+                  {{ detail.final_received_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_survey_qty" class="form-input text-right"/>
+                  {{ detail.boat_note_qty }}
+                </td>
+                <td>
+                  {{ detail.final_survey_qty }}
                 </td>
               </tr>
             </tbody>
