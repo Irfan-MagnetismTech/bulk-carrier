@@ -356,6 +356,33 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
+    /* Administrative Salary */
+    {
+        path: `/${BASE}/administrative-salaries`,
+        name: `${BASE}.administrative-salaries.index`,
+        component: () => import(`../views/${VIEW_BASE}/administrative-salary/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/administrative-salaries/create`,
+        name: `${BASE}.administrative-salaries.create`,
+        component: () => import(`../views/${VIEW_BASE}/administrative-salary/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/administrative-salaries/:administrativeSalaryId/edit`,
+        name: `${BASE}.administrative-salaries.edit`,
+        component: () => import(`../views/${VIEW_BASE}/administrative-salary/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/administrative-salaries/:administrativeSalaryId`,
+        name: `${BASE}.administrative-salaries.show`,
+        component: () => import(`../views/${BASE}/administrative-salary/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+
     /* AIS Report Routes */
     {
         path: `/${BASE}/ais-reports/balance-sheet`,

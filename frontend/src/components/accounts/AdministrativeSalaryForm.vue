@@ -136,8 +136,6 @@ onMounted(() => {
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom">Particular <span class="text-red-500">*</span></th>
-            <th class="px-4 py-3 align-bottom">Remarks</th>
-            <th class="px-4 py-3 align-bottom w-48">Attachment</th>
             <th class="px-4 py-3 align-bottom w-36">Amount <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 text-center align-bottom">Action</th>
           </tr>
@@ -164,12 +162,6 @@ onMounted(() => {
               </div>
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.accAdvanceAdjustmentLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
-            </td>
-            <td class="px-1 py-1">
-              <input type="file" @change="setAdvanceAdjustmentFile($event,index)" placeholder="Remarks" class="block form-input border border-gray-300 rounded-lg cursor-pointer" autocomplete="off" />
-            </td>
-            <td class="px-1 py-1">
               <input type="number" step=".01" v-model.trim="form.accAdvanceAdjustmentLines[index].amount" class="form-input !text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1 text-center">
@@ -189,20 +181,6 @@ onMounted(() => {
             <td class="font-bold !text-right" colspan="3">Total Bill Amount</td>
             <td class="px-1 py-1 font-bold text-right">
               <input type="number" step=".01" v-model.trim="form.total_bill_amount" class="block w-full rounded form-input vms-readonly-input !text-right" readonly>
-            </td>
-            <td class="px-1 py-1 font-bold text-right"></td>
-          </tr>
-          <tr class="text-gray-700 dark-disabled:text-gray-400">
-            <td class="px-1 py-1 font-bold !text-right" colspan="3">Total Cash Amount</td>
-            <td class="px-1 py-1 font-bold text-right">
-              <input type="number" step=".01" @input="calcTotalAdjustmentAmount" v-model.trim="form.total_cash_amount" class="block w-full rounded form-input !text-right">
-            </td>
-            <td class="px-1 py-1 font-bold text-right"></td>
-          </tr>
-          <tr class="text-gray-700 dark-disabled:text-gray-400">
-            <td class="px-1 py-1 font-bold !text-right" colspan="3">Adjusted Amount</td>
-            <td class="px-1 py-1 font-bold text-right">
-              <input type="number" step=".01" v-model.trim="form.adjustment_amount" class="block w-full rounded form-input vms-readonly-input !text-right" readonly>
             </td>
             <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
