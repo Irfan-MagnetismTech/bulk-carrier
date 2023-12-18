@@ -145,7 +145,7 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].loading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -157,7 +157,7 @@
               </v-select>
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].unloading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -252,7 +252,7 @@
 
 <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
 
-<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
+<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="code_name" class="block form-input" :reduce="port=>port.code">
   <template #search="{attributes, events}">
       <input
           class="vs__search"
