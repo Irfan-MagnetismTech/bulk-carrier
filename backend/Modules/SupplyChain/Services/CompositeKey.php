@@ -32,7 +32,7 @@ class CompositeKey
             if (isset($line[$columnName])) {
                 $parentModelId = $parentModelId;
                 $infix = $infix;
-                $line[$infix . '_composite_key'] = $parentModelId . '-' . strtoupper($infix) . '-' . $line[$columnName];
+                // $line[$infix . '_composite_key'] = $parentModelId . '-' . strtoupper($infix) . '-' . $line[$columnName];
                 $line[$infix . '_composite_key'] =  $this->generate($index, $parentModelId, $infix, $line[$columnName]);
             }
         }

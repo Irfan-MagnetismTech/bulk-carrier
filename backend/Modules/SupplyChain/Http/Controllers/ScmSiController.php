@@ -35,7 +35,7 @@ class ScmSiController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy')
+            $storeIssues = ScmSi::with('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSirs')
                 ->globalSearch(request()->all());
 
 
@@ -326,7 +326,7 @@ class ScmSiController extends Controller
                 ->map(function ($item) {
                     $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
                     if (request()->sir_id) {
-                        $qty = $item->scmSirLines->where('scm_sir_id', request()->sir_id)->where('si_composite_key', $item->si_composite_key)->first()->quantity;
+                        $qty = $item->scmSirLines->where('scm_sir_id', request()->sir_id)->where('si_composite_key', $item->si_composite_key)->first()->quantity ?? 0;
                     } else {
                         $qty = 0;
                     }
