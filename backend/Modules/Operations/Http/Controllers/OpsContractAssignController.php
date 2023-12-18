@@ -248,6 +248,16 @@ class OpsContractAssignController extends Controller
         ->with(['opsCargoTariff','opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageSectors'])
         ->get();
 
+        
+        $contract_tariffs->map(function($contract){
+            $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
+                if($contract->opsCargoTariff['pol_pod']==$item['pol_pod']){
+                    $item['opsCargoTariff'] = $contract->opsCargoTariff;
+                }
+                return $item;
+            });
+        });
+
         try {            
             return response()->success('Data retrieved successfully.', $contract_tariffs, 200);
         } catch (QueryException $e){
