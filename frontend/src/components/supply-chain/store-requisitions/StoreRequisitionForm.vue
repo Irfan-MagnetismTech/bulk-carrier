@@ -6,7 +6,7 @@
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">SR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">SR Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
@@ -66,15 +66,15 @@
     <div id="">
       <div class="table-responsive min-w-screen">
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
           <table class="">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="py-3 align-center">Material Name </th>
+              <th class="py-3 align-center">Material Name  <span class="text-red-500">*</span></th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Specification</th>
-              <th class="py-3 align-center">Qty</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class="py-3 align-center">Qty <span class="text-red-500">*</span></th>
+              <th class="py-3 text-center align-center">Action </th>
             </tr>
             </thead>
 

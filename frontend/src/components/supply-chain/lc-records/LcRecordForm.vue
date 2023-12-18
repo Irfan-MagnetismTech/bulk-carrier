@@ -126,17 +126,17 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         <!-- <Error v-if="errors?.lc_no" :errors="errors.lc_no" /> -->
       </label>
       <label class="label-group">
-          <span class="label-item-title">LC Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">LC Date <span class="text-red-500">*</span></span>
           <input type="date" v-model="form.lc_date" required class="form-input" name="lc_date" :id="'lc_date'" />
           <!-- <Error v-if="errors?.lc_date" :errors="errors.lc_date"  /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">LC Expire Date<span class="text-red-500">*</span></span>
+        <span class="label-item-title">LC Expire Date <span class="text-red-500">*</span></span>
            <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" />
           <!-- <Error v-if="errors?.expire_date" :errors="errors.expire_date"  /> -->
       </label>
       <label class="label-group">
-          <span class="label-item-title">Weight<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Weight <span class="text-red-500">*</span></span>
           <input type="text" placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
           <!-- <Error v-if="errors?.weight" :errors="errors.weight"  /> -->
       </label>
@@ -149,7 +149,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         <!-- <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" /> -->
     </label>
     <label class="label-group">
-          <span class="label-item-title">PO No<span class="text-red-500">*</span></span>
+          <span class="label-item-title">PO No <span class="text-red-500">*</span></span>
             <!-- <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input"> -->
             <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPo" label="ref_no" class="block form-input">
               <template #search="{attributes,events}">
@@ -169,30 +169,30 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         <!-- <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/> -->
     </label>
       <label class="label-group">
-          <span class="label-item-title">Assessment Value<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Assessment Value <span class="text-red-500">*</span></span>
           <input type="number" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
           <!-- <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  /> -->
       </label>
   </div>
   <div class="input-group">    
     <label class="label-group">
-        <span class="label-item-title">Issuing Bank</span>
+        <span class="label-item-title">Issuing Bank <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.issue_bank_name" required class="form-input" name="issue_bank_name" :id="'issue_bank_name'" /> 
         <!-- <Error v-if="errors?.issue_bank_name" :errors="errors.issue_bank_name" /> -->
     </label>
     <label class="label-group">
-          <span class="label-item-title">Advising Bank<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Advising Bank <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.advising_bank_name" required class="form-input" name="advising_bank_name" :id="'advising_bank_name'" />
           <!-- <Error v-if="errors?.advising_bank_id" :errors="errors.advising_bank_name"  /> -->
       </label>
       
       <label class="label-group">
-        <span class="label-item-title">Beneficiary Bank</span>
+        <span class="label-item-title">Beneficiary Bank <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.beneficiary_bank_name" required class="form-input" name="beneficiary_bank_name" :id="'beneficiary_bank_name'" />
         <!-- <Error v-if="errors?.beneficiary_bank_name" :errors="errors.beneficiary_bank_name"/> -->
     </label>
       <label class="label-group">
-          <span class="label-item-title">Discounting Bank<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Discounting Bank <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.discounting_bank_name" required class="form-input" name="discounting_bank_name" :id="'discounting_bank_name'" />
           <!-- <Error v-if="errors?.discounting_bank_name" :errors="errors.discounting_bank_name"  /> -->
       </label>
