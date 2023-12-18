@@ -16,7 +16,7 @@ const icons = useHeroIcon();
 
 const { setTitle } = Title();
 
-setTitle('Administrative Adjustment');
+setTitle('Administrative Salary');
 
 const page = 'edit';
 

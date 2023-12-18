@@ -54,7 +54,7 @@ class AccSalaryController extends Controller
     public function show(AccSalary $accSalary)
     {
         try {
-            return response()->success('Retrieved Succesfully', $accSalary->load('accSalaryLines', 'costCenter'), 200);
+            return response()->success('Retrieved Successfully', $accSalary->load('accSalaryLines', 'costCenter'), 200);
         }
         catch (\Exception $e)
         {

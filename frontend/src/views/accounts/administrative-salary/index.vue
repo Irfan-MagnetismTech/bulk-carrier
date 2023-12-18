@@ -43,7 +43,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Month - Year",
+      "label": "Year-Month",
       "filter_type": "input"
     },
     // {
@@ -64,16 +64,6 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Total Amount",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "remarks",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Remarks",
       "filter_type": "input"
     },
   ]
@@ -147,7 +137,6 @@ onMounted(() => {
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
                   <td> {{ salaryData?.year_month }} </td>
                   <td> {{ salaryData?.total_salary }} </td>
-                  <td> {{ salaryData?.remarks }} </td>
                 <td>
                   <span :class="salaryData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                     {{ salaryData?.business_unit }}
