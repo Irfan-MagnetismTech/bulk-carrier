@@ -94,13 +94,22 @@ onMounted(() => {
   <ErrorComponent :errors="errors"></ErrorComponent>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Month <span class="text-red-500">*</span></span>
-        <input type="month" v-model="form.year_month" class="form-input" id="monthInput" name="monthInput" required>
-      </label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+<!--      <label class="block w-full mt-2 text-sm">-->
+<!--        <span class="text-gray-700 dark-disabled:text-gray-300"> Month-Year <span class="text-red-500">*</span></span>-->
+<!--        <input type="month" v-model="form.year_month" class="form-input" id="monthInput" name="monthInput" required>-->
+<!--      </label>-->
     </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-3/6 mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Month-Year <span class="text-red-500">*</span></span>
+      <input type="month" v-model="form.year_month" class="form-input" id="monthInput" name="monthInput" required>
+    </label>
+    <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
+  </div>
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Salary Particulars Lines <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Particulars<span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -109,7 +118,7 @@ onMounted(() => {
             <th class="px-4 py-3 text-center align-bottom">Action</th>
           </tr>
           </thead>
-          <tbody v-if="allSalaryHeadLists.length" class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tbody v-if="form?.accSalaryLines?.length" class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(salaryLine, index) in form.accSalaryLines" :key="salaryLine.id">
             <td class="px-1 py-1">
               <div style="position: relative;">
@@ -131,7 +140,7 @@ onMounted(() => {
               </div>
             </td>
             <td class="px-1 py-1">
-              <input type="number" step=".01" v-model.trim="form.accSalaryLines[index].amount" class="form-input !text-right" autocomplete="off" required />
+              <input type="number" step=".01" min="1" v-model.trim="form.accSalaryLines[index].amount" class="form-input !text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeAdministrativeSalaryLines(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -153,11 +162,11 @@ onMounted(() => {
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!allSalaryHeadLists?.length">
+          <tfoot v-if="!form.accSalaryLines?.length">
           <tr v-if="isLoading">
             <td colspan="3">Loading...</td>
           </tr>
-          <tr v-else-if="!allSalaryHeadLists?.length">
+          <tr v-else-if="!form.accSalaryLines?.length">
             <td colspan="3">No data found.</td>
           </tr>
           </tfoot>
