@@ -324,6 +324,28 @@ export default function useVoyage() {
 		}
 	}
 
+	
+	async function getVoyageByCustomer(businessUnit, opsCustomerId) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-voyage-by-customer?business_unit=${businessUnit}&ops_customer_id=${opsCustomerId}`);
+
+			voyages.value = data?.value;
+
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+			console.log(error)
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
+
+
 	function checkValidation(openTab, tabNumber, props, requiredFields) {
         for (const field of requiredFields) {
             const element = document.getElementById(field);
@@ -384,6 +406,7 @@ export default function useVoyage() {
 		voyageVoyages,
 		getVoyagesByVoyage,
 		getVoyagesWithoutPaginate,
+		getVoyageByCustomer,
 		checkValidation,
 		isLoading,
 		isVoyageLoading,
