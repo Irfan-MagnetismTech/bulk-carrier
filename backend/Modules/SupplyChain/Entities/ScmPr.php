@@ -4,10 +4,10 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmMrr;
-use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,4 +45,20 @@ class ScmPr extends Model
     {
         return $this->hasMany(ScmCs::class);
     }
+
+    // public function scmPo(): HasMany
+    // {
+    //     return $this->hasMany(ScmPo::class);
+    // }
+
+    // public function scmMrr(): HasMany
+    // {
+    //     return $this->hasMany(ScmMrr::class);
+    // }
+
+    // public function scmCs(): HasMany
+    // {
+    //     return $this->hasMany(ScmCs::class);
+    // }
+
 }

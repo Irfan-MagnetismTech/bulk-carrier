@@ -7,6 +7,7 @@ import Store from '../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function useMovementRequisition() {
@@ -17,10 +18,11 @@ export default function useMovementRequisition() {
     const filteredMovementRequisitions = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const mmrWiseMaterials = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const movementRequisition = ref( {
         ref_no: '',
@@ -34,7 +36,7 @@ export default function useMovementRequisition() {
         from_cost_center_id: '',
         to_cost_center_id: '',
         requested_by: '',
-        required_for: '',
+        requested_for: '',
         remarks: '',
         business_unit: '',
         scmMmrLines: [
@@ -180,7 +182,7 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function searchMovementRequisition(searchParam, loading, business_unit) {
+    async function searchMovementRequisition(searchParam,business_unit,loading = false) {
         try {
             const { data, status } = await Api.get(`/${BASE}/search-mmr`, {
                 params: {
@@ -196,7 +198,22 @@ export default function useMovementRequisition() {
             notification.showError(status);
             console.log('tag', data)
         } finally {
-            loading(false)
+            // loading(false)
+        }
+    }
+
+    async function getMmrWiseMaterials(mmrId,moId = null) {
+        try {
+            const { data, status } = await Api.get(`/${BASE}/get-mmr-wise-materials`,{
+            params: {
+                    mmr_id: mmrId,
+                    mo_id: moId,
+                },
+            });
+            mmrWiseMaterials.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
         }
     }
 
@@ -212,6 +229,8 @@ export default function useMovementRequisition() {
         showMovementRequisition,
         updateMovementRequisition,
         deleteMovementRequisition,
+        getMmrWiseMaterials,
+        mmrWiseMaterials,
         materialObject,
         isTableLoading,
         isLoading,

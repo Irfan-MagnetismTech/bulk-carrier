@@ -7,6 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function useStoreIssueReturn() {
@@ -18,7 +19,7 @@ export default function useStoreIssueReturn() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const storeIssueReturn = ref({
         ref_no: '',
@@ -28,7 +29,7 @@ export default function useStoreIssueReturn() {
         scm_warehouse_name: '',
         acc_cost_center_id: '',
         scmDepartment: '',
-        scm_department_id: '',
+        department_id: '',
         scmSi: '',
         scm_si_id: '',
         si_no: '',

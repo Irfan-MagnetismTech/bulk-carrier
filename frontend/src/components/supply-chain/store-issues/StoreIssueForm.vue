@@ -23,9 +23,9 @@
             class="form-input vms-readonly-input"
             name="ref_no"
             :id="'ref_no'" />
-         <Error
+         <!-- <Error
             v-if="errors?.ref_no"
-            :errors="errors.ref_no" />
+            :errors="errors.ref_no" /> -->
       </label>
   </div>
   <div class="input-group">
@@ -34,14 +34,14 @@
           <input
             type="text"
             readonly
-            v-model="form.scmSr.ref_no"
+            :value="form.scmSr?.ref_no"
             required
             class="form-input vms-readonly-input"
             name="sr_no"
             :id="'sr_no'" />
-          <Error
+          <!-- <Error
             v-if="errors?.sr_no"
-            :errors="errors.sr_no" />
+            :errors="errors.sr_no" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
@@ -63,9 +63,9 @@
             class="form-input vms-readonly-input"
             name="scmwarehouse_name"
             :id="'scmwarehouse_name'" />
-          <Error
+          <!-- <Error
             v-if="errors?.scmwarehouse_name"
-            :errors="errors.scmwarehouse_name" />
+            :errors="errors.scmwarehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
@@ -79,8 +79,8 @@
               />
           </template>
           </v-select> -->
-          <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
-          <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
+          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
@@ -91,22 +91,16 @@
             class="form-input"
             name="date"
             :id="'date'" />
-          <Error
+          <!-- <Error
             v-if="errors?.date"
-            :errors="errors.date" />
+            :errors="errors.date" /> -->
       </label>
   </div>
   
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea
-            v-model="form.remarks"
-            class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error
-            v-if="errors?.remarks"
-            :errors="errors.remarks" />
+       <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
@@ -124,6 +118,7 @@
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Sr Quantity</th>
             <th class="py-3 align-center">Current Stock</th>
+            <th class="py-3 align-center">Remaining Quantity</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
@@ -136,13 +131,13 @@
             :key="index">
             <td class="!w-72">
               <v-select
-                :options="materials"
+                :options="srWiseMaterials"
                 placeholder="--Choose an option--"
-                @search="fetchMaterials"
                 v-model="form.scmSiLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @change="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)">
+                @update:modelValue="setMaterialOtherData(form.scmSiLines[index].scmMaterial,index)"
+                >
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -165,25 +160,37 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input
-                   type="text"
+                   type="text" readonly
                    v-model="form.scmSiLines[index].sr_quantity"
-                   class="form-input">
+                   class="vms-readonly-input form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                 <input
-                   type="text"
+                   type="text" readonly
                    v-model="form.scmSiLines[index].current_stock"
-                   class="form-input">
+                   class="vms-readonly-input form-input">
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input
+                   type="text" readonly
+                   v-model="form.scmSiLines[index].remaining_quantity"
+                   class="vms-readonly-input form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input
-                   type="text"
+                   type="number"
                    v-model="form.scmSiLines[index].quantity"
-                   class="form-input">
+                   :max="form.scmSiLines[index].max_quantity"
+                   min="1"
+                   class="form-input"
+                   :class="{'border-2': form.scmSiLines[index].quantity > form.scmSiLines[index].max_quantity,'border-red-500 bg-red-100': form.scmSiLines[index].quantity > form.scmSiLines[index].max_quantity}"
+                   >
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -214,7 +221,7 @@
     </div>
   </div>
 
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
@@ -230,11 +237,15 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+    import useStoreRequisition from '../../../composables/supply-chain/useStoreRequisition';
+    import useStockLedger from '../../../composables/supply-chain/useStockLedger';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-
-
+    const { srWiseMaterials , fetchSrWiseMaterials } = useStoreRequisition();
+    const { getMaterialWiseCurrentStock,CurrentStock} = useStockLedger();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -256,10 +267,11 @@
     }
 
     // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
+      // let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
+      // props.form.materials[index].unit = material.unit;
+      // props.form.materials[index].material_category_id = material.category.id;
+      // props.form.materials[index].material_category_name = material.category.name;
+      
     // }
 
 
@@ -270,8 +282,8 @@
 
 
 
-    function fetchWarehouse(search, loading) {
-    loading(true);
+    function fetchWarehouse(search, loading=false) {
+    // loading(true);
     searchWarehouse(search, loading,props.form.business_unit);
   }
 
@@ -281,39 +293,65 @@
     });
 
 function setMaterialOtherData(datas, index) {
-      console.log('change_event');
       props.form.scmSiLines[index].unit = datas.unit;
       props.form.scmSiLines[index].scm_material_id = datas.id;
+      props.form.scmSiLines[index].max_quantity = datas.max_quantity;
+      props.form.scmSiLines[index].remaining_quantity = datas.remaining_quantity;
+      props.form.scmSiLines[index].sr_quantity = datas.sr_quantity;
+      getMaterialWiseCurrentStock(datas.id,props.form.scm_warehouse_id).then(() => {
+      props.form.scmSiLines[index].current_stock = CurrentStock ?? 0;
+    });
+}
+
+
+function oomudueupdate(){
+  console.log('mudueupdate');
+}
+
+function unsetMaterialOtherData(index) {
+      props.form.scmSiLines[index].unit = null;
+      props.form.scmSiLines[index].scm_material_id = null;
+       props.form.scmSiLines[index].current_stock = 0;
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmSiLines, (newLines) => {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmSiLines[index].unit = selectedMaterial.unit;
-          props.form.scmSiLines[index].scm_material_id = selectedMaterial.id;
-        }
-      }
-    }
-  });
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+ watch(() => props.form.scmSiLines, (newLines) => {
+   const materialArray = [];
+   if (newLines && newLines.length) {
+    newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmSiLines.splice(index, 1);
+        } 
+   });
+  }
+   
+ }, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
+    function fetchMaterials(search, loading=false) {
+    // loading(true);
     searchMaterial(search, loading)
   }
 
 
+//watch scmSr changes
+watch(() => props.form.scmSr, (newValue, oldValue) => {
+      if (props.formType == 'edit') { 
+        fetchSrWiseMaterials(props.form.scm_sr_id,props.form.id);
+      } else {
+        
+       fetchSrWiseMaterials(props.form.scm_sr_id);
+      }
+    });
+
+
   watch(() => props.form.business_unit, (newValue, oldValue) => {
+
    if(newValue !== oldValue && oldValue != ''){
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
@@ -332,10 +370,14 @@ function tableWidth() {
       
     }, 10000);
 }
+
+
 //after mount
 onMounted(() => {
   tableWidth();
 });
+
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 </script>
 
 

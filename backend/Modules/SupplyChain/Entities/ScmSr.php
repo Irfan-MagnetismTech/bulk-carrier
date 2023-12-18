@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Entities;
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSrLine;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,5 +33,10 @@ class ScmSr extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function scmSis(): HasMany
+    {
+        return $this->hasMany(ScmSi::class);
     }
 }

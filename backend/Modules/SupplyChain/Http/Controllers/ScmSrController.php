@@ -10,6 +10,8 @@ use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmSrRequest;
+use Modules\SupplyChain\Entities\ScmSrLine;
+use Modules\SupplyChain\Services\CurrentStock;
 
 class ScmSrController extends Controller
 {
@@ -28,7 +30,7 @@ class ScmSrController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')
+            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSis')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $storeRequisitions, 200);
@@ -89,6 +91,8 @@ class ScmSrController extends Controller
     public function update(ScmSrRequest $request, ScmSr $storeRequisition): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $storeRequisition->update($request->all());
 
             $storeRequisition->scmSrLines()->delete();
@@ -97,8 +101,11 @@ class ScmSrController extends Controller
 
             $storeRequisition->scmSrLines()->createMany($linesData);
 
+            DB::commit();
+
             return response()->success('Data updated sucessfully!', $storeRequisition, 202);
         } catch (\Exception $e) {
+            DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
         }
@@ -111,13 +118,27 @@ class ScmSrController extends Controller
      */
     public function destroy(ScmSr $storeRequisition): JsonResponse
     {
+        if ($storeRequisition->scmSis()->count() > 0) {
+            $error = [
+                "message" => "Data could not be deleted!",
+                "errors" => [
+                    "id" => ["This data could not be deleted as it has reference to other table"]
+                ]
+            ];
+            return response()->json($error, 422);
+        }
+
         try {
+            DB::beginTransaction();
+
             $storeRequisition->scmSrLines()->delete();
             $storeRequisition->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -132,5 +153,38 @@ class ScmSrController extends Controller
             ->get();
 
         return response()->success('Search result', $storeRequisitions, 200);
+    }
+
+    public function getMaterialBySrId(): JsonResponse
+    {
+        $srMaterials = ScmSrLine::query()
+            ->with('scmMaterial', 'scmSr')
+            ->where('scm_sr_id', request()->sr_id)
+            ->get()
+            ->map(function ($item) {
+                $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
+                $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
+                if (request()->si_id) {
+                    $data = $item->scmSiLines->where('scm_si_id', request()->si_id)->where('sr_composite_key', $item->sr_composite_key)->first()->quantity;
+                    $cStock = $currentStock + $data;
+                    $srQty = $srQty + $data;
+                    $maxQty = $cStock > $srQty ? $srQty : $cStock;
+                } else {
+                    $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+                }
+
+                $data = $item->scmMaterial;
+                $data['unit'] = $item->unit;
+                $data['sr_quantity'] = $item->quantity;
+                $data['quantity'] = $item->quantity;
+                $data['current_stock'] = $currentStock;
+                $data['max_quantity'] = $maxQty;
+                $data['sr_composite_key'] = $item->sr_composite_key;
+                $data['remaining_quantity'] = $item->quantity - $item->scmSiLines->sum('quantity');
+
+                return $data;
+            });
+
+        return response()->success('data list', $srMaterials, 200);
     }
 }

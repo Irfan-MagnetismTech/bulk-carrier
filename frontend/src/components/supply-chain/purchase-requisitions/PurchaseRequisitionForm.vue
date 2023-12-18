@@ -212,6 +212,16 @@ watch(() => props.form.scmPrLines, (newLines) => {
   }
 });
 
+
+function tytyty(indx) {
+  console.log(indx)
+}
+
+
+
+function tytytyasd(indx) {
+  console.log(indx)
+}
 // function tableWidth() {
 //   setTimeout(function() {
 //     const customDataTable = document.getElementById("customDataTable");

@@ -19,7 +19,7 @@
 
     const { purchaseRequisitions, searchWarehouseWisePurchaseRequisition } = usePurchaseRequisition();
 
-    const props = defineProps({
+    const props= defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
@@ -91,19 +91,19 @@ const customDataTableirf = ref(null);  const dynamicMinHeight = ref(0);
       searchVendor(search);
     }
 
-function setMaterialOtherData(line, index) {
-  const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
-          if (selectedMaterial) {
-            if ( line.scm_material_id !== selectedMaterial.id
-            ) {
-              props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
-              props.form.scmPoLines[index].unit = selectedMaterial.unit;
-              props.form.scmPoLines[index].brand = selectedMaterial.brand;
-              props.form.scmPoLines[index].model = selectedMaterial.model;
-              props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
+  function setMaterialOtherData(line, index) {
+    const selectedMaterial = prMaterialList.value.find(material => material.id === line.scmMaterial.id);
+            if (selectedMaterial) {
+              if ( line.scm_material_id !== selectedMaterial.id
+              ) {
+                props.form.scmPoLines[index].scm_material_id = selectedMaterial.id;
+                props.form.scmPoLines[index].unit = selectedMaterial.unit;
+                props.form.scmPoLines[index].brand = selectedMaterial.brand;
+                props.form.scmPoLines[index].model = selectedMaterial.model;
+                props.form.scmPoLines[index].max_quantity = selectedMaterial.max_quantity;
+              }
             }
-          }
-    }
+      }
 
 watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;

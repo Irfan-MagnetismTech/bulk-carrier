@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMmr;
 use Modules\SupplyChain\Entities\ScmMoLine;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMo extends Model
 {
-    use HasFactory, StockLedger;
+    use HasFactory, StockLedger, GlobalSearchTrait;
 
     protected $fillable = [
         'ref_no', 'scm_mmr_id', 'from_warehouse_id', 'to_warehouse_id', 'date', 'business_unit', 'created_by',
@@ -34,7 +35,7 @@ class ScmMo extends Model
         return $this->belongsTo(ScmWarehouse::class, 'to_warehouse_id', 'id');
     }
 
-    public function createdBy(): BelongsTo  
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }

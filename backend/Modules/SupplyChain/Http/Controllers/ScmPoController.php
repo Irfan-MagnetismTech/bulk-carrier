@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -154,12 +155,18 @@ class ScmPoController extends Controller
                 return response()->json($error, 422);
             }
 
+            DB::beginTransaction();
+
             $purchaseOrder->scmPoTerms()->delete();
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (QueryException  $e) {
+            DB::rollBack();
+
             if ($e->errorInfo[1] == 1451) {
                 // Custom error response for foreign key constraint violation
                 return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
@@ -208,32 +215,8 @@ class ScmPoController extends Controller
 
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
-
-        // {
-        //     scmWarehouse: '', //ok
-        //     scm_warehouse_id: '', //ok
-        //     pr_no: null,  //ok
-        //     scm_pr_id: null, //ok
-        //     scmPr: null, //ok
-        //     pr_date: '', //ok
-        //     cs_no: '',//if cs
-        //     scm_cs_id: '',//if cs
-        //     scmCs: null,//if cs
-        //     scmPoLines: [
-        //                     {
-        //                         scmMaterial: '',
-        //                         scm_material_id: '',
-        //                         unit: '',
-        //                         brand: '',
-        //                         model: '',
-        //                         quantity: 0.0,
-        //                         rate: 0.0,//if cs
-        //                         total_price: 0.0,//if cs
-        //                     }
-        //                 ], 
-        //     }
         try {
-            if ($request->pr_id != null) {
+            if ($request->cs_id == null) {
                 $scmPr = ScmPr::query()
                     ->with([
                         'scmWarehouse',
@@ -267,10 +250,21 @@ class ScmPoController extends Controller
                     })
                 ];
             } else {
-                // $scmCs = ScmCs::query()
-                // ->with('scmWarehouse', 'scmPr')
-                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
-                // ->get();
+                $scmCs = ScmCs::query()
+                ->with('scmWarehouse', 'scmPr')
+                ->find('id', $request->cs_id);
+
+                $data = [
+                    'scmWarehouse' => $scmCs->scmWarehouse,
+                    'scm_warehouse_id' => $scmCs->scm_warehouse_id,
+                    'pr_no' => $scmCs->scmPr->ref_no,
+                    'cs_no' => $scmCs->ref_no,
+                    'scm_pr_id' => $scmCs->scmPr->id,
+                    'scmPr' => $scmCs->scmPr,
+                    'pr_date' => $scmCs->scmPr->raised_date,
+                    'business_unit' => $scmCs->scmPr->business_unit,
+                    'purchase_center' => $scmCs->scmPr->purchase_center,
+                ];
             }
 
             return response()->success('data', $data, 200);

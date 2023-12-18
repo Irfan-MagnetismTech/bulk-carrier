@@ -6,29 +6,32 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">MR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Ref No<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
   </div>
   <div class="input-group">
       <label class="label-group">
-          <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
           <Error v-if="errors?.date" :errors="errors.date"  />
       </label>
       <label class="label-group">
-          <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.delivery_date" required class="form-input" name="delivery_date" :id="'delivery_date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+        <span class="label-item-title">Adjustment Type <span class="text-red-500">*</span></span>
+        <select v-model="form.type" required class="form-input" name="adjustment_type" :id="'adjustment_type'">
+          <option value="">--Choose an option--</option>
+          <option value="Addition">Addition</option>
+          <option value="Deduction">Deduction</option>
+        </select>
       </label>
       <label class="label-group">
-        <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="fromWarehouseKey" placeholder="-- Search Here --" @search="fetchFromWarehouse"  v-model="form.fromWarehouse" label="name" class="block form-input">
+        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="-- Search Here --" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.fromWarehouse"
+                  :required="!form.scmWarehouse"
                   v-bind="attributes"
                   v-on="events"
               />
@@ -36,35 +39,9 @@
           </v-select>
          <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
-      <label class="label-group">
-        <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="toWarehouseKey" placeholder="-- Search Here --" @search="fetchToWarehouse" v-model="form.toWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.toWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
-      </label>
      
      
-  </div>
-
-  <div class="input-group !w-2/4">
-    <label class="label-group">
-        <span class="label-item-title">Requested By <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.requested_by" required class="form-input" name="requested_by" :id="'requested_by'" />
-          <Error v-if="errors?.unit" :errors="errors.unit" />
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">Material Required For<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.required_for" required class="form-input" name="requested_by" :id="'required_for'" />
-      </label>
-  </div>  
+  </div> 
   <div class="input-group !w-3/4">
     <label class="label-group">
           <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
@@ -85,22 +62,20 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Specification</th>
-            <th class="py-3 align-center">Present Stock</th>
-            <th class="py-3 align-center">Available Stock</th>
+            <th class="py-3 align-center">Rate</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMmrLine, index) in form.scmMmrLines" :key="index">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMmrLine, index) in form.scmAdjustmentLines" :key="index">
             <td class="!w-72">
-              <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMmrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMmrLines[index].scmMaterial,index)">
+              <v-select :options="materials" placeholder="--Choose an option--" v-model="form.scmAdjustmentLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="setMaterialOtherData(form.scmAdjustmentLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.scmMmrLines[index].scmMaterial"
+                        :required="!form.scmAdjustmentLines[index].scmMaterial"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -109,32 +84,17 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmMmrLines[index].unit" class="vms-readonly-input form-input">
+                 <input type="text" readonly v-model="form.scmAdjustmentLines[index].unit" class="vms-readonly-input form-input">
                </label>
-              
-            </td>
-           
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].specification" class="form-input">
-               </label>
-              
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].present_stock" class="form-input">
+                 <input type="text" v-model="form.scmAdjustmentLines[index].rate" class="form-input">
                </label>
-              
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].available_stock" class="form-input">
-               </label>
-              
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmMmrLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmAdjustmentLines[index].quantity" class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -198,19 +158,14 @@
 
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmMmrLines.push(clonedObj);
+      props.form.scmAdjustmentLines.push(clonedObj);
     }
 
     function removeMaterial(index){
-      props.form.scmMmrLines.splice(index, 1);
+      props.form.scmAdjustmentLines.splice(index, 1);
     }
 
-    // function setMaterialOtherData(index){
-    //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
-    //   props.form.materials[index].unit = material.unit;
-    //   props.form.materials[index].material_category_id = material.category.id;
-    //   props.form.materials[index].material_category_name = material.category.name;
-    // }
+    
 
 
  
@@ -225,36 +180,18 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  function fetchFromWarehouse(search) {
-      if (search.length > 0) {
+  function fetchWarehouse(search) {
         // loading(true);
         searchWarehouse(search, props.form.business_unit);
-      }
     }
 
-function fetchToWarehouse(search) {
-    if (search.length > 0) {
-        // loading(true);
-      searchWarehouse(search, props.form.business_unit);
-    }
-}
-
-watch(() => props.form.fromWarehouse, (value) => {
-        props.form.from_warehouse_id = value?.id;
-        props.form.from_cost_center_id = value?.acc_cost_center_id;
+watch(() => props.form.scmWarehouse, (value) => {
+        props.form.scm_warehouse_id = value?.id;
+        props.form.acc_cost_center_id = value?.cost_center_id;
     // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
     // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
-    warehouses.value = [];
-    fromWarehouseKey.value++;
-    toWarehouseKey.value++;
     });
-  watch(() => props.form.toWarehouse, (value) => {
-        props.form.to_warehouse_id = value?.id;
-        props.form.to_cost_center_id = value?.acc_cost_center_id;
-    warehouses.value = [];
-    fromWarehouseKey.value++;
-    toWarehouseKey.value++;
-  });
+ 
 
  
   // watch(() => props.form.scmWarehouse, (value) => {
@@ -263,48 +200,44 @@ watch(() => props.form.fromWarehouse, (value) => {
   //   });
 
 function setMaterialOtherData(datas, index) {
-      props.form.scmMmrLines[index].unit = datas.unit;
-      props.form.scmMmrLines[index].scm_material_id = datas.id;
-      getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
-      materials.value = [];
+      props.form.scmAdjustmentLines[index].unit = datas.unit;
+      props.form.scmAdjustmentLines[index].scm_material_id = datas.id;
 }
 
-watch(() => stockData.value, (newValue) => {
-  console.log(newValue);
-  if (newValue && newValue.index !== undefined && props.form.scmMmrLines[newValue.index]) {
-    props.form.scmMmrLines[newValue.index].available_stock = newValue.from_warehouse_stock;
-    props.form.scmMmrLines[newValue.index].present_stock = newValue.to_warehouse_stock;
-  } else {
-    console.error('Invalid index or stock data:', newValue);
-  }
-});
+// watch(() => stockData.value, (newValue) => {
+//   console.log(newValue);
+//   if (newValue && newValue.index !== undefined && props.form.scmAdjustmentLines[newValue.index]) {
+//     props.form.scmAdjustmentLines[newValue.index].available_stock = newValue.from_warehouse_stock;
+//     props.form.scmAdjustmentLines[newValue.index].present_stock = newValue.to_warehouse_stock;
+//   } else {
+//     console.error('Invalid index or stock data:', newValue);
+//   }
+// });
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-watch(() => props.form.scmMmrLines, (newLines) => {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
+// watch(() => props.form.scmAdjustmentLines, (newLines) => {
+//   newLines.forEach((line, index) => {
+//     // const previousLine = previousLines.value[index];
 
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmMmrLines[index].unit = selectedMaterial.unit;
-          props.form.scmMmrLines[index].scm_material_id = selectedMaterial.id;
-        }
-      }
-    }
-  });
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+//     if (line.scmMaterial) {
+//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//       if (selectedMaterial) {
+//         if ( line.scm_material_id !== selectedMaterial.id
+//         ) {
+//           props.form.scmAdjustmentLines[index].unit = selectedMaterial.unit;
+//           props.form.scmAdjustmentLines[index].scm_material_id = selectedMaterial.id;
+//         }
+//       }
+//     }
+//   });
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
 
 
 function fetchMaterials(search) {
-  if (search.length > 0) {
     // loading(true);
     searchMaterial(search)
-  }
   }
 
 
@@ -313,14 +246,10 @@ function fetchMaterials(search) {
     props.form.scm_warehouse_id = '';
     props.form.acc_cost_center_id = '';
      props.form.scmWarehouse = null;
-     props.form.scmFromWarehouse = null;
-     props.form.scmToWarehouse = null;
-     props.form.from_warehouse_id = '';
-     props.form.from_cost_center_id = '';
-     props.form.to_warehouse_id = '';
-     props.form.to_cost_center_id = '';
       
-  }
+    }
+    
+    fetchWarehouse('');
 });
 
 function tableWidth() {
@@ -337,6 +266,7 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
+  fetchMaterials('');
 });
 </script>
 

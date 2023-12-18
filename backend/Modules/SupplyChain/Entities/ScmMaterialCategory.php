@@ -74,6 +74,11 @@ class ScmMaterialCategory extends Model
     {
         return $this->children()->count() === 0;
     }
+    
+    public function scopeLeafNodes($query): object
+    {
+        return $query->whereDoesntHave('children');
+    }
 
     public function withoutChild(): HasMany
     {
@@ -84,7 +89,6 @@ class ScmMaterialCategory extends Model
     {
         return $this->parent->children()->where('id', '!=', $this->id);
     }
-
 
     public function getAllAncestors(): BelongsTo
     {
@@ -102,11 +106,25 @@ class ScmMaterialCategory extends Model
             ->where('business_unit', 'PSML')
             ->withDefault();
     }
-
+    
     public function account_tsll(): MorphOne
     {
         return $this->morphOne(AccAccount::class, 'accountable')
             ->where('business_unit', 'TSLL')
             ->withDefault();
+    }
+
+    
+    public function getChildrenLayerCount(): int
+    {
+        $count = 0;
+        $currentCategory = $this;
+
+        while ($currentCategory->parent) {
+            $currentCategory = $currentCategory->parent;
+            $count++;
+        }
+
+        return $count;
     }
 }

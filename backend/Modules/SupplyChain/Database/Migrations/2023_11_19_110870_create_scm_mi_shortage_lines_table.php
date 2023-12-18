@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreign('scm_mi_shortage_id')->references('id')->on('scm_mi_shortages')->onDelete('cascade');
             $table->unsignedBigInteger('scm_material_id')->nullable();  
             $table->string('unit')->nullable();
+            $table->string('mi_composite_key')->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

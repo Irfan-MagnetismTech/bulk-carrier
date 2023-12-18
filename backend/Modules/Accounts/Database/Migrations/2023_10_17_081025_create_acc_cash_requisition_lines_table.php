@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
 			$table->foreignId('acc_cash_requisition_id')->constrained('acc_cash_requisitions', 'id')->cascadeOnDelete();
 			$table->string('particular');
-            $table->decimal('amount', 10, 2)->nullable();
+            $table->decimal('amount', 10, 2);
 			$table->text('remarks')->nullable();
             $table->timestamps();
         });

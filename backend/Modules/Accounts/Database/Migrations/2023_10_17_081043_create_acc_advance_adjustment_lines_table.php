@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('acc_advance_adjustment_lines', function (Blueprint $table) {
             $table->id();
-            
-            $table->softDeletes();
+			$table->foreignId('acc_cash_requisition_id')->constrained('acc_advance_adjustments', 'id')->cascadeOnDelete();
+			$table->string('particular');
+            $table->decimal('amount', 10, 2);
+			$table->text('attachment')->nullable();            
+			$table->text('remarks')->nullable();            
             $table->timestamps();
         });
     }

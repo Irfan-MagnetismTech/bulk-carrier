@@ -492,6 +492,8 @@
           </tbody>
       </table>
     </div>
+
+    
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">

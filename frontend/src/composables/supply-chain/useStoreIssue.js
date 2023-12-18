@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 import { merge } from 'lodash';
 
@@ -16,11 +17,12 @@ export default function useStoreIssue() {
     const { downloadFile } = useHelper();
     const router = useRouter();
     const storeIssues = ref([]);
+    const siWiseMaterials = ref([]);
     const filteredStoreIssues = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const storeIssue = ref( {
         ref_no: '',
@@ -28,7 +30,7 @@ export default function useStoreIssue() {
         scmWarehouse: '',
         scm_warehouse_id: '',
         scmDepartment: '',
-        scm_department_id: '',
+        department_id: '',
         scmSr: '',
         scm_sr_id: '',
         sr_no: '',
@@ -44,6 +46,8 @@ export default function useStoreIssue() {
                 sr_quantity: 0.0,
                 current_stock: 0.0,
                 sr_composite_key: '',
+                max_quantity: 0.0,
+                remaining_quantity: 0.0,
             }
         ],
     });
@@ -55,6 +59,8 @@ export default function useStoreIssue() {
             sr_quantity: 0.0,
             current_stock: 0.0,
             sr_composite_key: '',
+            max_quantity: 0.0,
+            remaining_quantity: 0.0,
     }
 
     const errors = ref('');
@@ -178,7 +184,7 @@ export default function useStoreIssue() {
         }
     }
 
-    async function searchStoreIssue(searchParam, loading, business_unit) {
+    async function searchStoreIssue(searchParam, /* loading,*/ business_unit) {
         
 
         try {
@@ -194,9 +200,8 @@ export default function useStoreIssue() {
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
-            console.log('tag', data)
         } finally {
-            loading(false)
+            //     loading(false)
         }
     }
     async function getSrWiseSi(srId) {
@@ -221,6 +226,29 @@ export default function useStoreIssue() {
         }
     }
 
+    async function fetchSiWiseMaterials(siId,sirId = null) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-si-wise-materials`,{
+                params: {
+                    si_id: siId,
+                    sir_id: sirId,
+                },
+            });
+            siWiseMaterials.value = data.value;
+            console.log('tag', data)
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
  
 
     return {
@@ -234,6 +262,8 @@ export default function useStoreIssue() {
         updateStoreIssue,
         deleteStoreIssue,
         materialObject,
+        fetchSiWiseMaterials,
+        siWiseMaterials,
         getSrWiseSi,
         isTableLoading,
         isLoading,

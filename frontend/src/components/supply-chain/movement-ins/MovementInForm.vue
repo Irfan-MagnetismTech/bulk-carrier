@@ -14,7 +14,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
-          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" @search="fetchMovementRequisitions" @change="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
+          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" @option:selected="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -38,7 +38,17 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" />
+        <!-- <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
+        <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" @option:selected="setMoData(form.scmMo)" v-model="form.scmMo" label="ref_no" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmMo"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
           <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
       </label>
   </div>
@@ -103,7 +113,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].available_stock" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].remarks" class="form-input">
                 </label>
                 
               </td>
@@ -138,11 +148,22 @@
         </label>
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" />
-            <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+          <!-- <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
+           <v-select :options="warehouses" placeholder="-- Search Here --" @option:selected="setWarehouseData(form.scmMiShortage.scmWarehouse)" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmMiShortage.scmWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
+          </v-select>
+
+
         </label>
     </div>
-    <div class="mt-5">
+    <div class="mt-5" v-if="form.scmMiShortage.scmMiShortageLines.length">
       <div class="table-responsive min-w-screen">
       <table class="whitespace-no-wrap">
             <thead>
@@ -182,7 +203,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].available_stock" class="form-input">
+                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].remarks" class="form-input">
                 </label>
                 
               </td>
@@ -210,16 +231,19 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+    // import Store from "../../store";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
     import useMovementIn from '../../../composables/supply-chain/useMovementIn';
+    import useMovementOut from '../../../composables/supply-chain/useMovementOut';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { getFromAndToWarehouseWiseCurrentStock, stockData } = useStockLedger();
 
     const { filteredMovementRequisitions, searchMovementRequisition } = useMovementRequisition();
-    const { getMmrWiseMi, filteredMovementRequisitionLines } = useMovementIn();
+    const { filteredMoLines, getMoWiseMiLines } = useMovementIn();
+    const { getMmrWiseMo, filteredMovementOuts } = useMovementOut();
   
     const props = defineProps({
       form: { type: Object, required: true },
@@ -234,6 +258,10 @@
     });
 
     const mmrKey = ref(0);
+
+    // const USER = Store.getters.getCurrentUser;
+    // const ROLE = USER?.role ?? null;
+    // const PERMISSIONS = USER?.permissions ?? [];
 
 
     function addMaterial() {
@@ -265,27 +293,48 @@
   //   searchWarehouse(search, loading,props.form.business_unit);
   // }
 
-  function fetchMovementRequisitions(search, loading) {
-      if (search.length > 0) {
-        loading(true);
-        props.form.scmMiShortage.scmMiShortageLines= [];
-        props.form.scmMiLines = [];
-        searchMovementRequisition(search, loading, props.form.business_unit);
+//   function fetchMovementRequisitions(search, loading) {
+//       if (search.length > 0) {
+//         loading(true);
+//         props.form.scmMiShortage.scmMiShortageLines= [];
+//         props.form.scmMiLines = [];
+//         searchMovementRequisition(search, loading, props.form.business_unit);
+//       }
+// }
+
+    function fetchWarehouse(search) {
+        searchWarehouse(search, props.form.business_unit);
+    }
+
+    function setWarehouseData() {
+      if (props.form.scmMiShortage.scmWarehouse) {
+        props.form.scmMiShortage.scm_warehouse_id = props.form.scmMiShortage.scmWarehouse.id;
+        props.form.scmMiShortage.acc_cost_center_id = props.form.scmMiShortage.scmWarehouse.acc_cost_center_id;
       }
     }
 
+    function fetchMovementRequisitions(search, loading = false) {
+            searchMovementRequisition(search,props.form.business_unit);
+        }
+
     function setMovementRequisitionData(mmr) {
       if (mmr) {
-        getMmrWiseMi(mmr.id);
+       
+        getMmrWiseMo(props.form.business_unit, mmr.id);
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
-        filteredMovementRequisitions.value = [];
-        mmrKey.value++;
       }
 }
 
-    watch(() => filteredMovementRequisitionLines.value, (newVal, oldVal) => {
+    function setMoData(mo) {
+      if (mo) {
+        props.form.scm_mo_id = mo?.id;
+        getMoWiseMiLines(mo.id);
+      }
+    }
+
+    watch(() => filteredMoLines.value, (newVal, oldVal) => {
       props.form.scmMiLines = newVal;
     });
 
@@ -377,9 +426,9 @@ function fetchMaterials(search, loading) {
      props.form.scmMmr = null;
      props.form.scmMiLines = [];
      props.form.scm_mmr_id = '';
-      
-      
-  }
+    }
+    fetchMovementRequisitions('');
+    fetchWarehouse('');
 });
 
 function tableWidth() {

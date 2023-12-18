@@ -188,6 +188,17 @@ const navigateToMRRCreate = (purchaseRequisitionId) => {
 };
 
 
+const navigateToCSCreate = (purchaseRequisitionId) => {
+  const pr_id = purchaseRequisitionId; 
+  const routeOptions = {
+    name: 'scm.material-cs.create',
+    query: {
+      pr_id: pr_id
+    }
+  };
+  router.push(routeOptions);
+}; 
+
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -249,10 +260,11 @@ function confirmDelete(id) {
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
                     <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+                      <!-- <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button> -->
                     </template>
                     <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
 
-                      <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
+                    <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
 
                     </template>
                     <template v-if="(purchaseRequisition?.scmMrrs.length > 0 && purchaseRequisition?.scmPos.length <= 0 ) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">

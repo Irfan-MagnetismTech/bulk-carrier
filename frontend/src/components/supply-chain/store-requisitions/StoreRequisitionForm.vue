@@ -63,72 +63,71 @@
 
 
   <div id="">
-
     <div id="">
-    <div class="table-responsive min-w-screen">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="py-3 align-center">Material Name </th>
-            <th class="py-3 align-center">Unit</th>
-            <th class="py-3 align-center">Specification</th>
-            <th class="py-3 align-center">Qty</th>
-            <th class="py-3 text-center align-center">Action</th>
-          </tr>
-          </thead>
+      <div class="table-responsive min-w-screen">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+          <table class="">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="py-3 align-center">Material Name </th>
+              <th class="py-3 align-center">Unit</th>
+              <th class="py-3 align-center">Specification</th>
+              <th class="py-3 align-center">Qty</th>
+              <th class="py-3 text-center align-center">Action</th>
+            </tr>
+            </thead>
 
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
-            <td class="!w-72">
-              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmSrLines[index].scmMaterial"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-            </v-select>
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" readonly v-model="form.scmSrLines[index].unit" class="vms-readonly-input form-input">
-               </label>
-              
-            </td>
-           
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmSrLines[index].specification" class="form-input">
-               </label>
-              
-            </td>
-            <td>
-              <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmSrLines[index].quantity" class="form-input" min="1" required>
-              </label>
-            </td>
-            <td class="px-1 py-1 text-center">
-              <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-              <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </fieldset>
-    </div>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
+              <td class="!w-72">
+                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
+                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmSrLines[index].scmMaterial"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" readonly v-model="form.scmSrLines[index].unit" class="vms-readonly-input form-input">
+                </label>
+                
+              </td>
+            
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model="form.scmSrLines[index].specification" class="form-input">
+                </label>
+                
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="number" v-model="form.scmSrLines[index].quantity" class="form-input" min="1" required>
+                </label>
+              </td>
+              <td class="px-1 py-1 text-center">
+                <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+                <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </div>
     </div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>  
@@ -227,6 +226,7 @@ const DEPARTMENTS = [
 watch(() => props.form.scmSrLines, (newLines) => {
 
   const materialArray = [];
+  if (newLines) {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
     let material_key = line.scm_material_id;
@@ -247,6 +247,7 @@ watch(() => props.form.scmSrLines, (newLines) => {
       }
     }
   });
+}
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
@@ -284,10 +285,8 @@ watch(() => props.form.scmSrLines, (newLines) => {
 // });
 
 onMounted(() => {
-  console.log(isLoading);
   fetchMaterials("");
   watchPostEffect(() => {
-    console.log(isLoading);
     fetchWarehouse("");
   });
 });
