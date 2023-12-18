@@ -584,5 +584,31 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyage-budgets/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	/* Customer Invoice */
+	{
+		path: `/${BASE}/customer-invoices`,
+		name: `${BASE}.customer-invoices.index`,
+		component: () => import(`../views/${ViEWBASE}/customer-invoices/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/customer-invoices/create`,
+		name: `${BASE}.customer-invoices.create`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/edit`,
+		name: `${BASE}.customer-invoices.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/show`,
+		name: `${BASE}.customer-invoices.show`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	
 ];
