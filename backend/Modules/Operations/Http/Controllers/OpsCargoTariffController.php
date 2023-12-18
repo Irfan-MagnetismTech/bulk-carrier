@@ -58,6 +58,18 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
+            
+            $cargoTariffInfo['pol_pod']=$cargoTariffInfo['loading_point'] .'-'. $cargoTariffInfo['unloading_point'];
+
+            // if($cargoTariffInfo['loading_point'] == $cargoTariffInfo['unloading_point']){
+            //     $error= [
+            //         'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+            //         'errors'=>[
+            //             'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+            //             ]
+            //         ];
+            //     return response()->json($error, 422);
+            // }
 
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
             $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
@@ -107,8 +119,9 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
-                       
-            $cargo_tariff->update($cargoTariffInfo);            
+
+            $cargoTariffInfo['pol_pod']=$cargoTariffInfo['loading_point'] .'-'. $cargoTariffInfo['unloading_point'];
+            $cargo_tariff->update($cargoTariffInfo);         
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Data updated successfully.', $cargo_tariff, 202);

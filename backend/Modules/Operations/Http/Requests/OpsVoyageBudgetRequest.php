@@ -14,17 +14,17 @@ class OpsVoyageBudgetRequest extends FormRequest
     public function rules(): array
     {     
         return [
-            'ops_vessel_id'         => ['required', 'numeric', 'max:20'],
-            'ops_voyage_id'         => ['required', 'numeric', 'max:20'],
-            'ops_expense_head_id'   => ['nullable', 'numeric', 'max:20'],
-            // 'title'                 => ['required', 'string'],
+            'ops_vessel_id'         => ['required', 'numeric'],
+            'ops_voyage_id'         => ['required', 'numeric'],
+            'ops_expense_head_id'   => ['nullable', 'numeric'],
+            'title'                 => ['required', 'string'],
+            'currency'              => ['required'],
+            'effective_from'              => ['required'],
+            'effective_till'              => ['required'],
+            
+
             // 'total'                 => ['required', 'numeric'],
-            'opsVoyageBudgetEntries.*.perticular'   => ['required', 'string'],
-            'opsVoyageBudgetEntries.*.currency'   => ['required', 'string'],
-            'opsVoyageBudgetEntries.*.percentage'   => ['required', 'numeric'],
             'opsVoyageBudgetEntries.*.amount'   => ['required', 'numeric'],
-            'opsVoyageBudgetEntries.*.exchange_rate_bdt'   => ['nullable', 'numeric'],
-            'opsVoyageBudgetEntries.*.exchange_rate_usd'   => ['nullable', 'numeric'],
             'opsVoyageBudgetEntries.*.amount_bdt'   => ['nullable', 'numeric'],
             'opsVoyageBudgetEntries.*.amount_usd'   => ['nullable', 'numeric'],
         ];

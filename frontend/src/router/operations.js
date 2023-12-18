@@ -483,7 +483,7 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 
-	/* Expense Heads */
+	/* Vessel Expense Heads */
 	{
 		path: `/${BASE}/vessel-expense-heads`,
 		name: `${BASE}.vessel-expense-heads.index`,
@@ -509,6 +509,7 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
 	/* Bunker Requisitons */
 	{
 		path: `/${BASE}/bunker-requisitions`,
@@ -557,7 +558,7 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
-	/* Expense Heads */
+	/* Voyage Budgets */
 	{
 		path: `/${BASE}/voyage-budgets`,
 		name: `${BASE}.voyage-budgets.index`,
@@ -581,6 +582,32 @@ export default [
 		path: `/${BASE}/voyage-budgets/:voyageBudgetId/show`,
 		name: `${BASE}.voyage-budgets.show`,
 		component: () => import (`../views/${ViEWBASE}/voyage-budgets/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Customer Invoice */
+	{
+		path: `/${BASE}/customer-invoices`,
+		name: `${BASE}.customer-invoices.index`,
+		component: () => import(`../views/${ViEWBASE}/customer-invoices/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/customer-invoices/create`,
+		name: `${BASE}.customer-invoices.create`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/edit`,
+		name: `${BASE}.customer-invoices.edit`,
+		component: () => import (`../views/${ViEWBASE}/charterer-invoices/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/show`,
+		name: `${BASE}.customer-invoices.show`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	
