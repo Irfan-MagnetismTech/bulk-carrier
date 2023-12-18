@@ -61,12 +61,18 @@
                 <input type="hidden" v-model="form.opsCustomerInvoiceVoyages[index].ops_voyage_id">
                 </label>
               </td>
+
+              <!-- opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+    opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.opsVessel.id;
+    opsCustomerInvoiceVoyage.opsVessel = contractTariff.opsVessel;
+    opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage.ops_voyage_id;
+    opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.total_amount; -->
               <td>
-                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsVessel?.name" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsVessel?.name" readonly class="form-input vms-readonly-input" autocomplete="off"  />
               </td>
               
               <td>
-                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  />
                 <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
                   <!-- <label class="block w-full mt-2 text-sm"> -->
                     <!-- <span class="show-block">
@@ -81,7 +87,7 @@
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.total_amount" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
-                  <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.total_amount" readonly class="form-input text-right" autocomplete="off" />
+                  <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -579,7 +585,7 @@ watch(() => props.form.opsCustomerInvoiceVoyages, (newLines) => {
     // }
 
     // total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
-    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index]?.contractTariff?.total_amount ?? 0);
+    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt ?? 0);
   });
   props.form.total_amount = parseFloat(total_amount.toFixed(2));
   CalculateAll();
@@ -680,8 +686,16 @@ function opsCustomerInvoiceVoyageChanged(opsCustomerInvoiceVoyage) {
   // console.log(opsCustomerInvoiceVoyage.opsVoyage);
   opsCustomerInvoiceVoyage.contractTariff = {};
   if (opsCustomerInvoiceVoyage.ops_voyage_id) {
-    getContractTariffByVoyage(opsCustomerInvoiceVoyage.ops_voyage_id);
-    opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+    getContractTariffByVoyage(opsCustomerInvoiceVoyage.ops_voyage_id).then(() => {
+      opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+      opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.value?.opsVessel?.id;
+      opsCustomerInvoiceVoyage.opsVessel = contractTariff.value?.opsVessel;
+      opsCustomerInvoiceVoyage.opsCargoType = contractTariff.value?.opsCargoType;
+      opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.ops_voyage_id;
+      opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.value?.total_amount;
+    })
+    
+    // contractTariff.opsVessel.id
   }
 }
 
