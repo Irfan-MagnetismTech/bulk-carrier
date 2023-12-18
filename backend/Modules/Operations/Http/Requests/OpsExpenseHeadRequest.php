@@ -23,9 +23,8 @@ class OpsExpenseHeadRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('ops_expense_heads')->where(function ($query) {
-                    // Check if 'head_id' is not null
                     return $this->head_id !== null;
-                }),
+                })->ignore($this->route('expense_head'), 'id'),
             ],
             // 'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],
@@ -43,6 +42,7 @@ class OpsExpenseHeadRequest extends FormRequest
             'billing_type.max' => 'Billing type may not be greater than :max characters.',
             'head_id.numeric' => 'Head must be numeric.',
             'name.required' => 'Name is required.',
+            'name.unique' => 'This expense group name is already used.',
             'name.max' => 'Name may not be greater than :max characters.',
             // 'head_id.max' => 'Head may not be greater than :max characters.',
             // 'code.required' => 'code is required',

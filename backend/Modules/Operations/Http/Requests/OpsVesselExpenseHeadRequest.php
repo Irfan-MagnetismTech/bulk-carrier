@@ -19,8 +19,9 @@ class OpsVesselExpenseHeadRequest extends FormRequest
                 'required',
                 'integer',
                 'max:255',
-                Rule::unique('ops_vessel_expense_heads', 'ops_vessel_id'),
+                Rule::unique('ops_vessel_expense_heads', 'ops_vessel_id')->ignore($this->route('vessel_expense_head'), 'id'),
             ],
+
             // 'ops_expense_head_id'   => ['required', 'numeric', 'max:50'],
         ];
     }
@@ -35,7 +36,6 @@ class OpsVesselExpenseHeadRequest extends FormRequest
         return [
             'ops_vessel_id.unique' => 'This Vessel already have expense heads.',
         ];
-
     }
 
     /**
