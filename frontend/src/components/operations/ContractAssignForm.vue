@@ -17,7 +17,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
+              <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -31,7 +31,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Voyage<span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
