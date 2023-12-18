@@ -193,6 +193,16 @@ class ScmSiController extends Controller
      */
     public function destroy(ScmSi $storeIssue): JsonResponse
     {
+        if ($storeIssue->scmSirs()->count() > 0) {
+            $error = [
+                "message" => "Data could not be deleted!",
+                "errors" => [
+                    "id" => ["This data could not be deleted as it has reference to other table"]
+                ]
+            ];
+            return response()->json($error, 422);
+        }
+
         try {
             DB::beginTransaction();
 
