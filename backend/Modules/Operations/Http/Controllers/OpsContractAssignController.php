@@ -54,22 +54,26 @@ class OpsContractAssignController extends Controller
     public function store(OpsContractAssignRequest $request): JsonResponse
     // public function store(Request $request): JsonResponse
     {
-        // dd($request);
         // return response()->json($request->opsVoyage['opsContractTariffs']);
         try {
             DB::beginTransaction();
-            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) use($request) {
-                $item['ops_voyage_sector_id'] = $item['id'];
-                $item['ops_vessel_id'] = $request->ops_vessel_id;
-                return $item;
-            })->toArray();
+
+            if($request->business_unit== 'TSLL'){
+                $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) use($request) {
+                    $item['ops_voyage_sector_id'] = $item['id'];
+                    $item['ops_vessel_id'] = $request->ops_vessel_id;
+                    return $item;
+                })->toArray();
+            }
             
 
             $info = $request->all();
             $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
 
             $contract_assigns = OpsContractAssign::create($info);
-            $contract_assigns->opsContractTariffs()->createMany($tariffs);
+            if($request->business_unit== 'TSLL'){
+                $contract_assigns->opsContractTariffs()->createMany($tariffs);
+            }
             DB::commit();   
             return response()->success('Data added successfully.', $contract_assigns, 201);
         }
@@ -149,17 +153,22 @@ class OpsContractAssignController extends Controller
         // dd($request);
         try {
             DB::beginTransaction();
-            $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
-                $item['ops_voyage_sector_id'] = $item['id'];
-                return $item;
-            })->toArray();
+            if($request->business_unit== 'TSLL'){
+                $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) {
+                    $item['ops_voyage_sector_id'] = $item['id'];
+                    return $item;
+                })->toArray();
+            }
 
             $info = $request->all();
             $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
 
-            $contract_assign->opsContractTariffs()->delete();
             $contract_assign->update($info);
-            $contract_assign->opsContractTariffs()->createMany($tariffs);
+            if($request->business_unit== 'TSLL'){
+                $contract_assign->opsContractTariffs()->delete();
+                $contract_assign->opsContractTariffs()->createMany($tariffs);
+            }
+            
             DB::commit();  
             return response()->success('Data updated Successfully.', $contract_assign, 202);
         }
