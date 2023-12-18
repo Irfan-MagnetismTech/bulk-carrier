@@ -226,6 +226,7 @@ const DEPARTMENTS = [
 watch(() => props.form.scmSrLines, (newLines) => {
 
   const materialArray = [];
+  if (newLines) {
   newLines.forEach((line, index) => {
     // const previousLine = previousLines.value[index];
     let material_key = line.scm_material_id;
@@ -246,6 +247,7 @@ watch(() => props.form.scmSrLines, (newLines) => {
       }
     }
   });
+}
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
@@ -283,10 +285,8 @@ watch(() => props.form.scmSrLines, (newLines) => {
 // });
 
 onMounted(() => {
-  console.log(isLoading);
   fetchMaterials("");
   watchPostEffect(() => {
-    console.log(isLoading);
     fetchWarehouse("");
   });
 });
