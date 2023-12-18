@@ -103,7 +103,7 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function updateVesselExpenseHead(form) {
+	async function updateVesselExpenseHead(form, vesselExpenseHeadId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -111,8 +111,8 @@ export default function useVesselExpenseHead() {
 
 		try {
 
-			const { data, status } = await Api.post(
-				`/ops/vessel-expense-heads`,
+			const { data, status } = await Api.put(
+				`/ops/vessel-expense-heads/${vesselExpenseHeadId}`,
 				form
 			);
 			// VesselExpenseHead.value = data.value;

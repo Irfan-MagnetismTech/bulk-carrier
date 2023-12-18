@@ -59,7 +59,7 @@ class OpsVesselExpenseHeadController extends Controller
             DB::beginTransaction();
 
             $ops_vessel_id = $request->ops_vessel_id;
-            OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->delete();
+            // OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->delete();
 
             $insertables = [];
 
@@ -114,9 +114,6 @@ class OpsVesselExpenseHeadController extends Controller
                 $query->select('id', 'name');
             }])->pluck('ops_expense_head_id')->toArray();
 
-            // $heads = OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->pluck('ops_expense_head_id');
-            // $vesselDetails = OpsVessel::where('short_code', $vessel_expense_head->vessel_code)->first();
-
             $expenseHeads = OpsExpenseHead::with('opsSubHeads')
                     ->where('business_unit', $vessel_expense_head->business_unit)
                     ->whereNull('head_id')
@@ -154,21 +151,52 @@ class OpsVesselExpenseHeadController extends Controller
      * @param  OpsVesselExpenseHead  $vessel_expense_head
      * @return JsonResponse
      */
-    // public function update(OpsVesselExpenseHeadRequest $request, OpsVesselExpenseHead $vessel_expense_head): JsonResponse
-    // {
-    //     // dd($request);
-    //     try {
-    //         DB::beginTransaction();
-    //         $vessel_expense_head->update($request->all());
-    //         DB::commit();
-    //         return response()->success('Vessel expense heads updated Successfully.', $vessel_expense_head, 202);
-    //     }
-    //     catch (QueryException $e)
-    //     {
-    //         DB::rollBack();
-    //         return response()->error($e->getMessage(), 500);
-    //     }
-    // }
+    public function update(OpsVesselExpenseHeadRequest $request, OpsVesselExpenseHead $vessel_expense_head): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            $ops_vessel_id = $request->ops_vessel_id;
+            OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->delete();
+
+            $insertables = [];
+
+            $heads = collect($request->heads);
+
+            $heads = $heads->map(function($head) use(&$insertables, $ops_vessel_id, $request) {
+                if($head['is_checked']) {
+                    array_push($insertables, 
+                        [
+                            'ops_vessel_id' => $ops_vessel_id,
+                            'business_unit' => $request->business_unit,
+                            'ops_expense_head_id' => $head['id'],
+                        ]
+                    );
+                }
+                collect($head['opsSubHeads'])->map(function($sub) use(&$insertables, $ops_vessel_id, $request) {
+                    if($sub['is_checked']) {
+                        array_push($insertables, 
+                        [
+                            'ops_vessel_id' => $ops_vessel_id,
+                            'business_unit' => $request->business_unit,
+                            'ops_expense_head_id' => $sub['id'],
+                        ]);
+                    }
+                });
+            });
+
+            OpsVesselExpenseHead::insert($insertables);
+
+            DB::commit();
+
+            return response()->success('Data added Successfully.', $insertables, (isset($request->type) ? 202 : 201));
+        }
+        catch (QueryException $e)
+        {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -179,7 +207,7 @@ class OpsVesselExpenseHeadController extends Controller
     public function destroy(OpsVesselExpenseHead $vessel_expense_head): JsonResponse
     {
         try{
-            OpsVesselExpenseHead::where('vessel_code', $vessel_expense_head->vessel_code)->delete();
+            OpsVesselExpenseHead::where('ops_vessel_id', $vessel_expense_head->ops_vessel_id)->delete();
 
             return response()->json([
                 'message' => 'Data deleted successfully.'
@@ -198,13 +226,13 @@ class OpsVesselExpenseHeadController extends Controller
                 $query->select('id', 'name');
             }])
             ->where(function ($query) use($request) {
-                $query->where('vessel_code', 'like', '%' . $request->vessel_code . '%');
+                $query->where('ops_vessel_id', 'like', '%' . $request->ops_vessel_id . '%');
             })
             ->when(request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
             ->get()
-            ->groupBy('vessel_code');
+            ->groupBy('ops_vessel_id');
 
             return response()->success('Data retrieved successfully.', $vessel_expense_heads, 200);
         } catch (QueryException $e){
