@@ -13,6 +13,7 @@ class OpsCustomerInvoice extends Model
 
     protected $fillable = [
         'ops_customer_id',
+        'sub_total_amount',
         'total_amount_bdt',
         'others_billable_amount',
         'service_fee_deduction_amount',

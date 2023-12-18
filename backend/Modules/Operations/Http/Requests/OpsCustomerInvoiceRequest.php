@@ -22,9 +22,9 @@ class OpsCustomerInvoiceRequest extends FormRequest
         // dd($this);
         return [
             'ops_customer_id'       => ['required', 'numeric', 'max:50'],
-            'sub_total'             => ['required', 'numeric'],
-            'discount'              => ['required', 'string'],
-            'grand_total'           => ['required', 'numeric'],
+            'sub_total_amount'             => ['required', 'numeric'],
+            'discounted_amount'              => ['nullable', 'numeric'],
+            'grand_total_amount'           => ['required', 'numeric'],
             'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric', 'max:100000'],
         ];
     }
