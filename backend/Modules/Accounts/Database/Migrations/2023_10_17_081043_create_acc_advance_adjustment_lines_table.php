@@ -18,8 +18,8 @@ return new class extends Migration
 			$table->foreignId('acc_advance_adjustment_id')->constrained('acc_advance_adjustments', 'id')->cascadeOnDelete();
 			$table->string('particular');
             $table->decimal('amount', 10, 2);
-			$table->text('attachment')->nullable();            
-			$table->text('remarks')->nullable();            
+			$table->text('attachment')->nullable();
+			$table->text('remarks')->nullable();
             $table->timestamps();
         });
     }
