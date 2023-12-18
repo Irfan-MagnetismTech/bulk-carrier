@@ -55,7 +55,7 @@
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>

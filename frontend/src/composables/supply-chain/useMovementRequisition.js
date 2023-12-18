@@ -202,11 +202,12 @@ export default function useMovementRequisition() {
         }
     }
 
-    async function getMmrWiseMaterials(mmrId) {
+    async function getMmrWiseMaterials(mmrId,moId = null) {
         try {
             const { data, status } = await Api.get(`/${BASE}/get-mmr-wise-materials`,{
             params: {
                     mmr_id: mmrId,
+                    mo_id: moId,
                 },
             });
             mmrWiseMaterials.value = data.value;

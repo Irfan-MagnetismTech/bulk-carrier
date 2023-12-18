@@ -31,7 +31,7 @@ class ScmMmrController extends Controller
      */
     public function index(): JsonResponse
     {
-        try {   
+        try {
             $movementRequisitions = ScmMmr::with(
             'fromWarehouse',
             'toWarehouse',
@@ -208,14 +208,11 @@ class ScmMmrController extends Controller
                     ->first();
 
                 $data = [
-                    'scmWarehouse' => $scmMmr->scmWarehouse,
-                    'scm_warehouse_id' => $scmMmr->scm_warehouse_id,
-                    'scm_department_id' => $scmMmr->scm_department_id,
-                    'scm_mmr_id' => $scmMmr->id,
-                    'scmMmr' => $scmMmr,
-                    'acc_cost_center_id' => $scmMmr->acc_cost_center_id,
-                    'business_unit' => $scmMmr->business_unit,
                     'scmMmrLines' => $scmMmr->scmMmrLines->map(function ($item) use ($scmMmr) {
+                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id);
+                        $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
+                        $maxQty = $currentStock > $remainingQty ? $remainingQty : $currentStock;
+
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
@@ -223,8 +220,9 @@ class ScmMmrController extends Controller
                             'quantity' => $item->quantity,
                             'mmr_quantity' => $item->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
-                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
-                            // 'max_quantity' => "$item->quantity - $item->scmSiLines->sum('quantity'),"
+                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id),
+                            'max_quantity' => $maxQty,
+                            'remaining_quantity' => $remainingQty,
                             // 'rate' => $item->rate,
                             // 'total_price' => $item->total_price
                         ];
@@ -252,16 +250,23 @@ class ScmMmrController extends Controller
             ->where('scm_mmr_id', request()->mmr_id)
             ->get()
             ->map(function ($item) {
-                // $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
-                $mmrQty = $item->quantity - $item->scmMoLines->sum('quantity');
-                // $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
+                $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmMmr->from_warehouse_id);
+                $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
+                if(request()->mo_id){
+                    $mmrQty = $remainingQty + $item->scmMoLines->where('scm_mo_id',request()->mo_id)->where('mmr_composite_key',$item->mmr_composite_key)->first()->quantity;
+                    $maxQty = $currentStock > $mmrQty ? $mmrQty : $currentStock;
+                }else{
+                    $maxQty = $currentStock > $remainingQty ? $remainingQty : $currentStock;
+                }
 
                 $data = $item->scmMaterial;
                 $data['unit'] = $item->unit;
                 $data['mmr_quantity'] = $item->quantity;
-                $data['quantity'] =  $mmrQty;
-                $data['max_quantity'] =  $mmrQty;
+                $data['quantity'] =  $remainingQty;
+                $data['max_quantity'] =  $maxQty;
                 $data['mmr_composite_key'] = $item->mmr_composite_key;
+                $data['current_stock'] = $currentStock;
+                $data['remaining_quantity'] = $remainingQty;
                 return $data;
 
 

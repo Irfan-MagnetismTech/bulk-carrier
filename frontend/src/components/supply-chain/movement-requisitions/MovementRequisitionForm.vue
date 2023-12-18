@@ -8,23 +8,23 @@
       <label class="label-group">
           <span class="label-item-title">MR Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+         
       </label>
   </div>
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+         
       </label>
       <label class="label-group">
           <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.delivery_date" required class="form-input" name="delivery_date" :id="'delivery_date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+        
       </label>
       <label class="label-group">
         <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="fromWarehouseKey" placeholder="-- Search Here --" @search="fetchFromWarehouse"  v-model="form.fromWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="fromWarehouseKey" placeholder="-- Search Here --" @search="fetchFromWarehouse"  v-model="form.fromWarehouse" label="name" class="block form-input" @update:modelValue="fwarehouseChange">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -34,11 +34,10 @@
               />
           </template>
           </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
       <label class="label-group">
         <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" :key="toWarehouseKey" placeholder="-- Search Here --" @search="fetchToWarehouse" v-model="form.toWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" :key="toWarehouseKey" placeholder="-- Search Here --" @search="fetchToWarehouse" v-model="form.toWarehouse" label="name" class="block form-input" @update:modelValue="toWarehouseChange">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -48,7 +47,6 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
      
      
@@ -58,7 +56,7 @@
     <label class="label-group">
         <span class="label-item-title">Requested By <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.requested_by" required class="form-input" name="requested_by" :id="'requested_by'" />
-          <Error v-if="errors?.unit" :errors="errors.unit" />
+          
       </label>
       <label class="label-group">
         <span class="label-item-title">Material Required For<span class="text-red-500">*</span></span>
@@ -67,9 +65,7 @@
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks</span>
-          <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
@@ -126,7 +122,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmMmrLines[index].quantity" class="form-input" min="1">
+                 <input type="number" v-model="form.scmMmrLines[index].quantity" class="form-input" min="1" :max="form.scmMmrLines[index].available_stock">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -149,7 +145,7 @@
     </div>
   </div>
 
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
@@ -161,6 +157,8 @@
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
@@ -223,22 +221,52 @@
 
 
 
-watch(() => props.form.fromWarehouse, (value) => {
-        props.form.from_warehouse_id = value?.id;
-        props.form.from_cost_center_id = value?.acc_cost_center_id;
-    // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
-    // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
-    // warehouses.value = [];
-    // fromWarehouseKey.value++;
-    // toWarehouseKey.value++;
-    });
-  watch(() => props.form.toWarehouse, (value) => {
-        props.form.to_warehouse_id = value?.id;
-        props.form.to_cost_center_id = value?.acc_cost_center_id;
-    // warehouses.value = [];
-    // fromWarehouseKey.value++;
-    // toWarehouseKey.value++;
-  });
+// watch(() => props.form.fromWarehouse, (value) => {
+//         props.form.from_warehouse_id = value?.id;
+//         props.form.from_cost_center_id = value?.acc_cost_center_id;
+//     // warehouses.value = warehouses.value.filter((warehouse) => warehouse.id !== value?.id);
+//     // warehouses.value = [...warehouses.value, props.form.scmToWarehouse];
+//     // warehouses.value = [];
+//     // fromWarehouseKey.value++;
+//     // toWarehouseKey.value++;
+//     });
+
+function fwarehouseChange() {
+  if(props.form.to_warehouse_id && props.form.fromWarehouse?.id == props.form.to_warehouse_id){
+    props.form.fromWarehouse = null;
+    props.form.from_warehouse_id = props.form.fromWarehouse?.id;
+    props.form.from_cost_center_id = props.form.fromWarehouse?.acc_cost_center_id;
+    alert('From warehouse and To warehouse can not be same');
+    return;
+  }
+  props.form.from_warehouse_id = props.form.fromWarehouse?.id;
+  props.form.from_cost_center_id = props.form.fromWarehouse?.acc_cost_center_id;
+  if(props.form.scmMmrLines.length > 0){
+    mmrDatas(props.form.scmMmrLines);
+  }
+}
+
+function toWarehouseChange() {
+  if(props.form.from_warehouse_id && props.form.from_warehouse_id == props.form.toWarehouse?.id){
+    props.form.toWarehouse = null;
+    props.form.to_warehouse_id = props.form.toWarehouse?.id;
+    props.form.to_cost_center_id = props.form.toWarehouse?.acc_cost_center_id;
+    alert('From warehouse and To warehouse can not be same');
+    return;
+  }
+  props.form.to_warehouse_id = props.form.toWarehouse?.id;
+  props.form.to_cost_center_id = props.form.toWarehouse?.acc_cost_center_id;
+  if(props.form.scmMmrLines.length > 0){
+    mmrDatas(props.form.scmMmrLines);
+  }
+}
+  // watch(() => props.form.toWarehouse, (value) => {
+  //       props.form.to_warehouse_id = value?.id;
+  //       props.form.to_cost_center_id = value?.acc_cost_center_id;
+  //   // warehouses.value = [];
+  //   // fromWarehouseKey.value++;
+  //   // toWarehouseKey.value++;
+  // });
 
  
   // watch(() => props.form.scmWarehouse, (value) => {
@@ -254,7 +282,6 @@ watch(() => props.form.fromWarehouse, (value) => {
 // }
 
 watch(() => stockData.value, (newValue) => {
-  console.log(newValue);
   if (newValue && newValue.index !== undefined && props.form.scmMmrLines[newValue.index]) {
     props.form.scmMmrLines[newValue.index].available_stock = newValue.from_warehouse_stock;
     props.form.scmMmrLines[newValue.index].present_stock = newValue.to_warehouse_stock;
@@ -267,10 +294,17 @@ watch(() => stockData.value, (newValue) => {
 
 watch(() => props.form.scmMmrLines, (newLines) => {
   if (newLines) {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-
-    if (line.scmMaterial) {
+    const materialArray = [];
+   if (newLines && newLines.length) {
+    newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmMmrLines.splice(index, 1);
+      } 
+      if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
       if (selectedMaterial) {
         if ( line.scm_material_id !== selectedMaterial.id
@@ -281,10 +315,22 @@ watch(() => props.form.scmMmrLines, (newLines) => {
         }
       }
     }
+   });
+  }
+  newLines.forEach((line, index) => {
+   
   });
-    // previousLines.value = cloneDeep(newLines);
   }
 }, { deep: true });
+
+//loop mmr lines using a function
+function mmrDatas(mmrLines) {
+  mmrLines.forEach((line, index) => {
+    if (props.form.from_warehouse_id && props.form.to_warehouse_id && line.scmMaterial) {
+      getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, line.scmMaterial.id, index);
+    }
+  });
+}
 
 
 function fetchMaterials(search) {
