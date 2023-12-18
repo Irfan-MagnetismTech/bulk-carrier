@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -758,16 +758,16 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 //   searchVoyages(searchParam, props.form.business_unit, loading)
 // }
 
-watch(() => props.form.business_unit, (value) => {
-  // if(props?.formType != 'edit') {
-  //   props.form.opsVoyage = null;
-  //   vessel.value = null;
-  //   props.form.opsVoyageSectors = null;
-  //   props.form.vessel_name = null;
-  //   props.form.ops_voyage_id = null;
-  // }
-  getAllChartererProfiles(value);
-})
+// watch(() => props.form.business_unit, (value) => {
+//   // if(props?.formType != 'edit') {
+//   //   props.form.opsVoyage = null;
+//   //   vessel.value = null;
+//   //   props.form.opsVoyageSectors = null;
+//   //   props.form.vessel_name = null;
+//   //   props.form.ops_voyage_id = null;
+//   // }
+//   getAllChartererProfiles(value);
+// })
 
 
 // watch(() => props.form.opsChartererProfile, (value) => {
@@ -817,6 +817,8 @@ watch(() => props.form.opsChartererContract, (value) => {
 onMounted(() => {
   // getAllChartererProfiles();
   getCurrencies();
+  getAllChartererProfiles(props.form.business_unit);
+
 })
 
 watchPostEffect(() => {
