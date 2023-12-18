@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsContractAssign;
+use Modules\Operations\Entities\OpsContractTariff;
 use Illuminate\Contracts\Supcontract_assign\Renderable;
 use Modules\Operations\Http\Requests\OpsContractAssignRequest;
 
@@ -168,7 +169,7 @@ class OpsContractAssignController extends Controller
                 $contract_assign->opsContractTariffs()->delete();
                 $contract_assign->opsContractTariffs()->createMany($tariffs);
             }
-            
+
             DB::commit();  
             return response()->success('Data updated Successfully.', $contract_assign, 202);
         }
@@ -202,4 +203,53 @@ class OpsContractAssignController extends Controller
         }
     }
 
+
+    /**
+     * get the specified resource in storage.
+    *
+    * @return JsonResponse
+    */
+    public function getVoyageByCustomer(Request $request): JsonResponse
+    {
+        $contract_assigns= OpsContractAssign::query()
+        ->when(isset(request()->ops_customer_id), function ($query) {
+            $query->where('ops_customer_id', request()->ops_customer_id);
+        })
+        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+            $query->where('business_unit', request()->business_unit);
+        })
+        ->with('opsVoyage')
+        ->get();
+
+        try {            
+            return response()->success('Data retrieved successfully.', $contract_assigns, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+        /**
+     * get the specified resource in storage.
+    *
+    * @return JsonResponse
+    */
+    public function getContractTariffByVoyage(Request $request): JsonResponse
+    {
+        $contract_tariffs= OpsContractTariff::query()
+        ->when(isset(request()->ops_voyage_id), function ($query) {
+            $query->where('ops_voyage_id', request()->ops_voyage_id);
+        })
+        ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+            $query->where('business_unit', request()->business_unit);
+        })
+        ->with(['opsCargoTariff'])
+        ->get();
+
+        try {            
+            return response()->success('Data retrieved successfully.', $contract_tariffs, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

@@ -27,10 +27,19 @@ class OpsCustomerInvoice extends Model
         return $this->belongsTo(OpsCustomer::class, 'ops_customer_id' , 'id');
     }
 
-    public function opsCustomerInvoiceLines()
+    public function opsCustomerInvoiceVoyages()
     {
-        return $this->hasMany(OpsCustomerInvoiceLine::class, 'ops_customer_invoice_id', 'id');
+        return $this->hasMany(OpsCustomerInvoiceVoyage::class, 'ops_customer_invoice_id', 'id');
     }
-
+       
+    public function opsCustomerInvoiceOthers()
+    {
+        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','charge');
+    }
+    
+    public function opsCustomerInvoiceServices()
+    {
+        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','deduct');
+    }
 
 }
