@@ -25,7 +25,8 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'sub_total_amount'             => ['required', 'numeric'],
             'discounted_amount'              => ['nullable', 'numeric'],
             'grand_total'           => ['required', 'numeric'],
-            'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric', 'max:100000'],
+            'date'           => ['required', 'date'],
+            'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric'],
         ];
     }
 
@@ -37,11 +38,13 @@ class OpsCustomerInvoiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'ops_customer_id.required' => 'Customer is required',
-            'sub_total.required' => 'Sub total is required',
-            'discount.required' => 'Discount is required',
-            'grand_total.required' => 'Grand total is required',
-            'opsCustomerInvoiceLines.*.amount.max' => 'Sectors amount may not be greater than :max characters for row is :position.',
+            'ops_customer_id.required' => 'Customer is required.',
+            'sub_total.required' => 'Sub total is required.',
+            'discounted_amount.required' => 'Discount is required.',
+            'discounted_amount.numeric' => 'Discount must be numeric.',
+            'grand_total.required' => 'Grand total is required.',
+            'date.required' => 'Date is required.',
+            'opsCustomerInvoiceLines.*.amount.numeric' => 'Sectors amount must be numeric for row is :position.',
 
         ];
     }
