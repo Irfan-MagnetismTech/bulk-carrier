@@ -17,7 +17,7 @@ export default function useCrewSalaryStructure() {
         crw_crew_name: "",
         crw_crew_contact: "",
         effective_date: "",
-        currency: "USD",
+        currency: "BDT",
         gross_salary: "",
         addition: "",
         deduction: "",
