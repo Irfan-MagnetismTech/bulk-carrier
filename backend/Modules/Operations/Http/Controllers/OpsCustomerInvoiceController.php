@@ -67,9 +67,7 @@ class OpsCustomerInvoiceController extends Controller
                 $voyage_ids[]=$voyage['ops_voyage_id'];
             }    
 
-            $isBilled = OpsCustomerInvoiceVoyage::whereIn('ops_voyage_id', $voyage_ids)->get();
-
-            if(count($isBilled) > 0) {
+            if (count($voyage_ids) !== count(array_unique($voyage_ids))) {
                 $error= [
                     'message'=>'One or more voyages are already billed.',
                     'errors'=>[
@@ -153,20 +151,13 @@ class OpsCustomerInvoiceController extends Controller
             $voyage_ids= [];
             foreach($request->opsCustomerInvoiceVoyages as $key=>$voyage){
                 $voyage_ids[]=$voyage['ops_voyage_id'];
-            }
-            
-            $currentVoyages = $customer_invoice->opsCustomerInvoiceVoyages->pluck('ops_voyage_id');
+            }    
 
-            $notMatchedInArray1 = array_diff($voyage_ids, $currentVoyages->toArray());
-
-            $isBilled = OpsCustomerInvoiceVoyage::whereIn('ops_voyage_id', $notMatchedInArray1)->get();
-
-
-            if(count($isBilled) > 0) {
+            if (count($voyage_ids) !== count(array_unique($voyage_ids))) {
                 $error= [
-                    'message'=>'One or more voyages are already billed.',
+                    'message'=>'Voyage can not be same.',
                     'errors'=>[
-                        'Voyage'=>['One or more voyages are already billed.',]
+                        'Voyage'=>['Voyage can not be same.',]
                         ]
                     ];
                 return response()->json($error, 422);
