@@ -181,7 +181,20 @@ class OpsCargoTariffController extends Controller
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
+            ->when(isset(request()->ops_vessel_id), function ($query) {
+                $query->where('ops_vessel_id', request()->ops_vessel_id);                
+            })
             ->get();
+
+            if(isset($cargoTariffs)) {
+                $error= [
+                    'message'=>'Vessel has not define in any Tariffs.',
+                    'errors'=>[
+                        'tariff'=>['Vessel has not define in any Tariffs.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
 
             return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
