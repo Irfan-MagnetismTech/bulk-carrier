@@ -53,7 +53,18 @@ class OpsExpenseHeadController extends Controller
      */
      public function store(OpsExpenseHeadRequest $request): JsonResponse
      {
-        
+        $exist = OpsExpenseHead::where(['name' => $request->name])->get();
+
+        if ($exist) {
+            $error= [
+                'message'=>'Head name already exist.',
+                'errors'=>[
+                    'ops_sub_heads'=>['Head name already exist.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
         if(isset($request->opsSubHeads)){
             $subHeadNames= [];
             foreach($request->opsSubHeads as $key=>$subhead){
