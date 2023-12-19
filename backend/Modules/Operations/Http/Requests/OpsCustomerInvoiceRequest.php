@@ -46,7 +46,7 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'grand_total.required' => 'Grand total is required.',
             'date.required' => 'Date is required.',
             'opsCustomerInvoiceLines.*.amount.numeric' => 'Sectors amount must be numeric for row is :position.',
-            'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'Sectors Voyage must be numeric for row is :position.',
+            'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'Sectors Voyage must be unique for row is :position.',
 
         ];
     }
