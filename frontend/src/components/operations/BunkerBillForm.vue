@@ -345,8 +345,8 @@ const calculatePrAmounts = (billLineIndex) => {
   if (existingCurrency) {
 
     if(currency != existingCurrency?.currency) {
-       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd = '';
-       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt = '';
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd = null;
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt = null;
     }
 
     existingCurrency.currency = currency;
@@ -416,7 +416,7 @@ const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, ite
     item.amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_usd * exchange_rate_bdt).toFixed(2));
   }
 
-  return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
+  return {amount : (item.amount > 0) ? item.amount : null, amount_usd: (item.amount_usd > 0) ? item.amount_usd : null, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : null};
 }
 
 function CalculateAll() {
@@ -441,6 +441,36 @@ onMounted(() => {
   getCurrencies();
   fetchBunkerRequisition("", false)
 })
+
+//watch form.opsBunkerBillLines[index].opsBunkerBillLineItems
+// watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
+//   if(props.form?.opsBunkerBillLines?.length > 0) {
+//     const PrArray = [];
+//     console.log("sdf");
+//     for (let billLineIndex of props.form.opsBunkerBillLines) {
+//       let pr_key = billLineIndex.pr_no;
+//         if (PrArray.indexOf(pr_key) === -1) {
+//           PrArray.push(pr_key);
+//           if (props.form.opsBunkerBillLines[billLineIndex]?.opsBunkerBillLineItems?.length > 0) {
+//             const prMaterialArray = [];
+//           for(let itemIndex of props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems) {
+//             let item_key = props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[itemIndex].name;
+//             if (prMaterialArray.indexOf(item_key) === -1) {
+//               prMaterialArray.push(item_key);
+//             } else {
+//               alert("Duplicate Found");
+//               props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems.splice(itemIndex, 1);
+//             }
+//           }
+//           }
+//         } else {
+//           alert("Duplicate Found");
+//           props.form.opsBunkerBillLines.splice(index, 1);
+//         } 
+//     }
+
+//   }
+// }, { deep: true })
 </script>
 <style lang="postcss" scoped>
 .input-group {
