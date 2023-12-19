@@ -353,4 +353,29 @@ class OpsVoyageController extends Controller
     }
 
 
+    public function getCargoTariffFromVoyage(Request $request){
+        try {
+            $cargoTariffs = OpsVoyage::query()
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
+            })
+            ->when(isset(request()->ops_voyage_id), function($query) {
+                $query->where('ops_voyage_id', request()->ops_voyage_id);
+            })
+            ->with(['opsContractTariffs'])
+            ->get();
+
+            $cargoTariffs = $cargoTariffs->map(function ($tariffs) {
+                return $tariffs->opsContractTariffs;
+            });
+
+
+
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
 }
