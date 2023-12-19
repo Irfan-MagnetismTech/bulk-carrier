@@ -353,7 +353,7 @@ class OpsVoyageController extends Controller
     }
 
 
-    public function getCargoTariffFromVoyage(Request $request){
+    public function getCargoTariffByVoyage(Request $request){
         try {
             $cargoTariffs = OpsVoyage::query()
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){

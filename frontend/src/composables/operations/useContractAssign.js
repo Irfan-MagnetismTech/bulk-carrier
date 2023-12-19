@@ -28,7 +28,8 @@ export default function useContractAssign() {
 		ops_charterer_contract_id: null,
 		opsChartererContract: null,
         remarks: null,
-        business_unit: null, 
+		business_unit: null, 
+		
 	});
 
 
