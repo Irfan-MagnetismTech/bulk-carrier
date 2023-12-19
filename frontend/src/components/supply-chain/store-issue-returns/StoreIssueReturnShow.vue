@@ -14,7 +14,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Date</span>
-        <span class="show-block">{{ form.date }}</span>
+        <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
     </label>
       <label class="label-group">
           <span class="label-item-title">SI Ref</span>
@@ -25,7 +25,7 @@
         <span class="show-block">{{ form?.scmWarehouse?.name }}</span>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Issue To </span>
+        <span class="label-item-title">Return From </span>
         <span class="show-block">{{ DEPARTMENTS[form.department_id] }}</span>
       </label>
      
@@ -47,7 +47,7 @@
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials </legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
@@ -108,6 +108,7 @@
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import moment from 'moment';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();

@@ -101,6 +101,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('search-bulk-noon-reports', [OpsBulkNoonReportController::class, 'getBulkNoonReportByType']);
     Route::get('search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureByVoyageWise']);
     Route::get('show-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'showVesselExpenseHeads']);
+    Route::get('show-flatten-vessel-expense-heads', [OpsVesselExpenseHeadController::class, 'showFlattenVesselExpenseHeads']);
     
     // end for search api route
     
@@ -116,11 +117,14 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
+    Route::get('get-voyage-by-customer', [OpsContractAssignController::class, 'getVoyageByCustomer']);
+    Route::get('get-contract-tariff-by-voyage', [OpsContractAssignController::class, 'getContractTariffByVoyage']);
     Route::get('get-search-voyage-expenditures', [OpsVoyageExpenditureController::class, 'getVoyageExpenditureVoyageWise']);
     Route::get('search-expense-heads', [OpsExpenseHeadController::class, 'getExpenseHeadByHead']);
     Route::get('search-voyage-budgets', [OpsVoyageBudgetController::class, 'getVoyageBudgetByTitle']);
     Route::get('search-bunker-requisitions', [OpsBunkerRequisitionController::class, 'getBunkerRequisitionByReqNo']);
     Route::get('search-bunker-requisitions-by-vendor', [OpsBunkerRequisitionController::class, 'getApprovedBunkerRequisitionByVendor']);
+    Route::get('search-bunker-requisitions-by-pr-no', [OpsBunkerRequisitionController::class, 'getApprovedBunkerRequisitionByPRNo']);
     //end get data without limits
 
     Route::get('search-vessels-latest', [OpsVesselController::class, 'getVesselLatest']);

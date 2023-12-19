@@ -30,7 +30,7 @@ class ScmSrController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy')
+            $storeRequisitions = ScmSr::with('scmSrLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSis')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $storeRequisitions, 200);
@@ -155,7 +155,7 @@ class ScmSrController extends Controller
         return response()->success('Search result', $storeRequisitions, 200);
     }
 
-    public function getMaterialBySrId(Request $request): JsonResponse
+    public function getMaterialBySrId(): JsonResponse
     {
         $srMaterials = ScmSrLine::query()
             ->with('scmMaterial', 'scmSr')
@@ -164,12 +164,12 @@ class ScmSrController extends Controller
             ->map(function ($item) {
                 $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
                 $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
-                if(request()->si_id){
-                    $data = $item->scmSiLines->where('scm_si_id', request()->si_id)->where('sr_composite_key', $item->sr_composite_key)->first()->quantity;
-                    $cStock = $currentStock + $data;
-                    $srQty = $srQty + $data;
+                if (request()->si_id) {
+                    $data1 = $item->scmSiLines->where('scm_si_id', request()->si_id)->where('sr_composite_key', $item->sr_composite_key)->first()->quantity ?? 0;
+                    $cStock = $currentStock + $data1;
+                    $srQty = $srQty + $data1;
                     $maxQty = $cStock > $srQty ? $srQty : $cStock;
-                }else{
+                } else {
                     $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
                 }
 
@@ -180,8 +180,11 @@ class ScmSrController extends Controller
                 $data['current_stock'] = $currentStock;
                 $data['max_quantity'] = $maxQty;
                 $data['sr_composite_key'] = $item->sr_composite_key;
+                $data['remaining_quantity'] = $item->quantity - $item->scmSiLines->sum('quantity');
+
                 return $data;
             });
+
         return response()->success('data list', $srMaterials, 200);
     }
 }

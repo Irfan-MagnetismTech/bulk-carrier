@@ -16,7 +16,12 @@ class OpsVoyageBudget extends Model
         'ops_expense_head_id',
         'title',
         'total',
+        'effective_from',
+        'effective_till',
         'business_unit',
+        'currency',
+        'exchange_rate_usd',
+        'exchange_rate_bdt',
     ];
 
     public function opsVessel()

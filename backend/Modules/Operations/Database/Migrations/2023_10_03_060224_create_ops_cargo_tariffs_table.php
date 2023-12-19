@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('ops_cargo_type_id')->constrained('ops_cargo_types')->onDelete('cascade');
             $table->string('loading_point');
             $table->string('unloading_point');
+            $table->string('pol_pod');
             $table->string('currency');
             $table->enum('status',['Active','Inactive']);
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();          

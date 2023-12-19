@@ -33,7 +33,7 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Date</span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
   </div>
   
@@ -52,13 +52,13 @@
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 min-w-screen">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials </legend>
-        <table class="whitespace-no-wrap min-w-screen">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Sr Quantity</th>
-            <th class="py-3 align-center">Current Stock</th>
+            <!-- <th class="py-3 align-center">Current Stock</th> -->
             <th class="py-3 align-center">Qty</th>
           </tr>
           </thead>
@@ -81,11 +81,11 @@
                    <span class="show-block">{{ form.scmSiLines[index].sr_quantity }}</span>
                </label>
             </td>
-            <td>
+            <!-- <td>
               <label class="block w-full mt-2 text-sm">
                    <span class="show-block">{{ form.scmSiLines[index].current_stock }}</span>
                </label>
-            </td>
+            </td> -->
             <td>
               <label class="block w-full mt-2 text-sm">
                    <span class="show-block">{{ form.scmSiLines[index].quantity }}</span>
@@ -117,6 +117,7 @@
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import moment from 'moment';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();

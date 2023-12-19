@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from 'moment';
 
 const { getStoreIssues, storeIssues, deleteStoreIssue, isLoading ,errors,isTableLoading} = useStoreIssue();
 const { numberFormat } = useHelper();
@@ -172,7 +173,7 @@ onMounted(() => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -216,7 +217,7 @@ const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision D
             <tr v-for="(storeIssue,index) in (storeIssues?.data ? storeIssues?.data : storeIssues)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeIssue?.ref_no }}</td>
-              <td>{{ storeIssue?.date }}</td>
+              <td>{{ storeIssue?.date ? moment(storeIssue?.date).format('DD-MM-YYYY') : null }}</td>
               <td>{{ storeIssue?.scmWarehouse?.name?? '' }}</td>
               <td>{{ DEPARTMENTS[storeIssue.department_id] ?? '' }}</td>
               <td>
@@ -225,7 +226,7 @@ const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision D
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <action-button :action="'show'" :to="{ name: 'scm.store-issues.show', params: { storeIssueId: storeIssue.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.store-issues.edit', params: { storeIssueId: storeIssue.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.store-issues.edit', params: { storeIssueId: storeIssue.id } }" v-if="(storeRequisition?.scmSirs.length <= 0)"></action-button>
                   <action-button @click="confirmDelete(storeIssue.id)" :action="'delete'"></action-button>
                 </div>
               </td>

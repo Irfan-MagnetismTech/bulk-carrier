@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->bigInteger('department_id')->nullable();
             $table->date('date')->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();

@@ -4,7 +4,7 @@
     <default-button :title="'Expense Head List'" :to="{ name: 'ops.vessel-expense-heads.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-      <form @submit.prevent="updateVesselExpenseHead(vesselExpenseHead, vesselExpenseHeadId, formType)">
+      <form @submit.prevent="updateVesselExpenseHead(vesselExpenseHead, vesselExpenseHeadId)">
           <!-- Port Form -->
           <vessel-expense-head-form v-model:form="vesselExpenseHead" :errors="errors" :formType="formType"></vessel-expense-head-form>
           <!-- Submit button -->

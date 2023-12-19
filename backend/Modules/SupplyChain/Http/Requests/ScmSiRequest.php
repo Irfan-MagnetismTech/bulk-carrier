@@ -24,7 +24,8 @@ class ScmSiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'date' => 'required|date',
+            'scmSiLines.*.quantity' => 'required|numeric',
         ];
     }
 
@@ -36,7 +37,10 @@ class ScmSiRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'date.required' => 'Date is required',
+            'date.date' => 'Date must be a valid date',
+            'scmSiLines.*.quantity.required' => 'Quantity is required',
+            'scmSiLines.*.quantity.numeric' => 'Quantity must be numeric',
         ];
     }
 

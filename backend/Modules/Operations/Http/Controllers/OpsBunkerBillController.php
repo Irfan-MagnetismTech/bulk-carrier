@@ -32,7 +32,7 @@ class OpsBunkerBillController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $bunker_bills = OpsBunkerBill::with('scmVendor','opsBunkerBillLines')
+            $bunker_bills = OpsBunkerBill::with('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems')
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $bunker_bills, 200);
@@ -51,8 +51,11 @@ class OpsBunkerBillController extends Controller
     * @return JsonResponse
     */
     public function store(OpsBunkerBillRequest $request): JsonResponse
+    // public function store(Request $request): JsonResponse
     {
-        // dd($request);
+        $bunkerBillLines = $request->opsBunkerBillLines;
+
+        // return response()->json(count($bunkerBillLines));
         try {
             DB::beginTransaction();
             $bunker_bill_info = $request->except(
@@ -72,8 +75,33 @@ class OpsBunkerBillController extends Controller
                 $bunker_bill_info['smr_file_path'] = $smr_file_path;
             }
 
+            // return response()->json($bunker_bill_info);
+            $bunker_bill_info['vendor_bill_no'] = rand(1,10);
+
             $bunker_bill = OpsBunkerBill::create($bunker_bill_info);
-            $bunker_bill->opsBunkerBillLines()->createMany($request->opsBunkerBillLines);
+
+            if(isset($request->opsBunkerBillLines)){
+                foreach ($request->opsBunkerBillLines as $lineData) {
+
+                    $line = $bunker_bill->opsBunkerBillLines()->create($lineData);
+
+                    // return response()->json($line);
+
+                    if(isset($lineData['opsBunkerBillLineItems'])) {
+                        
+                        $lineItemData = collect($lineData['opsBunkerBillLineItems'])->map(function($item) use($bunker_bill) {
+                            $item['ops_bunker_bill_id'] = $bunker_bill->id;
+                            return $item;
+                        })->toArray();
+
+                        $line->opsBunkerBillLineItems()->createMany($lineItemData);
+                    }
+                }
+            }
+
+        // return response()->json(count($bunkerBillLines));
+
+            
             DB::commit();
             return response()->success('Data added successfully.', $bunker_bill, 201);
         }
@@ -92,7 +120,18 @@ class OpsBunkerBillController extends Controller
     */
     public function show(OpsBunkerBill $bunker_bill): JsonResponse
     {
-        $bunker_bill->load('scmVendor','opsBunkerBillLines');
+        $bunker_bill->load('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems', 'opsBunkerBillLines.opsBunkerRequisition');
+
+        $bunker_bill->opsBunkerBillLines->map(function($line) {
+
+            $line['requisitionBunkers'] = $line->opsBunkerRequisition->opsBunkers->map(function($item) {
+                $item['name'] = $item->scmMaterial->name;
+                return $item;
+            });
+
+            return $line;
+        });
+
         
         try
         {
@@ -137,7 +176,29 @@ class OpsBunkerBillController extends Controller
             }
 
             $bunker_bill->update($bunker_bill_info);            
-            $bunker_bill->opsBunkerBillLines()->createUpdateOrDelete($request->opsBunkerBillLines);
+            $bunker_bill->opsBunkerBillLineItems()->delete();
+            $bunker_bill->opsBunkerBillLines()->delete();
+
+
+            if(isset($request->opsBunkerBillLines)){
+                foreach ($request->opsBunkerBillLines as $lineData) {
+
+                    $line = $bunker_bill->opsBunkerBillLines()->create($lineData);
+
+                    // return response()->json($line);
+
+                    if(isset($lineData['opsBunkerBillLineItems'])) {
+                        
+                        $lineItemData = collect($lineData['opsBunkerBillLineItems'])->map(function($item) use($bunker_bill) {
+                            $item['ops_bunker_bill_id'] = $bunker_bill->id;
+                            return $item;
+                        })->toArray();
+
+                        $line->opsBunkerBillLineItems()->createMany($lineItemData);
+                    }
+                }
+            }
+            
             DB::commit();
             return response()->success('Data retrieved successfully.', $bunker_bill, 202);
         }
@@ -165,6 +226,7 @@ class OpsBunkerBillController extends Controller
                 $this->fileUpload->deleteFile($bunker_bill->smr_file_path);
             }
             $bunker_bill->opsBunkerBillLines()->delete();
+            $bunker_bill->opsBunkerBillLineItems()->delete();
             $bunker_bill->delete();
 
             return response()->json([

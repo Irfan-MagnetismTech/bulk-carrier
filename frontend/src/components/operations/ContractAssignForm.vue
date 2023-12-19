@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
-              <input type="date" v-model="form.assign_date" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray">
+              <input type="date" v-model="form.assign_date" required class="form-input">
       </label>
 
     </div>
@@ -17,7 +17,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -31,7 +31,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Voyage<span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -46,7 +46,7 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif <span class="text-red-500">*</span></span>
               <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
                   <template #search="{attributes, events}">
@@ -59,7 +59,7 @@
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
-      </label>
+      </label> -->
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
               <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
@@ -105,6 +105,64 @@
               </v-select>
               <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
+    </div>
+    <div v-if="form.business_unit=='TSLL' && form.opsVoyage">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Sector <span class="text-red-500">*</span></legend>
+        <table class="w-full whitespace-no-wrap" id="table">
+          <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
+              <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
+              <th class="w-1/12 px-4 py-3 align-bottom">Quantity</th>
+              <th class="w-3/12 px-4 py-3 align-bottom">Tariff</th>
+              <th class="w-1/12 px-4 py-3 align-bottom">Rate</th>
+              <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(opsContractTariff, index) in form.opsVoyage?.opsContractTariffs" :key="index">
+              <td><input type="text" :value="opsContractTariff?.loading_point" placeholder="Loading Point" class="form-input vms-readonly-input" readonly /></td>
+              
+              <td><input type="text" :value="opsContractTariff?.unloading_point" placeholder="Unloading Point" class="form-input vms-readonly-input" readonly /></td>
+              
+              <td><input type="text" :value="opsContractTariff?.quantity" placeholder="Unloading Point" class="form-input vms-readonly-input" readonly /></td>
+              <td>
+                <v-select :options="opsContractTariff?.cargoTariffs" placeholder="--Choose an option--" v-model="opsContractTariff.opsCargoTariff" label="tariff_name" class="block form-input" @update:modelValue="opsCargoTariffChange(opsContractTariff)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!opsContractTariff.opsCargoTariff"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+              <input type="hidden" v-model="opsContractTariff.ops_cargo_tariff_id" />
+              </td>
+              <td><input type="text" v-model="opsContractTariff.total_rate"   placeholder="Rate" class="form-input vms-readonly-input" readonly /></td>
+              <td>
+                <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)">
+                  <option  value="" disabled selected>Select</option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="mar"> Mar - {{opsContractTariff?.opsCargoTariff?.["mar"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="apr"> Apr - {{opsContractTariff?.opsCargoTariff?.["apr"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="may"> May - {{opsContractTariff?.opsCargoTariff?.["may"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jun"> Jun - {{opsContractTariff?.opsCargoTariff?.["jun"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jul"> Jul - {{opsContractTariff?.opsCargoTariff?.["jul"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="aug"> Aug - {{opsContractTariff?.opsCargoTariff?.["aug"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="sep"> Sep - {{opsContractTariff?.opsCargoTariff?.["sep"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="oct"> Oct - {{opsContractTariff?.opsCargoTariff?.["oct"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="nov"> Nov - {{opsContractTariff?.opsCargoTariff?.["nov"]}} </option>
+                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="dec"> Dec - {{opsContractTariff?.opsCargoTariff?.["dec"]}} </option>
+                </select>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
@@ -172,16 +230,36 @@ if(value) {
   }
 }, { deep: true })
 
-watch(() => props.form.opsVessel, (value) => {
+// watch(() => props.form.opsVessel, (value) => {
 
-if(value) {
+// if(value) {
+//   props.form.ops_vessel_id = value?.id
+
+//   voyages.value = [];
+//   props.form.opsVoyage = null;
+
+//   let loadStatus = true;
+//   showVessel(value?.id, loadStatus);
+//   getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
+//   getCargoTariffsByVessel(props.form.ops_vessel_id);
+// }
+// }, { deep: true })
+
+function opsVesselChange() {
+  const value = props.form.opsVessel;
   props.form.ops_vessel_id = value?.id
-  let loadStatus = true;
-  showVessel(value?.id, loadStatus);
-  getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
-  getCargoTariffsByVessel(props.form.ops_vessel_id);
+  
+  voyages.value = [];
+  props.form.opsVoyage = null;
+  
+  if(value) {
+    let loadStatus = true;
+    showVessel(value?.id, loadStatus);
+    getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
+    getCargoTariffsByVessel(props.form.ops_vessel_id);
+  }
 }
-}, { deep: true })
+
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
@@ -219,6 +297,23 @@ watch(() => props.form.opsCargoTariff, (value) => {
   props.form.ops_cargo_tariff_id = value?.id;
 })
 
+
+
+function opsCargoTariffChange(opsContractTariff) {
+  opsContractTariff.ops_cargo_tariff_id = opsContractTariff?.opsCargoTariff?.id;
+
+  if (!opsContractTariff.tariff_month && opsContractTariff.ops_cargo_tariff_id)
+    opsContractTariff.tariff_month = moment(props.form.opsVoyage.sail_date).format('MMM').toLowerCase();
+  else
+    opsContractTariff.tariff_month = '';
+
+  opsTariffMonthChange(opsContractTariff)
+
+}
+
+function opsTariffMonthChange(opsContractTariff) {
+  opsContractTariff.total_rate = opsContractTariff.tariff_month ? opsContractTariff?.opsCargoTariff?.[opsContractTariff.tariff_month] : '';
+}
 </script>
 <style lang="postcss" scoped>
 .input-group {

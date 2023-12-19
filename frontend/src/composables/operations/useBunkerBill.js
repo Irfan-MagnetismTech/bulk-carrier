@@ -5,21 +5,46 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api.js';
 import Error from '../../services/error.js';
 import useNotification from '../useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useBunkerBill() {
 	const router = useRouter();
 	const bunkerBills = ref([]);
 	const $loading = useLoading();
 	const notification = useNotification();
+	// const bunkerObject = {
+    //     pr_no : null,
+    //     description: null,
+    //     // amount: null,
+    //     // exchange_rate_bdt: null,
+    //     // exchange_rate_usd: null,
+    //     amount_usd: null,
+    //     amount_bdt: null,
+    //     sub_total: null,
+	// }
+
+	
+
+	const bunkerObjectItem = {
+		currency: '',
+        particular: null,
+		quantity : null,
+		rate : null,
+        amount_usd: null,
+        amount_bdt: null,
+	}
+
 	const bunkerObject = {
+		currency: '',
         pr_no : null,
         description: null,
         // amount: null,
-        // exchange_rate_bdt: null,
-        // exchange_rate_usd: null,
+        exchange_rate_bdt: null,
+        exchange_rate_usd: null,
         amount_usd: null,
         amount_bdt: null,
-        sub_total: null,
+		opsBunkerBillLineItems:[],
+		requisitionBunkers: []
 	}
 
 	const bunkerBill = ref({	
@@ -33,8 +58,11 @@ export default function useBunkerBill() {
         sub_total : null,
         discount : null,
         grand_total : null,
+		grand_total_bdt: null,
+		sub_total_bdt: null,
+		discount_bdt: null,
 		scmVendor: [],
-		opsBunkerBillLines: [],
+		opsBunkerBillLines: [{...bunkerObject}],
 	});
 
 	const filterParams = ref(null);
@@ -88,10 +116,33 @@ export default function useBunkerBill() {
 	}
 
 	async function storeBunkerBill(form) {
+		let showAlert = false;
+		form.opsBunkerBillLines.reduce((acc, billLine) => {
+			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+			  if(!(lineItem.amount_bdt > 0)) {
+				
+				showAlert = true;
+			  }
+			}, 0);
+		  }, 0);
+
+		  if (showAlert) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `BDT Amount Must Be Present. 
+					`,
+				customClass: "swal-width",
+			});
+			return;
+		  } 
+
 		//NProgress.start();
+
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
-
+	
 		let formData = new FormData();
 		formData.append('attachment', form.attachment);
 		formData.append('smr_file_path', form.smr_file_path);
@@ -159,6 +210,7 @@ export default function useBunkerBill() {
 		}
 	}
 
+
 	async function approvedBunkerBill(form, bunkerBillId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
@@ -181,6 +233,7 @@ export default function useBunkerBill() {
 			//NProgress.done();
 		}
 	}
+	
 
 	async function deleteBunkerBill(bunkerBillId) {
 		
@@ -229,6 +282,8 @@ export default function useBunkerBill() {
 		deleteBunkerBill,
 		searchBunkerBills,
 		approvedBunkerBill,
+		bunkerObject,
+		bunkerObjectItem,
 		isLoading,
 		isTableLoading,
 		errors,

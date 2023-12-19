@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Entities;
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Entities\ScmMmrLine;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,5 +38,10 @@ class ScmMmr extends Model
     public function scmMmrLines(): HasMany
     {
         return $this->hasMany(ScmMmrLine::class);
+    }
+
+    public function scmMos(): HasMany
+    {
+        return $this->hasMany(ScmMo::class);
     }
 }

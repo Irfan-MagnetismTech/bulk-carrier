@@ -7,7 +7,7 @@ import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
-const { expenseHeads, getAllExpenseHeads, showHead, isLoading, errors } = useExpenseHead();
+const { expenseHeads, getAllExpenseHeads, showHead, isLoading } = useExpenseHead();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
 const subheads = ref([]);

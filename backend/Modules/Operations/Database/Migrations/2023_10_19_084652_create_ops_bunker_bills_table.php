@@ -18,12 +18,12 @@ return new class extends Migration
             $table->date('date');
             $table->foreignId('scm_vendor_id')->constrained('scm_vendors')->onDelete('cascade');
             $table->string('vendor_bill_no');
-            $table->text('remarks');
+            $table->text('remarks')->nullable();
             $table->string('attachment')->nullable();
             $table->string('smr_file_path')->nullable();
-            $table->float('sub_total', 20, 2);
-            $table->float('discount', 20, 2);
-            $table->float('grand_total', 20, 2)->nullable();
+            $table->float('sub_total_bdt', 20, 4);
+            $table->float('discount_bdt', 20, 4)->nullable();
+            $table->float('grand_total_bdt', 20, 4)->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);
             $table->timestamps();
         });

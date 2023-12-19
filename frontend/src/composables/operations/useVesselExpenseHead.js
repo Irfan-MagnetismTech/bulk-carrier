@@ -103,7 +103,7 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
-	async function updateVesselExpenseHead(form) {
+	async function updateVesselExpenseHead(form, vesselExpenseHeadId) {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -111,8 +111,8 @@ export default function useVesselExpenseHead() {
 
 		try {
 
-			const { data, status } = await Api.post(
-				`/ops/vessel-expense-heads`,
+			const { data, status } = await Api.put(
+				`/ops/vessel-expense-heads/${vesselExpenseHeadId}`,
 				form
 			);
 			// VesselExpenseHead.value = data.value;
@@ -184,6 +184,25 @@ export default function useVesselExpenseHead() {
 		}
 	}
 
+	async function showFlatVesselExpenseHead(ops_vessel_id) {
+		//NProgress.start();
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.get(`/ops/show-flatten-vessel-expense-heads?ops_vessel_id=${ops_vessel_id}`);
+			vesselExpenseHeads.value = data.value;
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+		} finally {
+			// loader.hide();
+			// isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		vesselExpenseHeads,
 		vesselExpenseHead,
@@ -191,6 +210,7 @@ export default function useVesselExpenseHead() {
 		storeVesselExpenseHead,
 		showVesselExpenseHead,
 		showVesselWiseExpenseHead,
+		showFlatVesselExpenseHead,
 		updateVesselExpenseHead,
 		deleteVesselExpenseHead,
 		searchVesselExpenseHeads,

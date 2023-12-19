@@ -38,15 +38,6 @@ export default function useMovementOut() {
         scm_mmr_id: '',
         business_unit: '',
         scmMoLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                remarks: '',
-                mmr_quantity: 0.00,
-                mmr_composite_key: '',
-                quantity: 0.00
-            }
         ],
     });
     const materialObject = {
