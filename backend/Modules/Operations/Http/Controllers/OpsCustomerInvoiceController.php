@@ -114,6 +114,8 @@ class OpsCustomerInvoiceController extends Controller
                 // $contract->opsVoyageSectors['total_rate'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->total_rate;
 
                 // $contract['amount'] = $contract->total_rate * $contract->quantity;
+                $invoiceVoyages['opsCargoType']= $invoiceVoyages->opsVoyage->opsCargoType;
+                $invoiceVoyages['opsVessel']= $invoiceVoyages->opsVoyage->opsVessel;
                 $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
                     if($contract['pol_pod']==$item['pol_pod']){
                         $item['opsCargoTariff'] = $contract->opsCargoTariff;
