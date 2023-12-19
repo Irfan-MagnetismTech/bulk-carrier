@@ -30,7 +30,7 @@ watch(crewProfile, (value) => {
       crewProfile.value.is_training_data_required = true;
     } else {
       crewProfile.value.is_training_data_required = false;
-      crewProfile.value.trainings.push(originProfileData.value.trainings[0]);
+      //crewProfile.value.trainings.push(originProfileData.value.trainings[0]);
     }
     //training data
 
@@ -39,7 +39,7 @@ watch(crewProfile, (value) => {
       crewProfile.value.is_experience_data_required = true;
     } else {
       crewProfile.value.is_experience_data_required = false;
-      crewProfile.value.experiences.push(originProfileData.value.experiences[0]);
+      //crewProfile.value.experiences.push(originProfileData.value.experiences[0]);
     }
     //experience data
 
@@ -48,7 +48,7 @@ watch(crewProfile, (value) => {
       crewProfile.value.is_other_data_required = true;
     } else {
       crewProfile.value.is_other_data_required = false;
-      crewProfile.value.languages.push(originProfileData.value.languages[0]);
+      //crewProfile.value.languages.push(originProfileData.value.languages[0]);
     }
     // languages data
 
@@ -57,7 +57,7 @@ watch(crewProfile, (value) => {
       crewProfile.value.is_reference_data_required = true;
     } else {
       crewProfile.value.is_reference_data_required = false;
-      crewProfile.value.references.push(originProfileData.value.references[0]);
+      //crewProfile.value.references.push(originProfileData.value.references[0]);
     }
     // languages data
 
@@ -66,7 +66,7 @@ watch(crewProfile, (value) => {
       crewProfile.value.is_nominee_data_required = true;
     } else {
       crewProfile.value.is_nominee_data_required = false;
-      crewProfile.value.nominees.push(originProfileData.value.nominees[0]);
+      //crewProfile.value.nominees.push(originProfileData.value.nominees[0]);
     }
     // nominee data
   }
