@@ -253,7 +253,7 @@
               <td>
                 <label class="block w-full mt-2 text-sm relative">
                   <input type="text" v-model.trim="form.opsCustomerInvoiceServices[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceServices[index].isParticularDuplicate}" />
-                  <span v-show="form.opsCustomerInvoiceServices[index].isParticularDuplicate" class="text-yellow-600 absolute top-2 right-1 " title="Duplicate Voyage" v-html="icons.ExclamationTriangle"></span>
+                  <span v-show="form.opsCustomerInvoiceServices[index].isParticularDuplicate" class="text-yellow-600 absolute top-2 right-1 " title="Duplicate Particular" v-html="icons.ExclamationTriangle"></span>
                   <!-- <Error v-if="errors?.opsCustomerInvoiceServices[index]?.quantity" :errors="errors.opsCustomerInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
