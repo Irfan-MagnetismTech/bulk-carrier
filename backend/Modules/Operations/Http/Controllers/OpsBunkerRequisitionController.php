@@ -210,10 +210,22 @@ class OpsBunkerRequisitionController extends Controller
             ->get();
 
             $bunker_requisitions->map(function($req) {
-                return $req->opsBunkers->map(function($bunker) {
-                    $bunker['name'] = $bunker->scmMaterial->name;
-                    return $bunker;
-                });
+
+                $output =  $req->opsBunkers->map(function($bunker) {
+
+                    if($bunker->quantity > 0) {
+                        $bunker['name'] = $bunker->scmMaterial->name;
+                        return $bunker;
+                    } else {
+                        return [];
+                    }
+                    
+                })->filter();
+
+                data_forget($req, 'opsBunkers');
+
+                $req->opsBunkers = $output;
+
             });
 
             return response()->success('Data retrieved successfully.', $bunker_requisitions, 200);

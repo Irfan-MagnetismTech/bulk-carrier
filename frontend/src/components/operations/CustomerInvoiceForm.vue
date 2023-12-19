@@ -20,6 +20,11 @@
                           />
                   </template>
               </v-select>
+              <input type="hidden" v-model="form.ops_customer_id">
+        </label>
+        <label class="block w-1/4 mt-2 text-sm">
+          <span class="text-gray-700">Invoice Date <span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" required />
         </label>
     </div>
 
@@ -29,50 +34,63 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="">Voyage <span class="text-red-500">*</span></th>
-              <th class=""><nobr>Vessel</nobr></th>
-              <th class=""><nobr>Cargo Type</nobr></th>
-              <th><nobr>Total Amount</nobr></th>
-              <th class="py-3 text-center align-center">Action</th>
-              <th><nobr>Details</nobr></th>
+              <th class="w-4/12">Voyage <span class="text-red-500">*</span></th>
+              <th class="w-2/12"><nobr>Vessel</nobr></th>
+              <th class="w-2/12"><nobr>Cargo Type</nobr></th>
+              <th class="w-2/12"><nobr>Total Amount</nobr></th>
+              <th class="w-1/12py-3 text-center align-center">Details</th>
+              <th class="w-1/12"><nobr>Action</nobr></th>
 
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sector, index) in form.opsCustomerInvoiceVoyages" :key="index">
               <td class="!w-1/4">
-                <label class="block w-full mt-2 text-sm">
+                <label class="block w-full mt-2 text-sm relative">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsCustomerInvoiceVoyages[index].opsVoyage"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
+                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.
+                    opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsCustomerInvoiceVoyageChanged(form.opsCustomerInvoiceVoyages[index])">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsCustomerInvoiceVoyages[index].opsVoyage"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+                <input type="hidden" v-model="form.opsCustomerInvoiceVoyages[index].ops_voyage_id">
+                <span v-show="form.opsCustomerInvoiceVoyages[index].isVoyageDuplicate" class="text-yellow-600 absolute top-2 right-10" title="Duplicate Voyage" v-html="icons.ExclamationTriangle"></span>
                 </label>
               </td>
-              <td>
 
-              </td>
+              <!-- opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+    opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.opsVessel.id;
+    opsCustomerInvoiceVoyage.opsVessel = contractTariff.opsVessel;
+    opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage.ops_voyage_id;
+    opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.total_amount; -->
               <td>
-                  <label class="block w-full mt-2 text-sm">
-                    <span class="show-block">
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsVessel?.name" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+              </td>
+              
+              <td>
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+                <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
+                  <!-- <label class="block w-full mt-2 text-sm"> -->
+                    <!-- <span class="show-block">
                       {{ form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
-                    </span>
+                    </span> -->
                   <!-- <input type="text" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage.opsCargoType.cargo_type" readonly class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                </label>
+                <!-- </label> -->
               </td>
              
              
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsCustomerInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
+                  <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.total_amount" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
+                  <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -110,24 +128,29 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="">Particulars</th>
+              <th class=" w-4/12">Particulars</th>
               <!-- <th class="">Currency</th> -->
-              <th class="">Unit</th>
-              <th>Quantity</th>
-              <th>Rate</th>
+              <th class=" w-1/12">Unit</th>
+              <th class=" w-2/12">Quantity <span class="text-red-500">*</span></th>
+              <th class=" w-2/12">Rate <span class="text-red-500">*</span></th>
               <!-- <th>Exchange Rate (To USD)</th>
               <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th> -->
-              <th>Amount</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class=" w-2/12">Amount</th>
+              <th class=" w-1/12py-3 text-center align-center"><button  type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sector, index) in form.opsCustomerInvoiceOthers" :key="index">
               <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].particular" class="form-input" autocomplete="off" />
+                <label class="block w-full mt-2 text-sm relative">
+                  <input type="text" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceOthers[index].isParticularDuplicate}" />
+                  <span v-show="form.opsCustomerInvoiceOthers[index].isParticularDuplicate" class="text-yellow-600 absolute pl-2 top-2 right-1" title="Duplicate Particular" v-html="icons.ExclamationTriangle"></span>
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -147,12 +170,12 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].quantity" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <!-- <td>
@@ -181,16 +204,16 @@
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeOther(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeOther(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <!-- <button v-else type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
-                </button>
+                </button> -->
               </td>
             </tr>
           </tbody>
@@ -208,24 +231,29 @@
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
-              <th>Particulars</th>
+              <th class=" w-4/12">Particulars</th>
               <!-- <th>Currency</th> -->
-              <th>Unit</th>
-              <th>Quantity</th>
-              <th>Rate</th>
+              <th class=" w-1/12">Unit</th>
+              <th class=" w-2/12">Quantity <span class="text-red-500">*</span></th>
+              <th class=" w-2/12">Rate <span class="text-red-500">*</span></th>
               <!-- <th>Exchange Rate (To USD)</th>
               <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th> -->
-              <th>Amount</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class=" w-2/12">Amount</th>
+              <th class=" w-1/12py-3 text-center align-center"><button type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in form.opsCustomerInvoiceServices" :key="index">
               <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsCustomerInvoiceServices[index].particular" class="form-input" autocomplete="off" />
+                <label class="block w-full mt-2 text-sm relative">
+                  <input type="text" v-model.trim="form.opsCustomerInvoiceServices[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceServices[index].isParticularDuplicate}" />
+                  <span v-show="form.opsCustomerInvoiceServices[index].isParticularDuplicate" class="text-yellow-600 absolute top-2 right-1 " title="Duplicate Voyage" v-html="icons.ExclamationTriangle"></span>
                   <!-- <Error v-if="errors?.opsCustomerInvoiceServices[index]?.quantity" :errors="errors.opsCustomerInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
@@ -244,13 +272,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].quantity" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
 
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <!-- <td>
@@ -279,16 +307,16 @@
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button  type="button" @click="removeService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <!-- <button v-else type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
-                </button>
+                </button> -->
               </td>
             </tr>
           </tbody>
@@ -363,7 +391,7 @@
                   <input type="text" readonly :value="props.form.service_fee_deduction_amount" class="!hidden form-input bg-gray-100 text-right" autocomplete="off" />
                 </td>
                 <td>
-                  <input type="text" v-model="props.form.discounted_amount" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" v-model="props.form.discounted_amount" class="form-input text-right" autocomplete="off" />
                 </td>
                 <td>
                   <span class="show-block !justify-end">
@@ -377,8 +405,8 @@
     </div>
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
-    <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+    <form @submit.prevent="" style="position: absolute;top: 0; width: 100%">
+      <div class="px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 w-10/12 !mx-auto" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -405,33 +433,40 @@
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <thead>
               <tr>
-                <th>Loading Point</th>
-                <th>Unloading Point</th>
-                <th>Initial Survey Quantity</th>
-                <th>Final Receipt Quantity</th>
-                <th>Boat Note Quantity</th>
-                <th>Final Survey Quantity</th>
+                <th><nobr>Tariff Name</nobr></th>
+                <th><nobr>Loading Point</nobr></th>
+                <th><nobr>Unloading Point</nobr></th>
+                <th><nobr>Initial Survey Quantity</nobr></th>
+                <th><nobr>Final Receipt Quantity</nobr></th>
+                <th><nobr>Boat Note Quantity</nobr></th>
+                <th><nobr>Final Survey Quantity</nobr></th>
               </tr>
             </thead>
             <tbody>
+
               <tr v-for="(detail, index) in details" :key="index">
-                <td>
-                  <input type="text" readonly :value="detail.loading_point" class="form-input text-right"/>
+                <td v-if="detail.tariff_name">
+                  <router-link :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: detail?.tariff_id ?? null } }" target="_blank" class="font-semibold text-blue-600">
+                    <nobr>{{ detail.tariff_name }}</nobr>
+                  </router-link>
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.unloading_point" class="form-input text-right"/>
+                  {{ detail.loading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.initial_survey_qty" class="form-input text-right"/>
+                  {{ detail.unloading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_received_qty" class="form-input text-right"/>
+                  {{ detail.initial_survey_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.boat_note_qty" class="form-input text-right"/>
+                  {{ detail.final_received_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_survey_qty" class="form-input text-right"/>
+                  {{ detail.boat_note_qty }}
+                </td>
+                <td>
+                  {{ detail.final_survey_qty }}
                 </td>
               </tr>
             </tbody>
@@ -466,14 +501,20 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 import useHelper from "../../composables/useHelper";
+import useContractAssign from "../../composables/operations/useContractAssign";
+import useHeroIcon from "../../assets/heroIcon";
 
 const editInitiated = ref(false);
+const icons = useHeroIcon();
+
 
 const { currencies, getCurrencies } = useBusinessInfo();
 const { getCustomersByBusinessUnit, customers } = useCustomer();
 const { numberFormat } = useHelper();
 // const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
+const { voyages, getVoyageByCustomer } = useVoyage();
+const { contractTariff, getContractTariffByVoyage } = useContractAssign();
 const props = defineProps({
     form: { required: false,default: {},},
     errors: { type: [Object, Array], required: false },
@@ -550,23 +591,25 @@ const isNotBDTCurrency = (item,index) => {
 
 
 watch(() => props.form.opsCustomerInvoiceVoyages, (newLines) => {
+  console.log(newLines);
   let total_amount = 0.0;
   newLines.forEach((line, index) => {
-    if (line.opsVoyage) {
-      const selectedItem = voyages.value.find(voyage => voyage.id === line.opsVoyage.id);
-      if (selectedItem) {
-        if ( line.ops_voyage_id !== selectedItem.id
-        ) {
-          props.form.opsCustomerInvoiceVoyages[index].ops_voyage_id = selectedItem.id;
-          props.form.opsCustomerInvoiceVoyages[index].cargo_quantity = selectedItem.cargo_quantity;
-          props.form.opsCustomerInvoiceVoyages[index].total_amount = props.form.opsCustomerInvoiceVoyages[index].cargo_quantity * props.form.opsCustomerInvoiceVoyages[index].rate_per_mt;
-        }
-      }
-    }
+    // if (line.opsVoyage) {
+    //   const selectedItem = voyages.value.find(voyage => voyage.id === line.opsVoyage.id);
+    //   if (selectedItem) {
+    //     if ( line.ops_voyage_id !== selectedItem.id
+    //     ) {
+    //       props.form.opsCustomerInvoiceVoyages[index].ops_voyage_id = selectedItem.id;
+    //       props.form.opsCustomerInvoiceVoyages[index].cargo_quantity = selectedItem.cargo_quantity;
+    //       props.form.opsCustomerInvoiceVoyages[index].total_amount = props.form.opsCustomerInvoiceVoyages[index].cargo_quantity * props.form.opsCustomerInvoiceVoyages[index].rate_per_mt;
+    //     }
+    //   }
+    // }
 
-    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
-    props.form.total_amount = parseFloat(total_amount.toFixed(2));
+    // total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
+    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt ?? 0);
   });
+  props.form.total_amount = parseFloat(total_amount.toFixed(2));
   CalculateAll();
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
@@ -582,27 +625,35 @@ function CalculateAll() {
 watch(() => props?.form?.opsCustomerInvoiceServices, (newVal, oldVal) => {
       let total_bdt = 0.0;
       let total_usd = 0.0;
+      let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        total_bdt += amount_bdt;
-        total_usd += amount_usd;
+        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        // total_bdt += amount_bdt;
+        // total_usd += amount_usd;
+        line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
 
       });
-  props.form.service_fee_deduction_amount_usd = total_usd;
-  props.form.service_fee_deduction_amount = total_bdt ;
+  // props.form.service_fee_deduction_amount_usd = total_usd;
+  // props.form.service_fee_deduction_amount = total_bdt ;
+  props.form.service_fee_deduction_amount = total_amount ;
   CalculateAll();
 }, { deep: true }); 
 
 watch(() => props?.form?.opsCustomerInvoiceOthers, (newVal, oldVal) => {
       let total_bdt = 0.0;
-      let total_usd = 0.0;
+  let total_usd = 0.0;
+  let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        total_bdt += amount_bdt;
-        total_usd += amount_usd;
+        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        // total_bdt += amount_bdt;
+        // total_usd += amount_usd;
+        line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
       });
-  props.form.others_billable_amount_usd = total_usd;
-  props.form.others_billable_amount = total_bdt;
+  // props.form.others_billable_amount_usd = total_usd;
+  // props.form.others_billable_amount = total_bdt;
+  props.form.others_billable_amount = total_amount;
   CalculateAll(); 
 }, { deep: true });
 
@@ -642,6 +693,43 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 function profileChanged() {
   let value = props.form.opsCustomer ?? null;
   props.form.ops_customer_id = value?.id ?? null;
+
+  voyages.value = [];
+  props.form.opsCustomerInvoiceVoyages = [];
+  addVoyage();
+
+
+  if(props.form.business_unit && props.form.ops_customer_id)
+    getVoyageByCustomer(props.form.business_unit, props.form.ops_customer_id);
+}
+
+function opsCustomerInvoiceVoyageChanged(opsCustomerInvoiceVoyage) {
+  opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.opsVoyage?.id;
+  // console.log(opsCustomerInvoiceVoyage.opsVoyage);
+  opsCustomerInvoiceVoyage.contractTariff = {};
+  
+  if (opsCustomerInvoiceVoyage.ops_voyage_id) {
+    getContractTariffByVoyage(opsCustomerInvoiceVoyage.ops_voyage_id).then(() => {
+      opsCustomerInvoiceVoyage.contractTariff = cloneDeep(contractTariff);
+      opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.value?.opsVessel?.id;
+      opsCustomerInvoiceVoyage.opsVessel = contractTariff.value?.opsVessel;
+      opsCustomerInvoiceVoyage.ops_cargo_type_id = contractTariff.value?.opsCargoType?.id;
+      opsCustomerInvoiceVoyage.opsCargoType = contractTariff.value?.opsCargoType;
+      opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.ops_voyage_id;
+      opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.value?.total_amount;
+    })
+    
+    // contractTariff.opsVessel.id
+  }
+  else {
+    opsCustomerInvoiceVoyage.contractTariff = {};
+    opsCustomerInvoiceVoyage.ops_vessel_id = '';
+    opsCustomerInvoiceVoyage.opsVessel = '';
+    opsCustomerInvoiceVoyage.ops_cargo_type_id = '';
+    opsCustomerInvoiceVoyage.opsCargoType = '';
+    opsCustomerInvoiceVoyage.ops_voyage_id = '';
+    opsCustomerInvoiceVoyage.total_amount_bdt = '';
+  }
 }
 
 
@@ -651,7 +739,7 @@ watch(() => props.form.ops_customer_profile_id, (value) => {
       props.form.ops_customer_contract_id = '';
       props.form.opsCustomerContract = null;
   }
-   value ? getCustomerContractsByCharterOwner(value) : customerContracts.value = [];
+  //  value ? getCustomerContractsByCharterOwner(value) : customerContracts.value = [];
 })
 
 
@@ -679,8 +767,8 @@ const currentIndex = ref(null);
 function showModal(index) {
   isModalOpen.value = 1
   currentIndex.value = index
-  if(props.form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsVoyageSectors) {
-    details.value = cloneDeep(props.form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsVoyageSectors)
+  if(props.form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsVoyageSectors) {
+    details.value = cloneDeep(props.form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsVoyageSectors)
   } else {
     details.value = [{type: ''}]
   }
@@ -707,5 +795,9 @@ function closeModel() {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+#dataTable tr, th, td {
+  @apply text-[12px]
 }
 </style>

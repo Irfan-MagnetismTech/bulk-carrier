@@ -58,7 +58,6 @@ class OpsVoyage extends Model
         return $this->hasMany(OpsVoyageSector::class);
     }
 
-
     public function opsVoyagePortSchedules()
     {
         return $this->hasMany(OpsVoyagePortSchedule::class);
@@ -81,4 +80,8 @@ class OpsVoyage extends Model
     public function opsContractTariffs() {
         return $this->hasMany(OpsContractTariff::class, 'ops_voyage_id', 'id');
     }
+
+    // public function opsChartererInvoiceVoyage() {
+    //     return $this->hasMany(OpsChartererInvoiceVoyage::class, 'ops_voyage_id','id');
+    // }
 }
