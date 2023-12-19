@@ -186,15 +186,15 @@ class OpsCargoTariffController extends Controller
             })
             ->get();
 
-            if(isset($cargoTariffs)) {
-                $error= [
-                    'message'=>'Vessel has not define in any Tariffs.',
-                    'errors'=>[
-                        'tariff'=>['Vessel has not define in any Tariffs.',]
-                        ]
-                    ];
-                return response()->json($error, 422);
-            }
+            // if(count($cargoTariffs)==0) {
+            //     $error= [
+            //         'message'=>'Vessel has not define in any Tariffs.',
+            //         'errors'=>[
+            //             'tariff'=>['Vessel has not define in any Tariffs.',]
+            //             ]
+            //         ];
+            //     return response()->json($error, 422);
+            // }
 
             return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){

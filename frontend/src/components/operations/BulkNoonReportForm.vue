@@ -413,8 +413,8 @@
                         <option value="engine_unit">Engine Unit</option>
                         <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
                     </select>
-                    <span class="text-red-500 pl-1" v-if="item.type=='engine_unit'">*</span>
                     <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit" required>
+                    <span class="text-red-500 pl-1" v-if="item.type=='engine_unit'">*</span>
                     <span v-show="isEngineInputDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
 
                   </div>

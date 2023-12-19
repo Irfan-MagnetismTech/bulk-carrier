@@ -122,6 +122,12 @@ watch(
 
 function changeAccountName(){
   props.form.material_account_name = props.form.scm_material_name?.account?.account_name;
+  props.form.scm_material_id = props.form.scm_material_name?.id;
+  props.form.acc_account_id = props.form.scm_material_name?.account?.id;
+}
+
+function changeParentAccountName(){
+  props.form.acc_parent_account_id = props.form.acc_parent_account_name?.id;
 }
 
 watch(() => props.form.scmMaterial, (newValue, oldValue) => {
@@ -184,7 +190,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Asset Category <span class="text-red-500">*</span></span>
-        <v-select :options="allFixedAssetCategoryList" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_parent_account_name" label="account_name"  class="block w-full rounded form-input" required>
+        <v-select :options="allFixedAssetCategoryList" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_parent_account_name" label="account_name" @update:modelValue="changeParentAccountName" class="block w-full rounded form-input" required>
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_parent_account_name" v-bind="attributes" v-on="events"/>
           </template>
