@@ -48,4 +48,9 @@ class OpsCustomer extends Model
     {
         return  $this->name. ' - '.$this->code;
     }
+
+    public function opsVoyages()
+    {
+        return $this->hasMany(OpsVoyage::class, 'ops_customer_id', 'id');
+    }
 }
