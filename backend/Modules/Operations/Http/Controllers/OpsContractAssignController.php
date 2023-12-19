@@ -270,7 +270,7 @@ class OpsContractAssignController extends Controller
                 return $item;
             });
 
-            if(count($contract->opsCargoTariff)>0){
+            if(isset($contract->opsCargoTariff)>0){
                 $isError=1;
             }
         });
