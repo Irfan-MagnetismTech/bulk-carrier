@@ -34,7 +34,15 @@ class OpsCustomerInvoiceController extends Controller
         try {
             $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsCargoType','opsCustomerInvoiceOthers','opsCustomerInvoiceServices')
            ->globalSearch($request->all());
-            
+
+            $customerInvoices->map(function($invoice){
+                $voyages = $invoice->opsCustomerInvoiceVoyages->map(function ($invoiceVoyages) {
+                    return $invoiceVoyages->opsVoyage->voyage_sequence;
+                });
+                $invoice['voyage_name'] = implode(', ', $voyages->toArray());
+                return $invoice;
+            });
+        
             return response()->success('Data retrieved successfully.', $customerInvoices, 200);
         }
         catch (QueryException $e)
