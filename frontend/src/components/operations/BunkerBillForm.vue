@@ -123,10 +123,10 @@
                       <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="text" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
                       <button type="button" @click="removeBillItems(index, itemIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
