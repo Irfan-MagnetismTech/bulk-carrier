@@ -491,7 +491,7 @@
             <thead>
               <tr>
                 <th>Head</th>
-                <th>Amount</th>
+                <th>Quantity</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -504,7 +504,7 @@
                   </select>
                 </td>
                 <td>
-                  <input type="number" step="0.001" v-model.trim="details.amount" class="form-input text-right" placeholder="Amount" />
+                  <input type="number" step="0.001" v-model.trim="details.amount" class="form-input text-right" placeholder="Quantity" />
                 </td>
                 <td>
                   <button type="button" v-if="index>0" @click="removeConsumptionHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
