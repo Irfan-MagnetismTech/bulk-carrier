@@ -103,23 +103,27 @@ class OpsCustomerInvoiceController extends Controller
     */
     public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
     {
-        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVessel','opsCustomerInvoiceVoyages.opsVoyage.opsCargoType','opsCustomerInvoiceVoyages','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
                
         
         collect($customer_invoice->opsCustomerInvoiceVoyages)->map(function($invoiceVoyages){
             $invoiceVoyages->opsVoyage->opsContractTariffs->map(function($contract) use ($invoiceVoyages){
-                $contract->opsVoyageSectors['tariff_name'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->opsCargoTariff?->tariff_name;
-                $contract->opsVoyageSectors['tariff_id'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->opsCargoTariff?->id;
-                $contract->opsVoyageSectors['total_rate'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->total_rate;
+                // dd($contract->opsVoyage->opsVoyageSectors);
+                // $contract->opsVoyageSectors['tariff_name'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->opsCargoTariff?->tariff_name;
+                // $contract->opsVoyageSectors['tariff_id'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->opsCargoTariff?->id;
+                // $contract->opsVoyageSectors['total_rate'] =$contract->where('pol_pod', $contract->opsVoyageSectors['pol_pod'])?->first()?->total_rate;
 
-                $contract['amount'] = $contract->total_rate * $contract->quantity;
-                $invoiceVoyages->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
+                // $contract['amount'] = $contract->total_rate * $contract->quantity;
+                $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
                     if($contract['pol_pod']==$item['pol_pod']){
                         $item['opsCargoTariff'] = $contract->opsCargoTariff;
                     }
                     return $item;
                 });
             });
+
+            $invoiceVoyages['contractTariff']=$invoiceVoyages->opsVoyage;
+            return $invoiceVoyages;
         });
 
         try
