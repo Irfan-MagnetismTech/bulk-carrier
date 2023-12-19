@@ -23,24 +23,4 @@ class UniqueId
 
         return strtoupper($prefix) . '-' . $currentYear . '-' . $newId;
     }
-
-    
-    public function generate2($model, string $prefix): string
-    {
-        $latestModel = $model::latest()->first();
-        $currentYear = now()->format('Y');
-
-        if ($latestModel) {
-            $lastYear = date('Y', strtotime($latestModel->created_at));
-            $lastId = $latestModel->id;
-
-            if ($currentYear != $lastYear) {
-                return strtoupper($prefix) . '-' . $currentYear . '-' . 1;
-            }
-
-            return strtoupper($prefix) . '-' . $currentYear . '-' . ($lastId + 1);
-        } else {
-            return strtoupper($prefix) . '-' . $currentYear . '-' . 1;
-        }
-    }
 }
