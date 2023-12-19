@@ -62,9 +62,9 @@ class OpsExpenseHeadController extends Controller
 
             if (count($subHeadNames) !== count(array_unique($subHeadNames))) {
                 $error= [
-                    'message'=>'Sub head name can not be same.',
+                    'message'=>'Head name can not be same.',
                     'errors'=>[
-                        'ops_sub_heads'=>['Sub head name can not be same.',]
+                        'ops_sub_heads'=>['Head name can not be same.',]
                         ]
                     ];
                 return response()->json($error, 422);
@@ -145,9 +145,9 @@ class OpsExpenseHeadController extends Controller
 
             if (count($subHeadNames) !== count(array_unique($subHeadNames))) {
                 $error= [
-                    'message'=>'Sub head name can not be same.',
+                    'message'=>'Head name can not be same.',
                     'errors'=>[
-                        'ops_sub_heads'=>['Sub head name can not be same.',]
+                        'ops_sub_heads'=>['Head name can not be same.',]
                         ]
                     ];
                 return response()->json($error, 422);
