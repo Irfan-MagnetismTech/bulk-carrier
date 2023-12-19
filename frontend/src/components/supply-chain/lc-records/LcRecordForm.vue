@@ -164,8 +164,8 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
           <!-- <Error v-if="errors?.scm_po_id" :errors="errors.scm_po_id"  /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">Invoice Value</span>
-        <input type="number" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'" />
+        <span class="label-item-title">Invoice Value <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'"/>
         <!-- <Error v-if="errors?.invoice_value" :errors="errors.invoice_value"/> -->
     </label>
       <label class="label-group">
@@ -204,7 +204,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" /> -->
     </label>
     <label class="label-group">
-          <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Attachment</span>
           <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
           <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
       </label>
@@ -217,28 +217,28 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
           <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
           <tbody>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type</td>
+              <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type <span class="text-red-500">*</span></td>
               <td class="align-center text-center !w-1/4">
                 <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
               </td>
             </tr>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank</td>
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank <span class="text-red-500">*</span></td>
               <td class="align-center !w-1/4">
                 <input type="text" v-model="form.bank_name" required class="form-input text-center" name="bank_name" :id="'bank_name'" />
               </td>
             </tr>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100">CFR Value (BDT)</td>
+              <td class="align-center font-bold bg-gray-100">CFR Value (BDT) <span class="text-red-500">*</span></td>
               <td class="align-center">
-                <input type="number" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" />
+                <input type="number" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" min="1"/>
 
               </td>
             </tr>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100">LC Margin (BDT)</td>
+              <td class="align-center font-bold bg-gray-100">LC Margin (BDT) <span class="text-red-500">*</span></td>
               <td class="align-center">
-                <input type="number" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" />
+                <input type="number" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" min="1"/>
 
               </td>
             </tr>
@@ -263,16 +263,16 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
               </td>
             </tr>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD)</td>
+              <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD) <span class="text-red-500">*</span></td>
               <td class="align-center">
-                <input type="number" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'" />
+                <input type="number" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'"  min="1"/>
 
               </td>
             </tr>
             <tr class="text-center">
-              <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD)</td>
+              <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD) <span class="text-red-500">*</span></td>
               <td class="align-center">
-                <input type="number" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'" />
+                <input type="number" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'"  min="1"/>
 
               </td>
             </tr>

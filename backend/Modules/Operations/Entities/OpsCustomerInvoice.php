@@ -6,6 +6,7 @@ use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Operations\Entities\OpsCustomerInvoiceLine;
 
 class OpsCustomerInvoice extends Model
 {
@@ -13,6 +14,8 @@ class OpsCustomerInvoice extends Model
 
     protected $fillable = [
         'ops_customer_id',
+        'date',
+        'sub_total_amount',
         'total_amount_bdt',
         'others_billable_amount',
         'service_fee_deduction_amount',
@@ -34,12 +37,12 @@ class OpsCustomerInvoice extends Model
        
     public function opsCustomerInvoiceOthers()
     {
-        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','charge');
+        return $this->hasMany(OpsCustomerInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','charge');
     }
     
     public function opsCustomerInvoiceServices()
     {
-        return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','deduct');
+        return $this->hasMany(OpsCustomerInvoiceLine::class, 'ops_customer_invoice_id', 'id')->where('charge_or_deduct','deduct');
     }
 
 }

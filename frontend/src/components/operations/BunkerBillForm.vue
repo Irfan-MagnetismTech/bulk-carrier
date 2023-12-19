@@ -27,20 +27,20 @@
         <input type="hidden" v-model="form.scm_vendor_id" />        
       </label>
 
-      <!-- <label class="block w-1/2 mt-2 text-sm">
+      <label class="block w-1/2 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Bill No. <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.vendor_bill_no" placeholder="Bill No." class="form-input" required autocomplete="off" />
-      </label> -->
+      </label>
 
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.attachment) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.attachment) }}</p></span>
             <input type="file" @change="attachFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600"> {{ getFileName(form.smr_file_path) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.smr_file_path) }}</p></span>
             <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
     </div>
@@ -77,11 +77,11 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="text" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+            <input type="text" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
           </label>
         </div>
 
@@ -123,10 +123,10 @@
                       <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
                       <button type="button" @click="removeBillItems(index, itemIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -345,8 +345,8 @@ const calculatePrAmounts = (billLineIndex) => {
   if (existingCurrency) {
 
     if(currency != existingCurrency?.currency) {
-       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd = '';
-       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt = '';
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_usd = null;
+       props.form.opsBunkerBillLines[billLineIndex].exchange_rate_bdt = null;
     }
 
     existingCurrency.currency = currency;
@@ -416,7 +416,7 @@ const calculateInCurrency = (currency, exchange_rate_bdt, exchange_rate_usd, ite
     item.amount_bdt = parseFloat((item?.rate * item?.quantity * exchange_rate_usd * exchange_rate_bdt).toFixed(2));
   }
 
-  return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
+  return {amount : (item.amount > 0) ? item.amount : null, amount_usd: (item.amount_usd > 0) ? item.amount_usd : null, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : null};
 }
 
 function CalculateAll() {
@@ -441,6 +441,36 @@ onMounted(() => {
   getCurrencies();
   fetchBunkerRequisition("", false)
 })
+
+//watch form.opsBunkerBillLines[index].opsBunkerBillLineItems
+// watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
+//   if(props.form?.opsBunkerBillLines?.length > 0) {
+//     const PrArray = [];
+//     console.log("sdf");
+//     for (let billLineIndex of props.form.opsBunkerBillLines) {
+//       let pr_key = billLineIndex.pr_no;
+//         if (PrArray.indexOf(pr_key) === -1) {
+//           PrArray.push(pr_key);
+//           if (props.form.opsBunkerBillLines[billLineIndex]?.opsBunkerBillLineItems?.length > 0) {
+//             const prMaterialArray = [];
+//           for(let itemIndex of props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems) {
+//             let item_key = props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[itemIndex].name;
+//             if (prMaterialArray.indexOf(item_key) === -1) {
+//               prMaterialArray.push(item_key);
+//             } else {
+//               alert("Duplicate Found");
+//               props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems.splice(itemIndex, 1);
+//             }
+//           }
+//           }
+//         } else {
+//           alert("Duplicate Found");
+//           props.form.opsBunkerBillLines.splice(index, 1);
+//         } 
+//     }
+
+//   }
+// }, { deep: true })
 </script>
 <style lang="postcss" scoped>
 .input-group {

@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('acc_salaries', function (Blueprint $table) {
             $table->id();
-			$table->enum('business_unit', ['PSML', 'TSLL']);            
-            $table->softDeletes();
+            $table->unsignedBigInteger('acc_cost_center_id')->nullable();
+            $table->string('year_month', 7);
+            $table->decimal('total_salary', 16, 2);
+			$table->text('remarks')->nullable();                        
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

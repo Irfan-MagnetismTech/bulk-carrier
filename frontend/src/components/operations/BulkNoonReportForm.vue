@@ -413,8 +413,8 @@
                         <option value="engine_unit">Engine Unit</option>
                         <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
                     </select>
-                    <span class="text-red-500 pl-1" v-if="item.type=='engine_unit'">*</span>
                     <input type="text" v-if="item.type=='engine_unit'" class="form-input ml-2" v-model.trim="item.engine_unit" required>
+                    <span class="text-red-500 pl-1" v-if="item.type=='engine_unit'">*</span>
                     <span v-show="isEngineInputDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
 
                   </div>
@@ -491,7 +491,7 @@
             <thead>
               <tr>
                 <th>Head</th>
-                <th>Amount</th>
+                <th>Quantity</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -504,7 +504,7 @@
                   </select>
                 </td>
                 <td>
-                  <input type="number" step="0.001" v-model.trim="details.amount" class="form-input text-right" placeholder="Amount" />
+                  <input type="number" step="0.001" v-model.trim="details.amount" class="form-input text-right" placeholder="Quantity" />
                 </td>
                 <td>
                   <button type="button" v-if="index>0" @click="removeConsumptionHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

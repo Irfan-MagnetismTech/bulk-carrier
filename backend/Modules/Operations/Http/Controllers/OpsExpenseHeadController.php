@@ -53,6 +53,37 @@ class OpsExpenseHeadController extends Controller
      */
      public function store(OpsExpenseHeadRequest $request): JsonResponse
      {
+        $exist = OpsExpenseHead::where(['name' => $request->name])->get();
+
+        if ($exist) {
+            $error= [
+                'message'=>'Head name already exist.',
+                'errors'=>[
+                    'ops_sub_heads'=>['Head name already exist.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
+        if(isset($request->opsSubHeads)){
+            $subHeadNames= [];
+            foreach($request->opsSubHeads as $key=>$subhead){
+                $subHeadNames[]=$subhead['name'];
+            }
+
+            if (count($subHeadNames) !== count(array_unique($subHeadNames))) {
+                $error= [
+                    'message'=>'Head name can not be same.',
+                    'errors'=>[
+                        'ops_sub_heads'=>['Head name can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
+
+
         try {
             DB::beginTransaction();
 
@@ -117,6 +148,23 @@ class OpsExpenseHeadController extends Controller
     */
     public function update(OpsExpenseHeadRequest $request, OpsExpenseHead $expense_head): JsonResponse
     {
+        if(isset($request->opsSubHeads)){
+            $subHeadNames= [];
+            foreach($request->opsSubHeads as $key=>$subhead){
+                $subHeadNames[]=$subhead['name'];
+            }
+
+            if (count($subHeadNames) !== count(array_unique($subHeadNames))) {
+                $error= [
+                    'message'=>'Head name can not be same.',
+                    'errors'=>[
+                        'ops_sub_heads'=>['Head name can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
         $expense_head->update(['name' => $request->name, 'is_visible_in_voyage_report' => $request->is_visible_in_voyage_report]);
 

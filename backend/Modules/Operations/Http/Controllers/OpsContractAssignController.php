@@ -242,25 +242,51 @@ class OpsContractAssignController extends Controller
     */
     public function getContractTariffByVoyage(Request $request): JsonResponse
     {
-        $contract_tariffs= OpsContractTariff::query()
+        $contract_tariffs= OpsVoyage::query()
         ->when(isset(request()->ops_voyage_id), function ($query) {
-            $query->where('ops_voyage_id', request()->ops_voyage_id);
+            $query->where('id', request()->ops_voyage_id);
         })
         ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
             $query->where('business_unit', request()->business_unit);
         })
-        ->with(['opsCargoTariff','opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageSectors'])
-        ->get();
+        ->with(['opsContractTariffs', 'opsCargoType', 'opsCargoTariff','opsVessel','opsVoyageSectors'])
+        ->first();
 
+        $isError=0;
+
+        $contract_tariffs->opsVoyageSectors->map(function($sector) use($contract_tariffs) {
+            $sector['tariff_name'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->opsCargoTariff?->tariff_name;
+            $sector['tariff_id'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->opsCargoTariff?->id;
+            $sector['total_rate'] = $contract_tariffs->opsContractTariffs->where('pol_pod', $sector['pol_pod'])?->first()?->total_rate;
+            return $sector;
+        });
         
-        $contract_tariffs->map(function($contract){
+        $contract_tariffs->opsContractTariffs->map(function($contract) use ($isError){
+            $contract['amount'] = $contract->total_rate * $contract->quantity;
             $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
-                if($contract->opsCargoTariff['pol_pod']==$item['pol_pod']){
+                if($contract['pol_pod']==$item['pol_pod']){
                     $item['opsCargoTariff'] = $contract->opsCargoTariff;
                 }
                 return $item;
             });
+
+            if(isset($contract->opsCargoTariff)>0){
+                $isError=1;
+            }
         });
+
+        if($isError) {
+            $error= [
+                'message'=>'Voyage has not define in any Tariffs.',
+                'errors'=>[
+                    'tariff'=>['Voyage has not define in any Tariffs.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+       
+
+        $contract_tariffs['total_amount']=$contract_tariffs->opsContractTariffs->sum('amount');
 
         try {            
             return response()->success('Data retrieved successfully.', $contract_tariffs, 200);

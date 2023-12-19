@@ -26,7 +26,7 @@ export default function useFixedAsset() {
         acc_parent_account_name : null,
         acc_parent_account_id : '',
         acc_account_name : null,
-        acc_account_id : 1,
+        acc_account_id : '',
         asset_tag : '',
         useful_life : '',
         depreciation_rate : '',

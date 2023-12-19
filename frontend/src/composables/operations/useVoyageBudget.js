@@ -81,6 +81,17 @@ export default function useVoyageBudget() {
 	}
 
 	async function storeVoyageBudget(form) {
+		if((form.currency == 'USD' && form.exchange_rate_bdt == null) || form.currency == 'BDT' && form.exchange_rate_usd == null) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Currency Info Mismatch
+					`,
+				customClass: "swal-width",
+			});
+			return;
+		}
+
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -121,11 +132,11 @@ export default function useVoyageBudget() {
 
 	async function updateVoyageBudget(form, voyageBudgetId) {
 		//NProgress.start();
-		if((form.currency == 'USD' && form.exchange_rate_usd != '') || form.currency == 'BDT' && form.exchange_rate_bdt != '') {
+		if((form.currency == 'USD' && form.exchange_rate_bdt == null) || form.currency == 'BDT' && form.exchange_rate_usd == null) {
 			Swal.fire({
 				icon: "",
 				title: "Correct Please!",
-				html: `Currency Mismatch
+				html: `Currency Info Mismatch
 					`,
 				customClass: "swal-width",
 			});

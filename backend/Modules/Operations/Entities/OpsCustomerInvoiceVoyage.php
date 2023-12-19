@@ -11,9 +11,9 @@ class OpsCustomerInvoiceVoyage extends Model
 
     protected $fillable = [
         'ops_customer_invoice_id',
-        'ops_contract_tariff_id',
         'ops_voyage_id',
         'ops_vessel_id',  
+        'ops_cargo_type_id',  
         'total_amount_bdt',
     ];
 
@@ -26,10 +26,10 @@ class OpsCustomerInvoiceVoyage extends Model
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
-
-    public function opsContractTariff()
+    
+    public function opsCargoType()
     {
-        return $this->belongsTo(OpsContractTariff::class, 'ops_contract_tariff_id' , 'id');
+        return $this->belongsTo(OpsCargoType::class, 'ops_cargo_type_id' , 'id');
     }
 
     public function opsCustomerInvoice()

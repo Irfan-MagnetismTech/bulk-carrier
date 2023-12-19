@@ -53,7 +53,24 @@ class OpsBunkerBillController extends Controller
     public function store(OpsBunkerBillRequest $request): JsonResponse
     // public function store(Request $request): JsonResponse
     {
-        $bunkerBillLines = $request->opsBunkerBillLines;
+        // $bunkerBillLines = $request->opsBunkerBillLines;
+
+        if(isset($request->opsBunkerBillLines)){
+            $bunker_requisition_ids= [];
+            foreach($request->opsBunkerBillLines as $key=>$billLine){
+                $bunker_requisition_ids[]=$billLine['ops_bunker_requisition_id'];
+            }    
+
+            if (count($bunker_requisition_ids) !== count(array_unique($bunker_requisition_ids))) {
+                $error= [
+                    'message'=>'PR No. can not be same.',
+                    'errors'=>[
+                        'ops_bunker_requisition_id'=>['PR No. can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
 
         // return response()->json(count($bunkerBillLines));
         try {
@@ -76,7 +93,6 @@ class OpsBunkerBillController extends Controller
             }
 
             // return response()->json($bunker_bill_info);
-            $bunker_bill_info['vendor_bill_no'] = rand(1,10);
 
             $bunker_bill = OpsBunkerBill::create($bunker_bill_info);
 
@@ -154,6 +170,24 @@ class OpsBunkerBillController extends Controller
     */
     public function update(OpsBunkerBillRequest $request, OpsBunkerBill $bunker_bill): JsonResponse
     {
+
+        if(isset($request->opsBunkerBillLines)){
+            $bunker_requisition_ids= [];
+            foreach($request->opsBunkerBillLines as $key=>$billLine){
+                $bunker_requisition_ids[]=$billLine['ops_bunker_requisition_id'];
+            }
+
+            if (count($bunker_requisition_ids) !== count(array_unique($bunker_requisition_ids))) {
+                $error= [
+                    'message'=>'PR No. can not be same.',
+                    'errors'=>[
+                        'ops_bunker_requisition_id'=>['PR No. can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
             DB::beginTransaction();
             $bunker_bill_info = $request->except(

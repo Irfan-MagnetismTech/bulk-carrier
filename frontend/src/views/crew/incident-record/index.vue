@@ -37,16 +37,6 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": null,
-      "field_name": "date_time",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Incident Date & Time",
-      "filter_type": "input"
-    },
-    {
       "relation_name": "opsVessel",
       "field_name": "name",
       "search_param": "",
@@ -54,6 +44,16 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Vessel Name",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "date_time",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Incident Date & Time",
       "filter_type": "input"
     },
     {
@@ -83,7 +83,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Reporting Person",
+      "label": "Reported Person",
       "filter_type": "input"
     },
     {
@@ -155,7 +155,7 @@ onMounted(() => {
 
 <template>
   <!-- Heading -->
-  <div class="flex items-center justify-between w-full my-3" v-once>
+  <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Incident Record List</h2>
     <default-button :title="'Create Item'" :to="{ name: 'crw.incidentRecords.create' }" :icon="icons.AddIcon"></default-button>
   </div>
@@ -166,17 +166,18 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td class="text-left">{{ crwIncidentRecord?.opsVessel?.name }}</td>
             <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>{{ crwIncidentRecord?.opsVessel?.name }}</td>
             <td>{{ crwIncidentRecord?.type }}</td>
             <td>{{ crwIncidentRecord?.location }}</td>
             <td>{{ crwIncidentRecord?.reported_by }}</td>
             <td>
-              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">{{
-                  (typeof crwIncidentRecord?.attachment === 'string')
-                      ? '('+crwIncidentRecord?.attachment.split('/').pop()+')'
-                      : '----'
-                }}</a>
+              <a type="button" v-if="typeof crwIncidentRecord?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                </svg>
+              </a>
+              <a v-else>---</a>
             </td>
             <td>
               <span :class="crwIncidentRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwIncidentRecord?.business_unit }}</span>
