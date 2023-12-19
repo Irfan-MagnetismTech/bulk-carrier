@@ -204,7 +204,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" /> -->
     </label>
     <label class="label-group">
-          <span class="label-item-title">Attachment<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Attachment</span>
           <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
           <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
       </label>
