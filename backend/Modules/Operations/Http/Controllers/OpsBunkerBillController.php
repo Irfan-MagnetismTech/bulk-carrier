@@ -175,7 +175,7 @@ class OpsBunkerBillController extends Controller
             $bunker_requisition_ids= [];
             foreach($request->opsBunkerBillLines as $key=>$billLine){
                 $bunker_requisition_ids[]=$billLine['ops_bunker_requisition_id'];
-            }    
+            }
 
             if (count($bunker_requisition_ids) !== count(array_unique($bunker_requisition_ids))) {
                 $error= [
@@ -187,7 +187,7 @@ class OpsBunkerBillController extends Controller
                 return response()->json($error, 422);
             }
         }
-        
+
         try {
             DB::beginTransaction();
             $bunker_bill_info = $request->except(
