@@ -7,6 +7,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 import useCrewProfile from "../../composables/crew/useCrewProfile";
+import Swal from "sweetalert2";
 const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { recruitmentApprovals, getRecruitmentApprovals, crwRankLists, getCrewRankLists, crwAgencies, getCrewAgencyLists, isLoading } = useCrewCommonApiRequest();
 const { checkValidation } = useCrewProfile();
@@ -236,6 +237,17 @@ function changeTab(tabNumber, buttonType = null){
     openTab.value = tabNumber;
   }
 }
+
+// function validateYear(e) {
+//   const yearRegex = /^\d{4}$/;
+//   if (!yearRegex.test(e.target.value)) {
+//     alert("False");
+//     return false;
+//   } else {
+//     alert("True");
+//     return true;
+//   }
+// }
 
 onMounted(() => {
   watchEffect(() => {
