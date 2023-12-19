@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -121,7 +121,6 @@
 
     <div id="sectors" class="mt-5" v-if="form.contract_type == 'Voyage Wise'">
       <h4 class="text-md font-semibold my-3">Voyage Data</h4>
-
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
@@ -231,11 +230,17 @@
               <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class="text-center align-center">
+                <button type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sector, index) in form.opsChartererInvoiceOthers">
+            <tr v-for="(sector, index) in form.opsChartererInvoiceOthers" :key="index">
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].particular" class="form-input" autocomplete="off" />
@@ -296,16 +301,12 @@
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeOther(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeOther(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                
               </td>
             </tr>
           </tbody>
@@ -332,11 +333,17 @@
               <th>Exchange Rate (USD To BDT)</th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class="text-center align-center">
+                <button type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in form.opsChartererInvoiceServices">
+            <tr v-for="(item, index) in form.opsChartererInvoiceServices" :key="index">
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model.trim="form.opsChartererInvoiceServices[index].particular" class="form-input" autocomplete="off" />
@@ -397,16 +404,12 @@
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                
               </td>
             </tr>
           </tbody>
@@ -761,16 +764,16 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 //   searchVoyages(searchParam, props.form.business_unit, loading)
 // }
 
-watch(() => props.form.business_unit, (value) => {
-  // if(props?.formType != 'edit') {
-  //   props.form.opsVoyage = null;
-  //   vessel.value = null;
-  //   props.form.opsVoyageSectors = null;
-  //   props.form.vessel_name = null;
-  //   props.form.ops_voyage_id = null;
-  // }
-  getAllChartererProfiles(value);
-})
+// watch(() => props.form.business_unit, (value) => {
+//   // if(props?.formType != 'edit') {
+//   //   props.form.opsVoyage = null;
+//   //   vessel.value = null;
+//   //   props.form.opsVoyageSectors = null;
+//   //   props.form.vessel_name = null;
+//   //   props.form.ops_voyage_id = null;
+//   // }
+//   getAllChartererProfiles(value);
+// })
 
 
 // watch(() => props.form.opsChartererProfile, (value) => {
@@ -820,6 +823,8 @@ watch(() => props.form.opsChartererContract, (value) => {
 onMounted(() => {
   // getAllChartererProfiles();
   getCurrencies();
+  getAllChartererProfiles(props.form.business_unit);
+
 })
 
 watchPostEffect(() => {

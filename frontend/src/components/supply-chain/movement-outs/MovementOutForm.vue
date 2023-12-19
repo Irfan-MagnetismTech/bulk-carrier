@@ -39,7 +39,7 @@
   </div>
 
 
-  <div id="">
+  <div id="" v-if="form.scmMoLines.length">
 
     <div id="">
     <div class="table-responsive min-w-screen">
@@ -51,6 +51,8 @@
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">MR Quantity</th>
+            <th class="py-3 align-center">Current Stock</th>
+            <th class="py-3 align-center">Remaining Qty</th>
             <th class="py-3 align-center">Qty</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
@@ -68,7 +70,7 @@
                         v-on="events"
                         />
                 </template>
-            </v-select>
+              </v-select>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -82,7 +84,22 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmMoLines[index].quantity" class="form-input" :max="form.scmMoLines[index].mmr_quantity">
+                 <input type="text" v-model="form.scmMoLines[index].current_stock" class="form-input vms-readonly-input" readonly>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="text" v-model="form.scmMoLines[index].remaining_quantity" class="form-input vms-readonly-input" readonly>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+               <input
+                 type="number"
+                 v-model="form.scmMoLines[index].quantity"
+                 class="form-input"
+                 :max="form.scmMoLines[index].max_quantity"
+                 :class="{'border-2': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -123,7 +140,7 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
-import useMovementOut from '../../../composables/supply-chain/useMovementOut';
+    import useMovementOut from '../../../composables/supply-chain/useMovementOut';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
@@ -189,13 +206,18 @@ import useMovementOut from '../../../composables/supply-chain/useMovementOut';
     }
 }
 watch(() => props.form.scmMmr, (value) => {
-  getMmrWiseMaterials(value?.id);
+  if (props.formType === 'edit') {
+    getMmrWiseMaterials(value?.id, props.form.id);
+  } else { 
+    getMmrWiseMaterials(value?.id);
+  }
+  
 });
 
 
-    watch(() => filteredMovementRequisitionLines.value, (newVal, oldVal) => {
-      props.form.scmMoLines = newVal;
-    });
+watch(() => filteredMovementRequisitionLines.value, (newVal, oldVal) => {
+  props.form.scmMoLines = newVal;
+});
 
 
   // watch(() => props.form.scmMmr, (value) => {
@@ -212,13 +234,13 @@ watch(() => props.form.scmMmr, (value) => {
 
 
     watch(() => props.form.fromWarehouse, (value) => {
-        props.form.from_warehouse_id = value?.id;
+      props.form.from_warehouse_id = value?.id;
       props.form.from_cost_center_id = value?.acc_cost_center_id;
       props.form.from_warehouse_name = value?.name;
     });
 
   watch(() => props.form.toWarehouse, (value) => {
-        props.form.to_warehouse_id = value?.id;
+    props.form.to_warehouse_id = value?.id;
     props.form.to_cost_center_id = value?.acc_cost_center_id;
     props.form.to_warehouse_name = value?.name;
   });
@@ -230,26 +252,40 @@ function setMaterialOtherData(datas, index) {
       getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
       props.form.scmMoLines[index].mmr_quantity = datas.mmr_quantity;
       props.form.scmMoLines[index].quantity = datas.quantity;
+      props.form.scmMoLines[index].remaining_quantity = datas.remaining_quantity;
+      props.form.scmMoLines[index].current_stock = datas.current_stock;
+      props.form.scmMoLines[index].max_quantity = datas.max_quantity;
+      props.form.scmMoLines[index].mmr_composite_key = datas.mmr_composite_key;
+  
     }
 
 
 
 watch(() => props.form.scmMoLines, (newLines) => {
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmMoLines[index].unit = selectedMaterial.unit;
-          props.form.scmMoLines[index].scm_material_id = selectedMaterial.id;
+  if (newLines) {
+    const materialArray = [];
+    if (newLines && newLines.length) { 
+        newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+            if (materialArray.indexOf(material_key) === -1) {
+              materialArray.push(material_key);
+            } else {
+              alert("Duplicate Material Found");
+              props.form.scmMoLines.splice(index, 1);
+          } 
+        if (line.scmMaterial) {
+          const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+          if (selectedMaterial) {
+            if ( line.scm_material_id !== selectedMaterial.id
+            ) {
+              props.form.scmMoLines[index].unit = selectedMaterial.unit;
+              props.form.scmMoLines[index].scm_material_id = selectedMaterial.id;
+            }
+          }
         }
-      }
+      });
     }
-  });
-  // previousLines.value = cloneDeep(newLines);
+}
 }, { deep: true });
 
 
@@ -279,12 +315,9 @@ watch(() => props.form.scmMoLines, (newLines) => {
 function tableWidth() {
   setTimeout(function() {
     const customDataTable = document.getElementById("customDataTable");
-
     if (customDataTable) {
         tableScrollWidth.value = customDataTable.scrollWidth;
-      
       }
-      
     }, 10000);
 }
 //after mount

@@ -70,7 +70,7 @@
          
       </label>
       <label class="label-group">
-        <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Return From <span class="text-red-500">*</span></span>
           <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
@@ -92,7 +92,7 @@
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
@@ -251,7 +251,7 @@ function setStoreIssueOtherData(datas) {
       props.form.scm_warehouse_id = datas.scm_warehouse_id;
       props.form.scmWarehouse = datas.scmWarehouse;
       props.form.scm_warehouse_name = datas.scmWarehouse.name;
-      props.form.scm_department_id = datas.scm_department_id;
+      props.form.department_id = datas.department_id;
       getSiWiseSir(datas.id);   
 }
 
@@ -301,6 +301,8 @@ function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].scm_material_id = datas.id;
       props.form.scmSirLines[index].max_quantity = datas.max_quantity;
       props.form.scmSirLines[index].si_quantity = datas.si_quantity;
+      props.form.scmSirLines[index].si_composite_key = datas.si_composite_key;
+      props.form.scmSirLines[index].sr_composite_key = datas.sr_composite_key;
           
 }
 
@@ -350,7 +352,7 @@ watch(() => props.form.scmSi, (newVal, oldVal) => {
     props.form.scm_si_id = null;
     props.form.si_no = null,
     props.form.scmDepartment= null,
-    props.form.scm_department_id = null,
+    props.form.department_id = null,
     props.form.scmSirLines = [];
     filteredStoreIssues.value = [];
    } 

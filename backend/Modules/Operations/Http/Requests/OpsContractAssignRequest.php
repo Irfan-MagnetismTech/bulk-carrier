@@ -8,7 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class OpsContractAssignRequest extends FormRequest
 {
     protected function prepareForValidation(){
-        $data=  request('info');        
+        $data=  request('info');
+        // dd(json_decode($data, true));
         $this->replace(json_decode($data, true));
     }
     /**
@@ -23,9 +24,9 @@ class OpsContractAssignRequest extends FormRequest
             'ops_voyage_id'             => ['required', 'max:20',Rule::unique('ops_contract_assigns')->ignore($this->route('contract_assign'), 'id')],
             'ops_charterer_contract_id' => 'required_if:business_unit,!=,PSML|nullable|max:20',
             'ops_charterer_profile_id'  => 'required_if:business_unit,!=,PSML|nullable|max:20',
-            'ops_cargo_tariff_id'       => 'required_if:business_unit,!=,TSLL|nullable|max:20',
             'ops_customer_id'           => 'required_if:business_unit,!=,TSLL|nullable|max:20',
-            'assign_date'               => ['required'],            
+            'assign_date'               => ['required'], 
+            'opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:business_unit,!=,TSLL|nullable|max:20',
         ];
     }
 
@@ -42,9 +43,9 @@ class OpsContractAssignRequest extends FormRequest
             'ops_voyage_id.required' => 'Voyage is required.',
             'ops_charterer_profile_id.required' => 'Charterer is required.',
             'ops_charterer_contract_id.required' => 'Charterer Contract is required.',
-            'ops_cargo_tariff_id.required' => 'Tarrif is required.',
             'ops_customer_id.required' => 'Customer is required.',
             'assign_date.required' => 'Assign Date is required.',
+            'opsContractTariffs.*.ops_cargo_tariff_id.required' => 'Tarrif is required.',
         ];
     }
 

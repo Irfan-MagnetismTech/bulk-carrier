@@ -24,7 +24,7 @@ class ScmMoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'date' => 'required|date', 
         ];
     }
 
@@ -36,7 +36,8 @@ class ScmMoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'date.required' => 'Date is required',
+            'date.date' => 'Date must be a valid date',
         ];
     }
 

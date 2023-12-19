@@ -1,6 +1,6 @@
 <script setup>
 import Error from "../Error.vue";
-import { watch, ref, onMounted } from 'vue';
+import { watch, ref, onMounted, watchEffect } from 'vue';
 // import useVesselVoyageBudget from "../../composables/operations/useVesselVoyageBudget";
 import useVoyageBudget from "../../composables/operations/useVoyageBudget";
 import useVessel from "../../composables/operations/useVessel";
@@ -10,13 +10,11 @@ import useVesselExpenseHead from "../../composables/operations/useVesselExpenseH
 import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
 
-const { voyageBudgets, getVoyageBudgets, showHead, isLoading, errors } = useVoyageBudget();
+const { voyageBudgets, expenseHeadObject, getVoyageBudgets, showHead, isLoading } = useVoyageBudget();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
-const { vesselExpenseHeads, showVesselWiseExpenseHead } = useVesselExpenseHead();
+const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
 const { currencies, getCurrencies } = useBusinessInfo();
-
-const subheads = ref([]);
 
 const props = defineProps({
   form: {
@@ -28,13 +26,15 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
+const editInitiated = ref(0)
+
 function fetchVesselExpenseHeads(ops_vessel_id, loading) {
-  props.form.heads = []
-  showVesselWiseExpenseHead(ops_vessel_id, loading).then(() => {
-      if(props.formType == 'create') {
-        props.form.heads = vesselExpenseHeads.value
-        // props.form.heads = voyageBudgets.value
-      }
+  showFlatVesselExpenseHead(ops_vessel_id, loading).then(() => {
+     editInitiated.value = 1
+      // if(props.formType == 'create') {
+      //   props.form.opsVoyageBudgetEntries = vesselExpenseHeads.value
+      //   // props.form.opsVoyageBudgetEntries = voyageBudgets.value
+      // }
     })
 }
 
@@ -43,20 +43,23 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
 }
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {
-    props.form.ops_voyage_id = null;
-    if(newValue){
+
+    if(editInitiated.value == 1 || props.formType == 'create') {  
       props.form.ops_voyage_id = newValue?.id;
-      
     }
 
-});
+}, { deep: true });
 
 watch(() => props.form.opsVessel, (newValue, oldValue) => {
+
     props.form.ops_vessel_id = null;
     // props.form.ops_vessel_id = newValue?.id;
-    voyages.value = []
-    props.form.opsVoyage = null;
-    props.form.ops_voyage_id = null
+    if(editInitiated.value == 1 || props.formType == 'create') {
+      voyages.value = []
+      props.form.opsVoyage = null;
+      props.form.ops_voyage_id = null
+    }
+    
 
     if(newValue){
       props.form.ops_vessel_id = newValue?.id;
@@ -65,7 +68,7 @@ watch(() => props.form.opsVessel, (newValue, oldValue) => {
       fetchVesselWiseVoyages(props.form.ops_vessel_id, false);
     }
 
-});
+}, { deep: true });
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
 
@@ -74,7 +77,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   if(newValue !== oldValue && oldValue != null && newValue != undefined){
     props.form.opsVessel = null;
     vessels.value = []
-    props.form.heads = []
+    props.form.opsVoyageBudgetEntries = []
   }
 
   vessels.value = []
@@ -85,6 +88,93 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   
 }, {deep: true});
 
+const isUSDCurrency = ref(true)
+const isBDTCurrency = ref(true)
+const isOtherCurrency = ref(false)
+const isNotBDTCurrency = ref(true)
+
+watch(() => props.form.currency, (newValue, oldValue) => {
+
+    isUSDCurrency.value = false;
+    isBDTCurrency.value = false;
+    isOtherCurrency.value = false;
+    isNotBDTCurrency.value = false;
+
+    if(editInitiated.value == 1 || props.formType == 'create') {
+    
+    props.form.exchange_rate_usd = '';
+    props.form.exchange_rate_bdt = '';
+
+    if(props.form.currency === 'USD') {
+      isUSDCurrency.value = true;
+    } else if(props.form.currency === 'BDT') {
+      isBDTCurrency.value = true;
+    } else if(props.form.currency !== 'BDT' || props.form.currency !== 'USD') {
+      isOtherCurrency.value = true;
+    } else if(props.form.currency !== 'BDT') {
+      isNotBDTCurrency.value = true;
+    }
+  }
+    calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+
+}, { deep: true })
+
+watch(() => props.form.exchange_rate_usd, (value) => {
+  calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+}, { deep: true })
+
+watch(() => props.form.exchange_rate_bdt, (value) => {
+  calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+}, { deep: true })
+
+watch(() => props.form.opsVoyageBudgetEntries, (newValue, oldValue) => {
+  calculateHeadAmounts(newValue)
+
+  newValue.forEach((line, index) => {
+    props.form.opsVoyageBudgetEntries[index].ops_expense_head_id = props.form.opsVoyageBudgetEntries[index]?.opsExpenseHead?.id
+  });
+
+}, { deep: true })
+
+const calculateHeadAmounts = (heads) => {
+      heads.forEach((line, index) => {
+            const { amount, amount_usd, amount_bdt } = calculateInCurrency(line);
+            props.form.opsVoyageBudgetEntries[index].amount_usd = amount_usd
+            props.form.opsVoyageBudgetEntries[index].amount_bdt = amount_bdt
+            props.form.opsVoyageBudgetEntries[index].amount = amount
+      });
+}
+
+const calculateInCurrency = (item) => {
+
+  item.amount = null;
+
+  if(props.form.currency == 'USD'){
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * props.form?.exchange_rate_bdt).toFixed(2));
+  } else if(props.form.currency == 'BDT'){
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * props.form?.exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity).toFixed(2));
+  } else {
+    item.amount = parseFloat((item?.rate * item?.quantity).toFixed(2));
+    item.amount_usd = parseFloat((item?.rate * item?.quantity * props.form?.exchange_rate_usd).toFixed(2));
+    item.amount_bdt = parseFloat((item?.rate * item?.quantity * props.form?.exchange_rate_usd * props.form?.exchange_rate_bdt).toFixed(2));
+  }
+
+  return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
+}
+
+
+function addHead() {
+  props.form.opsVoyageBudgetEntries.push({...expenseHeadObject});
+}
+
+function removeHead(index){
+    props.form.opsVoyageBudgetEntries.splice(index, 1);
+}
+
 onMounted(() => {
   getCurrencies();
 })
@@ -92,8 +182,27 @@ onMounted(() => {
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          <business-unit-input class="w-1/2" v-model="form.business_unit" :page="formType"></business-unit-input>
-          <label class="block w-full mt-2 text-sm">
+      <business-unit-input class="w-1/4" v-model="form.business_unit" :page="formType"></business-unit-input>
+      <label class="block w-3/4 mt-2 text-sm">
+        <span class="text-gray-700">Title </span>
+        <input type="text" maxlength="250" v-model="form.title" placeholder="Title" class="form-input" autocomplete="off" />
+      </label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Effective From <span class="text-red-500">*</span></span>
+      <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Effective Till <span class="text-red-500">*</span></span>
+      <input type="date" v-model="form.effective_till" required placeholder="Effective Till" class="form-input" autocomplete="off" />
+    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
@@ -106,8 +215,8 @@ onMounted(() => {
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
-            </label> 
-            <label class="block w-1/2 mt-2 text-sm">
+    </label> 
+    <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
@@ -120,114 +229,88 @@ onMounted(() => {
                   </template>
               </v-select>
               <input type="hidden" v-model="form.ops_voyage_id" />
-            </label> 
+    </label> 
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
+        <select v-model.trim="form.currency" class="form-input" required>
+          <option selected value="" disabled>Select Currency</option>
+          <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
+        </select>
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Exchange Rate (To USD) </span>
+      <input type="text" v-model="form.exchange_rate_usd" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
+      <input type="text" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency" />
+    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+
   </div>
   <!-- South Sectors -->
 
-  <div class="relative my-3" v-if="form?.heads?.length > 0">
+  <div class="relative my-3">
 
     <div class="dt-responsive table-responsive">
       <table class="w-full whitespace-no-wrap" >
-        <thead v-once>
+        <thead>
             <tr class="w-full">
-              <th class="">Expesne Head</th>
-              <th class="">Currency</th>
-              <!-- <th class="">Unit</th> -->
-              <th>Quantity</th>
+              <th class="w-72">Expesne Head</th>
+              <th class="w-20">Quantity</th>
               <th>Rate</th>
-              <th>Exchange Rate (To USD)</th>
-              <th>Exchange Rate (USD To BDT)</th>
+              <th v-if="isOtherCurrency">Amount </th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
+              <th>
+                <button type="button" @click="addHead()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
-            
-            <template v-for="(costGroup, index) in form.heads" :key="index">
-              <template v-if="costGroup.opsSubHeads.length > 0">
-                <tr v-once>
-                  <td colspan="9" class="bg-green-100 font-semibold !text-left">
-                      <nobr>{{ costGroup?.name }}</nobr>
-                  </td>
-                </tr>
-                <tr v-for="(subhead, subIndex) in costGroup.opsSubHeads" :key="subIndex" class="text-gray-700 dark:text-gray-400">
-                  <td class="px-1 py-1">
-                    <span class="show-block">
-                      <nobr>{{ subhead?.name }}</nobr>
-                    </span>
-                  </td>
-                  <td>
-                    <select v-model.trim="form.heads[index].opsSubHeads[subIndex].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                      <option selected value="" disabled>Select Currency</option>
-                      <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                    </select>
-                  </td>
-                  <!-- <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].unit" placeholder="Unit" class="form-input" autocomplete="off" />
-                  </td> -->
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].quantity" placeholder="Quantity" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].rate" placeholder="Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].exchange_rate_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].exchange_rate_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].amount_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].opsSubHeads[subIndex].amount_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                </tr>
-              </template>
-              <template v-else>
-                <tr v-once>
-                  <td colspan="9" class="bg-green-100 font-semibold !text-left">
-                      <nobr>{{ costGroup?.name }}</nobr>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <span class="show-block">
-                      <nobr>{{ costGroup?.name }}</nobr>
-                    </span>
-                  </td>
-                  <td>
-                    <select v-model.trim="form.heads[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                      <option selected value="" disabled>Select Currency</option>
-                      <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                    </select>
-                  </td>
-                  <!-- <td>
-                    <input type="text" v-model="form.heads[index].unit" placeholder="Unit" class="form-input" autocomplete="off" />
-                  </td> -->
-                  <td>
-                    <input type="text" v-model="form.heads[index].quantity" placeholder="Quantity" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].exchange_rate_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].exchange_rate_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].amount_usd" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                  <td>
-                    <input type="text" v-model="form.heads[index].amount_bdt" placeholder="Ex. Rate" class="form-input" autocomplete="off" />
-                  </td>
-                </tr>
-              </template>
-            </template>
-            
+            <tr v-for="(head, index) in form.opsVoyageBudgetEntries" :key="index">
+              <td>
+                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsVoyageBudgetEntries[index].opsExpenseHead"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+                <input type="hidden" v-model="form.opsVoyageBudgetEntries[index].ops_expense_head_id" />
+              </td>
+              <td>
+                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+              </td>
+              <td>
+                <input type="text" v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+              </td>
+              <td v-if="isOtherCurrency">
+                <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+              </td>
+              <td>
+                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+              </td>
+              <td>
+                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+              </td>
+              <td>
+                <button type="button" @click="removeHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
     </div>

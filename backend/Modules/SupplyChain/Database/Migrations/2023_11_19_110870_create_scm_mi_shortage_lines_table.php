@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->string('mi_composite_key')->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

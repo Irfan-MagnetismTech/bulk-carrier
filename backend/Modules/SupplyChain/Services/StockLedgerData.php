@@ -46,8 +46,12 @@ class StockLedgerData
      * 
      * @return array Returns an array of stock outflow records.
      */
-    public function out($materialId, $warehouseId, $qty, $method = 'fifo'): array
+    public function out($materialId, $warehouseId, $qty, $method = 'fifo')
     {
+        if ((new CurrentStock)->count($materialId, $warehouseId) < $qty) {
+            return response()->json(['message' => 'Insufficient stock'], 422);
+        }
+
         $currentStock = ScmStockLedger::query()
             ->where('scm_material_id', $materialId)
             ->where('scm_warehouse_id', $warehouseId)

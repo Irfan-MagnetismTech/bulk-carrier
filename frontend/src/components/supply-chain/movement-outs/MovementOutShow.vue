@@ -25,7 +25,7 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
   </div>
 
@@ -36,7 +36,7 @@
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
@@ -92,8 +92,9 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
-import useMovementOut from '../../../composables/supply-chain/useMovementOut';
-    
+    import useMovementOut from '../../../composables/supply-chain/useMovementOut';
+    import moment from 'moment';
+        
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { getFromAndToWarehouseWiseCurrentStock, stockData } = useStockLedger();
