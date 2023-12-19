@@ -114,6 +114,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('get-search-vessel-certificates', [OpsVesselCertificateController::class, 'getVesselCertificateReferenceNumber']);
     Route::get('get-search-customers', [OpsCustomerController::class, 'getCustomerNameorCode']);
     Route::get('get-search-voyages', [OpsVoyageController::class, 'getSearchVoyages']);
+    Route::get('get-cargo-tariff-by-voyages', [OpsVoyageController::class, 'getCargoTariffFromVoyage']);
     Route::get('get-search-charterer-profiles', [OpsChartererProfileController::class, 'getChartererProfileNameorCode']);
     Route::get('get-charterer-contract-by-profile', [OpsChartererContractController::class, 'getChartererContractByProfile']);
     Route::get('get-voyage-by-contract', [OpsChartererInvoiceController::class, 'getVoyageByContract']);
