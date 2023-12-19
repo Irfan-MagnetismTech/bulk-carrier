@@ -38,8 +38,8 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "opsCustomerProfile",
-      "field_name": "name",
+      "relation_name": "opsCustomer",
+      "field_name": "name_code",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -48,25 +48,27 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": "opsCustomerContract.opsVessel",
+      "relation_name": null,
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
-      "filter_type": "input"
+      "label": "Invoiced Voyages",
+      "filter_type": ""
     },
+    
     {
       "relation_name": null,
-      "field_name": "contract_type",
+      "field_name": "date",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Contract Type",
-      "filter_type": "input",
+      "label": "Date",
+      "filter_type": "date",
     },
+    
     {
       "relation_name": null,
       "field_name": "grand_total",
@@ -76,7 +78,8 @@ let filterOptions = ref({
       "date_from": null,
       "label": "Grand Total",
       "filter_type": "input",
-    }
+    },
+
   ]
 });
 
@@ -150,17 +153,16 @@ onMounted(() => {
           <tbody v-if="customerInvoices?.data?.length" class="relative">
               <tr v-for="(customerInvoice, index) in customerInvoices.data" :key="customerInvoice?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ customerInvoice?.opsCustomerProfile?.name }}</td>
-                  <td>{{ customerInvoice?.opsCustomerContract?.contract_name }}</td>
-                  <td>{{ customerInvoice?.opsCustomerContract?.opsVessel?.name }}</td>
-                  <td>{{ customerInvoice?.contract_type }}</td>
+                  <td>{{ customerInvoice?.opsCustomer?.name_code }}</td>
+                  <td>{{ customerInvoice?.voyage_name }}</td>
+                  <td><nobr>{{ customerInvoice?.date }}</nobr></td>
                   <td>{{ numberFormat(customerInvoice?.grand_total) }}</td>
                   <!-- <td>
                     <span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span>
                   </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.customer-invoices.show', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.customer-invoices.show', params: { customerInvoiceId: customerInvoice.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.customer-invoices.edit', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
                       <action-button @click="confirmDelete(customerInvoice.id)" :action="'delete'"></action-button>
                     </nobr>
