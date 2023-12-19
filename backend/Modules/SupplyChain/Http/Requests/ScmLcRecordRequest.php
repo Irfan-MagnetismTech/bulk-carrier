@@ -33,7 +33,7 @@ class ScmLcRecordRequest extends FormRequest
             'no_of_packet' => 'sometimes|nullable|numeric',
             'scm_po_id' => 'required|integer|exists:scm_pos,id',
             'invoice_value' => 'numeric',
-            'assessment_value' => 'numeric',
+            'assessment_value' => 'required|numeric',
             // 'issue_bank_id' => 'required|integer|exists:acc_banks,id',
             'issue_bank_name' => 'required|max:255',
             // 'advising_bank_id' => 'required|integer|exists:acc_banks,id',
@@ -78,6 +78,9 @@ class ScmLcRecordRequest extends FormRequest
 
             'raised_date.required' => 'Raised date is required',
             'raised_date.date' => 'Raised date must be a date',
+
+            'assessment_value.required' => 'Assessment value is required',
+            'assessment_value.numeric' => 'Assessment value must be a number',
 
             'issue_bank_name.required' => 'Issue bank name is required',
             'issue_bank_name.max' => 'Issue bank name must be less than 255 characters',

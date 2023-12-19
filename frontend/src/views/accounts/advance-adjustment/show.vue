@@ -30,7 +30,7 @@ onMounted(() => {
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
       <div class="w-full">
-        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Advance Adjustment Information</h2>
+        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Advance Adjustment Information # {{advanceAdjustmentId}}</h2>
         <table class="w-full">
           <thead>
           <tr>
@@ -43,6 +43,10 @@ onMounted(() => {
             <td><span :class="advanceAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ advanceAdjustment?.business_unit }}</span></td>
           </tr>
           <tr>
+            <th class="w-40">Cost Center Name</th>
+            <td>{{ advanceAdjustment?.costCenter?.name }}</td>
+          </tr>
+          <tr>
             <th class="w-40">Adjustment Date</th>
             <td>{{ advanceAdjustment?.adjustment_date }}</td>
           </tr>
@@ -51,8 +55,8 @@ onMounted(() => {
             <td>{{ advanceAdjustment?.accCashRequisition?.id }}</td>
           </tr>
           <tr>
-            <th class="w-40">Cost Center Name</th>
-            <td>{{ advanceAdjustment?.costCenter?.name }}</td>
+            <th class="w-40">Cash Requisition Amount</th>
+            <td>{{ advanceAdjustment?.accCashRequisition?.total_amount }}</td>
           </tr>
           <tr>
             <th class="w-40">Adjustment Amount</th>
@@ -63,7 +67,7 @@ onMounted(() => {
         <table class="w-full mt-1" id="profileDetailTable">
           <thead>
           <tr>
-            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particulars</td>
+            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particular List</td>
           </tr>
           <tr>
             <th>Sl.</th>

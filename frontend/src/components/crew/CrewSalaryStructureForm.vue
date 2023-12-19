@@ -83,12 +83,12 @@ onMounted(() => {
       <input type="number" step=".01" v-model.trim="form.gross_salary" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Addition</span>
-      <input type="number" step=".01" v-model.trim="form.addition" class="form-input text-right" autocomplete="off"/>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Addition <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.addition" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Deduction </span>
-      <input type="number" step=".01" v-model.trim="form.deduction" class="form-input text-right" autocomplete="off"/>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Deduction <span class="text-red-500">*</span></span>
+      <input type="number" step=".01" v-model.trim="form.deduction" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Net Amount <span class="text-red-500">*</span></span>
