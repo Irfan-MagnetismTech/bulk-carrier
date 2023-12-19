@@ -32,7 +32,7 @@ class OpsCustomerInvoiceController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices')
+            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsCargoTariff','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages','opsCustomerInvoiceOthers','opsCustomerInvoiceServices')
            ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $customerInvoices, 200);
@@ -103,7 +103,7 @@ class OpsCustomerInvoiceController extends Controller
     */
     public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
     {
-        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariff','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsCargoTariff','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
         
         try
         {

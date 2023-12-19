@@ -58,7 +58,6 @@ class OpsVoyage extends Model
         return $this->hasMany(OpsVoyageSector::class);
     }
 
-
     public function opsVoyagePortSchedules()
     {
         return $this->hasMany(OpsVoyagePortSchedule::class);
