@@ -40,7 +40,6 @@ class OpsCustomerInvoiceRequest extends FormRequest
         return [
             'ops_customer_id.required' => 'Customer is required.',
             'sub_total.required' => 'Sub total is required.',
-            'discounted_amount.required' => 'Discount is required.',
             'discounted_amount.numeric' => 'Discount must be numeric.',
             'grand_total.required' => 'Grand total is required.',
             'date.required' => 'Date is required.',
