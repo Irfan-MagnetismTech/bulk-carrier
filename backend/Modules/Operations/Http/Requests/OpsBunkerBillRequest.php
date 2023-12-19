@@ -25,7 +25,8 @@ class OpsBunkerBillRequest extends FormRequest
         return [
             'date'              => ['required', 'date'],
             'scm_vendor_id'     => ['required', 'numeric', 'max:20'],
-            // 'vendor_bill_no'    => ['required', 'string', 'max:255'],
+            'vendor_bill_no'    => ['required', 'string','unique:ops_bunker_bills,vendor_bill_no,'.$this->id],
+
             'sub_total_bdt'         => ['required', 'numeric'],
             'discount_bdt'          => ['nullable', 'numeric'],
             'grand_total_bdt'       => ['required', 'numeric'],
@@ -51,7 +52,8 @@ class OpsBunkerBillRequest extends FormRequest
         return [
             'date.required' => 'Date is required.',
             'scm_vendor_id.required' => 'Vendor is required.',
-            // 'vendor_bill_no.required' => 'Vendor Bill No. is required.',
+            'vendor_bill_no.required' => 'Vendor Bill No. is required.',
+            'vendor_bill_no.unique' => 'This Vendor Bill No. is already exist.',
             'discount_bdt.numeric' => 'Discount must be numeric.',
             'sub_total_bdt.numeric' => 'Sub total must be numeric.',
             'sub_total_bdt.required' => 'Sub total is required.',

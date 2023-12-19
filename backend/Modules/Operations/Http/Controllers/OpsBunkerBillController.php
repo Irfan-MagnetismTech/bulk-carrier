@@ -76,7 +76,6 @@ class OpsBunkerBillController extends Controller
             }
 
             // return response()->json($bunker_bill_info);
-            $bunker_bill_info['vendor_bill_no'] = rand(1,10);
 
             $bunker_bill = OpsBunkerBill::create($bunker_bill_info);
 

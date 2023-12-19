@@ -33,7 +33,9 @@ class OpsBunkerRequisitionRequest extends FormRequest
         return [
             'ops_vessel_id.required' => 'Vessel is required',
             'ops_voyage_id.required' => 'Voyage is required',
-            'requisition_no.required' => 'Requisiton no is required',
+            'requisition_no.required' => 'Requisiton No is required',
+            'requisition_no.unique' => 'This Requisiton No is already exist.',
+
         ];
     }
 
