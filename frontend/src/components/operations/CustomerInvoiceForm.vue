@@ -23,8 +23,8 @@
               <input type="hidden" v-model="form.ops_customer_id">
         </label>
         <label class="block w-1/4 mt-2 text-sm">
-          <span class="text-gray-700">Invoice Date </span>
-          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" />
+          <span class="text-gray-700">Invoice Date <span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" required />
         </label>
     </div>
 
@@ -695,9 +695,10 @@ function opsCustomerInvoiceVoyageChanged(opsCustomerInvoiceVoyage) {
   opsCustomerInvoiceVoyage.contractTariff = {};
   if (opsCustomerInvoiceVoyage.ops_voyage_id) {
     getContractTariffByVoyage(opsCustomerInvoiceVoyage.ops_voyage_id).then(() => {
-      opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+      opsCustomerInvoiceVoyage.contractTariff = cloneDeep(contractTariff);
       opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.value?.opsVessel?.id;
       opsCustomerInvoiceVoyage.opsVessel = contractTariff.value?.opsVessel;
+      opsCustomerInvoiceVoyage.ops_cargo_type_id = contractTariff.value?.opsCargoType?.id;
       opsCustomerInvoiceVoyage.opsCargoType = contractTariff.value?.opsCargoType;
       opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.ops_voyage_id;
       opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.value?.total_amount;

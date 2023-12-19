@@ -243,6 +243,25 @@ export default function useCargoTariff() {
 		} finally {
 		}
 	}
+
+	
+	async function getCargoTariffsByVoyage(businessUnit, opsVoyageId ) {
+		// NProgress.start();
+		//const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		// isLoading.value = true;
+
+		try {
+			const { data } = await Api.get(
+				`ops/get-cargo-tariff-by-voyages?business_unit=${businessUnit}&ops_voyage_id =${opsVoyageId}`,
+			);
+			cargoTariffs.value = data.value;
+		} catch (error) {
+			error.value = Error.showError(error);
+		} finally {
+		}
+	}
+
+
 	return {
 		cargoTariffLineObject,
 		cargoTariffs,
@@ -256,6 +275,7 @@ export default function useCargoTariff() {
 		searchCargoTariffs,
 		GetCargoTariffByBusinessunit,
 		getCargoTariffsByVessel,
+		getCargoTariffsByVoyage,
 		isLoading,
 		isTableLoading,
 		errors,
