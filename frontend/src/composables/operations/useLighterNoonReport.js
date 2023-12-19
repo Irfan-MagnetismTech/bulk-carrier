@@ -154,7 +154,8 @@ export default function useLighterNoonReport() {
 		try {
 			const { data, status } = await Api.delete( `/ops/lighter-noon-reports/${lighterNoonReportId}`);
 			notification.showSuccess(status);
-			await getLighterNoonReports();
+			await getLighterNoonReports(filterParams.value);
+
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);
