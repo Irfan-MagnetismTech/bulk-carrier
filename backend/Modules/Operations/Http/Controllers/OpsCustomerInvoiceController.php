@@ -155,9 +155,9 @@ class OpsCustomerInvoiceController extends Controller
 
             if (count($voyage_ids) !== count(array_unique($voyage_ids))) {
                 $error= [
-                    'message'=>'One or more voyages are already billed.',
+                    'message'=>'Voyage can not be same.',
                     'errors'=>[
-                        'Voyage'=>['One or more voyages are already billed.',]
+                        'Voyage'=>['Voyage can not be same.',]
                         ]
                     ];
                 return response()->json($error, 422);
