@@ -19,6 +19,7 @@ return new class extends Migration
 			$table->unsignedBigInteger('acc_cash_requisition_id');
 			$table->date('adjustment_date');
 			$table->decimal('adjustment_amount');
+			$table->decimal('cash_amount')->nullable();
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });

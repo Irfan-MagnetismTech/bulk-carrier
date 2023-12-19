@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('acc_salaries', function (Blueprint $table) {
+        Schema::create('acc_salary_lines', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('acc_cost_center_id')->nullable();
-            $table->string('year_month', 7);
-            $table->decimal('total_salary', 16, 2);
-			$table->text('remarks')->nullable();                        
-			$table->enum('business_unit', ['PSML', 'TSLL']);
+			$table->foreignId('acc_salary_id')->constrained('acc_salaries', 'id')->cascadeOnDelete();
+			$table->string('particular');
+            $table->decimal('amount', 16, 2);
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('acc_salaries');
+        Schema::dropIfExists('acc_salary_lines');
     }
 };

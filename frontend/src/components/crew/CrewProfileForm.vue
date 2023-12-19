@@ -80,9 +80,15 @@ function addTrainingItem() {
     location: '',
   };
   props.form.trainings.push(obj);
+  if(props.form.trainings.length === 1){
+    props.form.is_training_data_required = true;
+  }
 }
 
 function removeTrainingItem(index){
+  if(props.form.trainings.length === 1){
+    props.form.is_training_data_required = false;
+  }
   props.form.trainings.splice(index, 1);
 }
 
@@ -95,9 +101,15 @@ function addExperienceItem() {
     reason_for_leave: '',
   };
   props.form.experiences.push(obj);
+  if(props.form.experiences.length === 1){
+    props.form.is_experience_data_required = true;
+  }
 }
 
 function removeExperienceItem(index){
+  if(props.form.experiences.length === 1){
+    props.form.is_experience_data_required = false;
+  }
   props.form.experiences.splice(index, 1);
 }
 
@@ -110,9 +122,15 @@ function addLanguageItem() {
     listening: '',
   };
   props.form.languages.push(obj);
+  if(props.form.languages.length === 1){
+    props.form.is_other_data_required = true;
+  }
 }
 
 function removeLanguageItem(index){
+  if(props.form.languages.length === 1){
+    props.form.is_other_data_required = false;
+  }
   props.form.languages.splice(index, 1);
 }
 
@@ -128,9 +146,15 @@ function addReferenceItem() {
     relation: '',
   };
   props.form.references.push(obj);
+  if(props.form.references.length === 1){
+    props.form.is_reference_data_required = true;
+  }
 }
 
 function removeReferenceItem(index){
+  if(props.form.references.length === 1){
+    props.form.is_reference_data_required = false;
+  }
   props.form.references.splice(index, 1);
 }
 
@@ -145,9 +169,15 @@ function addNomineeItem() {
     is_relative: '',
   };
   props.form.nominees.push(obj);
+  if(props.form.nominees.length === 1){
+    props.form.is_nominee_data_required = true;
+  }
 }
 
 function removeNomineeItem(index){
+  if(props.form.nominees.length === 1){
+    props.form.is_nominee_data_required = false;
+  }
   props.form.nominees.splice(index, 1);
 }
 
@@ -221,37 +251,37 @@ onMounted(() => {
   <div class="dark-disabled:border-gray-700">
     <ul class="flex flex-wrap -mb-px border-b">
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
+        <a href="#" @click="changeTab(1)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Personal <span class="ml-1 text-red-500">*</span>
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
+        <a href="#" @click="changeTab(2)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Education <span class="ml-1 text-red-500">*</span>
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
+        <a href="#" @click="changeTab(3)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Training
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
+        <a href="#" @click="changeTab(4)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Experience
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 5, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 5}">
+        <a href="#" @click="changeTab(5)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 5, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 5}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Others
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 6, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 6}">
+        <a href="#" @click="changeTab(6)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 6, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 6}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>References
         </a>
       </li>
       <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 7, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 7}">
+        <a href="#" @click="changeTab(7)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 7, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 7}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Nominees
         </a>
       </li>
@@ -480,7 +510,7 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>Passing Year <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Duration <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Achievement</nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14"><nobr>Action</nobr></th>
           </tr>
           </thead>
 
@@ -499,7 +529,7 @@ onMounted(() => {
               <input type="text" v-model.trim="form.educations[index].result" :id="'result_'+index" placeholder="Ex: 3.50" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.educations[index].passing_year" :id="'passing_year_'+index" placeholder="Ex: 2013" class="form-input" autocomplete="off" required />
+              <input type="number" v-model.trim="form.educations[index].passing_year" :id="'passing_year_'+index" placeholder="Ex: 2013" class="form-input" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
               <input type="text" v-model.trim="form.educations[index].duration" :id="'duration_'+index" placeholder="Ex: 4 years" class="form-input" autocomplete="off" required />
@@ -528,14 +558,14 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
           <span class="mr-2">Training Info</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="form.is_training_data_required" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_training_data_required ? 'text-red-600' : 'text-green-800'">
-              <template v-if="form.is_training_data_required">Applicable</template>
-              <template v-else>Not Applicable</template>
-            </span>
-          </label>
+<!--          <label class="relative inline-flex items-center cursor-pointer">-->
+<!--            <input type="checkbox" v-model="form.is_training_data_required" class="sr-only peer">-->
+<!--            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>-->
+<!--            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_training_data_required ? 'text-red-600' : 'text-green-800'">-->
+<!--              <template v-if="form.is_training_data_required">Applicable</template>-->
+<!--              <template v-else>Not Applicable</template>-->
+<!--            </span>-->
+<!--          </label>-->
         </legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
@@ -546,7 +576,13 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>Institute <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Address <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Duration <span class="text-red-500">*</span></nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14">
+              <button type="button" @click="addTrainingItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
           </thead>
 
@@ -572,14 +608,9 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.trainings[index].duration" placeholder="Ex: 2 month" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!==0" type="button" @click="removeTrainingItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeTrainingItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addTrainingItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
               </td>
@@ -598,14 +629,6 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
           <span class="mr-2">Experience Info</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="form.is_experience_data_required" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_experience_data_required ? 'text-red-600' : 'text-green-800'">
-              <template v-if="form.is_experience_data_required">Applicable</template>
-              <template v-else>Not Applicable</template>
-            </span>
-          </label>
         </legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
@@ -615,7 +638,13 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>To <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Last Designation <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Reason For Leave </nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14">
+              <button type="button" @click="addExperienceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
           </thead>
 
@@ -638,14 +667,9 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.experiences[index].reason_for_leave" placeholder="Leave Reason" class="form-input" autocomplete="off" />
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!==0" type="button" @click="removeExperienceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeExperienceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addExperienceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
               </td>
@@ -664,14 +688,14 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
           <span class="mr-2">Language Info</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="form.is_other_data_required" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_other_data_required ? 'text-red-600' : 'text-green-800'">
-              <template v-if="form.is_other_data_required">Applicable</template>
-              <template v-else>Not Applicable</template>
-            </span>
-          </label>
+<!--          <label class="relative inline-flex items-center cursor-pointer">-->
+<!--            <input type="checkbox" v-model="form.is_other_data_required" class="sr-only peer">-->
+<!--            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>-->
+<!--            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_other_data_required ? 'text-red-600' : 'text-green-800'">-->
+<!--              <template v-if="form.is_other_data_required">Applicable</template>-->
+<!--              <template v-else>Not Applicable</template>-->
+<!--            </span>-->
+<!--          </label>-->
         </legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
@@ -681,7 +705,13 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>Reading <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Speaking <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Listening <span class="text-red-500">*</span></nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14">
+              <button type="button" @click="addLanguageItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
           </thead>
 
@@ -724,14 +754,9 @@ onMounted(() => {
                 </select>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!==0" type="button" @click="removeLanguageItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeLanguageItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addLanguageItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
               </td>
@@ -750,14 +775,14 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
           <span class="mr-2">Reference Info</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="form.is_reference_data_required" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_reference_data_required ? 'text-red-600' : 'text-green-800'">
-              <template v-if="form.is_reference_data_required">Applicable</template>
-              <template v-else>Not Applicable</template>
-            </span>
-          </label>
+<!--          <label class="relative inline-flex items-center cursor-pointer">-->
+<!--            <input type="checkbox" v-model="form.is_reference_data_required" class="sr-only peer">-->
+<!--            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>-->
+<!--            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_reference_data_required ? 'text-red-600' : 'text-green-800'">-->
+<!--              <template v-if="form.is_reference_data_required">Applicable</template>-->
+<!--              <template v-else>Not Applicable</template>-->
+<!--            </span>-->
+<!--          </label>-->
         </legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
@@ -769,7 +794,13 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>Contact No. <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Email </nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Relation <span class="text-red-500">*</span></nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14">
+              <button type="button" @click="addReferenceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
           </thead>
 
@@ -798,14 +829,9 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.references[index].relation" placeholder="Relation" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!==0" type="button" @click="removeReferenceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeReferenceItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addReferenceItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
               </td>
@@ -824,14 +850,14 @@ onMounted(() => {
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
           <span class="mr-2">Nominee Info</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="form.is_nominee_data_required" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_nominee_data_required ? 'text-red-600' : 'text-green-800'">
-              <template v-if="form.is_nominee_data_required">Applicable</template>
-              <template v-else>Not Applicable</template>
-            </span>
-          </label>
+<!--          <label class="relative inline-flex items-center cursor-pointer">-->
+<!--            <input type="checkbox" v-model="form.is_nominee_data_required" class="sr-only peer">-->
+<!--            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>-->
+<!--            <span class="ml-2 text-xs font-bold dark:text-gray-300" :class="form.is_nominee_data_required ? 'text-red-600' : 'text-green-800'">-->
+<!--              <template v-if="form.is_nominee_data_required">Applicable</template>-->
+<!--              <template v-else>Not Applicable</template>-->
+<!--            </span>-->
+<!--          </label>-->
         </legend>
         <table class="w-full mt-2 whitespace-no-wrap" id="table">
           <thead>
@@ -843,7 +869,13 @@ onMounted(() => {
             <th class="px-4 py-3 align-bottom"><nobr>Contact No. <span class="text-red-500">*</span></nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Email </nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Is Relative <span class="text-red-500">*</span></nobr></th>
-            <th class="px-4 py-3 text-center align-bottom"><nobr>Action</nobr></th>
+            <th class="px-4 py-3 text-center align-bottom w-14">
+              <button type="button" @click="addNomineeItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </th>
           </tr>
           </thead>
 
@@ -876,14 +908,9 @@ onMounted(() => {
                 </select>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!==0" type="button" @click="removeNomineeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeNomineeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addNomineeItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
               </td>
