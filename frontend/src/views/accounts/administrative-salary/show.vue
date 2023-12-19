@@ -30,7 +30,7 @@ onMounted(() => {
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
       <div class="w-full">
-        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Administrative Salaries Information</h2>
+        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Administrative Salaries Information # {{administrativeSalaryId}}</h2>
         <table class="w-full">
           <thead>
           <tr>
@@ -43,7 +43,7 @@ onMounted(() => {
             <td><span :class="administrativeSalary?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ administrativeSalary?.business_unit }}</span></td>
           </tr>
           <tr>
-            <th class="w-40">Month-Year</th>
+            <th class="w-40">Year-Month</th>
             <td>{{ administrativeSalary?.year_month }}</td>
           </tr>
           <tr>
@@ -55,19 +55,25 @@ onMounted(() => {
         <table class="w-full mt-1" id="profileDetailTable">
           <thead>
           <tr>
-            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particulars</td>
+            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particular List</td>
           </tr>
           <tr>
             <th>Sl.</th>
             <th>Particular</th>
-            <th>Amount</th>
+            <th class="w-52">Amount</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(adjustmentData,index) in administrativeSalary?.accSalaryLines" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ adjustmentData?.particular }}</td>
-            <td>{{ adjustmentData?.amount }}</td>
+            <td class="!text-right">{{ adjustmentData?.amount }}</td>
+          </tr>
+          <tr class="text-gray-700 dark-disabled:text-gray-400">
+            <td class="font-bold !text-right" colspan="2">Total Amount</td>
+            <td class="px-1 py-1 font-bold !text-right">
+              {{administrativeSalary?.total_salary}}
+            </td>
           </tr>
           </tbody>
           <tfoot v-if="!administrativeSalary?.accSalaryLines?.length">
