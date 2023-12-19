@@ -4,11 +4,9 @@
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
-
     </div>
 
     <h4 class="text-md font-semibold mt-3">Basic Info</h4>
-
     <div class="flex flex-col w-full md:flex-row md:gap-2">
         <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
