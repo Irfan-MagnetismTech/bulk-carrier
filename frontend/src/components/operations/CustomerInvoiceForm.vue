@@ -20,6 +20,11 @@
                           />
                   </template>
               </v-select>
+              <input type="hidden" v-model="form.ops_customer_id">
+        </label>
+        <label class="block w-1/4 mt-2 text-sm">
+          <span class="text-gray-700">Invoice Date </span>
+          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" />
         </label>
     </div>
 
@@ -44,35 +49,47 @@
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.opsCustomerInvoiceVoyages[index].opsVoyage"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
+                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.
+                    opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsCustomerInvoiceVoyageChanged(form.opsCustomerInvoiceVoyages[index])">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsCustomerInvoiceVoyages[index].opsVoyage"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+                <input type="hidden" v-model="form.opsCustomerInvoiceVoyages[index].ops_voyage_id">
                 </label>
               </td>
-              <td>
 
-              </td>
+              <!-- opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+    opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.opsVessel.id;
+    opsCustomerInvoiceVoyage.opsVessel = contractTariff.opsVessel;
+    opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage.ops_voyage_id;
+    opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.total_amount; -->
               <td>
-                  <label class="block w-full mt-2 text-sm">
-                    <span class="show-block">
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsVessel?.name" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+              </td>
+              
+              <td>
+                <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  />
+                <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsCargoType?.cargo_type" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
+                  <!-- <label class="block w-full mt-2 text-sm"> -->
+                    <!-- <span class="show-block">
                       {{ form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
-                    </span>
+                    </span> -->
                   <!-- <input type="text" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage.opsCargoType.cargo_type" readonly class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                </label>
+                <!-- </label> -->
               </td>
              
              
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsCustomerInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
+                  <!-- <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.contractTariff?.total_amount" readonly class="form-input vms-readonly-input" autocomplete="off"  /> -->
+                  <input type="text" :value="form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt" readonly class="form-input text-right" autocomplete="off" />
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
@@ -377,8 +394,8 @@
     </div>
     <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
-    <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+    <form @submit.prevent="" style="position: absolute;top: 0; width: 100%">
+      <div class="px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 w-10/12 !mx-auto" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -405,33 +422,40 @@
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <thead>
               <tr>
-                <th>Loading Point</th>
-                <th>Unloading Point</th>
-                <th>Initial Survey Quantity</th>
-                <th>Final Receipt Quantity</th>
-                <th>Boat Note Quantity</th>
-                <th>Final Survey Quantity</th>
+                <th><nobr>Tariff Name</nobr></th>
+                <th><nobr>Loading Point</nobr></th>
+                <th><nobr>Unloading Point</nobr></th>
+                <th><nobr>Initial Survey Quantity</nobr></th>
+                <th><nobr>Final Receipt Quantity</nobr></th>
+                <th><nobr>Boat Note Quantity</nobr></th>
+                <th><nobr>Final Survey Quantity</nobr></th>
               </tr>
             </thead>
             <tbody>
+
               <tr v-for="(detail, index) in details" :key="index">
-                <td>
-                  <input type="text" readonly :value="detail.loading_point" class="form-input text-right"/>
+                <td v-if="detail.tariff_name">
+                  <router-link :to="{ name: 'ops.configurations.cargo-tariffs.show', params: { cargoTariffId: detail?.tariff_id ?? null } }" target="_blank" class="font-semibold text-blue-600">
+                    <nobr>{{ detail.tariff_name }}</nobr>
+                  </router-link>
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.unloading_point" class="form-input text-right"/>
+                  {{ detail.loading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.initial_survey_qty" class="form-input text-right"/>
+                  {{ detail.unloading_point }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_received_qty" class="form-input text-right"/>
+                  {{ detail.initial_survey_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.boat_note_qty" class="form-input text-right"/>
+                  {{ detail.final_received_qty }}
                 </td>
                 <td>
-                  <input type="text" readonly :value="detail.final_survey_qty" class="form-input text-right"/>
+                  {{ detail.boat_note_qty }}
+                </td>
+                <td>
+                  {{ detail.final_survey_qty }}
                 </td>
               </tr>
             </tbody>
@@ -466,6 +490,7 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 import useHelper from "../../composables/useHelper";
+import useContractAssign from "../../composables/operations/useContractAssign";
 
 const editInitiated = ref(false);
 
@@ -474,6 +499,8 @@ const { getCustomersByBusinessUnit, customers } = useCustomer();
 const { numberFormat } = useHelper();
 // const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
+const { voyages, getVoyageByCustomer } = useVoyage();
+const { contractTariff, getContractTariffByVoyage } = useContractAssign();
 const props = defineProps({
     form: { required: false,default: {},},
     errors: { type: [Object, Array], required: false },
@@ -550,23 +577,25 @@ const isNotBDTCurrency = (item,index) => {
 
 
 watch(() => props.form.opsCustomerInvoiceVoyages, (newLines) => {
+  console.log(newLines);
   let total_amount = 0.0;
   newLines.forEach((line, index) => {
-    if (line.opsVoyage) {
-      const selectedItem = voyages.value.find(voyage => voyage.id === line.opsVoyage.id);
-      if (selectedItem) {
-        if ( line.ops_voyage_id !== selectedItem.id
-        ) {
-          props.form.opsCustomerInvoiceVoyages[index].ops_voyage_id = selectedItem.id;
-          props.form.opsCustomerInvoiceVoyages[index].cargo_quantity = selectedItem.cargo_quantity;
-          props.form.opsCustomerInvoiceVoyages[index].total_amount = props.form.opsCustomerInvoiceVoyages[index].cargo_quantity * props.form.opsCustomerInvoiceVoyages[index].rate_per_mt;
-        }
-      }
-    }
+    // if (line.opsVoyage) {
+    //   const selectedItem = voyages.value.find(voyage => voyage.id === line.opsVoyage.id);
+    //   if (selectedItem) {
+    //     if ( line.ops_voyage_id !== selectedItem.id
+    //     ) {
+    //       props.form.opsCustomerInvoiceVoyages[index].ops_voyage_id = selectedItem.id;
+    //       props.form.opsCustomerInvoiceVoyages[index].cargo_quantity = selectedItem.cargo_quantity;
+    //       props.form.opsCustomerInvoiceVoyages[index].total_amount = props.form.opsCustomerInvoiceVoyages[index].cargo_quantity * props.form.opsCustomerInvoiceVoyages[index].rate_per_mt;
+    //     }
+    //   }
+    // }
 
-    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
-    props.form.total_amount = parseFloat(total_amount.toFixed(2));
+    // total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
+    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt ?? 0);
   });
+  props.form.total_amount = parseFloat(total_amount.toFixed(2));
   CalculateAll();
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
@@ -582,27 +611,35 @@ function CalculateAll() {
 watch(() => props?.form?.opsCustomerInvoiceServices, (newVal, oldVal) => {
       let total_bdt = 0.0;
       let total_usd = 0.0;
+      let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        total_bdt += amount_bdt;
-        total_usd += amount_usd;
+        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        // total_bdt += amount_bdt;
+        // total_usd += amount_usd;
+        line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
 
       });
-  props.form.service_fee_deduction_amount_usd = total_usd;
-  props.form.service_fee_deduction_amount = total_bdt ;
+  // props.form.service_fee_deduction_amount_usd = total_usd;
+  // props.form.service_fee_deduction_amount = total_bdt ;
+  props.form.service_fee_deduction_amount = total_amount ;
   CalculateAll();
 }, { deep: true }); 
 
 watch(() => props?.form?.opsCustomerInvoiceOthers, (newVal, oldVal) => {
       let total_bdt = 0.0;
-      let total_usd = 0.0;
+  let total_usd = 0.0;
+  let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        total_bdt += amount_bdt;
-        total_usd += amount_usd;
+        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        // total_bdt += amount_bdt;
+        // total_usd += amount_usd;
+        line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
+        total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
       });
-  props.form.others_billable_amount_usd = total_usd;
-  props.form.others_billable_amount = total_bdt;
+  // props.form.others_billable_amount_usd = total_usd;
+  // props.form.others_billable_amount = total_bdt;
+  props.form.others_billable_amount = total_amount;
   CalculateAll(); 
 }, { deep: true });
 
@@ -642,6 +679,32 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 function profileChanged() {
   let value = props.form.opsCustomer ?? null;
   props.form.ops_customer_id = value?.id ?? null;
+
+  voyages.value = [];
+  props.form.opsCustomerInvoiceVoyages = [];
+  addVoyage();
+
+
+  if(props.form.business_unit && props.form.ops_customer_id)
+    getVoyageByCustomer(props.form.business_unit, props.form.ops_customer_id);
+}
+
+function opsCustomerInvoiceVoyageChanged(opsCustomerInvoiceVoyage) {
+  opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.opsVoyage?.id;
+  // console.log(opsCustomerInvoiceVoyage.opsVoyage);
+  opsCustomerInvoiceVoyage.contractTariff = {};
+  if (opsCustomerInvoiceVoyage.ops_voyage_id) {
+    getContractTariffByVoyage(opsCustomerInvoiceVoyage.ops_voyage_id).then(() => {
+      opsCustomerInvoiceVoyage.contractTariff = contractTariff;
+      opsCustomerInvoiceVoyage.ops_vessel_id = contractTariff.value?.opsVessel?.id;
+      opsCustomerInvoiceVoyage.opsVessel = contractTariff.value?.opsVessel;
+      opsCustomerInvoiceVoyage.opsCargoType = contractTariff.value?.opsCargoType;
+      opsCustomerInvoiceVoyage.ops_voyage_id = opsCustomerInvoiceVoyage?.ops_voyage_id;
+      opsCustomerInvoiceVoyage.total_amount_bdt = contractTariff.value?.total_amount;
+    })
+    
+    // contractTariff.opsVessel.id
+  }
 }
 
 
@@ -679,8 +742,8 @@ const currentIndex = ref(null);
 function showModal(index) {
   isModalOpen.value = 1
   currentIndex.value = index
-  if(props.form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsVoyageSectors) {
-    details.value = cloneDeep(props.form.opsCustomerInvoiceVoyages[index].opsVoyage?.opsVoyageSectors)
+  if(props.form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsVoyageSectors) {
+    details.value = cloneDeep(props.form.opsCustomerInvoiceVoyages[index]?.contractTariff?.opsVoyageSectors)
   } else {
     details.value = [{type: ''}]
   }
@@ -707,5 +770,9 @@ function closeModel() {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+#dataTable tr, th, td {
+  @apply text-[12px]
 }
 </style>

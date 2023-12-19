@@ -184,8 +184,8 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input class="w-1/4" v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-3/4 mt-2 text-sm">
-        <span class="text-gray-700">Title </span>
-        <input type="text" maxlength="250" v-model="form.title" placeholder="Title" class="form-input" autocomplete="off" />
+        <span class="text-gray-700">Title <span class="text-red-500">*</span></span>
+        <input type="text" maxlength="250" required v-model="form.title" placeholder="Title" class="form-input" autocomplete="off" />
       </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -241,11 +241,11 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Exchange Rate (To USD) </span>
-      <input type="text" v-model="form.exchange_rate_usd" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency" />
+      <input type="number" step="0.0001" v-model="form.exchange_rate_usd" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency" />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-      <input type="text" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency" />
+      <input type="number" step="0.0001" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency" />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
 
@@ -258,9 +258,9 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap" >
         <thead>
             <tr class="w-full">
-              <th class="w-72">Expesne Head</th>
-              <th class="w-20">Quantity</th>
-              <th>Rate</th>
+              <th class="w-72">Expesne Head <span class="text-red-500">*</span></th>
+              <th class="w-20">Quantity <span class="text-red-500">*</span></th>
+              <th>Rate <span class="text-red-500">*</span></th>
               <th v-if="isOtherCurrency">Amount </th>
               <th>Amount USD</th>
               <th>Amount BDT</th>
@@ -289,19 +289,19 @@ onMounted(() => {
                 <input type="hidden" v-model="form.opsVoyageBudgetEntries[index].ops_expense_head_id" />
               </td>
               <td>
-                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" required v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
               <td>
-                <input type="text" v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" required v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
               <td v-if="isOtherCurrency">
-                <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
-                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
-                  <input type="text" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
                 <button type="button" @click="removeHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

@@ -32,9 +32,17 @@ class OpsCustomerInvoiceController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices')
+            $customerInvoices = OpsCustomerInvoice::with('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsCargoType','opsCustomerInvoiceOthers','opsCustomerInvoiceServices')
            ->globalSearch($request->all());
-            
+
+            $customerInvoices->map(function($invoice){
+                $voyages = $invoice->opsCustomerInvoiceVoyages->map(function ($invoiceVoyages) {
+                    return $invoiceVoyages->opsVoyage->voyage_sequence;
+                });
+                $invoice['voyage_name'] = implode(', ', $voyages->toArray());
+                return $invoice;
+            });
+        
             return response()->success('Data retrieved successfully.', $customerInvoices, 200);
         }
         catch (QueryException $e)
@@ -103,7 +111,23 @@ class OpsCustomerInvoiceController extends Controller
     */
     public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
     {
-        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsContractTariff','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsCargoType','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+               
+        
+        collect($customer_invoice->opsCustomerInvoiceVoyages)->map(function($invoiceVoyages){
+            $invoiceVoyages->opsVoyage->opsContractTariffs->map(function($contract) use ($invoiceVoyages){
+                $contract->opsVoyage->opsVoyageSectors->map(function($item) use($contract) {
+                    if($contract['pol_pod']==$item['pol_pod']){
+                        $item['opsCargoTariff'] = $contract->opsCargoTariff;
+                    }
+                    return $item;
+                });
+            });
+
+            $invoiceVoyages['contractTariff']=$invoiceVoyages->opsVoyage;
+            return $invoiceVoyages;
+        });
+
         try
         {
         return response()->success('Data retrieved successfully.', $customer_invoice, 200);
