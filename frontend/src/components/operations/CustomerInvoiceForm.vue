@@ -712,7 +712,7 @@ watch(() => props.form.ops_customer_profile_id, (value) => {
       props.form.ops_customer_contract_id = '';
       props.form.opsCustomerContract = null;
   }
-   value ? getCustomerContractsByCharterOwner(value) : customerContracts.value = [];
+  //  value ? getCustomerContractsByCharterOwner(value) : customerContracts.value = [];
 })
 
 
