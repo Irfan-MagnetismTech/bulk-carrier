@@ -17,7 +17,7 @@ class OpsBunkerRequisitionRequest extends FormRequest
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
             'created_by'        => ['nullable', 'numeric', 'max:50'],
-            'requisition_no'    => ['required', 'string'],
+            'requisition_no'    => ['required', 'string','unique:ops_bunker_requisitions,requisition_no,'.$this->id],
             'remarks'           => ['nullable', 'string'],
             'status'            => ['nullable', 'string'],
         ];
@@ -25,7 +25,7 @@ class OpsBunkerRequisitionRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages(): array

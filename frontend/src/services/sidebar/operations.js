@@ -195,56 +195,56 @@ export default [
                 subSubMenu: []
             },
 
-            // {
-            //     route: 'ops.expense-heads.index',
-            //     label: 'Expense Head',
-            //     preIcon: '',
-            //     postIcon: '',
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: []
-            // },
-            // {
-            //     route: 'ops.vessel-expense-heads.index',
-            //     label: 'Vessel Expense Head',
-            //     preIcon: '',
-            //     postIcon: '',
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: []
-            // },
-            // {
-            //     route: 'ops.voyage-budgets.index',
-            //     label: 'Voyage Budget',
-            //     preIcon: '',
-            //     postIcon: '',
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: []
-            // },
-            // {
-            //     route: 'ops.bunker-requisitions.index',
-            //     label: 'Purchase Requisition',
-            //     preIcon: '',
-            //     postIcon: '',
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: []
-            // },
-            // {
-            //     route: 'ops.bunker-bills.index',
-            //     label: 'Bunker Bill',
-            //     preIcon: '',
-            //     postIcon: '',
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: []
-            // },
+            {
+                route: 'ops.expense-heads.index',
+                label: 'Expense Head',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: 'ops.vessel-expense-heads.index',
+                label: 'Vessel Expense Head',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: 'ops.voyage-budgets.index',
+                label: 'Voyage Budget',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: 'ops.bunker-requisitions.index',
+                label: 'Purchase Requisition',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+            {
+                route: 'ops.bunker-bills.index',
+                label: 'Bunker Bill',
+                preIcon: '',
+                postIcon: '',
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
             
             // {
             //     route: '',

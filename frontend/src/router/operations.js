@@ -601,7 +601,7 @@ export default [
 	{
 		path: `/${BASE}/customer-invoices/:customerInvoiceId/edit`,
 		name: `${BASE}.customer-invoices.edit`,
-		component: () => import (`../views/${ViEWBASE}/charterer-invoices/edit.vue`),
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
