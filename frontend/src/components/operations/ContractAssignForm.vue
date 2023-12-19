@@ -8,7 +8,7 @@
     </div>
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Assign Date <span class="text-red-500">*</span></span>
               <input type="date" v-model="form.assign_date" required class="form-input">
       </label>
 
@@ -16,7 +16,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
@@ -30,7 +30,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage<span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
               <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
                   <template #search="{attributes, events}">
                       <input
@@ -115,9 +115,9 @@
               <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
               <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
               <th class="w-1/12 px-4 py-3 align-bottom">Quantity</th>
-              <th class="w-3/12 px-4 py-3 align-bottom">Tariff</th>
+              <th class="w-3/12 px-4 py-3 align-bottom">Tariff <span class="text-red-500">*</span></th>
               <th class="w-1/12 px-4 py-3 align-bottom">Rate</th>
-              <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate</th>
+              <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate <span class="text-red-500">*</span></th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -146,7 +146,7 @@
               <td><input type="text" v-model="opsContractTariff.total_rate"   placeholder="Rate" class="form-input vms-readonly-input" readonly /></td>
               <td>
                 <div v-if="opsContractTariff?.ops_cargo_tariff_id">
-                  <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)">
+                  <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)" >
                     <option  value="" disabled selected>Select</option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
