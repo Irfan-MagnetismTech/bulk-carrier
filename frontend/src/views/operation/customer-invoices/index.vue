@@ -44,18 +44,8 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Customer",
+      "label": "Customer Name",
       "filter_type": "input"
-    },
-    {
-      "relation_name": "opsCustomerContract",
-      "field_name": "contract_name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Contract Name",
-      "filter_type": "input" 
     },
     {
       "relation_name": "opsCustomerContract.opsVessel",

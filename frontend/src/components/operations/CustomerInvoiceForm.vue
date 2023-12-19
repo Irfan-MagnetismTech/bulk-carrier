@@ -24,6 +24,10 @@
               </v-select>
               <input type="hidden" v-model="form.ops_customer_id">
         </label>
+        <label class="block w-1/4 mt-2 text-sm">
+          <span class="text-gray-700">Invoice Date </span>
+          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" />
+        </label>
     </div>
 
 
