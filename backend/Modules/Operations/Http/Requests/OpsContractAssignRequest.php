@@ -22,17 +22,17 @@ class OpsContractAssignRequest extends FormRequest
         return [
             'ops_vessel_id'             => ['required', 'max:20'],
             'ops_voyage_id'             => ['required', 'max:20',Rule::unique('ops_contract_assigns')->ignore($this->route('contract_assign'), 'id')],
-            'ops_charterer_contract_id' => 'required_if:business_unit,!=,PSML|nullable|max:20',
-            'ops_charterer_profile_id'  => 'required_if:business_unit,!=,PSML|nullable|max:20',
-            'ops_customer_id'           => 'required_if:business_unit,!=,TSLL|nullable|max:20',
-            'assign_date'               => ['required'], 
-            'opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:business_unit,!=,TSLL|nullable|max:20',
+            'ops_charterer_contract_id' => 'required_if:business_unit,==,PSML|nullable|max:20',
+            'ops_charterer_profile_id'  => 'required_if:business_unit,==,PSML|nullable|max:20',
+            'ops_customer_id'           => 'required_if:business_unit,==,TSLL|nullable|max:20',
+            'assign_date'               => ['required'],
+            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:business_unit,==,TSLL|nullable|max:20',
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages(): array
@@ -45,7 +45,7 @@ class OpsContractAssignRequest extends FormRequest
             'ops_charterer_contract_id.required' => 'Charterer Contract is required.',
             'ops_customer_id.required' => 'Customer is required.',
             'assign_date.required' => 'Assign Date is required.',
-            'opsContractTariffs.*.ops_cargo_tariff_id.required' => 'Tarrif is required.',
+            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id.required_if' => 'Cargo Tarrif can not be null.',
         ];
     }
 

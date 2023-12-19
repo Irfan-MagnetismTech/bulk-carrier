@@ -22,9 +22,9 @@ class OpsExpenseHeadRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('ops_expense_heads')->where(function ($query) {
-                    return $this->head_id !== null;
-                })->ignore($this->route('expense_head'), 'id'),
+                // Rule::unique('ops_expense_heads', 'name')->where(function ($query) {
+                //     return $this->id !== null;
+                // }),
             ],
             // 'is_visible_in_voyage_report'   => ['boolean'],
             'business_unit'                 => ['required', 'string', 'max:255'],

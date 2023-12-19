@@ -117,7 +117,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Reported Person<span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.reported_by" placeholder="Reported person" class="form-input" autocomplete="off" required />
+      <input type="text" v-model.trim="form.reported_by" placeholder="Reported Person" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300 text-sm font-medium text-gray-900 dark-disabled:text-white">Attachment </span>
@@ -133,7 +133,7 @@ onMounted(() => {
     </label>
   </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Candidate List</legend>
+    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Participant List</legend>
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -161,7 +161,7 @@ onMounted(() => {
             </v-select>
             <span
                 v-show="incidentParticipant.isCrewNameDuplicate"
-                class="text-yellow-600 pl-1"
+                class="text-yellow-600 pl-3"
                 title="Duplicate Rank Name"
                 v-html="icons.ExclamationTriangle"
                 style="position: absolute; top: 50%; transform: translateY(-50%); right: 30px;"
@@ -169,10 +169,10 @@ onMounted(() => {
           </div>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_contact" placeholder="Contact no" class="form-input vms-readonly-input" autocomplete="off" disabled />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].crw_crew_contact" placeholder="Contact No" class="form-input vms-readonly-input" autocomplete="off" disabled />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwIncidentParticipants[index].injury_status" placeholder="Injury status" class="form-input" autocomplete="off" required />
+          <input type="text" v-model.trim="form.crwIncidentParticipants[index].injury_status" placeholder="Injury Status" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.crwIncidentParticipants[index].notes" placeholder="Notes" class="form-input" autocomplete="off" />

@@ -38,8 +38,7 @@ class CrwIncidentRequest extends FormRequest
             'business_unit'                           => 'required|in:PSML,TSLL',
             'crwIncidentParticipants.*.crw_crew_id'   => 'required|distinct',
             'crwIncidentParticipants.*.injury_status' => 'required|string|max:255',
-            'crwIncidentParticipants.*.notes'         => 'required|string|max:255',
-
+            'crwIncidentParticipants.*.notes'         => 'string|max:255',
         ];
     }
 

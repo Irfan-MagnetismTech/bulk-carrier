@@ -48,7 +48,7 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "total_crew",
+      "field_name": "total_crews",
       "search_param": "",
       "action": null,
       "order_by": null,

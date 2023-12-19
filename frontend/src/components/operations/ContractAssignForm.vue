@@ -8,7 +8,7 @@
     </div>
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Assign Date <span class="text-red-500">*</span></span>
               <input type="date" v-model="form.assign_date" required class="form-input">
       </label>
 
@@ -16,7 +16,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel<span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
@@ -30,8 +30,8 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage<span class="text-red-500">*</span></span>
-              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -115,9 +115,9 @@
               <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
               <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
               <th class="w-1/12 px-4 py-3 align-bottom">Quantity</th>
-              <th class="w-3/12 px-4 py-3 align-bottom">Tariff</th>
+              <th class="w-3/12 px-4 py-3 align-bottom">Tariff <span class="text-red-500">*</span></th>
               <th class="w-1/12 px-4 py-3 align-bottom">Rate</th>
-              <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate</th>
+              <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate <span class="text-red-500">*</span></th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -128,35 +128,43 @@
               
               <td><input type="text" :value="opsContractTariff?.quantity" placeholder="Unloading Point" class="form-input vms-readonly-input" readonly /></td>
               <td>
-                <v-select :options="opsContractTariff?.cargoTariffs" placeholder="--Choose an option--" v-model="opsContractTariff.opsCargoTariff" label="tariff_name" class="block form-input" @update:modelValue="opsCargoTariffChange(opsContractTariff)">
-                  <template #search="{attributes, events}">
+                <div v-if="opsContractTariff?.cargoTariffs">
+                  <v-select :options="opsContractTariff?.cargoTariffs" placeholder="--Choose an option--" v-model="opsContractTariff.opsCargoTariff" label="tariff_name" class="block form-input" @update:modelValue="opsCargoTariffChange(opsContractTariff)">
+                    <template #search="{attributes, events}">
                       <input
-                          class="vs__search"
-                          :required="!opsContractTariff.opsCargoTariff"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-              <input type="hidden" v-model="opsContractTariff.ops_cargo_tariff_id" />
+                      class="vs__search"
+                      :required="!opsContractTariff.opsCargoTariff"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+                    </template>
+                  </v-select>
+                  <input type="hidden" v-model="opsContractTariff.ops_cargo_tariff_id" />
+                </div>
+                <span class="text-red-600 font-bold" v-else>Cargo tariff not found</span>
               </td>
               <td><input type="text" v-model="opsContractTariff.total_rate"   placeholder="Rate" class="form-input vms-readonly-input" readonly /></td>
               <td>
-                <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)">
-                  <option  value="" disabled selected>Select</option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="mar"> Mar - {{opsContractTariff?.opsCargoTariff?.["mar"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="apr"> Apr - {{opsContractTariff?.opsCargoTariff?.["apr"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="may"> May - {{opsContractTariff?.opsCargoTariff?.["may"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jun"> Jun - {{opsContractTariff?.opsCargoTariff?.["jun"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jul"> Jul - {{opsContractTariff?.opsCargoTariff?.["jul"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="aug"> Aug - {{opsContractTariff?.opsCargoTariff?.["aug"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="sep"> Sep - {{opsContractTariff?.opsCargoTariff?.["sep"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="oct"> Oct - {{opsContractTariff?.opsCargoTariff?.["oct"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="nov"> Nov - {{opsContractTariff?.opsCargoTariff?.["nov"]}} </option>
-                  <option v-if="opsContractTariff.ops_cargo_tariff_id" value="dec"> Dec - {{opsContractTariff?.opsCargoTariff?.["dec"]}} </option>
-                </select>
+                <div v-if="opsContractTariff?.ops_cargo_tariff_id">
+                  <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)" >
+                    <option  value="" disabled selected>Select</option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="mar"> Mar - {{opsContractTariff?.opsCargoTariff?.["mar"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="apr"> Apr - {{opsContractTariff?.opsCargoTariff?.["apr"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="may"> May - {{opsContractTariff?.opsCargoTariff?.["may"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jun"> Jun - {{opsContractTariff?.opsCargoTariff?.["jun"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jul"> Jul - {{opsContractTariff?.opsCargoTariff?.["jul"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="aug"> Aug - {{opsContractTariff?.opsCargoTariff?.["aug"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="sep"> Sep - {{opsContractTariff?.opsCargoTariff?.["sep"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="oct"> Oct - {{opsContractTariff?.opsCargoTariff?.["oct"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="nov"> Nov - {{opsContractTariff?.opsCargoTariff?.["nov"]}} </option>
+                    <option v-if="opsContractTariff.ops_cargo_tariff_id" value="dec"> Dec - {{opsContractTariff?.opsCargoTariff?.["dec"]}} </option>
+                  </select>
+                </div>
+                <span v-else class="text-red-600 font-bold">
+                  Select tariff
+                </span>
               </td>
 
             </tr>
@@ -190,7 +198,7 @@ const { getChartererContractsByCharterOwner, chartererContracts } = useCharterer
 const { voyage, voyages, showVoyage, getVoyageList,searchVoyages } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { getCustomersByBusinessUnit, customers } = useCustomer();
-const { getCargoTariffsByVessel, cargoTariffs } = useCargoTariff();
+const { getCargoTariffsByVessel, cargoTariffs, getCargoTariffsByVoyage } = useCargoTariff();
 
 const props = defineProps({
     form: { required: false,default: {},},
@@ -224,11 +232,18 @@ onMounted(() => {
  
 })
 
-watch(() => props.form.opsVoyage, (value) => {
-if(value) {
-  props.form.ops_voyage_id = value?.id
-  }
-}, { deep: true })
+// watch(() => props.form.opsVoyage, (value) => {
+// if(value) {
+//   props.form.ops_voyage_id = value?.id
+//   }
+// }, { deep: true })
+
+function opsVoyageChange() {
+  const value = props.form.opsVoyage;
+  props.form.ops_voyage_id = value?.id;
+  if(props.form.business_unit && props.form.ops_voyage_id)
+    getCargoTariffsByVoyage(props.form.business_unit, props.form.ops_voyage_id);
+}
 
 // watch(() => props.form.opsVessel, (value) => {
 
@@ -256,7 +271,7 @@ function opsVesselChange() {
     let loadStatus = true;
     showVessel(value?.id, loadStatus);
     getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
-    getCargoTariffsByVessel(props.form.ops_vessel_id);
+    // getCargoTariffsByVessel(props.form.ops_vessel_id);
   }
 }
 

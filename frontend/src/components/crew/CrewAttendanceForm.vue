@@ -45,7 +45,7 @@ watch(() => vesselAssignedCrews.value, (items) => {
       crw_crew_id : item.crwCrew.id,
       attendance_line_composite : "BDCGP",
       present_days : "",
-      absent_days : 0,
+      absent_days : '',
       payable_days : 0,
     })
   }); 

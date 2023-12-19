@@ -26,15 +26,15 @@ class AccAdvanceAdjustmentRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            // 'acc_cost_center_id'                     => 'required',
-            // 'acc_cash_requisition_id'                => ['required', Rule::unique('acc_advance_adjustments')->ignore($this->id)],
-            // 'adjustment_date'                        => 'required|date',
-            // 'adjustment_amount'                      => 'required|numeric',
-            // 'business_unit'                          => 'required|in:PSML,TSLL',
-            // 'accAdvanceAdjustmentLines.*.particular' => 'required|string|max:255',
-            // 'accAdvanceAdjustmentLines.*.amount'     => 'required|numeric|between:0,9999999.99',
-            // 'accAdvanceAdjustmentLines.*.attachment' => 'nullable|string|max:255',
-            // 'accAdvanceAdjustmentLines.*.remarks'    => 'nullable|string|max:255',
+            'acc_cost_center_id'                     => 'required',
+            'acc_cash_requisition_id'                => ['required', Rule::unique('acc_advance_adjustments')->ignore($this->id)],
+            'adjustment_date'                        => 'required|date',
+            'adjustment_amount'                      => 'required|numeric',
+            'business_unit'                          => 'required|in:PSML,TSLL',
+            'accAdvanceAdjustmentLines.*.particular' => 'required|string|max:255',
+            'accAdvanceAdjustmentLines.*.amount'     => 'required|numeric|between:0,9999999.99',
+            'accAdvanceAdjustmentLines.*.attachment' => 'nullable|string|max:255',
+            'accAdvanceAdjustmentLines.*.remarks'    => 'nullable|string|max:255',
         ];
     }
 
@@ -45,7 +45,7 @@ class AccAdvanceAdjustmentRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            // 'acc_cost_center_id.unique'                     => 'required',
+            'acc_cost_center_id.unique'                     => 'The cash requisition no has already been taken.',
         ];
     }
 
