@@ -24,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { crewAssigns, getCrewAssigns, deleteCrewAssign, isLoading, isTableLoading } = useCrewAssign();
+const { crewAssigns, getCrewAssigns, deleteCrewAssign, updateCrewAssign, isLoading, isTableLoading } = useCrewAssign();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -151,6 +151,10 @@ function confirmDelete(id) {
   })
 }
 
+function updateAssignCrewStatus(assignData,id){
+  updateCrewAssign(assignData,id);
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
@@ -207,16 +211,22 @@ onMounted(() => {
               <td> <nobr> {{ crwAssign?.joining_date }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.joining_port_code }} </nobr> </td>
               <td> {{ crwAssign?.duration }}  </td>
-              <td>
-                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }}
-                </span>
-
-              </td>
+              <td>{{crwAssign?.status}}</td>
+<!--              <td>-->
+<!--                <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }}-->
+<!--                </span>-->
+<!--              </td>-->
               <td>
                 <span :class="crwAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAssign?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
+                  <div class="tooltip cursor-pointer">
+                    <svg @click="updateAssignCrewStatus(crwAssign,crwAssign.id)" xmlns="http://www.w3.org/2000/svg" class="icn dark:text-gray-600 dark:hover:text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="tooltiptext">Mark as Complete</span>
+                  </div>
                   <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
                   <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
                 </nobr>
