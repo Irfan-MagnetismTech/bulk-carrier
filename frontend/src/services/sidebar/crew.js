@@ -194,16 +194,6 @@ export default [
                 subSubMenu: [],
             },
             {
-                route: 'crw.crwAttendances.index',
-                label: 'Attendance Records',
-                preIcon: '',
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: [],
-            },
-            {
                 route: 'crw.crewSalaryStructures.index',
                 label: 'Crew Salary Structure',
                 preIcon: '',

@@ -90,16 +90,16 @@ let filterOptions = ref( {
       "label": "Account Number",
       "filter_type": "input"
     },
-    // {
-    //   "relation_name": null,
-    //   "field_name": "status",
-    //   "search_param": "",
-    //   "action": null,
-    //   "order_by": null,
-    //   "date_from": null,
-    //   "label": "Status",
-    //   "filter_type": "input"
-    // },
+    {
+      "relation_name": null,
+      "field_name": "is_active",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
+      "filter_type": "input"
+    },
   ]
 });
 
@@ -180,6 +180,10 @@ onMounted(() => {
               <td> {{ crewBankAccount?.bank_name }} </td>
               <td> {{ crewBankAccount?.account_name }} </td>
               <td> {{ crewBankAccount?.account_number }} </td>
+              <td>
+                <span v-if="!crewBankAccount?.is_active" class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">Deactive</span>
+                <span v-else class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">Active</span>
+              </td>
               <!-- <td>
                 <span :class="crewBankAccount?.is_active === 1 ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                   {{ crewBankAccount?.is_active === 1 ? "Active" : "Deactive" }}
