@@ -141,6 +141,15 @@ class MntSurveyItemController extends Controller
     {
         try {            
             $surveyItem = MntSurveyItem::findorfail($id);
+            if ($surveyItem->mntSurvey()->count() > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id"=>["This data could not be deleted as it is in use."]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
             $surveyItem->delete();
             
             return response()->success('Survey item deleted successfully', $surveyItem, 204);

@@ -144,7 +144,7 @@ class MntCriticalFunctionController extends Controller
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
-                        "id"=>["This data could not be deleted as it has reference to other table"]
+                        "id"=>["This data could not be deleted as it is in use."]
                     ]
                 );
                 return response()->json($error, 422);
