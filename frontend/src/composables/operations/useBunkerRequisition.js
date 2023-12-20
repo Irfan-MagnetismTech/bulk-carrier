@@ -136,6 +136,22 @@ export default function useBunkerRequisition() {
 
 	async function updateBunkerRequisition(form, bunkerRequisitionId) {
 		//NProgress.start();
+
+		let total = form.opsBunkers.reduce((accumulator, currentObject) => {
+			return accumulator + (currentObject.quantity ? parseFloat(currentObject.quantity) : 0);
+		  }, 0)
+
+		if (total<1) {
+		Swal.fire({
+			icon: "",
+			title: "Correct Please!",
+			html: `You must provide quantity for at leat one time. 
+				`,
+			customClass: "swal-width",
+		});
+		return;
+		} 
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
