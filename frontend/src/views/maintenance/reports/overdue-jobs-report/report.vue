@@ -4,10 +4,13 @@ import useOverdueJobsReport from "../../../../composables/maintenance/useOverdue
 import Title from "../../../../services/title";
 import useHeroIcon from "../../../../assets/heroIcon";
 import DefaultButton from '../../../../components/buttons/DefaultButton.vue';
+import { ref, watch, onMounted, watchEffect } from "vue";
+
 const icons = useHeroIcon();
 const { formParams, overdueJobs, overdueJobsReport, downloadOverdueJobsReport, isLoading, errors } = useOverdueJobsReport();
 
 const { setTitle } = Title();
+const showItemInfo = ref(true);
 setTitle('Overdue Jobs Report');
 
 </script>
@@ -57,19 +60,30 @@ setTitle('Overdue Jobs Report');
                                     <th class="w-2/12"> Last Done </th>
                                 </tr>
                             </thead>
+                    
                             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                                 <template  v-for="(item, itemIndex) in itemGroup.mntItems" :key="itemIndex">
                                     <template v-for="(job, jobIndex) in item.mntJobs" :key="jobIndex">
-                                        <tr v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
-                                            <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.item_code }}</td>
-                                            <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.name }}</td>
-                                            <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
-                                            <td>{{ jobLine.job_description }}</td>
-                                            <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
-                                            <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
-                                            <td>{{ jobLine.last_done }}</td>
-                                        </tr>
-                                        
+                                        <template>
+                                            <!-- {{count=0 }} -->
+                                            {{ showItemInfo = true  }}
+                                        </template>
+                                        <template v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
+                                            <tr>
+                                                <td v-if="showItemInfo" :rowspan="job.mntJobLines.length ">{{ item.item_code }}</td>
+                                                <td v-if="showItemInfo" :rowspan="job.mntJobLines.length ">{{ item.name }}</td>
+                                                <td v-if="showItemInfo" :rowspan="job.mntJobLines.length ">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
+                                                <td>{{ jobLine.job_description }}</td>
+                                                <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
+                                                <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
+                                                <td>{{ jobLine.last_done }}</td>
+                                            </tr>
+                                            <template>
+                                            <!-- {{++count }} -->
+                                            {{ showItemInfo = false }}
+                                        </template>
+                                        </template>
+
                                     </template>
                                     
                                     <!-- <td>{{ item.mntJobs.mntJobLines }}</td> -->
