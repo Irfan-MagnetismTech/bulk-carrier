@@ -115,20 +115,19 @@ watch(() => props.form.currency, (newValue, oldValue) => {
       isNotBDTCurrency.value = true;
     }
   }
-    calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+    calculateHeadAmounts()
 
 }, { deep: true })
 
 watch(() => props.form.exchange_rate_usd, (value) => {
-  calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+  calculateHeadAmounts()
 }, { deep: true })
 
 watch(() => props.form.exchange_rate_bdt, (value) => {
-  calculateHeadAmounts(props.form.opsVoyageBudgetEntries)
+  calculateHeadAmounts()
 }, { deep: true })
 
 watch(() => props.form.opsVoyageBudgetEntries, (newValue, oldValue) => {
-  calculateHeadAmounts(newValue)
 
   newValue.forEach((line, index) => {
     props.form.opsVoyageBudgetEntries[index].ops_expense_head_id = props.form.opsVoyageBudgetEntries[index]?.opsExpenseHead?.id
@@ -136,12 +135,13 @@ watch(() => props.form.opsVoyageBudgetEntries, (newValue, oldValue) => {
 
 }, { deep: true })
 
-const calculateHeadAmounts = (heads) => {
-      heads.forEach((line, index) => {
+const calculateHeadAmounts = () => {
+    props.form.opsVoyageBudgetEntries.forEach((line, index) => {
+
             const { amount, amount_usd, amount_bdt } = calculateInCurrency(line);
-            props.form.opsVoyageBudgetEntries[index].amount_usd = amount_usd
-            props.form.opsVoyageBudgetEntries[index].amount_bdt = amount_bdt
-            props.form.opsVoyageBudgetEntries[index].amount = amount
+            props.form.opsVoyageBudgetEntries[index].amount_usd = (amount_usd * 1);
+            props.form.opsVoyageBudgetEntries[index].amount_bdt = (amount_bdt * 1);
+            props.form.opsVoyageBudgetEntries[index].amount = (amount * 1);
       });
 }
 
@@ -163,7 +163,7 @@ const calculateInCurrency = (item) => {
     item.amount_bdt = parseFloat((item?.rate * item?.quantity * props.form?.exchange_rate_usd * props.form?.exchange_rate_bdt).toFixed(2));
   }
 
-  return {amount : (item.amount > 0) ? item.amount : '', amount_usd: (item.amount_usd > 0) ? item.amount_usd : '', amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : ''};
+  return {amount : (item.amount > 0) ? item.amount : 0, amount_usd: (item.amount_usd > 0) ? item.amount_usd : 0, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : 0};
 }
 
 
@@ -289,13 +289,13 @@ onMounted(() => {
                 <input type="hidden" v-model="form.opsVoyageBudgetEntries[index].ops_expense_head_id" />
               </td>
               <td>
-                  <input type="number" step="0.0001" required v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
               <td>
-                <input type="number" step="0.0001" required v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
               <td v-if="isOtherCurrency">
-                <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" @input="calculateHeadAmounts()" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
                   <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
