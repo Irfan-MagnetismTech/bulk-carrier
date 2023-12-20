@@ -77,11 +77,11 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="text" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-            <input type="text" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+            <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
           </label>
         </div>
 
@@ -114,13 +114,13 @@
                         </select>
                     </td>
                     <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" required @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
+                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" required @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" required @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
+                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" required @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
                     </td>
                     <td v-if="isOtherCurrency(index)">
-                      <input type="text" v-model="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
                         <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
