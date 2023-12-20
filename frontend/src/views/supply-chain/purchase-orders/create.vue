@@ -12,25 +12,25 @@ import { useRoute } from 'vue-router';
 const icons = useHeroIcon();
 const route = useRoute();
 
-const { getPurchaseOrder, purchaseOrder, storePurchaseOrder,getPrAndCsWisePurchaseOrder,materialObject,termsObject, errors, isLoading } = usePurchaseOrder();
-const page = ref('edit');
+const { getPurchaseOrder, purchaseOrder, storePurchaseOrder,getPrAndCsWisePurchaseOrder,materialObject,termsObject,poLineObject, errors, isLoading,materialList } = usePurchaseOrder();
+const page = ref('create');
 const { setTitle } = Title();
 
-const props = defineProps({
-  cs_id: {
-    type: Number,
-    default: 1,
-    },
-    pr_id: {
-    type: Number,
-    default: 1,
-  },
-});
+// const props = defineProps({
+//   cs_id: {
+//     type: Number,
+//     default: 1,
+//     },
+//     pr_id: {
+//     type: Number,
+//     default: 1,
+//   },
+// });
 
 
-onMounted(() => {
-    getPrAndCsWisePurchaseOrder(props.pr_id, props.cs_id);
-}); 
+// onMounted(() => {
+//     getPrAndCsWisePurchaseOrder(props.pr_id, props.cs_id);
+// }); 
 
 
 
@@ -45,7 +45,7 @@ setTitle('Create Purchase Order');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storePurchaseOrder(purchaseOrder)">
-          <purchase-order-form v-model:form="purchaseOrder" :errors="errors" :materialObject="materialObject" :termsObject="termsObject" :page="page"></purchase-order-form>
+          <purchase-order-form v-model:form="purchaseOrder" :errors="errors" :materialObject="materialObject" :termsObject="termsObject" :page="page" :poLineObject="poLineObject" v-model:materialList="materialList"></purchase-order-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

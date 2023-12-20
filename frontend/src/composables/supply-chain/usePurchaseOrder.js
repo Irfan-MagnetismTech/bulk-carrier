@@ -48,17 +48,23 @@ export default function usePurchaseOrder() {
         business_unit: '',
         scmPoLines: [
             {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                brand: '',
-                model: '',
-                required_date: null,
-                quantity: 0.0,
-                rate: 0.0,
-                total_price: 0.0,
-                pr_composite_key: '',
-                max_quantity: 0.0,
+                scmPr: '',
+                scm_pr_id: '',
+                scmPoMaterial: [
+                    {
+                        scmMaterial: '',
+                        scm_material_id: '',
+                        unit: '',
+                        brand: '',
+                        model: '',
+                        required_date: null,
+                        quantity: 0.0,
+                        rate: 0.0,
+                        total_price: 0.0,
+                        pr_composite_key: '',
+                        max_quantity: 0.0,
+                    }
+                ]
             }
         ],
         scmPoTerms: [
@@ -78,10 +84,36 @@ export default function usePurchaseOrder() {
                 required_date: null,
                 quantity: 0.0,
                 rate: 0.0,
+                tolerence: 0.0,
                 total_price: 0.0,
                 pr_composite_key: '',
                 max_quantity: 0.0,
     }
+
+    const poLineObject = 
+        {
+            scmPr: '',
+            scm_pr_id: '',
+            scmPoMaterial: [
+                {
+                    scmMaterial: '',
+                    scm_material_id: '',
+                    unit: '',
+                    brand: '',
+                    model: '',
+                    required_date: null,
+                    quantity: 0.0,
+                    rate: 0.0,
+                    total_price: 0.0,
+                    pr_composite_key: '',
+                    max_quantity: 0.0,
+                }
+            ]
+    }
+    
+    const materialList = ref([
+        [],
+    ]);
 
     const termsObject =  {
         description: ''
@@ -273,6 +305,7 @@ export default function usePurchaseOrder() {
                 },
             });
             prMaterialList.value = data.value;
+            return data.value;
             console.log('prMaterialList', prMaterialList.value);    
         } catch (error) {
             const { data, status } = error.response;
@@ -297,8 +330,10 @@ export default function usePurchaseOrder() {
         getMaterialList,
         prMaterialList,
         materialObject,
+        poLineObject,
         termsObject,
         isTableLoading,
+        materialList,
         isLoading,
         errors,
     };

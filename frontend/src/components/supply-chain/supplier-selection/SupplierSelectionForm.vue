@@ -56,7 +56,7 @@
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         Previous Selected Price
       </th>
-      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th>  
+      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name ?? ''}}</th>  
       <th v-if="form.purchase_center == 'Foreign'">
         Details
       </th>     
@@ -97,7 +97,7 @@
         Description
       </th>
     
-      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th>       
+      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th>       
     </tr> 
   </thead>
   <tbody>
@@ -259,7 +259,7 @@
             <thead>
               <tr>
                 <th>Description</th>
-                <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th> 
+                <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th> 
               </tr>
             </thead>
             <tbody>

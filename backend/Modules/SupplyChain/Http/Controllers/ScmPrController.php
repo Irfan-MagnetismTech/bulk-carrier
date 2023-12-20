@@ -258,6 +258,36 @@ class ScmPrController extends Controller
         return response()->success('Search result', $purchase_requisition, 200);
     }
 
+
+    public function searchPurchaseRequisitions(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $purchase_requisition, 200);
+    }
+
     // getPrWiseCsData
 
     // const materialCs = ref({
@@ -319,10 +349,10 @@ class ScmPrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-     
+
     // public function searchMrr(Request $request): JsonResponse
     // {
-    //     if($request->has('searchParam')) { 
+    //     if($request->has('searchParam')) {
     //         $materialReceiptReport = ScmMrr::query()
     //         ->with('scmMrrLines.scmMaterial')
     //         ->where(function($query) use ($request) {
@@ -350,7 +380,7 @@ class ScmPrController extends Controller
     //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
     //                  return $item1->scmMaterial;
     //             });
-    //          return $item;             
+    //          return $item;
     //         });
 
     //     return response()->success('Search Result', $materialReceiptReport, 200);

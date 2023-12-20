@@ -245,6 +245,31 @@ export default function usePurchaseRequisition() {
     }
 
 
+    async function searchPurchaseRequisition(business_unit, warehouse_id = null, searchParam = '') {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,{
+                params: {
+                    business_unit: business_unit,
+                    searchParam: searchParam,
+                    scm_warehouse_id: warehouse_id,
+                },
+            });
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
     async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
         isLoading.value = true;
 

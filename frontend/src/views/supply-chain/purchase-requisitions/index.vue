@@ -260,7 +260,7 @@ function confirmDelete(id) {
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
                     <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
-                      <!-- <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button> -->
+                     <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button>
                     </template>
                     <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
 
