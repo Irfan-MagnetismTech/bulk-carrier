@@ -45,8 +45,8 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'discounted_amount.numeric' => 'Discount must be numeric.',
             'grand_total.required' => 'Grand total is required.',
             'date.required' => 'Date is required.',
-            'opsCustomerInvoiceLines.*.amount.numeric' => 'Sectors amount must be numeric for row is :position.',
-            'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'Sectors Voyage must be unique for row is :position.',
+            'opsCustomerInvoiceLines.*.amount.numeric' => 'Sectors amount must be numeric for row :position.',
+            'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'Sectors Voyage already exist for row :position.',
 
         ];
     }
