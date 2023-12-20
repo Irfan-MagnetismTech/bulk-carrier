@@ -77,11 +77,11 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
-            <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
+            <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].exchange_rate_bdt" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency(index)" />
           </label>
         </div>
 
@@ -114,19 +114,19 @@
                         </select>
                     </td>
                     <td>
-                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" required @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
+                      <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity" required @input="calculatePrAmounts(index)" placeholder="Qty" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" required @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
+                      <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate" required @input="calculatePrAmounts(index)" placeholder="Rate" class="form-input" autocomplete="off" />
                     </td>
                     <td v-if="isOtherCurrency(index)">
-                      <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                      <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                        <input type="number" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                        <input type="number" step="0.001" v-model.trim.number="form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].amount_bdt" required placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
                     </td>
                     <td>
                       <button type="button" @click="removeBillItems(index, itemIndex)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -165,11 +165,11 @@
           </label>   
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) </span>
-              <input type="number" step="0.001"  v-model="props.form.discount_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+              <input type="number" step="0.001"  v-model="props.form.discount_bdt" placeholder="Discount (BDT)" class="form-input" autocomplete="off"/>
           </label>   
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" required readonly :value="props.form.grand_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+              <input type="number" step="0.001" required readonly :value="props.form.grand_total_bdt" placeholder="Grand Total(BDT)" class="form-input" autocomplete="off"/>
           </label>    
         </div>
       </div>
