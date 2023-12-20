@@ -6,7 +6,7 @@
 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 ">Group <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.name" required placeholder="Expediture Group" class="block w-full form-input" />
+      <input type="text" v-model="form.name" :readonly="formType=='edit'" required placeholder="Expediture Group" class="block w-full form-input" />
     </label>
     <label class="block w-full mt-2 text-sm" title="This will make this group available in every expenditure and budget input.">
       <span class="text-gray-700  form-input">Voyage Report Visibility </span>

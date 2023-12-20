@@ -28,7 +28,7 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'grand_total'           => ['required', 'numeric'],
             'date'           => ['required', 'date'],
             'opsCustomerInvoiceLines.*.amount' => ['nullable', 'numeric'],
-            // 'opsCustomerInvoiceVoyages.*.ops_voyage_id' =>[ 'nullable','max:20',Rule::unique('ops_customer_invoice_voyages')->ignore($this->route('customer_invoice'), 'id')],
+            'opsCustomerInvoiceVoyages.*.ops_voyage_id' =>[ 'nullable','max:20',Rule::unique('ops_customer_invoice_voyages')->ignore($this->route('customer_invoice'), 'id')],
         ];
     }
 
@@ -46,7 +46,7 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'grand_total.required' => 'Grand total is required.',
             'date.required' => 'Date is required.',
             'opsCustomerInvoiceLines.*.amount.numeric' => 'Sectors amount must be numeric for row is :position.',
-            'opsCustomerInvoiceVoyages.*.ops_voyage_id' => 'Sectors amount must be numeric for row is :position.',
+            'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'Sectors Voyage must be unique for row is :position.',
 
         ];
     }

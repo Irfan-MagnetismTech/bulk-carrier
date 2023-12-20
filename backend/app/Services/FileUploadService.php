@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
-use function PHPUnit\Framework\isNull;
-
 class FileUploadService
 {
     public function handleFile($file, $path, $previousFile = null)

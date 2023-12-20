@@ -109,7 +109,7 @@ class OpsCustomerInvoiceController extends Controller
     */
     public function show(OpsCustomerInvoice $customer_invoice): JsonResponse
     {
-        $customer_invoice->load('opsCustomer','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsCargoType','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
+        $customer_invoice->load('opsCustomer.opsVoyages','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsCargoTariff','opsCustomerInvoiceVoyages.opsVoyage.opsContractTariffs.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVoyage.opsVoyageSectors','opsCustomerInvoiceVoyages.opsVessel','opsCustomerInvoiceVoyages.opsCargoType','opsCustomerInvoiceOthers','opsCustomerInvoiceServices');
                
         
         collect($customer_invoice->opsCustomerInvoiceVoyages)->map(function($invoiceVoyages){
