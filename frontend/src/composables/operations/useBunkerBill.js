@@ -116,6 +116,8 @@ export default function useBunkerBill() {
 	}
 
 	async function storeBunkerBill(form) {
+		if (!checkUniqueArray(form)) return;
+
 		let showAlert = false;
 		form.opsBunkerBillLines.reduce((acc, billLine) => {
 			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
@@ -182,6 +184,8 @@ export default function useBunkerBill() {
 	}
 
 	async function updateBunkerBill(form, bunkerBillId) {
+		if (!checkUniqueArray(form)) return;
+
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -270,6 +274,56 @@ export default function useBunkerBill() {
 			isLoading.value = false;
 			//NProgress.done();
 		}
+	}
+
+	function checkUniqueArray(form) {
+		// console.log(form);
+		// return false;
+
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.opsBunkerBillLines.some((opsBunkerBillLine, index) => {
+
+            if (form.opsBunkerBillLines.filter(val => val.ops_bunker_requisition_id === opsBunkerBillLine.ops_bunker_requisition_id)?.length > 1) {
+                let data = `Duplicate Requisition [requisition data record no: ${index + 1}]`;
+                messages.value.push(data);
+                form.opsBunkerBillLines[index].isExpenseHeadDuplicate = true;
+            } else {
+                form.opsBunkerBillLines[index].isExpenseHeadDuplicate = false;
+            }
+
+			// if (opsBunkerBillLine.filter(val => val.ops_bunker_requisition_id === opsBunkerBillLine.ops_bunker_requisition_id)?.length > 1) {
+            //     let data = `Duplicate Expense [Expense Data line no: ${index + 1}]`;
+            //     messages.value.push(data);
+            //     form.opsBunkerBillLines[index].isExpenseHeadDuplicate = true;
+            // } else {
+            //     form.opsBunkerBillLines[index].isExpenseHeadDuplicate = false;
+            // }
+
+
+		});
+
+		if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
 	}
 
 	return {
