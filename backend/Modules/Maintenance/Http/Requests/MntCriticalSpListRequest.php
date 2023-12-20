@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntCriticalSpListRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class MntCriticalSpListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reference_no' => 'required',
+            'reference_no' => ['required', Rule::unique('mnt_critical_sp_lists')->ignore($this->route('critical_spare_list'), 'id')],
             'record_date' => 'required',
             'mntCriticalSpListLines.*.*.rob' => 'integer|min:1',
         ];
