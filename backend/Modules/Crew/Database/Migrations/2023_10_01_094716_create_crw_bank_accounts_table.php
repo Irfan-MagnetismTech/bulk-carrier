@@ -23,7 +23,7 @@ return new class extends Migration
 			$table->string('account_number');
 			$table->string('benificiary_name');
 			$table->string('attachment')->nullable();
-			$table->tinyInteger('is_active')->default(true)->nullable();
+			$table->tinyInteger('is_active')->default(true);  // active / inactive 
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });

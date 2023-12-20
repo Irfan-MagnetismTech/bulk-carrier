@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(OpsVoyage::class);
             $table->foreignIdFor(OpsVessel::class);
             $table->foreignIdFor(OpsCargoType::class);
-            $table->float('total_amount_bdt', 20, 4)->nullable();
+            $table->float('total_amount_bdt', 20, 2)->nullable();
             $table->timestamps();
         });
     }

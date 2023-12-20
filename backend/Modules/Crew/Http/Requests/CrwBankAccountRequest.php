@@ -3,16 +3,17 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwBankAccountRequest extends FormRequest
 {
 
     protected function prepareForValidation()
     {
-        $data      = request('data');
-        $dataArray = json_decode($data, true);
+        $data       = request('data');
+        $dataArray  = json_decode($data, true);
         $attachment = is_object(request('attachment')) ? request('attachment') : null;
-        $mergeData = array_merge($dataArray, ['attachment' => $attachment]);
+        $mergeData  = array_merge($dataArray, ['attachment' => $attachment]);
 
         $this->replace($mergeData);
     }
@@ -23,9 +24,9 @@ class CrwBankAccountRequest extends FormRequest
      * @return array
      */
     public function rules(): array {
-
         return [
-            'crw_crew_id'      => 'required',
+            'crw_crew_id'      => ['required', 'integer', 
+                                    $this->is_active == 1 ? Rule::unique('crw_bank_accounts')->where('is_active', true)->ignore($this->id) : null],
             'bank_name'        => 'required|string|max:255',
             'branch_name'      => 'required|string|max:255',
             'routing_number'   => 'string|max:255',
@@ -44,7 +45,7 @@ class CrwBankAccountRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_id.unique' => 'The Crew already has an active account. Please deactivate that account first.',
         ];
     }
 
