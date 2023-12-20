@@ -9,12 +9,16 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useVesselExpenseHead from "../../composables/operations/useVesselExpenseHead";
 import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
+import useHeroIcon from "../../assets/heroIcon";
+
 
 const { voyageBudgets, expenseHeadObject, getVoyageBudgets, showHead, isLoading } = useVoyageBudget();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
 const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
 const { currencies, getCurrencies } = useBusinessInfo();
+
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -275,8 +279,8 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="(head, index) in form.opsVoyageBudgetEntries" :key="index">
-              <td>
-                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input">
+              <td class="relative">
+                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
@@ -287,6 +291,8 @@ onMounted(() => {
                     </template>
                 </v-select>
                 <input type="hidden" v-model="form.opsVoyageBudgetEntries[index].ops_expense_head_id" />
+                <span v-show="form.opsVoyageBudgetEntries[index].isExpenseHeadDuplicate" class="text-yellow-600 absolute top-4 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
+
               </td>
               <td>
                   <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
