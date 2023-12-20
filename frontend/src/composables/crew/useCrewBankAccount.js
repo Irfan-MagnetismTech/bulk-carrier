@@ -20,7 +20,7 @@ export default function useCrewBankAccount() {
         account_number : "", 
         benificiary_name : "", 
         attachment : "", 
-        is_active : "", 
+        is_active : 0,
         business_unit : "", 
     });
 

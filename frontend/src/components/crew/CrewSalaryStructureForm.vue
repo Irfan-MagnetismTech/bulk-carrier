@@ -24,14 +24,22 @@ watch(
     () => props.form,
     (newEntries, oldEntries) => {
       props.form.crw_crew_id = props.form?.crw_crew_name?.id;
-      let total_net_salary = 0.0;
-      total_net_salary += parseFloat((newEntries.gross_salary + newEntries.addition) - newEntries.deduction);
-      if (!isNaN(total_net_salary)) {
-        props.form.net_amount = total_net_salary;
-      }
     },
     { deep: true }
 );
+
+function calculateNetAmount(){
+  let total_net_salary = 0.0;
+  let grossSalary = parseFloat(props.form.gross_salary);
+  let addition = parseFloat(props.form.addition);
+  let deduction = parseFloat(props.form.deduction);
+
+  total_net_salary += parseFloat(props.form.gross_salary) + parseFloat(props.form.addition) - parseFloat(props.form.deduction);
+
+  if (!isNaN(total_net_salary)) {
+    props.form.net_amount = total_net_salary;
+  }
+}
 
 onMounted(() => {
   watchEffect(() => {
@@ -80,15 +88,15 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2"> 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Gross Salary <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model.trim="form.gross_salary" class="form-input text-right" autocomplete="off" required/>
+      <input type="number" step=".01" @input="calculateNetAmount" v-model.trim="form.gross_salary" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Addition <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model.trim="form.addition" class="form-input text-right" autocomplete="off" required/>
+      <input type="number" step=".01" @input="calculateNetAmount" v-model.trim="form.addition" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Deduction <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model.trim="form.deduction" class="form-input text-right" autocomplete="off" required/>
+      <input type="number" step=".01" @input="calculateNetAmount" v-model.trim="form.deduction" class="form-input text-right" autocomplete="off" required/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Net Amount <span class="text-red-500">*</span></span>

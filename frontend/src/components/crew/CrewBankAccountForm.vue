@@ -100,12 +100,18 @@ onMounted(() => {
       <input type="text" v-model.trim="form.benificiary_name" class="form-input" placeholder="Benificiary Name" autocomplete="off" required/>
     </label>              
   </div>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2"> 
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
+      <select class="form-input" v-model.trim="form.is_active">
+        <option value="1">Active</option>
+        <option value="0">Deactive</option>
+      </select>
+    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Attachment</span>
       <input @change="selectedFile" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" type="file">
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
   </div>
