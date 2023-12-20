@@ -45,7 +45,7 @@
         </label>
     </div>
 
-    <div class="mt-3 md:mt-8" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
+    <div class="mt-3 md:mt-5" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
       <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
@@ -155,7 +155,7 @@
       
     </div>
 
-    <div v-if="form.opsBunkerBillLines" class="w-full my-2 mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+    <div v-if="form.opsBunkerBillLines" class="mt-3 md:mt-5 w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
         <h4 class="text-md font-semibold uppercase mb-2">Bunker Bill Summary</h4>
         
         <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
