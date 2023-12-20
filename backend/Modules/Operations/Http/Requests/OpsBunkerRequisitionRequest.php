@@ -17,7 +17,7 @@ class OpsBunkerRequisitionRequest extends FormRequest
             'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
             'ops_voyage_id'     => ['required', 'numeric', 'max:50'],
             'created_by'        => ['nullable', 'numeric', 'max:50'],
-            'requisition_no'    => ['required', 'string','unique:ops_bunker_requisitions,requisition_no,'.$this->id],
+            'requisition_no'    => ['required', 'string','max:50','unique:ops_bunker_requisitions,requisition_no,'.$this->id],
             'remarks'           => ['nullable', 'string'],
             'status'            => ['nullable', 'string'],
         ];
@@ -34,8 +34,8 @@ class OpsBunkerRequisitionRequest extends FormRequest
             'ops_vessel_id.required' => 'Vessel is required',
             'ops_voyage_id.required' => 'Voyage is required',
             'requisition_no.required' => 'Requisiton No is required',
+            'requisition_no.max' => 'Requisiton No may not be greater than :max characters.',
             'requisition_no.unique' => 'This Requisiton No is already exist.',
-
         ];
     }
 
