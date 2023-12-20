@@ -108,7 +108,7 @@
           <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Sail Date <span class="text-red-500">*</span></span>
             <!-- <input type="datetime-local" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" /> -->
-            <VueDatePicker v-model="form.sail_date" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" text-input ></VueDatePicker>
+            <VueDatePicker v-model="form.sail_date" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false" text-input  ></VueDatePicker>
           </div>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Transit Date <span class="text-red-500">*</span></span>
