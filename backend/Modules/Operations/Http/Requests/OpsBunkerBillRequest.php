@@ -29,15 +29,19 @@ class OpsBunkerBillRequest extends FormRequest
             'sub_total_bdt'     => ['required', 'numeric'],
             'discount_bdt'      => ['nullable', 'numeric'],
             'grand_total_bdt'   => ['required', 'numeric'],
-            'attachment'        => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
-            'smr_file_path'     => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
+            // 'attachment'        => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
+            // 'smr_file_path'     => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'remarks'           => ['nullable', 'string', 'max:500'],
+            'opsBunkerBillLines.*.ops_bunker_requisition_id' =>  ['nullable', 'numeric','distinct'],
             'opsBunkerBillLines.*.rate' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.exchange_rate_bdt' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.exchange_rate_usd' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.amount' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.amount_bdt' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.amount_usd' =>  ['nullable', 'numeric'],
+            // 'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material' => ['nullable', 'string'],
+
+            // 'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material' =>  ['nullable', 'string','distinct'],
         ];
     }
 
@@ -58,15 +62,18 @@ class OpsBunkerBillRequest extends FormRequest
             'sub_total_bdt.required' => 'Sub total is required.',
             'grand_total_bdt.numeric' => 'Grand total must be numeric.',
             'grand_total_bdt.required' => 'Grand total is required.',
-            'attachment.mimes' => 'Upload file(Supplier Invoice) must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
-            'smr_file_path.mimes' => 'Upload file(SRM Copy) must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
+            // 'attachment.mimes' => 'Upload file(Supplier Invoice) must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
+            // 'smr_file_path.mimes' => 'Upload file(SRM Copy) must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
             'remarks.max' => 'Remarks may not be greater than :max characters.',
+            'opsBunkerBillLines.*.ops_bunker_requisition_id.distinct' => 'PR No. can not be same for row :position.',
             'opsBunkerBillLines.*.rate.numeric' => 'Rate must be numeric for row is :position.',
             'opsBunkerBillLines.*.exchange_rate_bdt.numeric' => 'Exchange Rate(BDT) must be numeric for row is :position.',
             'opsBunkerBillLines.*.exchange_rate_usd.numeric' => 'Exchange Rate(USD) must be numeric for row is :position.',
             'opsBunkerBillLines.*.amount.numeric' => 'Amount must be numeric for row is :position.',
             'opsBunkerBillLines.*.amount_bdt.numeric' => 'Amount(BDT) must be numeric for row is :position.',
             'opsBunkerBillLines.*.amount_usd.numeric' => 'Amount(USD) must be numeric for row is :position.',
+
+            // 'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material.distinct' => 'Bunker can not be same for row :position.',
         ];
     }
 
@@ -79,4 +86,26 @@ class OpsBunkerBillRequest extends FormRequest
     {
         return true;
     }
+
+    // public function withValidator($validator)
+    // {
+    //     $validator->after(function ($validator) {
+    //         $this->customValidation($validator);
+    //     });
+    // }
+
+    // protected function customValidation($validator)
+    // {
+    //     $requisitionMaterials = $this->input('opsBunkerBillLines.*.opsBunkerBillLineItems');
+
+    //     dd($requisitionMaterials);
+
+    //     if ($requisitionMaterials) {
+    //         $uniqueRequisitionMaterials = array_unique($requisitionMaterials);
+
+    //         if (count($requisitionMaterials) !== count($uniqueRequisitionMaterials)) {
+    //             $validator->errors()->add('opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material', 'Bunker can not be same in individual PR.');
+    //         }
+    //     }
+    // }
 }
