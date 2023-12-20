@@ -75,18 +75,45 @@
       </label>
 
       
-      <label class="block w-full mt-2 text-sm">
+      <div class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
         <!-- <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/> -->
-        <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" @update:model-value="setDueDate"></VueDatePicker>
+        <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  @update:model-value="setDueDate"></VueDatePicker>
         <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
-      </label>
+      </div>
+
+      <div class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Date & Time <span class="text-red-500">*</span></span>
+        <VueDatePicker v-model="form.date_time" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm" model-type="yyyy-MM-dd HH:mm" ></VueDatePicker>
+        <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
+      </div>
+
+
+      
+      <div class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Month Picker <span class="text-red-500">*</span></span>
+        
+        <VueDatePicker v-model="form.month"  class="form-input" required auto-apply month-picker format="MMM-yyyy" model-type="yyyy-MM"></VueDatePicker>
+        <Error v-if="errors?.month" :errors="errors.month" />
+      </div>
+
+      
+      <div class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Year Picker <span class="text-red-500">*</span></span>
+        
+        <VueDatePicker v-model="form.year"  class="form-input" required auto-apply year-picker ></VueDatePicker>
+        <Error v-if="errors?.year" :errors="errors.year" />
+      </div>
+
+
+
+
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Due Date <span class="text-red-500">*</span></span>
         <!-- <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/> -->
-        <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" ></VueDatePicker>
+        <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  ></VueDatePicker>
         <Error v-if="errors?.due_date" :errors="errors.due_date" />
       </label>
 
@@ -151,7 +178,6 @@ function setRangeDateTo() {
 }
 
 function setDueDate() {
-  alert("onInput");
   if(props.form.assigned_date)
     props.form.due_date = moment(props.form.assigned_date).add(props.form?.mnt_survey_type?.due_period ?? 0, 'months').format('YYYY-MM-DD');
 }

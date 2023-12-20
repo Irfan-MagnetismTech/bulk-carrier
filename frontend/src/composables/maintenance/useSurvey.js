@@ -85,6 +85,7 @@ export default function useSurvey() {
             const { data, status } = await Api.post('/mnt/surveys', form);
             survey.value = data.value;
             notification.showSuccess(status);
+            return;
             await router.push({ name: "mnt.surveys.index" });
         } catch (error) {
             const { data, status } = error.response;

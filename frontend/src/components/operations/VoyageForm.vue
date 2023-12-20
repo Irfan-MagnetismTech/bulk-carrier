@@ -105,10 +105,11 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Load Port Distance (NM) <span class="text-red-500">*</span></span>
               <input type="number" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
             </label>
-          <label class="block w-full mt-2 text-sm">
+          <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Sail Date <span class="text-red-500">*</span></span>
-            <input type="datetime-local" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" />
-          </label>
+            <!-- <input type="datetime-local" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" /> -->
+            <VueDatePicker v-model="form.sail_date" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" text-input ></VueDatePicker>
+          </div>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Transit Date <span class="text-red-500">*</span></span>
             <input type="datetime-local" v-model="form.transit_date" placeholder="Transit Date" class="form-input" required autocomplete="off" />
