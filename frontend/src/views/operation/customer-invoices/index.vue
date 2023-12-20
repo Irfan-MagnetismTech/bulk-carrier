@@ -39,7 +39,7 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": "opsCustomer",
-      "field_name": "name_code",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,

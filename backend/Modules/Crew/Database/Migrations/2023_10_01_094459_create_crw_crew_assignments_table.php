@@ -23,7 +23,7 @@ return new class extends Migration
 			$table->string('duration'); //4 months (+/-1)
 			$table->enum('status', ['Onboard', 'Complete'])->default('Onboard'); //[assigned/onboard->active->complete]
 			$table->date('completion_date')->nullable();   
-			$table->date('completion_remarks')->nullable();   
+			$table->string('completion_remarks')->nullable();   
 			$table->string('remarks')->nullable();            
 			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();

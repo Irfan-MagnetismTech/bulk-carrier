@@ -71,7 +71,7 @@ class OpsVesselParticularRequest extends FormRequest
             'bhp.numeric' => 'BHP must be numeric.',
             'call_sign.unique' => 'Call sign is already taken.',
             'imo.unique' => 'IMO is already taken.',
-            'imo.digits_between' => 'IMO number must be between :min and :max characters.',           
+            'imo.digits_between' => 'IMO number must be between :min and :max characters.',         
             'attachment.mimes' => 'Attachment field must be an excel file of type: xlsx.',
             'official_number.unique' => 'Official number is already taken.',
             'official_number.digits_between' => 'Official Number must be between :min and :max characters.',

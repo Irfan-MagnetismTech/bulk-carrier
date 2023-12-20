@@ -8,6 +8,7 @@ export default function useCrewAssign() {
     const router = useRouter();
     const crewAssigns = ref([]);
     const isTableLoading = ref(false);
+    const isCrewUpdateStatusModalOpen = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
     const crewAssign = ref({
@@ -171,6 +172,29 @@ export default function useCrewAssign() {
         }
     }
 
+    async function updateCrewAssignStatus(form,crewAssigns) {
+
+        console.log(crewAssigns);
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post(`/crw/update-crew-assign-status/${form.id}`, form);
+            let crewDoc = crewAssigns.find(doc => doc.id === form.id);
+            crewDoc.status = data.value.status;
+            isCrewUpdateStatusModalOpen.value = 0;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+
+    }
+
     return {
         crewAssigns,
         crewAssign,
@@ -179,6 +203,8 @@ export default function useCrewAssign() {
         showCrewAssign,
         updateCrewAssign,
         deleteCrewAssign,
+        isCrewUpdateStatusModalOpen,
+        updateCrewAssignStatus,
         isTableLoading,
         isLoading,
         errors,

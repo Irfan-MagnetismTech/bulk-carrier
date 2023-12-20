@@ -53,13 +53,13 @@ class OpsExpenseHeadController extends Controller
      */
      public function store(OpsExpenseHeadRequest $request): JsonResponse
      {
-        $exist = OpsExpenseHead::where(['name' => $request->name])->get();
+        $exist = OpsExpenseHead::where(['name' => $request->name])->whereNull('head_id')->first();
 
         if ($exist) {
             $error= [
-                'message'=>'Head name already exist.',
+                'message'=>'Expense Group already exist.',
                 'errors'=>[
-                    'ops_sub_heads'=>['Head name already exist.',]
+                    'ops_sub_heads'=>['Expense Group already exist.',]
                     ]
                 ];
             return response()->json($error, 422);
@@ -148,6 +148,19 @@ class OpsExpenseHeadController extends Controller
     */
     public function update(OpsExpenseHeadRequest $request, OpsExpenseHead $expense_head): JsonResponse
     {
+
+        $exist = OpsExpenseHead::where(['name' => $request->name])->where('id','!=',$expense_head->id)->whereNull('head_id')->first();
+
+        if ($exist) {
+            $error= [
+                'message'=>'Expense Group already exist.',
+                'errors'=>[
+                    'ops_sub_heads'=>['Expense Group already exist.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
         if(isset($request->opsSubHeads)){
             $subHeadNames= [];
             foreach($request->opsSubHeads as $key=>$subhead){

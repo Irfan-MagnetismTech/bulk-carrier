@@ -176,7 +176,7 @@ export default function useAdvanceAdjustment() {
     }
 
     function checkUniqueArray(form){
-        if(form.acc_requisition_amount !== form.adjustment_amount){
+        if(parseFloat(form.acc_requisition_amount) !== parseFloat(form.adjustment_amount)){
             Swal.fire({
                 icon: "",
                 title: "Correct Please!",

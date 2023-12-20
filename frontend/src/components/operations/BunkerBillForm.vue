@@ -36,16 +36,16 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <span class="text-red-500">*</span><p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.attachment) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.attachment) }}</p></span>
             <input type="file" @change="attachFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy) <span class="text-red-500">*</span> <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.smr_file_path) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy)  <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.smr_file_path) }}</p></span>
             <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
     </div>
 
-    <div class="mt-3 md:mt-8" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
+    <div class="mt-3 md:mt-5" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
       
       <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
@@ -155,7 +155,7 @@
       
     </div>
 
-    <div v-if="form.opsBunkerBillLines" class="w-full my-2 mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+    <div v-if="form.opsBunkerBillLines" class="mt-3 md:mt-5 w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
         <h4 class="text-md font-semibold uppercase mb-2">Bunker Bill Summary</h4>
         
         <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
@@ -189,7 +189,10 @@ import DropZoneV2 from '../../components/DropZoneV2.vue';
 import useBusinessInfo from '../../composables/useBusinessInfo';
 import cloneDeep from 'lodash/cloneDeep';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import useHeroIcon from "../../assets/heroIcon";
 
+
+const icons = useHeroIcon();
 const editInitiated = ref(false);
 const props = defineProps({
     form: {
