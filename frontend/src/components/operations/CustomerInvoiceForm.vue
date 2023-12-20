@@ -39,7 +39,7 @@
               <th class="w-2/12"><nobr>Cargo Type</nobr></th>
               <th class="w-2/12"><nobr>Total Amount</nobr></th>
               <th class="w-1/12py-3 text-center align-center">Details</th>
-              <th class="w-1/12"><nobr>Action</nobr></th>
+              <th class="w-1/12" v-if="formType=='create'"><nobr>Action</nobr></th>
 
             </tr>
           </thead>
@@ -49,7 +49,7 @@
                 <label class="block w-full mt-2 text-sm relative">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.
+                  <v-select :options="voyages" placeholder="--Choose an option--" :readonly="formType=='edit'" :disabled="formType=='edit'" v-model="form.
                     opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsCustomerInvoiceVoyageChanged(form.opsCustomerInvoiceVoyages[index])">
                     <template #search="{attributes, events}">
                         <input
@@ -102,7 +102,7 @@
                   <span class="tooltiptext">Details</span>
                 </a>
               </td>
-              <td class="px-1 py-1 text-center">
+              <td class="px-1 py-1 text-center"  v-if="formType=='create'">
                 <button v-if="index!=0" type="button" @click="removeVoyage(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
