@@ -56,6 +56,19 @@ class OpsBunkerRequisitionController extends Controller
     public function store(OpsBunkerRequisitionRequest $request): JsonResponse
     {
         try {
+
+            $sum = collect($request->opsBunkers)->sum('quantity');
+
+            if($sum < 1) {
+                $error= [
+                    'message'=>'You must provide quantity for at least one item.',
+                    'errors'=>[
+                        'quantity_error'=>['You must provide quantity for at least one item.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
             DB::beginTransaction();
             $bunkerRequisitionInfo = $request->except(
                 '_token',
