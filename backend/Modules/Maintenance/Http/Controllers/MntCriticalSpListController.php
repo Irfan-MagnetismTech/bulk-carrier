@@ -122,7 +122,7 @@ class MntCriticalSpListController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntCriticalSpListRequest $request, $id)
     {
         try {
             $criticalSp['ops_vessel_id'] = $request->get('ops_vessel_id');
