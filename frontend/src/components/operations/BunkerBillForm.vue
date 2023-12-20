@@ -433,12 +433,12 @@ function CalculateAll() {
     }, 0);
   }, 0);
 
-  props.form.sub_total_bdt = totalAmount
-  props.form.grand_total_bdt = props.form.sub_total_bdt - props.form.discount_bdt;
+  props.form.sub_total_bdt = parseFloat(totalAmount).toFixed(2)
+  props.form.grand_total_bdt = parseFloat(props.form.sub_total_bdt - props.form.discount_bdt).toFixed(2);
 
 }
 watch(() => props.form.discount_bdt, (newValue, oldValue) => {
-  props.form.grand_total_bdt = props.form.sub_total_bdt - props.form.discount_bdt;
+  props.form.grand_total_bdt = parseFloat(props.form.sub_total_bdt - props.form.discount_bdt).toFixed(2);
 }, { deep: true })
 
 onMounted(() => {
