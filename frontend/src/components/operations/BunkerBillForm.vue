@@ -189,7 +189,10 @@ import DropZoneV2 from '../../components/DropZoneV2.vue';
 import useBusinessInfo from '../../composables/useBusinessInfo';
 import cloneDeep from 'lodash/cloneDeep';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import useHeroIcon from "../../assets/heroIcon";
 
+
+const icons = useHeroIcon();
 const editInitiated = ref(false);
 const props = defineProps({
     form: {
