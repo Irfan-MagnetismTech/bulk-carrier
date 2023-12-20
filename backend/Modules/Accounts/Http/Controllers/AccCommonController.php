@@ -238,6 +238,7 @@ class AccCommonController extends Controller
             ->when(request()->acc_cost_center_id, function($q){
                 $q->where('acc_cost_center_id', request()->acc_cost_center_id);
             })
+            ->doesnthave('accAdvanceAdjustment')
             ->get();
 
             return response()->json([
