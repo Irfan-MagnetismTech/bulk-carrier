@@ -106,4 +106,19 @@ class CrwCrewAssignmentController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function updateCrewAssignStatus(Request $request, CrwCrewAssignment $crwCrewAssignment)
+    {
+        try {
+            $crwCrewAssignmentData = $request->only('status', 'completion_date', 'completion_remarks');
+            $crwCrewAssignment->update($crwCrewAssignmentData);
+
+            return response()->success('Updated succesfully', $crwCrewAssignment, 202);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
