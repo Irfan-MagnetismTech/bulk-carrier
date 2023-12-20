@@ -61,7 +61,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" min="0" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                 </label>
               </td>
             </tr>
