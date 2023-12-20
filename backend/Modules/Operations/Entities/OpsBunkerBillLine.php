@@ -22,6 +22,15 @@ class OpsBunkerBillLine extends Model
         'description',
     ];
 
+    protected $casts = [
+        'rate' => 'float',
+        'exchange_rate_bdt' => 'float',
+        'exchange_rate_usd' => 'float',
+        'amount' => 'float',
+        'amount_bdt' => 'float',
+        'amount_usd' => 'float',
+    ];
+
     public function opsBunkerBillLineItems()
     {
         return $this->hasMany(OpsBunkerBillLineItem::class, 'ops_bunker_bill_line_id' , 'id');
