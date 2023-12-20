@@ -332,33 +332,33 @@ watch(() => props?.form?.scmPr, (newVal, oldVal) => {
             </td>
           </tr>
           <tr>
-            <td colspan="7" class="text-right">Sub Total</td>
+            <td colspan="8" class="text-right">Sub Total</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
             </td>
           </tr>
           <tr>
-            <td colspan="7" class="text-right">Less: Discount</td>
+            <td colspan="8" class="text-right">Less: Discount</td>
             <td class="text-right">
               <input type="text" class="form-input" v-model="form.discount">
             </td>
           </tr>
           
           <tr>
-            <td colspan="7" class="text-right">Total Amount</td>
+            <td colspan="8" class="text-right">Total Amount</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
             </td>
           </tr>
           <tr>
-            <td colspan="7" class="text-right">Add: VAT</td>
+            <td colspan="8" class="text-right">Add: VAT</td>
             <td class="text-right">
               <input type="text" class="form-input" v-model="form.vat">
             </td>
           </tr>
           
           <tr>
-            <td colspan="7" class="text-right">Net Amount</td>
+            <td colspan="8" class="text-right">Net Amount</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
             </td>
