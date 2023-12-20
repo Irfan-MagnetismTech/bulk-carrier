@@ -287,18 +287,14 @@ export default function useBunkerBill() {
             if (form.opsBunkerBillLines.filter(val => val.ops_bunker_requisition_id === opsBunkerBillLine.ops_bunker_requisition_id)?.length > 1) {
                 let data = `Duplicate Requisition [requisition data record no: ${index + 1}]`;
                 messages.value.push(data);
-                form.opsBunkerBillLines[index].isExpenseHeadDuplicate = true;
-            } else {
-                form.opsBunkerBillLines[index].isExpenseHeadDuplicate = false;
             }
 
-			// if (opsBunkerBillLine.filter(val => val.ops_bunker_requisition_id === opsBunkerBillLine.ops_bunker_requisition_id)?.length > 1) {
-            //     let data = `Duplicate Expense [Expense Data line no: ${index + 1}]`;
-            //     messages.value.push(data);
-            //     form.opsBunkerBillLines[index].isExpenseHeadDuplicate = true;
-            // } else {
-            //     form.opsBunkerBillLines[index].isExpenseHeadDuplicate = false;
-            // }
+			const hasChildError = form.opsBunkerBillLines[index].opsBunkerBillLineItems.some((bunkerLineItem, lineIndex) => {
+				if (form.opsBunkerBillLines[index].opsBunkerBillLineItems.filter(val => val.requisition_material === bunkerLineItem.requisition_material)?.length > 1) {
+					let data = `Duplicate Requisition Material [requisition data record no: ${index + 1} and bunker record no: ${lineIndex + 1}]`;
+					messages.value.push(data);
+				} 
+			});
 
 
 		});
