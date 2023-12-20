@@ -119,7 +119,7 @@ export default function useBunkerBill() {
 		let showAlert = false;
 		form.opsBunkerBillLines.reduce((acc, billLine) => {
 			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
-			  if(!(lineItem.amount_bdt > 0)) {
+			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
 				
 				showAlert = true;
 			  }
@@ -130,8 +130,7 @@ export default function useBunkerBill() {
 			Swal.fire({
 				icon: "",
 				title: "Correct Please!",
-				html: `BDT Amount Must Be Present. 
-					`,
+				html: `Exchange rate and BDT Amount is required.`,
 				customClass: "swal-width",
 			});
 			return;
@@ -182,6 +181,27 @@ export default function useBunkerBill() {
 	}
 
 	async function updateBunkerBill(form, bunkerBillId) {
+
+		let showAlert = false;
+		form.opsBunkerBillLines.reduce((acc, billLine) => {
+			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
+				
+				showAlert = true;
+			  }
+			}, 0);
+		  }, 0);
+
+		  if (showAlert) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Exchange rate and BDT Amount is required.`,
+				customClass: "swal-width",
+			});
+			return;
+		  } 
+
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;

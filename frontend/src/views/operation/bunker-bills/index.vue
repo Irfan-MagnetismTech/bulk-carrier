@@ -90,17 +90,6 @@ let filterOptions = ref( {
       "label": "Bill No.",
       "filter_type": "input"
     },
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "Remarks",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Remarks",
-      "filter_type": "input"
-    },
     
     
   ]
@@ -163,7 +152,6 @@ onMounted(() => {
                   <td>{{ bunkerBill?.vendor_bill_no }}</td>
 
                   <!-- <td>{{ bunkerBill?.date }}</td> -->
-                  <td>{{ bunkerBill?.remarks }}</td>
                   <td>
                     <span :class="bunkerBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerBill?.business_unit }}</span>
                   </td>
