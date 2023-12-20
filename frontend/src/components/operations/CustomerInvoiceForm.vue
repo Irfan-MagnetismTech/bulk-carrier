@@ -170,12 +170,12 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].quantity" class="form-input text-right" autocomplete="off" required />
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceOthers[index].quantity" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" required />
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <!-- <td>
@@ -200,7 +200,7 @@
               </td> -->
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceOthers[index].amount" class="form-input text-right" autocomplete="off" readonly/>
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
@@ -272,13 +272,13 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].quantity" class="form-input text-right" autocomplete="off" required />
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceServices[index].quantity" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
 
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" required />
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
               <!-- <td>
@@ -303,7 +303,7 @@
               </td> -->
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceServices[index].amount" class="form-input text-right" autocomplete="off" readonly/>
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
@@ -607,7 +607,7 @@ watch(() => props.form.opsCustomerInvoiceVoyages, (newLines) => {
     // }
 
     // total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index].total_amount);
-    total_amount += parseFloat(props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt ?? 0);
+    total_amount += parseFloat((props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt > 0) ? props.form.opsCustomerInvoiceVoyages[index]?.total_amount_bdt : 0);
   });
   props.form.total_amount = parseFloat(total_amount.toFixed(2));
   CalculateAll();

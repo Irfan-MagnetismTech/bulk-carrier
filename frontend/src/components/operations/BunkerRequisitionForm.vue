@@ -28,7 +28,7 @@
         </label>
         <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Requisition No. <span class="text-red-500">*</span></span>
-              <input type="text" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
+              <input type="text" maxlength="50" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
         </label>
     </div>
     <div>
