@@ -10,7 +10,7 @@
     </div>
 
     <div class="flex flex-col w-full md:flex-row md:gap-2">
-      
+
 
       <label class="block w-1/2 mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
@@ -24,7 +24,7 @@
                     />
             </template>
         </v-select>
-        <input type="hidden" v-model="form.scm_vendor_id" />        
+        <input type="hidden" v-model="form.scm_vendor_id" />
       </label>
 
       <label class="block w-1/2 mt-2 text-sm">
@@ -47,7 +47,7 @@
 
     <div class="mt-3 md:mt-5" v-if="form?.opsBunkerBillLines?.length > 0 && bunkerRequisitions?.length > 0">
       <h4 class="text-md font-semibold uppercase mb-2">Bunker Line Information</h4>
-      
+
       <div v-for="(pr, index) in form.opsBunkerBillLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -89,7 +89,7 @@
 
           <div class="dt-responsive table-responsive">
             <table class="w-full whitespace-no-wrap" >
-             
+
               <tbody v-if="form.opsBunkerBillLines[index]?.opsBunkerBillLineItems?.length > 0">
                 <template v-for="(lineItem, itemIndex) in form.opsBunkerBillLines[index].opsBunkerBillLineItems" :key="itemIndex">
                   <tr class="w-full" v-if="itemIndex==0">
@@ -148,29 +148,29 @@
             </button>
             <button type="button" v-if="index>0" @click="removeBunkerRequisition(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
               Remove
-            </button> 
+            </button>
           </div>
 
       </div>
-      
+
     </div>
 
     <div v-if="form.opsBunkerBillLines" class="mt-3 md:mt-5 w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
         <h4 class="text-md font-semibold uppercase mb-2">Bunker Bill Summary</h4>
-        
+
         <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (BDT) <span class="text-red-500">*</span></span>
-              <input type="number" step="0.001" readonly :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
-          </label>   
+              <input type="number" readonly :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+          </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) </span>
               <input type="number" step="0.001"  v-model="props.form.discount_bdt" placeholder="Discount (BDT)" class="form-input" autocomplete="off"/>
-          </label>   
+          </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
               <input type="number" step="0.001" required readonly :value="props.form.grand_total_bdt" placeholder="Grand Total(BDT)" class="form-input" autocomplete="off"/>
-          </label>    
+          </label>
         </div>
       </div>
     <ErrorComponent :errors="errors"></ErrorComponent>
@@ -214,7 +214,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
         fetchVendors("", false)
         fetchBunkerRequisition("", false)
 
-        
+
 
         if(props.formType != 'edit') {
           props.form.scmVendor = null;
@@ -298,16 +298,17 @@ const isNotBDTCurrency = (index) => {
     }
 }
 
-// watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
-//   console.log("sdf")
-//   if(props.form?.opsBunkerBillLines?.length > 0) {
-
-//     for(const billLineIndex in props.form.opsBunkerBillLines) {
-      
-//     }
-
-//   }
-// }, { deep: true })
+watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
+  let sub_total = 0;
+  props.form.opsBunkerBillLines.forEach((item,index) => {
+    item?.opsBunkerBillLineItems.forEach((lineItem,index) => {
+      sub_total += parseFloat(item.amount);
+    });
+  });
+  if(!isNaN(sub_total)) {
+    props.form.sub_total = sub_total;
+  }
+}, { deep: true })
 
 const getFileName  = (filename) => {
   return filename;
@@ -317,7 +318,7 @@ const initiateBunkerRequisitionItem = (billLineIndex) => {
 
   console.log("Initialize Bunker Requisition Form")
 
- 
+
   // if(props.formType != 'edit') {
     props.form.opsBunkerBillLines[billLineIndex].ops_bunker_requisition_id = props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id
     let requisition = bunkerRequisitions.value.filter((requisition) => requisition.id === props.form.opsBunkerBillLines[billLineIndex].opsBunkerRequisition?.id);
@@ -355,7 +356,7 @@ const calculatePrAmounts = (billLineIndex) => {
 
     existingCurrency.currency = currency;
 
-    
+
   } else {
     // Push a new object with id and currency properties
     allCurrencies.value.push({
@@ -378,7 +379,7 @@ const calculatePrAmounts = (billLineIndex) => {
           props.form.opsBunkerBillLines[billLineIndex].opsBunkerBillLineItems[index].amount = amount
      });
     }
-   
+
     CalculateAll()
 
 }
@@ -387,7 +388,7 @@ const calculatePrAmounts = (billLineIndex) => {
 function updateBunkerBillLineItems(index, itemIndex) {
 
   let requisition = props.form.opsBunkerBillLines[index].requisitionBunkers.filter((requisition) => requisition.name === props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].requisition_material)
-  
+
   console.log(index, itemIndex, requisition)
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].rate = null
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems[itemIndex].quantity = requisition[0].quantity
@@ -470,7 +471,7 @@ onMounted(() => {
 //         } else {
 //           alert("Duplicate Found");
 //           props.form.opsBunkerBillLines.splice(index, 1);
-//         } 
+//         }
 //     }
 
 //   }
