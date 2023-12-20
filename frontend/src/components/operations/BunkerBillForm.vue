@@ -247,12 +247,12 @@ watch(() => props.form.scmVendor, (newValue, oldValue) => {
 
 function addBunkerRequisition() {
   props.form.opsBunkerBillLines.push(cloneDeep(props.bunkerObject))
+  CalculateAll()
 }
 
 function removeBunkerRequisition(index) {
   props.form.opsBunkerBillLines.splice(index, 1);
   CalculateAll()
-
 }
 
 function removeBillItems(index, itemIndex) {
@@ -263,6 +263,7 @@ function removeBillItems(index, itemIndex) {
 
 function addBillItems(index, itemIndex) {
   props.form.opsBunkerBillLines[index].opsBunkerBillLineItems.push({});
+  CalculateAll();
 }
 
 const isUSDCurrency = (index) => {
