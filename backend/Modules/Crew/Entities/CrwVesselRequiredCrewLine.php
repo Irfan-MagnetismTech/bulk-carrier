@@ -14,6 +14,6 @@ class CrwVesselRequiredCrewLine extends Model
 
     public function crwRank()
     {
-        return $this->belongsTo(CrwRank::class);
+        return $this->belongsTo(CrwRank::class,'crw_rank_id','id');
     }
 }

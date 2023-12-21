@@ -53,7 +53,6 @@ class OpsBunkerBillController extends Controller
     public function store(OpsBunkerBillRequest $request): JsonResponse
     // public function store(Request $request): JsonResponse
     {
-
         // $bunkerBillLines = $request->opsBunkerBillLines;
 
         // if(isset($request->opsBunkerBillLines)){

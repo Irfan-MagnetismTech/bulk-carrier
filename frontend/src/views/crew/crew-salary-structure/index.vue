@@ -208,6 +208,7 @@ onMounted(() => {
           </td>
           <td>
             <nobr>
+              <action-button :action="'show'" :to="{ name: 'crw.crewSalaryStructures.show', params: { crewSalaryStructureId: crewSalaryStructureData?.id } }"></action-button>
               <action-button :action="'edit'" :to="{ name: 'crw.crewSalaryStructures.edit', params: { crewSalaryStructureId: crewSalaryStructureData?.id } }"></action-button>
               <action-button @click="confirmDelete(crewSalaryStructureData?.id)" :action="'delete'"></action-button>
             </nobr>

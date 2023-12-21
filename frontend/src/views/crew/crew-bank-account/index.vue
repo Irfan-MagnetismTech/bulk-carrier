@@ -194,6 +194,7 @@ onMounted(() => {
               </td>
               <td>
                 <nobr>
+                  <action-button :action="'show'" :to="{ name: 'crw.crewBankAccounts.show', params: { crewBankAccountId: crewBankAccount?.id } }"></action-button>                  
                   <action-button :action="'edit'" :to="{ name: 'crw.crewBankAccounts.edit', params: { crewBankAccountId: crewBankAccount?.id } }"></action-button>
                   <action-button @click="confirmDelete(crewBankAccount?.id)" :action="'delete'"></action-button>
                 </nobr>
