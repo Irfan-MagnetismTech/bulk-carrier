@@ -119,6 +119,7 @@ class MntCriticalItemController extends Controller
      */
     public function destroy($id)
     {
+        
         try {            
             $criticalItem = MntCriticalItem::findorfail($id);
             if ($criticalItem->mntCriticalVesselItems()->count() > 0) {
