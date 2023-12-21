@@ -199,6 +199,7 @@ onMounted(() => {
             </td>            
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.checklists.show', params: { checkListId: chkList?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.checklists.edit', params: { checkListId: chkList?.id } }"></action-button>
                 <action-button @click="confirmDelete(chkList?.id)" :action="'delete'"></action-button>
               </nobr>

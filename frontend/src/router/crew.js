@@ -74,6 +74,13 @@ export default [
         component: () => import(`../views/crew/checklist/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/checklists/:checkListId/show`,
+        name: `${BASE}.checklists.show`,
+        component: () => import (`../views/crew/checklist/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
+
     /* Vessel Required Crew Routes */
     {
         path: `/${BASE}/vessel-required-crews`,
@@ -93,6 +100,12 @@ export default [
         name: `${BASE}.vesselRequiredCrews.edit`,
         component: () => import(`../views/crew/vessel-required-crew/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/vessel-required-crews/:vesselRequiredCrewId/show`,
+        name: `${BASE}.vesselRequiredCrews.show`,
+        component: () => import (`../views/crew/vessel-required-crew/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
     },
     /* Crew Requisition Routes */
     {
@@ -114,6 +127,12 @@ export default [
         component: () => import(`../views/crew/crew-requisition/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/crew-requisitions/:crewRequisitionId/show`,
+        name: `${BASE}.crewRequisitions.show`,
+        component: () => import (`../views/crew/crew-requisition/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
     /* Recruitment Approval Routes */
     {
         path: `/${BASE}/recruitment-approvals`,
@@ -133,6 +152,12 @@ export default [
         name: `${BASE}.recruitmentApprovals.edit`,
         component: () => import(`../views/crew/recruitment-approval/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/recruitment-approvals/:recruitmentApprovalId/show`,
+        name: `${BASE}.recruitmentApprovals.show`,
+        component: () => import (`../views/crew/recruitment-approval/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
     },
 
     /* Crew agencies Routes */
