@@ -108,8 +108,8 @@ class OpsBunkerBillRequest extends FormRequest
 
             }
             if (count($items) !== count(array_unique($items))) {
-                // $errors='Bunker can not be same in individual PR for row '.($pr+1).'.';
-                $validator->errors()->add('opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material', 'Bunker can not be same in individual PR for row '.$pr.'.');
+                // $errors[]='Bunker can not be same in individual PR for row '.($pr+1).'.';
+                $validator->errors()->add('opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material', 'Bunker can not be same in individual PR for row '.($pr+1).'.');
             }
         }
     }
