@@ -610,5 +610,32 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/customer-invoices/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
+	/* Voyage Expenditures*/
+	{
+		path: `/${BASE}/voyage-expenditures`,
+		name: `${BASE}.voyage-expenditures.index`,
+		component: () => import(`../views/${ViEWBASE}/voyage-expenditures/index.vue`),
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/create`,
+		name: `${BASE}.voyage-expenditures.create`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/:voyageExpenditureId/edit`,
+		name: `${BASE}.voyage-expenditures.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/:voyageExpenditureId/show`,
+		name: `${BASE}.voyage-expenditures.show`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	
 ];

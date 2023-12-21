@@ -1,8 +1,8 @@
 <script setup>
 import Error from "../Error.vue";
 import { watch, ref, onMounted, watchEffect } from 'vue';
-// import useVesselVoyageBudget from "../../composables/operations/useVesselVoyageBudget";
-import useVoyageBudget from "../../composables/operations/useVoyageBudget";
+// import useVesselVoyageExpenditure from "../../composables/operations/useVesselVoyageExpenditure";
+import useVoyageExpenditure from "../../composables/operations/useVoyageExpenditure";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
@@ -10,9 +10,9 @@ import useVesselExpenseHead from "../../composables/operations/useVesselExpenseH
 import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
 import useHeroIcon from "../../assets/heroIcon";
+import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
-
-const { voyageBudgets, expenseHeadObject, getVoyageBudgets, showHead, isLoading } = useVoyageBudget();
+const { voyageExpenditures, expenseHeadObject, getVoyageExpenditures, showHead, isLoading } = useVoyageExpenditure();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
 const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
@@ -36,8 +36,8 @@ function fetchVesselExpenseHeads(ops_vessel_id, loading) {
   showFlatVesselExpenseHead(ops_vessel_id, loading).then(() => {
      editInitiated.value = 1
       // if(props.formType == 'create') {
-      //   props.form.opsVoyageBudgetEntries = vesselExpenseHeads.value
-      //   // props.form.opsVoyageBudgetEntries = voyageBudgets.value
+      //   props.form.opsVoyageExpenditureEntries = vesselExpenseHeads.value
+      //   // props.form.opsVoyageExpenditureEntries = voyageExpenditures.value
       // }
     })
 }
@@ -81,7 +81,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   if(newValue !== oldValue && oldValue != null && newValue != undefined){
     props.form.opsVessel = null;
     vessels.value = []
-    props.form.opsVoyageBudgetEntries = []
+    props.form.opsVoyageExpenditureEntries = []
   }
 
   vessels.value = []
@@ -131,21 +131,21 @@ watch(() => props.form.exchange_rate_bdt, (value) => {
   calculateHeadAmounts()
 }, { deep: true })
 
-watch(() => props.form.opsVoyageBudgetEntries, (newValue, oldValue) => {
+watch(() => props.form.opsVoyageExpenditureEntries, (newValue, oldValue) => {
 
   newValue.forEach((line, index) => {
-    props.form.opsVoyageBudgetEntries[index].ops_expense_head_id = props.form.opsVoyageBudgetEntries[index]?.opsExpenseHead?.id
+    props.form.opsVoyageExpenditureEntries[index].ops_expense_head_id = props.form.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.id
   });
 
 }, { deep: true })
 
 const calculateHeadAmounts = () => {
-    props.form.opsVoyageBudgetEntries.forEach((line, index) => {
+    props.form.opsVoyageExpenditureEntries.forEach((line, index) => {
 
             const { amount, amount_usd, amount_bdt } = calculateInCurrency(line);
-            props.form.opsVoyageBudgetEntries[index].amount_usd = (amount_usd * 1);
-            props.form.opsVoyageBudgetEntries[index].amount_bdt = (amount_bdt * 1);
-            props.form.opsVoyageBudgetEntries[index].amount = (amount * 1);
+            props.form.opsVoyageExpenditureEntries[index].amount_usd = (amount_usd * 1);
+            props.form.opsVoyageExpenditureEntries[index].amount_bdt = (amount_bdt * 1);
+            props.form.opsVoyageExpenditureEntries[index].amount = (amount * 1);
       });
 }
 
@@ -172,39 +172,30 @@ const calculateInCurrency = (item) => {
 
 
 function addHead() {
-  props.form.opsVoyageBudgetEntries.push({...expenseHeadObject});
+  props.form.opsVoyageExpenditureEntries.push({...expenseHeadObject});
 }
 
 function removeHead(index){
-    props.form.opsVoyageBudgetEntries.splice(index, 1);
+    props.form.opsVoyageExpenditureEntries.splice(index, 1);
 }
 
 onMounted(() => {
   getCurrencies();
 })
+
+function attachFile(e) {
+  let attachment = e.target.files[0];
+  props.form.attachment = attachment;
+}
 </script>
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input class="w-1/4" v-model="form.business_unit" :page="formType"></business-unit-input>
-      <label class="block w-3/4 mt-2 text-sm">
-        <span class="text-gray-700">Title <span class="text-red-500">*</span></span>
-        <input type="text" maxlength="250" required v-model="form.title" placeholder="Title" class="form-input" autocomplete="off" />
-      </label>
-  </div>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700">Effective From <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
-    </label>
-    <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700">Effective Till <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_till" required placeholder="Effective Till" class="form-input" autocomplete="off" />
-    </label>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
-
-  </div>
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+    </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
@@ -235,6 +226,12 @@ onMounted(() => {
               <input type="hidden" v-model="form.ops_voyage_id" />
     </label> 
   </div>
+  <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2 my-2">
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Attachment</span>
+            <input type="file" @change="attachFile" placeholder="Attachment" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
+        </label>
+  </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
@@ -264,6 +261,8 @@ onMounted(() => {
             <tr class="w-full">
               <th class="w-72">Expesne Head <span class="text-red-500">*</span></th>
               <th class="w-20">Quantity <span class="text-red-500">*</span></th>
+              <th class="w-24">Invoice Date <span class="text-red-500">*</span></th>
+              <th class="w-24">Invoice No. <span class="text-red-500">*</span></th>
               <th>Rate <span class="text-red-500">*</span></th>
               <th v-if="isOtherCurrency">Amount </th>
               <th>Amount USD</th>
@@ -278,36 +277,39 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(head, index) in form.opsVoyageBudgetEntries" :key="index">
+            <tr v-for="(head, index) in form.opsVoyageExpenditureEntries" :key="index">
               <td class="relative">
-                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input" >
+                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageExpenditureEntries[index].opsExpenseHead" label="name" class="block form-input" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
-                            :required="!form.opsVoyageBudgetEntries[index].opsExpenseHead"
+                            :required="!form.opsVoyageExpenditureEntries[index].opsExpenseHead"
                             v-bind="attributes"
                             v-on="events"
                             />
                     </template>
                 </v-select>
-                <input type="hidden" v-model="form.opsVoyageBudgetEntries[index].ops_expense_head_id" />
-                <span v-show="form.opsVoyageBudgetEntries[index].isExpenseHeadDuplicate" class="text-yellow-600 absolute top-4 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
+                <input type="hidden" v-model="form.opsVoyageExpenditureEntries[index].ops_expense_head_id" />
+                <span v-show="form.opsVoyageExpenditureEntries[index].isExpenseHeadDuplicate" class="text-yellow-600 absolute top-4 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
 
               </td>
+
               <td>
-                  <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageBudgetEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
+              <td></td>
+              <td></td>
               <td>
-                <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageBudgetEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
               <td v-if="isOtherCurrency">
-                <input type="number" step="0.0001" @input="calculateHeadAmounts()" v-model="form.opsVoyageBudgetEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" @input="calculateHeadAmounts()" v-model="form.opsVoyageExpenditureEntries[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
-                  <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" v-model="form.opsVoyageExpenditureEntries[index].amount_usd" placeholder="USD Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
-                  <input type="number" step="0.0001" v-model="form.opsVoyageBudgetEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" v-model="form.opsVoyageExpenditureEntries[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
               </td>
               <td>
                 <button type="button" @click="removeHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -325,10 +327,25 @@ onMounted(() => {
 
 
   <ErrorComponent :errors="errors"></ErrorComponent>
+  <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
 </template>
 <style lang="postcss" scoped>
 #table, #table th, #table td{
   @apply border border-collapse border-gray-400 text-center text-gray-700 px-1 text-xs
+}
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .input-group {
@@ -345,19 +362,6 @@ onMounted(() => {
   @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
-/* Hide the default number input arrows */
-input[type=number] {
-  -moz-appearance: textfield; /* Firefox */
-  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
-  appearance: textfield; /* Standard syntax */
-}
-
-/* Hide the spin buttons in Chrome */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;
