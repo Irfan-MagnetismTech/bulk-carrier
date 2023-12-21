@@ -180,6 +180,12 @@ export default [
         component: () => import(`../views/crew/agency/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/agencies/:agencyId/show`,
+        name: `${BASE}.agencies.show`,
+        component: () => import (`../views/crew/agency/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Agency Contract Routes */
     {
@@ -201,6 +207,12 @@ export default [
         component: () => import(`../views/crew/agency-contract/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/agency-contracts/:agencyContractId/show`,
+        name: `${BASE}.agencyContracts.show`,
+        component: () => import (`../views/crew/agency-contract/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Agency Bills Routes */
     {
@@ -221,6 +233,12 @@ export default [
         name: `${BASE}.agencyBills.edit`,
         component: () => import(`../views/crew/agency-bill/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/agency-bills/:agencyBillId/show`,
+        name: `${BASE}.agencyBills.show`,
+        component: () => import (`../views/crew/agency-bill/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
     },
 
     /* Crew Profile Routes */
@@ -270,6 +288,12 @@ export default [
         component: () => import(`../views/crew/document/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/documents/:documentId/show`,
+        name: `${BASE}.documents.show`,
+        component: () => import (`../views/crew/document/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew documents renew Routes */
     {
@@ -312,6 +336,12 @@ export default [
         component: () => import(`../views/crew/crew-assign/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
+    {
+        path: `/${BASE}/crew-assigns/:crewAssignId/show`,
+        name: `${BASE}.crewAssigns.show`,
+        component: () => import (`../views/crew/crew-assign/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew Attendance Routes */
     {
@@ -333,12 +363,12 @@ export default [
         component: () => import(`../views/crew/crew-attendance/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    // {
-    //     path: `/${BASE}/crw-attendances/:crwAttendanceId/show`,
-    //     name: `${BASE}.crwAttendances.show`,
-    //     component: () => import(`../views/crew/crew-attendance/show.vue`),
-    //     meta: { requiresAuth: true, role: "all", permission: '' },
-    // },
+    {
+        path: `/${BASE}/crw-attendances/:crwAttendanceId/show`,
+        name: `${BASE}.crwAttendances.show`,
+        component: () => import(`../views/crew/crew-attendance/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew Incident Records Routes */
     {
@@ -359,6 +389,12 @@ export default [
         name: `${BASE}.incidentRecords.edit`,
         component: () => import(`../views/crew/incident-record/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/incident-records/:incidentRecordId/show`,
+        name: `${BASE}.incidentRecords.show`,
+        component: () => import(`../views/crew/incident-record/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
     },
 
     /* Crew Salary Structure Routes */
