@@ -157,7 +157,7 @@ onMounted(() => {
             </td>
             <td>
               <nobr>
-<!--                <action-button :action="'show'" :to="{ name: 'crw.crwAttendances.show', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>-->
+               <action-button :action="'show'" :to="{ name: 'crw.crwAttendances.show', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.crwAttendances.edit', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>
                 <action-button @click="confirmDelete(crwAttendance?.id)" :action="'delete'"></action-button>
               </nobr>

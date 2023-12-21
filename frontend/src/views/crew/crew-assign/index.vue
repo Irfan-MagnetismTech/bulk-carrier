@@ -250,6 +250,7 @@ onMounted(() => {
                     </svg>
                     <span class="tooltiptext">{{ crwAssign?.status === 'Onboard' ? "Mark as Complete" : "Already Completed" }}</span>
                   </div>
+                  <action-button :action="'show'" :to="{ name: 'crw.crewAssigns.show', params: { crewAssignId: crwAssign?.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'crw.crewAssigns.edit', params: { crewAssignId: crwAssign?.id } }"></action-button>
                   <action-button @click="confirmDelete(crwAssign?.id)" :action="'delete'"></action-button>
                 </nobr>
