@@ -32,8 +32,8 @@ class OpsBunkerBillLine extends Model
         'amount_usd' => DoubleToFloatCast::class,
     ];
 
-//     public function getExchangeRateBdtAttribute() {
-//         return number_format($this->attributes['exchange_rate_bdt'], 2);
+//     public function getExchangeRateBdtAttribute($value) {
+//         return (float) $value;
 //   }
 
     public function opsBunkerBillLineItems()
