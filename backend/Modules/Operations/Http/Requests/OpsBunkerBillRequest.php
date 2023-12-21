@@ -39,7 +39,7 @@ class OpsBunkerBillRequest extends FormRequest
             'opsBunkerBillLines.*.amount' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.amount_bdt' =>  ['nullable', 'numeric'],
             'opsBunkerBillLines.*.amount_usd' =>  ['nullable', 'numeric'],
-            // 'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material' => ['nullable', 'string'],
+            'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material' => ['nullable', 'string'],
 
             // 'opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material' =>  ['nullable', 'string','distinct'],
         ];
@@ -87,25 +87,29 @@ class OpsBunkerBillRequest extends FormRequest
         return true;
     }
 
-    // public function withValidator($validator)
-    // {
-    //     $validator->after(function ($validator) {
-    //         $this->customValidation($validator);
-    //     });
-    // }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->customValidation($validator);
+        });
+    }
 
-    // protected function customValidation($validator)
-    // {
-    //     $requisitionMaterials = $this->input('opsBunkerBillLines.*.opsBunkerBillLineItems');
+    protected function customValidation($validator)
+    {
+        $requisitionMaterials = $this->input('opsBunkerBillLines');
 
-    //     dd($requisitionMaterials);
+        $errors=[];
+        foreach($requisitionMaterials as $pr => $requisitionMat){
+            $items= [];
+            foreach($requisitionMat['opsBunkerBillLineItems'] as $key => $item){
 
-    //     if ($requisitionMaterials) {
-    //         $uniqueRequisitionMaterials = array_unique($requisitionMaterials);
+                $items[]=$item['requisition_material'];
 
-    //         if (count($requisitionMaterials) !== count($uniqueRequisitionMaterials)) {
-    //             $validator->errors()->add('opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material', 'Bunker can not be same in individual PR.');
-    //         }
-    //     }
-    // }
+            }
+            if (count($items) !== count(array_unique($items))) {
+                // $errors='Bunker can not be same in individual PR for row '.($pr+1).'.';
+                $validator->errors()->add('opsBunkerBillLines.*.opsBunkerBillLineItems.*.requisition_material', 'Bunker can not be same in individual PR for row '.$pr.'.');
+            }
+        }
+    }
 }

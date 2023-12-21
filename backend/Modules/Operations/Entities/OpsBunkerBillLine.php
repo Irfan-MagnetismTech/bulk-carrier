@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Casts\DoubleToFloatCast;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,17 +24,17 @@ class OpsBunkerBillLine extends Model
     ];
 
     protected $casts = [
-        'rate' => 'float',
-        'exchange_rate_bdt' => 'float',
-        'exchange_rate_usd' => 'float',
-        'amount' => 'float',
-        'amount_bdt' => 'float',
-        'amount_usd' => 'float',
+        'rate' => DoubleToFloatCast::class,
+        'exchange_rate_bdt' => DoubleToFloatCast::class,
+        'exchange_rate_usd' => DoubleToFloatCast::class,
+        'amount' => DoubleToFloatCast::class,
+        'amount_bdt' => DoubleToFloatCast::class,
+        'amount_usd' => DoubleToFloatCast::class,
     ];
 
-    public function getExchangeRateBdtAttribute() {
-        return number_format($this->attributes['exchange_rate_bdt'], 2);
-  }
+//     public function getExchangeRateBdtAttribute() {
+//         return number_format($this->attributes['exchange_rate_bdt'], 2);
+//   }
 
     public function opsBunkerBillLineItems()
     {
