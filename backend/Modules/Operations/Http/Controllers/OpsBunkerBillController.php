@@ -139,7 +139,6 @@ class OpsBunkerBillController extends Controller
         $bunker_bill->load('scmVendor','opsBunkerBillLines.opsBunkerBillLineItems', 'opsBunkerBillLines.opsBunkerRequisition');
 
         $bunker_bill->opsBunkerBillLines->map(function($line) {
-
             $line['requisitionBunkers'] = $line->opsBunkerRequisition->opsBunkers->map(function($item) {
                 $item['name'] = $item->scmMaterial->name;
                 return $item;
@@ -147,7 +146,6 @@ class OpsBunkerBillController extends Controller
 
             return $line;
         });
-
         
         try
         {
@@ -161,7 +159,7 @@ class OpsBunkerBillController extends Controller
     }
  
  
-    /**
+   /**
      * Update the specified resource in storage.
     *
     * @param OpsBunkerBillRequest $request

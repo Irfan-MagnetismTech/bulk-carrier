@@ -2,7 +2,6 @@
 
 namespace Modules\Operations\Entities;
 
-use App\Casts\DoubleToFloatCast;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -26,9 +25,9 @@ class OpsBunkerBill extends Model
     ];
 
     protected $casts = [
-        'sub_total_bdt' => DoubleToFloatCast::class,
-        'discount_bdt' => DoubleToFloatCast::class,
-        'grand_total_bdt' => DoubleToFloatCast::class,
+        'sub_total_bdt' => 'float',
+        'discount_bdt' => 'float',
+        'grand_total_bdt' => 'float',
     ];
 
     public function scmVendor()
