@@ -248,6 +248,7 @@ onMounted(() => {
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.vesselRequiredCrews.show', params: { vesselRequiredCrewId: requiredCrew?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.vesselRequiredCrews.edit', params: { vesselRequiredCrewId: requiredCrew?.id } }"></action-button>
                 <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
               </nobr>
@@ -261,7 +262,7 @@ onMounted(() => {
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="7">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
               </td>
             </tr>
           <tr v-else-if="!vesselRequiredCrews?.data?.length">

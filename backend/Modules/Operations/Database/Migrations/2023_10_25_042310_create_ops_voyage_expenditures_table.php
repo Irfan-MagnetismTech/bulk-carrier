@@ -12,7 +12,7 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
+    {  
         Schema::create('ops_voyage_expenditures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ops_voyage_id')->constrained('ops_voyages', 'id')->nullable();
@@ -24,6 +24,8 @@ return new class extends Migration
             $table->longText('expense_json')->nullable();
             $table->date('date')->nullable();
             $table->string('type')->nullable();
+            $table->string('attachment')->nullable();
+            $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL']);  
             $table->timestamps();
         });
