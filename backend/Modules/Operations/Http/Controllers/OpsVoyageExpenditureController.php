@@ -30,7 +30,7 @@ class OpsVoyageExpenditureController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $voyage_expenditures = OpsVoyageExpenditure::with('opsVessel','opsVoyageExpenditureEntries')
+            $voyage_expenditures = OpsVoyageExpenditure::with('opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries')
             ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved voyage expenditures.', $voyage_expenditures, 200);

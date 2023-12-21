@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('ops_voyage_expenditure_entries', function (Blueprint $table) {
             $table->foreignId('ops_voyage_expenditure_id')->constrained('ops_voyage_expenditures')->cascadeOnDelete();
-            $table->foreignId('particular_id')->constrained('ops_expense_heads')->cascadeOnDelete();
+            // $table->foreignId('particular_id')->constrained('ops_expense_heads')->cascadeOnDelete();
+            $table->string('particular');
             $table->string('type')->default('expense')->comment('expense');
-            $table->string('invoice_id')->nullable();
+            $table->string('invoice_date')->nullable();
+            $table->string('invoice_no')->nullable();
             $table->string('currency')->nullable();
             $table->float('rate', 20, 2)->nullable();
             $table->float('amount', 20, 2)->nullable();

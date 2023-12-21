@@ -19,6 +19,8 @@ class OpsVoyageExpenditure extends Model
         'expense_json',
         'date',
         'type',
+        'attachment',
+        'remarks',
         'business_unit',
     ];
 

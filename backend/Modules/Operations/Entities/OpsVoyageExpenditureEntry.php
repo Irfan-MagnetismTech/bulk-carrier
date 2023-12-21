@@ -11,9 +11,10 @@ class OpsVoyageExpenditureEntry extends Model
 
     protected $fillable = [
         'ops_voyage_expenditure_id',
-        'particular_id',
+        'particular',
         'type',
-        'invoice_id',
+        'invoice_date',
+        'invoice_no',
         'currency',
         'rate',
         'amount',
