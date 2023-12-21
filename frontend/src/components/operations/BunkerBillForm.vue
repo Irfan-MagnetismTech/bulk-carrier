@@ -36,11 +36,11 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2 mt-2">
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.attachment) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(Supplier Invoice) <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ (getFileName(form.attachment)!='null')?getFileName(form.attachment):'' }}</p></span>
             <input type="file" @change="attachFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy)  <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ getFileName(form.smr_file_path) }}</p></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Upload file(SRM Copy)  <p v-if="props?.formType == 'edit'" class="text-red-600 hidden"> {{ (getFileName(form.smr_file_path)!='null')?getFileName(form.smr_file_path):'' }}</p></span>
             <input type="file" @change="attachSMRFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
     </div>
@@ -266,6 +266,19 @@ function addBillItems(index, itemIndex) {
   CalculateAll();
 }
 
+function attachFile(e) {
+  let attachment = e.target.files[0];
+  props.form.attachment = attachment;
+}
+
+function attachSMRFile(e) {
+  let smr_file_path = e.target.files[0];
+  props.form.smr_file_path = smr_file_path;
+}
+
+const getFileName  = (filename) => {
+  return filename;
+}
 const isUSDCurrency = (index) => {
     if(props.form.opsBunkerBillLines[index].currency === 'USD') {
       return true;
@@ -310,9 +323,7 @@ watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
   }
 }, { deep: true })
 
-const getFileName  = (filename) => {
-  return filename;
-}
+
 
 const initiateBunkerRequisitionItem = (billLineIndex) => {
 
