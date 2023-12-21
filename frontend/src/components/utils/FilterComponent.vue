@@ -92,7 +92,8 @@ function setSortState(index, order) {
                   <input v-model="option.search_param" type="text" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
                 <template v-else-if="option.filter_type === 'date'">
-                  <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
+                  <!-- <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" /> -->
+                  <VueDatePicker v-model="option.search_param" class="form-input " auto-apply  :enable-time-picker = "false" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  :clearable="false"></VueDatePicker>
                 </template>
                 <template v-else-if="option.filter_type === 'dropdown'">
                   <select v-model="option.search_param" class="filter_input" autocomplete="off">
@@ -116,5 +117,7 @@ function setSortState(index, order) {
           </thead>
 </template>
 <style lang="postcss" scoped>
-
+>>> {
+  --dp-input-padding: 0 ;
+}
 </style>
